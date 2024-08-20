@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:cardElevation="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="10dp"
+        app:cardCornerRadius="10dp"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/number"
+                android:background="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="crop name"
+                android:gravity="center"
+                android:textColor="@color/white"/>
+
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_height="wrap_content">
+                <LinearLayout
+
+                    android:id="@+id/image_layout"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal">
+
+                </LinearLayout>
+            </HorizontalScrollView>
+
+
+
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/crop_name"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="crop name"/>
+
+                <TextView
+                    android:id="@+id/crop_name_value"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="crop name"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:id="@+id/disease_layout"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/disease_name"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="disease name"/>
+
+                <TextView
+                    android:id="@+id/disease_name_value"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="diease name "/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="5dp"
+                android:id="@+id/part_name_layout"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/part_name"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="part name"/>
+
+                <TextView
+                    android:id="@+id/part_name_value"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="part name value "/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:id="@+id/insect_layout"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/insect_name"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Insect name"/>
+
+                <TextView
+                    android:id="@+id/insect_name_value"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Insect name value  "/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="5dp"
+                android:id="@+id/stage_layout"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/stage_name"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="stage name"/>
+
+                <TextView
+                    android:id="@+id/stage_name_value"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="stage name value "/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="DATE"/>
+
+                <TextView
+                    android:id="@+id/date_value"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="DATE value "/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/latitude"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="LATITUDE"/>
+
+                <TextView
+                    android:id="@+id/latitude_value"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="LATITUDE  value "/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/longitude"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="longitude"/>
+
+                <TextView
+                    android:id="@+id/longitude_value"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="longitude value "/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/status"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Status"/>
+
+                <TextView
+                    android:id="@+id/status_value"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Status value "/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="5dp"
+
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/soil_type"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="SOIL TYPE"/>
+
+                <TextView
+                    android:id="@+id/soil_type_value"
+                    android:layout_weight="50"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="SOIL TYPE value "/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="LOCATION"/>
+
+                <TextView
+                    android:id="@+id/location_value"
+                    android:layout_weight="50"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="LOCATION value "/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="5dp"
+
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/plant_growth_stage"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="PLANT GROWTH STAGE"/>
+
+                <TextView
+                    android:id="@+id/plant_growth_stage_value"
+                    android:layout_weight="50"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="PLANT GROWTH STAGE value "/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/severity_level"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="SEVERITY LEVEL"/>
+
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/severity_level_value"
+                    android:layout_weight="50"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="SEVERITY LEVEL value "/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/plant_part"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="PLANT PART"/>
+
+                <TextView
+                    android:id="@+id/plant_part_value"
+                    android:layout_weight="50"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="PLANT PART  value "/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/temperature"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TEMPERATURE"/>
+
+                <TextView
+                    android:id="@+id/temperature_value"
+                    android:layout_weight="50"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TEMPERATURE value "/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/irrigation"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="IRRIGATION"/>
+
+                <TextView
+                    android:id="@+id/irrigation_value"
+                    android:layout_weight="50"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="IRRIGATION value "/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="5dp"
+
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/humidity"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="HUMIDITY"/>
+
+                <TextView
+                    android:id="@+id/humidity_value"
+                    android:layout_weight="50"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="HUMIDITY value "/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="5dp"
+
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/plant_unique_id"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="PLANT UNIQUE ID "/>
+
+                <TextView
+                    android:id="@+id/plant_unique_id_value"
+                    android:layout_weight="50"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="PLANT UNIQUE ID  value "/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="5dp"
+
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/variety"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="VARIETY"/>
+
+                <TextView
+                    android:id="@+id/variety_value"
+                    android:layout_weight="50"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="VARIETY  value "/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/date_sowing"
+                    android:layout_weight="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="DATE SOWING"/>
+
+                <TextView
+                    android:id="@+id/date_sowing_value"
+                    android:layout_weight="50"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="DATE SOWING value "/>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/view_image"
+                android:layout_weight="50"
+                android:layout_marginBottom="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="view image "/>
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+

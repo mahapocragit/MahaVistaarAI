@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_camera">
+
+
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+
+        >
+
+        <TextureView
+            android:id="@+id/textureview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+       <!--
+
+        <View
+            android:layout_height="300dp"
+            android:layout_width="300dp"
+            android:background="@drawable/rectangle"
+            android:layout_gravity="center"/>
+
+            -->
+
+
+    </FrameLayout>
+
+
+
+    <Button
+        android:id="@+id/getpicture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Take Picture"/>
+
+</RelativeLayout>

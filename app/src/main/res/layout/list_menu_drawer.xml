@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2018. Runtime Solutions Pvt Ltd. All right reserved.
+  ~ Web URL  http://runtime-solutions.com
+  ~ Author Name: Vinod Vishwakarma
+  ~ Linked In: https://www.linkedin.com/in/vvishwakarma
+  ~ Official Email ID : vinod@runtime-solutions.com
+  ~ Email ID: vish.vino@gmail.com
+  ~ Last Modified : 1/12/18 3:21 PM
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:orientation="horizontal"
+    android:background="@color/transparent">
+
+    <ImageView
+        android:id="@+id/iconImageView"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:adjustViewBounds="true"
+        android:layout_gravity="center"
+        android:layout_margin="18dp"
+        android:contentDescription="@string/app_name"
+        app:srcCompat="@mipmap/ic_menu_profile" />
+
+    <TextView
+        android:id="@+id/nameTextView"
+        android:text="SO0000139"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center|left"
+        android:textSize="@dimen/text14"
+        android:padding="1dp"
+        android:textStyle="bold"
+        android:textColor="@color/status_green"
+        android:layout_marginBottom="0dp"/>
+
+
+</LinearLayout>

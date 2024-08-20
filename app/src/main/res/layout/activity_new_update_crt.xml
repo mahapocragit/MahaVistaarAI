@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".activity.NewUpdateCRT">
+
+
+
+        <RelativeLayout
+            android:id="@+id/relClimateDeatils"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                android:id="@+id/relativeLayoutTopBar"
+                layout="@layout/layout_toolbar" />
+
+            <GridView
+                android:id="@+id/gridViewJobs"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_below="@+id/relativeLayoutTopBar"
+                android:horizontalSpacing="1dp"
+                android:numColumns="2"
+                android:paddingLeft="10dp"
+                android:paddingTop="20dp"
+                android:paddingRight="10dp"
+                android:verticalSpacing="10dp">
+
+            </GridView>
+
+        </RelativeLayout>
+
+    </RelativeLayout>

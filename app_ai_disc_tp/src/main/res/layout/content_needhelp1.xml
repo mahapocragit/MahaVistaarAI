@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+
+    android:layout_height="match_parent">
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:src="@drawable/logo" />
+<androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        app:cardElevation="4dp"
+        android:layout_marginTop="15dp">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:id="@+id/contact_us"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="15dp"
+        android:gravity="center"
+        android:background="@color/grey"
+        android:textColor = "@color/black"
+        android:text="CONTACT US"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="left"
+        android:paddingLeft="5dp"
+        android:paddingTop="2dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="2dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:justificationMode="inter_word"
+        android:fontFamily="@font/balsamiq_sans"
+
+        android:text="If you face any kind of difficulty or having any issue regarding the AI-DISC app, kindly feel free to contact us:"
+         />
+
+
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:id="@+id/contact_us_3"
+            android:layout_margin="30dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:paddingLeft="5dp"
+                android:paddingTop="2dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="10dp"
+                android:fontFamily="@font/balsamiq_sans"
+                android:textColor="@color/colorPrimaryOrange"
+                android:justificationMode="inter_word"
+                android:text="Project Investigator:"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:paddingLeft="5dp"
+                android:paddingTop="2dp"
+                android:paddingRight="5dp"
+                android:textStyle="bold"
+                android:textColor="@color/darkblue"
+                android:text="Dr. Sudeep Marwaha" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:paddingLeft="5dp"
+                android:fontFamily="@font/balsamiq_sans"
+                android:textColor="@color/black"
+                android:paddingRight="5dp"
+                android:text="Principal Scientist and Head\nDivision of Computer Applications, ICAR-IASRI" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:paddingLeft="5dp"
+                android:paddingTop="12dp"
+                android:paddingRight="5dp"
+                android:textStyle="bold"
+                android:textColor="@color/darkblue"
+                android:text="Dr. Chandan Kumar Deb" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:fontFamily="@font/balsamiq_sans"
+                android:textColor="@color/black"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="Scientist \nDivision of Computer Applications, ICAR-IASRI" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:paddingLeft="5dp"
+                android:paddingTop="12dp"
+                android:paddingRight="5dp"
+            android:textStyle="bold"
+                android:textColor="@color/darkblue"
+                android:text="Dr. Md. Ashraful Haque" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:fontFamily="@font/balsamiq_sans"
+                android:textColor="@color/black"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="Scientist \nDivision of Computer Applications, ICAR-IASRI" />
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textColor="@color/brown"
+                android:textStyle="bold"
+                app:srcCompat="@drawable/ic_baseline_email_24" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:textColor="@color/greendark"
+                android:textStyle="bold"
+                android:paddingRight="5dp"
+                android:text="Email: support.aidisc@icar.gov.in" />
+
+
+        </LinearLayout>
+</LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+
+</LinearLayout>
+</ScrollView>

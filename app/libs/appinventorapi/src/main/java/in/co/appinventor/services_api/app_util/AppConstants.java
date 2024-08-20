@@ -1,0 +1,52 @@
+package in.co.appinventor.services_api.app_util;
+
+/* renamed from: in.co.appinventor.services_api.app_util.AppConstants */
+public interface AppConstants {
+    public static final int DEFAULT_TIMEOUT = 200000;
+    public static final String EMPTY_STRING = "";
+    public static final String GALLERY_KEY = "GALLERY_KEY";
+    public static final int IMAGE_UPLOAD_TIMEOUT = 200000;
+    public static final int LIMIT = 1000;
+    public static final String MAIN_FOLDER = "appinventor";
+    public static final int MAX_RESULTS = 50;
+    public static final String MESSAGE_NETWORK_UNAVAILABLE = "No Internet Connection";
+    public static final String NULL_STRING = "null";
+    public static final int PAGE_RESULTS = 30;
+    public static final String PROFILE_FOLDER = "profile";
+    public static final String PROFILE_PIC_NAME = "profile_pic";
+    public static final long SYNC_FREQUENCY_ONE_HOUR = 3600;
+    public static final long SYNC_FREQUENCY_ONE_MIN = 60;
+    public static final String kACC_DATA = "true";
+    public static final String kACTIVITY_TYPE = "activity_type";
+    public static final int kCART_MAX_LIMIT = 20;
+    public static final String kCART_STATUS_COMPLETED_KEY = "Completed";
+    public static final String kCART_STATUS_DRAFT_KEY = "Draft";
+    public static final String kCASE_ORIGIN = "Uni View";
+    public static final String kCASE_PRIORITY = "Medium";
+    public static final String kCASE_STATUS = "New";
+    public static final String kCASE_STATUS_OPEN = "Open";
+    public static final String kCASE_SUBJECT = "Request For Shipping Address update";
+    public static final String kCASE_TYPE = "Account Ledger";
+    public static final String kCASE_TYPE_SHIPPING_ADD = "Shipping Address";
+    public static final String kDEVICE_TYPE = "android";
+    public static final String kDOCUMENT = "Document";
+    public static final String kDOCUMENT_SLASH = "Document/";
+    public static final String kFAILED = "Failed";
+    public static final String kFB = "FB";
+    public static final String kGP = "GP";
+    public static final String kIMG_BODY = "/Body";
+    public static final String kIS_ACC_DATA = "true";
+    public static final String kNO_IMAGE_KEY = "no_image";
+    public static final String kOFFLINE = "Offline/";
+    public static final String kPRODUCT2 = "Product2";
+    public static final String kSOUP_ENTRY_ID = "_soupEntryId";
+    public static final String kSOUP_FLAG_FLASE = "false";
+    public static final String kSOUP_FLAG_TRUE = "true";
+    public static final String kSOUP_LOCAL = "__local__";
+    public static final String kSOUP_LOCAL_CREATED = "__locally_created__";
+    public static final String kSOUP_LOCAL_DELETED = "__locally_deleted__";
+    public static final String kSOUP_LOCAL_UPDATED = "__locally_updated__";
+    public static final String kSUCCESS = "Success";
+    public static final String kTW = "TW";
+    public static final String kWB = "WB";
+}

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_disclaimer">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_height="100dp"
+            android:layout_width="100dp"
+            android:src="@drawable/logo"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:text="AI-DISC Disclaimer"
+            android:textColor="@color/black"
+            android:textSize="14dp"
+            android:layout_gravity="center"
+            android:textStyle="bold" />
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="5dp"
+            android:id="@+id/text1"
+            android:justificationMode="inter_word"
+            android:textColor="@color/black"
+            android:layout_marginBottom="5dp"
+            android:text="@string/disclaimer_title"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="gone"
+            android:id="@+id/nodisease"
+            android:text="No Disease Models"/>
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="3dp"-->
+<!--                    android:id="@+id/disease"-->
+<!--                    android:orientation="horizontal">-->
+<!--                    <TextView-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginLeft="50dp"-->
+<!--                        android:text="Crop"-->
+<!--                        android:textStyle="bold"-->
+<!--                        android:gravity="start"-->
+<!--                        android:layout_marginRight="5dp"-->
+<!--                        android:textColor="@color/black" />-->
+<!--                    <TextView-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:layout_height="wrap_content"-->
+
+<!--                        android:layout_marginRight="50dp"-->
+<!--                        android:text="Disease"-->
+<!--                        android:textStyle="bold"-->
+<!--                        android:gravity="center"-->
+<!--                        android:justificationMode="inter_word"-->
+<!--                        android:textColor="@color/black" />-->
+<!--                </LinearLayout>-->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            app:cardCornerRadius="5dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/dislin">
+
+
+        </LinearLayout></androidx.cardview.widget.CardView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:id="@+id/nopest"
+            android:visibility="gone"
+            android:text="No Pest Models"/>
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="13dp"-->
+<!--            android:id="@+id/pest"-->
+<!--            android:orientation="horizontal">-->
+<!--            <TextView-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="50dp"-->
+<!--                android:text="Crop"-->
+<!--                android:textStyle="bold"-->
+<!--                android:gravity="start"-->
+<!--                android:layout_marginRight="5dp"-->
+<!--                android:textColor="@color/black" />-->
+<!--            <TextView-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="0dp"-->
+<!--                android:layout_marginRight="50dp"-->
+<!--                android:text="Pest"-->
+<!--                android:textStyle="bold"-->
+<!--                android:gravity="center"-->
+<!--                android:justificationMode="inter_word"-->
+<!--                android:textColor="@color/black" />-->
+<!--        </LinearLayout>-->
+<androidx.cardview.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="15dp"
+    app:cardCornerRadius="5dp"><LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:id="@+id/pestlin">
+
+
+</LinearLayout></androidx.cardview.widget.CardView>
+
+
+<!--                <TextView-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:visibility="gone"-->
+<!--                    android:text="Nodal Officers :"/>-->
+
+    </LinearLayout>
+
+
+</ScrollView>

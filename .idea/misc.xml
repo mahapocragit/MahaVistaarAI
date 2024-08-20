@@ -1,0 +1,23 @@
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/HP/Studio_git_project/farmers-java-android/app/src/main/res/layout/activity_crop_advisory.xml" value="0.23267326732673269" />
+        <entry key="..\:/Users/HP/Studio_git_project/farmers-java-android/app/src/main/res/layout/activity_crop_advisory_detaits_and_feedback.xml" value="0.327445652173913" />
+        <entry key="..\:/Users/HP/Studio_git_project/farmers-java-android/app/src/main/res/layout/activity_dashboard_screen.xml" value="0.3619791666666667" />
+        <entry key="..\:/Users/HP/Studio_git_project/farmers-java-android/app/src/main/res/layout/activity_market_price.xml" value="0.31521739130434784" />
+        <entry key="..\:/Users/HP/Studio_git_project/farmers-java-android/app/src/main/res/layout/activity_my_village_profile_pdf.xml" value="0.2477355072463768" />
+        <entry key="..\:/Users/HP/Studio_git_project/farmers-java-android/app/src/main/res/layout/activity_registration.xml" value="0.25" />
+        <entry key="..\:/Users/HP/Studio_git_project/farmers-java-android/app/src/main/res/layout/app_bar_maintwo.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/HP/Studio_git_project/farmers-java-android/app/src/main/res/layout/content_maintwo.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/HP/Studio_git_project/farmers-java-android/app/src/main/res/layout/fragment_advisory_feedback.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/HP/Studio_git_project/farmers-java-android/app/src/main/res/layout/fragment_crop_advisory.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/HP/Studio_git_project/farmers-java-android/app/src/main/res/layout/fragment_crop_advisory_selection.xml" value="0.3463541666666667" />
+        <entry key="..\:/Users/HP/Studio_git_project/farmers-java-android/app/src/main/res/layout/layout_toolbar.xml" value="0.3619791666666667" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="corretto-11" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+</project>

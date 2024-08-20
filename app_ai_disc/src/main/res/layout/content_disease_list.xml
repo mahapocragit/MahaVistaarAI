@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.ai.ai_disc.Disease_list"
+    tools:showIn="@layout/activity_disease_list">
+
+
+
+
+    <LinearLayout
+
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey"
+        android:id="@+id/layout1"
+       >
+        <Spinner
+            android:id="@+id/crop_list"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_below="@+id/layout1"
+        android:id="@+id/no_disease"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:text="NO DISEASE FOUND"/>
+
+    <TextView
+        android:layout_below="@+id/no_disease"
+        android:id="@+id/list_disease"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:text="LIST OF DISEASE"/>
+
+        <ListView
+            android:id="@+id/list"
+            android:layout_below="@+id/list_disease"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/layout"
+            android:layout_width="match_parent"/>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/layout"
+            android:layout_alignParentBottom="true">
+<!--
+        <EditText
+            android:id="@+id/name_disease"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter disease name"/>
+            <EditText
+                android:id="@+id/local_name_disease"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter local disease name"/>
+            <EditText
+                android:id="@+id/scientific_name_disease"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter scientific disease name"/>
+
+        <Button
+
+            android:id="@+id/add_disease"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submit"/>
+
+            -->
+
+
+            <Button
+
+                android:id="@+id/add"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add Disease"/>
+
+        </LinearLayout>
+
+
+
+
+
+</RelativeLayout>

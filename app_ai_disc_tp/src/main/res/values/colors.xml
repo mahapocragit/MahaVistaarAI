@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#169B89</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="white">#FAF7F8</color>
+    <color name="white1">#FFFFFF</color>
+    <color name="grey">#B3AFB0</color>
+    <color name="grey2">#819486</color>
+    <color name="grey1">#5e6775</color>
+    <color name="black">#000000</color>
+    <color name="green">#98D850</color>
+    <color name="heading">#6F4C57</color>
+    <color name="background">#dddddd</color>
+    <color name="blue">#5E99C9</color>
+    <color name="red">#EE1209</color>
+    <color name="greendark">#169B89</color>
+    <color name="colorMaroon">#fc9e1f06</color>
+    <color name="appsss">#00FF00</color>
+
+    <color name="bg_screen1">#16c266</color>
+    <color name="bg_screen2">#90c2bb</color>
+    <color name="colorPrimaryOrange">#CA6F1E</color>
+
+    <!-- dots inactive colors -->
+    <color name="dot_dark_screen1">#39d1ba</color>
+    <color name="dot_dark_screen2">#14a895</color>
+
+    <!-- dots active colors -->
+    <color name="dot_light_screen1">#8de7f9</color>
+    <color name="dot_light_screen2">#8cf9eb</color>
+
+    <array name="array_dot_active">
+        <item>@color/dot_light_screen1</item>
+        <item>@color/dot_light_screen2</item>
+    </array>
+
+    <array name="array_dot_inactive">
+        <item>@color/dot_dark_screen1</item>
+        <item>@color/dot_dark_screen2</item>
+    </array>
+    <color name="darkblue">#055d73</color>
+    <color name="brown">#964a3b</color>
+    <color name="inactive"></color>
+    <color name="active">#569E59</color>
+    <color name="greenblue">#539983</color>
+    <color name="dialogButtonText">#4C4E4E</color>
+
+</resources>

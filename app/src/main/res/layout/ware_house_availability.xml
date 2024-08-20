@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight=".5"
+        android:orientation="horizontal">
+
+        <LinearLayout
+
+            android:layout_width="@dimen/height140"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:layout_margin="@dimen/padding1"
+            android:background="@drawable/et_sqr_border"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/ware_house_name"
+                android:layout_width="@dimen/height140"
+                android:layout_margin="@dimen/padding1"
+                android:layout_height="25dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/heading"
+                android:textSize="12sp"
+                android:padding="1dp" />
+
+            <TextView
+                android:id="@+id/tvAddress"
+                android:layout_width="@dimen/height140"
+                android:layout_margin="@dimen/padding1"
+                android:layout_height="25dp"
+                android:textColor="@color/heading"
+                android:gravity="center_vertical"
+                android:textSize="12sp"
+                android:padding="1dp" />
+<RelativeLayout
+    android:id="@+id/relm"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tvContact_number"
+                android:layout_width="@dimen/height140"
+                android:layout_margin="@dimen/padding1"
+                android:layout_height="35dp"
+                android:textColor="@color/colorPrimary"
+                android:gravity="center_vertical"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:padding="1dp" />
+</RelativeLayout>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/tvTotal_Capacity"
+            android:layout_width="@dimen/height100"
+            android:layout_margin="@dimen/padding1"
+            android:layout_height="35dp"
+            android:background="@drawable/et_sqr_border"
+            android:gravity="center_vertical"
+            android:textColor="@color/heading"
+            android:visibility="gone"
+            android:padding="5dp" />
+
+        <TextView
+            android:id="@+id/tvTotal_available_Capacity"
+            android:layout_width="@dimen/height160"
+            android:layout_height="93dp"
+            android:layout_margin="@dimen/padding1"
+            android:background="@drawable/et_sqr_border"
+            android:textColor="@color/heading"
+            android:gravity="center"
+            android:padding="5dp"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tvWare_House_Code"
+            android:layout_width="@dimen/height140"
+            android:layout_margin="@dimen/padding1"
+            android:layout_height="35dp"
+            android:background="@drawable/et_sqr_border"
+            android:gravity="center_vertical"
+            android:textColor="@color/heading"
+            android:visibility="gone"
+            android:padding="5dp" />
+
+        <TextView
+            android:id="@+id/record_date"
+            android:layout_width="@dimen/height100"
+            android:layout_margin="@dimen/padding1"
+            android:layout_height="93dp"
+            android:background="@drawable/et_sqr_border"
+            android:textColor="@color/heading"
+            android:gravity="center_vertical"
+            android:textSize="12sp"
+            android:padding="5dp" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

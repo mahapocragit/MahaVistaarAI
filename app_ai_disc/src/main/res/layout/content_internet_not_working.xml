@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.ai.ai_disc.InternetNotWorking"
+    tools:showIn="@layout/activity_internet_not_working">
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Internet Not Connected."
+        android:layout_centerInParent="true"
+        android:textSize="20dp"
+        android:id="@+id/text"
+        android:textColor="@color/black"/>
+    <Button
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Retry"
+        android:id="@+id/retry"
+        android:layout_below="@+id/text"
+        android:layout_centerInParent="true"
+
+       />
+
+</RelativeLayout>

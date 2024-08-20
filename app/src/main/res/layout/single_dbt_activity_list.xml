@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/linlayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:background="@drawable/news_bg">
+
+        <TextView
+            android:id="@+id/nameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:paddingRight="2dp"
+            android:layout_marginTop="3dp"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:layout_gravity="left"
+            android:gravity="left"
+            android:textAlignment="gravity"
+            android:text="@string/poCRA_dBT_activity"
+            android:textAllCaps="false"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </LinearLayout>
+
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/fertlizerData_Rcl"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:visibility="gone"-->
+<!--        android:background="@color/transparent_green"-->
+<!--        android:scrollbarAlwaysDrawHorizontalTrack="true"-->
+<!--        android:scrollbarStyle="insideOverlay"-->
+<!--        android:scrollbars="horizontal">-->
+<!--    </androidx.recyclerview.widget.RecyclerView>-->
+    <LinearLayout
+        android:id="@+id/main_linr_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:layout_weight="4"
+        android:orientation="horizontal">
+
+       <LinearLayout
+        android:id="@+id/data1_linr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/data1_title"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:layout_margin="@dimen/padding1"
+            android:padding="1dp"
+            />
+
+        <TextView
+            android:id="@+id/data1_value"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+
+            android:gravity="center"
+            android:layout_margin="@dimen/padding1"
+            android:padding="1dp"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            />
+    </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/data2_linr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/data2_title"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:layout_margin="@dimen/padding1"
+                android:padding="1dp"
+                />
+
+            <TextView
+                android:id="@+id/data2_value"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+
+                android:gravity="center"
+                android:layout_margin="@dimen/padding1"
+                android:padding="1dp"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/data3_linr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/data3_title"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:layout_margin="@dimen/padding1"
+                android:padding="1dp"
+                />
+
+            <TextView
+                android:id="@+id/data3_value"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+
+                android:gravity="center"
+                android:layout_margin="@dimen/padding1"
+                android:padding="1dp"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/data_linr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/data4_title"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+
+                android:gravity="center"
+                android:textStyle="bold"
+                android:text="@string/Total_Estimated_Cost"
+                android:textSize="11sp"
+                android:layout_margin="@dimen/padding1"
+                android:padding="1dp"
+                />
+
+            <TextView
+                android:id="@+id/data4_value"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+
+                android:gravity="center"
+                android:layout_margin="@dimen/padding1"
+                android:padding="1dp"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

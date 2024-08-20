@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.Warehouse">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <include
+        android:id="@+id/relativeLayoutTopBar"
+        layout="@layout/layout_toolbar" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/source_info_warehouse"
+            android:textSize="16sp"
+            android:layout_marginTop="5dp"
+            android:gravity="center_horizontal"
+            android:textColor="@color/gray_light">
+        </TextView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height45"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewDistrict"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/padding20"
+            android:layout_marginEnd="@dimen/padding20"
+            android:background="@drawable/layout_warehouse_dropdown"
+            android:gravity="center"
+            android:text="@string/farmer_select_district"
+            android:hint="@string/farmer_select_district"
+            android:paddingStart="@dimen/padding20"
+            android:paddingEnd="@dimen/padding20"
+            android:textColor="@color/heading"
+            android:textSize="@dimen/text14"
+            android:textStyle="normal" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/padding30"
+            android:contentDescription="@string/app_name"
+            app:srcCompat="@drawable/ic_baseline_arrow_drop_down_24"
+            tools:ignore="VectorDrawableCompat"
+            android:layout_marginRight="@dimen/padding30"
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
+<!--        <RelativeLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="@dimen/height45"-->
+<!--            android:layout_marginTop="@dimen/height25"-->
+<!--            android:orientation="horizontal">-->
+<!--            <TextView-->
+<!--                android:id="@+id/textViewTaluka"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginStart="@dimen/padding20"-->
+<!--                android:layout_marginEnd="@dimen/padding20"-->
+<!--                android:background="@drawable/layout_warehouse_dropdown"-->
+<!--                android:gravity="center"-->
+<!--                android:hint="@string/farmer_select_taluka"-->
+<!--                android:paddingStart="@dimen/padding20"-->
+<!--                android:paddingEnd="@dimen/padding20"-->
+<!--                android:textColor="@color/heading"-->
+<!--                android:textSize="@dimen/text14"-->
+<!--                android:textStyle="normal" />-->
+
+<!--            <ImageView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_alignParentEnd="true"-->
+<!--                android:layout_centerVertical="true"-->
+<!--                android:layout_marginEnd="@dimen/padding30"-->
+<!--                android:contentDescription="@string/app_name"-->
+<!--                app:srcCompat="@drawable/ic_baseline_arrow_drop_down_24"-->
+<!--                tools:ignore="VectorDrawableCompat"-->
+<!--                android:layout_marginRight="@dimen/padding30"-->
+<!--                android:layout_alignParentRight="true" />-->
+
+<!--        </RelativeLayout>-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/height20"
+            android:layout_marginStart="@dimen/padding20"
+            android:background="@color/white_dim_light"
+            android:padding="15dp"
+            android:elevation="@dimen/height5"
+            android:layout_marginEnd="@dimen/padding20">
+
+            <TextView
+                android:id="@+id/textTotalWarehouse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:layout_marginLeft="40dp"
+                android:textColor="@color/status_green"
+                android:textStyle="bold"
+                android:text="@string/total_warehouse">
+
+            </TextView>
+            <TextView
+                android:id="@+id/textAvailableCapacity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/total_available_capacity"
+                android:layout_marginTop="@dimen/text8"
+                android:textSize="@dimen/text12"
+                android:layout_marginLeft="40dp"
+                android:textColor="@color/status_green"
+                android:textStyle="bold"
+                android:layout_below="@+id/textTotalWarehouse">
+            </TextView>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/height5"
+            android:layout_marginLeft="@dimen/height5"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_ware_house_name"
+                android:layout_width="@dimen/height140"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding1"
+                android:background="@color/status_green"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/warehouse_details"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/tv_Total_available_Capacity"
+                android:layout_width="@dimen/height160"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding1"
+                android:background="@color/status_green"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/total_available_capacity"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/tv_record_date"
+                android:layout_width="@dimen/height100"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding1"
+                android:background="@color/status_green"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/record_date"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rl_toolbar">
+
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/height5"
+            >
+
+
+            <TextView
+                android:id="@+id/wareHouseEmptyTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:padding="8dp"
+                android:textStyle="normal"
+                android:gravity="center"
+                android:text="Data Not Available"
+                android:textColor="@color/text_black_light" />
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never">
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/wareHousereport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scrollbarAlwaysDrawHorizontalTrack="true"
+                    android:scrollbarStyle="insideOverlay"
+                    android:scrollbars="horizontal">
+
+                </androidx.recyclerview.widget.RecyclerView>
+            </androidx.core.widget.NestedScrollView>
+        </LinearLayout>
+
+
+
+        </HorizontalScrollView>
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

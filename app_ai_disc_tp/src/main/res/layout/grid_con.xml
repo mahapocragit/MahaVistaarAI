@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        app:cardElevation="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        app:cardCornerRadius="10dp"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/grid_image"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                app:srcCompat="@drawable/expert" />
+
+
+            <TextView
+                android:id="@+id/grid_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="hi"
+                android:layout_marginTop="5dp"
+                android:textStyle="bold"
+                android:padding="2dp"
+                android:textColor="@color/black"
+                android:textSize="14sp" >
+            </TextView>
+            <TextView
+                android:id="@+id/grid_designation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="10dp"
+                android:padding="2dp"
+                android:textColor="@color/black"
+                android:text="hi"
+                 >
+            </TextView>
+            <TextView
+                android:id="@+id/grid_phn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="hi"
+                android:textSize="10dp"
+                android:gravity="center"
+                android:padding="2dp"
+                android:textColor="@color/black"
+                >
+            </TextView>
+            <TextView
+                android:id="@+id/grid_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="hi"
+                android:textSize="10dp"
+
+                android:padding="2dp"
+                android:textColor="@color/black"
+                >
+            </TextView>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</LinearLayout>
+
+
+

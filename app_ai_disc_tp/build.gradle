@@ -1,0 +1,131 @@
+ apply plugin: 'com.android.application'
+ apply plugin: 'com.google.firebase.crashlytics'
+ apply plugin: 'com.google.gms.google-services'
+
+android {
+    compileSdkVersion 33
+    defaultConfig {
+        applicationId "com.ai.ai_disc.third.party"
+        minSdkVersion 27
+        targetSdkVersion 33
+        versionCode 1
+        versionName "1.1"
+        multiDexEnabled true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+    lintOptions {
+        // Returns whether lint should be quiet (for example, not write informational messages such as paths to report files written)
+        quiet true
+
+        // Whether lint should set the exit code of the process if errors are found
+        abortOnError false
+
+        // Returns whether lint will only check for errors (ignoring warnings)
+        ignoreWarnings true
+
+        // Returns whether lint should check for fatal errors during release builds. Default is true.
+        // If issues with severity "fatal" are found, the release build is aborted.
+        checkReleaseBuilds false
+    }
+}
+
+dependencies {
+    implementation 'com.google.mlkit:image-labeling:17.0.7'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.navigation:navigation-fragment:2.2.2'
+    implementation 'androidx.navigation:navigation-ui:2.2.2'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
+
+    //noinspection GradleCompatible
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+
+
+    //for images
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    implementation ('com.github.bumptech.glide:okhttp3-integration:4.11.0'){
+        exclude group: 'glide-parent'
+    }
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+   // implementation 'com.github.bumptech.glide:glide:3.7.0'
+
+    //For Api
+    implementation 'com.squareup.okhttp:okhttp:2.7.5'
+    //implementation 'com.github.bumptech.glide:okhttp-integration:1.4.0'
+    //implementation 'com.amitshekhar.android:android-networking:1.0.0'
+    implementation 'com.amitshekhar.android:android-networking:1.0.2'
+    implementation 'com.toptoche.searchablespinner:searchablespinnerlibrary:1.3.1'
+    implementation 'com.android.support:multidex:1.0.3'
+
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.13'
+    implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
+    implementation 'id.zelory:compressor:2.1.0'
+    implementation 'com.jakewharton:butterknife:10.2.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
+    implementation 'androidx.work:work-runtime:2.7.1'
+
+    implementation 'com.karumi:dexter:4.2.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'org.parceler:parceler-api:1.1.12'
+    annotationProcessor 'org.parceler:parceler:1.1.12'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'android.arch.lifecycle:viewmodel:1.1.1'
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    annotationProcessor 'android.arch.lifecycle:compiler:1.1.1'
+
+    //needed for camera
+    implementation ('org.jitsi.react:jitsi-meet-sdk:2.+') { transitive = true }
+
+    //google services
+    implementation 'com.google.android.play:core:1.7.2'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
+    implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.google.firebase:firebase-firestore:24.0.1'
+    implementation platform('com.google.firebase:firebase-bom:31.1.0')
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-messaging:23.1.0'
+    implementation 'com.google.firebase:firebase-storage:20.0.0'
+    //implementation 'com.google.firebase:firebase-analytics:17.2.0'
+    implementation 'com.google.firebase:firebase-analytics:18.0.0'
+    implementation 'com.google.firebase:firebase-crashlytics:17.2.2'
+    implementation 'com.google.mlkit:object-detection:17.0.0'
+
+
+    //user github library
+    implementation 'com.wx.wheelview:wheelview:1.3.3'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'com.github.sujithkanna:smileyrating:2.0.0'
+    implementation 'com.xeoh.android:checkboxgroup:1.0.1'
+    implementation "androidx.fragment:fragment:1.3.0"
+    implementation 'com.facebook.soloader:soloader:0.10.5+'
+    implementation 'com.opencsv:opencsv:4.6'
+
+    //securely store data in encrypted format in shared preferences;
+    implementation "androidx.security:security-crypto:1.1.0-alpha06"
+
+}
+
+apply plugin: 'com.google.gms.google-services'

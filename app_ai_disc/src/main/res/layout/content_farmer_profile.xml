@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.ai.ai_disc.Farmer.FarmerProfileActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/logo" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="start"
+            android:justificationMode="inter_word"
+            android:text="@string/proceedScreen2_1"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:gravity="start"
+            android:visibility="gone"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:text="@string/proceedScreen2_2"
+            android:textColor="@color/black" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:visibility="gone"
+            android:layout_marginBottom="20dp"
+            android:gravity="start"
+            android:text="@string/proceedScreen2_3"
+            android:textColor="@color/black" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="start"
+            android:visibility="gone"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:text="@string/proceedScreen2_4"
+            android:textColor="@color/red" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/identificationText"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:backgroundTint="#FFA500"
+            app:cornerRadius="20sp"
+            android:textAllCaps="false"
+            android:text="Identification"
+            android:textColor="@color/black" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/imageList_text"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:backgroundTint="#FFA500"
+            app:cornerRadius="20sp"
+            android:visibility="gone"
+            android:textAllCaps="false"
+            android:text="Image List"
+            android:textColor="@color/black" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/expertText"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:backgroundTint="#FFA500"
+            android:textAllCaps="false"
+            app:cornerRadius="20sp"
+            android:text="Expert Forum"
+            android:textColor="@color/black" />
+
+
+
+    </LinearLayout>
+
+
+</ScrollView>

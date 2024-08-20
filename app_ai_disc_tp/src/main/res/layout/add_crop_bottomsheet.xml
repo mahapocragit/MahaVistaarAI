@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_bottomsheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="0dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    >
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+    <EditText
+        android:id="@+id/name_crop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:longClickable="false"
+        android:hint="Enter name of crop"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+    <EditText
+        android:id="@+id/local_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:longClickable="false"
+        android:hint="Enter local name of crop"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+    <EditText
+        android:id="@+id/scientific_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:longClickable="false"
+        android:hint="Enter causal organism scientific name of crop"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <Button
+        android:id="@+id/submit"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="submit"/>
+
+</LinearLayout>

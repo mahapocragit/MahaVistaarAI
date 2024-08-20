@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "859459455122",
+    "project_id": "authaidisc",
+    "storage_bucket": "authaidisc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:859459455122:android:276d6f027c80f01aa2fe4b",
+        "android_client_info": {
+          "package_name": "com.ai.ai_disc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "859459455122-ss8ekiop6ed3mos8akfsu7b0jlnhdds6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArD5H5i9JDfwis31u3C3qSSk-Ajz_cp48"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "859459455122-ss8ekiop6ed3mos8akfsu7b0jlnhdds6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

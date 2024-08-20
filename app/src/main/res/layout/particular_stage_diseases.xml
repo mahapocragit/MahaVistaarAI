@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/main_ln"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:padding="1dp"
+        android:paddingTop="2dp">
+
+        <androidx.cardview.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:layout_marginTop="2dp"
+            card_view:cardCornerRadius="8dp">
+
+            <ImageView
+                android:id="@+id/climate_image"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="2dp"
+                android:src="@drawable/ic_launcher_background">
+            </ImageView>
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="@dimen/height150"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/climate_image"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/height5"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/disease_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:paddingBottom="1dp"
+                android:text="Dummy Text"
+                android:textColor="@color/status_green"
+                android:textSize="@dimen/text12"
+                >
+            </TextView>
+
+            <TextView
+                android:id="@+id/diseases_scrpt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:paddingBottom="1dp"
+                android:text="Dummy Text"
+                android:textColor="@color/status_green"
+                android:textSize="@dimen/text12"
+                android:textStyle="bold">
+            </TextView>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/right_arrow"
+            android:layout_width="@dimen/height100"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/right_arrow">
+        </ImageView>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/padding1"
+        android:layout_marginTop="@dimen/padding2"
+        android:layout_below="@+id/main_ln"
+        android:background="@color/bg_button">
+    </View>
+
+
+
+</RelativeLayout>

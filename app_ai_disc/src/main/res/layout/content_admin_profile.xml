@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".Admin_profile"
+    ><TextView
+    android:background="@color/colorPrimaryDark"
+    android:textColor="@color/white"
+    android:text="Admin Page"
+    android:textSize="18dp"
+    android:layout_marginBottom="5dp"
+    android:gravity="center"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+
+            android:textColor="@color/black"
+            android:text="Admin Page"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_marginLeft="35dp"
+            android:id="@+id/user_farm"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
+        <TextView
+
+            android:textColor="@color/black"
+            android:text="Admin Page"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_marginLeft="35dp"
+            android:layout_marginTop="25dp"
+            android:id="@+id/user_expert"
+
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
+        <TextView
+
+            android:textColor="@color/black"
+            android:text="Admin Page"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_marginRight="35dp"
+            android:layout_marginTop="50dp"
+            android:id="@+id/idn"
+            android:layout_alignParentEnd="true"
+
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
+        <TextView
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/black"
+            android:text="Admin Page"
+            android:textStyle="bold"
+            android:layout_marginRight="35dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="75dp"
+            android:id="@+id/rpt"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
+        <TextView
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/black"
+            android:text="Admin Page"
+            android:textStyle="bold"
+            android:layout_marginRight="35dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="100dp"
+            android:id="@+id/chat"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="120dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:scrollbarStyle="insideInset"
+
+                >
+
+                <GridView
+                    android:layout_marginTop="10dp"
+                    android:numColumns="auto_fit"
+                    android:gravity="center"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:columnWidth="130dp"
+                    android:horizontalSpacing="5dp"
+                    android:verticalSpacing="5dp"
+                    android:stretchMode="columnWidth"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/gridc"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+
+
+
+</LinearLayout>

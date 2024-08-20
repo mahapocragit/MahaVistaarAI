@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+
+    tools:showIn="@layout/activity_about_us1">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_height="100dp"
+            android:layout_width="100dp"
+            android:src="@drawable/logo"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:text="ABOUT AI-DISC"
+            android:textColor="@color/black"
+            android:textSize="14dp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginBottom="5dp"
+            android:justificationMode="inter_word"
+            android:text="AI-DISC stands for Artificial Intelligence-based Disease Identification System for Crops. AI-DISC is an intelligent android based mobile application for automatic detection of diseases of several agricultural crops. This app is capable of identifying the symtomatic images of diseases and provides information of crop management practices. AI-DISC is powered by the huge image database of National Image base for Plant Protection (NIBPP) at ICAR Data Center. It uses highly efficient and sophisticated AI-oriented techniques which are deployed in the KHRISHIMEGH cloud computing infrastructure."
+            android:textColor="@color/black" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:text="DESIGNED &amp; DEVELOPED"
+            android:textColor="@color/black"
+            android:textSize="14dp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="5dp"
+            android:id="@+id/text1"
+            android:justificationMode="inter_word"
+            android:textColor="@color/black"
+            android:layout_marginBottom="5dp"
+            android:text="AI-DISC app is designed, developed and maintained by the Division of Computer Applications, ICAR-Indian Agricultural Statistics Research Institute, New Delhi, India."/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:text="PROJECTS"
+            android:textColor="@color/black"
+            android:textSize="14dp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="5dp"
+            android:id="@+id/text2"
+            android:justificationMode="inter_word"
+            android:textColor="@color/black"
+            android:layout_marginBottom="5dp"
+            android:text="@string/project_about"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="Institutes"
+                    android:textAllCaps="true"
+                    android:textSize="14dp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="LEADING INSTITUTE:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:id="@+id/inst1"
+                    android:justificationMode="inter_word"
+                    android:textColor="@color/black"
+                    android:layout_marginBottom="5dp"
+                    android:text="ICAR-Indian Agricultural Statistics Research Institute, New Delhi, India"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="PARTNER INSTITUTES:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="25dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="1)"
+                        android:layout_marginRight="5dp"
+                        android:textColor="@color/black" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginRight="12dp"
+                        android:text="ICAR-Indian Institute of Maize Research, Ludhiana, Punjab, India"
+                        android:justificationMode="inter_word"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:orientation="horizontal">
+                    <TextView
+
+                        android:layout_width="25dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+
+                        android:text="2)"
+                        android:layout_marginRight="5dp"
+
+                        android:textColor="@color/black" />
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginRight="12dp"
+                        android:text="ICAR-Indian Agricultural Research Institute, New Delhi, India"
+                        android:justificationMode="inter_word"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:orientation="horizontal">
+                    <TextView
+
+                        android:layout_width="25dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="3)"
+                        android:layout_marginRight="5dp"
+                        android:textColor="@color/black" />
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginRight="12dp"
+                        android:text="Swami Keshwanand Rajasthan Agricultural University, Bikaner, Rajasthan, India"
+                        android:justificationMode="inter_word"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:orientation="horizontal">
+                    <TextView
+
+                        android:layout_width="25dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="4)"
+                        android:layout_marginRight="5dp"
+                        android:textColor="@color/black" />
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginRight="12dp"
+                        android:text="Navsari Agricultural University, Navsari, Gujarat, India"
+                        android:justificationMode="inter_word"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:orientation="horizontal">
+                    <TextView
+
+                        android:layout_width="25dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="5)"
+                        android:layout_marginRight="5dp"
+                        android:textColor="@color/black" />
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginRight="12dp"
+                        android:text="Rani Lakshmi Bai Central Agricultural University, Jhansi, Uttar Pradesh, India"
+                        android:justificationMode="inter_word"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:orientation="horizontal">
+                    <TextView
+
+                        android:layout_width="25dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="6)"
+                        android:layout_marginRight="5dp"
+                        android:textColor="@color/black" />
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginRight="12dp"
+                        android:text="Agriculture University, Kota, Rajasthan, India"
+                        android:justificationMode="inter_word"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:orientation="horizontal">
+                    <TextView
+
+                        android:layout_width="25dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="7)"
+                        android:layout_marginRight="5dp"
+                        android:textColor="@color/black" />
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginRight="12dp"
+                        android:text="Chaudhary Sarwan Kumar Himachal Pradesh Krishi Vishvavidyalaya, Palampur, Himachal Pradesh, India"
+                        android:justificationMode="inter_word"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:orientation="horizontal">
+                    <TextView
+
+                        android:layout_width="25dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="8)"
+                        android:layout_marginRight="5dp"
+                        android:textColor="@color/black" />
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginRight="12dp"
+                        android:text="Sher-e-Kashmir University of Agricultural Sciences and Technology, Kashmir, Jammu &amp; Kashmir, India"
+                        android:justificationMode="inter_word"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:orientation="horizontal">
+                    <TextView
+
+                        android:layout_width="25dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="9)"
+                        android:layout_marginRight="5dp"
+                        android:textColor="@color/black" />
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginRight="12dp"
+                        android:text="Maharana Pratap University of Agriculture and Technology, Udaipur, Rajasthan, India"
+                        android:justificationMode="inter_word"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:orientation="horizontal">
+                    <TextView
+
+                        android:layout_width="25dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="10)"
+                        android:layout_marginRight="5dp"
+                        android:textColor="@color/black" />
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginRight="12dp"
+                        android:text="Junagadh Agricultural University, Junagadh, Gujarat, India"
+                        android:justificationMode="inter_word"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:orientation="horizontal">
+                    <TextView
+
+                        android:layout_width="25dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="11)"
+                        android:layout_marginRight="5dp"
+                        android:textColor="@color/black" />
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginRight="12dp"
+                        android:text="University of Agricultural Sciences, Bangalore, Karnataka, India"
+                        android:justificationMode="inter_word"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:orientation="horizontal">
+                    <TextView
+
+                        android:layout_width="25dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="12)"
+                        android:layout_marginRight="5dp"
+                        android:textColor="@color/black" />
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginRight="12dp"
+                        android:text="Assam Agricultural University, Jorhat Centre, Assam, India"
+                        android:justificationMode="inter_word"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
+                    <TextView
+
+                        android:layout_width="25dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="13)"
+                        android:layout_marginRight="5dp"
+                        android:textColor="@color/black" />
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginRight="12dp"
+                        android:text="Bidhan Chandra Krishi Viswavidyalaya, Mohanpur, West Bengal, India"
+                    android:justificationMode="inter_word"
+                    android:textColor="@color/black" />
+                </LinearLayout>
+<!--                <TextView-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:visibility="gone"-->
+<!--                    android:text="Nodal Officers :"/>-->
+            </LinearLayout>
+    </LinearLayout>
+
+
+</ScrollView>

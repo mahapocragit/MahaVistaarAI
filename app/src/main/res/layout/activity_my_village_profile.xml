@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.MyVillageProfile">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <include
+            android:id="@+id/relativeLayoutTopBar"
+            layout="@layout/layout_toolbar" />
+<LinearLayout
+    android:id="@+id/LLMyVillageProfile"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="5"
+    android:layout_margin="20dp"
+    android:orientation="vertical"
+    tools:ignore="MissingConstraints">
+    <TextView
+        android:id="@+id/text1"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:text="@string/vcrmc_members"
+        android:textSize="15dp"
+        android:layout_margin="5dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:paddingTop="30dp"
+        android:paddingLeft="100dp"
+        android:background="@drawable/vcrmc_background"
+        android:gravity="left"></TextView>
+    <TextView
+        android:id="@+id/text2"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:text="@string/nrm_structure"
+        android:textSize="15dp"
+        android:layout_margin="5dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:paddingTop="30dp"
+        android:paddingLeft="100dp"
+        android:background="@drawable/nrm_struct"
+        android:gravity="left"></TextView>
+    <TextView
+        android:id="@+id/text3"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:text="@string/list_fpo"
+        android:textSize="15dp"
+        android:layout_margin="5dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:paddingTop="30dp"
+        android:paddingLeft="100dp"
+        android:background="@drawable/fpo_list"
+        android:gravity="left"></TextView>
+    <TextView
+        android:id="@+id/text4"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:text="@string/maps"
+        android:textSize="15dp"
+        android:layout_margin="5dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:paddingTop="30dp"
+        android:paddingLeft="100dp"
+        android:background="@drawable/map"
+        android:gravity="left"></TextView>
+    <TextView
+        android:id="@+id/text5"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:text="@string/water_balance"
+        android:textSize="15dp"
+        android:layout_margin="5dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:paddingTop="30dp"
+        android:paddingLeft="100dp"
+        android:background="@drawable/water_balance_background"
+        android:gravity="left">
+    </TextView>
+</LinearLayout>
+    <LinearLayout
+    android:id="@+id/footer"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/height70"
+    android:layout_marginTop="@dimen/height120"
+        android:gravity="bottom|end"
+    android:orientation="horizontal"
+    android:ellipsize="end"
+    android:background="@drawable/ic_launcher_background"
+    android:paddingLeft="@dimen/padding20"
+    android:paddingRight="@dimen/padding20"
+    android:weightSum="1"
+        tools:ignore="MissingConstraints">
+    <LinearLayout
+        android:id="@+id/forum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="@dimen/height5"
+        android:layout_marginLeft="15dp"
+        android:layout_weight="0.3"
+        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="@dimen/height40"
+            android:layout_height="@dimen/height40"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="1dp"
+            app:srcCompat="@drawable/ic_menu_camera"
+            tools:ignore="VectorDrawableCompat" />
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Forum"
+            android:layout_marginLeft="15dp"
+            android:textColor="#7EC828"
+            android:textSize="12dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/support"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="@dimen/height5"
+        android:layout_weight="0.33"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="@dimen/height40"
+            android:layout_height="@dimen/height40"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="1dp"
+            app:srcCompat="@drawable/ic_menu_share" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Support &amp; Grivience"
+            android:textColor="@color/black"
+            android:textSize="12dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="@dimen/height5"
+        android:layout_marginLeft="15dp"
+        android:layout_weight="0.33"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="@dimen/height40"
+            android:layout_height="@dimen/height40"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="1dp"
+            app:srcCompat="@drawable/ic_menu_gallery"
+            tools:ignore="VectorDrawableCompat" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Profile"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/black"
+            android:textSize="12dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

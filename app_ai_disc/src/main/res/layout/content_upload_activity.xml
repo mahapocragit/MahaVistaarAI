@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.ai.ai_disc.Upload_activity"
+    tools:showIn="@layout/activity_upload_activity">
+
+
+    <ViewAnimator
+        android:id="@+id/simpleViewAnimator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+<!--
+    <GridView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="1"
+        android:id="@+id/grid_view" />
+        -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/grid_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical" />
+
+        <include layout="@layout/add_image_layout" />
+
+    </ViewAnimator>
+
+
+
+
+</RelativeLayout>

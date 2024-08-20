@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_margin="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:id="@+id/farmerquerylist"
+        android:layout_width="120dp"
+        android:layout_margin="10dp"
+        android:layout_height="120dp"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:elevation="12dp"
+            app:cardCornerRadius="40dp"
+            android:layout_gravity="center"
+            android:innerRadius="0dp"
+            android:shape="ring"
+            android:thicknessRatio="1.9">
+
+
+            <ImageView
+                android:id="@+id/grid_image1"
+                android:layout_width="120dp"
+                android:layout_height="70dp"
+                android:layout_margin="5dp"
+                android:layout_gravity="center"
+                android:src="@drawable/view_record" />
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/grid_text1"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Query List"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="#000000"
+            android:textSize="16sp" >
+        </TextView>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/farmerVideoCalling"
+        android:layout_width="120dp"
+        android:layout_margin="10dp"
+        android:layout_height="120dp"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:elevation="12dp"
+            app:cardCornerRadius="40dp"
+            android:layout_gravity="center"
+            android:innerRadius="0dp"
+            android:shape="ring"
+            android:thicknessRatio="1.9">
+
+
+            <ImageView
+                android:id="@+id/video_image"
+                android:layout_width="120dp"
+                android:layout_height="70dp"
+                android:layout_margin="5dp"
+                android:layout_gravity="center"
+                android:src="@drawable/videocalling" />
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/video_calling_text"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Solve Query by Video call"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="#000000"
+            android:textSize="16sp" >
+        </TextView>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/farmerSelectCrop"
+        android:layout_width="120dp"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:elevation="12dp"
+            app:cardCornerRadius="40dp"
+            app:cardBackgroundColor="@color/cardview_shadow_end_color"
+            android:layout_gravity="center"
+            android:innerRadius="0dp"
+            android:shape="ring"
+            android:thicknessRatio="1.9">
+
+
+            <ImageView
+                android:id="@+id/grid_image"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_margin="5dp"
+                android:layout_gravity="center"
+                android:src="@drawable/crops" />
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/grid_text"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Select Crop"
+            android:textStyle="bold"
+
+            android:gravity="center"
+            android:textColor="#000000"
+            android:textSize="16sp" >
+        </TextView>
+
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/status_green"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:backgroundTint="@color/transparent_green"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.AppBarOverlay">
+            <ImageView
+                android:id="@+id/FarmerlogoXmarks"
+                android:layout_width="@dimen/height50"
+                android:layout_height="@dimen/height50"
+                android:adjustViewBounds="true"
+                android:layout_gravity="left"
+                android:src="@drawable/pocra_farmer_logo" />
+            <ImageView
+                android:id="@+id/logoXmarks"
+                android:layout_width="@dimen/height50"
+                android:layout_height="@dimen/height50"
+                android:adjustViewBounds="true"
+                android:layout_gravity="center"
+                android:src="@drawable/pocra_logo" />
+            <ImageView
+                android:id="@+id/imgCallIcon"
+                android:layout_width="@dimen/height30"
+                android:layout_height="@dimen/height30"
+                android:layout_gravity="right"
+                android:layout_marginRight="@dimen/height10"
+                android:src="@drawable/phone_call_icon" />
+            <ImageView
+                android:id="@+id/imgLangChange"
+                android:layout_width="@dimen/height35"
+                android:layout_height="@dimen/height35"
+                android:layout_gravity="right"
+                android:layout_marginRight="@dimen/height10"
+                android:background="@color/text_black_light"
+                android:src="@drawable/translater_icon" />
+            <ImageView
+                android:id="@+id/imgNotification"
+
+                android:layout_width="@dimen/height25"
+                android:layout_height="@dimen/height25"
+                android:layout_gravity="right"
+                android:layout_marginRight="@dimen/height10"
+                android:src="@drawable/notification_image9" />
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <include layout="@layout/content_maintwo" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

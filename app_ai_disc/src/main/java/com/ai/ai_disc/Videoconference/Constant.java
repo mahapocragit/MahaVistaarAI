@@ -1,0 +1,9 @@
+package com.ai.ai_disc.Videoconference;
+
+public class Constant {
+//  static  String  AUTH_KEY_FCM="AAAAyc-i6Uk:APA91bHoL0daHB_dttCUR-sb6uPg-JGB1evj419etbRFWEGs91nUD8W8bMgTRAvhh3mWO5Q-co4uwUQZ6sPyTdwRfs3Tsiln8GW1KX7ko_yxi-EMWG7VGng7GJrmO8QZPbK8uszwgGQRUp9TjWMv7mqRxaaU5SB5Xg";
+ // static  String  AUTH_KEY_FCM="AAAAOIJnWl0:APA91bFbrkCX7sXpsXm4QfUHfEGluYrXLYE3ozX1n3ViV7BujmIFZB7lB2sP9ULr0UTzZRsO9odic6GAy4CC5uNQ5A7ZKuQ9I7a_cEBB8KWbHAwmE1JripgS6FomOAm91SfvP3EvGw3_";
+  static  String  AUTH_KEY_FCM="AAAAnivBMq4:APA91bEHHItaWWlxewsHRxlv7ksmz-bPVEfMpdGeqY6vl0PfjEKfNRM67dctbz09XljoFm1FWqm5IskiqJ4OcIVAL5_eouNjjsNNeK-x9sGgAYaAI2VX5xoQE7brEil3P2HP_SDNNgze";
+
+
+}

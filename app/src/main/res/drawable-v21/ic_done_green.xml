@@ -1,0 +1,19 @@
+<!--
+  ~ Copyright (c) 2021. Runtime Solutions Pvt Ltd. All right reserved.
+  ~ Web URL  http://runtime-solutions.com
+  ~ Author Name: Vinod Vishwakarma
+  ~ Linked In: https://www.linkedin.com/in/vvishwakarma
+  ~ Official Email ID : vinod@runtime-solutions.com
+  ~ Email ID: vish.vino@gmail.com
+  ~ Last Modified : 5/1/21 12:50 PM
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="24dp"
+        android:height="24dp"
+        android:viewportWidth="24.0"
+        android:viewportHeight="24.0">
+    <path
+        android:fillColor="#FF42842d"
+        android:pathData="M9,16.2L4.8,12l-1.4,1.4L9,19 21,7l-1.4,-1.4L9,16.2z"/>
+</vector>

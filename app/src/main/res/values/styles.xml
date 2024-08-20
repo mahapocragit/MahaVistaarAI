@@ -1,0 +1,64 @@
+<!--
+  ~ Copyright (c) 2018. Runtime Solutions Pvt Ltd. All right reserved.
+  ~ Web URL  http://runtime-solutions.com
+  ~ Author Name: Vinod Vishwakarma
+  ~ Linked In: https://www.linkedin.com/in/vvishwakarma
+  ~ Official Email ID : vinod@runtime-solutions.com
+  ~ Email ID: vish.vino@gmail.com
+  ~ Last Modified : 1/12/18 3:21 PM
+  -->
+
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+
+
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+    </style>
+
+
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="MyTheme" parent="@android:style/Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+    </style>
+
+    <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@color/transparent_green</item>
+    </style>
+
+
+    <style name="AppProgressBar" parent="@style/Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateTint" tools:ignore="NewApi">@color/status_red</item>
+    </style>
+
+
+
+    <style name="TextLabel" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@color/status_green</item>
+    </style>
+
+    <style name="AppThemeActionbar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:actionBarSize">15dp</item>
+        ...
+    </style>
+
+
+
+
+
+</resources>

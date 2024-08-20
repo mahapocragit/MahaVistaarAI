@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "734220385400",
+    "project_id": "krishi-sanjeevani-farmers",
+    "storage_bucket": "krishi-sanjeevani-farmers.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:734220385400:android:937c66b1310d32e87b418d",
+        "android_client_info": {
+          "package_name": "in.gov.mahapocra.farmerapppks"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "734220385400-3ihr4sbkb0vjvkcumt8jlju775vrnfd8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFiaEJksx-aIBhSn9hrGyyLY3txTE_9KY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "734220385400-3ihr4sbkb0vjvkcumt8jlju775vrnfd8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

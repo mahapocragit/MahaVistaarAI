@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backai1"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.ai.ai_disc.Farmer.Proceed_Activity_Registeration">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="17dp"
+            android:gravity="center"
+
+            android:orientation="horizontal"
+
+            tools:ignore="MissingConstraints">
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+
+                android:scaleType="fitXY"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/icarlogoc" />
+            <ImageView
+                android:id="@+id/imageViewt"
+                android:layout_width="130dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="20dp"
+                android:layout_gravity="center"
+
+                android:scaleType="fitXY"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/nahep" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="80dp"
+                android:layout_height="70dp"
+                android:layout_marginLeft="20dp"
+
+                android:scaleType="fitXY"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/cropped_iasri" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="133dp"
+            android:layout_height="130dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/logocut" />
+<LinearLayout
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="5dp"
+    android:layout_marginTop="30dp"
+    android:background="@color/white1"
+
+    tools:ignore="MissingConstraints">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:justificationMode="inter_word"
+            android:layout_marginBottom="5dp"
+            android:gravity="start"
+            android:text="@string/proceed"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="start"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:visibility="gone"
+            android:text="@string/proceed4"
+            android:textColor="@color/black" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="start"
+            android:visibility="gone"
+            android:justificationMode="inter_word"
+            android:text="@string/proceed1"
+            android:textColor="@color/black" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="start"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:visibility="gone"
+            android:text="@string/proceed5"
+            android:textColor="@color/black" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="start"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:visibility="gone"
+            android:justificationMode="inter_word"
+            android:text="@string/proceed3"
+            android:textColor="@color/black" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:gravity="center"
+
+            android:textStyle="bold"
+            android:text="\u2022"
+            android:layout_marginRight="5dp"
+            android:textColor="@color/black" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="12dp"
+            android:text="Automatic identification of diseases of crops using highly optimized AI-based models"
+            android:justificationMode="inter_word"
+            android:textColor="@color/black" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:gravity="center"
+
+            android:textStyle="bold"
+            android:text="\u2022"
+            android:layout_marginRight="5dp"
+            android:textColor="@color/black" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="12dp"
+            android:text="Crop protection-related advisory for the respective identified disease as prescribed by experts"
+            android:justificationMode="inter_word"
+            android:textColor="@color/black" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:gravity="center"
+
+            android:textStyle="bold"
+            android:text="\u2022"
+            android:layout_marginRight="5dp"
+            android:textColor="@color/black" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="12dp"
+            android:text="Expert Forum for users to discuss the issues related to crop protection with registered domain experts"
+            android:justificationMode="inter_word"
+            android:textColor="@color/black" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:gravity="center"
+
+            android:textStyle="bold"
+            android:text="\u2022"
+            android:layout_marginRight="5dp"
+            android:textColor="@color/black" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="12dp"
+            android:text="Report and access real-time news related to crop protection fed by users and reviewed by experts"
+            android:justificationMode="inter_word"
+            android:textColor="@color/black" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:gravity="center"
+
+            android:textStyle="bold"
+            android:text="\u2022"
+            android:layout_marginRight="5dp"
+            android:textColor="@color/black" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="12dp"
+            android:text="National level repository of images of crop diseases"
+            android:justificationMode="inter_word"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+
+</LinearLayout>
+        <LinearLayout
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="2dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            tools:ignore="MissingConstraints">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+
+                android:scaleType="fitXY"
+                android:background="#80000000"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/globe_1" />
+
+            <TextView
+                android:id="@+id/latlon"
+                android:layout_width="wrap_content"
+                android:text="Unknown Location"
+                android:layout_height="20dp"
+                android:layout_marginLeft="5dp"
+                app:layout_constraintVertical_bias="0.0"
+                />
+
+        </LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/proceedButton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:backgroundTint="@color/greendark"
+            app:cornerRadius="20sp"
+            android:text="Proceed for Login/registration"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+
+
+    </LinearLayout>
+
+
+</ScrollView>

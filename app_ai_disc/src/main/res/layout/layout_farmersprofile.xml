@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:id="@+id/my_drawer_layout"
+    android:background="@drawable/backai1"
+
+    tools:ignore="HardcodedText">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pagerq"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="SpeakableTextPresentCheck">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout_model"
+            app:tabIndicatorGravity="top"
+            app:tabSelectedTextColor="@color/white"
+
+            app:tabTextColor="@color/black"
+            android:layout_width="match_parent"
+
+            app:tabMaxWidth="0dp"
+            app:tabGravity="fill"
+            app:tabMode="fixed"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/dot_dark_screen2"
+            android:textColor="@color/black"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+
+        <!--                <com.google.android.material.tabs.TabLayout-->
+        <!--                    android:id="@+id/tab_layout_model"-->
+        <!--                    android:layout_gravity="bottom"-->
+        <!--                    android:layout_width="match_parent"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    app:tabMode="fixed"-->
+        <!--                    >-->
+
+        <!--                    <com.google.android.material.tabs.TabItem-->
+        <!--                        android:layout_width="wrap_content"-->
+        <!--                        android:layout_height="wrap_content"-->
+        <!--                        android:text="tab_1"-->
+        <!--                        android:icon="@drawable/attachment"-->
+        <!--                        />-->
+
+        <!--                    <com.google.android.material.tabs.TabItem-->
+        <!--                        android:layout_width="wrap_content"-->
+        <!--                        android:layout_height="wrap_content"-->
+        <!--                        android:text="tab_2"-->
+        <!--                        android:icon="@drawable/attachment"-->
+        <!--                        />-->
+
+        <!--                    <com.google.android.material.tabs.TabItem-->
+        <!--                        android:layout_width="wrap_content"-->
+        <!--                        android:layout_height="wrap_content"-->
+        <!--                        android:text="tab_3"-->
+        <!--                        android:icon="@drawable/attachment"-->
+        <!--                        />-->
+        <!--                    <com.google.android.material.tabs.TabItem-->
+        <!--                        android:layout_width="wrap_content"-->
+        <!--                        android:layout_height="wrap_content"-->
+        <!--                        android:text="tab_3"-->
+        <!--                        android:icon="@drawable/attachment"-->
+        <!--                        />-->
+
+        <!--                </com.google.android.material.tabs.TabLayout>-->
+    </androidx.viewpager.widget.ViewPager>
+
+
+
+</RelativeLayout>
+
+
+    <com.google.android.material.navigation.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/navigation_drawer"
+        app:headerLayout="@layout/header_nav"
+        android:layout_gravity="start"
+        app:menu="@menu/menutop" />
+</androidx.drawerlayout.widget.DrawerLayout>

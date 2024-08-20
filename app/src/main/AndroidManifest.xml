@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="in.gov.mahapocra.farmerapppks">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.AD_ID" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION" /> <!-- <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> -->
+    <!-- Needed only if your app targets Android 5.0 (API level 21) or higher. -->
+    <uses-feature android:name="android.hardware.location.gps" />
+
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.hardware.location.network" />
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
+    <uses-permission android:name="android.permission.ACCESS_ASSISTED_GPS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.hardware.camera" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature android:name="android.hardware.camera.flash" />
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application
+        android:name=".AppDelegate"
+        android:allowBackup="true"
+        android:icon="@drawable/farmer_appfinal_logo"
+        android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.FarmerApp"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".activity.CropStageAcitvity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.FertilizerCalculatorAcitvity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.PestsAndDiseasesStages"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.DiseaseInformation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.CropStageAdvisory"
+            android:exported="false" />
+        <activity
+            android:name=".ai_disc_tp_imp.identify.Identify.Identify_dashboard"
+            android:exported="true" />
+        <activity
+            android:name=".ai_disc_tp_imp.identify.Identify.Identify_img_upload"
+            android:exported="true"
+            android:parentActivityName=".ai_disc_tp_imp.identify.Identify.Identify_dashboard" />
+        <activity
+            android:name=".ai_disc_tp_imp.identify.util.NetNotWorking"
+            android:exported="false"
+            android:label="@string/title_activity_internet_not_working"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ai_disc_tp_imp.identify.util.Cam"
+            android:exported="true"
+            android:parentActivityName=".ai_disc_tp_imp.identify.Identify.Identify_img_upload" /> <!-- <activity -->
+        <!-- android:name=".ai_disc_tp_imp.identify.InternetNotWorking" -->
+        <!-- android:exported="false" -->
+        <!-- android:label="@string/title_activity_internet_not_working" -->
+        <!-- android:screenOrientation="portrait" -->
+        <!-- android:theme="@style/AppTheme.NoActionBar" /> -->
+        <activity
+            android:name=".ai_disc_tp_imp.identify.farmerdiseasepestIdentify"
+            android:configChanges="screenLayout|orientation|screenSize"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ai_disc_tp_imp.identify.Identify.Result_identified"
+            android:exported="true"
+            android:parentActivityName=".ai_disc_tp_imp.identify.Identify.Identify_img_upload" />
+        <activity
+            android:name=".activity.SelectSowingDataAndFarmer"
+            android:exported="false" />
+        <activity
+            android:name=".activity.AddCropActivity"
+            android:exported="false" />
+        <activity android:name=".activity.NewUpdateKharip" />
+        <activity android:name=".activity.NewUpdateCRT" />
+        <activity android:name=".activity.CropAdvisoryDetails" />
+        <activity android:name=".activity.CropAdvisory" /> <!-- <activity android:name=".notification.ReadNotificationActivity"></activity> -->
+        <activity
+            android:name=".notification.PocraFarmerNews"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="PocraFarmerNews" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".notification.ReadNotificationActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="ReadNotificationActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".notification.NotificationListActivity" />
+        <activity
+            android:name=".activity.ViewStoriesBandavar"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.CropCurrentAdvisoryAndFeedback"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.BandavarActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ResilientWebUrl"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.UpcomingEventsDetails"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.UpcomingEvents"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.TrainingLocationSelection"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ClimateDetailsGrid"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.DbtStatus"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ClimateResilintTechnology"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.Grievances"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ConfirmPassword"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ForgetPassword"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MarketPrice"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.WeatherHome"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MyVillageProfilePdf"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.PocraVillages"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.DbtSchemes"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.DbtActivityDetails"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.HealthCardActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.Gis" />
+        <activity
+            android:name=".activity.Warehouse"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.AboutPocra"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.CommingSoonActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.LoginScreen"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_dashboard"
+            android:theme="@style/Theme.FarmerApp.NoActionBar" />
+
+        <service
+            android:name=".webServices.FBaseMessagingService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".activity.SplashScreen"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.Dashboard"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.DashboardScreen"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.MobileOTP"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.Registration"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MyVillageProfile"
+            android:screenOrientation="portrait" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.android.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+    </application>
+
+</manifest>

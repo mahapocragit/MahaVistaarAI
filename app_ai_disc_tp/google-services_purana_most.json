@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "679338914478",
+    "firebase_url": "https://project2-81724.firebaseio.com",
+    "project_id": "project2-81724",
+    "storage_bucket": "project2-81724.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:679338914478:android:10d1d7d760ec43d31b333f",
+        "android_client_info": {
+          "package_name": "com.ai.ai_disc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "679338914478-mntn26jdt5s0nrol4sr66opf33bkjnjm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmaoloWP8hgaj48Z5mBJWfDYlyv6P5bxo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "679338914478-mntn26jdt5s0nrol4sr66opf33bkjnjm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:679338914478:android:dfc601f8d85a47bb1b333f",
+        "android_client_info": {
+          "package_name": "com.icar.iasri.DiseaseTracking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "679338914478-mntn26jdt5s0nrol4sr66opf33bkjnjm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmaoloWP8hgaj48Z5mBJWfDYlyv6P5bxo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "679338914478-mntn26jdt5s0nrol4sr66opf33bkjnjm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

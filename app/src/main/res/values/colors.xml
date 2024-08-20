@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="watercolor"></color>
+
+    <color name="app_bg">#ecebeb</color>
+
+    <color name="grey_300">#E0E0E0</color>
+    <color name="rebranding_red">#ed1c24</color>
+
+    <!--Tab bar colors-->
+    <color name="line">#bebebe</color>
+    <color name="line_dim">#d6d5d5</color>
+    <color name="badge_bg">#0061b8</color>
+    <color name="greendark">#169B89</color>
+    <color name="card_bg">#cccccc</color>
+    <color name="text_black_light">#747474</color>
+    <color name="text_black">#4b4b4b</color>
+    <color name="black">#201f1f</color>
+    <color name="button_text">#e9e8e8</color>
+    <color name="heading_dark">#383737</color>
+    <color name="bottom_bg_color">#e9e9e9</color>
+    <color name="gray_tab">#cccbcb</color>
+    <color name="white_tab">#ffffff</color>
+    <color name="selected_tab">#2d2d2d</color>
+    <color name="login_bottom_bg">#14a895</color>
+    <color name="status_green">#1d6b08</color>
+    <color name="status_red">#e23d63</color>
+
+    <color name="white_dim">#ecebeb</color>
+    <color name="white_dim_light">#ececec</color>
+    <color name="white_dim_dark">#cccccc</color>
+    <color name="bg_button">#494949</color>
+    <color name="gray">#6e6b6b</color>
+    <color name="gray_light">#a7a5a5</color>
+    <color name="tab_gray">#696868</color>
+    <color name="heading">#7e7e7e</color>
+    <color name="heading_text">#009688</color>
+    <color name="light_green">#FF7EC828</color>
+    <color name="dim_light_green">#E3FED3</color>
+    <color name="transparent">#00000000</color>
+    <color name="transparent_green">#FFF5F7F2</color>
+
+    <color name="colorPrimary">#2a7ee6</color>
+    <color name="colorPrimaryDark">#76a5df</color>
+    <color name="colorAccent">#ffff8800</color>
+    <color name="zircon">#e0e6e4</color>
+    <color name="colorListBackground">#F7F7F7</color>
+    <color name="colorBackgroundTextView">#F3F8FC</color>
+    <color name="colorButtonBackground">#2c3e50</color>
+    <color name="colorTransparent">#00000000</color>
+
+    <color name="stroke_color_gray">#C0C0C0</color>
+    <color name="bg_green">#3d8724</color>
+    <color name="selected_light_green_color">#381BF727</color>
+
+    <color name="blue">#b2a1c7</color>
+
+    <color name="stepview_line_done">@android:color/white</color>
+    <color name="stepview_line_next">#26ffffff</color>
+    <color name="stepview_text_next">#40ffffff</color>
+    <color name="stepview_text_done">#40ffffff</color>
+    <color name="stepview_text_selected">@android:color/white</color>
+    <color name="stepview_circle_done">@android:color/white</color>
+    <color name="stepview_circle_selected">@android:color/white</color>
+    <color name="stepview_selected_number">#25448a</color>
+    <color name="stepview_mark">@color/stepview_selected_number</color>
+
+    <color name="colorPrimaryOrange">#CA6F1E</color>
+    <color name="brown">#964a3b</color>
+    <color name="red">#EE1209</color>
+    <color name="darkblue">#055d73</color>
+    <color name="dot_light_screen1">#8de7f9</color>
+    <color name="dot_dark_screen2">#14a895</color>
+    <color name="green">#98D850</color>
+    <color name="white1">#FFFFFF</color>
+    <color name="yeellowies">#F6EDA1</color>
+</resources>

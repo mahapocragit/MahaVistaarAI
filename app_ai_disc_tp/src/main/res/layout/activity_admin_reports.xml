@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    tools:context=".Fragment_reporting"
+    android:orientation="vertical">
+
+    <!--    <androidx.cardview.widget.CardView-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_marginTop="15dp"-->
+    <!--        android:layout_marginBottom="15dp"-->
+    <!--        android:layout_marginLeft="15dp"-->
+    <!--        android:layout_marginRight="15dp"-->
+    <!--        android:backgroundTint="@color/greendark"-->
+    <!--        android:layout_height="wrap_content">-->
+    <!--        <TextView-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_margin="5dp"-->
+    <!--            android:layout_marginBottom="20dp"-->
+    <!--            android:gravity="start"-->
+    <!--            android:justificationMode="inter_word"-->
+    <!--            android:text="@string/reporting_heading"-->
+    <!--            android:textColor="@color/white" />-->
+    <!--    </androidx.cardview.widget.CardView>-->
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No Reports"
+        android:layout_marginTop="200dp"
+        android:gravity="center"
+        android:textStyle="bold"
+
+        android:id="@+id/noreports"
+        android:textSize="20dp"/>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:id="@+id/refr">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="2dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:id="@+id/searchhere"
+
+                android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/imageView13"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:src="@android:drawable/ic_menu_close_clear_cancel" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="10"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:hint="Search here"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/searchtext"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12dp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:longClickable="false"
+
+                        tools:ignore="TouchTargetSizeCheck" />
+
+
+
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <ImageView
+                    android:id="@+id/searchbutton"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+
+                    app:srcCompat="@drawable/ic_baseline_content_paste_search_24" />
+
+
+
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/grid"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp" />
+        </LinearLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</RelativeLayout>

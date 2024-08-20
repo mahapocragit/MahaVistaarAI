@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <androidx.cardview.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="1dp"
+        android:layout_marginTop="2dp"
+        android:elevation="@dimen/height5"
+        android:background="@color/transparent_green"
+        card_view:cardCornerRadius="8dp">
+
+        <LinearLayout
+            android:id="@+id/lv_grid_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/grid_item_image"
+                android:layout_width="@dimen/height60"
+                android:layout_height="@dimen/height60"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/padding10"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/crop_advsry" />
+
+
+            <TextView
+                android:id="@+id/grid_item_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding11"
+                android:background="@color/light_green"
+                android:gravity="center"
+                android:padding="@dimen/padding5"
+                android:text="@string/crop_advisory"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text14"
+                android:textStyle="normal" />
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+</LinearLayout>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/fert_ln1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight=".5"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/fert_title"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/et_sqr_border_title"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="10sp"
+            android:hint=""
+            android:layout_margin="@dimen/padding1"
+            android:padding="1dp"
+            />
+
+        <TextView
+            android:id="@+id/fert_value1"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/et_sqr_border"
+            android:gravity="center"
+            android:layout_margin="@dimen/padding1"
+            android:padding="1dp"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/fert_ln2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight=".5"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/fert_title2"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/et_sqr_border_title"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="10sp"
+            android:hint=""
+            android:layout_margin="@dimen/padding1"
+            android:padding="1dp"
+            />
+
+        <TextView
+            android:id="@+id/fert_value2"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/et_sqr_border"
+            android:gravity="center"
+            android:layout_margin="@dimen/padding1"
+            android:padding="1dp"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fert_ln3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight=".5"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/fert_title3"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/et_sqr_border_title"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="10sp"
+            android:hint=""
+            android:layout_margin="@dimen/padding1"
+            android:padding="1dp"
+            />
+
+        <TextView
+            android:id="@+id/fert_value3"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/et_sqr_border"
+            android:gravity="center"
+            android:layout_margin="@dimen/padding1"
+            android:padding="1dp"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fert_ln4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight=".5"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/fert_title4"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/et_sqr_border_title"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="10sp"
+            android:hint="Total Estimated Cost"
+            android:layout_margin="@dimen/padding1"
+            android:padding="1dp"
+            />
+
+        <TextView
+            android:id="@+id/fert_value4"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/et_sqr_border"
+            android:gravity="center"
+            android:layout_margin="@dimen/padding1"
+            android:padding="1dp"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

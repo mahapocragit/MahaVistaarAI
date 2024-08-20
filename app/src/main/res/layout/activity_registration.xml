@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bottom_bg_color"
+    tools:context=".activity.Registration">
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:elevation="@dimen/height5"
+        android:gravity="center"
+        android:background="@color/transparent_green"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imageViewProfile"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/img_registration">
+        </ImageView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text20"
+            android:visibility="gone"
+            android:layout_marginTop="15dp"
+            android:textColor="@color/status_green"
+            android:text="Add Profile Picture">
+        </TextView>
+
+        <EditText
+            android:id="@+id/nameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/login_edit_bg"
+            android:digits="@string/name_validation"
+            android:gravity="center|start"
+            android:hint="@string/reg_name"
+            android:inputType="text"
+            android:elevation="8dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:maxLines="1"
+            android:maxLength="30"
+            android:textSize="@dimen/text12"
+            android:textColor="@color/black"
+            android:textColorHint="@color/text_black"
+            android:paddingStart="@dimen/padding20"
+            android:paddingEnd="@dimen/padding20" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/mobNoEditText"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/login_edit_bg"
+                android:digits="@string/numeric"
+                android:gravity="center|start"
+                android:elevation="8dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:textSize="@dimen/text12"
+                android:layout_weight="0.5"
+                android:hint="@string/reg_mobno"
+                android:textColor="@color/black"
+                android:textColorHint="@color/text_black"
+                android:inputType="number"
+                android:maxLength="10"
+                android:maxLines="1"
+                android:paddingStart="@dimen/padding20"
+                android:paddingEnd="@dimen/padding20" />
+
+            <TextView
+                android:id="@+id/textViewVerify"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:paddingLeft="5dp"
+                android:textSize="@dimen/text14"
+                android:background="@drawable/btn_bg"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_marginRight="@dimen/height20"
+                android:gravity="center"
+                android:layout_weight="1.5"
+                android:text="@string/reg_verify">
+
+            </TextView>
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/emailId"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/login_edit_bg"
+            android:gravity="center|start"
+            android:hint="@string/reg_email"
+            android:textColorHint="@color/text_black"
+            android:inputType="text"
+            android:elevation="8dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textSize="@dimen/text12"
+            android:maxLines="1"
+            android:paddingStart="@dimen/padding20"
+            android:textColor="@color/black"
+            android:paddingEnd="@dimen/padding20" />
+
+        <EditText
+            android:id="@+id/passwordEditText"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/login_edit_bg"
+            android:gravity="center|start"
+            android:hint="@string/reg_pwd"
+            android:textColorHint="@color/text_black"
+            android:inputType="textPassword"
+            android:elevation="8dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textSize="@dimen/text12"
+            android:maxLines="1"
+            android:paddingStart="@dimen/padding20"
+            android:paddingEnd="@dimen/padding20" />
+        <EditText
+            android:id="@+id/confirmPasswordEditText"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/login_edit_bg"
+            android:gravity="center|start"
+            android:hint="@string/confirm_password"
+            android:textColorHint="@color/text_black"
+            android:inputType="textPassword"
+            android:elevation="8dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textSize="@dimen/text12"
+            android:maxLines="1"
+            android:paddingStart="@dimen/padding20"
+            android:paddingEnd="@dimen/padding20" />
+
+
+        <!--        <com.google.android.material.textfield.TextInputLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginLeft="@dimen/padding15"-->
+        <!--            android:layout_marginTop="@dimen/padding10"-->
+        <!--            android:layout_marginRight="@dimen/padding15"-->
+        <!--            android:textColorHint="@color/text_black"-->
+        <!--            app:hintTextAppearance="@style/TextLabel">-->
+
+        <!--            <EditText-->
+        <!--                android:id="@+id/mNameEditText"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="70dp"-->
+        <!--                android:background="@drawable/login_edit_bg"-->
+        <!--                android:gravity="center|start"-->
+        <!--                android:hint="Enter Your Email ID"-->
+        <!--                android:inputType="text"-->
+        <!--                android:maxLines="1"-->
+        <!--                android:paddingStart="@dimen/padding20"-->
+        <!--                android:paddingEnd="@dimen/padding20" />-->
+
+        <!--        </com.google.android.material.textfield.TextInputLayout>-->
+
+        <!--        <TextView-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginStart="@dimen/padding20"-->
+        <!--            android:layout_marginLeft="@dimen/padding20"-->
+        <!--            android:layout_marginTop="@dimen/padding10"-->
+        <!--            android:gravity="center|start"-->
+        <!--            android:hint="Are you a farmer ?"-->
+        <!--            android:maxLines="1"-->
+        <!--            android:textColor="@color/text_black"-->
+        <!--            android:textSize="@dimen/text16"-->
+        <!--            android:textStyle="bold" />-->
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!--            <TextView-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="@dimen/padding10"-->
+            <!--                android:gravity="start|center"-->
+            <!--                android:paddingEnd="@dimen/padding20"-->
+            <!--                android:paddingStart="@dimen/padding20"-->
+            <!--                android:text="District"-->
+            <!--                android:textColor="@color/heading"-->
+            <!--                android:textSize="@dimen/text16"-->
+            <!--                android:textStyle="bold" />-->
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/height5"
+                android:elevation="8dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/textViewDist"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/drop_down"
+                    android:gravity="start|center"
+                    android:hint="@string/farmer_select_district"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:paddingEnd="@dimen/padding20"
+                    android:paddingStart="@dimen/padding20"
+
+                    android:textColorHint="@color/text_black"
+                    android:textColor="@color/heading"
+                    android:textSize="@dimen/text14"
+                    android:textStyle="normal" />
+
+                <ImageView
+                    android:id="@+id/imageviewDist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/padding30"
+                    android:contentDescription="@string/app_name"
+                    app:srcCompat="@drawable/ic_expand_more_black_24dp"
+                    tools:ignore="VectorDrawableCompat"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/padding30"
+                    app:tint="@color/gray" />
+
+            </RelativeLayout>
+
+            <!--            <TextView-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="@dimen/padding10"-->
+            <!--                android:gravity="start|center"-->
+            <!--                android:paddingEnd="@dimen/padding20"-->
+            <!--                android:paddingStart="@dimen/padding20"-->
+            <!--                android:text="Taluka"-->
+            <!--                android:textColor="@color/heading"-->
+            <!--                android:textSize="@dimen/text16"-->
+            <!--                android:textStyle="bold" />-->
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/height5"
+                android:elevation="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewTaluka"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/drop_down"
+                    android:gravity="start|center"
+                    android:hint="@string/farmer_select_taluka"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="10dp"
+                    android:textColorHint="@color/text_black"
+                    android:paddingEnd="@dimen/padding20"
+                    android:paddingStart="@dimen/padding20"
+                    android:textColor="@color/heading"
+                    android:textSize="@dimen/text14"
+                    android:textStyle="normal" />
+
+                <ImageView
+                    android:id="@+id/imageviewTaluka"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/padding30"
+                    android:contentDescription="@string/app_name"
+                    app:srcCompat="@drawable/ic_expand_more_black_24dp"
+                    tools:ignore="VectorDrawableCompat"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/padding30"
+                    app:tint="@color/gray" />
+
+            </RelativeLayout>
+
+            <!--            <TextView-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="@dimen/padding10"-->
+            <!--                android:gravity="start|center"-->
+            <!--                android:paddingEnd="@dimen/padding20"-->
+            <!--                android:paddingStart="@dimen/padding20"-->
+            <!--                android:text="Village"-->
+            <!--                android:textColor="@color/heading"-->
+            <!--                android:textSize="@dimen/text16"-->
+            <!--                android:textStyle="bold" />-->
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewVillage"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/drop_down"
+                    android:gravity="start|center"
+                    android:hint="@string/farmer_select_village"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="15dp"
+                    android:textColorHint="@color/text_black"
+                    android:paddingEnd="@dimen/padding20"
+                    android:paddingStart="@dimen/padding20"
+                    android:textColor="@color/heading"
+                    android:textSize="@dimen/text14"
+                    android:textStyle="normal" />
+
+                <ImageView
+                    android:id="@+id/imageviewVillage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/padding30"
+                    android:contentDescription="@string/app_name"
+                    app:srcCompat="@drawable/ic_expand_more_black_24dp"
+                    tools:ignore="VectorDrawableCompat"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/padding30"
+                    app:tint="@color/gray" />
+
+            </RelativeLayout>
+            <Button
+                android:id="@+id/submitButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="30dp"
+                android:padding="@dimen/padding12"
+                android:backgroundTint="@color/light_green"
+                android:text="@string/reg_submit"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text16" />
+        </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
+</LinearLayout>
+

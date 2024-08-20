@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".activity.PestsAndDiseasesStages">
+    <include
+        android:id="@+id/relativeLayoutTopBar"
+        layout="@layout/layout_toolbar" />
+
+    <TextView
+        android:id="@+id/tvCropName"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/height30"
+        android:layout_marginTop="@dimen/height5"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:padding="@dimen/padding3"
+        android:paddingRight="@dimen/padding2"
+        android:text="@string/Crop_name"
+        android:textColor="@color/black"
+        android:background="@drawable/text_bg_with_border"
+        android:textSize="@dimen/text14"
+        android:textStyle="italic">
+    </TextView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/height10"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/disease_stage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/Pests_n_diseases_by_stage"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text16">
+                </TextView>
+                <TextView
+                    android:id="@+id/tvAgroMetAdvisory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/different_stages_text"></TextView>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/diseasesByStage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/height5"
+                    android:scrollbarAlwaysDrawHorizontalTrack="true"
+                    android:scrollbarStyle="insideOverlay"
+                    android:scrollbars="vertical">
+                </androidx.recyclerview.widget.RecyclerView>
+
+            </LinearLayout>
+        </LinearLayout>

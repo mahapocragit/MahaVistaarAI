@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/date_title1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight=".5"
+        android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/date_title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/et_sqr_border_title"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="10sp"
+        android:hint="Zone Name"
+        android:layout_margin="@dimen/padding1"
+        android:padding="1dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_rainfall"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/et_sqr_border"
+        android:gravity="center"
+        android:layout_margin="@dimen/padding1"
+        android:padding="1dp"
+        android:textSize="10sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:id="@+id/tv_max_temp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/et_sqr_border"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_margin="@dimen/padding1"
+        android:padding="1dp"
+        android:textColor="@color/black"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:id="@+id/tv_min_temp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/et_sqr_border"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:layout_margin="@dimen/padding1"
+        android:textColor="@color/black"
+        android:padding="1dp"
+        android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/tv_humidity"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/et_sqr_border"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:layout_margin="@dimen/padding1"
+            android:textColor="@color/black"
+            android:padding="1dp"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/tv_humidity2"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/et_sqr_border"
+            android:gravity="center"
+            android:visibility="gone"
+            android:textStyle="bold"
+            android:layout_margin="@dimen/padding1"
+            android:textColor="@color/black"
+            android:padding="1dp"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/tv_wind_speed"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/et_sqr_border"
+            android:gravity="center"
+            android:visibility="gone"
+            android:textStyle="bold"
+            android:layout_margin="@dimen/padding1"
+            android:textColor="@color/black"
+            android:padding="1dp"
+            android:textSize="10sp" />
+
+
+        <TextView
+            android:id="@+id/tv_wind_direct"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/et_sqr_border"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:layout_margin="@dimen/padding1"
+            android:textColor="@color/black"
+            android:padding="1dp"
+            android:visibility="gone"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/tv_cloud_covr"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/et_sqr_border"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:layout_margin="@dimen/padding1"
+            android:textColor="@color/black"
+            android:padding="1dp"
+            android:visibility="gone"
+            android:textSize="10sp" />
+
+    </LinearLayout>
+
+</RelativeLayout>

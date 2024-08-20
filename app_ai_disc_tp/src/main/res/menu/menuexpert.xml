@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:showAsAction="always"
+    tools:showIn="navigation_drawer">
+
+
+    <item android:title="Activities" >
+        <menu>
+            <item
+                android:id="@+id/editme"
+                android:icon="@drawable/ic_baseline_co_present_24"
+                android:title="My Profile" />
+
+            <item
+                android:id="@+id/history"
+                android:icon="@drawable/ic_baseline_receipt_long_24"
+                android:title="History" />
+            <item
+                android:id="@+id/appointment"
+                android:icon="@drawable/videocalling"
+                android:title="Appointment" />
+
+            <item
+                android:id="@+id/logout1"
+                android:icon="@drawable/ic_baseline_login_24"
+                android:title="Sign Out" />
+        </menu>
+    </item>
+
+    <item android:title="About AI-DISC "><menu>
+        <item
+            android:id="@+id/about_us1"
+            android:icon="@drawable/ic_baseline_supervised_user_circle_24"
+            android:title="About us" />
+        <item
+            android:id="@+id/contributor"
+            android:icon="@drawable/ic_baseline_engineering_24"
+            android:title="Credits" />
+        <item
+            android:id="@+id/help1"
+            android:icon="@drawable/ic_baseline_call_24"
+            android:title="Help Desk"
+
+            />
+
+    </menu>
+
+    </item>
+    <item android:title="Powered by,"><menu>
+        <item
+            android:gravity="center"
+
+            android:title="NIBPP and KRISHIMEGH"
+            />
+        <item
+            android:gravity="center"
+            android:textColor="@color/greendark"
+            android:title="Version: 17.5"
+            />
+    </menu>
+
+    </item>
+</menu>

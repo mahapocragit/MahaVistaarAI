@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">ilab-mlp-api.pocra.work</domain>
+        <domain includeSubdomains="true">ilab-sso.mahapocra.gov.in</domain>
+        <domain includeSubdomains="true">ilab-sma-api.mahapocra.gov.in</domain>
+        <domain includeSubdomains="true">api-ffs.mahapocra.gov.in</domain>
+
+        <domain includeSubdomains="true">api-mlp.mahapocra.gov.in</domain>
+        <domain includeSubdomains="true">sso.mahapocra.gov.in</domain>
+        <domain includeSubdomains="true">api-sma.mahapocra.gov.in</domain>
+        <domain includeSubdomains="true">dbt-api.mahapocra.gov.in</domain>
+        <domain includeSubdomains="true">mahapocra.gov.in</domain>
+        <domain includeSubdomains="true">dbt.mahapocra.gov.in</domain>
+        <domain includeSubdomains="true">kisan.wotr.org.in</domain>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+</network-security-config>

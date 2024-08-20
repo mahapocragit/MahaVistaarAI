@@ -1,0 +1,691 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.ai.ai_disc">
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="33" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="33" />
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
+    <uses-feature android:name="android.hardware.camera" />
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.MANAGE_OWN_CALLS" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+
+    <application
+        android:name=".my_application"
+        android:allowBackup="false"
+        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:requestLegacyExternalStorage="true"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="false"
+        tools:replace="android:allowBackup">
+        <activity
+            android:name=".identify.Result_identified"
+            android:parentActivityName=".identify.Identify_img_upload"
+            android:exported="true" />
+        <activity
+            android:name=".util.Cam"
+            android:exported="true"
+            android:parentActivityName=".identify.Identify_img_upload" />
+        <activity
+            android:name=".util.NetNotWorking"
+            android:exported="true" />
+        <activity
+            android:name=".identify.Identify_img_upload"
+            android:exported="true"
+            android:parentActivityName=".identify.Identify_dashboard" />
+        <activity
+            android:name=".identify.Identify_dashboard"
+            android:exported="true" />
+        <activity
+            android:name=".admin_reports"
+            android:exported="false" />
+        <activity
+            android:name=".adminDashboard"
+            android:exported="false" />
+        <activity
+            android:name=".MultiChat_adminQuery_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".admin_identify"
+            android:exported="false" />
+        <activity
+            android:name=".admin_chats"
+            android:exported="false" />
+        <activity
+            android:name=".admin_chat"
+            android:exported="false" />
+
+        <receiver
+            android:name=".MyNotificationPublisher"
+            android:exported="false" />
+        <receiver
+            android:name=".MyReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
+        <activity
+            android:name=".alarmservice"
+            android:exported="false" />
+        <activity
+            android:name=".farmer_appointment"
+            android:exported="false" />
+        <activity
+            android:name=".my_reports"
+            android:exported="false" />
+        <activity
+            android:name=".sendnotification"
+            android:exported="false" />
+        <activity
+            android:name=".add_token"
+            android:exported="false" />
+        <activity
+            android:name="com.karumi.dexter.DexterActivity"
+            android:exported="false"
+            android:theme="@style/Dexter.Internal.Theme.Transparent" />
+
+        <meta-data
+            android:name="com.bumptech.glide.integration.okhttp3.OkHttpGlideModule"
+            android:value="GlideModule" />
+
+        <activity
+            android:name="org.jitsi.meet.sdk.JitsiMeetActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"
+            android:supportsPictureInPicture="true"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+
+        <service
+            android:name="org.jitsi.meet.sdk.ConnectionService"
+            android:exported="true"
+            android:permission="android.permission.BIND_TELECOM_CONNECTION_SERVICE">
+            <intent-filter>
+                <action android:name="android.telecom.ConnectionService" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="org.jitsi.meet.sdk.JitsiMeetOngoingConferenceService"
+            android:exported="true"
+            android:foregroundServiceType="mediaProjection" />
+
+        <activity
+            android:name=".policy"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".disclaimer"
+            android:exported="false" />
+        <activity
+            android:name=".expertprofile_fragment"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Result_identify1"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".farmerdiseasepestIdentify1"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MultiChat_ExpertQuery_Activity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".expert_appointment"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".report_page"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".create_report"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Farmer.Account_expert"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Admin_profile"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".expert_setting"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".history" />
+
+        <activity
+            android:name=".afternotification"
+            android:exported="false"
+            android:label="notifying"
+            android:parentActivityName=".history"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".history_page"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".history"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".contributor"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".webview"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".needHelp"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".booikingdone"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".appointment"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".reportglobeview"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".myreports"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".reportfarmerdisease"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".reportfarmerdisease_new"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".editprofile"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".setMaps"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".farmerdiseasepestIdentify"
+            android:configChanges="screenLayout|orientation|screenSize"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Farmer.Farmer_Disease_identifier_pest_Identifier_Activity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Farmer.Expert_ReceivedQueryActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Farmer.send_query2_layout"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Farmer.list_of_query"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Farmer.head_query_details_and_reply"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Farmer.head_image_selected_query"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Farmer.Selected_query_details1"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Farmer.image_selected_query_details"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Farmer.head_query_list"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Farmer.FarmerSendQueryCropListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Farmer.FarmerSendQuryChooseImageOrVideoActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Farmer.Farmer_SendQueryDashboard"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Farmer.Farmer_Expert_QueryListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Farmer.Farmer_DiseasIdentifier_profile1"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".farmersprofile_fragment"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".farmersprofile_fragment1"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Farmer.Proceed_Activity_Registeration"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Farmer.Farmer_RegisterationPageActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Farmer.Farmer_LoginActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Result_identify"
+            android:exported="false"
+            android:label="@string/title_activity_result_identify"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".uploadimagereport"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Forgot_password"
+            android:exported="false"
+            android:label="@string/title_activity_forgot_password"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Welcome_screen"
+            android:exported="false"
+            android:label="@string/title_activity_welcome_screen"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
+        -->
+        <activity
+            android:name=".MapsActivity2"
+            android:exported="false"
+            android:label="@string/title_activity_maps2"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Expert_profile"
+            android:exported="false"
+            android:label="@string/title_activity_expert_profile"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Update_App"
+            android:exported="false"
+            android:label="@string/title_activity_update__app"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".About_us1"
+            android:exported="false"
+            android:label="@string/title_activity_about_us1"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".InternetNotWorking"
+            android:exported="false"
+            android:label="@string/title_activity_internet_not_working"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Detect_disease_info"
+            android:exported="false"
+            android:label="@string/title_activity_detect_disease_info"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Upload_activity"
+            android:exported="false"
+            android:keepScreenOn="true"
+            android:label="@string/title_activity_upload_activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Upload_image_validator"
+            android:exported="false"
+            android:label="@string/title_activity_upload_image_validator"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".All_in_one_annotation"
+            android:exported="false"
+            android:label="@string/title_activity_all_in_one_annotation"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".identify.BlankActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Transparent">
+
+            <!-- android:theme="@style/SplashTheme"> -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".See_annotation_admin"
+            android:exported="false"
+            android:label="@string/title_activity_see_annotation_admin"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".image_view"
+            android:exported="false"
+            android:label="@string/title_activity_image_view"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".See_annotation"
+            android:exported="false"
+            android:label="@string/title_activity_see_annotation"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Draw_image"
+            android:exported="false"
+            android:label="@string/title_activity_draw_image"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CAM2"
+            android:exported="false"
+            android:label="@string/title_activity_cam2"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Disease_list"
+            android:exported="false"
+            android:label="@string/title_activity_disease_list"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Login"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Image_activity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MultiChat_FarmerExpertQuery_Activity"
+            android:exported="false"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".VC.Call_by_expert"
+            android:exported="false"
+            android:label="@string/title_activity_call_by_expert"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".VC.expert_list"
+            android:exported="false"
+            android:label="@string/title_activity_expert_list"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".VC.List_request"
+            android:exported="false"
+            android:label="@string/title_activity_list_request"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".VC.Incoming"
+            android:exported="false"
+            android:label="@string/title_activity_incoming"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".VC.Outgoing"
+            android:exported="false"
+            android:label="@string/title_activity_outgoing"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".VC.Expert_profile"
+            android:exported="false"
+            android:label="@string/title_activity_expert_profile"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".VC.Farmer_profile"
+            android:exported="false"
+            android:label="@string/title_activity_farmer_profile"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Videoconference.Call_by_expert"
+            android:exported="false"
+            android:label="@string/title_activity_call_by_expert"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Videoconference.expert_list"
+            android:exported="false"
+            android:label="@string/title_activity_expert_list"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Videoconference.expert_signup"
+            android:exported="false"
+            android:label="@string/title_activity_expert_signup"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Videoconference.List_request"
+            android:exported="false"
+            android:label="@string/title_activity_list_request"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Videoconference.Incoming"
+            android:exported="false"
+            android:label="@string/title_activity_incoming"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Videoconference.Outgoing"
+            android:exported="false"
+            android:label="@string/title_activity_outgoing"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Videoconference.Expert_profile"
+            android:exported="false"
+            android:label="@string/title_activity_expert_profile"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Videoconference.Farmer_profile"
+            android:exported="false"
+            android:label="@string/title_activity_farmer_profile"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".VC.ListOfCropsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_farmer_profile"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Videoconference.Login_VideoCalling"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+
+            <!--
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            -->
+        </activity>
+        <activity
+            android:name=".Videoconference.VCActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Videoconference.signup"
+            android:exported="false"
+            android:label="@string/title_activity_signup"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Videoconference.MainActivity"
+            android:exported="false"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <service
+            android:name=".Videoconference.MyFirebaseMessagingService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".VC.MyFirebaseMessagingService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.google.firebase.components.ComponentDiscoveryService"
+            android:exported="false">
+            <meta-data
+                android:name="com.google.firebase.components:com.google.firebase.analytics.connector.internal.AnalyticsConnectorRegistrar"
+                android:value="com.google.firebase.components.ComponentRegistrar" />
+        </service>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <provider
+            android:name="com.google.mlkit.common.internal.MlKitInitProvider"
+            android:authorities="${applicationId}.mlkitinitprovider"
+            android:exported="false"
+            android:initOrder="99" />
+
+        <service
+            android:name="com.google.mlkit.common.internal.MlKitComponentDiscoveryService"
+            android:directBootAware="true"
+            android:exported="false"
+            tools:targetApi="n">
+            <meta-data
+                android:name="com.google.firebase.components:com.google.mlkit.common.internal.CommonComponentRegistrar"
+                android:value="com.google.firebase.components.ComponentRegistrar" />
+        </service>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+    </application>
+
+</manifest>
