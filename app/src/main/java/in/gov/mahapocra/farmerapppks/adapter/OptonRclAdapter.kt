@@ -31,6 +31,7 @@ class OptonRclAdapter (
         )
         return ViewHolder(view)
     }
+
     override fun getItemCount(): Int {
         return fertilizerCalacaltedValue?.length()!!
     }
@@ -80,8 +81,10 @@ class OptonRclAdapter (
             listener.onMultiRecyclerViewItemClick(1,fertilizerCalacaltedValue?.get(position))
         })
     }
+
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
         TODO("Not yet implemented")
     }
+
 
 }

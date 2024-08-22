@@ -64,11 +64,7 @@ public class ClimateGridAdapter extends ArrayAdapter<ClimateGridModel> {
                         intent.putExtra("id",Integer.parseInt(ClimateGridModel.getWebUrl()));
                         String currentString = ClimateGridModel.getClimate_name();
                         String[] separated = currentString.split("\n");
-                        if (separated.length > 1) {
-                            intent.putExtra("name", separated[1]);
-                        } else {
-                            intent.putExtra("name", currentString);
-                        }
+                        intent.putExtra("name",separated[1]);
                         mContext.startActivity(intent);
                     }
                 });

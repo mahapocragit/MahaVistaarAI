@@ -108,7 +108,7 @@ public class farmerdiseasepestIdentify extends AppCompatActivity implements Navi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_identify_disease);
-       // getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("AI-DISC");
         img_cv = findViewById(R.id.img_card_view);
 
@@ -128,7 +128,7 @@ public class farmerdiseasepestIdentify extends AppCompatActivity implements Navi
         actionBarDrawerToggle.syncState();
 
         // to make the Navigation drawer icon always appear on the action bar
-       // getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_drawer2);
         View head=navigationView.getHeaderView(0);

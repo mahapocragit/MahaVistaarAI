@@ -66,9 +66,11 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.View
     public class ViewHolder extends RecyclerView.ViewHolder{
         private final TextView gridText;
         private final ImageView gridImage;
+
         public ViewHolder(View view)
         {
             super(view);
+
             gridText = (TextView)view.findViewById(R.id.grid_text);
             gridImage = (ImageView) view.findViewById(R.id.grid_image);
         }

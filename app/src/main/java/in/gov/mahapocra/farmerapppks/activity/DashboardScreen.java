@@ -192,14 +192,13 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                     Intent weather = new Intent(DashboardScreen.this, WeatherHome.class);
                     startActivity(weather);
                 } else if (position == 1) {
+
                     Intent i = new Intent(getApplicationContext(), Identify_dashboard.class);
                     startActivity(i);
 
                 } else if (position == 2) {
-                    AppSettings.getInstance().setValue(DashboardScreen.this, AppConstants.tmpCropSearchType, "GeneralSearchCropDetail");
-                    Intent intent = new Intent(DashboardScreen.this, AddCropActivity.class);
-                   // intent.putExtra("GeneralCropDetail", "GeneralCropDetail");
-                    startActivity(intent);
+                    Intent sharing = new Intent(DashboardScreen.this, CommingSoonActivity.class);
+                    startActivity(sharing);
                 }
                 else if (position == 3) {
                     Intent sharing = new Intent(DashboardScreen.this, CommingSoonActivity.class);
@@ -265,13 +264,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         aboutPocraText1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(DashboardScreen.this, AboutPocra.class);
-//                startActivity(intent);
-
-                Intent intent = new Intent(DashboardScreen.this, ResilientWebUrl.class);
-                Bundle b = new Bundle();
-                b.putSerializable("webUrl", "https://dbt.mahapocra.gov.in/FarmerLogin/FarmerLogin.aspx?T=I&D=1#");
-                intent.putExtras(b);
+                Intent intent = new Intent(DashboardScreen.this, AboutPocra.class);
                 startActivity(intent);
             }
         });
