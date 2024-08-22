@@ -160,22 +160,9 @@
             android:background="@drawable/dashboard_button"
             android:gravity="center"
             android:padding="@dimen/height5"
-            android:text="Pocra DBT"
+            android:text="@string/about_pocra"
             android:textColor="@color/white"
             android:textSize="@dimen/text16" />
-
-<!--        <TextView-->
-<!--            android:id="@+id/textAboutPocra"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="40dp"-->
-<!--            android:layout_marginRight="@dimen/height10"-->
-<!--            android:layout_weight="0.5"-->
-<!--            android:background="@drawable/dashboard_button"-->
-<!--            android:gravity="center"-->
-<!--            android:padding="@dimen/height5"-->
-<!--            android:text="@string/about_pocra"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:textSize="@dimen/text16" />-->
 
         <TextView
             android:id="@+id/textMyvillage"

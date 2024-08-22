@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.makeramen.roundedimageview.RoundedTransformationBuilder
@@ -22,9 +21,6 @@ import `in`.gov.mahapocra.farmerapppks.activity.CropStageAdvisory
 import `in`.gov.mahapocra.farmerapppks.activity.SelectSowingDataAndFarmer
 import `in`.gov.mahapocra.farmerapppks.models.response.CropsCategName
 import org.json.JSONException
-import `in`.co.appinventor.services_api.settings.AppSettings
-import `in`.gov.mahapocra.farmerapppks.activity.PestsAndDiseasesStages
-import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 
 
 class VideosImageDetailsAdpter(
@@ -58,7 +54,7 @@ class VideosImageDetailsAdpter(
 
     @SuppressLint("SuspiciousIndentation")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-       var cropSearchType : String = AppSettings.getInstance().getValue(context, AppConstants.tmpCropSearchType, AppConstants.tmpCropSearchType)
+
         try {
             holder.titleTextView.setText(moviesImageList?.get(position)?.getmName())
 //            context?.let {
@@ -88,25 +84,7 @@ class VideosImageDetailsAdpter(
                     intent.putExtra("mUrl", moviesImageList?.get(position)?.getmUrl())
                     intent.putExtra("mName", moviesImageList?.get(position)?.getmName())
                     context?.startActivity(intent)
-                } else if(cropSearchType.equals("GeneralSearchCropDetail")){
-                    AppSettings.getInstance().setIntValue(context, AppConstants.tmpCROPID,
-                        moviesImageList?.get(position)?.id!!
-                    )
-                    AppSettings.getInstance().setValue(context, AppConstants.tmpWOTRID, moviesImageList?.get(position)?.wotr_id)
-                    AppSettings.getInstance().setValue(context, AppConstants.tmpMURL, moviesImageList?.get(position)?.getmUrl())
-                    AppSettings.getInstance().setValue(context, AppConstants.tmpCROPNAME,  moviesImageList?.get(position)?.getmName())
-
-
-                    val intent = Intent(context, PestsAndDiseasesStages::class.java)
-                    intent.putExtra("cropId", moviesImageList?.get(position)?.id!!)
-                    intent.putExtra("wotr_crop_id", moviesImageList?.get(position)?.wotr_id)
-                    intent.putExtra("mUrl",moviesImageList?.get(position)?.getmUrl())
-                    intent.putExtra("mName", moviesImageList?.get(position)?.getmName())
-                    context?.startActivity(intent)
-
-
-                }
-                else{
+                }else{
                     val intent = Intent(context, SelectSowingDataAndFarmer::class.java)
                     intent.putExtra("id", moviesImageList?.get(position)?.id)
                     intent.putExtra("wotr_crop_id", moviesImageList?.get(position)?.wotr_id)

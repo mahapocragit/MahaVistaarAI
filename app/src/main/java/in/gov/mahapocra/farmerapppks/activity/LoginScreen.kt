@@ -284,16 +284,20 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         }
     }
     private fun addVerificationDialog(sentOTP: String) {
+        Log.d("sentOTP", sentOTP)
         dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
+        Log.d("sentOTP111", sentOTP)
         dialog.setContentView(R.layout.dialog_activity_verification)
         dialog.window!!.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
+
         val dialogTitle = dialog.findViewById<TextView>(R.id.dialogTitle)
         dialogTitle.setText(resources.getString(R.string.enterOtp))
+        Log.d("sentOTP22222", sentOTP)
 
         val revcieveOTPEditText = dialog.findViewById<EditText>(R.id.OptEditText)
         val submitButton = dialog.findViewById<Button>(R.id.submitButton)

@@ -33,6 +33,4 @@ public interface AppConstants {
     String tmpSOWINGDATE = "tmpSOWINGDATE";
     String tmpMURL = "tmpMURL";
     String tmpCROPNAME = "tmpCROPNAME";
-
-    String tmpCropSearchType = "tmpCropSearchType";
 }

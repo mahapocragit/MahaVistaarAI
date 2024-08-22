@@ -4,12 +4,12 @@
 4
 5    <uses-sdk
 6        android:minSdkVersion="16"
-6-->D:\Shivmurat_old_user_data\Studio_git_project\farmers-java-android\app\libs\appinventorapi\src\main\AndroidManifest.xml
+6-->C:\Users\HP\AndroidStudioProjects\pocra_farmer_app\app\libs\appinventorapi\src\main\AndroidManifest.xml
 7        android:targetSdkVersion="33" />
-7-->D:\Shivmurat_old_user_data\Studio_git_project\farmers-java-android\app\libs\appinventorapi\src\main\AndroidManifest.xml
+7-->C:\Users\HP\AndroidStudioProjects\pocra_farmer_app\app\libs\appinventorapi\src\main\AndroidManifest.xml
 8
 9    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-9-->D:\Shivmurat_old_user_data\Studio_git_project\farmers-java-android\app\libs\appinventorapi\src\main\AndroidManifest.xml:5:5-79
-9-->D:\Shivmurat_old_user_data\Studio_git_project\farmers-java-android\app\libs\appinventorapi\src\main\AndroidManifest.xml:5:22-76
+9-->C:\Users\HP\AndroidStudioProjects\pocra_farmer_app\app\libs\appinventorapi\src\main\AndroidManifest.xml:5:5-79
+9-->C:\Users\HP\AndroidStudioProjects\pocra_farmer_app\app\libs\appinventorapi\src\main\AndroidManifest.xml:5:22-76
 10
 11</manifest>

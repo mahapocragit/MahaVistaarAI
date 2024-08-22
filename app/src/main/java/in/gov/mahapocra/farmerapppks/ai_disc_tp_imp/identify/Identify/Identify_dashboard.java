@@ -32,7 +32,6 @@ import in.gov.mahapocra.farmerapppks.activity.DashboardScreen;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.Farmer.RecyclerTouchListener;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.adapter.DashboardAdapter;
 
-import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.detection_instance;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.farmerdiseasepestIdentify;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.model_identify.Model_Dashboard;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.model_identify.detect_ins;
@@ -138,21 +137,6 @@ public class Identify_dashboard extends AppCompatActivity {
             intent.putExtra("number",numb);
             intent.putExtra("farmerIdentification","Farmer_prediction");
             startActivity(intent);*/
-
-
-                String cropprediction="disease"+"detection"+name.replace(" ", "");;
-                Intent gotopage =new Intent( this, farmerdiseasepestIdentify.class);
-                gotopage.putExtra("crop",name);
-                gotopage.putExtra("type","disease");
-                gotopage.putExtra("url",cropprediction.toLowerCase());
-                gotopage.putExtra("farmerIdentification","Farmer_prediction");
-
-                detection_instance.getInstance().settype("disease");
-                detection_instance.getInstance().setcrop(name);
-                detection_instance.getInstance().setnumb(numb);
-                detection_instance.getInstance().setdetection("Farmer_prediction");
-                detection_instance.getInstance().seturl(cropprediction.toLowerCase());
-                startActivity(gotopage);
             }
         }
 
