@@ -57,7 +57,7 @@
                     android:visibility="visible" />
 
                 <TextView
-                    android:id="@+id/showingDateTv"
+                    android:id="@+id/sowingDateTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -68,7 +68,7 @@
                     android:textStyle="bold" />
 
                 <ImageView
-                    android:id="@+id/editCropImg"
+                    android:id="@+id/editCropImageView"
                     android:layout_width="25dp"
                     android:layout_height="@dimen/height25"
                     android:layout_gravity="center"
@@ -121,7 +121,7 @@
                     android:orientation="vertical">
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/cropStages"
+                        android:id="@+id/cropStagesRecyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/height5"
@@ -145,7 +145,7 @@
 
 
                             <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/cropStagesDescrption"
+                                android:id="@+id/cropStagesInfoRecyclerView"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_marginLeft="@dimen/height20"
@@ -158,7 +158,7 @@
                                 android:scrollbars="horizontal"></androidx.recyclerview.widget.RecyclerView>
 
                             <LinearLayout
-                                android:id="@+id/comming_soon_LinearLayout1"
+                                android:id="@+id/coming_soon_LinearLayout1"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_below="@+id/linLayGridView"
@@ -191,7 +191,7 @@
 <!--            </ScrollView>-->
 
             <LinearLayout
-                android:id="@+id/comming_soon_LinearLayout"
+                android:id="@+id/coming_soon_LinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/linLayGridView"
