@@ -539,11 +539,7 @@ public class AppUtility {
     public void showDisabledFutureDatePicker(Context context, Date date, final int requestCode, final DatePickerRequestListener callbackListener) {
         Calendar calender = Calendar.getInstance();
         Context context2 = context;
-        DatePickerDialog datePickerDialog1 = new DatePickerDialog(context2, new DatePickerDialog.OnDateSetListener() {
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                callbackListener.onDateSelected(requestCode, dayOfMonth, monthOfYear + 1, year);
-            }
-        }, calender.get(1), calender.get(2), calender.get(5));
+        DatePickerDialog datePickerDialog1 = new DatePickerDialog(context2, (view, year, monthOfYear, dayOfMonth) -> callbackListener.onDateSelected(requestCode, dayOfMonth, monthOfYear + 1, year), calender.get(1), calender.get(2), calender.get(5));
         datePickerDialog1.getDatePicker().setMaxDate(date.getTime());
         datePickerDialog1.show();
     }
@@ -572,11 +568,7 @@ public class AppUtility {
         }
         final DatePickerRequestListener datePickerRequestListener = callbackListener;
         final int i = requestCode;
-        DatePickerDialog datePickerDialog1 = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                datePickerRequestListener.onDateSelected(i, dayOfMonth, monthOfYear + 1, year);
-            }
-        }, mYear, mMonth, mDay);
+        DatePickerDialog datePickerDialog1 = new DatePickerDialog(context, (view, year, monthOfYear, dayOfMonth) -> datePickerRequestListener.onDateSelected(i, dayOfMonth, monthOfYear + 1, year), mYear, mMonth, mDay);
         datePickerDialog1.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         datePickerDialog1.show();
     }
@@ -688,7 +680,6 @@ public class AppUtility {
         Log.v("DateTime", "End Date : " + endDate + " ,  MS:" + newDate.getTimeInMillis());
         return diff;
     }
-
 
 
     public String appVersionNumber(Context context) {
@@ -1695,6 +1686,7 @@ public class AppUtility {
         }
         return value;
     }
+
     public JSONArray sanitizeArrayJSONObj(JSONObject jsonObject, String key) {
         JSONArray value = null;
         try {
@@ -1715,6 +1707,7 @@ public class AppUtility {
         sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
         return sb.toString();
     }
+
     public String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = new CursorLoader(context, contentUri, new String[]{"_data"}, (String) null, (String[]) null, (String) null).loadInBackground();
         int column_index = cursor.getColumnIndexOrThrow("_data");
@@ -1840,6 +1833,7 @@ public class AppUtility {
 
         return filePath.getAbsolutePath();
     }
+
     public String saveImageToDirAndSystemGallery(Context context, Bitmap capturedBitmap, String dirPath, String fileName) {
         OutputStream fOutputStream = null;
         File filePath = new File(dirPath, fileName);
@@ -1967,7 +1961,7 @@ public class AppUtility {
         StringBuilder sb = new StringBuilder(name.toLowerCase());
         if (sb.length() < 1) {
             System.out.println("next line is empty");
-        }else {
+        } else {
             sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
         }
         return sb.toString();

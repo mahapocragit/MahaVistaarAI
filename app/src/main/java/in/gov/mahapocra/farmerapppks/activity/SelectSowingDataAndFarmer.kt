@@ -26,6 +26,7 @@ import `in`.gov.mahapocra.farmerapppks.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
+import `in`.gov.mahapocra.farmerapppks.databinding.ActivitySelectSowingDataAndFarmerBinding
 import `in`.gov.mahapocra.farmerapppks.fragment.advisory.rating2
 import `in`.gov.mahapocra.farmerapppks.models.response.CropsCategName
 import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
@@ -39,80 +40,56 @@ import java.util.Objects
 
 class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener, ApiCallbackCode {
 
-    lateinit var textViewSowingDate: TextView
-    lateinit var calenderForSowingDate: LinearLayout
-    private lateinit var farmName: EditText
-    lateinit var saveTextBt: Button
-    var sowingDate: String = ""
+    private lateinit var binding: ActivitySelectSowingDataAndFarmerBinding
+    private var sowingDate: String = ""
     val date = Date()
     var cropId: Int? = 0
-    var wotrCropId:  String? =null
-    var mName: String? =null
-    var mUrl: String? =null
-    var selectedCropData: String? =null
-    var editCrop: String? =null
-    lateinit var selectedCropList: ArrayList<CropsCategName>
-    lateinit var textViewHeaderTitle: TextView
-
-    private  var farmerId:Int=0
+    private var farmerId: Int = 0
+    private var wotrCropId: String? = null
+    private var mName: String? = null
+    private var mUrl: String? = null
+    private var editCrop: String? = null
+    private lateinit var selectedCropList: ArrayList<CropsCategName>
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_select_sowing_data_and_farmer)
+        binding = ActivitySelectSowingDataAndFarmerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        textViewSowingDate = findViewById(R.id.textViewSowingDate)
-        calenderForSowingDate = findViewById(R.id.calenderForSowingDate)
-        textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
-        saveTextBt = findViewById(R.id.saveFarm)
-        //farmName = findViewById(R.id.farmName)
-
-
-        cropId = intent.getIntExtra("id",0)
-       wotrCropId = intent.getStringExtra("wotr_crop_id")
+        cropId = intent.getIntExtra("id", 0)
+        wotrCropId = intent.getStringExtra("wotr_crop_id")
         mUrl = intent.getStringExtra("mUrl")
         mName = intent.getStringExtra("mName")
         editCrop = intent.getStringExtra("editCrop")
 
-        textViewHeaderTitle.setText(resources.getString(R.string.select_sowing_date))
-
-//        calenderForSowingDate.setOnClickListener {
-//            AppUtility.getInstance().showDisabledFutureDatePicker(
-//                this,
-//                date,
-//                1,
-//                this
-//            )
-//        }
-
+        binding.relativeLayoutTopBar.textViewHeaderTitle.text =
+            resources.getString(R.string.select_sowing_date)
         AppUtility.getInstance().showDisabledFutureDatePicker(
             this,
             date,
             1,
             this
         )
-
-
-
-
-
-
-
-        saveTextBt.setOnClickListener {
-          //  var farmNamr: String = farmName.text.toString()
-
-        saveFarmerSelectedCrop()
-
-
+        binding.saveDateForFarmButton.setOnClickListener {
+            saveFarmerSelectedCrop()
+        }
+        binding.calenderForSowingDate.setOnClickListener {
+            AppUtility.getInstance().showDisabledFutureDatePicker(
+                this,
+                date,
+                1,
+                this
+            )
         }
     }
 
     private fun saveFarmerSelectedCrop() {
         val jsonObject = JSONObject()
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-        if (sowingDate.equals("")){
+        if (sowingDate.isEmpty()) {
             UIToastMessage.show(this, resources.getString(R.string.farmer_select_date))
-        }else {
+        } else {
             try {
                 jsonObject.put("farmer_id", farmerId)
                 jsonObject.put("sowing_date", sowingDate)
@@ -132,7 +109,7 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
                 DebugLog.getInstance()
                     .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
             } catch (e: JSONException) {
-                DebugLog.getInstance().d("JSONException=" + e.toString())
+                DebugLog.getInstance().d("JSONException=$e")
                 e.printStackTrace()
             }
         }
@@ -140,12 +117,12 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
 
 
     override fun onDateSelected(i: Int, day: Int, month: Int, year: Int) {
-                if (i == 1) { 
+        if (i == 1) {
             Log.d("i2", day.toString())
             Log.d("i3", month.toString())
             Log.d("i4", year.toString())
-            sowingDate = "" + year + "-" + month + "-" + day
-            textViewSowingDate.text = sowingDate
+            sowingDate = "$year-$month-$day"
+            binding.textViewSowingDate.text = sowingDate
         }
     }
 
@@ -157,14 +134,14 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
         if (i == 1 && jSONObject != null) {
             val response = ResponseModel(jSONObject)
             if (response.status) {
-                if (response.response.equals("crop saved")){
-                    var selectedArrayLists : List<Objects>? = null
-                    selectedArrayLists =  AppSettings.getInstance()?.getList(this, AppConstants.kFarmerCrop) as?  List<Objects>
-                    if (!(selectedArrayLists == null)) {
-                        Log.d("selectedArrayListsss", selectedArrayLists.toString())
+                if (response.response.equals("crop saved")) {
+                    var selectedArrayLists: List<Objects>? = null
+                    selectedArrayLists = AppSettings.getInstance()
+                        ?.getList(this, AppConstants.kFarmerCrop) as? List<Objects>
+                    if (selectedArrayLists != null) {
                         selectedCropList = ArrayList<CropsCategName>()
                         if (selectedArrayLists.equals("selectedArrayLists")) {
-                            selectedCropList.add(CropsCategName(cropId!!, mName, mUrl,wotrCropId))
+                            selectedCropList.add(CropsCategName(cropId!!, mName, mUrl, wotrCropId))
                         } else {
                             val gson = Gson()
                             val element = gson.toJson(
@@ -174,34 +151,35 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
                             val listType =
                                 object : TypeToken<java.util.ArrayList<CropsCategName?>?>() {}.type
                             selectedCropList = Gson().fromJson(element, listType)
-                            selectedCropList.add(CropsCategName(cropId!!, mName, mUrl,wotrCropId))
+                            selectedCropList.add(CropsCategName(cropId!!, mName, mUrl, wotrCropId))
                             Log.d("selectedCropList", selectedCropList.toString())
-                            AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop,
+                            AppSettings.getInstance().setList(
+                                this, AppConstants.kFarmerCrop,
                                 selectedCropList as List<CropsCategName>?
                             )
                         }
-                    }else {
-                        selectedCropList = ArrayList<CropsCategName>()
-                        selectedCropList.add(CropsCategName(cropId!!, mName, mUrl,wotrCropId))
+                    } else {
+                        selectedCropList = ArrayList()
+                        selectedCropList.add(CropsCategName(cropId!!, mName, mUrl, wotrCropId))
                         AppSettings.getInstance().setList(
                             this, AppConstants.kFarmerCrop,
                             selectedCropList as List<CropsCategName>?
                         )
                     }
-            Toast.makeText(this, response.response, Toast.LENGTH_SHORT)
-                .show()
-                    if(editCrop.equals("EditCrop")){
+                    Toast.makeText(this, response.response, Toast.LENGTH_SHORT)
+                        .show()
+                    if (editCrop.equals("EditCrop")) {
                         val intent = Intent(this, CropStageAdvisory::class.java)
                         intent.putExtra("id", cropId)
                         intent.putExtra("mUrl", mUrl)
-                        intent.putExtra("mName",mName)
-                        intent.putExtra("wotrCropId",wotrCropId)
+                        intent.putExtra("mName", mName)
+                        intent.putExtra("wotrCropId", wotrCropId)
                         startActivity(intent)
-                    }else {
+                    } else {
                         val intent = Intent(this, DashboardScreen::class.java)
                         startActivity(intent)
                     }
-                }else{
+                } else {
                     UIToastMessage.show(this, response.response)
                 }
 
@@ -210,5 +188,4 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
             }
         }
     }
-
 }
