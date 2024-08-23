@@ -342,6 +342,8 @@ public class AppUtility {
                 throw th;
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
             }
         }
         return null;
@@ -1200,7 +1202,8 @@ public class AppUtility {
         return MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(fileName).toString());
     }
 
-    public String getFileName(Context mContext, Uri uri) {
+    @SuppressLint("Range")
+    public String getFileName(Context mContext, Uri uri) throws Throwable {
         String result = null;
         if (uri.getScheme().equals("content")) {
             Cursor cursor = mContext.getContentResolver().query(uri, (String[]) null, (String) null, (String[]) null, (String) null);
