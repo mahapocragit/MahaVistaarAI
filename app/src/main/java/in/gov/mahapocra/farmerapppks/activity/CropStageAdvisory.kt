@@ -48,7 +48,8 @@ class CropStageAdvisory : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerI
     private var villageID: Int = 0
     private var sowingDate: String = ""
     lateinit var languageToLoad: String
-    private val arrayCategory = arrayOf("Crop Advisory", "Fertilizer Calculator", "Crop Management", "Pests and Diseases")
+    private val arrayCategory =
+        arrayOf("Crop Advisory", "Fertilizer Calculator", "Crop Management", "Pests and Diseases")
     private val arrayCategoryMarathi =
         arrayOf("पीक सल्ला", "खत मात्रा गणक (कॅलक्यूलेटर)", "पीक व्यवस्थापन", "कीड व रोग")
     private var arrayCategoryImg = intArrayOf(
