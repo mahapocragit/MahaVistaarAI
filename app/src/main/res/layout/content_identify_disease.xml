@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ai_disc_tp_imp.identify.farmerdiseasepestIdentify"
+    tools:context=".ai_disc_tp_imp.identify.FarmerPestDiseaseIdentify"
     tools:showIn="@layout/activity_identify_disease">
 
     <LinearLayout

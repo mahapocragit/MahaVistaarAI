@@ -7,6 +7,8 @@ public interface AppConstants {
     String kAPP_BUILD_VERSION = "kAPP_BUILD_VERSION";
     String fREGISTER_ID = "fREGISTER_ID";
 
+    int CAMERA_PERMISSION_REQUEST_CODE = 100;
+
     String uName = "USER_NAME";
     String uMobileNo = "USER_MOBILE";
     String uEmail = "USER_EMAIL";

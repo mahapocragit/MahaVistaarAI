@@ -7,7 +7,7 @@
     android:id="@+id/my_drawer_layout2"
     android:background="@drawable/backai1"
     tools:ignore="HardcodedText"
-    tools:context=".ai_disc_tp_imp.identify.farmerdiseasepestIdentify">
+    tools:context=".ai_disc_tp_imp.identify.FarmerPestDiseaseIdentify">
 
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     android:layout_width="match_parent"

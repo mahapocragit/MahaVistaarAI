@@ -78,7 +78,7 @@
         <!-- android:screenOrientation="portrait" -->
         <!-- android:theme="@style/AppTheme.NoActionBar" /> -->
         <activity
-            android:name=".ai_disc_tp_imp.identify.farmerdiseasepestIdentify"
+            android:name=".ai_disc_tp_imp.identify.FarmerPestDiseaseIdentify"
             android:configChanges="screenLayout|orientation|screenSize"
             android:exported="false"
             android:screenOrientation="portrait" />

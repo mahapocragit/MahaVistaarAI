@@ -5,9 +5,6 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.media.RingtoneManager.getDefaultUri;
 
 import android.annotation.TargetApi;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -45,9 +42,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 
 
 import com.androidnetworking.AndroidNetworking;
@@ -260,7 +255,7 @@ public class Result_identify extends AppCompatActivity {
                         popDialog1.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent gotopage =new Intent(Result_identify.this, farmerdiseasepestIdentify.class);
+                                Intent gotopage =new Intent(Result_identify.this, FarmerPestDiseaseIdentify.class);
                                 startActivity(gotopage);
                                 finish();
 
@@ -280,7 +275,7 @@ public class Result_identify extends AppCompatActivity {
                     popDialog1.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Intent gotopage =new Intent(Result_identify.this, farmerdiseasepestIdentify.class);
+                            Intent gotopage =new Intent(Result_identify.this, FarmerPestDiseaseIdentify.class);
                             startActivity(gotopage);
                             finish();
 
@@ -298,7 +293,7 @@ public class Result_identify extends AppCompatActivity {
                 popDialog1.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent gotopage =new Intent(Result_identify.this, farmerdiseasepestIdentify.class);
+                        Intent gotopage =new Intent(Result_identify.this, FarmerPestDiseaseIdentify.class);
                         startActivity(gotopage);
                         finish();
 
@@ -438,7 +433,7 @@ public class Result_identify extends AppCompatActivity {
             @Override
             public void onClick(View view)
             {
-                Intent gotopage=new Intent(Result_identify.this,farmerdiseasepestIdentify.class);
+                Intent gotopage=new Intent(Result_identify.this, FarmerPestDiseaseIdentify.class);
 
                 startActivity(gotopage);
                 finish();
@@ -1548,7 +1543,7 @@ public class Result_identify extends AppCompatActivity {
                         popDialog1.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent gotopage =new Intent(Result_identify.this, farmerdiseasepestIdentify.class);
+                                Intent gotopage =new Intent(Result_identify.this, FarmerPestDiseaseIdentify.class);
                                 startActivity(gotopage);
                                 finish();
 

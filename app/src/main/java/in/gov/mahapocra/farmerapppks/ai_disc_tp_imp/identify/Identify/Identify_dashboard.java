@@ -32,14 +32,12 @@ import in.gov.mahapocra.farmerapppks.activity.DashboardScreen;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.Farmer.RecyclerTouchListener;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.adapter.DashboardAdapter;
 
-import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.farmerdiseasepestIdentify;
+import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.FarmerPestDiseaseIdentify;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.model_identify.Model_Dashboard;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.model_identify.detect_ins;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.model_identify.getIdentify_crops_response;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.model_identify.identify_model_croplist;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.vw_model.identify_croplist;
-import in.gov.mahapocra.farmerapppks.notification.NotificationListActivity;
-import in.gov.mahapocra.farmerapppks.notification.ReadNotificationActivity;
 
 
 public class Identify_dashboard extends AppCompatActivity {
@@ -114,7 +112,7 @@ public class Identify_dashboard extends AppCompatActivity {
         } else {
             if (numb == 2) {
                 String cropprediction = "pest" + "_detection_" + name.replace(" ", "");
-                Intent gotopage = new Intent(this, farmerdiseasepestIdentify.class);
+                Intent gotopage = new Intent(this, FarmerPestDiseaseIdentify.class);
                 gotopage.putExtra("crop", name);
                 gotopage.putExtra("type", "pest");
                 gotopage.putExtra("url", cropprediction.toLowerCase());
@@ -241,4 +239,10 @@ public class Identify_dashboard extends AppCompatActivity {
         //Log.d("after",croplist.toString());
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, DashboardScreen.class);
+        startActivity(intent);
+    }
 }

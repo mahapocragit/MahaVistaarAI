@@ -40,12 +40,12 @@ public class DashboardAdapter extends BaseAdapter {
 
 
             // set value into textview
-            final TextView textView = (TextView) gridView
+            final TextView textView = gridView
                     .findViewById(R.id.grid_item_label);
             textView.setText(mobileValues[position]);
 
             // set image based on selected text
-            ImageView imageView = (ImageView) gridView
+            ImageView imageView = gridView
                     .findViewById(R.id.grid_item_image);
             imageView.setImageResource(mobileImg[position]);
             notifyDataSetChanged();
@@ -105,7 +105,7 @@ public class DashboardAdapter extends BaseAdapter {
 //            }
 
         } else {
-            gridView = (View) convertView;
+            gridView = convertView;
         }
         return gridView;
     }

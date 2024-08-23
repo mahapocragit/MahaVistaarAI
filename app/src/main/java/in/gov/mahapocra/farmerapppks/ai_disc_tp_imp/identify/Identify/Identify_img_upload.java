@@ -20,26 +20,18 @@ import android.view.Surface;
 
 
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
-import com.google.android.gms.tasks.OnFailureListener;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.label.ImageLabel;
@@ -55,14 +47,16 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import java.util.List;
 import java.util.Map;
+
 import in.gov.mahapocra.farmerapppks.R;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.model_identify.detect_ins;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.model_identify.dis_predct_model;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.model_identify.user;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.util.Cam;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.util.IntReceiver;
+import in.gov.mahapocra.farmerapppks.app_util.AppConstants;
+import in.gov.mahapocra.farmerapppks.databinding.ActivityIdentifyImgUploadBinding;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -70,112 +64,77 @@ import io.reactivex.schedulers.Schedulers;
 public class Identify_img_upload extends AppCompatActivity {
 
     private static final String TAG = "Identify_disease";
+    private ActivityIdentifyImgUploadBinding binding;
     String crop = "";
     String user_id = "";
-
-    String farmerIdentificationString="";
-    String type="";
-    String url="";
+    String farmerIdentificationString = "";
+    String type = "";
+    String url = "";
     Bitmap bitmap;
-    LinearLayout lin1;
-    LinearLayout headview;
     IntReceiver internet;
     String selected_disease = "";
-    TextView title_severity, warning,warnbox;
-    LinearLayout severity_layout,disease_layout;
-    TextView title_disease;
-    Button take_photo, select_from_gallery,another;
-    ImageView image;////////////////////////////////////////
     ProgressDialog progressDialog;
-    Button upload;
     String file_path = "";
     String file_path_string = "";
     String url_model = "";
-    CardView img_cv;
     private String urls;
-    public DrawerLayout drawerLayout;
-    public ActionBarDrawerToggle actionBarDrawerToggle;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
+
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 0);
         ORIENTATIONS.append(Surface.ROTATION_90, 90);
         ORIENTATIONS.append(Surface.ROTATION_180, 180);
         ORIENTATIONS.append(Surface.ROTATION_270, 270);
     }
+
     String selected_severity_level = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_identify_img_upload);
-
+        binding = ActivityIdentifyImgUploadBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        requestCameraPermission();
         setTitle("AI-DISC");
-     //   getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        img_cv = findViewById(R.id.img_card_view);
-
         internet = new IntReceiver();
+        binding.warningHeadingTextView.setVisibility(View.GONE);
 
-        lin1 = (LinearLayout) findViewById(R.id.linlay1);
-        headview=findViewById(R.id.heading1);
-        TextView crppp=findViewById(R.id.crppp);
-        warnbox=findViewById(R.id.warning);
-        warnbox.setVisibility(View.GONE);
-
-        try{
+        try {
             Intent intent = getIntent();
             Bundle data = intent.getExtras();
             crop = data.getString("crop");
-            farmerIdentificationString=data.getString("farmerIdentification");
-            type=data.getString("type");
-            url=data.getString("url");
-            crppp.setText("Crop : "+crop);
+            farmerIdentificationString = data.getString("farmerIdentification");
+            type = data.getString("type");
+            url = data.getString("url");
+            binding.cropNameTextView.setText("Crop : " + crop);
 
         } catch (Exception e) {
             e.printStackTrace();
             try {
                 crop = detect_ins.getInstance().getcrop();
-                type=detect_ins.getInstance().gettype();
-                url=detect_ins.getInstance().geturl();
+                type = detect_ins.getInstance().gettype();
+                url = detect_ins.getInstance().geturl();
                 farmerIdentificationString = detect_ins.getInstance().getdetection();
-                crppp.setText("Crop : "+crop);
+                binding.cropNameTextView.setText("Crop : " + crop);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
         }
-
-        if(farmerIdentificationString!=null )
-        {
-
-        }
-        take_photo = (Button) findViewById(R.id.button);
-        select_from_gallery = (Button) findViewById(R.id.button1);
-        another=findViewById(R.id.tryanother);
-        another.setVisibility(View.GONE);
-        another.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent gotopage =new Intent(Identify_img_upload.this, Identify_img_upload.class);
-                startActivity(gotopage);
-                finish();
-
-            }
+        binding.tryAgainButton.setVisibility(View.GONE);
+        binding.tryAgainButton.setOnClickListener(view -> {
+            Intent gotopage = new Intent(Identify_img_upload.this, Identify_img_upload.class);
+            startActivity(gotopage);
+            finish();
         });
-        warning=findViewById(R.id.warningmsg);
-        warning.setVisibility(View.GONE);
-        image = (ImageView) findViewById(R.id.image);
-
-
-        upload = (Button) findViewById(R.id.upload);
-        progressDialog=new ProgressDialog(Identify_img_upload.this);
+        binding.warningDescriptionTextView.setVisibility(View.GONE);
+        progressDialog = new ProgressDialog(Identify_img_upload.this);
         user_id = user.getInstance().getUser_id();
-        upload.setVisibility(View.GONE);
-
+        binding.identifyButton.setVisibility(View.GONE);
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 
-
-        upload.setOnClickListener(new View.OnClickListener() {
+        binding.identifyButton.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("CheckResult")
             @Override
             public void onClick(View v) {
@@ -183,162 +142,118 @@ public class Identify_img_upload extends AppCompatActivity {
                 progressDialog.setCancelable(false);
                 progressDialog.setMessage("Uploading..");
                 progressDialog.show();
-                upload.setEnabled(false);
-                ///////////////// to add google identifier of crop
+                binding.identifyButton.setEnabled(false);
 
-                url_model="https://aidisc.krishimegh.in:32517/"+url;
-                Log.d(TAG, "upload onClick: "+url_model);
-
+                url_model = "https://aidisc.krishimegh.in:32517/" + url;
                 Observable.fromCallable(() -> {
-
-                            // System.out.println(" inside from callable is:" + Thread.currentThread().getName());
-                            // upload_image_data(file_path,upload,progressBar);
-
                             converting_string(file_path);
-
                             return false;
                         }).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe((result) ->
-                        {
-                            if (bitmap!=null){
-                                InputImage image = InputImage.fromBitmap(bitmap,0 );
-                                ImageLabeler labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS);
-                                labeler.process(image).addOnSuccessListener(new OnSuccessListener<List<ImageLabel>>() {
-                                            @Override
-                                            public void onSuccess(List<ImageLabel> imageLabels) {
-                                                //Log.d("Google Model Output:",imageLabels.getClass().getCanonicalName());
-                                                // Log.d("Google Model Output:",imageLabels.toString());
-                                                ArrayList<String> obj=new ArrayList<>();
-                                                Map<String,Float> myMap = new HashMap<>();
-                                                ArrayList<Float> scores = new ArrayList<>();
-                                                for (ImageLabel label : imageLabels) {
-                                                    String text = label.getText();
-                                                    Float conf = label.getConfidence();
-                                                    System.out.println(text+" : "+ conf);
-                                                    myMap.put(text,conf);
-                                                    obj.add(text);
-                                                }
-                                                // Log.d("Google Model Output:",obj.toString());
-                                                if (!obj.isEmpty()) {
-                                                    //Log.d(TAG, "not empty");
-                                                    if (obj.contains("Plant") || obj.contains("Vegetable") || obj.contains("Fruit") || obj.contains("Insect")) {
-                                                        System.out.println("confidence: "+myMap.get("Plant"));
-                                                        if (obj.contains("Forest") || obj.contains("Jungle") || obj.contains("Garden") || obj.contains("Field")) {
-                                                            //Log.d(TAG,obj.toString());
-                                                            progressDialog.cancel();
-                                                            afterJungleForestimage();
+                                {
+                                    if (bitmap != null) {
+                                        InputImage image = InputImage.fromBitmap(bitmap, 0);
+                                        ImageLabeler labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS);
+                                        labeler.process(image).addOnSuccessListener(imageLabels -> {
+                                                    ArrayList<String> obj = new ArrayList<>();
+                                                    Map<String, Float> myMap = new HashMap<>();
+                                                    for (ImageLabel label : imageLabels) {
+                                                        String text = label.getText();
+                                                        Float conf = label.getConfidence();
+                                                        System.out.println(text + " : " + conf);
+                                                        myMap.put(text, conf);
+                                                        obj.add(text);
+                                                    }
+                                                    if (!obj.isEmpty()) {
+                                                        if (obj.contains("Plant") || obj.contains("Vegetable") || obj.contains("Fruit") || obj.contains("Insect")) {
+                                                            System.out.println("confidence: " + myMap.get("Plant"));
+                                                            if (obj.contains("Forest") || obj.contains("Jungle") || obj.contains("Garden") || obj.contains("Field")) {
+                                                                progressDialog.cancel();
+                                                                afterJungleForestImage();
+                                                            } else {
+                                                                upload_image_data(url_model, user_id, selected_disease, selected_severity_level, type);
+                                                            }
                                                         } else {
-                                                            upload_image_data(url_model, user_id, selected_disease, selected_severity_level, type);
+                                                            progressDialog.cancel();
+                                                            afterFalseImage();
+
                                                         }
                                                     } else {
                                                         progressDialog.cancel();
-                                                        afterfalseimage();
-
+                                                        afterNoObj();
                                                     }
-                                                } else {
+                                                })
+                                                .addOnFailureListener(e -> {
                                                     progressDialog.cancel();
-                                                    afterNoObj();
-                                                }
-
-                                            }
-                                        })
-
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                //Toast.makeText(farmerdiseasepestIdentify.this, "Error !!! ", Toast.LENGTH_LONG).show();
-
-                                                progressDialog.cancel();
-                                                afterfalseimage();
-                                            }
-                                        });
-                            }
-                            //Use result for something
-                            //
-                        }
-
-
+                                                    afterFalseImage();
+                                                });
+                                    }
+                                }
                         );
-               // progressDialog.cancel();
             }
         });
 
-        take_photo.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v) {
-                if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.S) {
+        binding.takePhotoButton.setOnClickListener(v -> {
+            if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.S) {
+                Intent intent = new Intent(Identify_img_upload.this, Cam.class);
+                startActivityForResult(intent, 4);
+            } else {
+                if (checking_permision()) {
                     Intent intent = new Intent(Identify_img_upload.this, Cam.class);
                     startActivityForResult(intent, 4);
-                } else {
-                    if (checking_permision()) {
-                        Intent intent = new Intent(Identify_img_upload.this, Cam.class);
-                        startActivityForResult(intent, 4);
-
-                    }
                 }
             }
         });
 
+        binding.openGalleryButton.setOnClickListener(v -> {
+            if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.S) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "SELECT IMAGE"), 1);
+            } else {
+                if (ContextCompat.checkSelfPermission(Identify_img_upload.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(Identify_img_upload.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
 
-        select_from_gallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.S) {
+                } else {
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
                     startActivityForResult(Intent.createChooser(intent, "SELECT IMAGE"), 1);
-                } else {
-                    if (ContextCompat.checkSelfPermission(Identify_img_upload.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(Identify_img_upload.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
-
-                    } else {
-                        Intent intent = new Intent();
-                        intent.setType("image/*");
-                        intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(Intent.createChooser(intent, "SELECT IMAGE"), 1);
-                    }
-
-
-                }}
+                }
+            }
         });
 
     }
 
 
-    private void afterfalseimage(){
-        upload.setVisibility(View.GONE);
-        lin1.setVisibility(View.GONE);
-        headview.setVisibility(View.GONE);
-        warning.setVisibility(View.GONE);
-        warnbox.setVisibility(View.GONE);
-        another.setVisibility(View.GONE);
+    private void afterFalseImage() {
+        binding.identifyButton.setVisibility(View.GONE);
+        binding.identifyCropLinearLayout.setVisibility(View.GONE);
+        binding.uploadImageLinearLayout.setVisibility(View.GONE);
+        binding.warningDescriptionTextView.setVisibility(View.GONE);
+        binding.warningHeadingTextView.setVisibility(View.GONE);
+        binding.tryAgainButton.setVisibility(View.GONE);
 
         final AlertDialog.Builder popDialog1 = new AlertDialog.Builder(Identify_img_upload.this);
         popDialog1.setIcon(R.drawable.error_1);
         popDialog1.setTitle("WARNING!!");
         popDialog1.setMessage("Your image doesn't contain any plant parts. Please try again with appropriate images");
-        popDialog1.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent gotopage =new Intent(Identify_img_upload.this, Identify_img_upload.class);
-                startActivity(gotopage);
-                finish();
-
-            }
+        popDialog1.setPositiveButton("OK", (dialog, which) -> {
+            Intent gotoPage = new Intent(Identify_img_upload.this, Identify_img_upload.class);
+            startActivity(gotoPage);
+            finish();
         }).show();
     }
 
-    private void afterJungleForestimage(){
-
-        upload.setVisibility(View.GONE);
-        lin1.setVisibility(View.GONE);
-        headview.setVisibility(View.GONE);
-        warning.setVisibility(View.GONE);
-        warnbox.setVisibility(View.GONE);
-        another.setVisibility(View.GONE);
+    private void afterJungleForestImage() {
+        binding.identifyButton.setVisibility(View.GONE);
+        binding.identifyCropLinearLayout.setVisibility(View.GONE);
+        binding.uploadImageLinearLayout.setVisibility(View.GONE);
+        binding.warningDescriptionTextView.setVisibility(View.GONE);
+        binding.warningHeadingTextView.setVisibility(View.GONE);
+        binding.tryAgainButton.setVisibility(View.GONE);
         final AlertDialog.Builder popDialog1 = new AlertDialog.Builder(Identify_img_upload.this);
         popDialog1.setIcon(R.drawable.error_1);
         popDialog1.setTitle("WARNING!!");
@@ -346,7 +261,7 @@ public class Identify_img_upload extends AppCompatActivity {
         popDialog1.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent gotopage =new Intent(Identify_img_upload.this, Identify_img_upload.class);
+                Intent gotopage = new Intent(Identify_img_upload.this, Identify_img_upload.class);
                 startActivity(gotopage);
                 finish();
 
@@ -354,25 +269,28 @@ public class Identify_img_upload extends AppCompatActivity {
         }).show();
     }
 
-    private void afterNoObj(){
-        upload.setVisibility(View.GONE);
-        lin1.setVisibility(View.GONE);
-        headview.setVisibility(View.GONE);
-        warning.setVisibility(View.GONE);
-        warnbox.setVisibility(View.GONE);
-        another.setVisibility(View.GONE);
+    private void requestCameraPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+                    AppConstants.CAMERA_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    private void afterNoObj() {
+        binding.identifyButton.setVisibility(View.GONE);
+        binding.identifyCropLinearLayout.setVisibility(View.GONE);
+        binding.uploadImageLinearLayout.setVisibility(View.GONE);
+        binding.warningDescriptionTextView.setVisibility(View.GONE);
+        binding.warningHeadingTextView.setVisibility(View.GONE);
+        binding.tryAgainButton.setVisibility(View.GONE);
         final AlertDialog.Builder popDialog1 = new AlertDialog.Builder(Identify_img_upload.this);
         popDialog1.setIcon(R.drawable.error_1);
         popDialog1.setTitle("WARNING!!");
         popDialog1.setMessage("Objects in the image are too close. Try to capture the symptomatic region of crop within the rectangular box");
-        popDialog1.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent gotopage =new Intent(Identify_img_upload.this, Identify_img_upload.class);
-                startActivity(gotopage);
-                finish();
-
-            }
+        popDialog1.setPositiveButton("OK", (dialog, which) -> {
+            Intent gotoPage = new Intent(Identify_img_upload.this, Identify_img_upload.class);
+            startActivity(gotoPage);
+            finish();
         }).show();
     }
 
@@ -413,30 +331,21 @@ public class Identify_img_upload extends AppCompatActivity {
                 Toast.makeText(Identify_img_upload.this, "Error in converting ", Toast.LENGTH_LONG).show();
                 file_path_string = "";
             }
-        } else {
-           // System.out.println("...");
         }
     }
 
-    private void upload_image_data(String url, String user_id, String selected_disease, String selected_severity_level, String type)
-    {
-        urls=url;
-        if (file_path_string.isEmpty())
-        {
-            upload.setEnabled(true);
+    private void upload_image_data(String url, String user_id, String selected_disease, String selected_severity_level, String type) {
+        urls = url;
+        if (file_path_string.isEmpty()) {
+            binding.identifyButton.setEnabled(true);
             progressDialog.cancel();
             return;
         }
 
         String image_proper = file_path_string.replaceAll("\n", "");
-        System.out.println("imageFile "  + "  " + image_proper);
-        String paths="";
-
+        System.out.println("imageFile " + "  " + image_proper);
         JSONObject object = new JSONObject();
         try {
-           /* object.put("image_file", image_proper);
-            object.put("crop_name", crop);*/
-
             object.put("crop_name", crop);
             object.put("image_file", image_proper);
             object.put("user_id", "9010");
@@ -449,45 +358,29 @@ public class Identify_img_upload extends AppCompatActivity {
         AndroidNetworking.post("https://aidisc.krishimegh.in:32517/detect_crops")
                 .addJSONObjectBody(object)
                 .build()
-                .getAsJSONObject(new JSONObjectRequestListener()
-                {
+                .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
-                    public void onResponse(JSONObject response)
-                    {
-                        upload.setEnabled(true);
+                    public void onResponse(JSONObject response) {
+                        binding.identifyButton.setEnabled(true);
                         String paths;
                         progressDialog.cancel();
                         try {
-                            paths=response.optString("image_path");
-                            if (paths.matches("")){
+                            paths = response.optString("image_path");
+                            if (paths.matches("")) {
                                 Toast.makeText(Identify_img_upload.this, "Failed at Crop Detection", Toast.LENGTH_LONG).show();
-                            }else {
+                            } else {
                                 if (response.optBoolean("result")) {
                                     upload_image_data_aftercrop(urls, user_id, selected_disease, selected_severity_level, type, paths);
                                 } else {
-                                    String crops = response.optString("crop_name");
-                                    final int[] checkedItem = {-1};
-                                    final String[] selectedText = {""};
-                                    final String[] listItems = new String[]{ "YES","NO" };
-                                    ArrayList<Integer> slist = new ArrayList();
-
                                     final AlertDialog.Builder popDialog = new AlertDialog.Builder(Identify_img_upload.this);
                                     popDialog.setIcon(R.drawable.errro_2);
-                                    popDialog.setTitle("Warning ! The image may not contain "+crop+" crop");
+                                    popDialog.setTitle("Warning ! The image may not contain " + crop + " crop");
                                     popDialog.setMessage("Proceeding with the selected crop may give wrong detection result.\nStill if you want to proceed press YES or to try with another image press NO. ");
-                                    popDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            upload_image_data_aftercrop(urls, user_id, selected_disease, selected_severity_level, type, paths);
-                                        }
-                                    });
-                                    popDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            Intent gotopage =new Intent(Identify_img_upload.this, Identify_img_upload.class);
-                                            startActivity(gotopage);
-                                            finish();
-                                        }
+                                    popDialog.setPositiveButton("YES", (dialog, which) -> upload_image_data_aftercrop(urls, user_id, selected_disease, selected_severity_level, type, paths));
+                                    popDialog.setNegativeButton("NO", (dialog, which) -> {
+                                        Intent gotoPage = new Intent(Identify_img_upload.this, Identify_img_upload.class);
+                                        startActivity(gotoPage);
+                                        finish();
                                     });
                                     popDialog.show();
                                 }
@@ -504,27 +397,19 @@ public class Identify_img_upload extends AppCompatActivity {
                         popDialog1.setIcon(R.drawable.error_1);
                         popDialog1.setTitle("Sorry!!!");
                         popDialog1.setMessage("Some error occurred");
-                        popDialog1.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent gotopage =new Intent(Identify_img_upload.this, Identify_img_upload.class);
-                                startActivity(gotopage);
-                                finish();
-                            }
+                        popDialog1.setPositiveButton("Try again", (dialog, which) -> {
+                            Intent gotoPage = new Intent(Identify_img_upload.this, Identify_img_upload.class);
+                            startActivity(gotoPage);
+                            finish();
                         }).show();
                     }
                 });
     }
 
-    private void upload_image_data_aftercrop(String url_model, String user_id, String selected_disease, String selected_severity_level, String type,String path) {
+    private void upload_image_data_aftercrop(String url_model, String user_id, String selected_disease, String selected_severity_level, String type, String path) {
         progressDialog.show();
         JSONObject object = new JSONObject();
         try {
-            /*object.put("image_path", path);
-            object.put("user_id", user_id);
-            object.put("disease_name", selected_disease);
-            object.put("severity", selected_severity_level);*/
-
             object.put("image_path", path);
             object.put("user_id", "9010");
             object.put("lat", "17.400");
@@ -534,91 +419,81 @@ public class Identify_img_upload extends AppCompatActivity {
         }
 
 
-
         AndroidNetworking.post(url_model)
                 .addJSONObjectBody(object)
                 .build()
-                .getAsJSONObject(new JSONObjectRequestListener()
-                {
-                    @Override
-                    public void onResponse(JSONObject response)
-                    {
-                        upload.setEnabled(true);
-                        progressDialog.cancel();
-                        if (type.equals("pest")){
-                            pestCalling(response);
-                        }
-                        else
-                        {
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                                     @Override
+                                     public void onResponse(JSONObject response) {
+                                         binding.identifyButton.setEnabled(true);
+                                         progressDialog.cancel();
+                                         if (type.equals("pest")) {
+                                             pestCalling(response);
+                                         } else {
 
-                            dis_predct_model model = new dis_predct_model();
-                            model.setError(false);
-                            model.setDisease_name(selected_disease);
-                            model.setImage_url(file_path);
-                            model.setMessage(response.optString("message"));
-                            model.setResult(response.optBoolean("result"));
+                                             dis_predct_model model = new dis_predct_model();
+                                             model.setError(false);
+                                             model.setDisease_name(selected_disease);
+                                             model.setImage_url(file_path);
+                                             model.setMessage(response.optString("message"));
+                                             model.setResult(response.optBoolean("result"));
 
-                            if(response.optBoolean("result")){
-                                model.setCropId(response.optString("c_id"));
-                                model.setCropName(response.optString("c_name"));
-                                model.setIdentificationCode(response.optString("ds_id"));
-                                model.setIdentificationType(response.optString("identification_type"));
-                                model.setConfidence(response.optString("probability1"));
-                                System.out.println("result_crop" + response.toString());
-                            }
-                            else {
-                                model.setErrorval(response.optString("error_msg"));
-                                model.setMessage(response.optString("message"));
+                                             if (response.optBoolean("result")) {
+                                                 model.setCropId(response.optString("c_id"));
+                                                 model.setCropName(response.optString("c_name"));
+                                                 model.setIdentificationCode(response.optString("ds_id"));
+                                                 model.setIdentificationType(response.optString("identification_type"));
+                                                 model.setConfidence(response.optString("probability1"));
+                                                 System.out.println("result_crop" + response.toString());
+                                             } else {
+                                                 model.setErrorval(response.optString("error_msg"));
+                                                 model.setMessage(response.optString("message"));
 
 
-                            }
-                            detect_ins.getInstance().setpath(path);
-                            Gson gson = new Gson();
-                            String myJson = gson.toJson(model);
+                                             }
+                                             detect_ins.getInstance().setpath(path);
+                                             Gson gson = new Gson();
+                                             String myJson = gson.toJson(model);
 
-                            Intent intent = new Intent(Identify_img_upload.this, Result_identified.class);//Show result
-                            Bundle data1 = new Bundle();
-                            data1.putString("farmerIdentification",farmerIdentificationString);
-
-
-                            data1.putString("crop",crop);
-                            data1.putString("type",type);
-                            data1.putString("url",url);
-                            data1.putString("path",path);
-                            intent.putExtras(data1);
-                            intent.putExtra("result", myJson);
-                            startActivity(intent);
-                        }
-                    }
-                    @Override
-                    public void onError(ANError error) {
-                        System.out.println("Category: " + type);
-                        progressDialog.cancel();
-                        final AlertDialog.Builder popDialog1 = new AlertDialog.Builder(Identify_img_upload.this);
-                        popDialog1.setIcon(R.drawable.error_1);
-                        popDialog1.setTitle("Sorry!!!");
-                        popDialog1.setMessage("No model for this crop");
-                        popDialog1.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent gotopage =new Intent(Identify_img_upload.this, Identify_img_upload.class);
-                                startActivity(gotopage);
-                                finish();
-
-                            }
-                        }).show();
+                                             Intent intent = new Intent(Identify_img_upload.this, Result_identified.class);//Show result
+                                             Bundle data1 = new Bundle();
+                                             data1.putString("farmerIdentification", farmerIdentificationString);
 
 
-                        // Log.d(TAG, "onError: ");
+                                             data1.putString("crop", crop);
+                                             data1.putString("type", type);
+                                             data1.putString("url", url);
+                                             data1.putString("path", path);
+                                             intent.putExtras(data1);
+                                             intent.putExtra("result", myJson);
+                                             startActivity(intent);
+                                         }
+                                     }
 
+                                     @Override
+                                     public void onError(ANError error) {
+                                         System.out.println("Category: " + type);
+                                         progressDialog.cancel();
+                                         final AlertDialog.Builder popDialog1 = new AlertDialog.Builder(Identify_img_upload.this);
+                                         popDialog1.setIcon(R.drawable.error_1);
+                                         popDialog1.setTitle("Sorry!!!");
+                                         popDialog1.setMessage("No model for this crop");
+                                         popDialog1.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
+                                                     @Override
+                                                     public void onClick(DialogInterface dialog, int which) {
+                                                         Intent gotopage = new Intent(Identify_img_upload.this, Identify_img_upload.class);
+                                                         startActivity(gotopage);
+                                                         finish();
 
-                    }
-                });
-
+                                                     }
+                                                 }
+                                         ).show();
+                                     }
+                                 }
+                );
     }
 
-    public void pestCalling(JSONObject response)
-    {
+    public void pestCalling(JSONObject response) {
         dis_predct_model model = new dis_predct_model();
         model.setResult(response.optBoolean("result"));
         model.setMessage(response.optString("message"));
@@ -642,17 +517,6 @@ public class Identify_img_upload extends AppCompatActivity {
         String myJson = gson.toJson(model);
 
         System.out.println("datafound" + myJson);
-//        Intent intent = new Intent(Identify_img_upload.this, Result_identified.class);
-//        Bundle data1 = new Bundle();
-//        data1.putString("farmerIdentification", farmerIdentificationString);
-//        intent.putExtras(data1);
-//        intent.putExtra("result", myJson);
-//        intent.putExtra("crop",crop);
-//        intent.putExtra("type",type);
-//        intent.putExtra("url",url);
-//        intent.putExtra("type",type);
-//        startActivity(intent);
-
     }
 
     @Override
@@ -661,21 +525,20 @@ public class Identify_img_upload extends AppCompatActivity {
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(internet, intentFilter);
     }
+
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
-        if(progressDialog!=null)
-        {
+        if (progressDialog != null) {
             progressDialog.cancel();
-            upload.setEnabled(true);
+            binding.identifyButton.setEnabled(true);
         }
 
     }
 
     @Override
     public void onBackPressed() {
-        Intent gotopage =new Intent(Identify_img_upload.this, Identify_dashboard.class);
+        Intent gotopage = new Intent(Identify_img_upload.this, Identify_dashboard.class);
         startActivity(gotopage);
     }
 
@@ -692,24 +555,21 @@ public class Identify_img_upload extends AppCompatActivity {
                     final Uri address = data.getData();
                     System.out.println(" address 1:" + address);
 
-                    image.setImageURI(address);
+                    binding.previewImageView.setImageURI(address);
                     try {
-                        bitmap= MediaStore.Images.Media.getBitmap(getContentResolver(),address);
+                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), address);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    lin1.setVisibility(View.GONE);
-                    headview.setVisibility(View.GONE);
-                    img_cv.setVisibility(View.VISIBLE);
-                    image.setVisibility(View.VISIBLE);
-                    upload.setVisibility(View.VISIBLE);
+                    binding.identifyCropLinearLayout.setVisibility(View.GONE);
+                    binding.uploadImageLinearLayout.setVisibility(View.GONE);
+                    binding.imgCardView.setVisibility(View.VISIBLE);
+                    binding.previewImageView.setVisibility(View.VISIBLE);
+                    binding.identifyButton.setVisibility(View.VISIBLE);
                     file_path = String.valueOf(address);
-
-
                 } else {
                     Toast.makeText(Identify_img_upload.this, "File is not selected.", Toast.LENGTH_LONG).show();
                 }
-
                 break;
 
 
@@ -717,17 +577,17 @@ public class Identify_img_upload extends AppCompatActivity {
                 if (responsecode == RESULT_OK) {
                     String url = data.getStringExtra("url");
                     System.out.println(" url is:" + url);
-                    image.setImageURI(Uri.parse(url));
+                    binding.previewImageView.setImageURI(Uri.parse(url));
                     try {
-                        bitmap= MediaStore.Images.Media.getBitmap(getContentResolver(),Uri.parse(url));
+                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(url));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    lin1.setVisibility(View.GONE);
-                    headview.setVisibility(View.GONE);
-                    img_cv.setVisibility(View.VISIBLE);
-                    image.setVisibility(View.VISIBLE);
-                    upload.setVisibility(View.VISIBLE);
+                    binding.identifyCropLinearLayout.setVisibility(View.GONE);
+                    binding.uploadImageLinearLayout.setVisibility(View.GONE);
+                    binding.imgCardView.setVisibility(View.VISIBLE);
+                    binding.previewImageView.setVisibility(View.VISIBLE);
+                    binding.identifyButton.setVisibility(View.VISIBLE);
                     file_path = url;
                 } else {
                     Toast.makeText(Identify_img_upload.this, "No image captured", Toast.LENGTH_LONG).show();
