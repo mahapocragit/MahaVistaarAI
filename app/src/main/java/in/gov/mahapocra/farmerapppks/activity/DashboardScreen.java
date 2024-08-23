@@ -1,5 +1,7 @@
 package in.gov.mahapocra.farmerapppks.activity;
 
+import static android.app.PendingIntent.getActivity;
+
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
@@ -162,10 +164,10 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         String userNeme = AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName);
         String userNumber = AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo);
         Log.d("getStrName=", userNeme);
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         View hView = navigationView.getHeaderView(0);
-        nav_user_name = (TextView) hView.findViewById(R.id.tv_farmerName);
-        nav_user_phone = (TextView) hView.findViewById(R.id.tv_famerPhoneNumber);
+        nav_user_name = hView.findViewById(R.id.tv_farmerName);
+        nav_user_phone = hView.findViewById(R.id.tv_famerPhoneNumber);
         if (!userNeme.equals("USER_NAME")) {
             String capitalizeStrName = ApUtil.getCamelCaseStreing(userNeme);
             nav_user_name.setText(capitalizeStrName);
@@ -173,7 +175,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         }
 
         // navigationView.setNavigationItemSelectedListener(this);
-        gridView = (GridView) findViewById(R.id.gridViewJobs);
+        gridView = findViewById(R.id.gridViewJobs);
         gridView.setColumnWidth(GridView.AUTO_FIT);
         if (languageToLoad.equalsIgnoreCase("en")) {
             gridView.setAdapter(new DashboardAdapter(this, arrayCategery, arrayCategeryImg,"single_item_grid"));
@@ -184,7 +186,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                TextView txtLable = (TextView) v.findViewById(R.id.grid_item_label);
+                TextView txtLable = v.findViewById(R.id.grid_item_label);
                 //Toast.makeText(DashboardScreen.this, txtLable.getText(), Toast.LENGTH_SHORT).show();
                 Log.d("gridView", "Pos=" + position);
 
@@ -374,7 +376,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         nameTextView = findViewById(R.id.nameTextView);
         addCrop = findViewById(R.id.AddCropTv);
         yourCrop = findViewById(R.id.yourCropTv);
-        selectedCropListRecyc = (RecyclerView) findViewById(R.id.selectedCrops);
+        selectedCropListRecyc = findViewById(R.id.selectedCrops);
         textNewUpdates = findViewById(R.id.textNewUpdates);
         mobileNoTextView = findViewById(R.id.mobNoTextView);
         gridView = findViewById(R.id.gridViewJobs);
@@ -459,11 +461,11 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
             Retrofit retrofit = api.getRetrofitInstance();
             APIRequest apiRequest = retrofit.create(APIRequest.class);
             Call<JsonObject> responseCall = apiRequest.getGetRegistration(requestBody);
-            DebugLog.getInstance().d("param1=" + responseCall.request().toString());
+            DebugLog.getInstance().d("param1=" + responseCall.request());
             DebugLog.getInstance().d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()));
             api.postRequest(responseCall, this, 1);
 
-            DebugLog.getInstance().d("param=" + responseCall.request().toString());
+            DebugLog.getInstance().d("param=" + responseCall.request());
             DebugLog.getInstance().d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -482,11 +484,11 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
             Retrofit retrofit = api.getRetrofitInstance();
             APIRequest apiRequest = retrofit.create(APIRequest.class);
             Call<JsonObject> responseCall = apiRequest.getFarmersSelectedCrop(requestBody);
-            DebugLog.getInstance().d("param1=" + responseCall.request().toString());
+            DebugLog.getInstance().d("param1=" + responseCall.request());
             DebugLog.getInstance().d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()));
             api.postRequest(responseCall, this, 2);
 
-            DebugLog.getInstance().d("param=" + responseCall.request().toString());
+            DebugLog.getInstance().d("param=" + responseCall.request());
             DebugLog.getInstance().d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -504,11 +506,11 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
             Retrofit retrofit = api.getRetrofitInstance();
             APIRequest apiRequest = retrofit.create(APIRequest.class);
             Call<JsonObject> responseCall = apiRequest.deleteSelectedCrop(requestBody);
-            DebugLog.getInstance().d("param1=" + responseCall.request().toString());
+            DebugLog.getInstance().d("param1=" + responseCall.request());
             DebugLog.getInstance().d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()));
             api.postRequest(responseCall, this, 3);
 
-            DebugLog.getInstance().d("param=" + responseCall.request().toString());
+            DebugLog.getInstance().d("param=" + responseCall.request());
             DebugLog.getInstance().d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -524,28 +526,25 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         TextView tvEnglish = dialog.findViewById(R.id.tv_eng);
         TextView tvMarathi = dialog.findViewById(R.id.tv_mar);
 
-        tvEnglish.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        tvEnglish.setOnClickListener(view -> {
 
-                String languageToLoad = "en";
+             String languageToLoad = "en";
 
-                Locale locale = new Locale(languageToLoad);
-                Locale.setDefault(locale);
-                Configuration config = new Configuration();
-                config.locale = locale;
-                getBaseContext().getResources().updateConfiguration(config,
-                        getBaseContext().getResources().getDisplayMetrics());
+            Locale locale = new Locale(languageToLoad);
+            Locale.setDefault(locale);
+            Configuration config = new Configuration();
+            config.locale = locale;
+            getBaseContext().getResources().updateConfiguration(config,
+                    getBaseContext().getResources().getDisplayMetrics());
 
-                AppSettings.setLanguage(DashboardScreen.this, "1");
+            AppSettings.setLanguage(DashboardScreen.this, "1");
 
-                finish();
-                startActivity(getIntent());
+            finish();
+            startActivity(getIntent());
 
-                dialog.dismiss();
-                getFarmerSelectedCrop(languageToLoad);
+            dialog.dismiss();
+            getFarmerSelectedCrop(languageToLoad);
 
-            }
         });
 
         tvMarathi.setOnClickListener(new View.OnClickListener() {
@@ -654,10 +653,10 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
                         String userNeme = AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName);
                         String userNumber = AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo);
-                        navigationView = (NavigationView) findViewById(R.id.nav_view);
+                        navigationView = findViewById(R.id.nav_view);
                         View hView = navigationView.getHeaderView(0);
-                        nav_user_name = (TextView) hView.findViewById(R.id.tv_farmerName);
-                        nav_user_phone = (TextView) hView.findViewById(R.id.tv_famerPhoneNumber);
+                        nav_user_name = hView.findViewById(R.id.tv_farmerName);
+                        nav_user_phone = hView.findViewById(R.id.tv_famerPhoneNumber);
                         if (!userNeme.equals("USER_NAME")) {
                             try {
                                 String capitalizeStrName = ApUtil.getCamelCaseStreing(userNeme);
@@ -681,7 +680,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                 yourCrop.setVisibility(View.INVISIBLE);
                 if (selectedCrops.length() > 0) {
                     yourCrop.setVisibility(View.VISIBLE);
-                    selectedCropList = new ArrayList<CropsCategName>();
+                    selectedCropList = new ArrayList<>();
                     for (int j = 0; j < selectedCrops.length(); j++) {
                         try {
                             JSONObject selectedCrop = selectedCrops.getJSONObject(j);
@@ -771,7 +770,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                 //AppSettings.getInstance().setBooleanValue(this, AppConstants.kIS_OFFLINE, false)
                 logoutFromApp();
             }
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout1);
+            DrawerLayout drawer = findViewById(R.id.drawer_layout1);
             if (drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.closeDrawer(GravityCompat.START);
             }
@@ -809,19 +808,8 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                 .setTitle("New version available")
                 .setMessage("Please, update app to new version to continue reposting.")
                 .setPositiveButton("Update",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                redirectStore(updateUrl);
-                                // redirectStore(updateUrl);
-                            }
-                        }).setNegativeButton("No, thanks",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                finish();
-                            }
-                        }).create();
+                        (dialog1, which) -> redirectStore(updateUrl)).setNegativeButton("No, thanks",
+                        (dialog12, which) -> finish()).create();
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
     }
@@ -840,5 +828,9 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         }
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishAffinity();
+    }
 }
