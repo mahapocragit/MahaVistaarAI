@@ -4,12 +4,11 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.farmerapppks.R
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-class CommingSoonActivity : AppCompatActivity() {
-    lateinit var imageBackArrow: ImageView
+class ComingSoonActivity : AppCompatActivity() {
+    private lateinit var imageBackArrow: ImageView
     var languageToLoad: String? = null
     var nameTextView: TextView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +21,7 @@ class CommingSoonActivity : AppCompatActivity() {
         setContentView(R.layout.activity_comming_soon)
         init()
         val strNotification = intent.getStringExtra("notification")
-        Log.d("Flag=","notification="+strNotification);
+        Log.d("Flag=", "notification=$strNotification");
         if(strNotification.equals("mayu"))
         {
             nameTextView?.setText(R.string.NotificationMsg)
@@ -36,8 +35,8 @@ class CommingSoonActivity : AppCompatActivity() {
     }
     private fun onClick()
     {
-        imageBackArrow.setOnClickListener(View.OnClickListener {
+        imageBackArrow.setOnClickListener {
             finish()
-        })
+        }
     }
 }

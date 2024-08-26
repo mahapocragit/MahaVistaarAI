@@ -184,7 +184,7 @@
             android:name=".activity.AboutPocra"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.CommingSoonActivity"
+            android:name=".activity.ComingSoonActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.LoginScreen"

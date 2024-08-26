@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.farmerapppks.activity
 
+import android.app.AlertDialog
 import `in`.co.appinventor.services_api.api.AppinventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.debug.DebugLog
@@ -37,10 +38,10 @@ import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
+import kotlin.system.exitProcess
 
 
-class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
-    AlertListEventListener {
+class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, AlertListEventListener {
 
     lateinit var nameEditText: EditText
     lateinit var mobNoEditText: EditText
@@ -52,6 +53,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     lateinit var textViewVillage: TextView
     lateinit var textViewVerify: TextView
     lateinit var submitButton: Button
+    lateinit var deleteAccountButton: TextView
 
     lateinit var sentOTP: String
     lateinit var userName: String
@@ -61,13 +63,13 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     lateinit var confrmPass: String
     lateinit var emailid: String
     lateinit var districtName: String
-    private  var districtID: Int = 0
+    private var districtID: Int = 0
     lateinit var talukaName: String
     private var talukaID: Int = 0
     lateinit var villageName: String
     lateinit var villageCode: String
     private var villageID: Int = 0
-    private var fAAPRegistrationID: String =""
+    private var fAAPRegistrationID: String = ""
     private var sessionManager: SessionManager? = null
 
 
@@ -81,15 +83,14 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     var farmerRigisterID: Int = 0
     lateinit var languageToLoad: String
 
-    var versionName:kotlin.String? = null
-    var token:kotlin.String? = null
-    var machineId:kotlin.String? = null
+    var versionName: String? = null
+    var token: String? = null
+    var machineId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         languageToLoad = "mr"
-        if (AppSettings.getLanguage(this@Registration).equals("1", ignoreCase = true))
-        {
+        if (AppSettings.getLanguage(this@Registration).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
         setContentView(R.layout.activity_registration)
@@ -100,7 +101,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             e.printStackTrace()
         }
         val versionNumber = pinfo!!.versionCode
-        versionName = pinfo!!.versionName
+        versionName = pinfo.versionName
         token = FirebaseInstanceId.getInstance().token
         Log.d("token12345", "" + token)
 
@@ -109,17 +110,24 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         setConfiguration()
         onclick()
     }
+
     private fun setConfiguration() {
-        farmerRigisterID = intent.getIntExtra("FAAPRegistrationID",0)
-        if (farmerRigisterID > 0){
+        farmerRigisterID = intent.getIntExtra("FAAPRegistrationID", 0)
+        if (farmerRigisterID > 0) {
             fAAPRegistrationID = farmerRigisterID.toString()
-            moblNumberStatus= true
-            userName= AppSettings.getInstance().getValue(this, AppConstants.uName,AppConstants.uName )
-            registerMob= AppSettings.getInstance().getValue(this, AppConstants.uMobileNo,AppConstants.uMobileNo )
-            emailid =  AppSettings.getInstance().getValue(this, AppConstants.uEmail, AppConstants.uEmail)
-            districtName =  AppSettings.getInstance().getValue(this, AppConstants.uDIST, AppConstants.uDIST)
-            talukaName =  AppSettings.getInstance().getValue(this, AppConstants.uTALUKA, AppConstants.uTALUKA)
-            villageName  =  AppSettings.getInstance().getValue(this, AppConstants.uVILLAGE, AppConstants.uVILLAGE)
+            moblNumberStatus = true
+            userName =
+                AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName)
+            registerMob = AppSettings.getInstance()
+                .getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
+            emailid =
+                AppSettings.getInstance().getValue(this, AppConstants.uEmail, AppConstants.uEmail)
+            districtName =
+                AppSettings.getInstance().getValue(this, AppConstants.uDIST, AppConstants.uDIST)
+            talukaName =
+                AppSettings.getInstance().getValue(this, AppConstants.uTALUKA, AppConstants.uTALUKA)
+            villageName = AppSettings.getInstance()
+                .getValue(this, AppConstants.uVILLAGE, AppConstants.uVILLAGE)
             districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
             talukaID = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
             villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
@@ -129,9 +137,9 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             nameEditText.setText(userName)
             mobNoEditText.setText(registerMob)
             emailId.setText(emailid)
-            textViewDist.setText(districtName)
-            textViewTaluka.setText(talukaName)
-            textViewVillage.setText(villageName)
+            textViewDist.text = districtName
+            textViewTaluka.text = talukaName
+            textViewVillage.text = villageName
 
         }
         getDistrictData()
@@ -145,7 +153,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     private fun getDistrictData() {
         val jsonObject = JSONObject()
         try {
-           // jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+            // jsonObject.put("SecurityKey", APIServices.SSO_KEY)
             jsonObject.put("lang", languageToLoad)
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
@@ -167,16 +175,17 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     }
 
     private fun init() {
-        nameEditText = findViewById(R.id.nameEditText);
-        mobNoEditText = findViewById(R.id.mobNoEditText);
-        emailId = findViewById(R.id.emailId);
-        passwordEditText = findViewById(R.id.passwordEditText);
-        confirmPasswordEditText = findViewById(R.id.confirmPasswordEditText);
-        textViewDist = findViewById(R.id.textViewDist);
-        textViewTaluka = findViewById(R.id.textViewTaluka);
-        textViewVillage = findViewById(R.id.textViewVillage);
-        textViewVerify = findViewById(R.id.textViewVerify);
-        submitButton = findViewById(R.id.submitButton);
+        nameEditText = findViewById(R.id.nameEditText)
+        mobNoEditText = findViewById(R.id.mobNoEditText)
+        emailId = findViewById(R.id.emailId)
+        passwordEditText = findViewById(R.id.passwordEditText)
+        confirmPasswordEditText = findViewById(R.id.confirmPasswordEditText)
+        textViewDist = findViewById(R.id.textViewDist)
+        textViewTaluka = findViewById(R.id.textViewTaluka)
+        textViewVillage = findViewById(R.id.textViewVillage)
+        deleteAccountButton = findViewById(R.id.deleteAccountButton)
+        textViewVerify = findViewById(R.id.textViewVerify)
+        submitButton = findViewById(R.id.submitButton)
     }
 
     private fun onclick() {
@@ -196,6 +205,18 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
 //            }
 //        })
 
+        deleteAccountButton.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("Delete Account")
+                .setMessage("Are you sure you want to delete your account?")
+                .setPositiveButton("Yes") { _, _ ->
+                    Toast.makeText(this, "Your account has been deleted", Toast.LENGTH_SHORT).show()
+                }.setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
+        }
+
         mobNoEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 if (farmerRigisterID > 0) {
@@ -203,6 +224,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                     moblNumberStatus = false
                 }
             }
+
             override fun beforeTextChanged(
                 s: CharSequence, start: Int,
                 count: Int, after: Int
@@ -219,20 +241,20 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
 //                moblNumberStatus= false
             }
         })
-        submitButton.setOnClickListener(View.OnClickListener {
+        submitButton.setOnClickListener {
             machineId = getMachineId()
-            if (farmerRigisterID > 0){
+            if (farmerRigisterID > 0) {
                 userValidationAndUpdateprofile()
-            }else{
+            } else {
                 userValidationAndRegistraton()
             }
 
-        })
-        textViewVerify.setOnClickListener(View.OnClickListener {
+        }
+        textViewVerify.setOnClickListener {
             sendOTP()
-        })
+        }
         textViewDist.setOnClickListener {
-         showDistrict()
+            showDistrict()
         }
 
         textViewTaluka.setOnClickListener {
@@ -245,18 +267,27 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     }
 
 
-
-
     private fun showTaluka() {
         if (talukaJSONArray == null) {
             if (districtID > 0) {
                 fetchTalukaMasterData()
             } else {
-                UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_district))
+                UIToastMessage.show(
+                    this,
+                    resources.getString(R.string.error_farmer_select_district)
+                )
             }
         } else {
             AppUtility.getInstance()
-                .showListDialogIndex(talukaJSONArray, 2, getString(R.string.farmer_select_taluka), "name", "id", this, this)
+                .showListDialogIndex(
+                    talukaJSONArray,
+                    2,
+                    getString(R.string.farmer_select_taluka),
+                    "name",
+                    "id",
+                    this,
+                    this
+                )
         }
     }
 
@@ -269,7 +300,15 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             }
         } else {
             AppUtility.getInstance()
-                .showListDialogIndex(villJSONArray, 3, getString(R.string.farmer_select_village), "name", "code", this, this)
+                .showListDialogIndex(
+                    villJSONArray,
+                    3,
+                    getString(R.string.farmer_select_village),
+                    "name",
+                    "code",
+                    this,
+                    this
+                )
         }
     }
 
@@ -294,8 +333,8 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         mob = mobNoEditText.text.toString()
         // verification.setTextColor(Color.parseColor("#000000"))
 
-         if (farmerRigisterID > 0 && !mob.equals(registerMob) ) {
-            moblNumberStatus= false
+        if (farmerRigisterID > 0 && !mob.equals(registerMob)) {
+            moblNumberStatus = false
         }
         if (mob.isEmpty()) {
             mobNoEditText.error = resources.getString(R.string.login_mob_err)
@@ -303,8 +342,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         } else if (!AppUtility.getInstance().isValidPhoneNumber(mob)) {
             mobNoEditText.error = resources.getString(R.string.login_mob_valid_err)
             mobNoEditText.requestFocus()
-        }
-        else {
+        } else {
             val jsonObject = JSONObject()
             try {
                 jsonObject.put("MobileNo", mob.trim { it <= ' ' })
@@ -338,19 +376,19 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         if (userName.isEmpty()) {
             nameEditText.error = resources.getString(R.string.name_error)
             nameEditText.requestFocus()
-        }else if (mob.isEmpty() && !AppUtility.getInstance().isValidPhoneNumber(mob)) {
+        } else if (mob.isEmpty() && !AppUtility.getInstance().isValidPhoneNumber(mob)) {
             mobNoEditText.error = resources.getString(R.string.login_mob_valid_err)
             mobNoEditText.requestFocus()
         } else if (moblNumberStatus == false) {
             mobNoEditText.error = resources.getString(R.string.regist_mob_verify_err)
             mobNoEditText.requestFocus()
-        }else if (districtID == 0) {
+        } else if (districtID == 0) {
             UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_district))
         } else if (talukaID == 0) {
             UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_taluka))
         } else if (villageID == 0) {
             UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_village))
-        }else {
+        } else {
             val jsonObject = JSONObject()
             try {
                 jsonObject.put("Name", userName)
@@ -385,7 +423,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 DebugLog.getInstance()
                     .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
             } catch (e: JSONException) {
-                DebugLog.getInstance().d("JSONException=" + e.toString())
+                DebugLog.getInstance().d("JSONException=$e")
                 e.printStackTrace()
             }
         }
@@ -398,33 +436,33 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         confrmPass = confirmPasswordEditText.text.toString()
         emailid = emailId.text.toString()
 
-        Log.d("pass:confrmPass",pass+" ::"+confrmPass);
+        Log.d("pass:confrmPass", "$pass ::$confrmPass")
 
         if (userName.isEmpty()) {
             nameEditText.error = resources.getString(R.string.name_error)
             nameEditText.requestFocus()
-        }else if (mob.isEmpty()) {
+        } else if (mob.isEmpty()) {
             mobNoEditText.error = resources.getString(R.string.login_mob_valid_err)
             mobNoEditText.requestFocus()
-        }else if (moblNumberStatus == false) {
+        } else if (moblNumberStatus == false) {
             mobNoEditText.error = resources.getString(R.string.regist_mob_verify_err)
             mobNoEditText.requestFocus()
-        }else if (pass.isEmpty()) {
+        } else if (pass.isEmpty()) {
             passwordEditText.error = resources.getString(R.string.password_error)
             passwordEditText.requestFocus()
-        }else if (confrmPass.isEmpty()) {
+        } else if (confrmPass.isEmpty()) {
             confirmPasswordEditText.error = resources.getString(R.string.conf_password_error)
             confirmPasswordEditText.requestFocus()
-        }else if (!pass.equals(confrmPass)) {
+        } else if (!pass.equals(confrmPass)) {
             confirmPasswordEditText.error = resources.getString(R.string.pass_equals_confirmpass)
             confirmPasswordEditText.requestFocus()
-        }else if (districtID == 0) {
+        } else if (districtID == 0) {
             UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_district))
         } else if (talukaID == 0) {
             UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_taluka))
         } else if (villageID == 0) {
             UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_village))
-        }else {
+        } else {
             val jsonObject = JSONObject()
             try {
                 jsonObject.put("Name", userName)
@@ -464,6 +502,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             }
         }
     }
+
     private fun addVerificationDialog(sentOTP: String) {
         Log.d("sentOTP", sentOTP)
         dialog = Dialog(this)
@@ -477,7 +516,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         )
 
         val dialogTitle = dialog.findViewById<TextView>(R.id.dialogTitle)
-        dialogTitle.setText("Enter OTP")
+        dialogTitle.text = "Enter OTP"
         Log.d("sentOTP22222", sentOTP)
 
         val revcieveOTPEditText = dialog.findViewById<EditText>(R.id.OptEditText)
@@ -485,9 +524,9 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         val resendOTP = dialog.findViewById<Button>(R.id.resentOTP)
         val cancelButton = dialog.findViewById<ImageView>(R.id.imageView_close)
 
-        cancelButton.setOnClickListener(View.OnClickListener { dialog.dismiss() })
+        cancelButton.setOnClickListener { dialog.dismiss() }
         submitButton.setOnClickListener {
-            var enteredOTP: String = revcieveOTPEditText.text.toString()
+            val enteredOTP: String = revcieveOTPEditText.text.toString()
             if (enteredOTP.isEmpty()) {
                 revcieveOTPEditText.error = resources.getString(R.string.regist_otp_err)
                 revcieveOTPEditText.requestFocus()
@@ -501,16 +540,17 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         }
         dialog.show()
     }
+
     private fun userVerification(enteredOTP: String) {
 
         Log.d("shdfhsdf", enteredOTP)
         Log.d("testshvm1", this.sentOTP)
         if (enteredOTP.equals(this.sentOTP)) {
-            textViewVerify.setText(resources.getString(R.string.reg_verified))
+            textViewVerify.text = resources.getString(R.string.reg_verified)
             textViewVerify.setTextColor(Color.parseColor("#1d6b08"))
             mobNoEditText.setEnabled(false)
             moblNumberStatus = true
-            sessionManager?.setLoggedIn(true);
+            sessionManager?.setLoggedIn(true)
             dialog.dismiss()
         } else {
             Toast.makeText(this, R.string.wrong_OTP, Toast.LENGTH_LONG).show()
@@ -519,11 +559,11 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
 
 
     override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        DebugLog.getInstance().d("onResponse=$obj"+i)
+        DebugLog.getInstance().d("onResponse=$obj$i")
     }
 
     override fun onFailure(th: Throwable?, i: Int) {
-        DebugLog.getInstance().d("onResponse=$th"+i)
+        DebugLog.getInstance().d("onResponse=$th$i")
     }
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
@@ -532,7 +572,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
 
             if (response.status) {
                 districtJSONArray = response.getdataArray()
-                Log.d("districtJSONArray11111",districtJSONArray.toString())
+                Log.d("districtJSONArray11111", districtJSONArray.toString())
             } else {
                 UIToastMessage.show(this, response.response)
             }
@@ -543,7 +583,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
 
             if (response.status) {
                 talukaJSONArray = response.getdataArray()
-                Log.d("talukaJSONArray",talukaJSONArray.toString())
+                Log.d("talukaJSONArray", talukaJSONArray.toString())
             } else {
                 UIToastMessage.show(this, response.response)
             }
@@ -554,7 +594,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
 
             if (response.status) {
                 villJSONArray = response.getdataArray()
-                Log.d("villJSONArray",villJSONArray.toString())
+                Log.d("villJSONArray", villJSONArray.toString())
             } else {
                 UIToastMessage.show(this, response.response)
             }
@@ -566,7 +606,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 DebugLog.getInstance().d("onResponse=$jSONObject")
                 val response = ResponseModel(jSONObject)
                 if (response.getStatus()) {
-                    var notifiCountValue: String = jSONObject.getString("Message")
+                    val notifiCountValue: String = jSONObject.getString("Message")
                     Toast.makeText(this, notifiCountValue, Toast.LENGTH_LONG).show()
                     //UIToastMessage.showShortDuration(this, notifiCountValue)
                     sentOTP = jSONObject.getString("OTP")
@@ -574,16 +614,17 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 }
             }
         }
-        if(i==3){
+        if (i == 3) {
             if (jSONObject != null) {
                 DebugLog.getInstance().d("onResponse=$jSONObject")
                 val response = ResponseModel(jSONObject)
                 if (response.getStatus()) {
-                    var notifiCountValue: String = jSONObject.getString("Message")
+                    val notifiCountValue: String = jSONObject.getString("Message")
                     Toast.makeText(this, notifiCountValue, Toast.LENGTH_LONG).show()
-                    if (!(farmerRigisterID>0)){
+                    if (!(farmerRigisterID > 0)) {
                         farmerRigisterID = jSONObject.getInt("RegistrationID")
-                        AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, farmerRigisterID)
+                        AppSettings.getInstance()
+                            .setIntValue(this, AppConstants.fREGISTER_ID, farmerRigisterID)
                     }
 
                     val intent = Intent(this, DashboardScreen::class.java)
@@ -592,8 +633,8 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
                     finish()
-                }else{
-                    var notifiCountValue: String = jSONObject.getString("Message")
+                } else {
+                    val notifiCountValue: String = jSONObject.getString("Message")
                     Toast.makeText(this, notifiCountValue, Toast.LENGTH_LONG).show()
                 }
             }
@@ -602,26 +643,25 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
 
     override fun didSelectListItem(i: Int, s: String?, s1: String?) {
 
-
         if (i == 1) {
             if (s1 != null) {
-                districtID = s1!!.toInt()
+                districtID = s1.toInt()
             }
 
             if (s != null) {
                 districtName = s
             }
-            textViewDist.setText(s)
+            textViewDist.text = s
             if (districtID > 0) {
                 fetchTalukaMasterData()
             }
             talukaID = 0
-            textViewTaluka.setText("")
+            textViewTaluka.text = ""
             textViewTaluka.setHint(resources.getString(R.string.farmer_select_taluka))
             textViewTaluka.setHintTextColor(Color.GRAY)
 
             villageID = 0
-            textViewVillage.setText("")
+            textViewVillage.text = ""
             textViewVillage.setHint(resources.getString(R.string.farmer_select_village))
             textViewVillage.setHintTextColor(Color.GRAY)
         }
@@ -634,13 +674,13 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             if (s != null) {
                 talukaName = s
             }
-            textViewTaluka.setText(s)
+            textViewTaluka.text = s
             villJSONArray = null
             if (talukaID > 0) {
                 getVillageAgainstTaluka()
             }
             villageID = 0
-            textViewVillage.setText("")
+            textViewVillage.text = ""
             textViewVillage.setHint(resources.getString(R.string.farmer_select_village))
             textViewVillage.setHintTextColor(Color.GRAY)
 
@@ -652,7 +692,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             }
 
             villageName = s.toString()
-            textViewVillage.setText(s)
+            textViewVillage.text = s
         }
 
     }
@@ -711,10 +751,8 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             DebugLog.getInstance()
                 .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
         } catch (e: JSONException) {
-            DebugLog.getInstance().d("JSONException=" + e.toString())
+            DebugLog.getInstance().d("JSONException=$e")
             e.printStackTrace()
         }
     }
-
-
 }

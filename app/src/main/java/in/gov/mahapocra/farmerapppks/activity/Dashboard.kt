@@ -209,24 +209,24 @@ class Dashboard : AppCompatActivity(), OnMultiRecyclerItemClickListener, Adapter
                 startActivity(intent)
             }
             if (id == 1) { //Intent intent = new Intent(this, FinancialDetailsActivity.class);
-                val intent = Intent(this, CommingSoonActivity::class.java)
+                val intent = Intent(this, ComingSoonActivity::class.java)
                 startActivity(intent)
             }
             if (id == 2) {
-                val intent = Intent(this, CommingSoonActivity::class.java)
+                val intent = Intent(this, ComingSoonActivity::class.java)
                 startActivity(intent)
             }
             if (id == 3) {
-                val intent = Intent(this, CommingSoonActivity::class.java)
+                val intent = Intent(this, ComingSoonActivity::class.java)
                 startActivity(intent)
             }
             if (id == 4) {
-                val intent = Intent(this, CommingSoonActivity::class.java)
+                val intent = Intent(this, ComingSoonActivity::class.java)
 
                 startActivity(intent)
             }
             if (id == 5) {
-                val intent = Intent(this, CommingSoonActivity::class.java)
+                val intent = Intent(this, ComingSoonActivity::class.java)
                 startActivity(intent)
             }
             if (id == 6) {
@@ -263,7 +263,7 @@ class Dashboard : AppCompatActivity(), OnMultiRecyclerItemClickListener, Adapter
 //                startActivity(weatherIntent)
             }
             "Climate Resilent Technology" -> {
-                val parkingIntent = Intent(this@Dashboard, CommingSoonActivity::class.java)
+                val parkingIntent = Intent(this@Dashboard, ComingSoonActivity::class.java)
                 startActivity(parkingIntent)
             }
             "DBT Schemes" -> {
@@ -275,7 +275,7 @@ class Dashboard : AppCompatActivity(), OnMultiRecyclerItemClickListener, Adapter
                 startActivity(healthCardActivityIntent)
             }
             "Market Price" -> {
-                val parkingIntent = Intent(this@Dashboard, CommingSoonActivity::class.java)
+                val parkingIntent = Intent(this@Dashboard, ComingSoonActivity::class.java)
                 startActivity(parkingIntent)
             }
             "Warehouse Availabilities" -> {
@@ -287,11 +287,11 @@ class Dashboard : AppCompatActivity(), OnMultiRecyclerItemClickListener, Adapter
                 startActivity(gisIntent)
             }
             "Pest Management" -> {
-                val parkingIntent = Intent(this@Dashboard, CommingSoonActivity::class.java)
+                val parkingIntent = Intent(this@Dashboard, ComingSoonActivity::class.java)
                 startActivity(parkingIntent)
             }
             "Bandhavan" -> {
-                val parkingIntent = Intent(this@Dashboard, CommingSoonActivity::class.java)
+                val parkingIntent = Intent(this@Dashboard, ComingSoonActivity::class.java)
                 startActivity(parkingIntent)
             }
         }

@@ -5,7 +5,6 @@ import static android.app.PendingIntent.getActivity;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -161,16 +160,16 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         toggle.setDrawerSlideAnimationEnabled(true);
 
         // Set Data
-        String userNeme = AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName);
+        String userName = AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName);
         String userNumber = AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo);
-        Log.d("getStrName=", userNeme);
+        Log.d("getStrName=", userName);
         navigationView = findViewById(R.id.nav_view);
         View hView = navigationView.getHeaderView(0);
         nav_user_name = hView.findViewById(R.id.tv_farmerName);
         nav_user_phone = hView.findViewById(R.id.tv_famerPhoneNumber);
-        if (!userNeme.equals("USER_NAME")) {
-            String capitalizeStrName = ApUtil.getCamelCaseStreing(userNeme);
-            nav_user_name.setText(capitalizeStrName);
+        if (!userName.equals("USER_NAME")) {
+            String capitalizeStrName = ApUtil.getCamelCaseStreing(userName);
+            nav_user_name.setText(!capitalizeStrName.isEmpty() ? capitalizeStrName : userName);
             nav_user_phone.setText(userNumber);
         }
 
@@ -183,57 +182,54 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         } else if (languageToLoad.equalsIgnoreCase("hi")) {
             gridView.setAdapter(new DashboardAdapter(this, arrayCategeryMarathi, arrayCategeryImg,"single_item_grid"));
         }
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                TextView txtLable = v.findViewById(R.id.grid_item_label);
-                //Toast.makeText(DashboardScreen.this, txtLable.getText(), Toast.LENGTH_SHORT).show();
-                Log.d("gridView", "Pos=" + position);
+        gridView.setOnItemClickListener((parent, v, position, id) -> {
+            TextView txtLabel = v.findViewById(R.id.grid_item_label);
+            //Toast.makeText(DashboardScreen.this, txtLabel.getText(), Toast.LENGTH_SHORT).show();
+            Log.d("gridView", "Pos=" + position);
 
-                if (position == 0) {
-                    Intent weather = new Intent(DashboardScreen.this, WeatherHome.class);
-                    startActivity(weather);
-                } else if (position == 1) {
+            if (position == 0) {
+                Intent weather = new Intent(DashboardScreen.this, WeatherHome.class);
+                startActivity(weather);
+            } else if (position == 1) {
 
-                    Intent i = new Intent(getApplicationContext(), Identify_dashboard.class);
-                    startActivity(i);
+                Intent i = new Intent(getApplicationContext(), Identify_dashboard.class);
+                startActivity(i);
 
-                } else if (position == 2) {
-                    Intent sharing = new Intent(DashboardScreen.this, CommingSoonActivity.class);
-                    startActivity(sharing);
-                }
-                else if (position == 3) {
-                    Intent sharing = new Intent(DashboardScreen.this, CommingSoonActivity.class);
-                    startActivity(sharing);
+            } else if (position == 2) {
+                Intent sharing = new Intent(DashboardScreen.this, ComingSoonActivity.class);
+                startActivity(sharing);
+            }
+            else if (position == 3) {
+                Intent sharing = new Intent(DashboardScreen.this, ComingSoonActivity.class);
+                startActivity(sharing);
 
-                } else if (position == 4) {
+            } else if (position == 4) {
 
-                    Intent addPeople = new Intent(DashboardScreen.this, ClimateResilintTechnology.class);
-                    startActivity(addPeople);
-                } else if (position == 5) {
-                    Intent addPeople = new Intent(DashboardScreen.this, HealthCardActivity.class);
-                    startActivity(addPeople);
-                } else if (position == 6) {
-                    Intent sharing = new Intent(DashboardScreen.this, MarketPrice.class);
-                    startActivity(sharing);
-                }
-                else if (position == 7) {
-                    Intent sharing = new Intent(DashboardScreen.this, Warehouse.class);
-                    startActivity(sharing);
-                } else if (position == 8) {
-                   // Intent sharing = new Intent(DashboardScreen.this, CropAdvisory.class);
-                    Intent sharing = new Intent(DashboardScreen.this, DbtSchemes.class);
-                    startActivity(sharing);
-                }
+                Intent addPeople = new Intent(DashboardScreen.this, ClimateResilintTechnology.class);
+                startActivity(addPeople);
+            } else if (position == 5) {
+                Intent addPeople = new Intent(DashboardScreen.this, HealthCardActivity.class);
+                startActivity(addPeople);
+            } else if (position == 6) {
+                Intent sharing = new Intent(DashboardScreen.this, MarketPrice.class);
+                startActivity(sharing);
+            }
+            else if (position == 7) {
+                Intent sharing = new Intent(DashboardScreen.this, Warehouse.class);
+                startActivity(sharing);
+            } else if (position == 8) {
+               // Intent sharing = new Intent(DashboardScreen.this, CropAdvisory.class);
+                Intent sharing = new Intent(DashboardScreen.this, DbtSchemes.class);
+                startActivity(sharing);
+            }
 //                else if (position == 9) {
 //                    Intent sharing = new Intent(DashboardScreen.this, CropAdvisory.class);
 //                    startActivity(sharing);
 //                }
 
-                // Intent intent = new Intent(JobsMenuGridListScreen.this, JobFoundList.class);
-                // startActivity(intent);
-                //  txtLable.setBackgroundColor(Color.parseColor("#F21B92"));
-            }
+            // Intent intent = new Intent(JobsMenuGridListScreen.this, JobFoundList.class);
+            // startActivity(intent);
+            //  txtLabel.setBackgroundColor(Color.parseColor("#F21B92"));
         });
 
 
@@ -263,91 +259,59 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 //        }
 
 
-        aboutPocraText1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(DashboardScreen.this, AboutPocra.class);
+        aboutPocraText1.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardScreen.this, AboutPocra.class);
+            startActivity(intent);
+        });
+        aboutPocraText2.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardScreen.this, MyVillageProfilePdf.class);
+            startActivity(intent);
+        });
+        imgLangChange.setOnClickListener(v -> openChangeLangPopup());
+        imgNotification.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardScreen.this, ComingSoonActivity.class);
+            intent.putExtra("notification", "mayu");
+            startActivity(intent);
+        });
+        linearLayoutForum.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardScreen.this, DbtStatus.class);
+            startActivity(intent);
+        });
+        linearLayoutSupport.setOnClickListener(v -> {
+            if (farmerId > 0) {
+                Intent intent = new Intent(DashboardScreen.this, Grievances.class);
+                intent.putExtra("FAAPRegistrationID", farmerId);
                 startActivity(intent);
+            } else {
+                UIToastMessage.show(DashboardScreen.this, "Please Login First...");
             }
         });
-        aboutPocraText2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(DashboardScreen.this, MyVillageProfilePdf.class);
+        linearLayoutProfile.setOnClickListener(v -> {
+            if (farmerId > 0) {
+                Intent intent = new Intent(DashboardScreen.this, Registration.class);
+                intent.putExtra("FAAPRegistrationID", farmerId);
                 startActivity(intent);
+            } else {
+                UIToastMessage.show(DashboardScreen.this, "Please Login First...");
             }
-        });
-        imgLangChange.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openChangeLangPopup();
-            }
-        });
-        imgNotification.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(DashboardScreen.this, CommingSoonActivity.class);
-                intent.putExtra("notification", "mayu");
-                startActivity(intent);
-            }
-        });
-        linearLayoutForum.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(DashboardScreen.this, DbtStatus.class);
-                startActivity(intent);
-            }
-        });
-        linearLayoutSupport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (farmerId > 0) {
-                    Intent intent = new Intent(DashboardScreen.this, Grievances.class);
-                    intent.putExtra("FAAPRegistrationID", farmerId);
-                    startActivity(intent);
-                } else {
-                    UIToastMessage.show(DashboardScreen.this, "Please Login First...");
-                }
-            }
-        });
-        linearLayoutProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (farmerId > 0) {
-                    Intent intent = new Intent(DashboardScreen.this, Registration.class);
-                    intent.putExtra("FAAPRegistrationID", farmerId);
-                    startActivity(intent);
-                } else {
-                    UIToastMessage.show(DashboardScreen.this, "Please Login First...");
-                }
 
+        });
+        imgCallIcon.setOnClickListener(v -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                callingFun();
             }
         });
-        imgCallIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    callingFun();
-                }
-            }
-        });
-        textNewUpdates.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // climateResilientGroupList();
-                Intent intent = new Intent(DashboardScreen.this, NewUpdateKharip.class);
+        textNewUpdates.setOnClickListener(v -> {
+            // climateResilientGroupList();
+            Intent intent = new Intent(DashboardScreen.this, NewUpdateKharip.class);
 
-                startActivity(intent);
-            }
+            startActivity(intent);
         });
 
-        addCrop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(DashboardScreen.this, AddCropActivity.class);
-                // Intent intent = new Intent(DashboardScreen.this, SelectSowingDataAndFarmer.class);
-                startActivity(intent);
-            }
+        addCrop.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardScreen.this, AddCropActivity.class);
+            // Intent intent = new Intent(DashboardScreen.this, SelectSowingDataAndFarmer.class);
+            startActivity(intent);
         });
         setVersion();
         getFarmerSelectedCrop(languageToLoad);
@@ -547,27 +511,24 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
         });
 
-        tvMarathi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        tvMarathi.setOnClickListener(view -> {
 
-                String languageToLoad = "hi";
+            String languageToLoad = "hi";
 
-                Locale locale = new Locale(languageToLoad);
-                Locale.setDefault(locale);
-                Configuration config = new Configuration();
-                config.locale = locale;
-                getBaseContext().getResources().updateConfiguration(config,
-                        getBaseContext().getResources().getDisplayMetrics());
+            Locale locale = new Locale(languageToLoad);
+            Locale.setDefault(locale);
+            Configuration config = new Configuration();
+            config.locale = locale;
+            getBaseContext().getResources().updateConfiguration(config,
+                    getBaseContext().getResources().getDisplayMetrics());
 
-                AppSettings.setLanguage(DashboardScreen.this, "2");
+            AppSettings.setLanguage(DashboardScreen.this, "2");
 
-                finish();
-                startActivity(getIntent());
+            finish();
+            startActivity(getIntent());
 
-                dialog.dismiss();
-                getFarmerSelectedCrop(languageToLoad);
-            }
+            dialog.dismiss();
+            getFarmerSelectedCrop(languageToLoad);
         });
 
         dialog.show();
@@ -621,7 +582,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
         if (i == 1) {
             if (jSONObject != null) {
-                Log.d("jSONObject232dacsboard", jSONObject.toString());
+                Log.d("jSONObject232dashboard", jSONObject.toString());
                 DebugLog.getInstance().d("onResponse=$jSONObject");
                 ResponseModel response = new ResponseModel(jSONObject);
                 if (response.getStatus()) {
@@ -651,16 +612,16 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                         String districtName = AppSettings.getInstance().getValue(this, AppConstants.uDIST, AppConstants.uDIST);
                         String taluka = AppSettings.getInstance().getValue(this, AppConstants.uTALUKA, AppConstants.uTALUKA);
 
-                        String userNeme = AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName);
+                        String userName = AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName);
                         String userNumber = AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo);
                         navigationView = findViewById(R.id.nav_view);
                         View hView = navigationView.getHeaderView(0);
                         nav_user_name = hView.findViewById(R.id.tv_farmerName);
                         nav_user_phone = hView.findViewById(R.id.tv_famerPhoneNumber);
-                        if (!userNeme.equals("USER_NAME")) {
+                        if (!userName.equals("USER_NAME")) {
                             try {
-                                String capitalizeStrName = ApUtil.getCamelCaseStreing(userNeme);
-                                nav_user_name.setText(capitalizeStrName);
+                                String capitalizeStrName = ApUtil.getCamelCaseStreing(userName);
+                                nav_user_name.setText(!capitalizeStrName.isEmpty() ? capitalizeStrName : userName);
                                 nav_user_phone.setText(userNumber);
                             } catch (StringIndexOutOfBoundsException e) {
                                 e.printStackTrace();
