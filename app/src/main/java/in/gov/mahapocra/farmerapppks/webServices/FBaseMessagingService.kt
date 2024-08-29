@@ -54,7 +54,7 @@ class FBaseMessagingService : FirebaseMessagingService() {
                 notificationManager!!.createNotificationChannel(notificationChannel)
             }
 
-            `in`.gov.mahapocra.farmerapppks.webServices.Notification.getInstance(this).displayNotification(title,body)
+            Notification.getInstance(this).displayNotification(title,body)
 
         }
     }

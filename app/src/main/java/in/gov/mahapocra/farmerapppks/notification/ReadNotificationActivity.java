@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import in.co.appinventor.services_api.api.AppinventorApi;
+import in.co.appinventor.services_api.api.AppInventorApi;
 import in.co.appinventor.services_api.app_util.AppUtility;
 import in.co.appinventor.services_api.debug.DebugLog;
 import in.co.appinventor.services_api.listener.ApiCallbackCode;
@@ -306,7 +306,7 @@ public class ReadNotificationActivity extends AppCompatActivity implements ApiCa
 
 
             RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
-            AppinventorApi api = new AppinventorApi(this, APIServices.SDAO_BASE_URL, "", AppConstants.kMSG, true);
+            AppInventorApi api = new AppInventorApi(this, APIServices.SDAO_BASE_URL, "", AppConstants.kMSG, true);
             Retrofit retrofit = api.getRetrofitInstance();
             APIRequest apiRequest = retrofit.create(APIRequest.class);
             Call<JsonObject> responseCall = apiRequest.readfirebaseNotification(requestBody);

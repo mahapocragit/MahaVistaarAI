@@ -1,6 +1,6 @@
 package `in`.gov.mahapocra.farmerapppks.activity
 
-import `in`.co.appinventor.services_api.api.AppinventorApi
+import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.api.AppinventorIncAPI
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.debug.DebugLog
@@ -12,7 +12,6 @@ import `in`.gov.mahapocra.farmerapppks.adapter.CropAdvisoryAdapter
 import `in`.gov.mahapocra.farmerapppks.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
-import `in`.gov.mahapocra.farmerapppks.fragments.CropAdvisoryFragment
 import `in`.gov.mahapocra.farmerapppks.fragments.advisory.CropAdvisorySelection
 import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
 import android.content.Intent
@@ -136,7 +135,13 @@ class CropAdvisory : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback, O
             jsonObject.put("lang", languageToLoad)
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
-                AppinventorApi(this, APIServices.SSO, "", AppString(this).getkMSG_WAIT(), true)
+                AppInventorApi(
+                    this,
+                    APIServices.SSO,
+                    "",
+                    AppString(this).getkMSG_WAIT(),
+                    true
+                )
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(APIRequest::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getDistrictList(requestBody)
@@ -164,7 +169,13 @@ class CropAdvisory : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback, O
             jsonObject.put("district_id", districtID)
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
-                AppinventorApi(this, APIServices.SSO, "", AppString(this).getkMSG_WAIT(), true)
+                AppInventorApi(
+                    this,
+                    APIServices.SSO,
+                    "",
+                    AppString(this).getkMSG_WAIT(),
+                    true
+                )
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(APIRequest::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getTalukaList(requestBody)
@@ -190,7 +201,13 @@ class CropAdvisory : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback, O
     private fun fetchCropMasterData() {
         try {
             val api =
-                AppinventorApi(this, APIServices.SSO, "", AppString(this).getkMSG_WAIT(), true)
+                AppInventorApi(
+                    this,
+                    APIServices.SSO,
+                    "",
+                    AppString(this).getkMSG_WAIT(),
+                    true
+                )
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(APIRequest::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getCropList()

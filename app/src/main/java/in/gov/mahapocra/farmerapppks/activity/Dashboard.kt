@@ -1,7 +1,7 @@
 package `in`.gov.mahapocra.farmerapppks.activity
 
 
-import `in`.co.appinventor.services_api.api.AppinventorApi
+import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
@@ -76,7 +76,13 @@ class Dashboard : AppCompatActivity(), OnMultiRecyclerItemClickListener, Adapter
             jsonObject.put("SecurityKey", APIServices.SSO_KEY)
             jsonObject.put("FAAPRegistrationID", farmerId)
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api = AppinventorApi(this, APIServices.DBT, "", AppString(this).getkMSG_WAIT(), true)
+            val api = AppInventorApi(
+                this,
+                APIServices.DBT,
+                "",
+                AppString(this).getkMSG_WAIT(),
+                true
+            )
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(APIRequest::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getGetRegistration(requestBody)

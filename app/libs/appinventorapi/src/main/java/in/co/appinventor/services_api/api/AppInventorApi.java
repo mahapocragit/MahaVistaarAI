@@ -6,6 +6,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -63,8 +64,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
     /* renamed from: in.co.appinventor.services_api.api.AppinventorApi */
-    public class AppinventorApi {
-        private static final in.co.appinventor.services_api.api.AppinventorApi ourInstance = new in.co.appinventor.services_api.api.AppinventorApi();
+    public class AppInventorApi {
+        private static final AppInventorApi ourInstance = new AppInventorApi();
         /* access modifiers changed from: private */
         public String authToken;
         private String baserURL;
@@ -74,17 +75,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
         public ProgressDialog mProgressDialog = null;
         private boolean mShowProgressDialog;
 
-        public static in.co.appinventor.services_api.api.AppinventorApi getInstance() {
+        public static AppInventorApi getInstance() {
             return ourInstance;
         }
 
-        private AppinventorApi() {
+        private AppInventorApi() {
         }
 
-        public AppinventorApi(Context mContext2, String baseURL, String authTokentest, String mMessage2, boolean showProgressDialog) {
+        public AppInventorApi(Context mContext2, String baseURL, String authTokenTest, String mMessage2, boolean showProgressDialog) {
             this.mContext = mContext2;
             this.baserURL = baseURL;
-            this.authToken = authTokentest;
+            this.authToken = authTokenTest;
             this.mMessage = mMessage2;
             this.mShowProgressDialog = showProgressDialog;
             if (Utility.checkConnection(mContext2) && this.mShowProgressDialog) {
@@ -105,15 +106,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
             builder.readTimeout(200000, TimeUnit.SECONDS);
             builder.connectTimeout(200000, TimeUnit.SECONDS);
             Gson gson = new GsonBuilder().setLenient().create();
-            builder.addInterceptor(new Interceptor() {
-                public Response intercept(Chain chain) throws IOException {
-                    Request.Builder ongoing = chain.request().newBuilder();
-                    ongoing.addHeader("Accept", "application/json;versions=1");
-                    ongoing.addHeader("Content-Type", "application/json; charset=UTF-8");
-                    ongoing.addHeader("Content-Encoding", "gzip");
-                    ongoing.addHeader("authoritytoken", in.co.appinventor.services_api.api.AppinventorApi.this.authToken);
-                    return chain.proceed(ongoing.build());
-                }
+            builder.addInterceptor(chain -> {
+                Request.Builder ongoing = chain.request().newBuilder();
+                ongoing.addHeader("Accept", "application/json;versions=1");
+                ongoing.addHeader("Content-Type", "application/json; charset=UTF-8");
+                ongoing.addHeader("Content-Encoding", "gzip");
+                ongoing.addHeader("authoritytoken", AppInventorApi.this.authToken);
+                return chain.proceed(ongoing.build());
             });
            // return new Retrofit.Builder().baseUrl(this.baserURL).client(getUnsafeOkHttpClient(mContext).build()).client(builder.build()).addConverterFactory(GsonConverterFactory.create()).build();
 
@@ -165,12 +164,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
                         new X509TrustManager() {
                             @Override
                             public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String
-                                    authType) throws CertificateException {
+                                    authType) {
                             }
 
                             @Override
                             public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String
-                                    authType) throws CertificateException {
+                                    authType) {
                             }
 
                             @Override
@@ -206,15 +205,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 //                    }
 //                });
 
-                builder.addInterceptor(new Interceptor() {
-                    public Response intercept(Chain chain) throws IOException {
-                        Request.Builder ongoing = chain.request().newBuilder();
-                        ongoing.addHeader("Accept", "application/json;versions=1");
-                        ongoing.addHeader("Content-Type", "application/json; charset=UTF-8");
-                        ongoing.addHeader("Content-Encoding", "gzip");
-                        ongoing.addHeader("authoritytoken", in.co.appinventor.services_api.api.AppinventorApi.this.authToken);
-                        return chain.proceed(ongoing.build());
-                    }
+                builder.addInterceptor(chain -> {
+                    Request.Builder ongoing = chain.request().newBuilder();
+                    ongoing.addHeader("Accept", "application/json;versions=1");
+                    ongoing.addHeader("Content-Type", "application/json; charset=UTF-8");
+                    ongoing.addHeader("Content-Encoding", "gzip");
+                    ongoing.addHeader("authoritytoken", AppInventorApi.this.authToken);
+                    return chain.proceed(ongoing.build());
                 });
 
                 builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
@@ -241,8 +238,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
             isRegisterWithSDK();
             ((Api) getRetrofitInstance().create(Api.class)).getCommonRequestDataApi(url).enqueue(new Callback<JsonObject>() {
                 public void onResponse(@NonNull Call<JsonObject> call, @NonNull retrofit2.Response<JsonObject> response) {
-                    if (in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog != null && in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.isShowing()) {
-                        in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.dismiss();
+                    if (AppInventorApi.this.mProgressDialog != null && AppInventorApi.this.mProgressDialog.isShowing()) {
+                        AppInventorApi.this.mProgressDialog.dismiss();
                     }
                     if (response.isSuccessful()) {
                         DebugLog.getInstance().d("onResponse=====" + ((JsonObject) response.body()));
@@ -253,8 +250,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
                 }
 
                 public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-                    if (in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog != null && in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.isShowing()) {
-                        in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.dismiss();
+                    if (AppInventorApi.this.mProgressDialog != null && AppInventorApi.this.mProgressDialog.isShowing()) {
+                        AppInventorApi.this.mProgressDialog.dismiss();
                     }
                     apiCallback.onFailure(call, t, 0);
                     DebugLog.getInstance().d("onFailure=====" + t.toString());
@@ -270,8 +267,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
             isRegisterWithSDK();
             ((Api) getRetrofitInstance().create(Api.class)).getCommonRequestDataApi(url).enqueue(new Callback<JsonObject>() {
                 public void onResponse(@NonNull Call<JsonObject> call, @NonNull retrofit2.Response<JsonObject> response) {
-                    if (in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog != null && in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.isShowing()) {
-                        in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.dismiss();
+                    if (AppInventorApi.this.mProgressDialog != null && AppInventorApi.this.mProgressDialog.isShowing()) {
+                        AppInventorApi.this.mProgressDialog.dismiss();
                     }
                     if (response.isSuccessful()) {
                         JsonObject loginResponse = (JsonObject) response.body();
@@ -288,8 +285,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
                 }
 
                 public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-                    if (in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog != null && in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.isShowing()) {
-                        in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.dismiss();
+                    if (AppInventorApi.this.mProgressDialog != null && AppInventorApi.this.mProgressDialog.isShowing()) {
+                        AppInventorApi.this.mProgressDialog.dismiss();
                     }
                     apiCallback.onFailure(t, requestCode);
                     DebugLog.getInstance().d("onFailure=====" + t.toString());
@@ -302,8 +299,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
             isRegisterWithSDK();
             ((Api) getRetrofitInstance().create(Api.class)).getCommonRequestJSONArrayDataApi(url).enqueue(new Callback<JsonArray>() {
                 public void onResponse(@NonNull Call<JsonArray> call, @NonNull retrofit2.Response<JsonArray> response) {
-                    if (in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog != null && in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.isShowing()) {
-                        in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.dismiss();
+                    if (AppInventorApi.this.mProgressDialog != null && AppInventorApi.this.mProgressDialog.isShowing()) {
+                        AppInventorApi.this.mProgressDialog.dismiss();
                     }
                     if (response.isSuccessful()) {
                         DebugLog.getInstance().d("onResponse=====" + ((JsonArray) response.body()));
@@ -314,8 +311,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
                 }
 
                 public void onFailure(@NonNull Call<JsonArray> call, @NonNull Throwable t) {
-                    if (in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog != null && in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.isShowing()) {
-                        in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.dismiss();
+                    if (AppInventorApi.this.mProgressDialog != null && AppInventorApi.this.mProgressDialog.isShowing()) {
+                        AppInventorApi.this.mProgressDialog.dismiss();
                     }
                     apiCallback.onFailure(call, t, 0);
                     DebugLog.getInstance().d("onFailure=====" + t.toString());
@@ -328,8 +325,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
             isRegisterWithSDK();
             ((Api) getRetrofitInstance().create(Api.class)).getCommonRequestDataApi(url).enqueue(new Callback<JsonObject>() {
                 public void onResponse(@NonNull Call<JsonObject> call, @NonNull retrofit2.Response<JsonObject> response) {
-                    if (in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog != null && in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.isShowing()) {
-                        in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.dismiss();
+                    if (AppInventorApi.this.mProgressDialog != null && AppInventorApi.this.mProgressDialog.isShowing()) {
+                        AppInventorApi.this.mProgressDialog.dismiss();
                     }
                     if (response.isSuccessful()) {
                         JsonObject serverResponse = (JsonObject) response.body();
@@ -349,8 +346,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
                 }
 
                 public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-                    if (in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog != null && in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.isShowing()) {
-                        in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.dismiss();
+                    if (AppInventorApi.this.mProgressDialog != null && AppInventorApi.this.mProgressDialog.isShowing()) {
+                        AppInventorApi.this.mProgressDialog.dismiss();
                     }
                     try {
                         apiCallback.onFailure(new JSONObject(String.valueOf(call)), t);
@@ -367,8 +364,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
             isRegisterWithSDK();
             responseCall.enqueue(new Callback<JsonObject>() {
                 public void onResponse(@NonNull Call<JsonObject> call, @NonNull retrofit2.Response<JsonObject> response) {
-                    if (in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog != null && in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.isShowing()) {
-                        in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.dismiss();
+                    if (AppInventorApi.this.mProgressDialog != null && AppInventorApi.this.mProgressDialog.isShowing()) {
+                        AppInventorApi.this.mProgressDialog.dismiss();
                     }
                     if (response.isSuccessful()) {
                         JsonObject serverResponse = (JsonObject) response.body();
@@ -384,8 +381,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
                 }
 
                 public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-                    if (in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog != null && in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.isShowing()) {
-                        in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.dismiss();
+                    if (AppInventorApi.this.mProgressDialog != null && AppInventorApi.this.mProgressDialog.isShowing()) {
+                        AppInventorApi.this.mProgressDialog.dismiss();
                     }
                     try {
                         callbackResponse.onFailure(new JSONObject(String.valueOf(call)), t);
@@ -405,8 +402,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
             //isRegisterWithSDK();
             responseCall.enqueue(new Callback<JsonObject>() {
                 public void onResponse(@NonNull Call<JsonObject> call, @NonNull retrofit2.Response<JsonObject> response) {
-                    if (in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog != null && in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.isShowing()) {
-                        in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.dismiss();
+                    Log.d("APIINVENTORTAG", "onResponse: "+response.body());
+                    if (AppInventorApi.this.mProgressDialog != null && AppInventorApi.this.mProgressDialog.isShowing()) {
+                        AppInventorApi.this.mProgressDialog.dismiss();
                     }
                     if (response.isSuccessful()) {
                         JsonObject serverResponse = (JsonObject) response.body();
@@ -422,8 +420,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
                 }
 
                 public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-                    if (in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog != null && in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.isShowing()) {
-                        in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.dismiss();
+                    if (AppInventorApi.this.mProgressDialog != null && AppInventorApi.this.mProgressDialog.isShowing()) {
+                        AppInventorApi.this.mProgressDialog.dismiss();
                     }
                     try {
                         apiCallback.onFailure(call, t, requestCode);
@@ -440,8 +438,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
             isRegisterWithSDK();
             responseCall.enqueue(new Callback<JsonObject>() {
                 public void onResponse(@NonNull Call<JsonObject> call, @NonNull retrofit2.Response<JsonObject> response) {
-                    if (in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog != null && in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.isShowing()) {
-                        in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.dismiss();
+                    if (AppInventorApi.this.mProgressDialog != null && AppInventorApi.this.mProgressDialog.isShowing()) {
+                        AppInventorApi.this.mProgressDialog.dismiss();
                     }
                     if (response.isSuccessful()) {
                         JsonObject serverResponse = (JsonObject) response.body();
@@ -457,8 +455,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
                 }
 
                 public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-                    if (in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog != null && in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.isShowing()) {
-                        in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.dismiss();
+                    if (AppInventorApi.this.mProgressDialog != null && AppInventorApi.this.mProgressDialog.isShowing()) {
+                        AppInventorApi.this.mProgressDialog.dismiss();
                     }
                     try {
                         apiCallback.onFailure(call, t, requestCode);
@@ -475,8 +473,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
             isRegisterWithSDK();
             responseCall.enqueue(new Callback<JsonObject>() {
                 public void onResponse(@NonNull Call<JsonObject> call, @NonNull retrofit2.Response<JsonObject> response) {
-                    if (in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog != null && in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.isShowing()) {
-                        in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.dismiss();
+                    if (AppInventorApi.this.mProgressDialog != null && AppInventorApi.this.mProgressDialog.isShowing()) {
+                        AppInventorApi.this.mProgressDialog.dismiss();
                     }
                     if (response.isSuccessful()) {
                         JsonObject serverResponse = (JsonObject) response.body();
@@ -492,8 +490,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
                 }
 
                 public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-                    if (in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog != null && in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.isShowing()) {
-                        in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.dismiss();
+                    if (AppInventorApi.this.mProgressDialog != null && AppInventorApi.this.mProgressDialog.isShowing()) {
+                        AppInventorApi.this.mProgressDialog.dismiss();
                     }
                     try {
                         apiCallback.onFailure(call, t, requestCode);
@@ -519,8 +517,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
             isRegisterWithSDK();
             responseCall.enqueue(new Callback<JsonObject>() {
                 public void onResponse(@NonNull Call<JsonObject> call, @NonNull retrofit2.Response<JsonObject> response) {
-                    if (in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog != null && in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.isShowing()) {
-                        in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.dismiss();
+                    if (AppInventorApi.this.mProgressDialog != null && AppInventorApi.this.mProgressDialog.isShowing()) {
+                        AppInventorApi.this.mProgressDialog.dismiss();
                     }
                     if (response.isSuccessful()) {
                         JsonObject serverResponse = (JsonObject) response.body();
@@ -536,8 +534,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
                 }
 
                 public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-                    if (in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog != null && in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.isShowing()) {
-                        in.co.appinventor.services_api.api.AppinventorApi.this.mProgressDialog.dismiss();
+                    if (AppInventorApi.this.mProgressDialog != null && AppInventorApi.this.mProgressDialog.isShowing()) {
+                        AppInventorApi.this.mProgressDialog.dismiss();
                     }
                     try {
                         apiCallback.onFailure(call, t, requestCode);

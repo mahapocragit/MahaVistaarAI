@@ -11,7 +11,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonObject
-import `in`.co.appinventor.services_api.api.AppinventorApi
+import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
@@ -142,7 +142,13 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
 
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
-                AppinventorApi(this, APIServices.SSO, "", AppString(this).getkMSG_WAIT(), true)
+                AppInventorApi(
+                    this,
+                    APIServices.SSO,
+                    "",
+                    AppString(this).getkMSG_WAIT(),
+                    true
+                )
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(APIRequest::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getCropCategorywise(requestBody)

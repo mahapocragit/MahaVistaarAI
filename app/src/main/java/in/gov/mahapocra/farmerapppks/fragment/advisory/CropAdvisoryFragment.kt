@@ -9,11 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonObject
-import `in`.co.appinventor.services_api.api.AppinventorApi
+import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
@@ -26,8 +25,6 @@ import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
 import `in`.gov.mahapocra.farmerapppks.fragment.advisory.AdvisoryFeedback
 import `in`.gov.mahapocra.farmerapppks.fragment.advisory.languageToLoad
-import `in`.gov.mahapocra.farmerapppks.fragment.advisory.ratingbar
-import `in`.gov.mahapocra.farmerapppks.fragment.advisory.submitFeedback
 import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
 import org.json.JSONArray
 import org.json.JSONException
@@ -133,7 +130,13 @@ class CropAdvisoryFragment : Fragment(), ApiCallbackCode, OnMultiRecyclerItemCli
             jsonObject.put("village", villageID)
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
-                AppinventorApi(activity, APIServices.SS0_Temp, "", AppString(activity).getkMSG_WAIT(), true)
+                AppInventorApi(
+                    activity,
+                    APIServices.SS0_Temp,
+                    "",
+                    AppString(activity).getkMSG_WAIT(),
+                    true
+                )
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(APIRequest::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getAutoAdvisory(requestBody)

@@ -106,7 +106,7 @@ public class Identify_img_upload extends AppCompatActivity {
             farmerIdentificationString = data.getString("farmerIdentification");
             type = data.getString("type");
             url = data.getString("url");
-            binding.cropNameTextView.setText("Crop : " + crop);
+            binding.cropNameTextView.setText("Crop : "+ crop);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -172,7 +172,7 @@ public class Identify_img_upload extends AppCompatActivity {
                                                                 progressDialog.cancel();
                                                                 afterJungleForestImage();
                                                             } else {
-                                                                upload_image_data(url_model, user_id, selected_disease, selected_severity_level, type);
+                                                                upload_image_data(url_model, "9010", selected_disease, selected_severity_level, type);
                                                             }
                                                         } else {
                                                             progressDialog.cancel();
@@ -199,7 +199,7 @@ public class Identify_img_upload extends AppCompatActivity {
                 Intent intent = new Intent(Identify_img_upload.this, Cam.class);
                 startActivityForResult(intent, 4);
             } else {
-                if (checking_permision()) {
+                if (checkingPermission()) {
                     Intent intent = new Intent(Identify_img_upload.this, Cam.class);
                     startActivityForResult(intent, 4);
                 }
@@ -258,14 +258,10 @@ public class Identify_img_upload extends AppCompatActivity {
         popDialog1.setIcon(R.drawable.error_1);
         popDialog1.setTitle("WARNING!!");
         popDialog1.setMessage("Objects in the image are too far. Try to capture the symptomatic region of crop within the rectangular box");
-        popDialog1.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent gotopage = new Intent(Identify_img_upload.this, Identify_img_upload.class);
-                startActivity(gotopage);
-                finish();
-
-            }
+        popDialog1.setPositiveButton("OK", (dialog, which) -> {
+            Intent intent = new Intent(Identify_img_upload.this, Identify_img_upload.class);
+            startActivity(intent);
+            finish();
         }).show();
     }
 
@@ -288,19 +284,17 @@ public class Identify_img_upload extends AppCompatActivity {
         popDialog1.setTitle("WARNING!!");
         popDialog1.setMessage("Objects in the image are too close. Try to capture the symptomatic region of crop within the rectangular box");
         popDialog1.setPositiveButton("OK", (dialog, which) -> {
-            Intent gotoPage = new Intent(Identify_img_upload.this, Identify_img_upload.class);
-            startActivity(gotoPage);
+            Intent intent = new Intent(Identify_img_upload.this, Identify_img_upload.class);
+            startActivity(intent);
             finish();
         }).show();
     }
 
-    public boolean checking_permision() {
+    public boolean checkingPermission() {
         if ((ContextCompat.checkSelfPermission(Identify_img_upload.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
                 || (ContextCompat.checkSelfPermission(Identify_img_upload.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions(Identify_img_upload.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-
             return false;
-
         }
         return true;
     }
@@ -312,17 +306,16 @@ public class Identify_img_upload extends AppCompatActivity {
             System.out.println("Uri is:" + address_to_convert);
             try {
 
-                InputStream inputstream = null;
+                InputStream inputstream;
                 inputstream = getContentResolver().openInputStream(address_to_convert);
 
                 System.out.println(" input stream is :");
-                int length_image = 0;
-
+                int length_image;
                 length_image = inputstream.available();
                 byte[] data_in_byte_image = new byte[length_image];
                 inputstream.read(data_in_byte_image);
                 inputstream.close();
-                System.out.println(" after inputstream close");
+                System.out.println(" after input stream close");
                 file_path_string = "";
                 file_path_string = Base64.encodeToString(data_in_byte_image, Base64.DEFAULT);
                 // System.out.println("image in string :" +file_path_string);
@@ -345,10 +338,11 @@ public class Identify_img_upload extends AppCompatActivity {
         String image_proper = file_path_string.replaceAll("\n", "");
         System.out.println("imageFile " + "  " + image_proper);
         JSONObject object = new JSONObject();
+        Log.d("Fertilizer_TAG", "upload_image_data: "+crop);
         try {
             object.put("crop_name", crop);
             object.put("image_file", image_proper);
-            object.put("user_id", "9010");
+            object.put("user_id", user_id);
             object.put("lat", "17.40");
             object.put("long", "19.30");
         } catch (JSONException e) {

@@ -51,6 +51,21 @@
             android:background="@color/white"
             app:srcCompat="@drawable/login_edit_bg"
             tools:ignore="VectorDrawableCompat" />
+
+        <ImageView
+            android:id="@+id/deleteOptionImageView"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:visibility="visible"
+            android:layout_marginEnd="@dimen/padding20"
+            android:layout_marginRight="@dimen/padding30"
+            android:contentDescription="@string/app_name"
+            android:background="@color/white"
+            app:srcCompat="@drawable/delete_icon"
+            tools:ignore="VectorDrawableCompat" />
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView

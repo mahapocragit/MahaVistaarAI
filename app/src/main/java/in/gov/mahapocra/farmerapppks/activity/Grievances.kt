@@ -1,7 +1,7 @@
 package `in`.gov.mahapocra.farmerapppks.activity
 
 
-import `in`.co.appinventor.services_api.api.AppinventorApi
+import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.api.AppinventorIncAPI
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.debug.DebugLog
@@ -439,11 +439,12 @@ class Grievances : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
             Log.d("addGrievance=", "imgFile===" + imgFile)
             val params: HashMap<String, RequestBody> = HashMap<String,RequestBody>()
 
-            params.put("mobile", AppinventorApi.toRequestBody(mobileNumber.trim { it <= ' ' }))
-            params.put("category" , AppinventorApi.toRequestBody(cotegoryID.toString()))
-            params.put("grievance", AppinventorApi.toRequestBody(descriptionText))
-            params.put("name",AppinventorApi.toRequestBody(name))
-            params.put("location", AppinventorApi.toRequestBody(areaOfIssues))
+            params.put("mobile", AppInventorApi.toRequestBody(mobileNumber.trim { it <= ' ' }))
+            params.put("category" , AppInventorApi.toRequestBody(cotegoryID.toString()))
+            params.put("grievance", AppInventorApi.toRequestBody(descriptionText))
+            params.put("name",
+                AppInventorApi.toRequestBody(name))
+            params.put("location", AppInventorApi.toRequestBody(areaOfIssues))
             if( flag.equals("pdf")){
                 //creating a file
                 val file = selectedFilePath as File   //pdf

@@ -2,6 +2,7 @@ package in.gov.mahapocra.farmerapppks.activity;
 
 import static android.app.PendingIntent.getActivity;
 
+import android.Manifest;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
@@ -25,11 +26,14 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -45,9 +49,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
-import in.co.appinventor.services_api.api.AppinventorApi;
+import in.co.appinventor.services_api.api.AppInventorApi;
 import in.co.appinventor.services_api.app_util.AppUtility;
 import in.co.appinventor.services_api.debug.DebugLog;
 import in.co.appinventor.services_api.listener.ApiCallbackCode;
@@ -77,6 +82,7 @@ import retrofit2.Retrofit;
 public class DashboardScreen extends AppCompatActivity implements ApiCallbackCode, AdapterView.OnItemClickListener, ForceUpdateChecker.OnUpdateNeededListener, OnMultiRecyclerItemClickListener {
     private NavigationView navigationView;
     private DrawerLayout drawer;
+    private static final int PERMISSION_REQUEST_CODE = 100;
     private GridView gridView;
     private TextView nameTextView;
     private TextView mobileNoTextView;
@@ -329,6 +335,40 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 //            mobileNoTextView.setText(strMobNo);
 //        }
 
+        requestingPermissions();
+
+    }
+
+    private void requestingPermissions() {
+        String[] permissions = {
+                Manifest.permission.CAMERA,
+                Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+        };
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissions = new String[]{
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.READ_PHONE_STATE,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.POST_NOTIFICATIONS
+            };
+        }
+
+        // Check which permissions are not granted
+        List<String> permissionsToRequest = new ArrayList<>();
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(permission);
+            }
+        }
+
+        // Request the permissions that are not granted
+        if (!permissionsToRequest.isEmpty()) {
+            ActivityCompat.requestPermissions(this, permissionsToRequest.toArray(new String[0]), PERMISSION_REQUEST_CODE);
+        }
     }
 
 
@@ -421,7 +461,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
             jsonObject.put("FAAPRegistrationID", farmerId);
 
             RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
-            AppinventorApi api = new AppinventorApi(this, APIServices.DBT, "", new AppString(this).getkMSG_WAIT(), true);
+            AppInventorApi api = new AppInventorApi(this, APIServices.DBT, "", new AppString(this).getkMSG_WAIT(), true);
             Retrofit retrofit = api.getRetrofitInstance();
             APIRequest apiRequest = retrofit.create(APIRequest.class);
             Call<JsonObject> responseCall = apiRequest.getGetRegistration(requestBody);
@@ -444,7 +484,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
             jsonObject.put("farmer_id", farmerId);
 
             RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
-            AppinventorApi api = new AppinventorApi(this, APIServices.SSO, "", new AppString(this).getkMSG_WAIT(), true);
+            AppInventorApi api = new AppInventorApi(this, APIServices.SSO, "", new AppString(this).getkMSG_WAIT(), true);
             Retrofit retrofit = api.getRetrofitInstance();
             APIRequest apiRequest = retrofit.create(APIRequest.class);
             Call<JsonObject> responseCall = apiRequest.getFarmersSelectedCrop(requestBody);
@@ -466,7 +506,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
             jsonObject.put("farmer_id", farmerId);
 
             RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
-            AppinventorApi api = new AppinventorApi(this, APIServices.SSO, "", new AppString(this).getkMSG_WAIT(), true);
+            AppInventorApi api = new AppInventorApi(this, APIServices.SSO, "", new AppString(this).getkMSG_WAIT(), true);
             Retrofit retrofit = api.getRetrofitInstance();
             APIRequest apiRequest = retrofit.create(APIRequest.class);
             Call<JsonObject> responseCall = apiRequest.deleteSelectedCrop(requestBody);
@@ -535,7 +575,23 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
     }
 
-//    public boolean onNavigationItemSelected(@NonNull @NotNull MenuItem item) {
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            for (int i = 0; i < permissions.length; i++) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission was granted
+                    // Perform the related action (e.g., accessing the camera)
+                } else {
+                    // Permission was denied
+                    // Notify the user and handle the situation gracefully
+                }
+            }
+        }
+    }
+
+    //    public boolean onNavigationItemSelected(@NonNull @NotNull MenuItem item) {
 //        int id = item.getItemId();
 //
 //        if (id == R.id.nav_home) {
@@ -586,9 +642,8 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                 DebugLog.getInstance().d("onResponse=$jSONObject");
                 ResponseModel response = new ResponseModel(jSONObject);
                 if (response.getStatus()) {
-                    String strName = null;
                     try {
-                        strName = jSONObject.getString("Name");
+                        String strName = jSONObject.getString("Name");
                         String strMobNo = jSONObject.getString("MobileNo");
                         String strEmailId = jSONObject.getString("EmailId");
                         int strFFAReg = jSONObject.getInt("FAAPRegistrationID");

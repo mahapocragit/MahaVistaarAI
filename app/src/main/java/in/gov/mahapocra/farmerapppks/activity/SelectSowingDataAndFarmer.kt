@@ -4,17 +4,13 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
-import `in`.co.appinventor.services_api.api.AppinventorApi
+import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
@@ -27,7 +23,6 @@ import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
 import `in`.gov.mahapocra.farmerapppks.databinding.ActivitySelectSowingDataAndFarmerBinding
-import `in`.gov.mahapocra.farmerapppks.fragment.advisory.rating2
 import `in`.gov.mahapocra.farmerapppks.models.response.CropsCategName
 import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
 import org.json.JSONException
@@ -97,7 +92,13 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api =
-                    AppinventorApi(this, APIServices.SSO, "", AppString(this).getkMSG_WAIT(), true)
+                    AppInventorApi(
+                        this,
+                        APIServices.SSO,
+                        "",
+                        AppString(this).getkMSG_WAIT(),
+                        true
+                    )
                 val retrofit: Retrofit = api.getRetrofitInstance()
                 val apiRequest = retrofit.create(APIRequest::class.java)
                 val responseCall: Call<JsonObject> = apiRequest.kSaveFarmerSelectedCrop(requestBody)

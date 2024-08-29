@@ -12,7 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.JsonObject
-import `in`.co.appinventor.services_api.api.AppinventorApi
+import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
@@ -123,7 +123,13 @@ class DiseaseInformation : AppCompatActivity() , ApiCallbackCode {
         try {
             jsonObject.put("pdid",id)
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api = AppinventorApi(this, APIServices.SSO, "", AppString(this).getkMSG_WAIT(), true)
+            val api = AppInventorApi(
+                this,
+                APIServices.SSO,
+                "",
+                AppString(this).getkMSG_WAIT(),
+                true
+            )
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(APIRequest::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getPestDiseaseDetails(requestBody)

@@ -19,7 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import in.co.appinventor.services_api.api.AppinventorApi;
+import in.co.appinventor.services_api.api.AppInventorApi;
 import in.co.appinventor.services_api.app_util.AppUtility;
 import in.co.appinventor.services_api.debug.DebugLog;
 import in.co.appinventor.services_api.listener.ApiCallbackCode;
@@ -180,7 +180,7 @@ public class NotificationListActivity extends AppCompatActivity implements ApiCa
             jsonObject.put("SecurityKey", APIServices.SSO_KEY);
 
             RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
-            AppinventorApi api = new AppinventorApi(this, APIServices.DBT, "", AppConstants.kMSG, true);
+            AppInventorApi api = new AppInventorApi(this, APIServices.DBT, "", AppConstants.kMSG, true);
             Retrofit retrofit = api.getRetrofitInstance();
             APIRequest apiRequest = retrofit.create(APIRequest.class);
             Call<JsonObject> responseCall = apiRequest.getNewsList(requestBody);

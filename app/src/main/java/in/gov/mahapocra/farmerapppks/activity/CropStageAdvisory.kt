@@ -10,7 +10,7 @@ import android.widget.GridView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.JsonObject
-import `in`.co.appinventor.services_api.api.AppinventorApi
+import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
@@ -118,7 +118,7 @@ class CropStageAdvisory : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerI
                     }
 
                     1 -> {
-                        val intent = Intent(this, FertilizerCalculatorAcitvity::class.java)
+                        val intent = Intent(this, FertilizerCalculatorActivity::class.java)
                         intent.putExtra("id", cropId)
                         intent.putExtra("mName", cropName)
                         intent.putExtra("wotr_crop_id", wotrCropId)
@@ -187,7 +187,13 @@ class CropStageAdvisory : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerI
 
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
-                AppinventorApi(this, APIServices.SSO, "", AppString(this).getkMSG_WAIT(), true)
+                AppInventorApi(
+                    this,
+                    APIServices.SSO,
+                    "",
+                    AppString(this).getkMSG_WAIT(),
+                    true
+                )
             val retrofit: Retrofit = api.retrofitInstance
             val apiRequest = retrofit.create(APIRequest::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getCropStagesAndAdvisory(requestBody)

@@ -22,7 +22,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.hardware.camera" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature android:name="android.hardware.camera.flash" />
 
@@ -44,7 +44,7 @@
             android:name=".activity.CropStageAcitvity"
             android:exported="false" />
         <activity
-            android:name=".activity.FertilizerCalculatorAcitvity"
+            android:name=".activity.FertilizerCalculatorActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.PestsAndDiseasesStages"

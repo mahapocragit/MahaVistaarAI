@@ -176,7 +176,7 @@ public interface APIRequest {
     );
 
     @POST(APIServices.kGetFertilizerCalculatedDataWotr)
-    Call<JsonObject> getFertilzerCalculatedData(@Query("CropID") String cropID,
+    Call<JsonObject> getFertilizerCalculatedData(@Query("CropID") String cropID,
                                       @Query("SowingDate") String sowingDate,
                                       @Query("IsNPK") String isNPK,
                                       @Query("SoilTestN") String soilTestN,
