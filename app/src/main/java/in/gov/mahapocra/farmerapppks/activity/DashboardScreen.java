@@ -1,7 +1,5 @@
 package in.gov.mahapocra.farmerapppks.activity;
 
-import static android.app.PendingIntent.getActivity;
-
 import android.Manifest;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
@@ -110,19 +108,19 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
     private JSONArray jsonArray;
 
     private static final String[] arrayCategery = new String[]{
-            "Weather", "Identify Pest/Disease","Pests and Diseases","Fertilizer Calculator", "Climate Resilent Technology", "Soil Health Card",
+            "Weather", "Identify Pest/Disease", "Pests and Diseases", "Fertilizer Calculator", "Climate Resilent Technology", "Soil Health Card",
             "Market Price", "Warehouse Availabilities", "DBT Schemes"
 
     };
 
     private static final String[] arrayCategeryMarathi = new String[]{
-            "हवामान", "किटक/रोग ओळखा","कीड व रोग","खत मात्रा गणक (कॅलक्यूलेटर)", "हवामान अनुकूल तंत्रज्ञान", "मृदा आरोग्य पत्रिका",
-            "बाजारभाव", " गोदाम उपलब्धता","थेट लाभ हस्तांतरण योजना"
+            "हवामान", "किटक/रोग ओळखा", "कीड व रोग", "खत मात्रा गणक (कॅलक्यूलेटर)", "हवामान अनुकूल तंत्रज्ञान", "मृदा आरोग्य पत्रिका",
+            "बाजारभाव", " गोदाम उपलब्धता", "थेट लाभ हस्तांतरण योजना"
 
     };
 
     static int[] arrayCategeryImg = new int[]{
-            R.drawable.weather_icon, R.drawable.identify_disease_icon,R.drawable.pets_n_disease_img, R.drawable.fertilizer_calculator, R.drawable.climate_resilent_technology_icon, R.drawable.soil_health_card_icon,
+            R.drawable.weather_icon, R.drawable.identify_disease_icon, R.drawable.pets_n_disease_img, R.drawable.fertilizer_calculator, R.drawable.climate_resilent_technology_icon, R.drawable.soil_health_card_icon,
             R.drawable.market_price_icon, R.drawable.warehouse_availability_icon, R.drawable.dbt_schemes_icon
     };
 
@@ -183,87 +181,51 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         gridView = findViewById(R.id.gridViewJobs);
         gridView.setColumnWidth(GridView.AUTO_FIT);
         if (languageToLoad.equalsIgnoreCase("en")) {
-            gridView.setAdapter(new DashboardAdapter(this, arrayCategery, arrayCategeryImg,"single_item_grid"));
+            gridView.setAdapter(new DashboardAdapter(this, arrayCategery, arrayCategeryImg, "single_item_grid"));
             Log.d("", "");
         } else if (languageToLoad.equalsIgnoreCase("hi")) {
-            gridView.setAdapter(new DashboardAdapter(this, arrayCategeryMarathi, arrayCategeryImg,"single_item_grid"));
+            gridView.setAdapter(new DashboardAdapter(this, arrayCategeryMarathi, arrayCategeryImg, "single_item_grid"));
         }
         gridView.setOnItemClickListener((parent, v, position, id) -> {
-            TextView txtLabel = v.findViewById(R.id.grid_item_label);
-            //Toast.makeText(DashboardScreen.this, txtLabel.getText(), Toast.LENGTH_SHORT).show();
-            Log.d("gridView", "Pos=" + position);
-
-            if (position == 0) {
-                Intent weather = new Intent(DashboardScreen.this, WeatherHome.class);
-                startActivity(weather);
-            } else if (position == 1) {
-
-                Intent i = new Intent(getApplicationContext(), Identify_dashboard.class);
-                startActivity(i);
-
-            } else if (position == 2) {
-                Intent sharing = new Intent(DashboardScreen.this, ComingSoonActivity.class);
-                startActivity(sharing);
+            switch (position) {
+                case 0:
+                    Intent weather = new Intent(DashboardScreen.this, WeatherHome.class);
+                    startActivity(weather);
+                    break;
+                case 1:
+                    Intent identify = new Intent(getApplicationContext(), Identify_dashboard.class);
+                    startActivity(identify);
+                    break;
+                case 2:
+                    Intent sharing = new Intent(DashboardScreen.this, ComingSoonActivity.class);
+                    startActivity(sharing);
+                    break;
+                case 3:
+                    Intent comingSoonIntent = new Intent(DashboardScreen.this, ComingSoonActivity.class);
+                    startActivity(comingSoonIntent);
+                    break;
+                case 4:
+                    Intent addPeople = new Intent(DashboardScreen.this, ClimateResilintTechnology.class);
+                    startActivity(addPeople);
+                    break;
+                case 5:
+                    Intent healthIntent = new Intent(DashboardScreen.this, HealthCardActivity.class);
+                    startActivity(healthIntent);
+                    break;
+                case 6:
+                    Intent marketIntent = new Intent(DashboardScreen.this, MarketPrice.class);
+                    startActivity(marketIntent);
+                    break;
+                case 7:
+                    Intent warehouseIntent = new Intent(DashboardScreen.this, Warehouse.class);
+                    startActivity(warehouseIntent);
+                    break;
+                case 8:
+                    Intent dbtIntent = new Intent(DashboardScreen.this, DbtSchemes.class);
+                    startActivity(dbtIntent);
+                    break;
             }
-            else if (position == 3) {
-                Intent sharing = new Intent(DashboardScreen.this, ComingSoonActivity.class);
-                startActivity(sharing);
-
-            } else if (position == 4) {
-
-                Intent addPeople = new Intent(DashboardScreen.this, ClimateResilintTechnology.class);
-                startActivity(addPeople);
-            } else if (position == 5) {
-                Intent addPeople = new Intent(DashboardScreen.this, HealthCardActivity.class);
-                startActivity(addPeople);
-            } else if (position == 6) {
-                Intent sharing = new Intent(DashboardScreen.this, MarketPrice.class);
-                startActivity(sharing);
-            }
-            else if (position == 7) {
-                Intent sharing = new Intent(DashboardScreen.this, Warehouse.class);
-                startActivity(sharing);
-            } else if (position == 8) {
-               // Intent sharing = new Intent(DashboardScreen.this, CropAdvisory.class);
-                Intent sharing = new Intent(DashboardScreen.this, DbtSchemes.class);
-                startActivity(sharing);
-            }
-//                else if (position == 9) {
-//                    Intent sharing = new Intent(DashboardScreen.this, CropAdvisory.class);
-//                    startActivity(sharing);
-//                }
-
-            // Intent intent = new Intent(JobsMenuGridListScreen.this, JobFoundList.class);
-            // startActivity(intent);
-            //  txtLabel.setBackgroundColor(Color.parseColor("#F21B92"));
         });
-
-
-
-
-//        selectedCropList = new ArrayList<CropsCategName>();
-//        List<Object> selectedArrayLists;
-//        selectedArrayLists = AppSettings.getInstance().getList(this, AppConstants.kFarmerCrop);
-//        if (!(selectedArrayLists == null)  && selectedArrayLists.size() > 0) {
-//            if (languageToLoad.equalsIgnoreCase("en")) {
-//                yourCrop.setVisibility(View.VISIBLE);
-//                Log.d("selectedArrayListsss", selectedArrayLists.toString());
-//                Gson gson = new Gson();
-//                String element = gson.toJson(
-//                        selectedArrayLists,
-//                        new TypeToken<ArrayList<CropsCategName>>() {
-//                        }.getType());
-//                Type listType = new TypeToken<ArrayList<CropsCategName>>() {
-//                }.getType();
-//                selectedCropList = new Gson().fromJson(element, listType);
-//                showCropList(selectedCropList);
-//            } else if (languageToLoad.equalsIgnoreCase("hi")) {
-//                getFarmerSelectedCrop();
-//            }
-//        } else {
-//            getFarmerSelectedCrop();
-//        }
-
 
         aboutPocraText1.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardScreen.this, AboutPocra.class);
@@ -316,27 +278,11 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
         addCrop.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardScreen.this, AddCropActivity.class);
-            // Intent intent = new Intent(DashboardScreen.this, SelectSowingDataAndFarmer.class);
             startActivity(intent);
         });
         setVersion();
         getFarmerSelectedCrop(languageToLoad);
-//        UserDetailsModel userDetailsModel=new UserDetailsModel();
-//        String strName=userDetailsModel.getName();
-//        String strMobNo=userDetailsModel.getMobileNo();
-//        Log.d("DashboardScreen::","Name:"+strName);
-//        Log.d("DashboardScreen::","MobNo:"+strMobNo);
-//        if(nameTextView.equals(null)) {
-//            Toast.makeText(this, "Null Name", Toast.LENGTH_SHORT).show();
-//        }
-//        else
-//        {
-//            nameTextView.setText(strName);
-//            mobileNoTextView.setText(strMobNo);
-//        }
-
         requestingPermissions();
-
     }
 
     private void requestingPermissions() {
@@ -431,21 +377,17 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        int versionNumber = pinfo.versionCode;
         String versionName = pinfo.versionName;
         if (APIServices.DBT.equalsIgnoreCase("https://ilab-sso.mahapocra.gov.in/")) {
             appVersionTextView.setText("App Version " + versionName + " S");
         } else {
             appVersionTextView.setText("App Version " + versionName);
         }
-
-        Log.d("gfghfghfghfgh", versionName);
         AppSettings.getInstance().setValue(DashboardScreen.this, AppConstants.kAPP_BUILD_VERSION, versionName);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void callingFun() {
-//        String number = "2222163352";
         Intent intent = new Intent(Intent.ACTION_DIAL);
         intent.setData(Uri.parse("tel:02222163352"));
         startActivity(intent);
@@ -454,7 +396,6 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
     private void getUserDetails() {
         JSONObject jsonObject = new JSONObject();
-        //var farmerId: Int = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
         Log.d("farmerId11111", String.valueOf(farmerId));
         try {
             jsonObject.put("SecurityKey", APIServices.SSO_KEY);
@@ -532,8 +473,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
         tvEnglish.setOnClickListener(view -> {
 
-             String languageToLoad = "en";
-
+            String languageToLoad = "en";
             Locale locale = new Locale(languageToLoad);
             Locale.setDefault(locale);
             Configuration config = new Configuration();
@@ -591,48 +531,10 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         }
     }
 
-    //    public boolean onNavigationItemSelected(@NonNull @NotNull MenuItem item) {
-//        int id = item.getItemId();
-//
-//        if (id == R.id.nav_home) {
-//           item.setIcon(R.drawable.warehouse_availabilities);
-//            Intent i=new Intent(DashboardScreen.this, Registration.class);
-//            startActivity(i);
-//        } else if (id == R.id.nav_login) {
-//
-//            Intent i=new Intent(DashboardScreen.this, LoginScreen.class);
-//            startActivity(i);
-//        } else if (id == R.id.nav_gallery) {
-//
-//            Intent i=new Intent(DashboardScreen.this, LoginScreen.class);
-//            startActivity(i);
-//        } else if (id == R.id.nav_slideshow) {
-//            Intent i=new Intent(DashboardScreen.this, Warehouse.class);
-//            startActivity(i);
-//        } else if (id == R.id.nav_my_farm_survay) {
-//            Intent i=new Intent(DashboardScreen.this, AboutPocra.class);
-//            startActivity(i);
-//
-//        } else if (id == R.id.nav_crop_Registration) {
-//            Toast.makeText(this, "Comming soon.......", Toast.LENGTH_SHORT).show();
-//
-//        } else if (id == R.id.nav_Trainings_Workshops_Events_Exposures) {
-//            AppUtility.getInstance().clearAppSharedPrefData(this, AppConstants.kSHARED_PREF);
-//            Intent intent =new  Intent(DashboardScreen.this, SplashScreen.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            startActivity(intent);
-//            finish();
-//        }
-//        //DrawerLayout drawer = findViewById(R.id.drawer_layout);
-//        drawer.closeDrawer(GravityCompat.START);
-//        return true;
-//    }
-
     @Override
     public void onFailure(Object obj, Throwable th, int i) {
     }
+
     @Override
     public void onResponse(JSONObject jSONObject, int i) {
 
@@ -663,9 +565,6 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                         AppSettings.getInstance().setIntValue(this, AppConstants.uTALUKAID, strTalukaId);
                         AppSettings.getInstance().setValue(this, AppConstants.uVILLAGE, strVillageName);
                         AppSettings.getInstance().setIntValue(this, AppConstants.uVILLAGEID, strVillageId);
-
-                        String districtName = AppSettings.getInstance().getValue(this, AppConstants.uDIST, AppConstants.uDIST);
-                        String taluka = AppSettings.getInstance().getValue(this, AppConstants.uTALUKA, AppConstants.uTALUKA);
 
                         String userName = AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName);
                         String userNumber = AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo);
@@ -709,10 +608,10 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                             this, AppConstants.kFarmerCrop,
                             Arrays.asList(selectedCropList.toArray()));
                 }
-                if(!(selectedCropList == null)){
+                if (!(selectedCropList == null)) {
                     showCropList(selectedCropList);
                 }
-            }else {
+            } else {
                 UIToastMessage.show(this, response.getResponse());
             }
         }
@@ -743,48 +642,47 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
-
         try {
             JSONObject jsonObject = jsonArray.getJSONObject(position);
             int id = jsonObject.getInt("id");
-            Log.d("id1111", String.valueOf(id));
-            if (id == 0) {
-                Intent intent = new Intent(DashboardScreen.this, Registration.class);
-                intent.putExtra("FAAPRegistrationID", farmerId);
-                startActivity(intent);
-            }
-            if (id == 1) { //Intent intent = new Intent(this, FinancialDetailsActivity.class);
-                if (farmerId > 0) {
-                    Intent sharing = new Intent(DashboardScreen.this, BandavarActivity.class);
-                    startActivity(sharing);
-                } else {
-                    UIToastMessage.show(DashboardScreen.this, "Please Login First...");
-                }
-            }
-            if (id == 2) {
-                Intent intent = new Intent(DashboardScreen.this, DbtStatus.class);
-                intent.putExtra("userPhoneNumber", String.valueOf(nav_user_phone));
-                startActivity(intent);
-            }
-            if (id == 3) {
-                Intent intent = new Intent(DashboardScreen.this, NotificationListActivity.class);
-                startActivity(intent);
-            }
-            if (id == 4) {
-                Intent intent = new Intent(DashboardScreen.this, Gis.class);
-                startActivity(intent);
-            }
-            if (id == 5) {
-                Intent intent = new Intent(DashboardScreen.this, TrainingLocationSelection.class);
-                startActivity(intent);
-            }
-            if (id == 6) {
-                Intent intent = new Intent(DashboardScreen.this, LoginScreen.class);
-                startActivity(intent);
-            }
-            if (id == 7) {
-                //AppSettings.getInstance().setBooleanValue(this, AppConstants.kIS_OFFLINE, false)
-                logoutFromApp();
+            switch (id) {
+                case 0:
+                    Intent intent = new Intent(DashboardScreen.this, Registration.class);
+                    intent.putExtra("FAAPRegistrationID", farmerId);
+                    startActivity(intent);
+                    break;
+                case 1:
+                    if (farmerId > 0) {
+                        Intent sharing = new Intent(DashboardScreen.this, BandavarActivity.class);
+                        startActivity(sharing);
+                    } else {
+                        UIToastMessage.show(DashboardScreen.this, "Please Login First...");
+                    }
+                    break;
+                case 2:
+                    Intent dbtStatusIntent = new Intent(DashboardScreen.this, DbtStatus.class);
+                    dbtStatusIntent.putExtra("userPhoneNumber", String.valueOf(nav_user_phone));
+                    startActivity(dbtStatusIntent);
+                    break;
+                case 3:
+                    Intent notificationIntent = new Intent(DashboardScreen.this, NotificationListActivity.class);
+                    startActivity(notificationIntent);
+                    break;
+                case 4:
+                    Intent gisIntent = new Intent(DashboardScreen.this, Gis.class);
+                    startActivity(gisIntent);
+                    break;
+                case 5:
+                    Intent trainingLocationIntent = new Intent(DashboardScreen.this, TrainingLocationSelection.class);
+                    startActivity(trainingLocationIntent);
+                    break;
+                case 6:
+                    Intent loginIntent = new Intent(DashboardScreen.this, LoginScreen.class);
+                    startActivity(loginIntent);
+                    break;
+                case 7:
+                    logoutFromApp();
+                    break;
             }
             DrawerLayout drawer = findViewById(R.id.drawer_layout1);
             if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -812,6 +710,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         Intent intent = new Intent(DashboardScreen.this, SplashScreen.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();

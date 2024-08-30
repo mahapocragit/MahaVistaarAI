@@ -412,7 +412,6 @@ public class Identify_img_upload extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
         AndroidNetworking.post(url_model)
                 .addJSONObjectBody(object)
                 .build()
@@ -442,8 +441,6 @@ public class Identify_img_upload extends AppCompatActivity {
                                              } else {
                                                  model.setErrorval(response.optString("error_msg"));
                                                  model.setMessage(response.optString("message"));
-
-
                                              }
                                              detect_ins.getInstance().setpath(path);
                                              Gson gson = new Gson();
@@ -602,7 +599,6 @@ public class Identify_img_upload extends AppCompatActivity {
     }
 
     public void show_dialog(String message) {
-
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Identify_img_upload.this);
         alertDialogBuilder.setTitle("Result");
         alertDialogBuilder

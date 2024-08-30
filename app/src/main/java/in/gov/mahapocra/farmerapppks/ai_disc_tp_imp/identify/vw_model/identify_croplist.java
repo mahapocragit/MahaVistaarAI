@@ -1,5 +1,7 @@
 package in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.vw_model;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -19,20 +21,16 @@ import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.model_identify.iden
 
 public class identify_croplist extends ViewModel {
 
-    private static final String TAG = "identify_croplist";
+    private static final String TAG = "identify_cropList";
     public MutableLiveData<getIdentify_crops_response> list;
 
     public LiveData<getIdentify_crops_response> getting_crops() {
-        // if (list == null) {
-        list = new MutableLiveData<getIdentify_crops_response>();
-        getcrops();
-        // }
+        list = new MutableLiveData<>();
+        getCrops();
         return list;
     }
 
-
-    public void getcrops() {
-
+    public void getCrops() {
         AndroidNetworking.post("https://nibpp.krishimegh.in/Api/nibpp/getmodels_aidisc")
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
@@ -40,8 +38,8 @@ public class identify_croplist extends ViewModel {
                     public void onResponse(JSONObject response) {
                         //Log.d(TAG, "onResponse: " + response.toString());
                         identify_model_croplist output = new identify_model_croplist();
-                        ArrayList<String> cropnames_dis=new ArrayList<String>();
-                        ArrayList<String> cropnames_pest=new ArrayList<String>();
+                        ArrayList<String> cropnames_dis = new ArrayList<String>();
+                        ArrayList<String> cropnames_pest = new ArrayList<String>();
                         try {
                             JSONArray array = response.getJSONArray("identifiercroplist_dis");
                             JSONArray array1 = response.getJSONArray("identifiercroplist_pest");

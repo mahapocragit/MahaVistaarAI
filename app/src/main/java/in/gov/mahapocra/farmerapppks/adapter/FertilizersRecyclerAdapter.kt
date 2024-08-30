@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.gov.mahapocra.farmerapppks.R
+import `in`.gov.mahapocra.farmerapppks.app_util.DeleteApi
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -21,7 +22,9 @@ class FertilizersRecyclerAdapter (
     private var listener: OnMultiRecyclerItemClickListener,
     private var fertilizerCalculatedValue: JSONArray?,
     private var availableOption: String
-) : RecyclerView.Adapter<FertilizersRecyclerAdapter.ViewHolder>(), OnMultiRecyclerItemClickListener {
+) : RecyclerView.Adapter<FertilizersRecyclerAdapter.ViewHolder>(), OnMultiRecyclerItemClickListener, DeleteApi {
+
+    private lateinit var deleteApi:DeleteApi
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -35,6 +38,10 @@ class FertilizersRecyclerAdapter (
         return ViewHolder(view)
     }
 
+    fun setItemClickListener(deleteApi:DeleteApi) {
+        this.deleteApi = deleteApi
+    }
+
     override fun getItemCount(): Int {
         return fertilizerCalculatedValue?.length()!!
     }
@@ -46,22 +53,24 @@ class FertilizersRecyclerAdapter (
         val optionTv: TextView = itemView.findViewById(R.id.optiontv)
         val mainLinearLayout: LinearLayout = itemView.findViewById(R.id.mainLinearLayout)
         val deleteOptionImageView: ImageView = mainLinearLayout.findViewById(R.id.deleteOptionImageView)
+        val saveOptionImageView: ImageView = mainLinearLayout.findViewById(R.id.optionImg)
         val fertilizerDateRcl: RecyclerView = itemView.findViewById(R.id.fertlizerDate_Rcl)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         for (i in 0 until (fertilizerCalculatedValue?.length() ?: 0)) {
-            holder.optionTv.text = context!!.getResources().getString(R.string.Option) + " ${position+1}"
-            Log.d("NASHIK_TAG", "onBindViewHolder: $availableOption")
+            holder.optionTv.text = context?.getResources()?.getString(R.string.Option) + " ${position+1}"
             val adaptorDbtActivityGrp =
                 BbtActivityGrpAdapter(
                     context,
                     this,
                     if (availableOption == "fertilizerSelectedValue"){
                         holder.deleteOptionImageView.visibility = View.VISIBLE
+                        holder.saveOptionImageView.visibility = View.GONE
                         (fertilizerCalculatedValue?.get(position) as JSONObject).getJSONArray("option")
                     }else{
                         holder.deleteOptionImageView.visibility = View.GONE
+                        holder.saveOptionImageView.visibility = View.VISIBLE
                         (fertilizerCalculatedValue?.get(position) as JSONObject).getJSONArray("Option")
                     }
                     ,
@@ -86,11 +95,15 @@ class FertilizersRecyclerAdapter (
             val id =  (fertilizerCalculatedValue?.get(position) as JSONObject).getInt("id")
             val farmerId =  (fertilizerCalculatedValue?.get(position) as JSONObject).getInt("farmer_id")
             val cropId =  (fertilizerCalculatedValue?.get(position) as JSONObject).getInt("crop_id")
-            Toast.makeText(holder.mainLinearLayout.context, "Deleted", Toast.LENGTH_SHORT).show()
+            deleteApi.deleteData(id, farmerId, cropId)
         }
     }
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteData(id: Int, farmerId: Int, cropId: Int) {
         TODO("Not yet implemented")
     }
 

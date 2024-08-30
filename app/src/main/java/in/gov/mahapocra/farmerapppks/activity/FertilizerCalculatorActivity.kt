@@ -34,7 +34,11 @@ import `in`.gov.mahapocra.farmerapppks.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
+import `in`.gov.mahapocra.farmerapppks.app_util.DeleteApi
 import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -246,18 +250,12 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             jsonObject.put("farmer_id", "902")
             jsonObject.put("crop_id", cropId)
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api =
-                AppInventorApi(this, APIServices.SSO, "", AppString(this).getkMSG_WAIT(), true)
-            val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getFertilizerSavedFormula(requestBody)
-            DebugLog.getInstance().d("param1=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()))
-            api.postRequest(responseCall, this, 4)
-            DebugLog.getInstance().d("param=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
+            val api = AppInventorApi(this, APIServices.SSO, "", AppString(this).getkMSG_WAIT(), true)
+            CoroutineScope(Dispatchers.IO).launch {
+                val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
+                val responseCall: Call<JsonObject> = apiRequest.getFertilizerSavedFormula(requestBody)
+                api.postRequest(responseCall, this@FertilizerCalculatorActivity, 4)
+            }
         } catch (e: JSONException) {
             DebugLog.getInstance().d("JSONException=$e")
             e.printStackTrace()
@@ -335,19 +333,12 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
 
     private fun getToken() {
         try {
-            val api =
-                AppInventorApi(this, APIServices.WOTR, "", AppString(this).getkMSG_WAIT(), true)
-            val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> =
-                apiRequest.getTokenFromWotr("8470807282", "PMU%40PoCRA%232023")
-            DebugLog.getInstance().d("param1=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()))
-            api.postRequest(responseCall, this, 2)
-            DebugLog.getInstance().d("param=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
+            val api = AppInventorApi(this, APIServices.WOTR, "", AppString(this).getkMSG_WAIT(), true)
+            CoroutineScope(Dispatchers.IO).launch {
+                val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
+                val responseCall: Call<JsonObject> = apiRequest.getTokenFromWotr("8470807282", "PMU%40PoCRA%232023")
+                api.postRequest(responseCall, this@FertilizerCalculatorActivity, 2)
+            }
         } catch (e: JSONException) {
             DebugLog.getInstance().d("JSONException=$e")
             e.printStackTrace()
@@ -356,54 +347,24 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getCalculatedFertilizerData() {
-//        try {
-//
-//            val api = AppInventorIncAPI(
-//                this,
-//               // "https://dev-0otqduj79ub8k68.api.raw-labs.com",
-//                  "https://kisan.wotr.org.in/",
-//                AppSession(this).getToken(),
-//                AppString(this).getMSG_WAIT(),
-//                true
-//            )
-//          //  api.getRequestData("https://dev-0otqduj79ub8k68.api.raw-labs.com/calculator_value", this, 1)
-//             api.getRequestData("https://kisan.wotr.org.in/Api_GoM/getNutrient_calculator?CropID=7&SowingDate=2023-12-01&IsNPK=1&SoilTestN=15&SoilTestP=20&SoilTestK=15&VillageCode=548229&FYM=5&TargetYield=20&PlotSize=4&PlotUnit=2&Token=$token", this, 2)
-//
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
 
         val formatter: DateFormat = SimpleDateFormat("dd-mm-yyyy")
         val date = sowingDate?.let { formatter.parse(it) } as Date
         val newFormat = SimpleDateFormat("yyyy-mm-dd")
         val finalSowingDate = newFormat.format(date)
         try {
-            val api =
-                AppInventorApi(this, APIServices.WOTR, "", AppString(this).getkMSG_WAIT(), true)
-            val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
-            // val responseCall: Call<JsonObject> = apiRequest.getFertilizerCalculatedData("7", "2023-06-01","1","177","7","280","548229","0","0","4","2",token)
-            val responseCall: Call<JsonObject> = apiRequest.getFertilizerCalculatedData(
-                wotrCropId,
-                finalSowingDate,
-                soilTestOption.toString(),
-                nitrogenValue,
-                phosphorusValue,
-                potassiumValue,
-                villageID.toString(),
-                edtFYMValue,
-                "0",
-                totalAcrArea.toString(),
-                "1",
-                token
-            )
-            DebugLog.getInstance().d("param1=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()))
-            api.postRequest(responseCall, this, 1)
-            DebugLog.getInstance().d("param=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
+            val api = AppInventorApi(this, APIServices.WOTR, "", AppString(this).getkMSG_WAIT(), true)
+
+            CoroutineScope(Dispatchers.IO).launch {
+                val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
+                val responseCall: Call<JsonObject> = apiRequest.getFertilizerCalculatedData(
+                    wotrCropId, finalSowingDate, soilTestOption.toString(),
+                    nitrogenValue, phosphorusValue, potassiumValue,
+                    villageID.toString(), edtFYMValue, "0",
+                    totalAcrArea.toString(), "1", token
+                )
+                api.postRequest(responseCall, this@FertilizerCalculatorActivity, 1)
+            }
         } catch (e: JSONException) {
             DebugLog.getInstance().d("JSONException=$e")
             e.printStackTrace()
@@ -570,6 +531,16 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                             showCalculatorData()
                         }
                     }
+
+                    5 -> {
+                        val message = jSONObject.getString("response")
+                        getSelectedSavedOption()
+                        Toast.makeText(
+                            this@FertilizerCalculatorActivity,
+                            message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
         } catch (e: JSONException) {
@@ -609,6 +580,29 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     false
                 )
             )
+            val itemClickListener: DeleteApi = object : DeleteApi {
+                override fun deleteData(id: Int, farmerId: Int, cropId: Int) {
+                    val jsonObject = JSONObject()
+                    jsonObject.put("id", id)
+                    jsonObject.put("farmer_id", farmerId)
+                    jsonObject.put("crop_id", cropId)
+                    val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                    val api = AppInventorApi(
+                        this@FertilizerCalculatorActivity,
+                        APIServices.SSO,
+                        "",
+                        AppString(this@FertilizerCalculatorActivity).getkMSG_WAIT(),
+                        true
+                    )
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
+                        val responseCall: Call<JsonObject> =
+                            apiRequest.deleteFertilizerFromSavedList(requestBody)
+                        api.postRequest(responseCall, this@FertilizerCalculatorActivity, 5)
+                    }
+                }
+            }
+            optionRclAdapter.setItemClickListener(deleteApi = itemClickListener)
             fertilizerNameRcl.adapter = optionRclAdapter
             optionRclAdapter.notifyDataSetChanged()
         }
@@ -638,18 +632,12 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             jsonObject.put("option", fertilizerOption)
 
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api =
-                AppInventorApi(this, APIServices.SSO, "", AppString(this).getkMSG_WAIT(), true)
-            val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.saveFertilizerFormula(requestBody)
-            DebugLog.getInstance().d("param1=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()))
-            api.postRequest(responseCall, this, 3)
-            DebugLog.getInstance().d("param=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
+            val api = AppInventorApi(this, APIServices.SSO, "", AppString(this).getkMSG_WAIT(), true)
+            CoroutineScope(Dispatchers.IO).launch {
+                val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
+                val responseCall: Call<JsonObject> = apiRequest.saveFertilizerFormula(requestBody)
+                api.postRequest(responseCall, this@FertilizerCalculatorActivity, 3)
+            }
         } catch (e: JSONException) {
             DebugLog.getInstance().d("JSONException=$e")
             e.printStackTrace()

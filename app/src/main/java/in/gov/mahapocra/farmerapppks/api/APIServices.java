@@ -93,6 +93,7 @@ public interface APIServices {
     String kGetPestDiseaseDetails ="farmerService/get-pest-disease-details";
     String kGetCropStages ="farmerService/get-crop-stages";
     String kGetCropStagesAndAdvisory ="farmerService/get-crop-stages-and-advisory";
+    String DELETE_FERTILIZER_FROM_SAVED ="farmerService/delete-fertilizer-formula-of-user";
     String kAutoAdvisory ="farmerService/get-auto-advisory";
     String advisory_feedback ="farmerService/advisory-feedback";
 
