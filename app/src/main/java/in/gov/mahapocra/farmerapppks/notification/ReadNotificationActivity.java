@@ -37,7 +37,7 @@ import in.co.appinventor.services_api.widget.UIToastMessage;
 import in.gov.mahapocra.farmerapppks.R;
 import in.gov.mahapocra.farmerapppks.activity.DashboardScreen;
 import in.gov.mahapocra.farmerapppks.activity.LoginScreen;
-import in.gov.mahapocra.farmerapppks.activity.SplashScreen;
+import in.gov.mahapocra.farmerapppks.activity.SplashScreenActivity;
 import in.gov.mahapocra.farmerapppks.api.APIRequest;
 import in.gov.mahapocra.farmerapppks.api.APIServices;
 import in.gov.mahapocra.farmerapppks.app_util.AppConstants;
@@ -259,7 +259,7 @@ public class ReadNotificationActivity extends AppCompatActivity implements ApiCa
            // JSONObject loginJson = new JSONObject(loginData);
             userId = "6289";
         }else{
-            startActivity(new Intent(this, SplashScreen.class));
+            startActivity(new Intent(this, SplashScreenActivity.class));
             finish();
         }
     }

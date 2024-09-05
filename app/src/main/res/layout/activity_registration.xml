@@ -190,16 +190,6 @@
         <!--            android:textStyle="bold" />-->
 
 
-        <TextView
-            android:id="@+id/deleteAccountButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center|start"
-            android:paddingHorizontal="30dp"
-            android:paddingVertical="10dp"
-            android:hint="Delete Account"
-            android:textColorHint="@color/red" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -223,20 +213,21 @@
                 android:layout_marginTop="@dimen/height5"
                 android:elevation="8dp"
                 android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/textViewDist"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:background="@drawable/drop_down"
                     android:gravity="start|center"
                     android:hint="@string/farmer_select_district"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:paddingEnd="@dimen/padding20"
                     android:paddingStart="@dimen/padding20"
+                    android:paddingEnd="@dimen/padding20"
 
-                    android:textColorHint="@color/text_black"
                     android:textColor="@color/heading"
+                    android:textColorHint="@color/text_black"
                     android:textSize="@dimen/text14"
                     android:textStyle="normal" />
 
@@ -245,14 +236,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/padding30"
+                    android:layout_marginRight="@dimen/padding30"
                     android:contentDescription="@string/app_name"
                     app:srcCompat="@drawable/ic_expand_more_black_24dp"
-                    tools:ignore="VectorDrawableCompat"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/padding30"
-                    app:tint="@color/gray" />
+                    app:tint="@color/gray"
+                    tools:ignore="VectorDrawableCompat" />
 
             </RelativeLayout>
 
@@ -279,16 +270,16 @@
                     android:id="@+id/textViewTaluka"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
                     android:background="@drawable/drop_down"
                     android:gravity="start|center"
                     android:hint="@string/farmer_select_taluka"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp"
-                    android:textColorHint="@color/text_black"
-                    android:paddingEnd="@dimen/padding20"
                     android:paddingStart="@dimen/padding20"
+                    android:paddingEnd="@dimen/padding20"
                     android:textColor="@color/heading"
+                    android:textColorHint="@color/text_black"
                     android:textSize="@dimen/text14"
                     android:textStyle="normal" />
 
@@ -297,14 +288,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/padding30"
+                    android:layout_marginRight="@dimen/padding30"
                     android:contentDescription="@string/app_name"
                     app:srcCompat="@drawable/ic_expand_more_black_24dp"
-                    tools:ignore="VectorDrawableCompat"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/padding30"
-                    app:tint="@color/gray" />
+                    app:tint="@color/gray"
+                    tools:ignore="VectorDrawableCompat" />
 
             </RelativeLayout>
 
@@ -330,16 +321,16 @@
                     android:id="@+id/textViewVillage"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="20dp"
                     android:background="@drawable/drop_down"
                     android:gravity="start|center"
                     android:hint="@string/farmer_select_village"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="15dp"
-                    android:textColorHint="@color/text_black"
-                    android:paddingEnd="@dimen/padding20"
                     android:paddingStart="@dimen/padding20"
+                    android:paddingEnd="@dimen/padding20"
                     android:textColor="@color/heading"
+                    android:textColorHint="@color/text_black"
                     android:textSize="@dimen/text14"
                     android:textStyle="normal" />
 
@@ -348,29 +339,40 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/padding30"
+                    android:layout_marginRight="@dimen/padding30"
                     android:contentDescription="@string/app_name"
                     app:srcCompat="@drawable/ic_expand_more_black_24dp"
-                    tools:ignore="VectorDrawableCompat"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/padding30"
-                    app:tint="@color/gray" />
+                    app:tint="@color/gray"
+                    tools:ignore="VectorDrawableCompat" />
 
             </RelativeLayout>
+
             <Button
                 android:id="@+id/submitButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_margin="30dp"
-                android:padding="@dimen/padding12"
                 android:backgroundTint="@color/light_green"
+                android:padding="@dimen/padding12"
                 android:text="@string/reg_submit"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text16" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/deleteAccountButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|start"
+            android:paddingHorizontal="30dp"
+            android:paddingVertical="10dp"
+            android:hint="Delete Account"
+            android:textColorHint="@color/red" />
+
     </LinearLayout>
     </ScrollView>
 </LinearLayout>

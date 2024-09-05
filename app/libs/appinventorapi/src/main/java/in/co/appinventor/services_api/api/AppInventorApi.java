@@ -114,7 +114,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
                 ongoing.addHeader("authoritytoken", AppInventorApi.this.authToken);
                 return chain.proceed(ongoing.build());
             });
-           // return new Retrofit.Builder().baseUrl(this.baserURL).client(getUnsafeOkHttpClient(mContext).build()).client(builder.build()).addConverterFactory(GsonConverterFactory.create()).build();
 
             return new Retrofit.Builder()
                     .baseUrl(this.baserURL)

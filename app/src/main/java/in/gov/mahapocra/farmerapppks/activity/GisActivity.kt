@@ -2,28 +2,26 @@ package `in`.gov.mahapocra.farmerapppks.activity
 
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.farmerapppks.R
-import android.content.Intent
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.webkit.WebView
 import android.widget.ProgressBar
-import `in`.gov.mahapocra.farmerapppks.databinding.ActivityHealthCardBinding
+import androidx.appcompat.app.AppCompatActivity
+import `in`.gov.mahapocra.farmerapppks.databinding.ActivityGisBinding
 
-class HealthCardActivity : AppCompatActivity() {
+class GisActivity : AppCompatActivity() {
 
+    private lateinit var binding:ActivityGisBinding
     var languageToLoad: String? = null
-    private lateinit var binding: ActivityHealthCardBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityHealthCardBinding.inflate(layoutInflater)
+        binding= ActivityGisBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         languageToLoad = "hi"
-        if (AppSettings.getLanguage(this@HealthCardActivity).equals("1", ignoreCase = true)) {
+        if (AppSettings.getLanguage(this@GisActivity).equals("1", ignoreCase = true))
+        {
             languageToLoad = "en"
         }
 
@@ -34,11 +32,11 @@ class HealthCardActivity : AppCompatActivity() {
         }
 
         binding.progressBar.visibility = View.VISIBLE
-        val webSettings = binding.webView.settings
+        val webSettings = binding.webView1.settings
         webSettings.cacheMode
         webSettings.javaScriptEnabled = true
-        binding.webView.loadUrl("http://gis.mahapocra.gov.in/controlpanel/soilcard.html")
-        if (binding.webView.progress == 10){
+        binding.webView1.loadUrl("http://gis.mahapocra.gov.in/controlpanel")
+        if (binding.webView1.progress == 10){
             binding.progressBar.visibility = View.INVISIBLE
         }
     }

@@ -33,6 +33,9 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.gson.JsonObject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -42,79 +45,76 @@ import retrofit2.Retrofit
 
 class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, AlertListEventListener {
 
-    lateinit var nameEditText: EditText
-    lateinit var mobNoEditText: EditText
-    lateinit var emailId: EditText
-    lateinit var passwordEditText: EditText
-    lateinit var confirmPasswordEditText: EditText
-    lateinit var textViewDist: TextView
-    lateinit var textViewTaluka: TextView
-    lateinit var textViewVillage: TextView
-    lateinit var textViewVerify: TextView
-    lateinit var submitButton: Button
-    lateinit var deleteAccountButton: TextView
+    private lateinit var nameEditText: EditText
+    private lateinit var mobNoEditText: EditText
+    private lateinit var emailId: EditText
+    private lateinit var passwordEditText: EditText
+    private lateinit var confirmPasswordEditText: EditText
+    private lateinit var textViewDist: TextView
+    private lateinit var textViewTaluka: TextView
+    private lateinit var textViewVillage: TextView
+    private lateinit var textViewVerify: TextView
+    private lateinit var submitButton: Button
+    private lateinit var deleteAccountButton: TextView
 
-    lateinit var sentOTP: String
-    lateinit var userName: String
-    lateinit var mob: String
-    lateinit var registerMob: String
-    lateinit var pass: String
-    lateinit var confrmPass: String
-    lateinit var emailid: String
-    lateinit var districtName: String
+    private lateinit var sentOTP: String
+    private lateinit var userName: String
+    private lateinit var mob: String
+    private lateinit var registerMob: String
+    private lateinit var pass: String
+    private lateinit var confirmPass: String
+    private lateinit var emailid: String
+    private lateinit var districtName: String
     private var districtID: Int = 0
-    lateinit var talukaName: String
+    private lateinit var talukaName: String
     private var talukaID: Int = 0
-    lateinit var villageName: String
-    lateinit var villageCode: String
+    private lateinit var villageName: String
     private var villageID: Int = 0
     private var fAAPRegistrationID: String = ""
     private var sessionManager: SessionManager? = null
 
-
     private var districtJSONArray: JSONArray? = null
     private var talukaJSONArray: JSONArray? = null
-    private var villJSONArray: JSONArray? = null
-
+    private var villageJSONArray: JSONArray? = null
 
     private lateinit var dialog: Dialog
-    private var moblNumberStatus: Boolean = false
-    var farmerRigisterID: Int = 0
-    lateinit var languageToLoad: String
+    private var mobileNumberStatus: Boolean = false
+    var farmerRegisterID: Int = 0
+    private lateinit var languageToLoad: String
 
-    var versionName: String? = null
-    var token: String? = null
-    var machineId: String? = null
+    private var versionName: String? = null
+    private var token: String? = null
+    private var machineId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_registration)
+
         languageToLoad = "mr"
         if (AppSettings.getLanguage(this@Registration).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
-        setContentView(R.layout.activity_registration)
         var pinfo: PackageInfo? = null
         try {
             pinfo = packageManager.getPackageInfo(packageName, 0)
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
         }
-        val versionNumber = pinfo!!.versionCode
-        versionName = pinfo.versionName
+        versionName = pinfo?.versionName
         token = FirebaseInstanceId.getInstance().token
         Log.d("token12345", "" + token)
-
         sessionManager = SessionManager(this)
         init()
+        deleteAccountButton.visibility = View.GONE
         setConfiguration()
         onclick()
     }
 
     private fun setConfiguration() {
-        farmerRigisterID = intent.getIntExtra("FAAPRegistrationID", 0)
-        if (farmerRigisterID > 0) {
-            fAAPRegistrationID = farmerRigisterID.toString()
-            moblNumberStatus = true
+        farmerRegisterID = intent.getIntExtra("FAAPRegistrationID", 0)
+        if (farmerRegisterID > 0) {
+            fAAPRegistrationID = farmerRegisterID.toString()
+            mobileNumberStatus = true
             userName =
                 AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName)
             registerMob = AppSettings.getInstance()
@@ -132,7 +132,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
             villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
             passwordEditText.visibility = View.GONE
             confirmPasswordEditText.visibility = View.GONE
-
+            deleteAccountButton.visibility = View.VISIBLE
             nameEditText.setText(userName)
             mobNoEditText.setText(registerMob)
             emailId.setText(emailid)
@@ -163,18 +163,14 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
                     AppString(this).getkMSG_WAIT(),
                     true
                 )
-            val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getDistrictList(requestBody)
-            DebugLog.getInstance().d("param1=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()))
-            api.postRequest(responseCall, this, 1)
-            DebugLog.getInstance().d("param=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
+            CoroutineScope(Dispatchers.IO).launch {
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(APIRequest::class.java)
+                val responseCall: Call<JsonObject> = apiRequest.getDistrictList(requestBody)
+                api.postRequest(responseCall, this@Registration, 1)
+            }
         } catch (e: JSONException) {
-            DebugLog.getInstance().d("JSONException=" + e.toString())
+            DebugLog.getInstance().d("JSONException=$e")
             e.printStackTrace()
         }
     }
@@ -194,21 +190,6 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
     }
 
     private fun onclick() {
-//        mobNoEditText.setOnClickListener(View.OnClickListener {
-//            val MobilePattern = "[0-9]{10}"
-//            if (mobNoEditText.getText().toString().equals(MobilePattern)) {
-//                Toast.makeText(this, "phone number is valid", Toast.LENGTH_SHORT)
-//                    .show();
-//
-//            } else if (!mobNoEditText.getText().toString().equals(MobilePattern)) {
-//
-//                Toast.makeText(
-//                    this,
-//                    "Please enter valid 10 digit phone number",
-//                    Toast.LENGTH_SHORT
-//                ).show();
-//            }
-//        })
 
         deleteAccountButton.setOnClickListener {
             AlertDialog.Builder(this)
@@ -224,9 +205,8 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
 
         mobNoEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                if (farmerRigisterID > 0) {
-                    Log.d("sssssss1", s.toString())
-                    moblNumberStatus = false
+                if (farmerRegisterID > 0) {
+                    mobileNumberStatus = false
                 }
             }
 
@@ -234,22 +214,18 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
                 s: CharSequence, start: Int,
                 count: Int, after: Int
             ) {
-                Log.d("sssssss2", s.toString())
-//                moblNumberStatus= false
             }
 
             override fun onTextChanged(
                 s: CharSequence, start: Int,
                 before: Int, count: Int
             ) {
-                Log.d("sssssss3", s.toString())
-//                moblNumberStatus= false
             }
         })
         submitButton.setOnClickListener {
             machineId = getMachineId()
-            if (farmerRigisterID > 0) {
-                userValidationAndUpdateprofile()
+            if (farmerRegisterID > 0) {
+                userValidationAndUpdateProfile()
             } else {
                 userValidationAndRegistraton()
             }
@@ -297,7 +273,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
     }
 
     private fun showVillage() {
-        if (villJSONArray == null) {
+        if (villageJSONArray == null) {
             if (talukaID > 0) {
                 getVillageAgainstTaluka()
             } else {
@@ -306,7 +282,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
         } else {
             AppUtility.getInstance()
                 .showListDialogIndex(
-                    villJSONArray,
+                    villageJSONArray,
                     3,
                     getString(R.string.farmer_select_village),
                     "name",
@@ -338,8 +314,8 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
         mob = mobNoEditText.text.toString()
         // verification.setTextColor(Color.parseColor("#000000"))
 
-        if (farmerRigisterID > 0 && !mob.equals(registerMob)) {
-            moblNumberStatus = false
+        if (farmerRegisterID > 0 && !mob.equals(registerMob)) {
+            mobileNumberStatus = false
         }
         if (mob.isEmpty()) {
             mobNoEditText.error = resources.getString(R.string.login_mob_err)
@@ -362,24 +338,20 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
                         AppString(this).getkMSG_WAIT(),
                         true
                     )
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getOTPRequest(requestBody)
-                DebugLog.getInstance().d("param1=" + responseCall.request().toString())
-                DebugLog.getInstance()
-                    .d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()))
-                api.postRequest(responseCall, this, 2)
-                DebugLog.getInstance().d("param=" + responseCall.request().toString())
-                DebugLog.getInstance()
-                    .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
+                CoroutineScope(Dispatchers.IO).launch {
+                    val retrofit: Retrofit = api.getRetrofitInstance()
+                    val apiRequest = retrofit.create(APIRequest::class.java)
+                    val responseCall: Call<JsonObject> = apiRequest.getOTPRequest(requestBody)
+                    api.postRequest(responseCall, this@Registration, 2)
+                }
             } catch (e: JSONException) {
-                DebugLog.getInstance().d("JSONException=" + e.toString())
+                DebugLog.getInstance().d("JSONException=$e")
                 e.printStackTrace()
             }
         }
     }
 
-    private fun userValidationAndUpdateprofile() {
+    private fun userValidationAndUpdateProfile() {
         userName = nameEditText.text.toString()
         mob = mobNoEditText.text.toString()
         emailid = emailId.text.toString()
@@ -390,7 +362,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
         } else if (mob.isEmpty() && !AppUtility.getInstance().isValidPhoneNumber(mob)) {
             mobNoEditText.error = resources.getString(R.string.login_mob_valid_err)
             mobNoEditText.requestFocus()
-        } else if (moblNumberStatus == false) {
+        } else if (mobileNumberStatus == false) {
             mobNoEditText.error = resources.getString(R.string.regist_mob_verify_err)
             mobNoEditText.requestFocus()
         } else if (districtID == 0) {
@@ -429,16 +401,12 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
                         AppString(this).getkMSG_WAIT(),
                         true
                     )
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getRegistrationRequest(requestBody)
-                DebugLog.getInstance().d("param1=" + responseCall.request().toString())
-                DebugLog.getInstance()
-                    .d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()))
-                api.postRequest(responseCall, this, 3)
-                DebugLog.getInstance().d("param=" + responseCall.request().toString())
-                DebugLog.getInstance()
-                    .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
+                CoroutineScope(Dispatchers.IO).launch {
+                    val retrofit: Retrofit = api.getRetrofitInstance()
+                    val apiRequest = retrofit.create(APIRequest::class.java)
+                    val responseCall: Call<JsonObject> = apiRequest.getRegistrationRequest(requestBody)
+                    api.postRequest(responseCall, this@Registration, 3)
+                }
             } catch (e: JSONException) {
                 DebugLog.getInstance().d("JSONException=$e")
                 e.printStackTrace()
@@ -450,10 +418,8 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
         userName = nameEditText.text.toString()
         mob = mobNoEditText.text.toString()
         pass = passwordEditText.text.toString()
-        confrmPass = confirmPasswordEditText.text.toString()
+        confirmPass = confirmPasswordEditText.text.toString()
         emailid = emailId.text.toString()
-
-        Log.d("pass:confrmPass", "$pass ::$confrmPass")
 
         if (userName.isEmpty()) {
             nameEditText.error = resources.getString(R.string.name_error)
@@ -461,16 +427,16 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
         } else if (mob.isEmpty()) {
             mobNoEditText.error = resources.getString(R.string.login_mob_valid_err)
             mobNoEditText.requestFocus()
-        } else if (moblNumberStatus == false) {
+        } else if (!mobileNumberStatus) {
             mobNoEditText.error = resources.getString(R.string.regist_mob_verify_err)
             mobNoEditText.requestFocus()
         } else if (pass.isEmpty()) {
             passwordEditText.error = resources.getString(R.string.password_error)
             passwordEditText.requestFocus()
-        } else if (confrmPass.isEmpty()) {
+        } else if (confirmPass.isEmpty()) {
             confirmPasswordEditText.error = resources.getString(R.string.conf_password_error)
             confirmPasswordEditText.requestFocus()
-        } else if (!pass.equals(confrmPass)) {
+        } else if (!pass.equals(confirmPass)) {
             confirmPasswordEditText.error = resources.getString(R.string.pass_equals_confirmpass)
             confirmPasswordEditText.requestFocus()
         } else if (districtID == 0) {
@@ -509,16 +475,12 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
                         AppString(this).getkMSG_WAIT(),
                         true
                     )
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getRegistrationRequest(requestBody)
-                DebugLog.getInstance().d("param1=" + responseCall.request().toString())
-                DebugLog.getInstance()
-                    .d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()))
-                api.postRequest(responseCall, this, 3)
-                DebugLog.getInstance().d("param=" + responseCall.request().toString())
-                DebugLog.getInstance()
-                    .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
+                CoroutineScope(Dispatchers.IO).launch {
+                    val retrofit: Retrofit = api.getRetrofitInstance()
+                    val apiRequest = retrofit.create(APIRequest::class.java)
+                    val responseCall: Call<JsonObject> = apiRequest.getRegistrationRequest(requestBody)
+                    api.postRequest(responseCall, this@Registration, 3)
+                }
             } catch (e: JSONException) {
                 DebugLog.getInstance().d("JSONException=" + e.toString())
                 e.printStackTrace()
@@ -542,17 +504,17 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
         dialogTitle.text = "Enter OTP"
         Log.d("sentOTP22222", sentOTP)
 
-        val revcieveOTPEditText = dialog.findViewById<EditText>(R.id.OptEditText)
+        val receiveOTPEditText = dialog.findViewById<EditText>(R.id.OptEditText)
         val submitButton = dialog.findViewById<Button>(R.id.submitButton)
         val resendOTP = dialog.findViewById<Button>(R.id.resentOTP)
         val cancelButton = dialog.findViewById<ImageView>(R.id.imageView_close)
 
         cancelButton.setOnClickListener { dialog.dismiss() }
         submitButton.setOnClickListener {
-            val enteredOTP: String = revcieveOTPEditText.text.toString()
+            val enteredOTP: String = receiveOTPEditText.text.toString()
             if (enteredOTP.isEmpty()) {
-                revcieveOTPEditText.error = resources.getString(R.string.regist_otp_err)
-                revcieveOTPEditText.requestFocus()
+                receiveOTPEditText.error = resources.getString(R.string.regist_otp_err)
+                receiveOTPEditText.requestFocus()
             } else {
                 userVerification(enteredOTP)
             }
@@ -565,21 +527,17 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
     }
 
     private fun userVerification(enteredOTP: String) {
-
-        Log.d("shdfhsdf", enteredOTP)
-        Log.d("testshvm1", this.sentOTP)
         if (enteredOTP.equals(this.sentOTP)) {
             textViewVerify.text = resources.getString(R.string.reg_verified)
             textViewVerify.setTextColor(Color.parseColor("#1d6b08"))
             mobNoEditText.setEnabled(false)
-            moblNumberStatus = true
+            mobileNumberStatus = true
             sessionManager?.setLoggedIn(true)
             dialog.dismiss()
         } else {
             Toast.makeText(this, R.string.wrong_OTP, Toast.LENGTH_LONG).show()
         }
     }
-
 
     override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
         DebugLog.getInstance().d("onResponse=$obj$i")
@@ -592,10 +550,8 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 1 && jSONObject != null) {
             val response = ResponseModel(jSONObject)
-
             if (response.status) {
                 districtJSONArray = response.getdataArray()
-                Log.d("districtJSONArray11111", districtJSONArray.toString())
             } else {
                 UIToastMessage.show(this, response.response)
             }
@@ -603,10 +559,8 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
 
         if (i == 4 && jSONObject != null) {
             val response = ResponseModel(jSONObject)
-
             if (response.status) {
                 talukaJSONArray = response.getdataArray()
-                Log.d("talukaJSONArray", talukaJSONArray.toString())
             } else {
                 UIToastMessage.show(this, response.response)
             }
@@ -614,15 +568,12 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
 
         if (i == 5 && jSONObject != null) {
             val response = ResponseModel(jSONObject)
-
             if (response.status) {
-                villJSONArray = response.getdataArray()
-                Log.d("villJSONArray", villJSONArray.toString())
+                villageJSONArray = response.getdataArray()
             } else {
                 UIToastMessage.show(this, response.response)
             }
         }
-
 
         if (i == 2) {
             if (jSONObject != null) {
@@ -639,15 +590,14 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
         }
         if (i == 3) {
             if (jSONObject != null) {
-                DebugLog.getInstance().d("onResponse=$jSONObject")
                 val response = ResponseModel(jSONObject)
                 if (response.getStatus()) {
                     val notifiCountValue: String = jSONObject.getString("Message")
                     Toast.makeText(this, notifiCountValue, Toast.LENGTH_LONG).show()
-                    if (!(farmerRigisterID > 0)) {
-                        farmerRigisterID = jSONObject.getInt("RegistrationID")
+                    if (!(farmerRegisterID > 0)) {
+                        farmerRegisterID = jSONObject.getInt("RegistrationID")
                         AppSettings.getInstance()
-                            .setIntValue(this, AppConstants.fREGISTER_ID, farmerRigisterID)
+                            .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisterID)
                     }
 
                     val intent = Intent(this, DashboardScreen::class.java)
@@ -698,7 +648,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
                 talukaName = s
             }
             textViewTaluka.text = s
-            villJSONArray = null
+            villageJSONArray = null
             if (talukaID > 0) {
                 getVillageAgainstTaluka()
             }
@@ -724,8 +674,6 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
 
         val jsonObject = JSONObject()
         try {
-//            jsonObject.put("SecurityKey", APIServices.SSO_KEY)
-//            jsonObject.put("DistrictID", districtID)
             jsonObject.put("lang", languageToLoad)
             jsonObject.put("district_id", districtID)
 
@@ -738,18 +686,14 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
                     AppString(this).getkMSG_WAIT(),
                     true
                 )
-            val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getTalukaList(requestBody)
-            DebugLog.getInstance().d("param1=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()))
-            api.postRequest(responseCall, this, 4)
-            DebugLog.getInstance().d("param=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
+            CoroutineScope(Dispatchers.IO).launch {
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(APIRequest::class.java)
+                val responseCall: Call<JsonObject> = apiRequest.getTalukaList(requestBody)
+                api.postRequest(responseCall, this@Registration, 4)
+            }
         } catch (e: JSONException) {
-            DebugLog.getInstance().d("JSONException=" + e.toString())
+            DebugLog.getInstance().d("JSONException=$e")
             e.printStackTrace()
         }
 
@@ -759,10 +703,6 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
     private fun getVillageAgainstTaluka() {
         val jsonObject = JSONObject()
         try {
-//            jsonObject.put("SecurityKey", APIServices.SSO_KEY)
-//            jsonObject.put("DistrictID", districtID)
-//            jsonObject.put("TalukaID", talukaID)
-
             jsonObject.put("lang", languageToLoad)
             jsonObject.put("taluka_id", talukaID)
 
@@ -775,16 +715,13 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
                     AppString(this).getkMSG_WAIT(),
                     true
                 )
-            val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.kGetVillageList(requestBody)
-            DebugLog.getInstance().d("param1=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()))
-            api.postRequest(responseCall, this, 5)
-            DebugLog.getInstance().d("param=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
+
+            CoroutineScope(Dispatchers.IO).launch {
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(APIRequest::class.java)
+                val responseCall: Call<JsonObject> = apiRequest.kGetVillageList(requestBody)
+                api.postRequest(responseCall, this@Registration, 5)
+            }
         } catch (e: JSONException) {
             DebugLog.getInstance().d("JSONException=$e")
             e.printStackTrace()

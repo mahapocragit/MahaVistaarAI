@@ -243,7 +243,7 @@ class Dashboard : AppCompatActivity(), OnMultiRecyclerItemClickListener, Adapter
             if (id == 7) {
                 //AppSettings.getInstance().setBooleanValue(this, AppConstants.kIS_OFFLINE, false)
                 AppUtility.getInstance().clearAppSharedPrefData(this, AppConstants.kSHARED_PREF)
-                val intent = Intent(this, SplashScreen::class.java)
+                val intent = Intent(this, SplashScreenActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -289,7 +289,7 @@ class Dashboard : AppCompatActivity(), OnMultiRecyclerItemClickListener, Adapter
                 startActivity(warehouseIntent)
             }
             "GIS" -> {
-                val gisIntent = Intent(this@Dashboard, Gis::class.java)
+                val gisIntent = Intent(this@Dashboard, GisActivity::class.java)
                 startActivity(gisIntent)
             }
             "Pest Management" -> {

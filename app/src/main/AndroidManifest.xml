@@ -176,7 +176,7 @@
         <activity
             android:name=".activity.HealthCardActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.Gis" />
+        <activity android:name=".activity.GisActivity" />
         <activity
             android:name=".activity.Warehouse"
             android:screenOrientation="portrait" />
@@ -203,7 +203,7 @@
         </service>
 
         <activity
-            android:name=".activity.SplashScreen"
+            android:name=".activity.SplashScreenActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>

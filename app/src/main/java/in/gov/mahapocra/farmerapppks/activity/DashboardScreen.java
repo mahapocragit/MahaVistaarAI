@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -52,7 +53,6 @@ import java.util.Locale;
 
 import in.co.appinventor.services_api.api.AppInventorApi;
 import in.co.appinventor.services_api.app_util.AppUtility;
-import in.co.appinventor.services_api.debug.DebugLog;
 import in.co.appinventor.services_api.listener.ApiCallbackCode;
 import in.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener;
 import in.co.appinventor.services_api.settings.AppSettings;
@@ -403,15 +403,15 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
             RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
             AppInventorApi api = new AppInventorApi(this, APIServices.DBT, "", new AppString(this).getkMSG_WAIT(), true);
-            Retrofit retrofit = api.getRetrofitInstance();
-            APIRequest apiRequest = retrofit.create(APIRequest.class);
-            Call<JsonObject> responseCall = apiRequest.getGetRegistration(requestBody);
-            DebugLog.getInstance().d("param1=" + responseCall.request());
-            DebugLog.getInstance().d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()));
-            api.postRequest(responseCall, this, 1);
 
-            DebugLog.getInstance().d("param=" + responseCall.request());
-            DebugLog.getInstance().d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()));
+            Handler handler = new Handler();
+            Runnable runnable = () -> {
+                Retrofit retrofit = api.getRetrofitInstance();
+                APIRequest apiRequest = retrofit.create(APIRequest.class);
+                Call<JsonObject> responseCall = apiRequest.getGetRegistration(requestBody);
+                api.postRequest(responseCall, this, 1);
+            };
+            handler.post(runnable);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -426,15 +426,15 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
             RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
             AppInventorApi api = new AppInventorApi(this, APIServices.SSO, "", new AppString(this).getkMSG_WAIT(), true);
-            Retrofit retrofit = api.getRetrofitInstance();
-            APIRequest apiRequest = retrofit.create(APIRequest.class);
-            Call<JsonObject> responseCall = apiRequest.getFarmersSelectedCrop(requestBody);
-            DebugLog.getInstance().d("param1=" + responseCall.request());
-            DebugLog.getInstance().d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()));
-            api.postRequest(responseCall, this, 2);
 
-            DebugLog.getInstance().d("param=" + responseCall.request());
-            DebugLog.getInstance().d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()));
+            Handler handler = new Handler();
+            Runnable runnable = () -> {
+                Retrofit retrofit = api.getRetrofitInstance();
+                APIRequest apiRequest = retrofit.create(APIRequest.class);
+                Call<JsonObject> responseCall = apiRequest.getFarmersSelectedCrop(requestBody);
+                api.postRequest(responseCall, this, 2);
+            };
+            handler.post(runnable);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -448,15 +448,15 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
             RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
             AppInventorApi api = new AppInventorApi(this, APIServices.SSO, "", new AppString(this).getkMSG_WAIT(), true);
-            Retrofit retrofit = api.getRetrofitInstance();
-            APIRequest apiRequest = retrofit.create(APIRequest.class);
-            Call<JsonObject> responseCall = apiRequest.deleteSelectedCrop(requestBody);
-            DebugLog.getInstance().d("param1=" + responseCall.request());
-            DebugLog.getInstance().d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()));
-            api.postRequest(responseCall, this, 3);
 
-            DebugLog.getInstance().d("param=" + responseCall.request());
-            DebugLog.getInstance().d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()));
+            Handler handler = new Handler();
+            Runnable runnable = () -> {
+                Retrofit retrofit = api.getRetrofitInstance();
+                APIRequest apiRequest = retrofit.create(APIRequest.class);
+                Call<JsonObject> responseCall = apiRequest.deleteSelectedCrop(requestBody);
+                api.postRequest(responseCall, this, 3);
+            };
+            handler.post(runnable);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -523,9 +523,11 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                     // Permission was granted
                     // Perform the related action (e.g., accessing the camera)
+                    UIToastMessage.show(DashboardScreen.this, "Access Permission granted");
                 } else {
                     // Permission was denied
                     // Notify the user and handle the situation gracefully
+                    UIToastMessage.show(DashboardScreen.this, "Access Permission denied");
                 }
             }
         }
@@ -537,96 +539,93 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
     @Override
     public void onResponse(JSONObject jSONObject, int i) {
-
-        if (i == 1) {
-            if (jSONObject != null) {
-                Log.d("jSONObject232dashboard", jSONObject.toString());
-                DebugLog.getInstance().d("onResponse=$jSONObject");
-                ResponseModel response = new ResponseModel(jSONObject);
-                if (response.getStatus()) {
-                    try {
-                        String strName = jSONObject.getString("Name");
-                        String strMobNo = jSONObject.getString("MobileNo");
-                        String strEmailId = jSONObject.getString("EmailId");
-                        int strFFAReg = jSONObject.getInt("FAAPRegistrationID");
-                        String strDistName = jSONObject.getString("DistrictName");
-                        int strDistId = jSONObject.getInt("DistrictID");
-                        String strTalukaName = jSONObject.getString("TalukaName");
-                        int strTalukaId = jSONObject.getInt("TalukaID");
-                        int strVillageId = jSONObject.getInt("VillageID");
-                        String strVillageName = jSONObject.getString("VillageName");
-                        AppSettings.getInstance().setValue(this, AppConstants.uName, strName);
-                        AppSettings.getInstance().setValue(this, AppConstants.uMobileNo, strMobNo);
-                        AppSettings.getInstance().setValue(this, AppConstants.uEmail, strEmailId);
-                        AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, strFFAReg);
-                        AppSettings.getInstance().setValue(this, AppConstants.uDIST, strDistName);
-                        AppSettings.getInstance().setIntValue(this, AppConstants.uDISTId, strDistId);
-                        AppSettings.getInstance().setValue(this, AppConstants.uTALUKA, strTalukaName);
-                        AppSettings.getInstance().setIntValue(this, AppConstants.uTALUKAID, strTalukaId);
-                        AppSettings.getInstance().setValue(this, AppConstants.uVILLAGE, strVillageName);
-                        AppSettings.getInstance().setIntValue(this, AppConstants.uVILLAGEID, strVillageId);
-
-                        String userName = AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName);
-                        String userNumber = AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo);
-                        navigationView = findViewById(R.id.nav_view);
-                        View hView = navigationView.getHeaderView(0);
-                        nav_user_name = hView.findViewById(R.id.tv_farmerName);
-                        nav_user_phone = hView.findViewById(R.id.tv_famerPhoneNumber);
-                        if (!userName.equals("USER_NAME")) {
-                            try {
-                                String capitalizeStrName = ApUtil.getCamelCaseStreing(userName);
-                                nav_user_name.setText(!capitalizeStrName.isEmpty() ? capitalizeStrName : userName);
-                                nav_user_phone.setText(userNumber);
-                            } catch (StringIndexOutOfBoundsException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-        }
-        if (i == 2 && jSONObject != null) {
-            ResponseModel response = new ResponseModel(jSONObject);
-            if (response.getStatus()) {
-                JSONArray selectedCrops = response.getDataArrays();
-                yourCrop.setVisibility(View.INVISIBLE);
-                if (selectedCrops.length() > 0) {
-                    yourCrop.setVisibility(View.VISIBLE);
-                    selectedCropList = new ArrayList<>();
-                    for (int j = 0; j < selectedCrops.length(); j++) {
+        if (jSONObject!=null) {
+            switch (i) {
+                case 1:
+                    ResponseModel registrationResponse = new ResponseModel(jSONObject);
+                    if (registrationResponse.getStatus()) {
                         try {
-                            JSONObject selectedCrop = selectedCrops.getJSONObject(j);
-                            selectedCropList.add(new CropsCategName(selectedCrop.getInt("crop_id"), selectedCrop.getString("name"), selectedCrop.getString("image"), selectedCrop.getString("wotr_crop_id")));
+                            String strName = jSONObject.getString("Name");
+                            String strMobNo = jSONObject.getString("MobileNo");
+                            String strEmailId = jSONObject.getString("EmailId");
+                            int strFFAReg = jSONObject.getInt("FAAPRegistrationID");
+                            String strDistName = jSONObject.getString("DistrictName");
+                            int strDistId = jSONObject.getInt("DistrictID");
+                            String strTalukaName = jSONObject.getString("TalukaName");
+                            int strTalukaId = jSONObject.getInt("TalukaID");
+                            int strVillageId = jSONObject.getInt("VillageID");
+                            String strVillageName = jSONObject.getString("VillageName");
+                            AppSettings.getInstance().setValue(this, AppConstants.uName, strName);
+                            AppSettings.getInstance().setValue(this, AppConstants.uMobileNo, strMobNo);
+                            AppSettings.getInstance().setValue(this, AppConstants.uEmail, strEmailId);
+                            AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, strFFAReg);
+                            AppSettings.getInstance().setValue(this, AppConstants.uDIST, strDistName);
+                            AppSettings.getInstance().setIntValue(this, AppConstants.uDISTId, strDistId);
+                            AppSettings.getInstance().setValue(this, AppConstants.uTALUKA, strTalukaName);
+                            AppSettings.getInstance().setIntValue(this, AppConstants.uTALUKAID, strTalukaId);
+                            AppSettings.getInstance().setValue(this, AppConstants.uVILLAGE, strVillageName);
+                            AppSettings.getInstance().setIntValue(this, AppConstants.uVILLAGEID, strVillageId);
+
+                            String userName = AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName);
+                            String userNumber = AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo);
+                            navigationView = findViewById(R.id.nav_view);
+                            View hView = navigationView.getHeaderView(0);
+                            nav_user_name = hView.findViewById(R.id.tv_farmerName);
+                            nav_user_phone = hView.findViewById(R.id.tv_famerPhoneNumber);
+                            if (!userName.equals("USER_NAME")) {
+                                try {
+                                    String capitalizeStrName = ApUtil.getCamelCaseStreing(userName);
+                                    nav_user_name.setText(!capitalizeStrName.isEmpty() ? capitalizeStrName : userName);
+                                    nav_user_phone.setText(userNumber);
+                                } catch (StringIndexOutOfBoundsException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         } catch (JSONException e) {
-                            throw new RuntimeException(e);
+                            e.printStackTrace();
                         }
                     }
-                    AppSettings.getInstance().setList(
-                            this, AppConstants.kFarmerCrop,
-                            Arrays.asList(selectedCropList.toArray()));
-                }
-                if (!(selectedCropList == null)) {
-                    showCropList(selectedCropList);
-                }
-            } else {
-                UIToastMessage.show(this, response.getResponse());
+                    break;
+                case 2:
+                    ResponseModel farmersSelectedCropResponse = new ResponseModel(jSONObject);
+                    if (farmersSelectedCropResponse.getStatus()) {
+                        JSONArray selectedCrops = farmersSelectedCropResponse.getDataArrays();
+                        yourCrop.setVisibility(View.INVISIBLE);
+                        if (selectedCrops.length() > 0) {
+                            yourCrop.setVisibility(View.VISIBLE);
+                            selectedCropList = new ArrayList<>();
+                            for (int j = 0; j < selectedCrops.length(); j++) {
+                                try {
+                                    JSONObject selectedCrop = selectedCrops.getJSONObject(j);
+                                    selectedCropList.add(new CropsCategName(selectedCrop.getInt("crop_id"), selectedCrop.getString("name"), selectedCrop.getString("image"), selectedCrop.getString("wotr_crop_id")));
+                                } catch (JSONException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                            AppSettings.getInstance().setList(
+                                    this, AppConstants.kFarmerCrop,
+                                    Arrays.asList(selectedCropList.toArray()));
+                        }
+                        if (!(selectedCropList == null)) {
+                            showCropList(selectedCropList);
+                        }
+                    } else {
+                        UIToastMessage.show(this, farmersSelectedCropResponse.getResponse());
+                    }
+                    break;
+                case 3:
+                    ResponseModel deleteSelectedCropResponse = new ResponseModel(jSONObject);
+                    if (deleteSelectedCropResponse.getStatus()) {
+                        UIToastMessage.show(this, deleteSelectedCropResponse.getResponse());
+                        AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null);
+                        selectedCropList.clear();
+                        getFarmerSelectedCrop(languageToLoad);
+                    } else {
+                        UIToastMessage.show(this, deleteSelectedCropResponse.getResponse());
+                    }
+                    break;
             }
         }
-        if (i == 3 && jSONObject != null) {
-            ResponseModel response = new ResponseModel(jSONObject);
-            if (response.getStatus()) {
-                UIToastMessage.show(this, response.getResponse());
-                AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null);
-                selectedCropList.clear();
-                getFarmerSelectedCrop(languageToLoad);
-            } else {
-                UIToastMessage.show(this, response.getResponse());
-            }
-        }
-
     }
 
     private void showCropList(ArrayList<CropsCategName> selectedCropList) {
@@ -669,7 +668,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                     startActivity(notificationIntent);
                     break;
                 case 4:
-                    Intent gisIntent = new Intent(DashboardScreen.this, Gis.class);
+                    Intent gisIntent = new Intent(DashboardScreen.this, GisActivity.class);
                     startActivity(gisIntent);
                     break;
                 case 5:
@@ -707,7 +706,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         AppSettings.getInstance().setIntValue(this, AppConstants.uVILLAGEID, 0);
         AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null);
         AppUtility.getInstance().clearAppSharedPrefData(this, AppConstants.kSHARED_PREF);
-        Intent intent = new Intent(DashboardScreen.this, SplashScreen.class);
+        Intent intent = new Intent(DashboardScreen.this, SplashScreenActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

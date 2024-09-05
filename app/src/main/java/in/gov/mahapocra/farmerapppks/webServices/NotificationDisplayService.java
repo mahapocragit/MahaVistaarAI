@@ -19,7 +19,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
 import in.gov.mahapocra.farmerapppks.R;
-import in.gov.mahapocra.farmerapppks.activity.SplashScreen;
+import in.gov.mahapocra.farmerapppks.activity.SplashScreenActivity;
 
 public class NotificationDisplayService extends AppCompatActivity {
     private static final int NotifyId = 1;
@@ -52,7 +52,7 @@ public class NotificationDisplayService extends AppCompatActivity {
     public static void showNotification(Context context, String title, String message){
 
         // To open an Intent on click by Notification
-        Intent intent = new Intent(context, SplashScreen.class);
+        Intent intent = new Intent(context, SplashScreenActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context,NotifyId,intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, chanelId)
