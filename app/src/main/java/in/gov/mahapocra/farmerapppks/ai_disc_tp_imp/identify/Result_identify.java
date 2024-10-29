@@ -50,7 +50,7 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.google.gson.Gson;
-import com.hsalf.smileyrating.SmileyRating;
+//import com.hsalf.smileyrating.SmileyRating;
 
 
 import org.json.JSONArray;
@@ -387,35 +387,35 @@ public class Result_identify extends AppCompatActivity {
     @Override
     public void onClick(View v) {
         final android.app.AlertDialog.Builder popDialog = new android.app.AlertDialog.Builder(Result_identify.this);
-        SmileyRating sml=new SmileyRating(Result_identify.this);
-        LinearLayout linearLayout = new LinearLayout(Result_identify.this);
-
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        sml.setLayoutParams(lp);
-        linearLayout.addView(sml);
-        linearLayout.setGravity(Gravity.CENTER);
+//        SmileyRating sml=new SmileyRating(Result_identify.this);
+//        LinearLayout linearLayout = new LinearLayout(Result_identify.this);
+//
+//        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+//                LinearLayout.LayoutParams.WRAP_CONTENT,
+//                LinearLayout.LayoutParams.WRAP_CONTENT
+//        );
+//        sml.setLayoutParams(lp);
+//        linearLayout.addView(sml);
+//        linearLayout.setGravity(Gravity.CENTER);
 
 //
 //                popDialog.setIcon(android.R.drawable.gallery_thumb);
         popDialog.setTitle("How useful is it to you?");
 
         //add linearLayout to dailog
-        popDialog.setView(linearLayout);
+//        popDialog.setView(linearLayout);
         popDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                SmileyRating.Type smiley = sml.getSelectedSmiley();
+//                SmileyRating.Type smiley = sml.getSelectedSmiley();
 // You can compare it with rating Type
 
                 // You can get the user rating too
                 // rating will between 1 to 5, but -1 is none selected
-                int rating = smiley.getRating();
-                if (rating!=-1){
-
-                ratings(rating,id);}
+//                int rating = smiley.getRating();
+//                if (rating!=-1){
+//
+//                ratings(rating,id);}
             }
         });
         popDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
