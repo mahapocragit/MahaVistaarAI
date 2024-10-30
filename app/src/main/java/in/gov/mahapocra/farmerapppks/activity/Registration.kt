@@ -31,7 +31,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.JsonObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -101,7 +101,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
             e.printStackTrace()
         }
         versionName = pinfo?.versionName
-        token = FirebaseInstanceId.getInstance().token
+        token = FirebaseMessaging.getInstance().token.toString()
         Log.d("token12345", "" + token)
         sessionManager = SessionManager(this)
         init()

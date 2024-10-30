@@ -96,7 +96,7 @@ class CropAdvisorySelection : Fragment(), ApiCallbackCode, AlertListEventListene
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view: View = inflater!!.inflate(R.layout.fragment_crop_advisory_selection, container, false)
+        val view: View = inflater.inflate(R.layout.fragment_crop_advisory_selection, container, false)
         languageToLoad = "mr"
         if (AppSettings.getLanguage(activity).equals("1", ignoreCase = true))
         {
@@ -124,7 +124,7 @@ class CropAdvisorySelection : Fragment(), ApiCallbackCode, AlertListEventListene
         textViewSowingDate.setOnClickListener {
             AppUtility.getInstance().showDisabledFutureDatePicker(activity, date, 1, this)
         }
-        nextButton.setOnClickListener { view ->
+        nextButton.setOnClickListener {
             val fragmentTransaction = getParentFragmentManager().beginTransaction()
             fragmentTransaction.replace(R.id.fragment_container, CropAdvisoryFragment(), "advisory")
             fragmentTransaction.addToBackStack("advisory")
@@ -143,7 +143,7 @@ class CropAdvisorySelection : Fragment(), ApiCallbackCode, AlertListEventListene
         try {
             view.isFocusableInTouchMode = true
             view.requestFocus()
-            view.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+            view.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
                 if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
                     val i = Intent(activity, DashboardScreen::class.java)
                     startActivity(i)

@@ -73,7 +73,7 @@ class StageAdvisoryDetailAdaptr(
         val data =  removeHtml(datas)
 
         if (data?.length!! > 50) {
-            val textData = data?.substring(0, 49)
+            val textData = data.substring(0, 49)
             val readMore: String = context!!.getString(R.string.read_more)
             val finalString = textData + readMore
             val   sb = SpannableStringBuilder(finalString)
@@ -88,7 +88,7 @@ class StageAdvisoryDetailAdaptr(
         holder.cropSapadvisoryTv.setOnClickListener(View.OnClickListener {
             val alert = AlertDialog.Builder(context!!)
             val wv = WebView(context!!)
-            wv!!.loadDataWithBaseURL(
+            wv.loadDataWithBaseURL(
                 "file:///android_asset/",
                 datas, "text/html", "utf-8", null
             )
@@ -104,7 +104,7 @@ class StageAdvisoryDetailAdaptr(
             alert.setNegativeButton(
                 context!!.getString(R.string.cancel)
             ) {
-                    dialog, id -> dialog.dismiss()
+                    dialog, _ -> dialog.dismiss()
             }
 
             alert.show()

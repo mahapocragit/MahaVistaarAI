@@ -370,7 +370,7 @@ class PocraVillages : AppCompatActivity(), ApiCallbackCode,ApiJSONObjCallback,
                         )
                 )
                 villageAdapter!!.adapter = adaptorWaterBudgetReport
-                adaptorWaterBudgetReport!!.notifyDataSetChanged()
+                adaptorWaterBudgetReport.notifyDataSetChanged()
             }
             } else {
                // UIToastMessage.show(this, response.response)

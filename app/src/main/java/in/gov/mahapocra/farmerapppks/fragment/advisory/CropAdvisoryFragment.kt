@@ -73,9 +73,9 @@ class CropAdvisoryFragment : Fragment(), ApiCallbackCode, OnMultiRecyclerItemCli
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
-        val view: View = inflater!!.inflate(R.layout.fragment_crop_advisory, container, false)
+        val view: View = inflater.inflate(R.layout.fragment_crop_advisory, container, false)
 
         languageToLoad = "mr"
         if (AppSettings.getLanguage(activity).equals("1", ignoreCase = true))
@@ -91,7 +91,7 @@ class CropAdvisoryFragment : Fragment(), ApiCallbackCode, OnMultiRecyclerItemCli
 
 
     private fun onClick() {
-        onfeedback.setOnClickListener { view ->
+        onfeedback.setOnClickListener {
             val advisoryFeedback = AdvisoryFeedback()
             val bundle = Bundle()
             bundle.putString("cropId", cropID.toString())
@@ -115,9 +115,9 @@ class CropAdvisoryFragment : Fragment(), ApiCallbackCode, OnMultiRecyclerItemCli
       val  view = requireActivity().findViewById<View>(R.id.relativeLayoutTopBar)
         view.visibility = View.GONE
 
-      cropID = getArguments()?.getString("cropId").toString()
-      talukaID = getArguments()?.getString("talukaId").toString()
-      villageID = getArguments()?.getString("villageId").toString()
+      cropID = arguments?.getString("cropId").toString()
+      talukaID = arguments?.getString("talukaId").toString()
+      villageID = arguments?.getString("villageId").toString()
         getAutoAdvisory()
 
     }
@@ -185,13 +185,12 @@ class CropAdvisoryFragment : Fragment(), ApiCallbackCode, OnMultiRecyclerItemCli
             if (response.status ) {
               val  autoadvisory: JSONArray = response.getAdvisoryArray()
                 advisoryCropId=""
-                for (i in 0 until autoadvisory.length()){
-                    val a = autoadvisory.getJSONObject(i).getString("id")
-                    val b:String
-                    if( i == autoadvisory.length()-1) {
-                        b = a
+                for (j in 0 until autoadvisory.length()){
+                    val a = autoadvisory.getJSONObject(j).getString("id")
+                    val b:String = if( j == autoadvisory.length()-1) {
+                        a
                     }else{
-                        b = a.plus(",")
+                        a.plus(",")
                     }
                     advisoryCropId = concatenate(advisoryCropId, b)
                     Log.d("advisoryCropId===",advisoryCropId)
@@ -201,23 +200,22 @@ class CropAdvisoryFragment : Fragment(), ApiCallbackCode, OnMultiRecyclerItemCli
                 val adaptorDbtActivityGrp = BbtActivityGrpAdapter(activity, this, autoadvisory, "cropAdvisory")
                 autoadvisoryRcyl?.setLayoutManager(
                     LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false))
-                Log.d("dbtdata","autoadvisory="+autoadvisory);
+                Log.d("dbtdata", "autoadvisory=$autoadvisory")
                 autoadvisoryRcyl?.setAdapter(adaptorDbtActivityGrp)
                 adaptorDbtActivityGrp.notifyDataSetChanged()
 
-                var cropsadvisory: JSONObject? = null
+                val cropsadvisory: JSONObject?
                 Log.d("autoadvisory value",autoadvisory.toString())
                 if (autoadvisory.length() > 0) {
                     cropsadvisory = autoadvisory.getJSONObject(0)
                     var advisoryText = cropsadvisory.getString("advisory")
                     cropsapadvisoryCropId = cropsadvisory.getString("id")
                 }
-                var cropsapadvisory: JSONObject? = null
-                cropsapadvisory = response.getCropsapadvisory()
-                cropSapAdvisoryTv.setText("")
+                var cropsapadvisory: JSONObject? = response.getCropsapadvisory()
+                cropSapAdvisoryTv.text = ""
                 if (cropsapadvisory != null) {
                     var cropSapAdvisoryText = cropsapadvisory.getString("cropsap_advisory")
-                    cropSapAdvisoryTv.setText(cropSapAdvisoryText)
+                    cropSapAdvisoryTv.text = cropSapAdvisoryText
                 }
             } else {
                 UIToastMessage.show(activity, response.response)

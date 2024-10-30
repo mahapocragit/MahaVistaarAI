@@ -20,7 +20,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.JsonObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -64,7 +64,7 @@ class SplashScreenActivity : AppCompatActivity(), ApiCallbackCode {
             e.printStackTrace()
         }
         versionName = pinfo!!.versionName
-        token = FirebaseInstanceId.getInstance().token
+        token = FirebaseMessaging.getInstance().token.toString()
         Log.d("token12345", "" + token)
         session = AppSession(this)
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)

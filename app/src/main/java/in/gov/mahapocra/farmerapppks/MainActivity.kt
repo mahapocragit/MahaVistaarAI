@@ -1,10 +1,12 @@
 package `in`.gov.mahapocra.farmerapppks
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.messaging.FirebaseMessaging
 import `in`.gov.mahapocra.farmerapppks.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(){
@@ -19,7 +21,6 @@ class MainActivity : AppCompatActivity(){
         setContentView(binding.root)
 
         //setSupportActionBar(binding.appBarMain.toolbar)
-
         val drawerLayout: DrawerLayout = binding.drawerLayout
        // val navView: NavigationView = binding.navView
        // val navController = findNavController(R.id.nav_host_fragment_content_main)

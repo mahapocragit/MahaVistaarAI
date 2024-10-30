@@ -119,7 +119,7 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         }else{
 
             val args = intent.getBundleExtra("BUNDLE")
-            diseasesDetails = args!!.getSerializable("diseasesDetails") as  ArrayList<DiseasesDetails>?
+            diseasesDetails = args?.getSerializable("diseasesDetails") as  ArrayList<DiseasesDetails>?
             showParticularStagesByList()
         }
 
@@ -143,7 +143,7 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
                 )
             )
             diseasesByStage?.setAdapter(particularDiseasesAdpter)
-            particularDiseasesAdpter?.notifyDataSetChanged()
+            particularDiseasesAdpter.notifyDataSetChanged()
         }
     }
 
@@ -177,25 +177,25 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
     }
 
 
-    override fun onResponse(jSONObject: JSONObject?, i: Int) {
-        if (i == 1) {
+    override fun onResponse(jSONObject: JSONObject?, n :Int) {
+        if (n == 1) {
             if (jSONObject != null) {
                 DebugLog.getInstance().d("onResponse=$jSONObject")
                 val response = ResponseModel(jSONObject)
                 if (response.getStatus()) {
                     stageJsonArray = response.getdataArray()
-                    diseaseStages = ArrayList<DiseaseStages>()
+                    diseaseStages = ArrayList()
                     for (i in 0 until stageJsonArray.length()) {
                         val stagesJsonObject:JSONObject = stageJsonArray.get(i) as JSONObject
-                        var stageName: String = stagesJsonObject.getString("stage")
-                        var pestAndDiseasesJsonArray: JSONArray = stagesJsonObject.getJSONArray("pest_and_diseases")
-                        diseasesDetails = ArrayList<DiseasesDetails>()
+                        val stageName: String = stagesJsonObject.getString("stage")
+                        val pestAndDiseasesJsonArray: JSONArray = stagesJsonObject.getJSONArray("pest_and_diseases")
+                        diseasesDetails = ArrayList()
                         for (j in 0 until pestAndDiseasesJsonArray.length()){
                             val pestAndDiseasesJsonObject:JSONObject = pestAndDiseasesJsonArray.get(j) as JSONObject
-                            var peastAndDiseaseId: Int = pestAndDiseasesJsonObject.get("id") as Int
-                            var stageTitle :String = pestAndDiseasesJsonObject.get("title") as String
-                            var stagesubtitle :String = pestAndDiseasesJsonObject.get("subtitle") as String
-                            var type :String = pestAndDiseasesJsonObject.get("type") as String
+                            val peastAndDiseaseId: Int = pestAndDiseasesJsonObject.get("id") as Int
+                            val stageTitle :String = pestAndDiseasesJsonObject.get("title") as String
+                            val stagesubtitle :String = pestAndDiseasesJsonObject.get("subtitle") as String
+                            val type :String = pestAndDiseasesJsonObject.get("type") as String
                             var cropsImgUrl : String? = ""
                             cropsImgUrl = pestAndDiseasesJsonObject.get("image").toString()
                             if(cropsImgUrl == null){
@@ -216,7 +216,7 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
 
     private fun showStages(diseaseStages: ArrayList<DiseaseStages>) {
 
-            val pestAndDiseasesAdpter =
+            val pestAndDiseasesAdapter =
                 PestAndDiseasesAdpater(
                     this,
                     diseaseStages
@@ -229,8 +229,8 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
                     false
                 )
             )
-            diseasesByStage?.setAdapter(pestAndDiseasesAdpter)
-            pestAndDiseasesAdpter?.notifyDataSetChanged()
+            diseasesByStage?.setAdapter(pestAndDiseasesAdapter)
+            pestAndDiseasesAdapter.notifyDataSetChanged()
     }
 
     override fun onFailure(obj: Any?, th: Throwable?, i: Int) {

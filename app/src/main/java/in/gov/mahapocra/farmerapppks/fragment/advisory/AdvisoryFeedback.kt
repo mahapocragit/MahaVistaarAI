@@ -69,7 +69,7 @@ class AdvisoryFeedback : Fragment(), ApiCallbackCode {
         savedInstanceState: Bundle?
     ): View? {
 
-        val view: View = inflater!!.inflate(R.layout.fragment_advisory_feedback, container, false)
+        val view: View = inflater.inflate(R.layout.fragment_advisory_feedback, container, false)
 
         languageToLoad = "mr"
         if (AppSettings.getLanguage(activity).equals("1", ignoreCase = true))
@@ -101,14 +101,14 @@ class AdvisoryFeedback : Fragment(), ApiCallbackCode {
     }
 
     private fun onClick() {
-        submitFeedback.setOnClickListener { view ->
+        submitFeedback.setOnClickListener {
             submitAdvisoryFeedback()
         }
-        imageMenushow?.setOnClickListener(View.OnClickListener {
+        imageMenushow?.setOnClickListener {
             val i = Intent(activity, DashboardScreen::class.java)
             startActivity(i)
             (activity as Activity?)!!.overridePendingTransition(0, 0)
-        })
+        }
     }
 
     private fun submitAdvisoryFeedback() {
@@ -165,25 +165,6 @@ class AdvisoryFeedback : Fragment(), ApiCallbackCode {
         }}
 
         }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment AdvisoryFeedback.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            AdvisoryFeedback().apply {
-                arguments = Bundle().apply {
-
-                }
-            }
-    }
 
 
     override fun onFailure(obj: Any?, th: Throwable?, i: Int) {

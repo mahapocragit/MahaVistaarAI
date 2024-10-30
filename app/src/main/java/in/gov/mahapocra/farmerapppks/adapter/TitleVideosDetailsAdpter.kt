@@ -27,25 +27,24 @@ class TitleVideosDetailsAdpter(private var context: Context? = null, private var
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         try {
 
-            holder.textView.text = videiDetailsList.get(position).titles
-            var imagesList: ArrayList<CropsCategName>? = null
-            imagesList = videiDetailsList.get(position).moviesImagesList
+            holder.textView.text = videiDetailsList[position].titles
+            val imagesList: ArrayList<CropsCategName>? = videiDetailsList[position].moviesImagesList
 
-            holder.pimg.setOnClickListener(View.OnClickListener {
-                Log.d("gfgfghgf","test6666")
+            holder.pimg.setOnClickListener {
+                Log.d("gfgfghgf", "test6666")
                 holder.videosImageView.smoothScrollBy(-1000, 0);
 
-            })
+            }
 
-            holder.nimg.setOnClickListener(View.OnClickListener {
+            holder.nimg.setOnClickListener {
                 holder.pimg.visibility = View.VISIBLE
-                val abc= videiDetailsList.get(position).id
+                val abc = videiDetailsList[position].id
                 Log.d("dgfgfdgdf", abc.toString())
                 holder.videosImageView.smoothScrollBy(200, 1000);
 
-            })
+            }
 
-            val videosImageApdapter =
+            val videosImageAdapter =
                 VideosImageDetailsAdpter(
                     context,
                     imagesList,
@@ -53,15 +52,15 @@ class TitleVideosDetailsAdpter(private var context: Context? = null, private var
                     "TitleVideosDetailsAdpter"
                 )
 
-            holder.videosImageView?.setLayoutManager(
+            holder.videosImageView.setLayoutManager(
                 LinearLayoutManager(
                     context,
                     LinearLayoutManager.HORIZONTAL,
                     false
                 )
             )
-            holder.videosImageView?.setAdapter(videosImageApdapter)
-            videosImageApdapter.notifyDataSetChanged()
+            holder.videosImageView.setAdapter(videosImageAdapter)
+            videosImageAdapter.notifyDataSetChanged()
         } catch (e: JSONException) {
             e.printStackTrace()
         }

@@ -103,14 +103,14 @@ class VideosImageDetailsAdpter(
                         .setMessage("Are you sure you want to delete?")
                         .setPositiveButton(
                             "Yes"
-                        ) { dialog, which ->
+                        ) { _, _ ->
                             listener.onMultiRecyclerViewItemClick(
                                 2,
                                 moviesImageList?.get(position)!!.id
                             )
                         }.setNegativeButton(
                             "No, thanks"
-                        ) { dialog, which ->
+                        ) { dialog, _ ->
                             dialog.dismiss()
                         }.create()
                     dialog.setCanceledOnTouchOutside(false)

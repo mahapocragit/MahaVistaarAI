@@ -45,7 +45,6 @@ public class Identify_dashboard extends AppCompatActivity {
     RecyclerView recyclerView;
     DashboardAdapter dashboardAdapter;
     ArrayList<Model_Dashboard> model_dashboardContents;
-
     TextView textViewHeaderTitle;
     ImageView imageMenuShow;
 

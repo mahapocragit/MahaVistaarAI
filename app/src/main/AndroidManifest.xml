@@ -22,8 +22,15 @@
     <uses-permission android:name="android.hardware.camera" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature android:name="android.hardware.camera.flash" />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -42,15 +49,9 @@
         <activity
             android:name=".activity.CropStageAcitvity"
             android:exported="false" />
-        <activity
-            android:name=".activity.FertilizerCalculatorActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.PestsAndDiseasesStages"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.DiseaseInformation"
-            android:screenOrientation="portrait" />
+        <activity android:name=".activity.FertilizerCalculatorActivity" />
+        <activity android:name=".activity.PestsAndDiseasesStages" />
+        <activity android:name=".activity.DiseaseInformation" />
         <activity
             android:name=".activity.CropStageAdvisory"
             android:exported="false" />
@@ -65,7 +66,7 @@
             android:name=".ai_disc_tp_imp.identify.util.NetNotWorking"
             android:exported="false"
             android:label="@string/title_activity_internet_not_working"
-            android:screenOrientation="portrait"
+
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ai_disc_tp_imp.identify.util.Cam"
@@ -74,13 +75,12 @@
         <!-- android:name=".ai_disc_tp_imp.identify.InternetNotWorking" -->
         <!-- android:exported="false" -->
         <!-- android:label="@string/title_activity_internet_not_working" -->
-        <!-- android:screenOrientation="portrait" -->
+        <!--  -->
         <!-- android:theme="@style/AppTheme.NoActionBar" /> -->
         <activity
             android:name=".ai_disc_tp_imp.identify.FarmerPestDiseaseIdentify"
             android:configChanges="screenLayout|orientation|screenSize"
-            android:exported="false"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".ai_disc_tp_imp.identify.Identify.Result_identified"
             android:exported="true"
@@ -97,8 +97,7 @@
         <activity android:name=".activity.CropAdvisory" /> <!-- <activity android:name=".notification.ReadNotificationActivity"></activity> -->
         <activity
             android:name=".notification.PocraFarmerNews"
-            android:exported="true"
-            android:screenOrientation="portrait">
+            android:exported="false">
             <intent-filter>
                 <action android:name="PocraFarmerNews" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -106,8 +105,7 @@
         </activity>
         <activity
             android:name=".notification.ReadNotificationActivity"
-            android:exported="true"
-            android:screenOrientation="portrait">
+            android:exported="false">
             <intent-filter>
                 <action android:name="ReadNotificationActivity" />
 
@@ -117,79 +115,80 @@
         <activity android:name=".notification.NotificationListActivity" />
         <activity
             android:name=".activity.ViewStoriesBandavar"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".activity.CropCurrentAdvisoryAndFeedback"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".activity.BandavarActivity"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".activity.ResilientWebUrl"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".activity.UpcomingEventsDetails"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".activity.UpcomingEvents"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".activity.TrainingLocationSelection"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".activity.ClimateDetailsGrid"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".activity.DbtStatus"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".activity.ClimateResilintTechnology"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".activity.Grievances"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".activity.ConfirmPassword"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".activity.ForgetPassword"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".activity.MarketPrice"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".activity.WeatherHome"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".activity.MyVillageProfilePdf"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".activity.PocraVillages"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".activity.DbtSchemes"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".activity.DbtActivityDetails"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".activity.HealthCardActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activity.GisActivity" />
+            android:exported="false" />
+        <activity
+            android:name=".activity.GisActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.Warehouse"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".activity.AboutPocra"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".activity.ComingSoonActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.LoginScreen"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
+        <activity android:name=".activity.LoginScreen" />
         <activity
             android:name=".MainActivity"
+            android:exported="false"
             android:label="@string/title_activity_dashboard"
             android:theme="@style/Theme.FarmerApp.NoActionBar" />
 
@@ -203,8 +202,7 @@
 
         <activity
             android:name=".activity.SplashScreenActivity"
-            android:exported="true"
-            android:screenOrientation="portrait">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -213,24 +211,25 @@
         </activity>
         <activity
             android:name=".activity.Dashboard"
+            android:exported="false"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.DashboardScreen"
+            android:exported="false"
+
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.MobileOTP"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
+            android:exported="false"
+            android:label="@string/app_name" />
         <activity
             android:name=".activity.Registration"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".activity.MyVillageProfile"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

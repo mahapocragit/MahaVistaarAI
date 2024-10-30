@@ -25,7 +25,7 @@ class ResilientWebUrl : AppCompatActivity() {
         val locale = Locale(languageToLoad)
         Locale.setDefault(locale)
         val config = Configuration()
-        config.locale = locale
+        config.setLocale(locale)
         baseContext.resources.updateConfiguration(
             config,
             baseContext.resources.displayMetrics

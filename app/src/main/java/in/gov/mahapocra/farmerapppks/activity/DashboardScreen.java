@@ -39,7 +39,10 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
@@ -145,7 +148,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         setContentView(R.layout.activity_dashboard_screen);
         init();
 
-
+        getFirebaseTokenFromServer();
         ForceUpdateChecker.with(this).onUpdateNeeded(this).check();
         setConfiguration();
         this.getWindow().setSoftInputMode(
@@ -283,6 +286,17 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         setVersion();
         getFarmerSelectedCrop(languageToLoad);
         requestingPermissions();
+    }
+
+    private void getFirebaseTokenFromServer() {
+
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                Log.w("firebaseMessage", "Fetching FCM registration token failed", task.getException());
+            }
+            String token = task.getResult();
+            Log.d("firebaseMessage", "FCM Token: " + token);
+        });
     }
 
     private void requestingPermissions() {
@@ -539,7 +553,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
     @Override
     public void onResponse(JSONObject jSONObject, int i) {
-        if (jSONObject!=null) {
+        if (jSONObject != null) {
             switch (i) {
                 case 1:
                     ResponseModel registrationResponse = new ResponseModel(jSONObject);
