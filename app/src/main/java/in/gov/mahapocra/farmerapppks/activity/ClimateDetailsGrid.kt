@@ -1,29 +1,30 @@
 package `in`.gov.mahapocra.farmerapppks.activity
 
-import `in`.co.appinventor.services_api.settings.AppSettings
-import `in`.gov.mahapocra.farmerapppks.R
-import `in`.gov.mahapocra.farmerapppks.adapter.ClimateGridAdapter
-import `in`.gov.mahapocra.farmerapppks.models.response.ClimateGridModel
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
+import android.widget.GridView
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import java.util.*
-import kotlin.collections.ArrayList
+import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.gov.mahapocra.farmerapppks.R
+import `in`.gov.mahapocra.farmerapppks.adapter.ClimateGridAdapter
+import `in`.gov.mahapocra.farmerapppks.models.response.ClimateGridModel
 
 class ClimateDetailsGrid : AppCompatActivity() {
     private var gridView: GridView? = null
     private var textViewHeaderTitle: TextView? = null
     private var imgBackArrow: ImageView? = null
     private var relClimateDeatils: RelativeLayout? = null
-    val climateModelArrayList: ArrayList<ClimateGridModel> = ArrayList<ClimateGridModel>()
+    private val climateModelArrayList: ArrayList<ClimateGridModel> = ArrayList()
 
-    var groupName: ArrayList<String> = ArrayList()
-    var groupImagePath: ArrayList<String> = ArrayList()
-    var webUrl: ArrayList<String> = ArrayList()
+    private var groupName: ArrayList<String> = ArrayList()
+    private var groupImagePath: ArrayList<String> = ArrayList()
+    private var webUrl: ArrayList<String> = ArrayList()
     var languageToLoad: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

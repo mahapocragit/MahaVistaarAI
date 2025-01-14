@@ -172,7 +172,7 @@ public class Identify_img_upload extends AppCompatActivity {
                                                                 progressDialog.cancel();
                                                                 afterJungleForestImage();
                                                             } else {
-                                                                upload_image_data(url_model, "9010", selected_disease, selected_severity_level, type);
+                                                                uploadImageData(url_model, "9010", selected_disease, selected_severity_level, type);
                                                             }
                                                         } else {
                                                             progressDialog.cancel();
@@ -327,7 +327,7 @@ public class Identify_img_upload extends AppCompatActivity {
         }
     }
 
-    private void upload_image_data(String url, String user_id, String selected_disease, String selected_severity_level, String type) {
+    private void uploadImageData(String url, String userId, String selectedDisease, String selectedSeverityLevel, String type) {
         urls = url;
         if (file_path_string.isEmpty()) {
             binding.identifyButton.setEnabled(true);
@@ -335,50 +335,39 @@ public class Identify_img_upload extends AppCompatActivity {
             return;
         }
 
-        String image_proper = file_path_string.replaceAll("\n", "");
-        System.out.println("imageFile " + "  " + image_proper);
+        String imageProper = file_path_string.replaceAll("\n", "");
+        System.out.println("imageFile " + imageProper);
         JSONObject object = new JSONObject();
-        Log.d("Fertilizer_TAG", "upload_image_data: "+crop);
+        Log.d("Fertilizer_TAG", "uploadImageData: " + crop);
         try {
-            object.put("crop_name", crop);
-            object.put("image_file", image_proper);
-            object.put("user_id", user_id);
-            object.put("lat", "17.40");
-            object.put("long", "19.30");
+            object.put("crop", crop);
+            object.put("image", imageProper);
+            object.put("category", "Disease");
+            object.put("latitude", "17.400");
+            object.put("longitude", "19.30");
+            object.put("application_user_id", userId);
+            object.put("application", "POCRA");
+            object.put("language", "eng");
+            object.put("region", "all");
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        AndroidNetworking.post("https://aidisc.krishimegh.in:32517/detect_crops")
+        AndroidNetworking.post("https://aidisc.krishimegh.in:32518/api/v2/image_detection_plants")
+                .addHeaders("User-Agent", "pocra")
+                .addHeaders("Authorization", "Bearer WIK0UBN3EMHF1UTXLZ52JHSFRO71W6BKU6QZIDZF9F0MHQ1KV8")
+                .addHeaders("Content-Type", "application/json")
                 .addJSONObjectBody(object)
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         binding.identifyButton.setEnabled(true);
-                        String paths;
                         progressDialog.cancel();
                         try {
-                            paths = response.optString("image_path");
-                            if (paths.matches("")) {
-                                Toast.makeText(Identify_img_upload.this, "Failed at Crop Detection", Toast.LENGTH_LONG).show();
-                            } else {
-                                if (response.optBoolean("result")) {
-                                    upload_image_data_aftercrop(urls, user_id, selected_disease, selected_severity_level, type, paths);
-                                } else {
-                                    final AlertDialog.Builder popDialog = new AlertDialog.Builder(Identify_img_upload.this);
-                                    popDialog.setIcon(R.drawable.errro_2);
-                                    popDialog.setTitle("Warning ! The image may not contain " + crop + " crop");
-                                    popDialog.setMessage("Proceeding with the selected crop may give wrong detection result.\nStill if you want to proceed press YES or to try with another image press NO. ");
-                                    popDialog.setPositiveButton("YES", (dialog, which) -> upload_image_data_aftercrop(urls, user_id, selected_disease, selected_severity_level, type, paths));
-                                    popDialog.setNegativeButton("NO", (dialog, which) -> {
-                                        Intent gotoPage = new Intent(Identify_img_upload.this, Identify_img_upload.class);
-                                        startActivity(gotoPage);
-                                        finish();
-                                    });
-                                    popDialog.show();
-                                }
-                            }
+                            Intent intent = new Intent(Identify_img_upload.this, Result_identified.class);
+                            intent.putExtra("result", response.toString());
+                            startActivity(intent);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -387,17 +376,21 @@ public class Identify_img_upload extends AppCompatActivity {
                     @Override
                     public void onError(ANError error) {
                         progressDialog.cancel();
-                        final AlertDialog.Builder popDialog1 = new AlertDialog.Builder(Identify_img_upload.this);
-                        popDialog1.setIcon(R.drawable.error_1);
-                        popDialog1.setTitle("Sorry!!!");
-                        popDialog1.setMessage("Some error occurred");
-                        popDialog1.setPositiveButton("Try again", (dialog, which) -> {
-                            Intent gotoPage = new Intent(Identify_img_upload.this, Identify_img_upload.class);
-                            startActivity(gotoPage);
-                            finish();
-                        }).show();
+                        showErrorDialog();
                     }
                 });
+    }
+
+    private void showErrorDialog() {
+        final AlertDialog.Builder popDialog1 = new AlertDialog.Builder(Identify_img_upload.this);
+        popDialog1.setIcon(R.drawable.error_1);
+        popDialog1.setTitle("Sorry!!!");
+        popDialog1.setMessage("Some error occurred");
+        popDialog1.setPositiveButton("Try again", (dialog, which) -> {
+            Intent gotoPage = new Intent(Identify_img_upload.this, Identify_img_upload.class);
+            startActivity(gotoPage);
+            finish();
+        }).show();
     }
 
     private void upload_image_data_aftercrop(String url_model, String user_id, String selected_disease, String selected_severity_level, String type, String path) {

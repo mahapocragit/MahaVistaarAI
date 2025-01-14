@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.AD_ID" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_LOCATION" /> <!-- <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> -->
-    <!-- Needed only if your app targets Android 5.0 (API level 21) or higher. -->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION" />
+
     <uses-feature android:name="android.hardware.location.gps" />
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
@@ -47,7 +46,7 @@
         android:theme="@style/Theme.FarmerApp"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".activity.CropStageAcitvity"
+            android:name=".activity.CropStageActivity"
             android:exported="false" />
         <activity android:name=".activity.FertilizerCalculatorActivity" />
         <activity android:name=".activity.PestsAndDiseasesStages" />
@@ -71,12 +70,7 @@
         <activity
             android:name=".ai_disc_tp_imp.identify.util.Cam"
             android:exported="true"
-            android:parentActivityName=".ai_disc_tp_imp.identify.Identify.Identify_img_upload" /> <!-- <activity -->
-        <!-- android:name=".ai_disc_tp_imp.identify.InternetNotWorking" -->
-        <!-- android:exported="false" -->
-        <!-- android:label="@string/title_activity_internet_not_working" -->
-        <!--  -->
-        <!-- android:theme="@style/AppTheme.NoActionBar" /> -->
+            android:parentActivityName=".ai_disc_tp_imp.identify.Identify.Identify_img_upload" />
         <activity
             android:name=".ai_disc_tp_imp.identify.FarmerPestDiseaseIdentify"
             android:configChanges="screenLayout|orientation|screenSize"
@@ -94,7 +88,7 @@
         <activity android:name=".activity.NewUpdateKharip" />
         <activity android:name=".activity.NewUpdateCRT" />
         <activity android:name=".activity.CropAdvisoryDetails" />
-        <activity android:name=".activity.CropAdvisory" /> <!-- <activity android:name=".notification.ReadNotificationActivity"></activity> -->
+        <activity android:name=".activity.CropAdvisory" />
         <activity
             android:name=".notification.PocraFarmerNews"
             android:exported="false">
@@ -186,11 +180,6 @@
             android:name=".activity.ComingSoonActivity"
             android:exported="false" />
         <activity android:name=".activity.LoginScreen" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="false"
-            android:label="@string/title_activity_dashboard"
-            android:theme="@style/Theme.FarmerApp.NoActionBar" />
 
         <service
             android:name=".webServices.FBaseMessagingService"

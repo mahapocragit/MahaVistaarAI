@@ -17,6 +17,7 @@ import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.listener.DatePickerRequestListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
+import `in`.gov.mahapocra.farmerapppks.AppPreferenceManager
 import `in`.gov.mahapocra.farmerapppks.R
 import `in`.gov.mahapocra.farmerapppks.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.api.APIServices
@@ -66,8 +67,19 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
             1,
             this
         )
+        val source = AppPreferenceManager(this).getString(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD)
         binding.saveDateForFarmButton.setOnClickListener {
-            saveFarmerSelectedCrop()
+            if (source.equals(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD)) {
+                val intent = Intent(this, CropStageAdvisory::class.java)
+                intent.putExtra("id", cropId)
+                intent.putExtra("wotr_crop_id", wotrCropId)
+                intent.putExtra("mUrl", mUrl)
+                intent.putExtra("mName", mName)
+                intent.putExtra("editCrop", editCrop)
+                startActivity(intent)
+            } else {
+                saveFarmerSelectedCrop()
+            }
         }
         binding.calenderForSowingDate.setOnClickListener {
             AppUtility.getInstance().showDisabledFutureDatePicker(
@@ -123,6 +135,7 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
             Log.d("i3", month.toString())
             Log.d("i4", year.toString())
             sowingDate = "$year-$month-$day"
+//            AppSettings.getInstance().setValue(this, AppConstants.tmpSOWINGDATE, sowingDate)
             binding.textViewSowingDate.text = sowingDate
         }
     }

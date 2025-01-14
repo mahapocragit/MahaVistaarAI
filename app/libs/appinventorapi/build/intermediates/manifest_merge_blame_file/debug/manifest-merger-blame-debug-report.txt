@@ -3,10 +3,10 @@
 3    package="in.co.appinventor" >
 4
 5    <uses-sdk android:minSdkVersion="16" />
-5-->C:\Users\Admin\AndroidStudioProjects\pocra_farmer_app1\app\libs\appinventorapi\src\main\AndroidManifest.xml
+5-->C:\Users\Admin\AndroidStudioProjects\pocra_farmer_app\app\libs\appinventorapi\src\main\AndroidManifest.xml
 6
 7    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-7-->C:\Users\Admin\AndroidStudioProjects\pocra_farmer_app1\app\libs\appinventorapi\src\main\AndroidManifest.xml:4:5-79
-7-->C:\Users\Admin\AndroidStudioProjects\pocra_farmer_app1\app\libs\appinventorapi\src\main\AndroidManifest.xml:4:22-76
+7-->C:\Users\Admin\AndroidStudioProjects\pocra_farmer_app\app\libs\appinventorapi\src\main\AndroidManifest.xml:4:5-79
+7-->C:\Users\Admin\AndroidStudioProjects\pocra_farmer_app\app\libs\appinventorapi\src\main\AndroidManifest.xml:4:22-76
 8
 9</manifest>

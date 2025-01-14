@@ -14,6 +14,7 @@ import android.provider.MediaStore;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.BulletSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -28,6 +29,7 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,10 +44,12 @@ import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.InternetReceiver;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.detection_instance;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.model_identify.Management_Practices_Disease;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.model_identify.disease_prediction_model1;
+import in.gov.mahapocra.farmerapppks.databinding.ActivityResultIdentifiedBinding;
 
 public class Result_identified extends AppCompatActivity {
 
     private static final String TAG = "Result_identify";
+    private ActivityResultIdentifiedBinding binding;
     int pageHeight = 2700;
     int pagewidth = 792;
     String selected_disease="";
@@ -76,241 +80,282 @@ public class Result_identified extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_result_identified);
+        binding = ActivityResultIdentifiedBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        setTitle("AI-DISC");
-      //  getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        internet = new InternetReceiver();
-        path="";
-        id="";
-        try{
-            Intent intent = getIntent();
-            Bundle data = intent.getExtras();
-            farmerIdentification = data.getString("farmerIdentification");
-            type = data.getString("type");
-            crop=data.getString("crop");
-            url=data.getString("url");
-            path=data.getString("path");
-        } catch (Exception e) {
-            e.printStackTrace();
-            try{
-                crop = detection_instance.getInstance().getcrop();
-                type=detection_instance.getInstance().gettype();
-                url=detection_instance.getInstance().geturl();
-                farmerIdentification = detection_instance.getInstance().getdetection();
-                path=detection_instance.getInstance().getpath();
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-        }
-        getid();
-        bmp = BitmapFactory.decodeResource(getResources(), R.drawable.logocut);
-        scaledbmp = Bitmap.createScaledBitmap(bmp, 120, 120, false);
-        scaledlogo = BitmapFactory.decodeResource(getResources(), R.drawable.logos);
-        scaledlogo = Bitmap.createScaledBitmap(scaledlogo, 300, 120, false);
-       // rate=findViewById(R.id.feed);
-        Button download=findViewById(R.id.download);
-//        rate.setVisibility(View.GONE);
-        management_practices_diseaseList = new ArrayList<>();
-        Gson gson = new Gson();
-        disease_prediction_model1 ob = gson.fromJson(getIntent().getStringExtra("result"), disease_prediction_model1.class);
-        //Log.d("Result Page", ob.toString());
-        Diseases_Layout_main = findViewById(R.id.Diseases_Layout_main);
-        pest_Layout_main=findViewById(R.id.pest_Layout_main);
-        casual_Organism_Layout = findViewById(R.id.casual_Organism_Layout);
-        prevalance_Layout = findViewById(R.id.prevalance_Layout);
-        predisposingFunction_Layout = findViewById(R.id.predisposingFunction_Layout);
-        Symptoms_Layout = findViewById(R.id.Symptoms_Layout);
-        ManagementPractices_Layout = findViewById(R.id.ManagementPractices_Layout);
-        casual_Organism_Text = findViewById(R.id.casual_Organism_Text);
-        prevalance_Text = findViewById(R.id.prevalance_Text);
-        predisposingFunction_Text = findViewById(R.id.predisposingFunction_Text);
-        symptoms_Text = findViewById(R.id.symptoms_Text);
-        cultural_Text = findViewById(R.id.cultural_Text);
-        chemical_Text = findViewById(R.id.chemical_Text);
-        biological_Text = findViewById(R.id.biological_Text);
-        result_identify = findViewById(R.id.result_identify);
-        disease_result = (TextView) findViewById(R.id.disease);
-        prediction_status = findViewById(R.id.prediction_status);
-        image = findViewById(R.id.image);
-        head_1 = findViewById(R.id.Heading);
-        next = findViewById(R.id.next);
-        next2 = findViewById(R.id.next2);
-        prediction_status_text = findViewById(R.id.prediction_status_text);
-        prediction_status1 = findViewById(R.id.prediction_status);
-        scientificName_pest_Text= findViewById(R.id.scientificName_pest_Text);
-        cultural_pest_Text= findViewById(R.id.cultural_pest_Text);
-        chemical_pest_Text= findViewById(R.id.chemical_pest_Text);
-        bilogical_pest_Text= findViewById(R.id.bilogical_pest_Text);
-        symptoms_pest_Text= findViewById(R.id.dynamicSymptom_pest_Text);
-
-        //reading returned variables
-        if(type.equals("disease")) {
-            System.out.println("Category: " + type);
-            pest_Layout_main.setVisibility(View.GONE);
-            // get image path
-            try {
-                if (Uri.parse(ob.getImage_url()) != null)
-                {
-                    image.setImageURI(Uri.parse(ob.getImage_url()));
-                    try {
-                        sacledimg= MediaStore.Images.Media.getBitmap(getContentResolver(),Uri.parse(ob.getImage_url()));
-                        sacledimg = Bitmap.createScaledBitmap(sacledimg, 400, 400, false);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    Toast.makeText(Result_identified.this, "Not found", Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e)
-            {
-                Toast.makeText(Result_identified.this, "Please upload valid image", Toast.LENGTH_LONG).show();
-            }
-            if (!ob.isError()) {
-                System.out.println("No error");
-                message = ob.getMessage();
-                boolean result = ob.isResult();
-                if(result){
-                    System.out.println("result is true");
-                    crop_id = ob.getCropId();
-                    String crop_name = ob.getCropName();
-                    identificationType = ob.getIdentificationType();
-                    System.out.println("id type" + identificationType);
-                    //  ##### Disease type
-                    if(identificationType.equals("Disease")){
-                        String disease_id = ob.getIdentificationCode();
-                        System.out.println("Disease ID: " + disease_id);
-                        Diseases_Layout_main.setVisibility(View.VISIBLE);
-                        result_identify.setText(message);
-                        get_Management_Practices_Disease(disease_id, crop_id);
-
-                    }
-                    // ##### Healthy type
-                    else if(identificationType.equals("Healthy")){
-                        System.out.println("id type" + identificationType);
-                        Diseases_Layout_main.setVisibility(View.GONE);
-                        final android.app.AlertDialog.Builder popDialog1 = new android.app.AlertDialog.Builder(Result_identified.this);
-                        popDialog1.setIcon(R.drawable.sucess_1);
-                        popDialog1.setTitle("congratulations");
-                        popDialog1.setMessage("Your crop looks healthy");
-                        popDialog1.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
-                        result_identify.setText(message);
-
-                    }
-                    else if(identificationType.equals("Unidentified")){
-                        System.out.println("id type" + identificationType);
-                        Diseases_Layout_main.setVisibility(View.GONE);
-                        result_identify.setVisibility(View.GONE);
-                        final android.app.AlertDialog.Builder popDialog1 = new android.app.AlertDialog.Builder(Result_identified.this);
-                        popDialog1.setIcon(R.drawable.error_1);
-                        popDialog1.setTitle("Sorry!!!");
-                        popDialog1.setMessage("Failed to identify the disease, please try with different image");
-                        popDialog1.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent gotopage =new Intent(Result_identified.this, Identify_img_upload.class);
-                                startActivity(gotopage);
-                                finish();
-
-                            }
-                        }).show();
-                    }
-
-                }
-                else {
-                    Diseases_Layout_main.setVisibility(View.GONE);
-                    result_identify.setVisibility(View.GONE);
-                    final android.app.AlertDialog.Builder popDialog1 = new android.app.AlertDialog.Builder(Result_identified.this);
-                    popDialog1.setIcon(R.drawable.error_1);
-                    popDialog1.setTitle("Sorry!!!");
-                    popDialog1.setMessage("Some error occurred");
-                    popDialog1.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent gotopage =new Intent(Result_identified.this, Identify_img_upload.class);
-                            startActivity(gotopage);
-                            finish();
-
-                        }
-                    }).show();
-                }
-
-
-            }
-            else{
-                final android.app.AlertDialog.Builder popDialog1 = new android.app.AlertDialog.Builder(Result_identified.this);
-                popDialog1.setIcon(R.drawable.error_1);
-                popDialog1.setTitle("Sorry!!!");
-                popDialog1.setMessage("Some error occured");
-                popDialog1.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent gotopage =new Intent(Result_identified.this, Identify_img_upload.class);
-                        startActivity(gotopage);
-                        finish();
-
-                    }
-                }).show();
-
-            }
-        }
-        else if(type.equals("pest")){
-            Diseases_Layout_main.setVisibility(View.GONE);
-            if(!message.isEmpty() && !String.valueOf(ob.getOne()).equals("NA"))
-            {
-                pest_Layout_main.setVisibility(View.VISIBLE);
-                result_identify.setText(message);
-                get_Management_Practices_Pest(insectId, crop_id);
-            }
-
-            //message is available but pest is not present
-            else if(!message.isEmpty() && String.valueOf(ob.getOne()).equals("NA"))
-            {
-                result_identify.setText(message);
-                pest_Layout_main.setVisibility(View.VISIBLE);
-                get_Management_Practices_Pest(insectId, crop_id);
-
-            }
-
-        }
-        else
-        {
-            Diseases_Layout_main.setVisibility(View.GONE);
-            pest_Layout_main.setVisibility(View.GONE);
-            result_identify.setText("Sorry!! Failed to identify. Please try with another image");
-
-        }
-
-
-
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent gotopage=new Intent(Result_identified.this, Identify_img_upload.class);
-                startActivity(gotopage);
-                finish();
-            }
-        });
-
-        next2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent gotopage=new Intent(Result_identified.this, Identify_dashboard.class);
-                startActivity(gotopage);
-                finish();
-            }
-        });
-
-
+        setDataInViews();
+        setUpClickEvents();
     }
+
+    private void setDataInViews() {
+        Intent intent = getIntent();
+        String result = intent.getStringExtra("result");
+        Log.d(TAG, "setDataInViews: "+result);
+        try {
+            if (result != null) {
+                JSONObject response = new JSONObject(result);
+                String message = response.optString("message");
+                binding.resultIdentify.setText(message);
+                Log.d(TAG, "setDataInViews: "+ response);
+            }
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void setUpClickEvents() {
+        binding.next.setOnClickListener(view -> {
+            Intent intent=new Intent(Result_identified.this, Identify_img_upload.class);
+            startActivity(intent);
+            finish();
+        });
+
+        binding.next2.setOnClickListener(view -> {
+            Intent intent=new Intent(Result_identified.this, Identify_dashboard.class);
+            startActivity(intent);
+            finish();
+        });
+    }
+
+//    @SuppressLint("MissingInflatedId")
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_result_identified);
+//
+//        setTitle("AI-DISC");
+//      //  getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//
+//        internet = new InternetReceiver();
+//        path="";
+//        id="";
+//        try{
+//            Intent intent = getIntent();
+//            Bundle data = intent.getExtras();
+//            farmerIdentification = data.getString("farmerIdentification");
+//            type = data.getString("type");
+//            crop=data.getString("crop");
+//            url=data.getString("url");
+//            path=data.getString("path");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            try{
+//                crop = detection_instance.getInstance().getcrop();
+//                type=detection_instance.getInstance().gettype();
+//                url=detection_instance.getInstance().geturl();
+//                farmerIdentification = detection_instance.getInstance().getdetection();
+//                path=detection_instance.getInstance().getpath();
+//            } catch (Exception exception) {
+//                exception.printStackTrace();
+//            }
+//        }
+//        getid();
+//        bmp = BitmapFactory.decodeResource(getResources(), R.drawable.logocut);
+//        scaledbmp = Bitmap.createScaledBitmap(bmp, 120, 120, false);
+//        scaledlogo = BitmapFactory.decodeResource(getResources(), R.drawable.logos);
+//        scaledlogo = Bitmap.createScaledBitmap(scaledlogo, 300, 120, false);
+//       // rate=findViewById(R.id.feed);
+//        Button download=findViewById(R.id.download);
+////        rate.setVisibility(View.GONE);
+//        management_practices_diseaseList = new ArrayList<>();
+//        Gson gson = new Gson();
+//        disease_prediction_model1 ob = gson.fromJson(getIntent().getStringExtra("result"), disease_prediction_model1.class);
+//        //Log.d("Result Page", ob.toString());
+//        Diseases_Layout_main = findViewById(R.id.Diseases_Layout_main);
+//        pest_Layout_main=findViewById(R.id.pest_Layout_main);
+//        casual_Organism_Layout = findViewById(R.id.casual_Organism_Layout);
+//        prevalance_Layout = findViewById(R.id.prevalance_Layout);
+//        predisposingFunction_Layout = findViewById(R.id.predisposingFunction_Layout);
+//        Symptoms_Layout = findViewById(R.id.Symptoms_Layout);
+//        ManagementPractices_Layout = findViewById(R.id.ManagementPractices_Layout);
+//        casual_Organism_Text = findViewById(R.id.casual_Organism_Text);
+//        prevalance_Text = findViewById(R.id.prevalance_Text);
+//        predisposingFunction_Text = findViewById(R.id.predisposingFunction_Text);
+//        symptoms_Text = findViewById(R.id.symptoms_Text);
+//        cultural_Text = findViewById(R.id.cultural_Text);
+//        chemical_Text = findViewById(R.id.chemical_Text);
+//        biological_Text = findViewById(R.id.biological_Text);
+//        result_identify = findViewById(R.id.result_identify);
+//        disease_result = (TextView) findViewById(R.id.disease);
+//        prediction_status = findViewById(R.id.prediction_status);
+//        image = findViewById(R.id.image);
+//        head_1 = findViewById(R.id.Heading);
+//        next = findViewById(R.id.next);
+//        next2 = findViewById(R.id.next2);
+//        prediction_status_text = findViewById(R.id.prediction_status_text);
+//        prediction_status1 = findViewById(R.id.prediction_status);
+//        scientificName_pest_Text= findViewById(R.id.scientificName_pest_Text);
+//        cultural_pest_Text= findViewById(R.id.cultural_pest_Text);
+//        chemical_pest_Text= findViewById(R.id.chemical_pest_Text);
+//        bilogical_pest_Text= findViewById(R.id.bilogical_pest_Text);
+//        symptoms_pest_Text= findViewById(R.id.dynamicSymptom_pest_Text);
+//
+//        //reading returned variables
+//        if(type.equals("disease")) {
+//            System.out.println("Category: " + type);
+//            pest_Layout_main.setVisibility(View.GONE);
+//            // get image path
+//            try {
+//                if (Uri.parse(ob.getImage_url()) != null)
+//                {
+//                    image.setImageURI(Uri.parse(ob.getImage_url()));
+//                    try {
+//                        sacledimg= MediaStore.Images.Media.getBitmap(getContentResolver(),Uri.parse(ob.getImage_url()));
+//                        sacledimg = Bitmap.createScaledBitmap(sacledimg, 400, 400, false);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                } else {
+//                    Toast.makeText(Result_identified.this, "Not found", Toast.LENGTH_SHORT).show();
+//                }
+//            } catch (Exception e)
+//            {
+//                Toast.makeText(Result_identified.this, "Please upload valid image", Toast.LENGTH_LONG).show();
+//            }
+//            if (!ob.isError()) {
+//                System.out.println("No error");
+//                message = ob.getMessage();
+//                boolean result = ob.isResult();
+//                if(result){
+//                    System.out.println("result is true");
+//                    crop_id = ob.getCropId();
+//                    String crop_name = ob.getCropName();
+//                    identificationType = ob.getIdentificationType();
+//                    System.out.println("id type" + identificationType);
+//                    //  ##### Disease type
+//                    if(identificationType.equals("Disease")){
+//                        String disease_id = ob.getIdentificationCode();
+//                        System.out.println("Disease ID: " + disease_id);
+//                        Diseases_Layout_main.setVisibility(View.VISIBLE);
+//                        result_identify.setText(message);
+//                        get_Management_Practices_Disease(disease_id, crop_id);
+//
+//                    }
+//                    // ##### Healthy type
+//                    else if(identificationType.equals("Healthy")){
+//                        System.out.println("id type" + identificationType);
+//                        Diseases_Layout_main.setVisibility(View.GONE);
+//                        final android.app.AlertDialog.Builder popDialog1 = new android.app.AlertDialog.Builder(Result_identified.this);
+//                        popDialog1.setIcon(R.drawable.sucess_1);
+//                        popDialog1.setTitle("congratulations");
+//                        popDialog1.setMessage("Your crop looks healthy");
+//                        popDialog1.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                dialog.dismiss();
+//                            }
+//                        }).show();
+//                        result_identify.setText(message);
+//
+//                    }
+//                    else if(identificationType.equals("Unidentified")){
+//                        System.out.println("id type" + identificationType);
+//                        Diseases_Layout_main.setVisibility(View.GONE);
+//                        result_identify.setVisibility(View.GONE);
+//                        final android.app.AlertDialog.Builder popDialog1 = new android.app.AlertDialog.Builder(Result_identified.this);
+//                        popDialog1.setIcon(R.drawable.error_1);
+//                        popDialog1.setTitle("Sorry!!!");
+//                        popDialog1.setMessage("Failed to identify the disease, please try with different image");
+//                        popDialog1.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                Intent gotopage =new Intent(Result_identified.this, Identify_img_upload.class);
+//                                startActivity(gotopage);
+//                                finish();
+//
+//                            }
+//                        }).show();
+//                    }
+//
+//                }
+//                else {
+//                    Diseases_Layout_main.setVisibility(View.GONE);
+//                    result_identify.setVisibility(View.GONE);
+//                    final android.app.AlertDialog.Builder popDialog1 = new android.app.AlertDialog.Builder(Result_identified.this);
+//                    popDialog1.setIcon(R.drawable.error_1);
+//                    popDialog1.setTitle("Sorry!!!");
+//                    popDialog1.setMessage("Some error occurred");
+//                    popDialog1.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            Intent gotopage =new Intent(Result_identified.this, Identify_img_upload.class);
+//                            startActivity(gotopage);
+//                            finish();
+//
+//                        }
+//                    }).show();
+//                }
+//
+//
+//            }
+//            else{
+//                final android.app.AlertDialog.Builder popDialog1 = new android.app.AlertDialog.Builder(Result_identified.this);
+//                popDialog1.setIcon(R.drawable.error_1);
+//                popDialog1.setTitle("Sorry!!!");
+//                popDialog1.setMessage("Some error occured");
+//                popDialog1.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Intent gotopage =new Intent(Result_identified.this, Identify_img_upload.class);
+//                        startActivity(gotopage);
+//                        finish();
+//
+//                    }
+//                }).show();
+//
+//            }
+//        }
+//        else if(type.equals("pest")){
+//            Diseases_Layout_main.setVisibility(View.GONE);
+//            if(!message.isEmpty() && !String.valueOf(ob.getOne()).equals("NA"))
+//            {
+//                pest_Layout_main.setVisibility(View.VISIBLE);
+//                result_identify.setText(message);
+//                get_Management_Practices_Pest(insectId, crop_id);
+//            }
+//
+//            //message is available but pest is not present
+//            else if(!message.isEmpty() && String.valueOf(ob.getOne()).equals("NA"))
+//            {
+//                result_identify.setText(message);
+//                pest_Layout_main.setVisibility(View.VISIBLE);
+//                get_Management_Practices_Pest(insectId, crop_id);
+//
+//            }
+//
+//        }
+//        else
+//        {
+//            Diseases_Layout_main.setVisibility(View.GONE);
+//            pest_Layout_main.setVisibility(View.GONE);
+//            result_identify.setText("Sorry!! Failed to identify. Please try with another image");
+//
+//        }
+//
+//
+//
+//        next.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view)
+//            {
+//                Intent gotopage=new Intent(Result_identified.this, Identify_img_upload.class);
+//                startActivity(gotopage);
+//                finish();
+//            }
+//        });
+//
+//        next2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view)
+//            {
+//                Intent gotopage=new Intent(Result_identified.this, Identify_dashboard.class);
+//                startActivity(gotopage);
+//                finish();
+//            }
+//        });
+//
+//
+//    }
 
     void getid(){
         String[] sty=path.split("/");
@@ -579,8 +624,6 @@ public class Result_identified extends AppCompatActivity {
                         Toast.makeText(Result_identified.this, "Error", Toast.LENGTH_LONG).show();
                     }
                 });
-
-
     }
     SpannableString splitmerge(String val){
         String[] sp=val.split(";");
@@ -613,21 +656,13 @@ public class Result_identified extends AppCompatActivity {
         }else{
             return new SpannableString(rt.toString());
         }
-
     }
-
 
     @Override
     public void onStart() {
         super.onStart();
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(internet, intentFilter);
-
-
     }
-
-
-
-
 
 }

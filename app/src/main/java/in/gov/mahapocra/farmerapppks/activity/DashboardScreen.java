@@ -60,6 +60,7 @@ import in.co.appinventor.services_api.listener.ApiCallbackCode;
 import in.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener;
 import in.co.appinventor.services_api.settings.AppSettings;
 import in.co.appinventor.services_api.widget.UIToastMessage;
+import in.gov.mahapocra.farmerapppks.AppPreferenceManager;
 import in.gov.mahapocra.farmerapppks.R;
 import in.gov.mahapocra.farmerapppks.adapter.DashboardAdapter;
 import in.gov.mahapocra.farmerapppks.adapter.DrawerMenuAdapter;
@@ -189,6 +190,9 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         } else if (languageToLoad.equalsIgnoreCase("hi")) {
             gridView.setAdapter(new DashboardAdapter(this, arrayCategeryMarathi, arrayCategeryImg, "single_item_grid"));
         }
+
+        AppPreferenceManager appPreferenceManager = new AppPreferenceManager(this);
+        appPreferenceManager.clearAll();
         gridView.setOnItemClickListener((parent, v, position, id) -> {
             switch (position) {
                 case 0:
@@ -200,11 +204,23 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                     startActivity(identify);
                     break;
                 case 2:
-                    Intent sharing = new Intent(DashboardScreen.this, ComingSoonActivity.class);
+                    Intent sharing = new Intent(DashboardScreen.this, AddCropActivity.class);
+                    appPreferenceManager.saveString(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD, AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD);
                     startActivity(sharing);
                     break;
+
+                    /*
+                    Intent intent = new Intent(DashboardScreen.this, AddCropActivity.class);
+                    new AppPreferenceManager(this).saveString(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD, AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD);
+                    startActivity(intent);
+                    break;
+                case 3: //fertilizer calculator
+                    Intent comingSoonIntent = new Intent(DashboardScreen.this, FertilizerCalculatorActivity.class);
+                    startActivity(comingSoonIntent);
+                    break;
+                    * */
                 case 3:
-                    Intent comingSoonIntent = new Intent(DashboardScreen.this, ComingSoonActivity.class);
+                    Intent comingSoonIntent = new Intent(DashboardScreen.this, AddCropActivity.class);
                     startActivity(comingSoonIntent);
                     break;
                 case 4:

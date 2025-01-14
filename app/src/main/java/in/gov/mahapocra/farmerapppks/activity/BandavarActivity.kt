@@ -30,14 +30,13 @@ import retrofit2.Retrofit
 class BandavarActivity : AppCompatActivity() , ApiCallbackCode {
     lateinit var textViewHeaderTitle: TextView
     lateinit var imageMenushow: ImageView
-    lateinit var edtFarmerSuccessStory: EditText
-    lateinit var tvPostStory: TextView
-    lateinit var tvViewStory: TextView
-    lateinit var userName: String
-    lateinit var userMobileNo: String
-//    lateinit var userRegId: String
-    var userRegId : Int ? = 0
-    lateinit var strFarmerStory: String
+    private lateinit var edtFarmerSuccessStory: EditText
+    private lateinit var tvPostStory: TextView
+    private lateinit var tvViewStory: TextView
+    private lateinit var userName: String
+    private lateinit var userMobileNo: String
+    private var userRegId : Int ? = 0
+    private lateinit var strFarmerStory: String
     var languageToLoad: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,44 +50,44 @@ class BandavarActivity : AppCompatActivity() , ApiCallbackCode {
         init()
 
         onClick()
-        imageMenushow.setVisibility(View.VISIBLE)
-        textViewHeaderTitle.setText(resources.getString(R.string.badhvarText))
+        imageMenushow.visibility = View.VISIBLE
+        textViewHeaderTitle.text = resources.getString(R.string.badhvarText)
 
         userName = AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName)
         userMobileNo = AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
         userRegId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-        Log.d("BandavarActivity=","userName="+userName)
-        Log.d("BandavarActivity=","userMobileNo="+userMobileNo)
-        Log.d("BandavarActivity=","userRegId="+userRegId)
+        Log.d("BandavarActivity=", "userName=$userName")
+        Log.d("BandavarActivity=", "userMobileNo=$userMobileNo")
+        Log.d("BandavarActivity=", "userRegId=$userRegId")
     }
     private fun init() {
-        textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle);
-        imageMenushow = findViewById(R.id.imageMenushow);
-        edtFarmerSuccessStory = findViewById(R.id.tv_farmer_success_story);
-        tvPostStory = findViewById(R.id.tv_post_story);
-        tvViewStory = findViewById(R.id.tv_view_story);
+        textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
+        imageMenushow = findViewById(R.id.imageMenushow)
+        edtFarmerSuccessStory = findViewById(R.id.tv_farmer_success_story)
+        tvPostStory = findViewById(R.id.tv_post_story)
+        tvViewStory = findViewById(R.id.tv_view_story)
     }
     private fun onClick()
     {
-        imageMenushow.setOnClickListener(View.OnClickListener {
-        val intent = Intent(this, DashboardScreen::class.java)
+        imageMenushow.setOnClickListener {
+            val intent = Intent(this, DashboardScreen::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
-       })
-        tvPostStory.setOnClickListener(View.OnClickListener {
+            startActivity(intent)
+        }
+        tvPostStory.setOnClickListener {
             setBandavarSuccessStory()
-        })
-        tvViewStory.setOnClickListener(View.OnClickListener {
+        }
+        tvViewStory.setOnClickListener {
             val intent = Intent(this, ViewStoriesBandavar::class.java)
             startActivity(intent)
-        })
+        }
     }
     private fun setBandavarSuccessStory()
     {
-        strFarmerStory=edtFarmerSuccessStory.getText().toString();
-        Log.d("BandavarActivity","FarmerStory="+strFarmerStory)
+        strFarmerStory=edtFarmerSuccessStory.text.toString()
+        Log.d("BandavarActivity", "FarmerStory=$strFarmerStory")
         val jsonObject = JSONObject()
         if(userRegId!! > 0) {
             try {
@@ -112,7 +111,7 @@ class BandavarActivity : AppCompatActivity() , ApiCallbackCode {
                 DebugLog.getInstance().d("param=" + responseCall.request().toString())
                 DebugLog.getInstance().d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
             } catch (e: JSONException) {
-                DebugLog.getInstance().d("JSONException=" + e.toString())
+                DebugLog.getInstance().d("JSONException=$e")
                 e.printStackTrace()
             }
         }else
@@ -129,11 +128,10 @@ class BandavarActivity : AppCompatActivity() , ApiCallbackCode {
                 DebugLog.getInstance().d("onResponse=$jSONObject")
                 val response = ResponseModel(jSONObject)
                 if (response.getStatus()) {
-                        var message: String = jSONObject.getString("response")
+                        val message: String = jSONObject.getString("response")
                         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-                        //UIToastMessage.showShortDuration(this, notifiCountValue)
                 }else {
-                    var message: String = jSONObject.getString("response")
+                    val message: String = jSONObject.getString("response")
                     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
                 }
             }
