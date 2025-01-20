@@ -108,7 +108,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
     private String newupdateFlag;
     private int farmerId = 0;
     private int cropId = 0;
-
+    private AppPreferenceManager appPreferenceManager;
     private JSONArray jsonArray;
 
     private static final String[] arrayCategery = new String[]{
@@ -147,6 +147,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         getBaseContext().getResources().updateConfiguration(config,
                 getBaseContext().getResources().getDisplayMetrics());
         setContentView(R.layout.activity_dashboard_screen);
+        appPreferenceManager = new AppPreferenceManager(this);
         init();
 
         getFirebaseTokenFromServer();
@@ -191,7 +192,6 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
             gridView.setAdapter(new DashboardAdapter(this, arrayCategeryMarathi, arrayCategeryImg, "single_item_grid"));
         }
 
-        AppPreferenceManager appPreferenceManager = new AppPreferenceManager(this);
         appPreferenceManager.clearAll();
         gridView.setOnItemClickListener((parent, v, position, id) -> {
             switch (position) {
@@ -221,6 +221,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                     * */
                 case 3:
                     Intent comingSoonIntent = new Intent(DashboardScreen.this, AddCropActivity.class);
+                    appPreferenceManager.saveString(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD, AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD);
                     startActivity(comingSoonIntent);
                     break;
                 case 4:
@@ -575,6 +576,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                     ResponseModel registrationResponse = new ResponseModel(jSONObject);
                     if (registrationResponse.getStatus()) {
                         try {
+                            Log.d("RESPONSE_TAG", "onResponse1: "+jSONObject);
                             String strName = jSONObject.getString("Name");
                             String strMobNo = jSONObject.getString("MobileNo");
                             String strEmailId = jSONObject.getString("EmailId");

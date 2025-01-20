@@ -184,7 +184,7 @@ class CropStageAdvisory : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerI
             jsonObject.put("crop_id", cropId)
             jsonObject.put("farmer_id", farmerId)
             jsonObject.put("lang", languageToLoad)
-
+            Log.d("RESPONSE_TAG", "getCropStagesAndAdvisory: "+jsonObject)
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
                 AppInventorApi(
@@ -220,6 +220,7 @@ class CropStageAdvisory : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerI
                     sowingDate = jSONObject.getString("sowing_date")
                     binding.sowingDateTextView.text = jSONObject.getString("sowing_date")
                     cropAdvisoryDetailsJSONArray = response.getdataArray()
+                    Log.d("RESPONSE_TAG", "onResponse: $cropAdvisoryDetailsJSONArray")
 
                     if (cropAdvisoryDetailsJSONArray?.length()!! > 0) {
                         val stagesAdvisoryAdapter =

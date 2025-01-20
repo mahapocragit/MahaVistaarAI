@@ -128,7 +128,7 @@
                         android:background="@color/transparent_green"
                         android:scrollbarAlwaysDrawHorizontalTrack="true"
                         android:scrollbarStyle="insideOverlay"
-                        android:scrollbars="horizontal"></androidx.recyclerview.widget.RecyclerView>
+                        android:scrollbars="horizontal"/>
 
                     <ScrollView
                         android:layout_width="match_parent"

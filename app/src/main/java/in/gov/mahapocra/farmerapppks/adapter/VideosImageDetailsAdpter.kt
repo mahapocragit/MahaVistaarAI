@@ -75,16 +75,16 @@ class VideosImageDetailsAdpter(
                 .resize(180, 180)
                 .centerCrop()
                 .into(holder.videosImage)
-            holder.videosImage.setOnClickListener(View.OnClickListener {
-                if (callerAcitvity.equals("dashboardScreen")){
-                 //   UIToastMessage.show(context,"Farmer Advisory")
+            holder.videosImage.setOnClickListener {
+                if (callerAcitvity == "dashboardScreen") {
+                    //   UIToastMessage.show(context,"Farmer Advisory")
                     val intent = Intent(context, CropStageAdvisory::class.java)
                     intent.putExtra("id", moviesImageList?.get(position)?.id)
                     intent.putExtra("wotr_crop_id", moviesImageList?.get(position)?.wotr_id)
                     intent.putExtra("mUrl", moviesImageList?.get(position)?.getmUrl())
                     intent.putExtra("mName", moviesImageList?.get(position)?.getmName())
                     context?.startActivity(intent)
-                }else{
+                } else {
                     val intent = Intent(context, SelectSowingDataAndFarmer::class.java)
                     intent.putExtra("id", moviesImageList?.get(position)?.id)
                     intent.putExtra("wotr_crop_id", moviesImageList?.get(position)?.wotr_id)
@@ -93,10 +93,10 @@ class VideosImageDetailsAdpter(
                     intent.putExtra("editCrop", "NoEditCrop")
                     context?.startActivity(intent)
                 }
-            })
+            }
             if (callerAcitvity.equals("dashboardScreen")) {
                 holder.closeImag.visibility = View.VISIBLE
-                holder.closeImag.setOnClickListener(View.OnClickListener {
+                holder.closeImag.setOnClickListener {
                     val dialog = AlertDialog.Builder(context!!)
                         .setCancelable(false)
                         .setTitle("Delete Crop")
@@ -115,7 +115,7 @@ class VideosImageDetailsAdpter(
                         }.create()
                     dialog.setCanceledOnTouchOutside(false)
                     dialog.show()
-                })
+                }
             }
         } catch (e: JSONException) {
             e.printStackTrace()

@@ -289,6 +289,15 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             phosphorusValue = edPhosphorus.text.toString()
             potassiumValue = edPotassium.text.toString()
             edtFYMValue = edtFYM.text.toString()
+            if (nitrogenValue == null || phosphorusValue == null || potassiumValue == null) {
+                Toast.makeText(this, "Please enter valid numerical values for NPK", Toast.LENGTH_SHORT).show()
+                return
+            } else if ((nitrogenValue.toInt() < 60 || nitrogenValue.toInt() > 100) ||
+                (phosphorusValue.toInt() < 60 || phosphorusValue.toInt() > 100) ||
+                (potassiumValue.toInt() < 60 || potassiumValue.toInt() > 100)) {
+                Toast.makeText(this, "NPK values should be between 60 and 100", Toast.LENGTH_SHORT).show()
+                return
+            }
         }
         if (cropId == 0) {
             UIToastMessage.show(

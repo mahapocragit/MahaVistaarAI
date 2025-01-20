@@ -25,6 +25,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.JsonObject
+import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -74,32 +75,29 @@ class MyVillageProfilePdf : AppCompatActivity(), ApiCallbackCode,
 
         textViewDistrict=findViewById(R.id.textViewDistrict)
         textViewTaluka=findViewById(R.id.textViewTaluka)
-        textViewVillage = findViewById(R.id.textViewVillage);
+        textViewVillage = findViewById(R.id.textViewVillage)
         submitButton = findViewById(R.id.submitButton)
 
-        textViewHeaderTitle=findViewById(R.id.textViewHeaderTitle);
-        imageBackArrow=findViewById(R.id.imgBackArrow);
+        textViewHeaderTitle=findViewById(R.id.textViewHeaderTitle)
+        imageBackArrow=findViewById(R.id.imgBackArrow)
 
     }
 
     private fun setConfiguration() {
 
-        imageBackArrow.setVisibility(View.VISIBLE);
-        textViewHeaderTitle.setText(resources.getString(R.string.village_profile))
+        imageBackArrow.visibility = View.VISIBLE
+        textViewHeaderTitle.text = resources.getString(R.string.village_profile)
 
-//        districtName = AppSettings.getInstance().getValue(this, AppConstants.uDIST, AppConstants.uDIST)
-//        talukaName = AppSettings.getInstance().getValue(this, AppConstants.uTALUKA, AppConstants.uTALUKA)
-//        districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
-//        talukaID = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
-//
-//        if (!districtName.equals("USER_DIST") && !talukaName.equals("USER_TALUKA")) {
-//            textViewDistrict.setText(districtName)
-//            textViewTaluka.setText(talukaName)
-//            Log.d("districtNamewr:talukawr", districtName + " ::" + talukaName)
-//            fetchTalukaMasterData()
-//            getMyProfileVillageDetails()
-//        }
-        getDistrictData()
+        districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
+        talukaID = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
+        villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
+        try {
+            getDistrictData()
+            fetchTalukaMasterData()
+            getVillageAgainstTaluka()
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
     }
 
     private fun onClick()
@@ -107,9 +105,9 @@ class MyVillageProfilePdf : AppCompatActivity(), ApiCallbackCode,
 //        imageMenushow.setOnClickListener(View.OnClickListener {
 //
 //        })
-        imageBackArrow.setOnClickListener(View.OnClickListener {
+        imageBackArrow.setOnClickListener {
             finish()
-        })
+        }
         textViewDistrict.setOnClickListener {
             showDistrict()
         }
@@ -121,9 +119,9 @@ class MyVillageProfilePdf : AppCompatActivity(), ApiCallbackCode,
             showVillage()
         }
 
-        submitButton.setOnClickListener(View.OnClickListener {
+        submitButton.setOnClickListener {
             getMyProfileVillageDetails()
-        })
+        }
     }
 
     private fun getMyProfileVillageDetails() {
@@ -144,15 +142,8 @@ class MyVillageProfilePdf : AppCompatActivity(), ApiCallbackCode,
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(APIRequest::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getMyVillageProfileDetails(requestBody)
-            DebugLog.getInstance().d("param1=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()))
             api.postRequest(responseCall, this, 4)
-            DebugLog.getInstance().d("param=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
         } catch (e: JSONException) {
-            DebugLog.getInstance().d("JSONException=" + e.toString())
             e.printStackTrace()
         }
     }
@@ -221,15 +212,8 @@ class MyVillageProfilePdf : AppCompatActivity(), ApiCallbackCode,
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(APIRequest::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getDistrictList(requestBody)
-            DebugLog.getInstance().d("param1=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()))
             api.postRequest(responseCall, this, 1)
-            DebugLog.getInstance().d("param=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
         } catch (e: JSONException) {
-            DebugLog.getInstance().d("JSONException=" + e.toString())
             e.printStackTrace()
         }
     }
@@ -254,15 +238,8 @@ class MyVillageProfilePdf : AppCompatActivity(), ApiCallbackCode,
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(APIRequest::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getTalukaList(requestBody)
-            DebugLog.getInstance().d("param1=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()))
             api.postRequest(responseCall, this, 2)
-            DebugLog.getInstance().d("param=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
         } catch (e: JSONException) {
-            DebugLog.getInstance().d("JSONException=" + e.toString())
             e.printStackTrace()
         }
     }
@@ -285,15 +262,8 @@ class MyVillageProfilePdf : AppCompatActivity(), ApiCallbackCode,
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(APIRequest::class.java)
             val responseCall: Call<JsonObject> = apiRequest.kGetVillageList(requestBody)
-            DebugLog.getInstance().d("param1=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()))
             api.postRequest(responseCall, this, 3)
-            DebugLog.getInstance().d("param=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
         } catch (e: JSONException) {
-            DebugLog.getInstance().d("JSONException=" + e.toString())
             e.printStackTrace()
         }
     }
@@ -322,19 +292,19 @@ class MyVillageProfilePdf : AppCompatActivity(), ApiCallbackCode,
             if (s != null) {
                 districtName = s
             }
-            textViewDistrict.setText(s)
+            textViewDistrict.text = s
             if (districtID > 0) {
                 fetchTalukaMasterData()
             }
             //  warehouseAvailabilityJSONArray = null
             talukaID = 0
-            textViewTaluka.setText("")
-            textViewTaluka.setHint(resources.getString(R.string.farmer_select_taluka))
+            textViewTaluka.text = ""
+            textViewTaluka.hint = resources.getString(R.string.farmer_select_taluka)
             textViewTaluka.setHintTextColor(Color.GRAY)
 
             villageID = 0
-            textViewVillage.setText("")
-            textViewVillage.setHint(resources.getString(R.string.farmer_select_village))
+            textViewVillage.text = ""
+            textViewVillage.hint = resources.getString(R.string.farmer_select_village)
             textViewVillage.setHintTextColor(Color.GRAY)
         }
         if (i == 2) {
@@ -343,11 +313,11 @@ class MyVillageProfilePdf : AppCompatActivity(), ApiCallbackCode,
                 talukaName = s
                 getVillageAgainstTaluka()
             }
-            textViewTaluka.setText(s)
+            textViewTaluka.text = s
 
             villageID = 0
-            textViewVillage.setText("")
-            textViewVillage.setHint(resources.getString(R.string.farmer_select_village))
+            textViewVillage.text = ""
+            textViewVillage.hint = resources.getString(R.string.farmer_select_village)
             textViewVillage.setHintTextColor(Color.GRAY)
 
         }
@@ -355,7 +325,7 @@ class MyVillageProfilePdf : AppCompatActivity(), ApiCallbackCode,
         if (i == 3) {
             villageID = s1!!.toInt()
             villageName = s.toString()
-            textViewVillage.setText(s)
+            textViewVillage.text = s
         }
     }
 
@@ -374,7 +344,23 @@ class MyVillageProfilePdf : AppCompatActivity(), ApiCallbackCode,
 
             if (response.status) {
                 districtJSONArray = response.getdataArray()
-                Log.d("districtJSONArray11111", districtJSONArray.toString())
+                districtJSONArray?.let {
+                    for (j in 0 until it.length()) {
+                        val districtObject = it.getJSONObject(j)
+                        val id = districtObject.getInt("id")
+                        val name = districtObject.getString("name")
+
+                        // Check if the current id matches districtID
+                        if (id == districtID) {
+                            // Set the text in textViewDistrict if a match is found
+                            textViewDistrict.text = name
+                            break // No need to continue looping once the matching district is found
+                        }
+                    }
+                } ?: run {
+                    Log.e("TAGGER", "districtJSONArray could not be cast to JSONArray")
+                }
+
             } else {
 
                 Toast.makeText(this, "Data Not Found", Toast.LENGTH_LONG).show()
@@ -386,7 +372,22 @@ class MyVillageProfilePdf : AppCompatActivity(), ApiCallbackCode,
 
             if (response.status) {
                 talukaJSONArray = response.getdataArray()
-                Log.d("talukaJSONArray", talukaJSONArray.toString())
+                talukaJSONArray?.let {
+                    for (j in 0 until it.length()) {
+                        val talukaObject = it.getJSONObject(j)
+                        val id = talukaObject.getInt("id")
+                        val name = talukaObject.getString("name")
+
+                        // Check if the current id matches districtID
+                        if (id == talukaID) {
+                            // Set the text in textViewDistrict if a match is found
+                            textViewTaluka.text = name
+                            break // No need to continue looping once the matching district is found
+                        }
+                    }
+                } ?: run {
+                    Log.e("TAGGER", "districtJSONArray could not be cast to JSONArray")
+                }
             } else {
                 Toast.makeText(this, "Data Not Found", Toast.LENGTH_LONG).show()
             }
@@ -397,7 +398,23 @@ class MyVillageProfilePdf : AppCompatActivity(), ApiCallbackCode,
 
             if (response.status) {
                 villJSONArray = response.getdataArray()
-                Log.d("villJSONArray", villJSONArray.toString())
+                Log.d("TAGGER", "onResponse: $villageID & $villJSONArray")
+                villJSONArray?.let {
+                    for (j in 0 until it.length()) {
+                        val villageObject = it.getJSONObject(j)
+                        val id = villageObject.getInt("code")
+                        val name = villageObject.getString("name")
+
+                        // Check if the current id matches districtID
+                        if (id == villageID) {
+                            // Set the text in textViewDistrict if a match is found
+                            textViewVillage.text = name
+                            break // No need to continue looping once the matching district is found
+                        }
+                    }
+                } ?: run {
+                    Log.e("TAGGER", "districtJSONArray could not be cast to JSONArray")
+                }
             }
             else {
                 Toast.makeText(this, "Data Not Found", Toast.LENGTH_LONG).show()
@@ -413,7 +430,7 @@ class MyVillageProfilePdf : AppCompatActivity(), ApiCallbackCode,
 
 //                var browserIntent = Intent(Intent.ACTION_VIEW, uri.parse(pdfUrl))
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(pdfUrl))
-                Log.d("mmmm","browserIntent="+pdfUrl);
+                Log.d("mmmm","browserIntent="+pdfUrl)
                 startActivity(browserIntent)
 
             } else {

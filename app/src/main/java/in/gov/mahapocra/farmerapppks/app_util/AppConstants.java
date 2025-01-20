@@ -11,6 +11,7 @@ public interface AppConstants {
 
     String uName = "USER_NAME";
     String PEST_AND_DISEASES_FROM_DASHBOARD = "PEST_AND_DISEASES_FROM_DASHBOARD";
+    String FERTILIZER_CALCULATOR_FROM_DASHBOARD = "FERTILIZER_CALCULATOR_FROM_DASHBOARD";
     String uMobileNo = "USER_MOBILE";
     String uEmail = "USER_EMAIL";
     String uDIST = "USER_DIST";

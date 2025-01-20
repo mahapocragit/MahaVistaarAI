@@ -71,10 +71,21 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
         binding.saveDateForFarmButton.setOnClickListener {
             if (source.equals(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD)) {
                 val intent = Intent(this, CropStageAdvisory::class.java)
+                intent.putExtra("dataSavedInLocal", "dataSavedInLocal")
+                AppSettings.getInstance().setIntValue(this, AppConstants.tmpCROPID, cropId!!)
+                AppSettings.getInstance().setValue(this, AppConstants.tmpWOTRID, wotrCropId)
+                AppSettings.getInstance().setValue(this, AppConstants.tmpSOWINGDATE, sowingDate)
+                AppSettings.getInstance().setValue(this, AppConstants.tmpMURL, mUrl)
+                AppSettings.getInstance().setValue(this, AppConstants.tmpCROPNAME, mName)
+                intent.putExtra("editCrop", editCrop)
+                startActivity(intent)
+            }else if (source.equals(AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD)) {
+                val intent = Intent(this, FertilizerCalculatorActivity::class.java)
                 intent.putExtra("id", cropId)
                 intent.putExtra("wotr_crop_id", wotrCropId)
                 intent.putExtra("mUrl", mUrl)
                 intent.putExtra("mName", mName)
+                intent.putExtra("sowingDate", sowingDate)
                 intent.putExtra("editCrop", editCrop)
                 startActivity(intent)
             } else {
@@ -114,13 +125,7 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
                 val retrofit: Retrofit = api.getRetrofitInstance()
                 val apiRequest = retrofit.create(APIRequest::class.java)
                 val responseCall: Call<JsonObject> = apiRequest.kSaveFarmerSelectedCrop(requestBody)
-                DebugLog.getInstance().d("param1=" + responseCall.request().toString())
-                DebugLog.getInstance()
-                    .d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()))
                 api.postRequest(responseCall, this, 1)
-                DebugLog.getInstance().d("param=" + responseCall.request().toString())
-                DebugLog.getInstance()
-                    .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
             } catch (e: JSONException) {
                 DebugLog.getInstance().d("JSONException=$e")
                 e.printStackTrace()
