@@ -95,12 +95,21 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
     }
 
     private fun showCropData(videoDetailsList: ArrayList<VideoDetails>) {
-        val titleVideosAdapter =
+        var titleVideosAdapter =
             TitleVideosDetailsAdpter(
                 this,
-                videoDetailsList
+                videoDetailsList,
+                "TitleVideosDetailsAdpter"
             )
-
+        val str = intent.getStringExtra("NO_NEED_TO_ADD_SOWING_DATE")
+        if (str != null){
+            titleVideosAdapter =
+                TitleVideosDetailsAdpter(
+                    this,
+                    videoDetailsList,
+                    "NO_NEED_TO_ADD_SOWING_DATE"
+                )
+        }
         mainCropCategoryRecycle?.setLayoutManager(
             LinearLayoutManager(
                 this,

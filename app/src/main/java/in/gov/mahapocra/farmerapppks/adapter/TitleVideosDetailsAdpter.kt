@@ -16,7 +16,7 @@ import `in`.gov.mahapocra.farmerapppks.models.response.VideoDetails
 import org.json.JSONException
 import java.util.ArrayList
 
-class TitleVideosDetailsAdpter(private var context: Context? = null, private var videiDetailsList: List<VideoDetails>): RecyclerView.Adapter<TitleVideosDetailsAdpter.ViewHolder>(),
+class TitleVideosDetailsAdpter(private var context: Context? = null, private var videiDetailsList: List<VideoDetails>,private var callerActivity:String): RecyclerView.Adapter<TitleVideosDetailsAdpter.ViewHolder>(),
     OnMultiRecyclerItemClickListener {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -49,7 +49,7 @@ class TitleVideosDetailsAdpter(private var context: Context? = null, private var
                     context,
                     imagesList,
                     this,
-                    "TitleVideosDetailsAdpter"
+                    callerActivity
                 )
 
             holder.videosImageView.setLayoutManager(

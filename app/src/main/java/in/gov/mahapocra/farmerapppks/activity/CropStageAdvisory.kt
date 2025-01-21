@@ -76,6 +76,7 @@ class CropStageAdvisory : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerI
         wotrCropId = intent.getStringExtra("wotr_crop_id")
         mUrl = intent.getStringExtra("mUrl")
         cropName = intent.getStringExtra("mName")
+        binding.cropNameTextView.text = cropName
         val dataSavedInLocal = intent.getStringExtra("dataSavedInLocal")
         villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
         if (dataSavedInLocal.equals("dataSavedInLocal") && cropId == 0) {
@@ -168,6 +169,12 @@ class CropStageAdvisory : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerI
 
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
         getCropStagesAndAdvisory()
+        binding.addCropImageView.setOnClickListener {
+            val intent = Intent(this@CropStageAdvisory, AddCropActivity::class.java)
+            intent.putExtra("SOWING_DATE", sowingDate)
+            intent.putExtra("NO_NEED_TO_ADD_SOWING_DATE", "NO_NEED_TO_ADD_SOWING_DATE")
+            startActivity(intent)
+        }
     }
 
     private fun setConfiguration() {

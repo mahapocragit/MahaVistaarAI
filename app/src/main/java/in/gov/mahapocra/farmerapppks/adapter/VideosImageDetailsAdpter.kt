@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -76,22 +77,34 @@ class VideosImageDetailsAdpter(
                 .centerCrop()
                 .into(holder.videosImage)
             holder.videosImage.setOnClickListener {
-                if (callerAcitvity == "dashboardScreen") {
-                    //   UIToastMessage.show(context,"Farmer Advisory")
-                    val intent = Intent(context, CropStageAdvisory::class.java)
-                    intent.putExtra("id", moviesImageList?.get(position)?.id)
-                    intent.putExtra("wotr_crop_id", moviesImageList?.get(position)?.wotr_id)
-                    intent.putExtra("mUrl", moviesImageList?.get(position)?.getmUrl())
-                    intent.putExtra("mName", moviesImageList?.get(position)?.getmName())
-                    context?.startActivity(intent)
-                } else {
-                    val intent = Intent(context, SelectSowingDataAndFarmer::class.java)
-                    intent.putExtra("id", moviesImageList?.get(position)?.id)
-                    intent.putExtra("wotr_crop_id", moviesImageList?.get(position)?.wotr_id)
-                    intent.putExtra("mUrl", moviesImageList?.get(position)?.getmUrl())
-                    intent.putExtra("mName", moviesImageList?.get(position)?.getmName())
-                    intent.putExtra("editCrop", "NoEditCrop")
-                    context?.startActivity(intent)
+                when (callerAcitvity) {
+                    "dashboardScreen" -> {
+                        //   UIToastMessage.show(context,"Farmer Advisory")
+                        val intent = Intent(context, CropStageAdvisory::class.java)
+                        intent.putExtra("id", moviesImageList?.get(position)?.id)
+                        intent.putExtra("wotr_crop_id", moviesImageList?.get(position)?.wotr_id)
+                        intent.putExtra("mUrl", moviesImageList?.get(position)?.getmUrl())
+                        intent.putExtra("mName", moviesImageList?.get(position)?.getmName())
+                        context?.startActivity(intent)
+                    }
+                    "NO_NEED_TO_ADD_SOWING_DATE" -> {
+                        val intent = Intent(context, CropStageAdvisory::class.java)
+                        intent.putExtra("id", moviesImageList?.get(position)?.id)
+                        intent.putExtra("wotr_crop_id", moviesImageList?.get(position)?.wotr_id)
+                        intent.putExtra("mUrl", moviesImageList?.get(position)?.getmUrl())
+                        intent.putExtra("mName", moviesImageList?.get(position)?.getmName())
+                        intent.putExtra("editCrop", "NoEditCrop")
+                        context?.startActivity(intent)
+                    }
+                    else -> {
+                        val intent = Intent(context, SelectSowingDataAndFarmer::class.java)
+                        intent.putExtra("id", moviesImageList?.get(position)?.id)
+                        intent.putExtra("wotr_crop_id", moviesImageList?.get(position)?.wotr_id)
+                        intent.putExtra("mUrl", moviesImageList?.get(position)?.getmUrl())
+                        intent.putExtra("mName", moviesImageList?.get(position)?.getmName())
+                        intent.putExtra("editCrop", "NoEditCrop")
+                        context?.startActivity(intent)
+                    }
                 }
             }
             if (callerAcitvity.equals("dashboardScreen")) {

@@ -50,13 +50,13 @@ class MyVillageProfilePdf : AppCompatActivity(), ApiCallbackCode,
     lateinit var talukaName: String
     private var talukaID: Int = 0
     private var villageID: Int = 0
-    lateinit var villageName: String
+    private lateinit var villageName: String
   //  lateinit var villageCode: String
-    lateinit  var pdfUrl :String
+    private lateinit  var pdfUrl :String
     lateinit var languageToLoad: String
 
     lateinit var textViewHeaderTitle: TextView
-    lateinit var imageBackArrow: ImageView
+    private lateinit var imageBackArrow: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
