@@ -17,8 +17,8 @@ import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
-import `in`.gov.mahapocra.farmerapppks.adapter.TitleVideosDetailsAdpter
 import `in`.gov.mahapocra.farmerapppks.R
+import `in`.gov.mahapocra.farmerapppks.adapter.TitleVideosDetailsAdapter
 import `in`.gov.mahapocra.farmerapppks.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
@@ -96,7 +96,7 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
 
     private fun showCropData(videoDetailsList: ArrayList<VideoDetails>) {
         var titleVideosAdapter =
-            TitleVideosDetailsAdpter(
+            TitleVideosDetailsAdapter(
                 this,
                 videoDetailsList,
                 "TitleVideosDetailsAdpter"
@@ -104,7 +104,7 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
         val str = intent.getStringExtra("NO_NEED_TO_ADD_SOWING_DATE")
         if (str != null){
             titleVideosAdapter =
-                TitleVideosDetailsAdpter(
+                TitleVideosDetailsAdapter(
                     this,
                     videoDetailsList,
                     "NO_NEED_TO_ADD_SOWING_DATE"

@@ -24,23 +24,23 @@ import `in`.gov.mahapocra.farmerapppks.models.response.CropsCategName
 import org.json.JSONException
 
 
-class VideosImageDetailsAdpter(
+class VideosImageDetailsAdapter(
     private var context: Context? = null,
     private var moviesImageList: ArrayList<CropsCategName>?,
     private var listener: OnMultiRecyclerItemClickListener,
-    private var callerAcitvity: String
-) : RecyclerView.Adapter<VideosImageDetailsAdpter.ViewHolder>() {
+    private var callerActivity: String
+) : RecyclerView.Adapter<VideosImageDetailsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): VideosImageDetailsAdpter.ViewHolder {
+    ): ViewHolder {
         val view: View = LayoutInflater.from(parent.context).inflate(
             R.layout.videos_images_details_layout,
             parent,
             false
         )
-        return VideosImageDetailsAdpter.ViewHolder(view)
+        return ViewHolder(view)
     }
 
     override fun getItemCount(): Int {
@@ -57,7 +57,7 @@ class VideosImageDetailsAdpter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         try {
-            holder.titleTextView.setText(moviesImageList?.get(position)?.getmName())
+            holder.titleTextView.text = moviesImageList?.get(position)?.getmName()
 //            context?.let {
 //                Glide.with(it)
 //                    .load(moviesImageList?.get(position)?.getmUrl())
@@ -77,7 +77,7 @@ class VideosImageDetailsAdpter(
                 .centerCrop()
                 .into(holder.videosImage)
             holder.videosImage.setOnClickListener {
-                when (callerAcitvity) {
+                when (callerActivity) {
                     "dashboardScreen" -> {
                         //   UIToastMessage.show(context,"Farmer Advisory")
                         val intent = Intent(context, CropStageAdvisory::class.java)
@@ -87,6 +87,7 @@ class VideosImageDetailsAdpter(
                         intent.putExtra("mName", moviesImageList?.get(position)?.getmName())
                         context?.startActivity(intent)
                     }
+
                     "NO_NEED_TO_ADD_SOWING_DATE" -> {
                         val intent = Intent(context, CropStageAdvisory::class.java)
                         intent.putExtra("id", moviesImageList?.get(position)?.id)
@@ -96,6 +97,7 @@ class VideosImageDetailsAdpter(
                         intent.putExtra("editCrop", "NoEditCrop")
                         context?.startActivity(intent)
                     }
+
                     else -> {
                         val intent = Intent(context, SelectSowingDataAndFarmer::class.java)
                         intent.putExtra("id", moviesImageList?.get(position)?.id)
@@ -107,7 +109,7 @@ class VideosImageDetailsAdpter(
                     }
                 }
             }
-            if (callerAcitvity.equals("dashboardScreen")) {
+            if (callerActivity == "dashboardScreen") {
                 holder.closeImag.visibility = View.VISIBLE
                 holder.closeImag.setOnClickListener {
                     val dialog = AlertDialog.Builder(context!!)

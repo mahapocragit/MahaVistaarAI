@@ -64,7 +64,7 @@ import in.gov.mahapocra.farmerapppks.AppPreferenceManager;
 import in.gov.mahapocra.farmerapppks.R;
 import in.gov.mahapocra.farmerapppks.adapter.DashboardAdapter;
 import in.gov.mahapocra.farmerapppks.adapter.DrawerMenuAdapter;
-import in.gov.mahapocra.farmerapppks.adapter.VideosImageDetailsAdpter;
+import in.gov.mahapocra.farmerapppks.adapter.VideosImageDetailsAdapter;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.Identify.Identify_dashboard;
 import in.gov.mahapocra.farmerapppks.api.APIRequest;
 import in.gov.mahapocra.farmerapppks.api.APIServices;
@@ -209,16 +209,6 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                     startActivity(sharing);
                     break;
 
-                    /*
-                    Intent intent = new Intent(DashboardScreen.this, AddCropActivity.class);
-                    new AppPreferenceManager(this).saveString(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD, AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD);
-                    startActivity(intent);
-                    break;
-                case 3: //fertilizer calculator
-                    Intent comingSoonIntent = new Intent(DashboardScreen.this, FertilizerCalculatorActivity.class);
-                    startActivity(comingSoonIntent);
-                    break;
-                    * */
                 case 3:
                     Intent comingSoonIntent = new Intent(DashboardScreen.this, AddCropActivity.class);
                     appPreferenceManager.saveString(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD, AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD);
@@ -666,7 +656,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         selectedCropListRecyc.setLayoutManager(layoutManager);
         selectedCropListRecyc.setHasFixedSize(true);
         selectedCropListRecyc.setItemAnimator(new DefaultItemAnimator());
-        VideosImageDetailsAdpter adapter = new VideosImageDetailsAdpter(this, selectedCropList, this, "dashboardScreen");
+        VideosImageDetailsAdapter adapter = new VideosImageDetailsAdapter(this, selectedCropList, this, "dashboardScreen");
         selectedCropListRecyc.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }

@@ -16,7 +16,7 @@ import `in`.gov.mahapocra.farmerapppks.models.response.VideoDetails
 import org.json.JSONException
 import java.util.ArrayList
 
-class TitleVideosDetailsAdpter(private var context: Context? = null, private var videiDetailsList: List<VideoDetails>,private var callerActivity:String): RecyclerView.Adapter<TitleVideosDetailsAdpter.ViewHolder>(),
+class TitleVideosDetailsAdapter(private var context: Context? = null, private var videoDetailsList: List<VideoDetails>,private var callerActivity:String): RecyclerView.Adapter<TitleVideosDetailsAdapter.ViewHolder>(),
     OnMultiRecyclerItemClickListener {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,8 +27,8 @@ class TitleVideosDetailsAdpter(private var context: Context? = null, private var
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         try {
 
-            holder.textView.text = videiDetailsList[position].titles
-            val imagesList: ArrayList<CropsCategName>? = videiDetailsList[position].moviesImagesList
+            holder.textView.text = videoDetailsList[position].titles
+            val imagesList: ArrayList<CropsCategName>? = videoDetailsList[position].moviesImagesList
 
             holder.pimg.setOnClickListener {
                 Log.d("gfgfghgf", "test6666")
@@ -38,14 +38,14 @@ class TitleVideosDetailsAdpter(private var context: Context? = null, private var
 
             holder.nimg.setOnClickListener {
                 holder.pimg.visibility = View.VISIBLE
-                val abc = videiDetailsList[position].id
+                val abc = videoDetailsList[position].id
                 Log.d("dgfgfdgdf", abc.toString())
                 holder.videosImageView.smoothScrollBy(200, 1000);
 
             }
 
             val videosImageAdapter =
-                VideosImageDetailsAdpter(
+                VideosImageDetailsAdapter(
                     context,
                     imagesList,
                     this,
@@ -67,7 +67,7 @@ class TitleVideosDetailsAdpter(private var context: Context? = null, private var
     }
 
     override fun getItemCount(): Int {
-        return videiDetailsList.size
+        return videoDetailsList.size
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
