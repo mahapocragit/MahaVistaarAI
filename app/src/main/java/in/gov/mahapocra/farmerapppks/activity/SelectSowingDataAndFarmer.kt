@@ -139,8 +139,7 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
             Log.d("i2", day.toString())
             Log.d("i3", month.toString())
             Log.d("i4", year.toString())
-            sowingDate = "$year-$month-$day"
-//            AppSettings.getInstance().setValue(this, AppConstants.tmpSOWINGDATE, sowingDate)
+            sowingDate = "$day-$month-$year"
             binding.textViewSowingDate.text = sowingDate
         }
     }
@@ -158,7 +157,7 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
                     selectedArrayLists = AppSettings.getInstance()
                         ?.getList(this, AppConstants.kFarmerCrop) as? List<Objects>
                     if (selectedArrayLists != null) {
-                        selectedCropList = ArrayList<CropsCategName>()
+                        selectedCropList = ArrayList()
                         if (selectedArrayLists.equals("selectedArrayLists")) {
                             selectedCropList.add(CropsCategName(cropId!!, mName, mUrl, wotrCropId))
                         } else {
@@ -171,7 +170,6 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
                                 object : TypeToken<java.util.ArrayList<CropsCategName?>?>() {}.type
                             selectedCropList = Gson().fromJson(element, listType)
                             selectedCropList.add(CropsCategName(cropId!!, mName, mUrl, wotrCropId))
-                            Log.d("selectedCropList", selectedCropList.toString())
                             AppSettings.getInstance().setList(
                                 this, AppConstants.kFarmerCrop,
                                 selectedCropList as List<CropsCategName>?
