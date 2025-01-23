@@ -27,21 +27,45 @@
             android:layout_marginRight="@dimen/height5"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvCropName"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/height30"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textAlignment="center"
-                android:padding="@dimen/padding3"
-                android:paddingRight="@dimen/padding2"
-                android:text="@string/Crop_name"
-                android:textColor="@color/black"
-                android:background="@drawable/text_bg_with_border"
-                android:textSize="@dimen/text14"
-                android:textStyle="italic">
-            </TextView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvSowingDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/height30"
+                    android:layout_gravity="center"
+                    android:background="@drawable/text_bg_with_border"
+                    android:gravity="center"
+                    android:padding="@dimen/padding3"
+                    android:paddingRight="@dimen/padding2"
+                    android:text="Sowing Date"
+                    android:layout_marginHorizontal="2dp"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text14"
+                    android:layout_weight="1"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/tvCropName"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/height30"
+                    android:layout_gravity="center"
+                    android:background="@drawable/text_bg_with_border"
+                    android:gravity="center"
+                    android:padding="@dimen/padding3"
+                    android:paddingRight="@dimen/padding2"
+                    android:text="@string/Crop_name"
+                    android:layout_marginHorizontal="2dp"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text14"
+                    android:layout_weight="1"
+                    android:textStyle="italic"/>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

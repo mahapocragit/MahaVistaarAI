@@ -194,7 +194,7 @@
                                 android:layout_gravity="center"
                                 android:scrollbarAlwaysDrawHorizontalTrack="true"
                                 android:scrollbarStyle="insideOverlay"
-                                android:scrollbars="horizontal"></androidx.recyclerview.widget.RecyclerView>
+                                android:scrollbars="horizontal"/>
 
                             <LinearLayout
                                 android:id="@+id/coming_soon_LinearLayout1"

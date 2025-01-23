@@ -68,6 +68,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     private lateinit var availableOptionTv: TextView
     private lateinit var selectedOptionTv: TextView
     private lateinit var selectAnyOneOptionTV: TextView
+    private lateinit var tvSowingDate: TextView
 
     private lateinit var edNitrogen: EditText
     private lateinit var edPhosphorus: EditText
@@ -117,6 +118,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         cropName = intent.getStringExtra("mName")
         wotrCropId = intent.getStringExtra("wotr_crop_id")
         sowingDate = intent.getStringExtra("sowingDate")
+        Log.d("TAGGER", "onCreate: $cropId, $wotrCropId, $sowingDate, $cropName")
 
         villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
 
@@ -135,6 +137,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         availableOptionTv = findViewById(R.id.availableOptionTv)
         selectedOptionTv = findViewById(R.id.selectedOptionTv)
         selectAnyOneOptionTV = findViewById(R.id.selectAnyOneOptionTV)
+        tvSowingDate = findViewById(R.id.tvSowingDate)
         edNitrogen = findViewById(R.id.edNitrogen)
         edPhosphorus = findViewById(R.id.edPhosphorus)
         edPotassium = findViewById(R.id.edPotassium)
@@ -178,7 +181,14 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             )
             getSelectedSavedOption()
         }
-
+        tvSowingDate.setOnClickListener {
+            startActivity(
+                Intent(
+                    this@FertilizerCalculatorActivity,
+                    SelectSowingDataAndFarmer::class.java
+                )
+            )
+        }
         availableOptionTv.setOnClickListener {
             availableOptionTv.background = ContextCompat.getDrawable(
                 this,
@@ -250,10 +260,12 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             jsonObject.put("farmer_id", "902")
             jsonObject.put("crop_id", cropId)
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api = AppInventorApi(this, APIServices.SSO, "", AppString(this).getkMSG_WAIT(), true)
+            val api =
+                AppInventorApi(this, APIServices.SSO, "", AppString(this).getkMSG_WAIT(), true)
             CoroutineScope(Dispatchers.IO).launch {
                 val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getFertilizerSavedFormula(requestBody)
+                val responseCall: Call<JsonObject> =
+                    apiRequest.getFertilizerSavedFormula(requestBody)
                 api.postRequest(responseCall, this@FertilizerCalculatorActivity, 4)
             }
         } catch (e: JSONException) {
@@ -290,12 +302,18 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             potassiumValue = edPotassium.text.toString()
             edtFYMValue = edtFYM.text.toString()
             if (nitrogenValue == null || phosphorusValue == null || potassiumValue == null) {
-                Toast.makeText(this, "Please enter valid numerical values for NPK", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Please enter valid numerical values for NPK",
+                    Toast.LENGTH_SHORT
+                ).show()
                 return
             } else if ((nitrogenValue.toInt() < 60 || nitrogenValue.toInt() > 100) ||
                 (phosphorusValue.toInt() < 60 || phosphorusValue.toInt() > 100) ||
-                (potassiumValue.toInt() < 60 || potassiumValue.toInt() > 100)) {
-                Toast.makeText(this, "NPK values should be between 60 and 100", Toast.LENGTH_SHORT).show()
+                (potassiumValue.toInt() < 60 || potassiumValue.toInt() > 100)
+            ) {
+                Toast.makeText(this, "NPK values should be between 60 and 100", Toast.LENGTH_SHORT)
+                    .show()
                 return
             }
         }
@@ -342,10 +360,12 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
 
     private fun getToken() {
         try {
-            val api = AppInventorApi(this, APIServices.WOTR, "", AppString(this).getkMSG_WAIT(), true)
+            val api =
+                AppInventorApi(this, APIServices.WOTR, "", AppString(this).getkMSG_WAIT(), true)
             CoroutineScope(Dispatchers.IO).launch {
                 val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getTokenFromWotr("8470807282", "PMU%40PoCRA%232023")
+                val responseCall: Call<JsonObject> =
+                    apiRequest.getTokenFromWotr("8470807282", "PMU%40PoCRA%232023")
                 api.postRequest(responseCall, this@FertilizerCalculatorActivity, 2)
             }
         } catch (e: JSONException) {
@@ -362,7 +382,8 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         val newFormat = SimpleDateFormat("yyyy-mm-dd")
         val finalSowingDate = newFormat.format(date)
         try {
-            val api = AppInventorApi(this, APIServices.WOTR, "", AppString(this).getkMSG_WAIT(), true)
+            val api =
+                AppInventorApi(this, APIServices.WOTR, "", AppString(this).getkMSG_WAIT(), true)
 
             CoroutineScope(Dispatchers.IO).launch {
                 val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
@@ -641,7 +662,8 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             jsonObject.put("option", fertilizerOption)
 
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api = AppInventorApi(this, APIServices.SSO, "", AppString(this).getkMSG_WAIT(), true)
+            val api =
+                AppInventorApi(this, APIServices.SSO, "", AppString(this).getkMSG_WAIT(), true)
             CoroutineScope(Dispatchers.IO).launch {
                 val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
                 val responseCall: Call<JsonObject> = apiRequest.saveFertilizerFormula(requestBody)

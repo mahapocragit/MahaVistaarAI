@@ -59,6 +59,7 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
         mName = intent.getStringExtra("mName")
         editCrop = intent.getStringExtra("editCrop")
 
+
         binding.relativeLayoutTopBar.textViewHeaderTitle.text =
             resources.getString(R.string.select_sowing_date)
         AppUtility.getInstance().showDisabledFutureDatePicker(

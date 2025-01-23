@@ -35,15 +35,13 @@ import retrofit2.Call
 import retrofit2.Retrofit
 
 
-
 class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerItemClickListener {
 
     private var mainCropCategoryRecycle: RecyclerView? = null
     private lateinit var moviesImagesList: ArrayList<CropsCategName>
-    private lateinit var videoDetailsList : ArrayList<VideoDetails>
+    private lateinit var videoDetailsList: ArrayList<VideoDetails>
     private lateinit var languageToLoad: String
     private lateinit var cropJsonArray: JSONArray
-
     private lateinit var textViewHeaderTitle: TextView
     private lateinit var imageMenuShow: ImageView
 
@@ -102,7 +100,7 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
                 "TitleVideosDetailsAdpter"
             )
         val str = intent.getStringExtra("NO_NEED_TO_ADD_SOWING_DATE")
-        if (str != null){
+        if (str != null) {
             titleVideosAdapter =
                 TitleVideosDetailsAdapter(
                     this,
@@ -132,26 +130,37 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
             if (response.status) {
                 cropJsonArray = response.getdataArray()
                 videoDetailsList = ArrayList()
-                val nCropSize : Int = cropJsonArray.length()
+                val nCropSize: Int = cropJsonArray.length()
                 for (i in 0 until nCropSize) {
-                    val cropJsonObject:JSONObject = cropJsonArray.get(i) as JSONObject
+                    val cropJsonObject: JSONObject = cropJsonArray.get(i) as JSONObject
+                    Log.d("TAGGER", "onResponse sat: $cropJsonObject")
                     val cropType: String = cropJsonObject.getString("type")
                     val cropCategoriesJsonArray: JSONArray = cropJsonObject.getJSONArray("crops")
-                    val nCropsCategory : Int = cropCategoriesJsonArray.length()
+                    val nCropsCategory: Int = cropCategoriesJsonArray.length()
                     moviesImagesList = ArrayList()
-                    for (j in 0 until nCropsCategory){
-                        val cropCategoriesJsonObject:JSONObject = cropCategoriesJsonArray.get(j) as JSONObject
+                    for (j in 0 until nCropsCategory) {
+                        val cropCategoriesJsonObject: JSONObject =
+                            cropCategoriesJsonArray.get(j) as JSONObject
                         val cropsId: Int = cropCategoriesJsonObject.get("id") as Int
-                        val cropsName :String = cropCategoriesJsonObject.get("name") as String
-                        var cropsImgUrl : String? = ""
-                         cropsImgUrl = cropCategoriesJsonObject.get("image").toString()
-                        if(cropsImgUrl == null){
-                            cropsImgUrl = "https://cdn.pixabay.com/photo/2016/06/11/15/33/broccoli-1450274_640.png"
+                        val cropsName: String = cropCategoriesJsonObject.get("name") as String
+                        val wotrCropId: String =
+                            cropCategoriesJsonObject.get("wotr_crop_id").toString()
+                        var cropsImgUrl: String? = ""
+                        cropsImgUrl = cropCategoriesJsonObject.get("image").toString()
+                        if (cropsImgUrl == null) {
+                            cropsImgUrl =
+                                "https://cdn.pixabay.com/photo/2016/06/11/15/33/broccoli-1450274_640.png"
                         }
-                        moviesImagesList.add(CropsCategName(cropsId,cropsName ,cropsImgUrl,"wotrCropsId"))
+                        moviesImagesList.add(
+                            CropsCategName(
+                                cropsId,
+                                cropsName,
+                                cropsImgUrl,
+                                wotrCropId
+                            )
+                        )
                     }
-                    videoDetailsList.add(VideoDetails(i,cropType,moviesImagesList))
-                    Log.d("videoDetailsList11111", videoDetailsList.toString())
+                    videoDetailsList.add(VideoDetails(i, cropType, moviesImagesList))
                 }
                 showCropData(videoDetailsList)
             } else {

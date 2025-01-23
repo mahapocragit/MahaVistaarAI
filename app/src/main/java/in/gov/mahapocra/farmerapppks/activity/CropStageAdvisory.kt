@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.GridView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.JsonObject
@@ -191,7 +192,7 @@ class CropStageAdvisory : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerI
             jsonObject.put("crop_id", cropId)
             jsonObject.put("farmer_id", farmerId)
             jsonObject.put("lang", languageToLoad)
-            Log.d("RESPONSE_TAG", "getCropStagesAndAdvisory: "+jsonObject)
+            Log.d("RESPONSE_TAG", "getCropStagesAndAdvisory: " + jsonObject)
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
                 AppInventorApi(
@@ -253,29 +254,27 @@ class CropStageAdvisory : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerI
             val cropDetail: JSONObject = obj as JSONObject
             val status =
                 if (cropDetail.getString("status").equals("pending")) "pending" else "No data"
-            if (status == "pending") {
-                binding.comingSoonLinearLayout1.visibility = View.VISIBLE
-                binding.cropStagesInfoRecyclerView.visibility = View.GONE
-            } else {
-                binding.comingSoonLinearLayout1.visibility = View.GONE
-                binding.cropStagesInfoRecyclerView.visibility = View.VISIBLE
-                cropAdvisoryJSONArray = cropDetail.getJSONArray("advisory")
-                val stageAdvisoryDetailAdapter = StageAdvisoryDetailAdaptr(
-                    this,
-                    this,
-                    cropAdvisoryJSONArray as JSONArray,
-                    languageToLoad,
-                    cropId.toString(),
-                    villageID.toString()
-                )
-                binding.cropStagesInfoRecyclerView.layoutManager = LinearLayoutManager(
-                    this,
-                    LinearLayoutManager.HORIZONTAL,
-                    false
-                )
-                binding.cropStagesInfoRecyclerView.adapter = stageAdvisoryDetailAdapter
-                stageAdvisoryDetailAdapter.notifyDataSetChanged()
+            binding.comingSoonLinearLayout1.visibility = View.GONE
+            binding.cropStagesInfoRecyclerView.visibility = View.VISIBLE
+            cropAdvisoryJSONArray = cropDetail.getJSONArray("advisory")
+            if (cropAdvisoryJSONArray?.length() ==0){
+                Toast.makeText(this, "Advisory is not available for current stage", Toast.LENGTH_SHORT).show()
             }
+            val stageAdvisoryDetailAdapter = StageAdvisoryDetailAdaptr(
+                this,
+                this,
+                cropAdvisoryJSONArray as JSONArray,
+                languageToLoad,
+                cropId.toString(),
+                villageID.toString()
+            )
+            binding.cropStagesInfoRecyclerView.layoutManager = LinearLayoutManager(
+                this,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            binding.cropStagesInfoRecyclerView.adapter = stageAdvisoryDetailAdapter
+            stageAdvisoryDetailAdapter.notifyDataSetChanged()
         }
         if (i == 2) {
             binding.relativeLayoutTopBar.relativeLayoutToolbar.visibility = View.GONE
