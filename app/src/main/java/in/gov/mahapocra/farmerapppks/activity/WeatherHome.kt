@@ -122,13 +122,13 @@ class WeatherHome : AppCompatActivity(), ApiCallbackCode, AlertListEventListener
     }
 
     private fun onClick() {
-        imageMenushow.setOnClickListener(View.OnClickListener {
+        imageMenushow.setOnClickListener {
             val intent = Intent(this, DashboardScreen::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
-        })
+        }
         textViewDistrict.setOnClickListener {
             showDistrict()
         }
