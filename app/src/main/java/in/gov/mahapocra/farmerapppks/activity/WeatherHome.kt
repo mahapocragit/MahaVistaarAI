@@ -238,18 +238,8 @@ class WeatherHome : AppCompatActivity(), ApiCallbackCode, AlertListEventListener
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(APIRequest::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getDistrictList(requestBody)
-            DebugLog.getInstance().d("Weather::param1=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d(
-                    "Weather::param2=" + AppUtility.getInstance()
-                        .bodyToString(responseCall.request())
-                )
             api.postRequest(responseCall, this, 1)
-            DebugLog.getInstance().d("Weather::param=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
         } catch (e: JSONException) {
-            DebugLog.getInstance().d("JSONException=" + e.toString())
             e.printStackTrace()
         }
     }

@@ -11,32 +11,51 @@
         android:id="@+id/appBar1"
         android:layout_width="match_parent"
         android:layout_height="180dp"
-        android:background="@drawable/pocra_banner_image2"
+        android:background="@drawable/backgroundforweather"
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/app_logo_name"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:textSize="22dp"
-            android:layout_marginTop="50dp"
-            android:layout_centerHorizontal="true">
-        </TextView>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="24dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
-        <!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/app_name"-->
-<!--            android:textStyle="bold"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:textSize="22dp"-->
-<!--            android:layout_marginTop="120dp"-->
-<!--            android:layout_centerHorizontal="true">-->
-<!--        </TextView>-->
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:text="Weather" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="22°"
+                android:textColor="@color/white"
+                android:textSize="36dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:text="Now" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="23 January 2025" />
+
+        </LinearLayout>
+
     </RelativeLayout>
 
     <LinearLayout
@@ -50,7 +69,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginHorizontal="10dp"
             android:layout_weight="1"
             android:orientation="horizontal">
             <TextView
@@ -92,11 +111,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbarAlwaysDrawHorizontalTrack="true"
-            android:layout_marginLeft="@dimen/height15"
+            android:layout_marginHorizontal="10dp"
             android:visibility="gone"
             android:scrollbarStyle="insideOverlay"
             android:background="@color/dim_light_green"
-            android:scrollbars="horizontal"></androidx.recyclerview.widget.RecyclerView>
+            android:scrollbars="horizontal"/>
 
     </LinearLayout>
 
@@ -115,33 +134,18 @@
             android:id="@+id/gridViewJobs"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
             android:horizontalSpacing="10dp"
             android:numColumns="3"
             android:paddingLeft="10dp"
-            android:paddingTop="20dp"
+            android:paddingTop="10dp"
             android:paddingRight="10dp"
             android:verticalSpacing="10dp">
 
         </GridView>
 
     </LinearLayout>
-    <TextView
-        android:id="@+id/textNewUpdates"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="130dp"
-        android:layout_marginBottom="5dp"
-        android:gravity="center"
-        android:visibility="invisible"
-        android:layout_centerHorizontal="true"
-        android:text="@string/climate_resilient_Newupdate"
-        android:padding="5dp"
-        android:textStyle="bold"
-        android:layout_below="@id/linLayGridView"
-        android:textColor="@color/white"
-        android:textSize="14dp" />
+
+
     <LinearLayout
         android:id="@+id/linLayoutButton"
         android:layout_width="match_parent"

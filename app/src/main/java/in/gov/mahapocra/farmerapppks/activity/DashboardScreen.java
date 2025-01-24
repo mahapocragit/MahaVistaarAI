@@ -105,7 +105,6 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
     private ListView menuListView;
     private RecyclerView selectedCropListRecyc;
     String languageToLoad;
-    private String newupdateFlag;
     private int farmerId = 0;
     private int cropId = 0;
     private AppPreferenceManager appPreferenceManager;
@@ -133,7 +132,6 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //          String  languageToLoad = "hi";
 
         languageToLoad = "en";
         if (AppSettings.getLanguage(DashboardScreen.this).equalsIgnoreCase("2")) {
@@ -171,7 +169,6 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         // Set Data
         String userName = AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName);
         String userNumber = AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo);
-        Log.d("getStrName=", userName);
         navigationView = findViewById(R.id.nav_view);
         View hView = navigationView.getHeaderView(0);
         nav_user_name = hView.findViewById(R.id.tv_farmerName);
@@ -184,7 +181,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
         // navigationView.setNavigationItemSelectedListener(this);
         gridView = findViewById(R.id.gridViewJobs);
-        gridView.setColumnWidth(GridView.AUTO_FIT);
+        gridView.setColumnWidth(GridView.STRETCH_COLUMN_WIDTH);
         if (languageToLoad.equalsIgnoreCase("en")) {
             gridView.setAdapter(new DashboardAdapter(this, arrayCategery, arrayCategeryImg, "single_item_grid"));
             Log.d("", "");
@@ -279,12 +276,12 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                 callingFun();
             }
         });
-        textNewUpdates.setOnClickListener(v -> {
+        /*textNewUpdates.setOnClickListener(v -> {
             // climateResilientGroupList();
             Intent intent = new Intent(DashboardScreen.this, NewUpdateKharip.class);
 
             startActivity(intent);
-        });
+        });*/
 
         addCrop.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardScreen.this, AddCropActivity.class);
@@ -348,7 +345,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         addCrop = findViewById(R.id.AddCropTv);
         yourCrop = findViewById(R.id.yourCropTv);
         selectedCropListRecyc = findViewById(R.id.selectedCrops);
-        textNewUpdates = findViewById(R.id.textNewUpdates);
+//        textNewUpdates = findViewById(R.id.textNewUpdates);
         mobileNoTextView = findViewById(R.id.mobNoTextView);
         gridView = findViewById(R.id.gridViewJobs);
         aboutPocraText1 = findViewById(R.id.textAboutPocra);

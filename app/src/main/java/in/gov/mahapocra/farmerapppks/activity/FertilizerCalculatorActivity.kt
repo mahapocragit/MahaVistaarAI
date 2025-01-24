@@ -181,6 +181,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             )
             getSelectedSavedOption()
         }
+        tvSowingDate.text = sowingDate
         tvSowingDate.setOnClickListener {
             startActivity(
                 Intent(
@@ -376,7 +377,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getCalculatedFertilizerData() {
-
         val formatter: DateFormat = SimpleDateFormat("dd-mm-yyyy")
         val date = sowingDate?.let { formatter.parse(it) } as Date
         val newFormat = SimpleDateFormat("yyyy-mm-dd")
