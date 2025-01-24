@@ -7,14 +7,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
@@ -29,6 +26,7 @@ import `in`.gov.mahapocra.farmerapppks.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
+import `in`.gov.mahapocra.farmerapppks.databinding.ActivityWeatherHomeBinding
 import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
 import org.json.JSONArray
 import org.json.JSONException
@@ -39,23 +37,8 @@ import retrofit2.Retrofit
 class WeatherHome : AppCompatActivity(), ApiCallbackCode, AlertListEventListener, OnMultiRecyclerItemClickListener {
 
     lateinit var textViewHeaderTitle: TextView
-    lateinit var imageMenushow: ImageView
-    lateinit var textViewDistrict: TextView
-    lateinit var textViewTaluka: TextView
-    lateinit var tvRainfall: TextView
-    lateinit var tvMinValue: TextView
-    lateinit var tvMaxValue: TextView
-    lateinit var tvWindValue: TextView
-    lateinit var tvHumidityValue: TextView
-    lateinit var tvAgroMetAdvisory: TextView
-    lateinit var tvWindDirection: TextView
-    lateinit var tvCloudCover: TextView
-    lateinit var btnText: TextView
-    lateinit var tableRow1: TableRow
-
-    lateinit var btnForecastNext: TextView
-    lateinit var btnPreviousWeather: TextView
-    lateinit var pikSallaTv: LinearLayout
+    private lateinit var imageMenuShow: ImageView
+    lateinit var binding: ActivityWeatherHomeBinding
 
     private var districtJSONArray: JSONArray? = null
     private var talukaJSONArray: JSONArray? = null
@@ -65,17 +48,13 @@ class WeatherHome : AppCompatActivity(), ApiCallbackCode, AlertListEventListener
     lateinit var talukaName: String
     private var talukaID: Int = 0
     private var weatherForecastJSONArray: JSONArray? = null
-    private var weatherPrevioustJSONArray: JSONArray? = null
-    lateinit var rainfall: String
-    lateinit var minValue: String
-    lateinit var maxValue: String
-    lateinit var windValue: String
-    lateinit var humidityValue: String
+    private var weatherPreviousJSONArray: JSONArray? = null
+    private lateinit var rainfall: String
+    private lateinit var minValue: String
+    private lateinit var maxValue: String
+    private lateinit var windValue: String
+    private lateinit var humidityValue: String
     lateinit var languageToLoad: String
-
-    lateinit var weatherRecyclerView: RecyclerView
-    lateinit var forcast_view: LinearLayout
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,36 +62,20 @@ class WeatherHome : AppCompatActivity(), ApiCallbackCode, AlertListEventListener
         if (AppSettings.getLanguage(this@WeatherHome).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
-        setContentView(R.layout.activity_weather_home)
+        binding= ActivityWeatherHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         init()
         setConfiguration()
         onClick()
     }
-    // Initialization
+    // Initializing Views
     private fun init() {
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
-        imageMenushow = findViewById(R.id.imageMenushow)
-        textViewDistrict = findViewById(R.id.textViewDistrict)
-        textViewTaluka = findViewById(R.id.textViewTaluka)
-        tvRainfall = findViewById(R.id.tvRainfall)
-        tvMinValue = findViewById(R.id.tvMintemp)
-        tvMaxValue = findViewById(R.id.tvMaxtemp)
-        tvWindValue = findViewById(R.id.tvWindtemp)
-        tvHumidityValue = findViewById(R.id.tvHumiditytemp)
-        tvWindDirection = findViewById(R.id.tv_wind_direction)
-        tvCloudCover = findViewById(R.id.tv_cloud_cover)
-        tvAgroMetAdvisory = findViewById(R.id.tvAgroMetAdvisory)
-        btnForecastNext = findViewById(R.id.btnForecastNext)
-        pikSallaTv = findViewById(R.id.pikSallaTv)
-        btnPreviousWeather = findViewById(R.id.btnPreviousWeather)
-        weatherRecyclerView = findViewById(R.id.weatherRecyclerView)
-        forcast_view = findViewById(R.id.forcast_view)
-        btnText = findViewById(R.id.btnText)
-        tableRow1 = findViewById(R.id.tableRow1)
-
+        imageMenuShow = findViewById(R.id.imageMenushow)
     }
+
     private fun setConfiguration() {
-        imageMenushow.visibility = View.VISIBLE
+        imageMenuShow.visibility = View.VISIBLE
         textViewHeaderTitle.setText(R.string.weather)
         districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
         talukaID = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
@@ -122,61 +85,61 @@ class WeatherHome : AppCompatActivity(), ApiCallbackCode, AlertListEventListener
     }
 
     private fun onClick() {
-        imageMenushow.setOnClickListener {
+        imageMenuShow.setOnClickListener {
             val intent = Intent(this, DashboardScreen::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
-        textViewDistrict.setOnClickListener {
+        binding.textViewDistrict.setOnClickListener {
             showDistrict()
         }
-        textViewTaluka.setOnClickListener {
+        binding.textViewTaluka.setOnClickListener {
             showTaluka()
         }
 
-        btnForecastNext.setOnClickListener {
-            forcast_view.visibility = View.VISIBLE
-            tvWindDirection.visibility = View.VISIBLE
-            tvCloudCover.visibility = View.VISIBLE
-            btnText.visibility = View.VISIBLE
-            pikSallaTv.visibility = View.VISIBLE
-            btnText.setText(R.string.next_days)
-            btnForecastNext.background = ContextCompat.getDrawable(this, R.drawable.green_bg_gradient)
-            btnPreviousWeather.background = ContextCompat.getDrawable(this, R.drawable.layout_button_bg)
+        binding.btnForecastNext.setOnClickListener {
+            binding.forecastViewLayout.visibility = View.VISIBLE
+            binding.tvWindDirection.visibility = View.VISIBLE
+            binding.tvCloudCover.visibility = View.VISIBLE
+            binding.labelTextView.visibility = View.VISIBLE
+            binding.pikSallaTv.visibility = View.VISIBLE
+            binding.labelTextView.setText(R.string.next_days)
+            binding.btnForecastNext.background = ContextCompat.getDrawable(this, R.drawable.green_bg_gradient)
+            binding.btnPreviousWeather.background = ContextCompat.getDrawable(this, R.drawable.layout_button_bg)
             forecastData()
         }
-        btnPreviousWeather.setOnClickListener {
-            forcast_view.visibility = View.VISIBLE
-            tvWindDirection.visibility = View.GONE
-            tvCloudCover.visibility = View.GONE
-            btnText.visibility = View.VISIBLE
-            pikSallaTv.visibility = View.GONE
-            btnText.setText(R.string.previous_days)
-            btnForecastNext.background = ContextCompat.getDrawable(this, R.drawable.layout_button_bg)
-            btnPreviousWeather.background = ContextCompat.getDrawable(this, R.drawable.green_bg_gradient)
+        binding.btnPreviousWeather.setOnClickListener {
+            binding.forecastViewLayout.visibility = View.VISIBLE
+            binding.tvWindDirection.visibility = View.GONE
+            binding.tvCloudCover.visibility = View.GONE
+            binding.labelTextView.visibility = View.VISIBLE
+            binding.pikSallaTv.visibility = View.GONE
+            binding.labelTextView.setText(R.string.previous_days)
+            binding.btnForecastNext.background = ContextCompat.getDrawable(this, R.drawable.layout_button_bg)
+            binding.btnPreviousWeather.background = ContextCompat.getDrawable(this, R.drawable.green_bg_gradient)
             previousCastData()
         }
     }
 
     private fun previousCastData() {
-        if(weatherPrevioustJSONArray!=null) {
-            if (weatherPrevioustJSONArray?.length()!! > 0) {
+        if(weatherPreviousJSONArray!=null) {
+            if (weatherPreviousJSONArray?.length()!! > 0) {
                 val weatherAdapter =
                     WeatherAdapter(
                         this,
                         this,
-                        weatherPrevioustJSONArray, "previousWeather"
+                        weatherPreviousJSONArray, "previousWeather"
                     )
-                weatherRecyclerView.setLayoutManager(
+                binding.weatherRecyclerView.setLayoutManager(
                     LinearLayoutManager(
                         this,
                         LinearLayoutManager.HORIZONTAL,
                         false
                     )
                 )
-                weatherRecyclerView.adapter = weatherAdapter
+                binding.weatherRecyclerView.adapter = weatherAdapter
                 weatherAdapter.notifyDataSetChanged()
             }
         }else
@@ -194,14 +157,14 @@ class WeatherHome : AppCompatActivity(), ApiCallbackCode, AlertListEventListener
                         this,
                         weatherForecastJSONArray, "forecastWeather"
                     )
-                weatherRecyclerView.setLayoutManager(
+                binding.weatherRecyclerView.setLayoutManager(
                     LinearLayoutManager(
                         this,
                         LinearLayoutManager.HORIZONTAL,
                         false
                     )
                 )
-                weatherRecyclerView.adapter = weatherAdapter
+                binding.weatherRecyclerView.adapter = weatherAdapter
                 weatherAdapter.notifyDataSetChanged()
             }
         } else
@@ -339,7 +302,7 @@ class WeatherHome : AppCompatActivity(), ApiCallbackCode, AlertListEventListener
                         // Check if the current id matches districtID
                         if (id == districtID) {
                             // Set the text in textViewDistrict if a match is found
-                            textViewDistrict.text = name
+                            binding.textViewDistrict.text = name
                             break // No need to continue looping once the matching district is found
                         }
                     }
@@ -364,7 +327,7 @@ class WeatherHome : AppCompatActivity(), ApiCallbackCode, AlertListEventListener
                         // Check if the current id matches districtID
                         if (id == talukaID) {
                             // Set the text in textViewDistrict if a match is found
-                            textViewTaluka.text = name
+                            binding.textViewTaluka.text = name
                             break // No need to continue looping once the matching district is found
                         }
                     }
@@ -388,29 +351,29 @@ class WeatherHome : AppCompatActivity(), ApiCallbackCode, AlertListEventListener
                 windValue = jSONObject.getString("wind").toString()
                 humidityValue = jSONObject.getString("humidity").toString()
 
-                tvRainfall.setTypeface(null, Typeface.BOLD)
-                tvMinValue.setTypeface(null, Typeface.BOLD)
-                tvMaxValue.setTypeface(null, Typeface.BOLD)
-                tvWindValue.setTypeface(null, Typeface.BOLD)
-                tvHumidityValue.setTypeface(null, Typeface.BOLD)
+                binding.tvRainfall.setTypeface(null, Typeface.BOLD)
+                binding.tvMintemp.setTypeface(null, Typeface.BOLD)
+                binding.tvMaxtemp.setTypeface(null, Typeface.BOLD)
+                binding.tvWindtemp.setTypeface(null, Typeface.BOLD)
+                binding.tvHumiditytemp.setTypeface(null, Typeface.BOLD)
 
-                tvRainfall.text = "" + rainfall + resources.getString(R.string.rainfallunits)
-                tvMinValue.text = "" + minValue + "°C"
-                tvMaxValue.text = "" + maxValue + "°C"
-                tvWindValue.text = "" + windValue + resources.getString(R.string.windunits)
-                tvHumidityValue.text = "" + humidityValue + "%"
-                tvAgroMetAdvisory.text = "" + strAgroData
-                if(tvMinValue!=null) {
-                    tableRow1.visibility = View.VISIBLE
+                binding.tvRainfall.text = "" + rainfall + resources.getString(R.string.rainfallunits)
+                binding.tvMintemp.text = "" + minValue + "°C"
+                binding.tvMaxtemp.text = "" + maxValue + "°C"
+                binding.tvWindtemp.text = "" + windValue + resources.getString(R.string.windunits)
+                binding.tvHumiditytemp.text = "" + humidityValue + "%"
+                binding.tvAgroMetAdvisory.text = "" + strAgroData
+                if(binding.tvMintemp!=null) {
+                    binding.tableRowValues.visibility = View.VISIBLE
                 }
                 weatherForecastJSONArray = response.getForcastDataArray()
 
-                weatherPrevioustJSONArray = response.getPriviousWeatherDataArray()
-                forcast_view.visibility = View.VISIBLE
-                tvWindDirection.visibility = View.VISIBLE
-                tvCloudCover.visibility = View.VISIBLE
-                btnText.visibility = View.VISIBLE
-                btnText.setText(R.string.next_days)
+                weatherPreviousJSONArray = response.getPriviousWeatherDataArray()
+                binding.forecastViewLayout.visibility = View.VISIBLE
+                binding.tvWindDirection.visibility = View.VISIBLE
+                binding.tvCloudCover.visibility = View.VISIBLE
+                binding.labelTextView.visibility = View.VISIBLE
+                binding.labelTextView.setText(R.string.next_days)
                 forecastData()
             }
         }
@@ -423,16 +386,16 @@ class WeatherHome : AppCompatActivity(), ApiCallbackCode, AlertListEventListener
             if (s != null) {
                 districtName = s
             }
-            textViewDistrict.text = s
+            binding.textViewDistrict.text = s
             if (districtID > 0) {
                 fetchTalukaMasterData()
             }
             weatherForecastJSONArray = null
-            weatherPrevioustJSONArray = null
+            weatherPreviousJSONArray = null
             talukaID = 0
-            textViewTaluka.text = ""
-            textViewTaluka.hint = resources.getString(R.string.farmer_select_taluka)
-            textViewTaluka.setHintTextColor(Color.GRAY)
+            binding.textViewTaluka.text = ""
+            binding.textViewTaluka.hint = resources.getString(R.string.farmer_select_taluka)
+            binding.textViewTaluka.setHintTextColor(Color.GRAY)
         }
         if (i == 2) {
             try {
@@ -441,7 +404,7 @@ class WeatherHome : AppCompatActivity(), ApiCallbackCode, AlertListEventListener
                     talukaName = s
                     weatherDetails()
                 }
-                textViewTaluka.text = s
+                binding.textViewTaluka.text = s
             } catch (ex: NumberFormatException) {
                 System.err.println("Invalid string in argument")
                 Toast.makeText(this@WeatherHome, "Data not Found...", Toast.LENGTH_SHORT).show()
