@@ -1,8 +1,20 @@
 package `in`.gov.mahapocra.farmerapppks.activity
 
+import android.app.ProgressDialog
+import android.content.Intent
+import android.os.Bundle
+import android.view.View
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
-import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
@@ -17,16 +29,6 @@ import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
 import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
 import `in`.gov.mahapocra.farmerapppks.models.response.TrainingDetailModel
-import android.app.ProgressDialog
-import android.content.Intent
-import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.JsonObject
 import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONException
@@ -47,20 +49,14 @@ class UpcomingEventsDetails : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCa
 
     private var eventTypeLLayout: LinearLayout? = null
     private var eventTypeTextView: TextView? = null
-
     private var eventTypeId = ""
-
 
     private var eventSubTypeLLayout: LinearLayout? = null
     private var eventSubTypeTView: TextView? = null
-
     private var eventSubTypeId = ""
     private var eventSubType = ""
 
     private var eventTitleLLayout: LinearLayout? = null
-
-
-
     private var eventStartDateTextView: TextView? = null
     private var eventStartDate = ""
     private var eventEndDateTextView: TextView? = null
@@ -76,85 +72,59 @@ class UpcomingEventsDetails : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCa
     private var eventReportingTimeTView: TextView? = null
     private var eventReportingTime: String? = null
 
-
     // For session
     private var sessionData: JSONArray? = null
 
-
-    //////////////////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////////////////
     // VCRMC (GP)
     private var selectVCRMCRLayout: RelativeLayout? = null
     private var sledVCRMCCountTView: TextView? = null
     private var sledVCRMCMoreTView: TextView? = null
 
     private var sledVCRMCTView: TextView? = null
-    private var sledGPLLayout // Selected VCRMC
-            : LinearLayout? = null
+    private var sledGPLLayout: LinearLayout? = null // Selected VCRMC
     private var sledGPRView: RecyclerView? = null
-
 
     // Farmer
     private var selectFarmerRLayout: RelativeLayout? = null
     private var sledFarmerCountTView: TextView? = null
     private var sledFarmerMoreTView: TextView? = null
 
-    private var sledFarmerLLayout // Selected Farmer
-            : LinearLayout? = null
+    private var sledFarmerLLayout: LinearLayout? = null // Selected Farmer
     private var sledFarmerRView: RecyclerView? = null
     private var sledFarmerTView: TextView? = null
-
 
     // Pocra official
     private var selectPOMRLayout: RelativeLayout? = null
     private var sledPOMCountTView: TextView? = null
     private var sledPOMMoreTView: TextView? = null
 
-    private var sledPOMemberLLayout // Selected Facilitator
-            : LinearLayout? = null
+    private var sledPOMemberLLayout: LinearLayout? = null // Selected Facilitator
     private var sledPOMemberRView: RecyclerView? = null
     private var sledPOMemberTView: TextView? = null
-
-
 
     // CA Resource_person
     private var selectCaResourceRLayout: RelativeLayout? = null
     private var selectCaResourceCountTView: TextView? = null
     private var selectCaResourceMoreTView: TextView? = null
 
-
-
     // Other Participants
     private var selectOtherRLayout: RelativeLayout? = null
     private var sledOtherCountTView: TextView? = null
     private var sledOtherMoreTView: TextView? = null
 
-    private var sledOthParticipantLLayout // Selected Facilitator
-            : LinearLayout? = null
+    private var sledOthParticipantLLayout: LinearLayout? = null // Selected Facilitator
     private var sledOthParticipantRView: RecyclerView? = null
     private var sledOthParticipantTView: TextView? = null
 
-
     private var participantsEditText: TextView? = null
     private var memCount: String? = null
-
-
-    ////////////////////////////////////////////////////////
-
-    ////////////////////////////////////////////////////////
     private var oVenueLocationTView: TextView? = null
-
     private var vDistLLayout: LinearLayout? = null
     private var vDistTView: TextView? = null
 
     private var vDistId = ""
-
-
-
     private var venueLLayout: LinearLayout? = null
     private var venueLocationTView: TextView? = null
-    private val eventVenueJSONArray: JSONArray? = null
     private var eventVenueId = ""
     private var eventVenue = ""
     private var eventOtherVenue: String? = null
@@ -162,11 +132,7 @@ class UpcomingEventsDetails : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCa
 
     private var kvkLLayout: LinearLayout? = null
     private var kvkTView: TextView? = null
-
-
-
     private var desigLLayout: LinearLayout? = null
-
 
     // Coordinator
     private var coordinatorLLayout: LinearLayout? = null
@@ -186,23 +152,18 @@ class UpcomingEventsDetails : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCa
     private var sledCoCoordinatorId: JSONArray? = null
     private var sledCoCoordinatorArray: JSONArray? = null
 
-    //////////////////////////////////////////
     private var selectshgRLayout: RelativeLayout? = null
     private var sledshgCountTView: TextView? = null
     private var sledshgMoreTView: TextView? = null
     private var sledShgTView: TextView? = null
     private var sledshgLLayout: LinearLayout? = null
     private var sledshgRView: RecyclerView? = null
-
-
     private var selectfpcRLayout: RelativeLayout? = null
     private var sledfpcCountTView: TextView? = null
     private var sledfpcMoreTView: TextView? = null
     private var sledFpcTView: TextView? = null
     private var sledFpcLLayout: LinearLayout? = null
     private var sledFpcRView: RecyclerView? = null
-
-
     private var selectFGRLayout: RelativeLayout? = null
     private var sledFGCountTView: TextView? = null
     private var sledFGMoreTView: TextView? = null
@@ -215,157 +176,93 @@ class UpcomingEventsDetails : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCa
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_upcoming_events_details2)
         languageToLoad = "hi"
-        if (AppSettings.getLanguage(this@UpcomingEventsDetails).equals("1", ignoreCase = true))
-        {
+        if (AppSettings.getLanguage(this@UpcomingEventsDetails).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
         init()
         setConfiguration()
-
     }
 
     private fun init() {
 
-        textViewHeaderTitle=findViewById(R.id.textViewHeaderTitle);
-        imgBackArrow=findViewById(R.id.imgBackArrow);
-
-
-        // Initialization of VIEWs
-
-
+        textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
+        imgBackArrow = findViewById(R.id.imgBackArrow)
         // Initialization of VIEWs
         eventTypeLLayout = findViewById<View>(R.id.eventTypeLinearLayout) as LinearLayout
         eventTypeTextView = findViewById<View>(R.id.eventTypeTextView) as TextView
-       // eventTitleEditText = findViewById<View>(R.id.eventTitleEditText) as TextView
-
         eventSubTypeLLayout = findViewById<View>(R.id.eventSubTypeLLayout) as LinearLayout
         eventSubTypeTView = findViewById<View>(R.id.eventSubTypeTView) as TextView
-
         eventTitleLLayout = findViewById<View>(R.id.eventTitleLLayout) as LinearLayout
-      //  eventTitleEditText = findViewById<View>(R.id.eventTitleEditText) as EditText
-
         eventStartDateTextView = findViewById<View>(R.id.eventStartDateTextView) as TextView
         eventEndDateTextView = findViewById<View>(R.id.eventEndDateTextView) as TextView
         eventStartTimeTextView = findViewById<View>(R.id.eventStartTimeTextView) as TextView
         eventEndTimeTextView = findViewById<View>(R.id.eventEndTimeTextView) as TextView
-
         eventReportingDateTView = findViewById<View>(R.id.eventReportingDateTView) as TextView
         eventReportingTimeTView = findViewById<View>(R.id.eventReportingTimeTView) as TextView
-
-
-
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////
-        // VCRMC (GP)
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // VCRMC (GP)
         selectVCRMCRLayout = findViewById<View>(R.id.selectVCRMCRLayout) as RelativeLayout
         sledVCRMCCountTView = findViewById<View>(R.id.sledVCRMCCountTView) as TextView
         sledVCRMCMoreTView = findViewById<View>(R.id.sledVCRMCMoreTView) as TextView
-
-        // selectVCRMCLLayout = (LinearLayout)findViewById(R.id.selectVCRMCLLayout);
-
-        // selectVCRMCLLayout = (LinearLayout)findViewById(R.id.selectVCRMCLLayout);
         sledVCRMCTView = findViewById<View>(R.id.sledVCRMCTView) as TextView
         sledGPLLayout = findViewById<View>(R.id.sledGPLLayout) as LinearLayout
         sledGPRView = findViewById<View>(R.id.sledGPRView) as RecyclerView
         val sledGPLayoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         sledGPRView!!.setLayoutManager(sledGPLayoutManager)
-
-        // Farmer
-
         // Farmer
         selectFarmerRLayout = findViewById<View>(R.id.selectFarmerRLayout) as RelativeLayout
         sledFarmerCountTView = findViewById<View>(R.id.sledFarmerCountTView) as TextView
         sledFarmerMoreTView = findViewById<View>(R.id.sledFarmerMoreTView) as TextView
-
-
         sledFarmerLLayout = findViewById<View>(R.id.sledFarmerLLayout) as LinearLayout
         sledFarmerTView = findViewById<View>(R.id.sledFarmerTView) as TextView
         sledFarmerRView = findViewById<View>(R.id.sledFarmerRView) as RecyclerView
         val sledFarmerLayoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         sledFarmerRView!!.setLayoutManager(sledFarmerLayoutManager)
-
-
-        // SHG
-
-
         // SHG
         selectshgRLayout = findViewById<View>(R.id.selectshgRLayout) as RelativeLayout
         sledshgCountTView = findViewById<View>(R.id.sledshgCountTView) as TextView
         sledshgMoreTView = findViewById<View>(R.id.sledshgMoreTView) as TextView
-
         sledShgTView = findViewById<View>(R.id.sledShgTView) as TextView
         sledshgLLayout = findViewById<View>(R.id.sledshgLLayout) as LinearLayout
         sledshgRView = findViewById<View>(R.id.sledshgRView) as RecyclerView
-
         val shgLL = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         sledshgRView!!.setLayoutManager(shgLL)
-
-
-        // FPC
-
-
         // FPC
         selectfpcRLayout = findViewById<View>(R.id.selectfpcRLayout) as RelativeLayout
         sledfpcCountTView = findViewById<View>(R.id.sledfpcCountTView) as TextView
         sledfpcMoreTView = findViewById<View>(R.id.sledfpcMoreTView) as TextView
-
         sledFpcTView = findViewById<View>(R.id.sledFpcTView) as TextView
         sledFpcLLayout = findViewById<View>(R.id.sledFpcLLayout) as LinearLayout
         sledFpcRView = findViewById<View>(R.id.sledFpcRView) as RecyclerView
-
         val fpcLL = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         sledFpcRView!!.setLayoutManager(fpcLL)
-
-
-        // FG
-
-
         // FG
         selectFGRLayout = findViewById<View>(R.id.selectFGRLayout) as RelativeLayout
         sledFGCountTView = findViewById<View>(R.id.sledFGCountTView) as TextView
         sledFGMoreTView = findViewById<View>(R.id.sledFGMoreTView) as TextView
-
         sledFGTView = findViewById<View>(R.id.sledFGTView) as TextView
         sledFGLLayout = findViewById<View>(R.id.sledFGLLayout) as LinearLayout
         sledFGRView = findViewById<View>(R.id.sledFGRView) as RecyclerView
-
         val FGLL = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         sledFGRView!!.setLayoutManager(FGLL)
-
-
-        // PoCRA Official Member
-
-
         // PoCRA Official Member
         selectPOMRLayout = findViewById<View>(R.id.selectPOMRLayout) as RelativeLayout
         sledPOMCountTView = findViewById<View>(R.id.sledPOMCountTView) as TextView
         sledPOMMoreTView = findViewById<View>(R.id.sledPOMMoreTView) as TextView
-
         sledPOMemberLLayout = findViewById<View>(R.id.sledPOMemberLLayout) as LinearLayout
         sledPOMemberTView = findViewById<View>(R.id.sledPOMemberTView) as TextView
         sledPOMemberRView = findViewById<View>(R.id.sledPOMemberRView) as RecyclerView
         val sledPOMemberLayoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         sledPOMemberRView!!.setLayoutManager(sledPOMemberLayoutManager)
-
-        // CA Resource Person
-
         // CA Resource Person
         selectCaResourceRLayout = findViewById<View>(R.id.selectCaResourceRLayout) as RelativeLayout
         selectCaResourceCountTView = findViewById<View>(R.id.selectCaResourceCountTView) as TextView
         selectCaResourceMoreTView = findViewById<View>(R.id.selectCaResourceMoreTView) as TextView
-
-        // Other Participants
-
         // Other Participants
         selectOtherRLayout = findViewById<View>(R.id.selectOtherRLayout) as RelativeLayout
         sledOtherCountTView = findViewById<View>(R.id.sledOtherCountTView) as TextView
         sledOtherMoreTView = findViewById<View>(R.id.sledOtherMoreTView) as TextView
-
         sledOthParticipantLLayout =
             findViewById<View>(R.id.sledOthParticipantLLayout) as LinearLayout
         sledOthParticipantTView = findViewById<View>(R.id.sledOthParticipantTView) as TextView
@@ -374,21 +271,9 @@ class UpcomingEventsDetails : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCa
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         sledOthParticipantRView!!.setLayoutManager(sledOthParticipantLayoutManager)
 
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-
-        // For Participants Count
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-
         // For Participants Count
         participantsEditText = findViewById<View>(R.id.participantsEditText) as EditText
-
         desigLLayout = findViewById<View>(R.id.desigLLayout) as LinearLayout
-
-        // For Selected Coordinator
-
         // For Selected Coordinator
         coordinatorLLayout = findViewById<View>(R.id.coordinatorLLayout) as LinearLayout
         sledCordLLayout = findViewById<View>(R.id.sledCordLLayout) as LinearLayout
@@ -396,9 +281,6 @@ class UpcomingEventsDetails : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCa
         val sledCordLayoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         sledCordRView!!.setLayoutManager(sledCordLayoutManager)
         coordinatorTextView = findViewById<View>(R.id.coordinatorTextView) as TextView
-
-        // For Selected Co-coordinator
-
         // For Selected Co-coordinator
         coCordLinearLayout = findViewById<View>(R.id.coCordLinearLayout) as LinearLayout
         sledCoCoordLLayout = findViewById<View>(R.id.sledCoCoordLLayout) as LinearLayout
@@ -407,52 +289,37 @@ class UpcomingEventsDetails : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCa
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         sledCoCoordRView!!.setLayoutManager(sledCoCordLayoutManager)
         coCordTextView = findViewById<View>(R.id.coCordTextView) as TextView
-
-
-        // For Venue District
-
-
         // For Venue District
         vDistLLayout = findViewById<View>(R.id.vDistLLayout) as LinearLayout
         vDistTView = findViewById<View>(R.id.vDistTView) as TextView
-
-        // For Venue
-
         // For Venue
         venueLLayout = findViewById<View>(R.id.venueLLayout) as LinearLayout
         venueLocationTView = findViewById<View>(R.id.venueLocationTView) as TextView
-
         kvkLLayout = findViewById<View>(R.id.kvkLLayout) as LinearLayout
         kvkTView = findViewById<View>(R.id.kvkTView) as TextView
-
         venueELLayout = findViewById<View>(R.id.venueELLayout) as LinearLayout
         oVenueLocationTView = findViewById<View>(R.id.oVenueLocationTView) as TextView
-       // eventTitleEditText = findViewById<View>(R.id.eventTitleEditText) as EditText
-
     }
 
     private fun setConfiguration() {
-        imgBackArrow?.setVisibility(View.VISIBLE)
+        imgBackArrow?.visibility = View.VISIBLE
         textViewHeaderTitle?.setText(R.string.event_details)
-
-
-        imgBackArrow?.setOnClickListener(View.OnClickListener {
+        imgBackArrow?.setOnClickListener {
             val intent = Intent(this, TrainingLocationSelection::class.java)
             startActivity(intent)
             finish()
-        })
+        }
 
-        val sch_id: String? = intent.getStringExtra("id_value")
-        Log.d("sch_idqweqweqw", sch_id.toString())
-        if (sch_id != null) {
-            getScheduledEventBySchId(sch_id)
+        val schId: String? = intent.getStringExtra("id_value")
+        if (schId != null) {
+            getScheduledEventBySchId(schId)
         }
     }
 
-    private fun getScheduledEventBySchId(Sch_id: String) {
+    private fun getScheduledEventBySchId(schId: String) {
         val jsonObject = JSONObject()
         try {
-            jsonObject.put("schedule_id", Sch_id)
+            jsonObject.put("schedule_id", schId)
             jsonObject.put("user_id", "")
             jsonObject.put("role_id", "")
             jsonObject.put("level", "")
@@ -472,73 +339,61 @@ class UpcomingEventsDetails : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCa
         val retrofit: Retrofit = api.getRetrofitInstance()
         val apiRequest: APIRequest = retrofit.create(APIRequest::class.java)
         val responseCall: Call<JsonObject> = apiRequest.psGetEventDetailRequest(requestBody)
-        DebugLog.getInstance().d("event_detail_by_id_param=" + responseCall.request().toString())
-        DebugLog.getInstance().d(
-            "event_detail_by_id_param=" + AppUtility.getInstance()
-                .bodyToString(responseCall.request())
-        )
         api.postRequest(responseCall, this, 5)
     }
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 5 && jSONObject != null) {
-
-
             // get Event detail Response
-
-                val responseModel = ResponseModel(jSONObject)
-                if (responseModel.status) {
-                    val eventJSONArray: JSONArray = responseModel.getdataArray()
-                    Log.d("eventJSONArray", eventJSONArray.toString())
-                    setScheduledEventData(eventJSONArray)
-                } else {
-                   // UIToastMessage.show(this, responseModel.msg)
-                }
+            val responseModel = ResponseModel(jSONObject)
+            if (responseModel.status) {
+                val eventJSONArray: JSONArray = responseModel.getdataArray()
+                setScheduledEventData(eventJSONArray)
+            } else {
+                // UIToastMessage.show(this, responseModel.msg)
+            }
         }
     }
 
     private fun setScheduledEventData(eventJsonArray: JSONArray) {
-
         // Getting Data
         try {
             val eventDetailJson = eventJsonArray.getJSONObject(0)
             val trDModel = TrainingDetailModel(eventDetailJson)
-            schId = trDModel.getId()
-            eventTypeId = trDModel.getEvent_type()
-            val event_type_name: String = trDModel.getEvent_type_name()
+            schId = trDModel.id
+            eventTypeId = trDModel.event_type
+            val event_type_name: String = trDModel.event_type_name
             eventSubTypeLLayout!!.visibility = View.VISIBLE
-            eventSubTypeId = trDModel.getEvent_sub_type_id()
-            eventSubType = trDModel.getEvent_sub_type_name()
+            eventSubTypeId = trDModel.event_sub_type_id
+            eventSubType = trDModel.event_sub_type_name
             if (eventSubType.equals("Others", ignoreCase = true)) {
                 eventTitleLLayout!!.visibility = View.VISIBLE
             } else {
                 eventTitleLLayout!!.visibility = View.GONE
             }
             eventSubTypeTView!!.text = eventSubType
-            val title: String = trDModel.getTitle()
-            memCount = trDModel.getParticipints()
-            eventStartTime = trDModel.getStart_date()
+            val title: String = trDModel.title
+            memCount = trDModel.participints
+            eventStartTime = trDModel.start_date
             eventStartDate = ApUtil.getDateYMDByTimeStamp(eventStartTime)
-            //AppSettings.getInstance().setValue(this, ApConstants.kS_EVENT_E_DATE, eventStartDate)
-            eventEndTime = trDModel.getEnd_date()
+            eventEndTime = trDModel.end_date
             eventEndDate = ApUtil.getDateYMDByTimeStamp(eventEndTime)
-           // AppSettings.getInstance().setValue(this, ApConstants.kS_EVENT_E_DATE, eventEndDate)
-            eventStartTimeTextView?.setText(trDModel.getEvent_start_time())
-            eventEndTimeTextView?.setText(trDModel.getEvent_end_time())
-            val eventReportDate: String = trDModel.getReporting_date()
+            eventStartTimeTextView?.text = trDModel.event_start_time
+            eventEndTimeTextView?.text = trDModel.event_end_time
+            val eventReportDate: String = trDModel.reporting_date
             if (!eventReportDate.equals("", ignoreCase = true)) {
                 eventReportingDate = ApUtil.getDateYMDByTimeStamp(eventReportDate)
                 val dispReportDate: String = ApUtil.getDateByTimeStamp(eventReportDate)
                 eventReportingDateTView!!.text = dispReportDate
             }
-            eventReportingTime = trDModel.getReporting_time()
+            eventReportingTime = trDModel.reporting_time
             eventReportingTimeTView!!.text = eventReportingTime
-            vDistId = trDModel.getDistrict_id()
-            val districtName: String = trDModel.getDistrict_name()
+            vDistId = trDModel.district_id
+            val districtName: String = trDModel.district_name
             vDistTView!!.text = districtName
-            eventVenueId = trDModel.getVenue()
-            eventVenue = trDModel.getVenue_name()
-            eventOtherVenue = trDModel.getOther_venue()
+            eventVenueId = trDModel.venue
+            eventVenue = trDModel.venue_name
+            eventOtherVenue = trDModel.other_venue
             if (eventVenueId.equals("1", ignoreCase = true) || eventVenueId.equals(
                     "64",
                     ignoreCase = true
@@ -565,14 +420,13 @@ class UpcomingEventsDetails : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCa
             participantsEditText!!.text = memCount
 
             // For Session Detail
-            sessionData = trDModel.getSession()
+            sessionData = trDModel.session
 
 
             // For Co-coordinator
             var coCoordinatorArray: JSONArray? = null
-            val coCoordArray: JSONArray = trDModel.getCo_coordinators()
-            Log.d("testet2121212", coCoordArray.toString())
-            val othCoCoordArray: JSONArray = trDModel.getResource_person()
+            val coCoordArray: JSONArray = trDModel.co_coordinators
+            val othCoCoordArray: JSONArray = trDModel.resource_person
             if (othCoCoordArray != null && othCoCoordArray.length() > 0) {
                 coCoordinatorArray = othCoCoordArray
                 if (coCoordinatorArray != null) {
@@ -584,7 +438,6 @@ class UpcomingEventsDetails : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCa
                         val cCFName = cCJosn.getString("first_name")
                         val cCMName = cCJosn.getString("middle_name")
                         val cCLName = cCJosn.getString("last_name")
-                        //String cCName = cCFName +" "+cCMName +" "+cCLName ;
                         coCoJSON.put("id", cCId)
                         coCoJSON.put("role_id", "0")
                         coCoJSON.put("first_name", cCFName)
@@ -609,8 +462,6 @@ class UpcomingEventsDetails : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCa
                         val cCMName = cCJosn.getString("middle_name")
                         val cCLName = cCJosn.getString("last_name")
                         val mobile = cCJosn.getString("mobile")
-
-                        //String cCName = cCFName +" "+cCMName +" "+cCLName ;
                         coCoJSON.put("id", cCId)
                         coCoJSON.put("role_id", cCRoleId)
                         coCoJSON.put("first_name", cCFName)
@@ -627,7 +478,7 @@ class UpcomingEventsDetails : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCa
 
 
             // For Coordinator Person
-            val coordinators: JSONArray = trDModel.getCoordinators()
+            val coordinators: JSONArray = trDModel.coordinators
             if (coordinators != null) {
                 val cordA = JSONArray()
                 for (ri in 0 until coordinators.length()) {
@@ -642,7 +493,7 @@ class UpcomingEventsDetails : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCa
             setSelectedCoCoord()
         } catch (e: JSONException) {
             e.printStackTrace()
-                   }
+        }
     }
 
     // Coordinator
@@ -689,7 +540,6 @@ class UpcomingEventsDetails : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCa
     private fun setSelectedCoCoord() {
         val sledCoCoord = AppSettings.getInstance()
             .getValue(this, AppConstants.kS_CO_COORDINATOR, AppConstants.kS_CO_COORDINATOR)
-        // Log.d("fffffgfgfgf",sledCoCoord+sledCoCoordJSONArray.toString());
         try {
             if (!sledCoCoord.equals("kS_CO_COORDINATOR", ignoreCase = true)) {
                 sledCoCoordJSONArray = JSONArray(sledCoCoord)
@@ -735,20 +585,18 @@ class UpcomingEventsDetails : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCa
     }
 
     override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        TODO("Not yet implemented")
+        th?.printStackTrace()
     }
 
     override fun onFailure(th: Throwable?, i: Int) {
-        TODO("Not yet implemented")
+        th?.printStackTrace()
     }
 
     override fun onBackPressed() {
-//        val intent = Intent(this, UpcomingEvents::class.java)
-//        startActivity(intent)
         finish()
     }
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
-        TODO("Not yet implemented")
+
     }
 }
