@@ -1,14 +1,11 @@
 package in.gov.mahapocra.farmerapppks.activity;
 
 import android.Manifest;
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,11 +14,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -39,8 +34,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.JsonObject;
@@ -83,25 +76,15 @@ import retrofit2.Retrofit;
 
 public class DashboardScreen extends AppCompatActivity implements ApiCallbackCode, AdapterView.OnItemClickListener, ForceUpdateChecker.OnUpdateNeededListener, OnMultiRecyclerItemClickListener {
     private NavigationView navigationView;
-    private DrawerLayout drawer;
     private static final int PERMISSION_REQUEST_CODE = 100;
     private GridView gridView;
-    private TextView nameTextView;
-    private TextView mobileNoTextView;
-
     private TextView addCrop;
     private TextView yourCrop;
-    private TextView textNewUpdates;
-    private TextView aboutPocraText1;
-    private TextView aboutPocraText2;
     private TextView nav_user_name;
     private TextView nav_user_phone;
     private ImageView imgLangChange;
     private ImageView imgNotification;
     private ImageView imgCallIcon;
-    private LinearLayout linearLayoutForum;
-    private LinearLayout linearLayoutSupport;
-    private LinearLayout linearLayoutProfile;
     private ListView menuListView;
     private RecyclerView selectedCropListRecyc;
     String languageToLoad;
@@ -122,9 +105,9 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
     };
 
-    static int[] arrayCategeryImg = new int[]{
-            R.drawable.weather_icon, R.drawable.identify_disease_icon, R.drawable.pets_n_disease_img, R.drawable.fertilizer_calculator, R.drawable.climate_resilent_technology_icon, R.drawable.soil_health_card_icon,
-            R.drawable.market_price_icon, R.drawable.warehouse_availability_icon, R.drawable.dbt_schemes_icon
+    static int[] arrayCategoryImg = new int[]{
+            R.drawable.ecology, R.drawable.pest, R.drawable.ladybug, R.drawable.fertilizer, R.drawable.climate_change, R.drawable.soil,
+            R.drawable.commodity, R.drawable.warehouse, R.drawable.world_news
     };
 
     ArrayList<CropsCategName> selectedCropList;
@@ -156,7 +139,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        drawer = findViewById(R.id.drawer_layout1);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout1);
 
 
         // navigationView = findViewById(R.id.nav_view);
@@ -183,10 +166,10 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         gridView = findViewById(R.id.gridViewJobs);
         gridView.setColumnWidth(GridView.STRETCH_COLUMN_WIDTH);
         if (languageToLoad.equalsIgnoreCase("en")) {
-            gridView.setAdapter(new DashboardAdapter(this, arrayCategery, arrayCategeryImg, "single_item_grid"));
+            gridView.setAdapter(new DashboardAdapter(this, arrayCategery, arrayCategoryImg, "single_item_grid"));
             Log.d("", "");
         } else if (languageToLoad.equalsIgnoreCase("hi")) {
-            gridView.setAdapter(new DashboardAdapter(this, arrayCategeryMarathi, arrayCategeryImg, "single_item_grid"));
+            gridView.setAdapter(new DashboardAdapter(this, arrayCategeryMarathi, arrayCategoryImg, "single_item_grid"));
         }
 
         appPreferenceManager.clearAll();
@@ -233,55 +216,17 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                     break;
             }
         });
-
-        aboutPocraText1.setOnClickListener(v -> {
-            Intent intent = new Intent(DashboardScreen.this, AboutPocra.class);
-            startActivity(intent);
-        });
-        aboutPocraText2.setOnClickListener(v -> {
-            Intent intent = new Intent(DashboardScreen.this, MyVillageProfilePdf.class);
-            startActivity(intent);
-        });
         imgLangChange.setOnClickListener(v -> openChangeLangPopup());
         imgNotification.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardScreen.this, ComingSoonActivity.class);
             intent.putExtra("notification", "mayu");
             startActivity(intent);
         });
-        linearLayoutForum.setOnClickListener(v -> {
-            Intent intent = new Intent(DashboardScreen.this, DbtStatus.class);
-            startActivity(intent);
-        });
-        linearLayoutSupport.setOnClickListener(v -> {
-            if (farmerId > 0) {
-                Intent intent = new Intent(DashboardScreen.this, Grievances.class);
-                intent.putExtra("FAAPRegistrationID", farmerId);
-                startActivity(intent);
-            } else {
-                UIToastMessage.show(DashboardScreen.this, "Please Login First...");
-            }
-        });
-        linearLayoutProfile.setOnClickListener(v -> {
-            if (farmerId > 0) {
-                Intent intent = new Intent(DashboardScreen.this, Registration.class);
-                intent.putExtra("FAAPRegistrationID", farmerId);
-                startActivity(intent);
-            } else {
-                UIToastMessage.show(DashboardScreen.this, "Please Login First...");
-            }
-
-        });
         imgCallIcon.setOnClickListener(v -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 callingFun();
             }
         });
-        /*textNewUpdates.setOnClickListener(v -> {
-            // climateResilientGroupList();
-            Intent intent = new Intent(DashboardScreen.this, NewUpdateKharip.class);
-
-            startActivity(intent);
-        });*/
 
         addCrop.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardScreen.this, AddCropActivity.class);
@@ -341,31 +286,14 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         if (farmerId > 0) {
             getUserDetails();
         }
-        nameTextView = findViewById(R.id.nameTextView);
         addCrop = findViewById(R.id.AddCropTv);
         yourCrop = findViewById(R.id.yourCropTv);
         selectedCropListRecyc = findViewById(R.id.selectedCrops);
-//        textNewUpdates = findViewById(R.id.textNewUpdates);
-        mobileNoTextView = findViewById(R.id.mobNoTextView);
         gridView = findViewById(R.id.gridViewJobs);
-        aboutPocraText1 = findViewById(R.id.textAboutPocra);
-        aboutPocraText2 = findViewById(R.id.textMyvillage);
         imgLangChange = findViewById(R.id.imgLangChange);
         imgNotification = findViewById(R.id.imgNotification);
         imgCallIcon = findViewById(R.id.imgCallIcon);
-        linearLayoutForum = findViewById(R.id.forum);
-        linearLayoutSupport = findViewById(R.id.support);
-        linearLayoutProfile = findViewById(R.id.profile);
         menuListView = findViewById(R.id.menuListView1);
-        ObjectAnimator animator = ObjectAnimator.ofInt(textNewUpdates, "backgroundColor", Color.BLUE, Color.RED, Color.GREEN);
-        // duration of one color
-        animator.setDuration(500);
-        animator.setEvaluator(new ArgbEvaluator());
-        // color will be show in reverse manner
-        animator.setRepeatCount(Animation.REVERSE);
-        // It will be repeated up to infinite time
-        animator.setRepeatCount(Animation.INFINITE);
-        animator.start();
     }
 
     private void setConfiguration() {
@@ -700,6 +628,24 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                     break;
                 case 7:
                     logoutFromApp();
+                    break;
+                case 10:
+                    startActivity(new Intent(DashboardScreen.this, AboutPocra.class));
+                    break;
+                case 11:
+                    startActivity(new Intent(DashboardScreen.this, MyVillageProfilePdf.class));
+                    break;
+                case 12:
+                    startActivity(new Intent(DashboardScreen.this, DbtStatus.class));
+                    break;
+                case 13:
+                    if (farmerId > 0) {
+                        Intent grievanceIntent = new Intent(DashboardScreen.this, Grievances.class);
+                        grievanceIntent.putExtra("FAAPRegistrationID", farmerId);
+                        startActivity(grievanceIntent);
+                    } else {
+                        UIToastMessage.show(DashboardScreen.this, "Please Login First...");
+                    }
                     break;
             }
             DrawerLayout drawer = findViewById(R.id.drawer_layout1);

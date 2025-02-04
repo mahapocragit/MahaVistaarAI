@@ -61,17 +61,37 @@ public class AppHelper {
             jsonObject9.put("name", "Logout");
             jsonObject9.put("icon", "logout");
 
+            JSONObject jsonObject10 = new JSONObject();
+            jsonObject10.put("id", 10);
+            jsonObject10.put("name", "About PoCRA");
+            jsonObject10.put("icon", "icon9");
 
+            JSONObject jsonObject11 = new JSONObject();
+            jsonObject11.put("id", 11);
+            jsonObject11.put("name", "My Village Profile");
+            jsonObject11.put("icon", "icon9");
 
-            jsonArray.put(jsonObject7);
+            JSONObject jsonObject12 = new JSONObject();
+            jsonObject12.put("id", 12);
+            jsonObject12.put("name", "My Application");
+            jsonObject12.put("icon", "icon9");
+
+            JSONObject jsonObject13 = new JSONObject();
+            jsonObject13.put("id", 13);
+            jsonObject13.put("name", "Suggestion & Grievances");
+            jsonObject13.put("icon", "icon9");
+
             jsonArray.put(jsonObject1);
-
+            jsonArray.put(jsonObject2);
             jsonArray.put(jsonObject3);
-
+            jsonArray.put(jsonObject4);
             jsonArray.put(jsonObject5);
             jsonArray.put(jsonObject6);
-            jsonArray.put(jsonObject2);
-            jsonArray.put(jsonObject4);
+            jsonArray.put(jsonObject7);
+            jsonArray.put(jsonObject10);
+            jsonArray.put(jsonObject11);
+            jsonArray.put(jsonObject12);
+            jsonArray.put(jsonObject13);
             jsonArray.put(jsonObject9);
 
         } catch (JSONException e) {
@@ -151,15 +171,37 @@ public class AppHelper {
             jsonObject9.put("name", "बाहेर पडणे");
             jsonObject9.put("icon", "logout");
 
+            JSONObject jsonObject10 = new JSONObject();
+            jsonObject10.put("id", 10);
+            jsonObject10.put("name", "पोक्रा विषयी");
+            jsonObject10.put("icon", "icon9");
 
+            JSONObject jsonObject11 = new JSONObject();
+            jsonObject11.put("id", 11);
+            jsonObject11.put("name", "ग्राम कृषी संजीवनी");
+            jsonObject11.put("icon", "icon9");
 
-            jsonArray.put(jsonObject7);
+            JSONObject jsonObject12 = new JSONObject();
+            jsonObject12.put("id", 12);
+            jsonObject12.put("name", "माझे अर्ज");
+            jsonObject12.put("icon", "icon9");
+
+            JSONObject jsonObject13 = new JSONObject();
+            jsonObject13.put("id", 13);
+            jsonObject13.put("name", "सूचना व तक्रार निवारण");
+            jsonObject13.put("icon", "icon9");
+
             jsonArray.put(jsonObject1);
+            jsonArray.put(jsonObject2);
             jsonArray.put(jsonObject3);
+            jsonArray.put(jsonObject4);
             jsonArray.put(jsonObject5);
             jsonArray.put(jsonObject6);
-            jsonArray.put(jsonObject2);
-            jsonArray.put(jsonObject4);
+            jsonArray.put(jsonObject7);
+            jsonArray.put(jsonObject10);
+            jsonArray.put(jsonObject11);
+            jsonArray.put(jsonObject12);
+            jsonArray.put(jsonObject13);
             jsonArray.put(jsonObject9);
 
         } catch (JSONException e) {
