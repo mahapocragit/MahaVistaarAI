@@ -18,6 +18,7 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.messaging.FirebaseMessaging
@@ -71,7 +72,7 @@ class SplashScreenActivity : AppCompatActivity(), ApiCallbackCode {
         if (farmerId!! > 0) {
             getUserDetails()
         } else {
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent(this, LoginScreen::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -84,7 +85,6 @@ class SplashScreenActivity : AppCompatActivity(), ApiCallbackCode {
 
     private fun getUserDetails() {
         val jsonObject = JSONObject()
-        Log.d("farmerId11111", farmerId.toString())
         try {
             jsonObject.put("SecurityKey", APIServices.SSO_KEY)
             jsonObject.put("FAAPRegistrationID", farmerId)
@@ -131,7 +131,7 @@ class SplashScreenActivity : AppCompatActivity(), ApiCallbackCode {
                     AppSettings.getInstance().setValue(this, AppConstants.uTALUKA, strTalukaName)
                     AppSettings.getInstance().setIntValue(this, AppConstants.uTALUKAID, strTalukaId)
 
-                    Handler().postDelayed({
+                    Handler(Looper.getMainLooper()).postDelayed({
                         val intent = Intent(this, DashboardScreen::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

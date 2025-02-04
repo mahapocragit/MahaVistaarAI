@@ -112,7 +112,7 @@
                         app:passwordToggleTint="@color/status_green">
 
                         <EditText
-                            android:id="@+id/password"
+                            android:id="@+id/passwordEditText"
                             android:layout_width="match_parent"
                             android:layout_height="70dp"
                             android:background="@drawable/login_edit_bg"

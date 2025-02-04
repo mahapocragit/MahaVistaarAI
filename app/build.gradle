@@ -66,6 +66,8 @@ android {
 
 
 dependencies {
+    implementation 'com.intuit.sdp:sdp-android:1.1.1'
+    implementation 'com.mikhaellopez:circularimageview:4.3.1'
     // Project dependencies
     implementation project(path: ':app:libs:appinventorapi')
 

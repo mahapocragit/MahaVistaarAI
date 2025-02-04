@@ -13,8 +13,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-
-
+        <item name="android:statusBarColor" tools:ignore="NewApi">@color/actionbar_color_figma</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
