@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,6 +27,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -78,8 +80,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
     private NavigationView navigationView;
     private static final int PERMISSION_REQUEST_CODE = 100;
     private GridView gridView;
-    private TextView addCrop;
-    private TextView yourCrop;
+    private CardView addCrop;
     private TextView nav_user_name;
     private TextView nav_user_phone;
     private ImageView imgLangChange;
@@ -90,16 +91,17 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
     String languageToLoad;
     private int farmerId = 0;
     private int cropId = 0;
+    TextView alertHeadingTv;
     private AppPreferenceManager appPreferenceManager;
     private JSONArray jsonArray;
 
-    private static final String[] arrayCategery = new String[]{
+    private static final String[] arrayCategory = new String[]{
             "Weather", "Identify Pest/Disease", "Pests and Diseases", "Fertilizer Calculator", "Climate Resilent Technology", "Soil Health Card",
             "Market Price", "Warehouse Availabilities", "DBT Schemes"
 
     };
 
-    private static final String[] arrayCategeryMarathi = new String[]{
+    private static final String[] arrayCategoryMarathi = new String[]{
             "हवामान", "किटक/रोग ओळखा", "कीड व रोग", "खत मात्रा गणक (कॅलक्यूलेटर)", "हवामान अनुकूल तंत्रज्ञान", "मृदा आरोग्य पत्रिका",
             "बाजारभाव", " गोदाम उपलब्धता", "थेट लाभ हस्तांतरण योजना"
 
@@ -130,6 +132,11 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         setContentView(R.layout.activity_dashboard_screen);
         appPreferenceManager = new AppPreferenceManager(this);
         init();
+        LinearLayout temperatureLayout = findViewById(R.id.temperatureLayout);
+        temperatureLayout.setOnClickListener(view->{
+            Intent weather = new Intent(DashboardScreen.this, WeatherHome.class);
+            startActivity(weather);
+        });
 
         getFirebaseTokenFromServer();
         ForceUpdateChecker.with(this).onUpdateNeeded(this).check();
@@ -166,10 +173,10 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         gridView = findViewById(R.id.gridViewJobs);
         gridView.setColumnWidth(GridView.STRETCH_COLUMN_WIDTH);
         if (languageToLoad.equalsIgnoreCase("en")) {
-            gridView.setAdapter(new DashboardAdapter(this, arrayCategery, arrayCategoryImg, "single_item_grid"));
+            gridView.setAdapter(new DashboardAdapter(this, arrayCategory, arrayCategoryImg, "single_item_grid"));
             Log.d("", "");
         } else if (languageToLoad.equalsIgnoreCase("hi")) {
-            gridView.setAdapter(new DashboardAdapter(this, arrayCategeryMarathi, arrayCategoryImg, "single_item_grid"));
+            gridView.setAdapter(new DashboardAdapter(this, arrayCategoryMarathi, arrayCategoryImg, "single_item_grid"));
         }
 
         appPreferenceManager.clearAll();
@@ -287,13 +294,13 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
             getUserDetails();
         }
         addCrop = findViewById(R.id.AddCropTv);
-        yourCrop = findViewById(R.id.yourCropTv);
         selectedCropListRecyc = findViewById(R.id.selectedCrops);
         gridView = findViewById(R.id.gridViewJobs);
         imgLangChange = findViewById(R.id.imgLangChange);
         imgNotification = findViewById(R.id.imgNotification);
         imgCallIcon = findViewById(R.id.imgCallIcon);
         menuListView = findViewById(R.id.menuListView1);
+        alertHeadingTv = findViewById(R.id.textView5);
     }
 
     private void setConfiguration() {
@@ -537,9 +544,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                     ResponseModel farmersSelectedCropResponse = new ResponseModel(jSONObject);
                     if (farmersSelectedCropResponse.getStatus()) {
                         JSONArray selectedCrops = farmersSelectedCropResponse.getDataArrays();
-                        yourCrop.setVisibility(View.INVISIBLE);
                         if (selectedCrops.length() > 0) {
-                            yourCrop.setVisibility(View.VISIBLE);
                             selectedCropList = new ArrayList<>();
                             for (int j = 0; j < selectedCrops.length(); j++) {
                                 try {
@@ -553,8 +558,12 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                                     this, AppConstants.kFarmerCrop,
                                     Arrays.asList(selectedCropList.toArray()));
                         }
-                        if (!(selectedCropList == null)) {
+                        if (selectedCropList != null) {
+                            alertHeadingTv.setVisibility(View.GONE);
                             showCropList(selectedCropList);
+                        }else{
+                            alertHeadingTv.setVisibility(View.VISIBLE);
+                            selectedCropListRecyc.setVisibility(View.GONE);
                         }
                     } else {
                         UIToastMessage.show(this, farmersSelectedCropResponse.getResponse());
