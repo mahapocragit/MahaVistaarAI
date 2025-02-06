@@ -54,10 +54,10 @@ class CropStageAdvisory : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerI
     private val arrayCategoryMarathi =
         arrayOf("पीक सल्ला", "खत मात्रा गणक (कॅलक्यूलेटर)", "पीक व्यवस्थापन", "कीड व रोग")
     private var arrayCategoryImg = intArrayOf(
-        R.drawable.crop_advsry,
-        R.drawable.fertilizer_calculator,
-        R.drawable.pest_management,
-        R.drawable.pets_n_disease_img
+        R.drawable.ecology,
+        R.drawable.fertilizer,
+        R.drawable.cropmanagement,
+        R.drawable.ladybug
     )
 
     @SuppressLint("ResourceAsColor")
@@ -77,7 +77,7 @@ class CropStageAdvisory : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerI
         wotrCropId = intent.getStringExtra("wotr_crop_id")
         mUrl = intent.getStringExtra("mUrl")
         cropName = intent.getStringExtra("mName")
-        binding.cropNameTextView.text = cropName
+        binding.sowingInfoLayout.cropNameTextView.text = cropName
         val dataSavedInLocal = intent.getStringExtra("dataSavedInLocal")
         villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
         if (dataSavedInLocal.equals("dataSavedInLocal") && cropId == 0) {
@@ -159,7 +159,7 @@ class CropStageAdvisory : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerI
             startActivity(intent)
         }
 
-        binding.editCropImageView.setOnClickListener {
+        binding.sowingInfoLayout.editSowingDateIcon.setOnClickListener {
             val intent = Intent(this, SelectSowingDataAndFarmer::class.java)
             intent.putExtra("id", cropId)
             intent.putExtra("mUrl", mUrl)
@@ -170,7 +170,7 @@ class CropStageAdvisory : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerI
 
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
         getCropStagesAndAdvisory()
-        binding.addCropImageView.setOnClickListener {
+        binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {
             val intent = Intent(this@CropStageAdvisory, AddCropActivity::class.java)
             intent.putExtra("SOWING_DATE", sowingDate)
             intent.putExtra("NO_NEED_TO_ADD_SOWING_DATE", "NO_NEED_TO_ADD_SOWING_DATE")
@@ -226,7 +226,7 @@ class CropStageAdvisory : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerI
                 val response = ResponseModel(jSONObject)
                 if (response.status) {
                     sowingDate = jSONObject.getString("sowing_date")
-                    binding.sowingDateTextView.text = jSONObject.getString("sowing_date")
+                    binding.sowingInfoLayout.sowingDateTextView.text = jSONObject.getString("sowing_date")
                     cropAdvisoryDetailsJSONArray = response.getdataArray()
                     Log.d("RESPONSE_TAG", "onResponse: $cropAdvisoryDetailsJSONArray")
 

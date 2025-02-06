@@ -40,79 +40,14 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/sowing_edit_crop_lnr_l"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/height40"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="0dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Crop-"
-                    android:textColor="@color/green"
-                    android:textSize="14sp"
-                    android:textStyle="italic"
-                    android:visibility="visible" />
-
-                <TextView
-                    android:id="@+id/cropNameTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/height5"
-                    android:textColor="@color/green"
-                    android:textSize="@dimen/text15"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:id="@+id/addCropImageView"
-                    android:layout_width="25dp"
-                    android:layout_height="@dimen/height25"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="2dp"
-                    android:src="@drawable/edit_icons"/>
-
-            </LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/sowing_edit_crop_lnr_ly"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/height40"
-                android:layout_marginLeft="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height100"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/sowing_date"
-                    android:textColor="@color/green"
-                    android:textSize="14sp"
-                    android:textStyle="italic"
-                    android:visibility="visible" />
-
-                <TextView
-                    android:id="@+id/sowingDateTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/height5"
-                    android:textColor="@color/green"
-                    android:textSize="@dimen/text15"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:id="@+id/editCropImageView"
-                    android:layout_width="25dp"
-                    android:layout_height="@dimen/height25"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="2dp"
-                    android:src="@drawable/edit_icons"></ImageView>
+                <include
+                    android:id="@+id/sowingInfoLayout"
+                    layout="@layout/sowing_date_layout"/>
 
             </LinearLayout>
 

@@ -3,19 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/transparent_green"
+    android:background="@color/actionbar_color_figma"
     android:layout_height="wrap_content">
 
     <RelativeLayout
         android:id="@+id/relativeLayoutToolbar"
         android:layout_width="match_parent"
-        android:layout_height="45dp">
+        android:minHeight="48dp"
+        android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/imgBackArrow"
             android:layout_width="@dimen/height25"
             android:layout_height="@dimen/height25"
             android:layout_gravity="left"
             android:visibility="gone"
+            app:tint="@color/white"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="@dimen/height20"
@@ -38,6 +40,7 @@
             android:layout_marginLeft="15dp"
             android:padding="4dp"
             android:visibility="gone"
+            app:tint="@color/white"
             app:srcCompat="@drawable/ic_baseline_home_24"
             tools:ignore="VectorDrawableCompat" />
 
@@ -47,11 +50,11 @@
             android:layout_height="45dp"
             android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:textSize="20dp"
+            android:textSize="@dimen/_16sdp"
             android:text="Title"
             android:textStyle="bold"
             android:textAlignment="center"
-            android:textColor="@color/status_green" />
+            android:textColor="@color/white" />
 
         <TableRow
             android:layout_width="match_parent"

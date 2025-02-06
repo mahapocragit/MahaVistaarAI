@@ -26,11 +26,7 @@ public class DashboardAdapter extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View gridView;
         if (convertView == null) {
-            if(gridItemType.equalsIgnoreCase("stage_single_item_grid")){
-                gridView = inflater.inflate(R.layout.stage_single_item_grid, parent, false);
-            }else {
-                gridView = inflater.inflate(R.layout.single_item_grid, parent, false);
-            }
+            gridView = inflater.inflate(R.layout.single_item_grid, parent, false);
             final TextView textView = gridView.findViewById(R.id.grid_item_label);
             textView.setText(mobileValues[position]);
             ImageView imageView = gridView.findViewById(R.id.grid_item_image);

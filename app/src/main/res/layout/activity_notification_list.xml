@@ -10,8 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="@dimen/height5">
+        android:orientation="vertical">
 
     <include
         android:id="@+id/relativeLayoutTopBar"
@@ -19,7 +18,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbarAlwaysDrawHorizontalTrack="true"
         android:scrollbarStyle="insideOverlay"

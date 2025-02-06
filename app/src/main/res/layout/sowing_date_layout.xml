@@ -40,14 +40,14 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/textView8"
-                        android:layout_width="@dimen/_60sdp"
+                        android:id="@+id/sowingDateTextView"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
                         android:text="17-11-2024" />
 
                     <ImageView
-                        android:id="@+id/imageView5"
+                        android:id="@+id/editSowingDateIcon"
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_gravity="start"
@@ -58,7 +58,7 @@
             </LinearLayout>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardview1"
+                android:id="@+id/cropInfoCardView"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_gravity="center_vertical"
@@ -92,11 +92,12 @@
 
 
                     <TextView
-                        android:id="@+id/textView9"
-                        android:layout_width="@dimen/_50sdp"
+                        android:id="@+id/cropNameTextView"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_6sdp"
                         android:text="Cotton"
+                        android:layout_weight="1"
                         android:textColor="@color/font_color_figma"
                         android:textStyle="bold" />
 
@@ -104,7 +105,7 @@
                         android:id="@+id/imageView7"
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_20sdp"
-                        android:layout_marginStart="@dimen/_2sdp"
+                        android:layout_marginEnd="@dimen/_6sdp"
                         android:padding="@dimen/_2sdp"
                         app:srcCompat="@drawable/down_arrow_figma"
                         app:tint="@color/arrow_color_figma" />

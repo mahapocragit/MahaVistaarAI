@@ -90,13 +90,13 @@ class DbtActivityDetails : AppCompatActivity(), ApiCallbackCode, OnMultiRecycler
         setContentView(R.layout.activity_dbt_details)
         init()
 
-        imageMenushow?.setVisibility(View.VISIBLE)
+        imageMenushow?.visibility = View.VISIBLE
         textViewHeaderTitle?.setText(R.string.pocra_dbt_activity)
 
         activityID = intent.getStringExtra("ActivityGroupID").toString()
         activityName = intent.getStringExtra("mActivityName").toString()
 
-        text_grp_activity_name?.setText(activityName)
+        text_grp_activity_name?.text = activityName
 
         imageMenushow?.setOnClickListener(View.OnClickListener {
             val intent = Intent(this, DashboardScreen::class.java)
@@ -108,80 +108,80 @@ class DbtActivityDetails : AppCompatActivity(), ApiCallbackCode, OnMultiRecycler
             startActivity(intent)
         })
         linlayout1?.setOnClickListener(View.OnClickListener {
-            cardView1?.setVisibility(View.VISIBLE)
-            cardView2?.setVisibility(View.GONE)
-            cardView3?.setVisibility(View.GONE)
-            cardView4?.setVisibility(View.GONE)
+            cardView1?.visibility = View.VISIBLE
+            cardView2?.visibility = View.GONE
+            cardView3?.visibility = View.GONE
+            cardView4?.visibility = View.GONE
         })
         linlayout2?.setOnClickListener(View.OnClickListener {
-            cardView1?.setVisibility(View.GONE)
-            cardView2?.setVisibility(View.VISIBLE)
-            cardView3?.setVisibility(View.GONE)
-            cardView4?.setVisibility(View.GONE)
+            cardView1?.visibility = View.GONE
+            cardView2?.visibility = View.VISIBLE
+            cardView3?.visibility = View.GONE
+            cardView4?.visibility = View.GONE
         })
         linlayout3?.setOnClickListener(View.OnClickListener {
-            cardView1?.setVisibility(View.GONE)
-            cardView2?.setVisibility(View.GONE)
-            cardView3?.setVisibility(View.VISIBLE)
-            cardView4?.setVisibility(View.GONE)
+            cardView1?.visibility = View.GONE
+            cardView2?.visibility = View.GONE
+            cardView3?.visibility = View.VISIBLE
+            cardView4?.visibility = View.GONE
         })
         linlayout4?.setOnClickListener(View.OnClickListener {
-            cardView1?.setVisibility(View.GONE)
-            cardView2?.setVisibility(View.GONE)
-            cardView3?.setVisibility(View.GONE)
-            cardView4?.setVisibility(View.VISIBLE)
+            cardView1?.visibility = View.GONE
+            cardView2?.visibility = View.GONE
+            cardView3?.visibility = View.GONE
+            cardView4?.visibility = View.VISIBLE
         })
         imgViewDown1.setOnClickListener(View.OnClickListener {
-            cardView1?.setVisibility(View.VISIBLE)
-            cardView2?.setVisibility(View.GONE)
-            cardView3?.setVisibility(View.GONE)
-            cardView4?.setVisibility(View.GONE)
-            imgViewDown1?.setVisibility(View.GONE)
-            imgViewup1?.setVisibility(View.VISIBLE)
+            cardView1?.visibility = View.VISIBLE
+            cardView2?.visibility = View.GONE
+            cardView3?.visibility = View.GONE
+            cardView4?.visibility = View.GONE
+            imgViewDown1?.visibility = View.GONE
+            imgViewup1?.visibility = View.VISIBLE
         })
         imgViewup1.setOnClickListener(View.OnClickListener {
-            cardView1?.setVisibility(View.GONE)
-            imgViewDown1?.setVisibility(View.VISIBLE)
-            imgViewup1?.setVisibility(View.GONE)
+            cardView1?.visibility = View.GONE
+            imgViewDown1?.visibility = View.VISIBLE
+            imgViewup1?.visibility = View.GONE
         })
         imgViewDown2.setOnClickListener(View.OnClickListener {
-            cardView1?.setVisibility(View.GONE)
-            cardView2?.setVisibility(View.VISIBLE)
-            cardView3?.setVisibility(View.GONE)
-            cardView4?.setVisibility(View.GONE)
-            imgViewDown2?.setVisibility(View.GONE)
-            imgViewup2?.setVisibility(View.VISIBLE)
+            cardView1?.visibility = View.GONE
+            cardView2?.visibility = View.VISIBLE
+            cardView3?.visibility = View.GONE
+            cardView4?.visibility = View.GONE
+            imgViewDown2?.visibility = View.GONE
+            imgViewup2?.visibility = View.VISIBLE
         })
         imgViewup2.setOnClickListener(View.OnClickListener {
-            cardView2?.setVisibility(View.GONE)
-            imgViewDown2?.setVisibility(View.VISIBLE)
-            imgViewup2?.setVisibility(View.GONE)
+            cardView2?.visibility = View.GONE
+            imgViewDown2?.visibility = View.VISIBLE
+            imgViewup2?.visibility = View.GONE
         })
         imgViewDown3.setOnClickListener(View.OnClickListener {
-            cardView1?.setVisibility(View.GONE)
-            cardView2?.setVisibility(View.GONE)
-            cardView3?.setVisibility(View.VISIBLE)
-            cardView4?.setVisibility(View.GONE)
-            imgViewDown3?.setVisibility(View.GONE)
-            imgViewup3?.setVisibility(View.VISIBLE)
+            cardView1?.visibility = View.GONE
+            cardView2?.visibility = View.GONE
+            cardView3?.visibility = View.VISIBLE
+            cardView4?.visibility = View.GONE
+            imgViewDown3?.visibility = View.GONE
+            imgViewup3?.visibility = View.VISIBLE
         })
         imgViewup3.setOnClickListener(View.OnClickListener {
-            cardView3?.setVisibility(View.GONE)
-            imgViewDown3?.setVisibility(View.VISIBLE)
-            imgViewup3?.setVisibility(View.GONE)
+            cardView3?.visibility = View.GONE
+            imgViewDown3?.visibility = View.VISIBLE
+            imgViewup3?.visibility = View.GONE
         })
         imgViewDown4.setOnClickListener(View.OnClickListener {
-            cardView1?.setVisibility(View.GONE)
-            cardView2?.setVisibility(View.GONE)
-            cardView3?.setVisibility(View.GONE)
-            cardView4?.setVisibility(View.VISIBLE)
-            imgViewDown4?.setVisibility(View.GONE)
-            imgViewup4?.setVisibility(View.VISIBLE)
+            cardView1?.visibility = View.GONE
+            cardView2?.visibility = View.GONE
+            cardView3?.visibility = View.GONE
+            cardView4?.visibility = View.VISIBLE
+            imgViewDown4?.visibility = View.GONE
+            imgViewup4?.visibility = View.VISIBLE
         })
         imgViewup4.setOnClickListener(View.OnClickListener {
-            cardView4?.setVisibility(View.GONE)
-            imgViewDown4?.setVisibility(View.VISIBLE)
-            imgViewup4?.setVisibility(View.GONE)
+            cardView4?.visibility = View.GONE
+            imgViewDown4?.visibility = View.VISIBLE
+            imgViewup4?.visibility = View.GONE
         })
     }
 
@@ -404,7 +404,7 @@ class DbtActivityDetails : AppCompatActivity(), ApiCallbackCode, OnMultiRecycler
         val dialogTitle = dialog.findViewById<TextView>(R.id.dialogTitle)
         val cancelButton = dialog.findViewById<ImageView>(R.id.imageView_close)
         val dialogRecyclerView = dialog.findViewById<RecyclerView>(R.id.recyclerViewDbtSubsidy)
-        dialogTitle.setText(activityName)
+        dialogTitle.text = activityName
 
         cancelButton.setOnClickListener(View.OnClickListener { dialog.dismiss() })
 
@@ -422,7 +422,7 @@ class DbtActivityDetails : AppCompatActivity(), ApiCallbackCode, OnMultiRecycler
             )
         )
         dialogRecyclerView!!.adapter = adaptorDbtSubsidy
-        adaptorDbtSubsidy!!.notifyDataSetChanged()
+        adaptorDbtSubsidy.notifyDataSetChanged()
 
         dialog.show()
     }
