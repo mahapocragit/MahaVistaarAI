@@ -34,18 +34,14 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
 
-class CropStageAdvisory : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerItemClickListener {
+class CropStageAdvisory : AppCompatActivity() {
 
     private lateinit var binding: ActivityCropStageAdvisoryBinding
-
-    private var cropAdvisoryDetailsJSONArray: JSONArray? = null
-    private var cropAdvisoryJSONArray: JSONArray? = null
 
     var cropId: Int? = 0
     private var wotrCropId: String? = "0"
     private var cropName: String? = null
     private var mUrl: String? = null
-    private var farmerId: Int = 0
     private var villageID: Int = 0
     private var sowingDate: String = ""
     lateinit var languageToLoad: String
@@ -115,8 +111,10 @@ class CropStageAdvisory : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerI
             OnItemClickListener { _, _, position, _ ->
                 when (position) {
                     0 -> {
-                        binding.cropAdvisoryLinearLayout.visibility = View.VISIBLE
-                        binding.comingSoonLinearLayout.visibility = View.GONE
+                        val intent = Intent(this, AdvisoryCropActivity::class.java)
+                        intent.putExtra("id", cropId)
+                        intent.putExtra("mName", cropName)
+                        startActivity(intent)
                     }
 
                     1 -> {
@@ -129,8 +127,6 @@ class CropStageAdvisory : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerI
                     }
 
                     2 -> {
-                        binding.cropAdvisoryLinearLayout.visibility = View.GONE
-                        binding.comingSoonLinearLayout.visibility = View.VISIBLE
                     }
 
                     3 -> {
@@ -168,8 +164,6 @@ class CropStageAdvisory : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerI
             startActivity(intent)
         }
 
-        farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-        getCropStagesAndAdvisory()
         binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {
             val intent = Intent(this@CropStageAdvisory, AddCropActivity::class.java)
             intent.putExtra("SOWING_DATE", sowingDate)
@@ -183,101 +177,6 @@ class CropStageAdvisory : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerI
         if (AppSettings.getLanguage(this@CropStageAdvisory).equals("1", ignoreCase = true)) {
             Log.d("getStrName=", AppSettings.getLanguage(this@CropStageAdvisory))
             languageToLoad = "en"
-        }
-    }
-
-    private fun getCropStagesAndAdvisory() {
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put("crop_id", cropId)
-            jsonObject.put("farmer_id", farmerId)
-            jsonObject.put("lang", languageToLoad)
-            Log.d("RESPONSE_TAG", "getCropStagesAndAdvisory: " + jsonObject)
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api =
-                AppInventorApi(
-                    this,
-                    APIServices.SSO,
-                    "",
-                    AppString(this).getkMSG_WAIT(),
-                    true
-                )
-            val retrofit: Retrofit = api.retrofitInstance
-            val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getCropStagesAndAdvisory(requestBody)
-            DebugLog.getInstance().d("param1=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()))
-            api.postRequest(responseCall, this, 1)
-            DebugLog.getInstance().d("param=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
-        } catch (e: JSONException) {
-            DebugLog.getInstance().d("JSONException=$e")
-            e.printStackTrace()
-        }
-    }
-
-    @SuppressLint("SuspiciousIndentation")
-    override fun onResponse(jSONObject: JSONObject?, i: Int) {
-        if (i == 1) {
-            if (jSONObject != null) {
-                DebugLog.getInstance().d("onResponse=$jSONObject")
-                val response = ResponseModel(jSONObject)
-                if (response.status) {
-                    sowingDate = jSONObject.getString("sowing_date")
-                    binding.sowingInfoLayout.sowingDateTextView.text = jSONObject.getString("sowing_date")
-                    cropAdvisoryDetailsJSONArray = response.getdataArray()
-                    Log.d("RESPONSE_TAG", "onResponse: $cropAdvisoryDetailsJSONArray")
-
-                    if (cropAdvisoryDetailsJSONArray?.length()!! > 0) {
-                        val stagesAdvisoryAdapter =
-                            StageAdvisoryAdapter(this, this, cropAdvisoryDetailsJSONArray)
-                        binding.cropStagesRecyclerView.layoutManager =
-                            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-                        binding.cropStagesRecyclerView.adapter = stagesAdvisoryAdapter
-                        stagesAdvisoryAdapter.notifyDataSetChanged()
-                    }
-                } else {
-                    UIToastMessage.show(this, response.response)
-                }
-            }
-        }
-    }
-
-    override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
-        if (i == 1) {
-            val cropDetail: JSONObject = obj as JSONObject
-            val status =
-                if (cropDetail.getString("status").equals("pending")) "pending" else "No data"
-            binding.comingSoonLinearLayout1.visibility = View.GONE
-            binding.cropStagesInfoRecyclerView.visibility = View.VISIBLE
-            cropAdvisoryJSONArray = cropDetail.getJSONArray("advisory")
-            if (cropAdvisoryJSONArray?.length() ==0){
-                Toast.makeText(this, "Advisory is not available for current stage", Toast.LENGTH_SHORT).show()
-            }
-            val stageAdvisoryDetailAdapter = StageAdvisoryDetailAdaptr(
-                this,
-                this,
-                cropAdvisoryJSONArray as JSONArray,
-                languageToLoad,
-                cropId.toString(),
-                villageID.toString()
-            )
-            binding.cropStagesInfoRecyclerView.layoutManager = LinearLayoutManager(
-                this,
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
-            binding.cropStagesInfoRecyclerView.adapter = stageAdvisoryDetailAdapter
-            stageAdvisoryDetailAdapter.notifyDataSetChanged()
-        }
-        if (i == 2) {
-            binding.relativeLayoutTopBar.relativeLayoutToolbar.visibility = View.GONE
         }
     }
 

@@ -94,6 +94,17 @@ public class Result_identified extends AppCompatActivity {
         try {
             if (result != null) {
                 JSONObject response = new JSONObject(result);
+                JSONObject advisoryData = response.optJSONObject("advisory_info");
+                assert advisoryData != null;
+                String chemical_control = advisoryData.optString("chemical_control");
+                String cultural_control = advisoryData.optString("cultural_control");
+                binding.culturalText.setText(cultural_control);
+                binding.chemicalText.setText(chemical_control);
+
+                JSONObject pestInfoData = response.optJSONObject("pest_info");
+                assert pestInfoData != null;
+                String damage_symptoms = pestInfoData.optString("damage_symptoms");
+                binding.symptomsText.setText(damage_symptoms);
                 String message = response.optString("message");
                 binding.resultIdentify.setText(message);
                 Log.d(TAG, "setDataInViews: "+ response);
