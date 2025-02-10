@@ -77,6 +77,7 @@ public class Identify_img_upload extends AppCompatActivity {
     String file_path = "";
     String file_path_string = "";
     String url_model = "";
+    String identificationType = "Disease";
     private String urls;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 
@@ -99,6 +100,8 @@ public class Identify_img_upload extends AppCompatActivity {
         internet = new IntReceiver();
         binding.warningHeadingTextView.setVisibility(View.GONE);
 
+        binding.radioPest.setOnCheckedChangeListener((buttonView, isChecked) -> identificationType = isChecked ? "Insect" : "Disease");
+
         try {
             Intent intent = getIntent();
             Bundle data = intent.getExtras();
@@ -106,7 +109,7 @@ public class Identify_img_upload extends AppCompatActivity {
             farmerIdentificationString = data.getString("farmerIdentification");
             type = data.getString("type");
             url = data.getString("url");
-            binding.cropNameTextView.setText("Crop : "+ crop);
+            binding.cropNameTextView.setText("Crop : " + crop);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -172,7 +175,7 @@ public class Identify_img_upload extends AppCompatActivity {
                                                                 progressDialog.cancel();
                                                                 afterJungleForestImage();
                                                             } else {
-                                                                uploadImageData(url_model, "9010", selected_disease, selected_severity_level, type);
+                                                                uploadImageData(url_model, "9010", identificationType);
                                                             }
                                                         } else {
                                                             progressDialog.cancel();
@@ -327,7 +330,7 @@ public class Identify_img_upload extends AppCompatActivity {
         }
     }
 
-    private void uploadImageData(String url, String userId, String selectedDisease, String selectedSeverityLevel, String type) {
+    private void uploadImageData(String url, String userId, String identificationType) {
         urls = url;
         if (file_path_string.isEmpty()) {
             binding.identifyButton.setEnabled(true);
@@ -342,7 +345,7 @@ public class Identify_img_upload extends AppCompatActivity {
         try {
             object.put("crop", crop);
             object.put("image", imageProper);
-            object.put("category", "Disease");
+            object.put("category", identificationType);
             object.put("latitude", "17.400");
             object.put("longitude", "19.30");
             object.put("application_user_id", userId);
@@ -367,6 +370,7 @@ public class Identify_img_upload extends AppCompatActivity {
                         try {
                             Intent intent = new Intent(Identify_img_upload.this, Result_identified.class);
                             intent.putExtra("result", response.toString());
+                            intent.putExtra("file_path", file_path);
                             startActivity(intent);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -439,11 +443,9 @@ public class Identify_img_upload extends AppCompatActivity {
                                              Gson gson = new Gson();
                                              String myJson = gson.toJson(model);
 
-                                             Intent intent = new Intent(Identify_img_upload.this, Result_identified.class);//Show result
+                                             Intent intent = new Intent(Identify_img_upload.this, Result_identified.class);
                                              Bundle data1 = new Bundle();
                                              data1.putString("farmerIdentification", farmerIdentificationString);
-
-
                                              data1.putString("crop", crop);
                                              data1.putString("type", type);
                                              data1.putString("url", url);
@@ -536,7 +538,7 @@ public class Identify_img_upload extends AppCompatActivity {
 
                 if (responsecode == RESULT_OK && data != null) {
 
-                    final Uri address = data.getData();
+                    Uri address = data.getData();
                     System.out.println(" address 1:" + address);
 
                     binding.previewImageView.setImageURI(address);
@@ -546,7 +548,7 @@ public class Identify_img_upload extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     binding.identifyCropLinearLayout.setVisibility(View.GONE);
-                    binding.uploadImageLinearLayout.setVisibility(View.GONE);
+                    binding.uploadImageLinearLayout.setVisibility(View.VISIBLE);
                     binding.imgCardView.setVisibility(View.VISIBLE);
                     binding.previewImageView.setVisibility(View.VISIBLE);
                     binding.identifyButton.setVisibility(View.VISIBLE);

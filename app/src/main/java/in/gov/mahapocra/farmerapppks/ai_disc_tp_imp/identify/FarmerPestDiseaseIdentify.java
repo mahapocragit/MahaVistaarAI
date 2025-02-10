@@ -209,35 +209,33 @@ public class FarmerPestDiseaseIdentify extends AppCompatActivity implements Navi
 
                             InputImage image = InputImage.fromBitmap(bitmap,0 );
                             ImageLabeler labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS);
-                            labeler.process(image).addOnSuccessListener(new OnSuccessListener<List<ImageLabel>>() {
-                                        @Override
-                                        public void onSuccess(List<ImageLabel> imageLabels) {
-                                            //Log.d("Google Model Output:",imageLabels.getClass().getCanonicalName());
-                                           // Log.d("Google Model Output:",imageLabels.toString());
-                                            ArrayList<String> obj=new ArrayList<>();
-                                            Map<String,Float> myMap = new HashMap<>();
-                                            ArrayList<Float> scores = new ArrayList<>();
-                                            for (ImageLabel label : imageLabels) {
-                                                String text = label.getText();
-                                                Float conf = label.getConfidence();
-                                                System.out.println(text+" : "+ conf);
-                                                myMap.put(text,conf);
-                                                obj.add(text);
+                            labeler.process(image).addOnSuccessListener(imageLabels -> {
+                                //Log.d("Google Model Output:",imageLabels.getClass().getCanonicalName());
+                               // Log.d("Google Model Output:",imageLabels.toString());
+                                ArrayList<String> obj=new ArrayList<>();
+                                Map<String,Float> myMap = new HashMap<>();
+                                ArrayList<Float> scores = new ArrayList<>();
+                                for (ImageLabel label : imageLabels) {
+                                    String text = label.getText();
+                                    Float conf = label.getConfidence();
+                                    System.out.println(text+" : "+ conf);
+                                    myMap.put(text,conf);
+                                    obj.add(text);
 
-                                            }
+                                }
 //                                                   // Log.d("Google Model Output:",obj.toString());
 
-                                            if (!obj.isEmpty()) {
-                                                //Log.d(TAG, "not empty");
+                                if (!obj.isEmpty()) {
+                                    //Log.d(TAG, "not empty");
 
-                                                if (obj.contains("Plant") || obj.contains("Vegetable") || obj.contains("Fruit") || obj.contains("Insect")) {
-                                                    System.out.println("confidence: "+myMap.get("Plant"));
-                                                    if (obj.contains("Forest") || obj.contains("Jungle") || obj.contains("Garden") || obj.contains("Field")) {
-                                                        //Log.d(TAG,obj.toString());
-                                                        progressDialog.cancel();
-                                                        afterJungleForestImage();
-                                                    } else {
-                                                        upload_image_data(url_model, user_id, selected_disease, selected_severity_level, type);
+                                    if (obj.contains("Plant") || obj.contains("Vegetable") || obj.contains("Fruit") || obj.contains("Insect")) {
+                                        System.out.println("confidence: "+myMap.get("Plant"));
+                                        if (obj.contains("Forest") || obj.contains("Jungle") || obj.contains("Garden") || obj.contains("Field")) {
+                                            //Log.d(TAG,obj.toString());
+                                            progressDialog.cancel();
+                                            afterJungleForestImage();
+                                        } else {
+                                            upload_image_data(url_model, user_id, selected_disease, selected_severity_level, type);
 //                                                            if(myMap.get("Plant")>0.75 || myMap.get("Vegetable")>0.75 || myMap.get("Fruit")>0.75 || myMap.get("Fruit")>0.75){
 //                                                                upload_image_data(url_model, user_id, selected_disease, selected_severity_level, type);
 //                                                                //upload_image_data_for_crop(url_model, user_id, selected_disease, selected_severity_level, type);
@@ -248,21 +246,20 @@ public class FarmerPestDiseaseIdentify extends AppCompatActivity implements Navi
 //                                                                afterJungleForestimage();
 //                                                            }
 
-                                                    }
-
-                                                } else {
-                                                    //Toast.makeText(farmerdiseasepestIdentify.this, "Error !!! No plant objects...", Toast.LENGTH_LONG).show();
-                                                    progressDialog.cancel();
-                                                    afterfalseimage();
-
-                                                }
-                                            } else {
-                                                progressDialog.cancel();
-                                                afterNoObj();
-                                            }
-
                                         }
-                                    })
+
+                                    } else {
+                                        //Toast.makeText(farmerdiseasepestIdentify.this, "Error !!! No plant objects...", Toast.LENGTH_LONG).show();
+                                        progressDialog.cancel();
+                                        afterfalseimage();
+
+                                    }
+                                } else {
+                                    progressDialog.cancel();
+                                    afterNoObj();
+                                }
+
+                            })
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {

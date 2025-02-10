@@ -90,6 +90,9 @@ public class Result_identified extends AppCompatActivity {
     private void setDataInViews() {
         Intent intent = getIntent();
         String result = intent.getStringExtra("result");
+        String filePath = intent.getStringExtra("file_path");
+        Uri uri = Uri.parse(filePath);
+        binding.image.setImageURI(uri);
         Log.d(TAG, "setDataInViews: "+result);
         try {
             if (result != null) {
