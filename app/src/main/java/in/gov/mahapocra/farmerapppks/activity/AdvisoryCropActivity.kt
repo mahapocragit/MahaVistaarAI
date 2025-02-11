@@ -113,7 +113,7 @@ class AdvisoryCropActivity : AppCompatActivity(), ApiCallbackCode,
                         val stagesAdvisoryAdapter =
                             StageAdvisoryAdapter(this, this, cropAdvisoryDetailsJSONArray)
                         binding.cropStagesRecyclerView.layoutManager =
-                            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+                            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
                         binding.cropStagesRecyclerView.adapter = stagesAdvisoryAdapter
                         stagesAdvisoryAdapter.notifyDataSetChanged()
                     }
@@ -127,7 +127,6 @@ class AdvisoryCropActivity : AppCompatActivity(), ApiCallbackCode,
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
         if (i == 1) {
             val cropDetail: JSONObject = obj as JSONObject
-            binding.cropStagesInfoRecyclerView.visibility = View.VISIBLE
             cropAdvisoryJSONArray = cropDetail.getJSONArray("advisory")
             if (cropAdvisoryJSONArray?.length() ==0){
                 Toast.makeText(this, "Advisory is not available for current stage", Toast.LENGTH_SHORT).show()
@@ -140,12 +139,6 @@ class AdvisoryCropActivity : AppCompatActivity(), ApiCallbackCode,
                 cropId.toString(),
                 villageID.toString()
             )
-            binding.cropStagesInfoRecyclerView.layoutManager = LinearLayoutManager(
-                this,
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
-            binding.cropStagesInfoRecyclerView.adapter = stageAdvisoryDetailAdapter
             stageAdvisoryDetailAdapter.notifyDataSetChanged()
         }
         if (i == 2) {

@@ -25,6 +25,7 @@ import com.squareup.picasso.Picasso
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.farmerapppks.R
+import `in`.gov.mahapocra.farmerapppks.activity.AdvisoryCropActivity
 import `in`.gov.mahapocra.farmerapppks.activity.CropStageAdvisory
 import `in`.gov.mahapocra.farmerapppks.fragment.advisory.AdvisoryFeedback
 import org.json.JSONArray
@@ -46,7 +47,7 @@ class StageAdvisoryDetailAdaptr(
         viewType: Int
     ): ViewHolder {
         val view: View = LayoutInflater.from(parent.context).inflate(
-            R.layout.stage_advisory_details,
+            R.layout.stage_advisory_details_temp,
             parent,
             false
         )
@@ -133,7 +134,7 @@ class StageAdvisoryDetailAdaptr(
 //            fragmentTransaction.addToBackStack(null)
 //            fragmentTransaction.commit()
 
-            if ((context as CropStageAdvisory).supportFragmentManager
+            if ((context as AdvisoryCropActivity).supportFragmentManager
                     .findFragmentById(R.id.frameLayout) == null
             ) {
 
@@ -145,7 +146,7 @@ class StageAdvisoryDetailAdaptr(
                 bundle.putString("advisoryCropId", id)
                 advisoryFeedback.arguments = bundle
                 val fragmentTransaction =
-                    (context as CropStageAdvisory).supportFragmentManager.beginTransaction()
+                    (context as AdvisoryCropActivity).supportFragmentManager.beginTransaction()
                 fragmentTransaction.add(R.id.frameLayout, advisoryFeedback)
                 fragmentTransaction.commit()
 

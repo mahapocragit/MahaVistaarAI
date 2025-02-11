@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.gov.mahapocra.farmerapppks.R
@@ -24,55 +25,65 @@ class StageAdvisoryAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): StageAdvisoryAdapter.ViewHolder {
+    ): ViewHolder {
         val view: View = LayoutInflater.from(parent.context).inflate(
-            R.layout.stage_view,
+            R.layout.stage_view_temp,
             parent,
             false
         )
-        return StageAdvisoryAdapter.ViewHolder(view)
+        return ViewHolder(view)
     }
+
+    override fun getItemId(position: Int) = position.toLong()
+
+    override fun getItemViewType(position: Int) = position
 
     override fun getItemCount(): Int {
         return cropAdvisoryDetailsJSONArray?.length()!!
     }
 
-    override fun getItemId(position: Int) = position.toLong()
-    override fun getItemViewType(position: Int) = position
-
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
         val stepLine: View = itemView.findViewById(R.id.stepLine)
-        val steage: RelativeLayout = itemView.findViewById(R.id.stage)
-        val stages: LinearLayout = itemView.findViewById(R.id.stages)
-        val right_tick: ImageView = itemView.findViewById(R.id.right_tick)
+        val stage: RelativeLayout = itemView.findViewById(R.id.stage)
+        val rightTick: ImageView = itemView.findViewById(R.id.right_tick)
+        val cropStagesInfoRecyclerView: RecyclerView =
+            itemView.findViewById(R.id.cropStagesInfoRecyclerView)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val advisoryJsonDetails: JSONObject =
             cropAdvisoryDetailsJSONArray?.get(position) as JSONObject
-        Log.d("advisoryJsonDetails=" + position, advisoryJsonDetails.toString())
+        val cropAdvisoryJSONArray = advisoryJsonDetails.getJSONArray("advisory")
+        val sAdapter =
+            StageAdvisoryDetailAdaptr(context, listener, cropAdvisoryJSONArray, "mr", "", "")
+        holder.cropStagesInfoRecyclerView.layoutManager = LinearLayoutManager(
+            context,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+        holder.cropStagesInfoRecyclerView.adapter = sAdapter
         val status = advisoryJsonDetails.getString("status")
         if (position == (cropAdvisoryDetailsJSONArray?.length())!! - 1) {
             holder.stepLine.visibility = View.GONE
         }
         if (status.equals("current")) {
-            holder.steage.setBackgroundResource(R.drawable.current_round_background_status)
-            holder.right_tick.visibility = View.GONE
+            holder.stage.setBackgroundResource(R.drawable.current_round_background_status)
+            holder.rightTick.visibility = View.GONE
 
         } else if (status.equals("completed")) {
-            holder.steage.setBackgroundResource(R.drawable.completed_background_stages)
+            holder.stage.setBackgroundResource(R.drawable.completed_background_stages)
             holder.stepLine.setBackgroundResource(R.color.bg_green)
-            holder.right_tick.visibility = View.VISIBLE
+            holder.rightTick.visibility = View.VISIBLE
         }
-        holder.titleTextView.setText(advisoryJsonDetails.getString("stage"))
+        holder.titleTextView.text = advisoryJsonDetails.getString("stage")
 
-        holder.stages.setOnClickListener(View.OnClickListener {
+        holder.stage.setOnClickListener {
             listener.onMultiRecyclerViewItemClick(
                 1,
                 cropAdvisoryDetailsJSONArray?.get(position) as JSONObject
             )
-        })
+        }
 
         if (status.equals("current")) {
             listener.onMultiRecyclerViewItemClick(
@@ -81,6 +92,4 @@ class StageAdvisoryAdapter(
             )
         }
     }
-
-
 }

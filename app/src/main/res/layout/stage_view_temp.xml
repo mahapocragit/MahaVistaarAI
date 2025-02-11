@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_150sdp">
+
+    <View
+        android:id="@+id/stepLine"
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/_24sdp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RelativeLayout
+        android:id="@+id/stage"
+        android:layout_width="@dimen/_18sdp"
+        android:layout_height="@dimen/_18sdp"
+        android:layout_marginTop="@dimen/_24sdp"
+        app:layout_constraintEnd_toEndOf="@+id/stepLine"
+        app:layout_constraintStart_toStartOf="@+id/stepLine"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/pending_round_backgroud_stages">
+        <ImageView
+            android:id="@+id/right_tick"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            android:layout_centerInParent="true"
+            android:src="@drawable/right_tick">
+        </ImageView>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/stage"
+        app:layout_constraintStart_toEndOf="@+id/stage"
+        app:layout_constraintTop_toTopOf="@+id/stage"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/cropStagesInfoRecyclerView"
+        android:layout_width="@dimen/_250sdp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/titleTextView"
+        app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
+</androidx.constraintlayout.widget.ConstraintLayout>

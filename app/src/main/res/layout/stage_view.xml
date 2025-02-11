@@ -24,7 +24,7 @@
                 android:id="@+id/right_tick"
                 android:layout_width="@dimen/height25"
                 android:layout_height="@dimen/height25"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:layout_centerInParent="true"
                 android:src="@drawable/right_tick">
             </ImageView>
