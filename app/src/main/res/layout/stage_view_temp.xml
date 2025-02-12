@@ -39,6 +39,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_20sdp"
+        android:textSize="@dimen/_10sdp"
+        android:textStyle="bold"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="@+id/stage"
         app:layout_constraintStart_toEndOf="@+id/stage"
@@ -48,6 +50,7 @@
         android:id="@+id/cropStagesInfoRecyclerView"
         android:layout_width="@dimen/_250sdp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_2sdp"
         app:layout_constraintStart_toStartOf="@+id/titleTextView"
         app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

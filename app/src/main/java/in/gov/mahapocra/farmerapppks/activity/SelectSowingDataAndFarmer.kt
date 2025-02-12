@@ -71,14 +71,12 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
         val source = AppPreferenceManager(this).getString(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD)
         binding.saveDateForFarmButton.setOnClickListener {
             if (source.equals(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD)) {
-                val intent = Intent(this, CropStageAdvisory::class.java)
+                val intent = Intent(this, AdvisoryCropActivity::class.java)
                 intent.putExtra("dataSavedInLocal", "dataSavedInLocal")
-                AppSettings.getInstance().setIntValue(this, AppConstants.tmpCROPID, cropId!!)
-                AppSettings.getInstance().setValue(this, AppConstants.tmpWOTRID, wotrCropId)
-                AppSettings.getInstance().setValue(this, AppConstants.tmpSOWINGDATE, sowingDate)
-                AppSettings.getInstance().setValue(this, AppConstants.tmpMURL, mUrl)
-                AppSettings.getInstance().setValue(this, AppConstants.tmpCROPNAME, mName)
+                intent.putExtra("id", cropId)
+                intent.putExtra("mName", mName)
                 intent.putExtra("editCrop", editCrop)
+                intent.putExtra("sowingDate", sowingDate)
                 startActivity(intent)
             }else if (source.equals(AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD)) {
                 val intent = Intent(this, FertilizerCalculatorActivity::class.java)
