@@ -825,7 +825,7 @@
                     android:textColor="@color/line"
                     android:textSize="@dimen/text14"
                     android:textStyle="bold"
-                    android:visibility="gone"></TextView>
+                    android:visibility="gone"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/fertlizerOpt_Rcl"
@@ -836,7 +836,7 @@
                     android:scrollbarAlwaysDrawHorizontalTrack="true"
                     android:scrollbarStyle="insideOverlay"
                     android:scrollbars="horizontal"
-                    android:visibility="gone"></androidx.recyclerview.widget.RecyclerView>
+                    android:visibility="gone"/>
 
                 <LinearLayout
                     android:id="@+id/ly_bar_bottom"

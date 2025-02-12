@@ -6,19 +6,13 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.RadioButton
-import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
@@ -35,6 +29,7 @@ import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
 import `in`.gov.mahapocra.farmerapppks.app_util.DeleteApi
+import `in`.gov.mahapocra.farmerapppks.databinding.ActivityFertilizerCalculatorActivityBinding
 import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,7 +38,6 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
-import retrofit2.Retrofit
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -51,39 +45,8 @@ import java.util.Date
 class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     OnMultiRecyclerItemClickListener, ApiCallbackCode {
 
-    private lateinit var yesRadioButton: RadioButton
-    private lateinit var noRadioButton: RadioButton
+    private lateinit var binding: ActivityFertilizerCalculatorActivityBinding
 
-    private lateinit var lnrSoilTestNo: LinearLayout
-    private lateinit var lnrSoilTestYes: LinearLayout
-    private lateinit var lnrNpkFetch: LinearLayout
-    private lateinit var fertilizerCal: LinearLayout
-    private lateinit var imageMenuShow: ImageView
-
-    private lateinit var textViewHeaderTitle: TextView
-    private lateinit var restTv: TextView
-    private lateinit var calculateTv: TextView
-    private lateinit var fetchNPKTv: TextView
-    private lateinit var cropNameTv: TextView
-    private lateinit var availableOptionTv: TextView
-    private lateinit var selectedOptionTv: TextView
-    private lateinit var selectAnyOneOptionTV: TextView
-    private lateinit var tvSowingDate: TextView
-
-    private lateinit var edNitrogen: EditText
-    private lateinit var edPhosphorus: EditText
-    private lateinit var edPotassium: EditText
-
-    private lateinit var edNitrogen1: EditText
-    private lateinit var edPhosphorus1: EditText
-    private lateinit var edPotassium1: EditText
-
-    private lateinit var edtSurveyNo: EditText
-    private lateinit var edtAcre: EditText
-    private lateinit var edtGuntha: EditText
-
-    private lateinit var edtFYM: EditText
-    private lateinit var fertilizerNameRcl: RecyclerView
     private var soilTestOption: Int = 1
     var languageToLoad: String? = null
 
@@ -91,21 +54,22 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     private var cropId: Int? = 0
     private var wotrCropId: String? = null
     private var sowingDate: String? = null
+    private var cropName: String? = null
     private lateinit var token: String
     private var acrArea: String = ""
     private var gunthaArea: String = ""
-    private var nitrogenValue: String = ""
-    private var phosphorusValue: String = ""
-    private var potassiumValue: String = ""
     private var edtFYMValue: String = ""
-    private var totalAcrArea: Float = 0.0F
-    private var cropName: String? = null
+    private var nitrogenValue: String = ""
+    private var potassiumValue: String = ""
+    private var phosphorusValue: String = ""
     private var availableOption: String = ""
+    private var totalAcrArea: Float = 0.0F
     private var fertilizerOptionValue: JSONArray? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_fertilizer_calculator_activity)
+        binding= ActivityFertilizerCalculatorActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         languageToLoad = "hi"
         if (AppSettings.getLanguage(this@FertilizerCalculatorActivity)
@@ -118,71 +82,40 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         cropName = intent.getStringExtra("mName")
         wotrCropId = intent.getStringExtra("wotr_crop_id")
         sowingDate = intent.getStringExtra("sowingDate")
-        Log.d("TAGGER", "onCreate: $cropId, $wotrCropId, $sowingDate, $cropName")
 
         villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
 
-        yesRadioButton = findViewById(R.id.yesRadioButton)
-        noRadioButton = findViewById(R.id.noRadioButton)
-        lnrSoilTestNo = findViewById(R.id.lnr_soil_test_no)
-        lnrSoilTestYes = findViewById(R.id.lnr_soil_test_yes)
-        lnrNpkFetch = findViewById(R.id.lnr_npk_fetch)
-        fertilizerCal = findViewById(R.id.lnrfertilizerCal)
-        textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
-        restTv = findViewById(R.id.restTv)
-        calculateTv = findViewById(R.id.calculateTv)
-        fetchNPKTv = findViewById(R.id.fetchNPKTv)
-        cropNameTv = findViewById(R.id.cropNameTextView)
-        imageMenuShow = findViewById(R.id.imageMenushow)
-        availableOptionTv = findViewById(R.id.availableOptionTv)
-        selectedOptionTv = findViewById(R.id.selectedOptionTv)
-        selectAnyOneOptionTV = findViewById(R.id.selectAnyOneOptionTV)
-        tvSowingDate = findViewById(R.id.sowingDateTextView)
-        edNitrogen = findViewById(R.id.edNitrogen)
-        edPhosphorus = findViewById(R.id.edPhosphorus)
-        edPotassium = findViewById(R.id.edPotassium)
+        binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.fertilizer_calculator)
+        binding.lnrSoilTestNo.visibility = View.GONE
+        binding.lnrNpkFetch.visibility = View.GONE
 
-        edNitrogen1 = findViewById(R.id.edNitrogen1)
-        edPhosphorus1 = findViewById(R.id.edPhosphorus1)
-        edPotassium1 = findViewById(R.id.edPotassium1)
-        edtSurveyNo = findViewById(R.id.edtSurveyNo)
-        edtAcre = findViewById(R.id.edtAcre)
-        edtGuntha = findViewById(R.id.edtGuntha)
-        edtFYM = findViewById(R.id.edtFYM)
-
-        fertilizerNameRcl = findViewById(R.id.fertlizerOpt_Rcl)
-        textViewHeaderTitle.setText(R.string.fertilizer_calculator)
-        lnrSoilTestNo.visibility = View.GONE
-        lnrNpkFetch.visibility = View.GONE
-
-        yesRadioButton.setOnClickListener {
+        binding.yesRadioButton.setOnClickListener {
             onRadioButtonClicked(it)
         }
-        noRadioButton.setOnClickListener {
+        binding.noRadioButton.setOnClickListener {
             onRadioButtonClicked(it)
         }
-        restTv.setOnClickListener {
+        binding.restTv.setOnClickListener {
             resetEditTest()
         }
-        calculateTv.setOnClickListener {
+        binding.calculateTv.setOnClickListener {
             validation()
         }
-        fetchNPKTv.setOnClickListener {
-            Log.d("restTv ", "restTv")
+        binding.fetchNPKTv.setOnClickListener {
         }
-        selectedOptionTv.setOnClickListener {
-            selectedOptionTv.background = ContextCompat.getDrawable(
+        binding.selectedOptionTv.setOnClickListener {
+            binding.selectedOptionTv.background = ContextCompat.getDrawable(
                 this,
                 R.drawable.green_gradient_with_yellow_border
             )
-            availableOptionTv.background = ContextCompat.getDrawable(
+            binding.availableOptionTv.background = ContextCompat.getDrawable(
                 this,
                 R.drawable.green_bg_gradient
             )
             getSelectedSavedOption()
         }
-        tvSowingDate.text = sowingDate
-        tvSowingDate.setOnClickListener {
+        binding.sowingInfoLayout.sowingDateTextView.text = sowingDate
+        binding.sowingInfoLayout.sowingDateTextView.setOnClickListener {
             startActivity(
                 Intent(
                     this@FertilizerCalculatorActivity,
@@ -190,26 +123,26 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                 )
             )
         }
-        availableOptionTv.setOnClickListener {
-            availableOptionTv.background = ContextCompat.getDrawable(
+        binding.availableOptionTv.setOnClickListener {
+            binding.availableOptionTv.background = ContextCompat.getDrawable(
                 this,
                 R.drawable.green_gradient_with_yellow_border
             )
-            selectedOptionTv.background = ContextCompat.getDrawable(
+            binding.selectedOptionTv.background = ContextCompat.getDrawable(
                 this,
                 R.drawable.green_bg_gradient
             )
             validation()
         }
 
-        imageMenuShow.visibility = View.VISIBLE
-        imageMenuShow.setOnClickListener {
+        binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
+        binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {
             val intent = Intent(this, CropStageAdvisory::class.java)
             intent.putExtra("dataSavedInLocal", "dataSavedInLocal")
             startActivity(intent)
         }
 
-        edtAcre.addTextChangedListener(object : TextWatcher {
+        binding.edtAcre.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
             }
 
@@ -225,13 +158,13 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                             "Please Enter Acre Area Should Be Less Than 99",
                             Toast.LENGTH_SHORT
                         ).show()
-                        edtAcre.setText("0")
+                        binding.edtAcre.setText("0")
                     }
                 }
             }
         })
 
-        edtGuntha.addTextChangedListener(object : TextWatcher {
+        binding.edtGuntha.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
             }
 
@@ -247,12 +180,12 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                             "Please Enter Guntha Area Should Be Less Than or equal to 39",
                             Toast.LENGTH_SHORT
                         ).show()
-                        edtGuntha.setText("0")
+                        binding.edtGuntha.setText("0")
                     }
                 }
             }
         })
-        cropNameTv.text = cropName
+        binding.sowingInfoLayout.cropNameTextView.text = cropName
     }
 
     private fun getSelectedSavedOption() {
@@ -276,18 +209,18 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     }
 
     private fun resetEditTest() {
-        edtAcre.setText("0")
-        edtGuntha.setText("0")
-        edNitrogen.setText("0")
-        edPhosphorus.setText("0")
-        edPotassium.setText("0")
-        edtFYM.setText("0")
+        binding.edtAcre.setText("0")
+        binding.edtGuntha.setText("0")
+        binding.edNitrogen.setText("0")
+        binding.edPhosphorus.setText("0")
+        binding.edPotassium.setText("0")
+        binding.edtFYM.setText("0")
         totalAcrArea = 0.0F
     }
 
     private fun validation() {
-        acrArea = edtAcre.text.toString()
-        gunthaArea = edtGuntha.text.toString()
+        acrArea = binding.edtAcre.text.toString()
+        gunthaArea = binding.edtGuntha.text.toString()
         if (gunthaArea.isBlank()) {
             gunthaArea = "0"
         }
@@ -298,10 +231,10 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             potassiumValue = "0"
             edtFYMValue = "0"
         } else {
-            nitrogenValue = edNitrogen.text.toString()
-            phosphorusValue = edPhosphorus.text.toString()
-            potassiumValue = edPotassium.text.toString()
-            edtFYMValue = edtFYM.text.toString()
+            nitrogenValue = binding.edNitrogen.text.toString()
+            phosphorusValue = binding.edPhosphorus.text.toString()
+            potassiumValue = binding.edPotassium.text.toString()
+            edtFYMValue = binding.edtFYM.text.toString()
             if (nitrogenValue == null || phosphorusValue == null || potassiumValue == null) {
                 Toast.makeText(
                     this,
@@ -410,38 +343,35 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             when (view.getId()) {
                 R.id.yesRadioButton ->
                     if (checked) {
-                        lnrSoilTestYes.visibility = View.VISIBLE
-                        lnrSoilTestNo.visibility = View.GONE
-                        lnrNpkFetch.visibility = View.GONE
+                        binding.lnrSoilTestYes.visibility = View.VISIBLE
+                        binding.lnrSoilTestNo.visibility = View.GONE
+                        binding.lnrNpkFetch.visibility = View.GONE
                         soilTestOption = 1
                         fertilizerOptionValue = null
-                        availableOptionTv.visibility = View.INVISIBLE
-                        fertilizerNameRcl.visibility = View.GONE
-                        fertilizerCal.visibility = View.GONE
+                        binding.availableOptionTv.visibility = View.INVISIBLE
+                        binding.fertlizerOptRcl.visibility = View.GONE
+                        binding.lnrfertilizerCal.visibility = View.GONE
                     }
 
                 R.id.noRadioButton ->
                     if (checked) {
-                        lnrSoilTestNo.visibility = View.GONE
-                        lnrNpkFetch.visibility = View.GONE
-                        lnrSoilTestYes.visibility = View.GONE
+                        binding.lnrSoilTestNo.visibility = View.GONE
+                        binding.lnrNpkFetch.visibility = View.GONE
+                        binding.lnrSoilTestYes.visibility = View.GONE
                         soilTestOption = 0
                         fertilizerOptionValue = null
-                        availableOptionTv.visibility = View.INVISIBLE
-                        fertilizerNameRcl.visibility = View.GONE
-                        fertilizerCal.visibility = View.GONE
+                        binding.availableOptionTv.visibility = View.INVISIBLE
+                        binding.fertlizerOptRcl.visibility = View.GONE
+                        binding.lnrfertilizerCal.visibility = View.GONE
                     }
             }
         }
     }
 
     override fun onFailure(th: Throwable?, i: Int) {
-        Log.d("Throwable", th.toString())
     }
 
     override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        Log.d("Throwable", th.toString())
-        Log.d("obj", obj.toString())
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -451,8 +381,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             if (jSONObject != null) {
                 when (code) {
                     1 -> {
-                        availableOptionTv.visibility = View.INVISIBLE
-                        Log.d("jSONObject", jSONObject.toString())
+                        binding.availableOptionTv.visibility = View.INVISIBLE
                         val simpleFertilizersArray: JSONArray =
                             jSONObject.getJSONArray("SimpleFertilizers")
                         val complexFertilizersArray: JSONArray =
@@ -528,11 +457,8 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     }
 
                     2 -> {
-                        Log.d("jSONObject", jSONObject.toString())
                         val response = ResponseModel(jSONObject)
-                        Log.d("response", response.toString())
                         val tokenData: JSONArray = response.getuserDataArray()
-                        Log.d("tokenData", tokenData.toString())
                         val tokenJsonObject: JSONObject = tokenData.getJSONObject(0)
                         token = tokenJsonObject.getString("Token")
 
@@ -556,7 +482,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                         val response = ResponseModel(jSONObject)
                         if (response.status) {
                             fertilizerOptionValue = response.getdataArray()
-                            Log.d("fertilizerOptionValue", fertilizerOptionValue.toString())
                             availableOption = "fertilizerSelectedValue"
                             showCalculatorData()
                         }
@@ -580,21 +505,21 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
 
     private fun showCalculatorData() {
         if (fertilizerOptionValue?.length()!! > 0) {
-            selectedOptionTv.visibility = View.VISIBLE
-            availableOptionTv.visibility = View.VISIBLE
+            binding.selectedOptionTv.visibility = View.VISIBLE
+            binding.availableOptionTv.visibility = View.VISIBLE
             if (availableOption == "fertilizerSelectedValue") {
-                availableOptionTv.background =
+                binding.availableOptionTv.background =
                     ContextCompat.getDrawable(this, R.drawable.green_bg_gradient)
-                selectAnyOneOptionTV.background =
+                binding.selectAnyOneOptionTV.background =
                     ContextCompat.getDrawable(this, R.drawable.green_gradient_with_yellow_border)
             } else {
-                selectedOptionTv.background =
+                binding.selectedOptionTv.background =
                     ContextCompat.getDrawable(this, R.drawable.green_bg_gradient)
-                availableOptionTv.background =
+                binding.availableOptionTv.background =
                     ContextCompat.getDrawable(this, R.drawable.green_gradient_with_yellow_border)
             }
-            fertilizerNameRcl.visibility = View.VISIBLE
-            fertilizerCal.visibility = View.VISIBLE
+            binding.fertlizerOptRcl.visibility = View.VISIBLE
+            binding.lnrfertilizerCal.visibility = View.VISIBLE
 
             val optionRclAdapter =
                 FertilizersRecyclerAdapter(
@@ -603,7 +528,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     fertilizerOptionValue,
                     availableOption
                 )
-            fertilizerNameRcl.setLayoutManager(
+            binding.fertlizerOptRcl.setLayoutManager(
                 LinearLayoutManager(
                     this,
                     LinearLayoutManager.VERTICAL,
@@ -633,14 +558,13 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                 }
             }
             optionRclAdapter.setItemClickListener(deleteApi = itemClickListener)
-            fertilizerNameRcl.adapter = optionRclAdapter
+            binding.fertlizerOptRcl.adapter = optionRclAdapter
             optionRclAdapter.notifyDataSetChanged()
         }
     }
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
         if (i == 1) {
-            Log.d("obj", obj.toString())
             saveOption(obj as JSONObject?)
         }
     }
@@ -648,8 +572,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     private fun saveOption(obj: JSONObject?) {
         val jsonObject = JSONObject()
         val fertilizerOption: JSONArray = obj!!.getJSONArray("Option")
-        Log.d("fertilizerOption", fertilizerOption.toString())
-
         try {
             jsonObject.put("farmer_id", "902")
             jsonObject.put("crop_id", cropId)
