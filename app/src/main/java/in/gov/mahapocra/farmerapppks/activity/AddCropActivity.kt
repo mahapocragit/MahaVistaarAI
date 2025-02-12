@@ -44,6 +44,7 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
     private lateinit var cropJsonArray: JSONArray
     private lateinit var textViewHeaderTitle: TextView
     private lateinit var imageMenuShow: ImageView
+    private lateinit var imgBackArrow: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +57,7 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
         setContentView(R.layout.activity_add_crop)
 
         mainCropCategoryRecycle = findViewById(R.id.mainRecyclerView)
+        imgBackArrow = findViewById(R.id.imgBackArrow)
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
         imageMenuShow = findViewById(R.id.imageMenushow)
         textViewHeaderTitle.setText(R.string.select_crop)
@@ -63,6 +65,11 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
         imageMenuShow.setOnClickListener {
             val intent = Intent(this, DashboardScreen::class.java)
             startActivity(intent)
+        }
+
+        imgBackArrow.visibility = View.VISIBLE
+        imgBackArrow.setOnClickListener {
+            onBackPressed()
         }
         getCropCategoriesAndCropDetails()
     }

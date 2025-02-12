@@ -122,7 +122,6 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         if (AppSettings.getLanguage(DashboardScreen.this).equalsIgnoreCase("2")) {
             languageToLoad = "hi";
         }
-        Log.d("languageToLoad121212=", languageToLoad);
         Locale locale = new Locale(languageToLoad);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
@@ -174,7 +173,6 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         gridView.setColumnWidth(GridView.STRETCH_COLUMN_WIDTH);
         if (languageToLoad.equalsIgnoreCase("en")) {
             gridView.setAdapter(new DashboardAdapter(this, arrayCategory, arrayCategoryImg, "single_item_grid"));
-            Log.d("", "");
         } else if (languageToLoad.equalsIgnoreCase("hi")) {
             gridView.setAdapter(new DashboardAdapter(this, arrayCategoryMarathi, arrayCategoryImg, "single_item_grid"));
         }
@@ -310,14 +308,12 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
             } else if (languageToLoad.equalsIgnoreCase("hi")) {
                 jsonArray = AppHelper.getInstance().getMenuOptionMarathi();
             }
-            Log.d("jsonArray111", jsonArray.toString());
-            Log.d("farmerIdfarmerId", String.valueOf(farmerId));
             DrawerMenuAdapter menuAdapter = new DrawerMenuAdapter(this, jsonArray, farmerId);
             menuListView.setAdapter(menuAdapter);
             menuListView.setOnItemClickListener(this);
 
         } catch (Exception e) {
-            Log.d("JSONException", e.toString());
+            e.printStackTrace();
         }
     }
 
@@ -348,25 +344,27 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
 
     private void getUserDetails() {
-        JSONObject jsonObject = new JSONObject();
-        Log.d("farmerId11111", String.valueOf(farmerId));
-        try {
-            jsonObject.put("SecurityKey", APIServices.SSO_KEY);
-            jsonObject.put("FAAPRegistrationID", farmerId);
+        boolean isLogin = AppSettings.getInstance().getBooleanValue(this, AppConstants.userDataSaved, false);
+        if (!isLogin) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("SecurityKey", APIServices.SSO_KEY);
+                jsonObject.put("FAAPRegistrationID", farmerId);
 
-            RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
-            AppInventorApi api = new AppInventorApi(this, APIServices.DBT, "", new AppString(this).getkMSG_WAIT(), true);
+                RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
+                AppInventorApi api = new AppInventorApi(this, APIServices.DBT, "", new AppString(this).getkMSG_WAIT(), true);
 
-            Handler handler = new Handler();
-            Runnable runnable = () -> {
-                Retrofit retrofit = api.getRetrofitInstance();
-                APIRequest apiRequest = retrofit.create(APIRequest.class);
-                Call<JsonObject> responseCall = apiRequest.getGetRegistration(requestBody);
-                api.postRequest(responseCall, this, 1);
-            };
-            handler.post(runnable);
-        } catch (JSONException e) {
-            e.printStackTrace();
+                Handler handler = new Handler();
+                Runnable runnable = () -> {
+                    Retrofit retrofit = api.getRetrofitInstance();
+                    APIRequest apiRequest = retrofit.create(APIRequest.class);
+                    Call<JsonObject> responseCall = apiRequest.getGetRegistration(requestBody);
+                    api.postRequest(responseCall, this, 1);
+                };
+                handler.post(runnable);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -498,7 +496,6 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                     ResponseModel registrationResponse = new ResponseModel(jSONObject);
                     if (registrationResponse.getStatus()) {
                         try {
-                            Log.d("RESPONSE_TAG", "onResponse1: "+jSONObject);
                             String strName = jSONObject.getString("Name");
                             String strMobNo = jSONObject.getString("MobileNo");
                             String strEmailId = jSONObject.getString("EmailId");
@@ -519,6 +516,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                             AppSettings.getInstance().setIntValue(this, AppConstants.uTALUKAID, strTalukaId);
                             AppSettings.getInstance().setValue(this, AppConstants.uVILLAGE, strVillageName);
                             AppSettings.getInstance().setIntValue(this, AppConstants.uVILLAGEID, strVillageId);
+                            AppSettings.getInstance().setBooleanValue(this, AppConstants.userDataSaved, true);
 
                             String userName = AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName);
                             String userNumber = AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo);
@@ -680,6 +678,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         AppSettings.getInstance().setIntValue(this, AppConstants.uVILLAGEID, 0);
         AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null);
         AppUtility.getInstance().clearAppSharedPrefData(this, AppConstants.kSHARED_PREF);
+        AppSettings.getInstance().setBooleanValue(this, AppConstants.userDataSaved, false);
         Intent intent = new Intent(DashboardScreen.this, SplashScreenActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

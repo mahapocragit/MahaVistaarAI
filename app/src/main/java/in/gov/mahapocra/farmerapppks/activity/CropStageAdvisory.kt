@@ -18,6 +18,7 @@ import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
+import `in`.gov.mahapocra.farmerapppks.AppPreferenceManager
 import `in`.gov.mahapocra.farmerapppks.R
 import `in`.gov.mahapocra.farmerapppks.adapter.DashboardAdapter
 import `in`.gov.mahapocra.farmerapppks.adapter.StageAdvisoryAdapter
@@ -34,7 +35,7 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
 
-class CropStageAdvisory : AppCompatActivity() {
+class CropStageAdvisory : AppCompatActivity(), ApiCallbackCode {
 
     private lateinit var binding: ActivityCropStageAdvisoryBinding
 
@@ -43,6 +44,7 @@ class CropStageAdvisory : AppCompatActivity() {
     private var cropName: String? = null
     private var mUrl: String? = null
     private var villageID: Int = 0
+    private var farmerId: Int = 0
     private var sowingDate: String = ""
     lateinit var languageToLoad: String
     private val arrayCategory =
@@ -73,6 +75,7 @@ class CropStageAdvisory : AppCompatActivity() {
         wotrCropId = intent.getStringExtra("wotr_crop_id")
         mUrl = intent.getStringExtra("mUrl")
         cropName = intent.getStringExtra("mName")
+        farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
         binding.sowingInfoLayout.cropNameTextView.text = cropName
         val dataSavedInLocal = intent.getStringExtra("dataSavedInLocal")
         villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
@@ -169,6 +172,53 @@ class CropStageAdvisory : AppCompatActivity() {
             intent.putExtra("SOWING_DATE", sowingDate)
             intent.putExtra("NO_NEED_TO_ADD_SOWING_DATE", "NO_NEED_TO_ADD_SOWING_DATE")
             startActivity(intent)
+        }
+
+        getCropStagesAndAdvisory()
+    }
+
+    private fun getCropStagesAndAdvisory() {
+        val jsonObject = JSONObject()
+        try {
+            jsonObject.put("crop_id", cropId)
+            jsonObject.put("farmer_id", farmerId)
+            jsonObject.put("lang", languageToLoad)
+            Log.d("RESPONSE_TAG", "getCropStagesAndAdvisory: " + jsonObject)
+            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+            val api =
+                AppInventorApi(
+                    this,
+                    APIServices.SSO,
+                    "",
+                    AppString(this).getkMSG_WAIT(),
+                    true
+                )
+            val retrofit: Retrofit = api.retrofitInstance
+            val apiRequest = retrofit.create(APIRequest::class.java)
+            val responseCall: Call<JsonObject> = apiRequest.getCropStagesAndAdvisory(requestBody)
+            api.postRequest(responseCall, this, 1)
+        } catch (e: JSONException) {
+            DebugLog.getInstance().d("JSONException=$e")
+            e.printStackTrace()
+        }
+    }
+
+    override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onResponse(jSONObject: JSONObject?, i: Int) {
+        if (i == 1) {
+            if (jSONObject != null) {
+                AppPreferenceManager(this).saveString("CROP_STAGE_RESPONSE", jSONObject.toString())
+                val response = ResponseModel(jSONObject)
+                if (response.status) {
+                    sowingDate = jSONObject.getString("sowing_date")
+                    binding.sowingInfoLayout.sowingDateTextView.text = sowingDate
+                } else {
+                    UIToastMessage.show(this, response.response)
+                }
+            }
         }
     }
 
