@@ -3,25 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/actionbar_color_figma"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/actionbar_color_figma">
 
     <RelativeLayout
         android:id="@+id/relativeLayoutToolbar"
         android:layout_width="match_parent"
-        android:minHeight="48dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:minHeight="48dp">
+
         <ImageView
             android:id="@+id/imgBackArrow"
             android:layout_width="@dimen/height25"
             android:layout_height="@dimen/height25"
             android:layout_gravity="left"
-            android:visibility="gone"
-            app:tint="@color/white"
-            android:layout_marginTop="10dp"
             android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="@dimen/height20"
-            android:src="@drawable/ic_baseline_arrow_back_24" />
+            android:src="@drawable/ic_baseline_arrow_back_24"
+            android:visibility="gone"
+            app:tint="@color/white" />
+
         <ImageView
             android:id="@+id/imageViewHeaderBack"
             android:layout_width="30dp"
@@ -32,6 +34,7 @@
             android:visibility="gone"
             app:srcCompat="@drawable/ic_left_arrow"
             tools:ignore="VectorDrawableCompat" />
+
         <ImageView
             android:id="@+id/imageMenushow"
             android:layout_width="30dp"
@@ -40,8 +43,8 @@
             android:layout_marginLeft="15dp"
             android:padding="4dp"
             android:visibility="gone"
-            app:tint="@color/white"
             app:srcCompat="@drawable/ic_baseline_home_24"
+            app:tint="@color/white"
             tools:ignore="VectorDrawableCompat" />
 
         <TextView
@@ -50,19 +53,20 @@
             android:layout_height="45dp"
             android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:textSize="@dimen/_16sdp"
             android:text="Title"
-            android:textStyle="bold"
             android:textAlignment="center"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="@dimen/_16sdp"
+            android:textStyle="bold" />
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_marginTop="2dp"
             android:layout_height="1.5dp"
             android:layout_below="@id/textViewHeaderTitle"
+            android:layout_marginTop="2dp"
             android:background="@color/white"
-            android:visibility="gone"/>
+            android:visibility="gone" />
+
         <ImageView
             android:id="@+id/imageViewFilterMenu"
             android:layout_width="35dp"
@@ -74,6 +78,7 @@
             android:visibility="gone"
             app:srcCompat="@drawable/filter"
             tools:ignore="VectorDrawableCompat" />
+
         <ImageView
             android:id="@+id/imageViewCall"
             android:layout_width="28dp"
@@ -85,6 +90,7 @@
             android:visibility="gone"
             app:srcCompat="@drawable/ic_baseline_call_24"
             tools:ignore="VectorDrawableCompat" />
+
         <ImageView
             android:id="@+id/imageViewDeleteMenu"
             android:layout_width="30dp"
@@ -96,18 +102,19 @@
             android:visibility="gone"
             app:srcCompat="@drawable/ic_delete_forever_white_24dp"
             tools:ignore="VectorDrawableCompat" />
+
         <TextView
             android:id="@+id/textViewSkip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:textColor="@color/white"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
-            android:textSize="15dp"
-            android:visibility="gone"
             android:padding="1dp"
-            android:text="SKIP"/>
+            android:text="SKIP"
+            android:textColor="@color/white"
+            android:textSize="15dp"
+            android:visibility="gone" />
 
     </RelativeLayout>
 
