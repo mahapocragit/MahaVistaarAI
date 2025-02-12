@@ -191,4 +191,7 @@ public interface APIRequest {
                                       @Query("Token") String token
 
     );
+
+    @POST(APIServices.fetchFarmerListForSHC)
+    Call<JsonObject> fetchFarmerListForSHC(@Body RequestBody params);
 }

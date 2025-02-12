@@ -4,6 +4,7 @@ public interface APIServices {
 
     String DBT = AppEnv.DBT.instance();           // for production
     String WOTR = AppEnv.WOTR.instance();
+    String GIS = AppEnv.GIS.instance();
     String SSO = AppEnv.SSO.instance();
     String TMS = AppEnv.TMS.instance();
     String SSO_KEY = APIKeys.SSO_PROD.key();
@@ -61,7 +62,7 @@ public interface APIServices {
 
     String kGetmarketsPriceDetails ="masterService/msamb-data";
     String kResetPassword = "Shareddbtapi/OtherApp/ResetPassword";
-
+    String fetchFarmerListForSHC = "webservices//fetch_farmer_shc_list";
     String kGetDistrictList = "masterService/get-all-district";
     String kGetCropCategorywise = "masterService/get-crop-categorywise";
 

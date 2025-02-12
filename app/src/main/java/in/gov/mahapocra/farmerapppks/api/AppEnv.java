@@ -32,6 +32,13 @@ public enum AppEnv {
         }
     },
 
+    GIS {
+        public String instance() {
+            return "https://gis.mahapocra.gov.in/";
+
+        }
+    },
+
     SSO {
         public String instance() {
 
