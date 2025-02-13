@@ -46,7 +46,7 @@
                     android:text="@string/plot_size"
                     android:textColor="@color/text_black_light"
                     android:textSize="@dimen/text14"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -74,7 +74,7 @@
                         android:gravity="bottom"
                         android:text="@string/acre"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_12sdp" />
+                        android:textSize="@dimen/_10sdp" />
 
                     <EditText
                         android:id="@+id/edtAcre"
@@ -110,7 +110,7 @@
                         android:gravity="bottom"
                         android:text="@string/guntha"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_12sdp">
+                        android:textSize="@dimen/_10sdp">
 
                     </TextView>
 
@@ -147,7 +147,7 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@drawable/plus_button_img"></ImageView>
+                    android:src="@drawable/plus_button_img" />
 
                 <TextView
                     android:id="@+id/plut_count_area"
@@ -160,7 +160,7 @@
                     android:text="3"
                     android:textColor="@color/text_black_light"
                     android:textSize="@dimen/text14"
-                    android:textStyle="bold"></TextView>
+                    android:textStyle="bold" />
 
 
             </LinearLayout>
@@ -204,7 +204,7 @@
                 android:text="@string/do_you_have_soil_test_report"
                 android:textColor="@color/text_black_light"
                 android:textSize="@dimen/text14"
-                android:textStyle="bold"></TextView>
+                android:textStyle="bold" />
 
             <RadioGroup
                 android:id="@+id/radioGroup2"
@@ -251,7 +251,7 @@
                     android:text="@string/soil_test_report"
                     android:textColor="@color/text_black_light"
                     android:textSize="@dimen/text14"
-                    android:textStyle="bold"></TextView>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -260,7 +260,7 @@
                     android:text="@string/survey_number"
                     android:textColor="@color/text_black_light"
                     android:textSize="@dimen/text14"
-                    android:textStyle="bold"></TextView>
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -321,7 +321,7 @@
                     android:text="@string/your_N_P_K_values"
                     android:textColor="@color/line"
                     android:textSize="@dimen/text14"
-                    android:textStyle="bold"></TextView>
+                    android:textStyle="bold"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -338,37 +338,30 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:layout_marginLeft="2dp"
-                            android:layout_marginRight="@dimen/height5"
-                            android:background="@drawable/text_bg_brown"
-                            android:gravity="center"
-                            android:padding="@dimen/height10"
-                            android:paddingLeft="5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:gravity="bottom"
                             android:text="@string/nitrogen"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/text12"
-                            android:textStyle="bold">
+                            android:textSize="@dimen/_10sdp">
 
                         </TextView>
 
                         <EditText
                             android:id="@+id/edNitrogen"
                             android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
+                            android:layout_height="@dimen/_44sdp"
+                            android:layout_marginHorizontal="@dimen/_5sdp"
                             android:background="@drawable/login_edit_bg"
+                            android:clickable="false"
                             android:digits="@string/numeric"
-                            android:elevation="8dp"
+                            android:elevation="@dimen/_2sdp"
                             android:gravity="center|start"
                             android:hint=""
                             android:inputType="number"
-                            android:maxLength="3"
+                            android:maxLength="2"
                             android:maxLines="1"
-                            android:paddingStart="@dimen/padding20"
-                            android:paddingEnd="@dimen/padding20"
                             android:textAlignment="center"
                             android:textColor="@color/black"
                             android:textColorHint="@color/text_black"
@@ -385,37 +378,30 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:layout_marginLeft="2dp"
-                            android:layout_marginRight="@dimen/height5"
-                            android:background="@drawable/text_bg_brown"
-                            android:gravity="center"
-                            android:padding="@dimen/height10"
-                            android:paddingLeft="5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:gravity="bottom"
                             android:text="@string/phosphorus"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/text12"
-                            android:textStyle="bold">
+                            android:textSize="@dimen/_10sdp">
 
                         </TextView>
 
                         <EditText
                             android:id="@+id/edPhosphorus"
                             android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
+                            android:layout_height="@dimen/_44sdp"
+                            android:layout_marginHorizontal="@dimen/_5sdp"
                             android:background="@drawable/login_edit_bg"
+                            android:clickable="false"
                             android:digits="@string/numeric"
-                            android:elevation="8dp"
+                            android:elevation="@dimen/_2sdp"
                             android:gravity="center|start"
                             android:hint=""
                             android:inputType="number"
-                            android:maxLength="3"
+                            android:maxLength="2"
                             android:maxLines="1"
-                            android:paddingStart="@dimen/padding20"
-                            android:paddingEnd="@dimen/padding20"
                             android:textAlignment="center"
                             android:textColor="@color/black"
                             android:textColorHint="@color/text_black"
@@ -432,37 +418,30 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:layout_marginLeft="2dp"
-                            android:layout_marginRight="@dimen/height5"
-                            android:background="@drawable/text_bg_brown"
-                            android:gravity="center"
-                            android:padding="@dimen/height10"
-                            android:paddingLeft="5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:gravity="bottom"
                             android:text="@string/potassium"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/text12"
-                            android:textStyle="bold">
+                            android:textSize="@dimen/_10sdp">
 
                         </TextView>
 
                         <EditText
                             android:id="@+id/edPotassium"
                             android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
+                            android:layout_height="@dimen/_44sdp"
+                            android:layout_marginHorizontal="@dimen/_5sdp"
                             android:background="@drawable/login_edit_bg"
+                            android:clickable="false"
                             android:digits="@string/numeric"
-                            android:elevation="8dp"
+                            android:elevation="@dimen/_2sdp"
                             android:gravity="center|start"
                             android:hint=""
                             android:inputType="number"
-                            android:maxLength="3"
+                            android:maxLength="2"
                             android:maxLines="1"
-                            android:paddingStart="@dimen/padding20"
-                            android:paddingEnd="@dimen/padding20"
                             android:textAlignment="center"
                             android:textColor="@color/black"
                             android:textColorHint="@color/text_black"
@@ -481,14 +460,14 @@
                     android:text="@string/hw_much_fym_used"
                     android:textColor="@color/line"
                     android:textSize="@dimen/text14"
-                    android:textStyle="bold"></TextView>
+                    android:textStyle="bold"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding5"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -498,35 +477,30 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:background="@drawable/text_bg_brown"
-                            android:gravity="center"
-                            android:padding="@dimen/height10"
-                            android:paddingLeft="5dp"
                             android:text="@string/FYM"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:gravity="bottom"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/text12"
-                            android:textStyle="bold">
+                            android:textSize="@dimen/_10sdp">
 
                         </TextView>
 
                         <EditText
                             android:id="@+id/edtFYM"
                             android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:layout_marginLeft="150dp"
-                            android:layout_marginRight="150dp"
+                            android:layout_height="@dimen/_44sdp"
+                            android:layout_marginHorizontal="@dimen/_5sdp"
                             android:background="@drawable/login_edit_bg"
+                            android:clickable="false"
                             android:digits="@string/numeric"
-                            android:elevation="8dp"
+                            android:elevation="@dimen/_2sdp"
                             android:gravity="center|start"
                             android:hint=""
                             android:inputType="number"
                             android:maxLength="2"
                             android:maxLines="1"
-                            android:paddingStart="@dimen/padding20"
-                            android:paddingEnd="@dimen/padding20"
                             android:textAlignment="center"
                             android:textColor="@color/black"
                             android:textColorHint="@color/text_black"
@@ -758,7 +732,7 @@
                     android:padding="@dimen/height5"
                     android:text="@string/calculate"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/_10sdp"/>
+                    android:textSize="@dimen/_10sdp" />
 
 
             </LinearLayout>
@@ -825,7 +799,7 @@
                     android:textColor="@color/line"
                     android:textSize="@dimen/text14"
                     android:textStyle="bold"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/fertlizerOpt_Rcl"
@@ -836,7 +810,7 @@
                     android:scrollbarAlwaysDrawHorizontalTrack="true"
                     android:scrollbarStyle="insideOverlay"
                     android:scrollbars="horizontal"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/ly_bar_bottom"

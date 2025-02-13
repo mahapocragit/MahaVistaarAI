@@ -2,7 +2,6 @@ package `in`.gov.mahapocra.farmerapppks.activity
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.webkit.WebView
 import android.widget.ImageView
@@ -33,95 +32,77 @@ import retrofit2.Retrofit
 import java.util.Locale
 
 
-class DiseaseInformation : AppCompatActivity() , ApiCallbackCode {
+class DiseaseInformation : AppCompatActivity(), ApiCallbackCode {
 
+    var id: Int = 0
     private var viewPager: ViewPager? = null
-    private var symptomDescrpListWebView: WebView? = null
-    private var preventCntrlMeasur: WebView? = null
+    private var symptomDescriptionListWebView: WebView? = null
+    private var preventControlMeasure: WebView? = null
     private lateinit var prevention: TextView
     private lateinit var controlMeasures: TextView
     private lateinit var txtCropName: TextView
     private lateinit var imgBackArrow: ImageView
-    private lateinit var textViewHeaderTitle:TextView
+    private lateinit var textViewHeaderTitle: TextView
     private lateinit var cropName: String
     private lateinit var mainCropName: String
-    var id: Int = 0
     private var indicator: TabLayout? = null
-     var symptomDescriptionList:String = ""
-     var preventiveMeasures: String =""
-    var curativeMeasures: String=""
-    lateinit var pestAndDiseaseDetailsJson: JSONObject
+    private var symptomDescriptionList: String = ""
+    private var preventiveMeasures: String = ""
+    private var curativeMeasures: String = ""
     lateinit var languageToLoad: String
-
-
-    var diseasesImages: ArrayList<String> = ArrayList()
+    private lateinit var pestAndDiseaseDetailsJson: JSONObject
+    private var diseasesImages: ArrayList<String> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         languageToLoad = "mr"
         if (AppSettings.getLanguage(this@DiseaseInformation).equals("1", ignoreCase = true)) {
-            Log.d("getStrName=", AppSettings.getLanguage(this@DiseaseInformation))
             languageToLoad = "en"
         }
         setContentView(R.layout.activity_disease_information)
-        languageToLoad = "mr"
-        if (AppSettings.getLanguage(this@DiseaseInformation).equals("1", ignoreCase = true)) {
-            Log.d("getStrName=", AppSettings.getLanguage(this@DiseaseInformation))
-            languageToLoad = "en"
-        }
-        Log.d("languageToLoad3",languageToLoad)
         viewPager = findViewById<View>(R.id.view_pager) as ViewPager
-        symptomDescrpListWebView = findViewById<View>(R.id.symptomsList) as WebView
-        preventCntrlMeasur = findViewById<View>(R.id.prevent_cntrl_measur) as WebView
-        prevention = findViewById(R.id.prevention_msr) as TextView
-        controlMeasures = findViewById(R.id.control_msr) as TextView
-        txtCropName = findViewById(R.id.tvCropName) as TextView
+        symptomDescriptionListWebView = findViewById<View>(R.id.symptomsList) as WebView
+        preventControlMeasure = findViewById<View>(R.id.prevent_cntrl_measur) as WebView
+        prevention = findViewById(R.id.prevention_msr)
+        controlMeasures = findViewById(R.id.control_msr)
+        txtCropName = findViewById(R.id.tvCropName)
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
-        imgBackArrow = findViewById(R.id.imgBackArrow) as ImageView
+        imgBackArrow = findViewById(R.id.imgBackArrow)
         indicator = findViewById<View>(R.id.indicator) as TabLayout
 
-
-        imgBackArrow?.setVisibility(View.VISIBLE)
-        imgBackArrow.setOnClickListener(View.OnClickListener {
+        imgBackArrow.visibility = View.VISIBLE
+        imgBackArrow.setOnClickListener {
             finish()
-        })
+        }
 
         cropName = intent.getStringExtra("name").toString()
-        id = intent.getIntExtra("id",0)
-        textViewHeaderTitle?.setText(cropName)
-        Log.d("languageToLoad2",languageToLoad)
+        id = intent.getIntExtra("id", 0)
+        textViewHeaderTitle.text = cropName
         showPestDiseaseDetails()
 
-        mainCropName = AppSettings.getInstance().getValue(this, AppConstants.tmpCROPNAME, AppConstants.tmpCROPNAME)
+        mainCropName = AppSettings.getInstance()
+            .getValue(this, AppConstants.tmpCROPNAME, AppConstants.tmpCROPNAME)
+        prevention.setOnClickListener {
+            prevention.background = ContextCompat.getDrawable(this, R.drawable.dashboard_button)
+            controlMeasures.background =
+                ContextCompat.getDrawable(this, R.drawable.layout_button_bg)
+            setPreventControlMeasureWebView(preventiveMeasures)
+        }
+        controlMeasures.setOnClickListener {
 
-//        diseasesImages.add("https://farmprecise-app-static-assets.s3.ap-south-1.amazonaws.com/plants_diseases_prevention/29072020175336Greenmould-onion-1.jpg")
-//        diseasesImages.add("https://c1.wallpaperflare.com/preview/1015/28/863/leaf-maple-disease-pest.jpg")
-//        diseasesImages.add("https://secure.caes.uga.edu/extension/publications/files/html/C960/images/Fig%203b%20stripe%20rust%20symptoms%205%20.jpg")
-//        diseasesImages.add("https://farmprecise-app-static-assets.s3.ap-south-1.amazonaws.com/plants_diseases_prevention/29072020175336Greenmould-onion-1.jpg")
+            controlMeasures.background =
+                ContextCompat.getDrawable(this, R.drawable.dashboard_button)
+            prevention.background = ContextCompat.getDrawable(this, R.drawable.layout_button_bg)
+            setPreventControlMeasureWebView(curativeMeasures)
+        }
 
-
-//        symptomDescriptionList =
-//            "<ul><li style=\\\"font-weight: 400;\\\"><span style=\\\"font-weight: 400;\\\">या रोगाचा प्रादुर्भाव कांद्याच्या वरच्या बाजूस होऊन पूर्ण पाने पक्वतेच्या अगोदरच मरतात.</span></li><li style=\\\"font-weight: 400;\\\"><span style=\\\"font-weight: 400;\\\">प्रादुर्भाव ग्रस्त कांद्यावर हिरवी बुरशी वाढून कांदे हिरवे दिसायला लागतात.</span></li><li style=\\\"font-weight: 400;\\\"><span style=\\\"font-weight: 400;\\\">नंतर प्रादुर्भाव कांद्याच्या मानेपासून आतील गाभ्या पर्यंत वाढतो</span></li></ul>"
-
-        prevention.setOnClickListener(View.OnClickListener {
-            prevention.setBackground(ContextCompat.getDrawable(this, R.drawable.dashboard_button))
-            controlMeasures.setBackground(ContextCompat.getDrawable(this, R.drawable.layout_button_bg))
-            setPreventCntrlMeasurWebView(preventiveMeasures)
-        })
-        controlMeasures.setOnClickListener(View.OnClickListener {
-
-            controlMeasures.setBackground(ContextCompat.getDrawable(this, R.drawable.dashboard_button))
-            prevention.setBackground(ContextCompat.getDrawable(this, R.drawable.layout_button_bg))
-            setPreventCntrlMeasurWebView(curativeMeasures)
-        })
-
-        txtCropName.setText(mainCropName+" ")
+        txtCropName.text = mainCropName + " "
     }
 
     private fun showPestDiseaseDetails() {
         val jsonObject = JSONObject()
         try {
-            jsonObject.put("pdid",id)
+            jsonObject.put("pdid", id)
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api = AppInventorApi(
                 this,
@@ -133,30 +114,22 @@ class DiseaseInformation : AppCompatActivity() , ApiCallbackCode {
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(APIRequest::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getPestDiseaseDetails(requestBody)
-            DebugLog.getInstance().d("param1=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()))
             api.postRequest(responseCall, this, 1)
-            DebugLog.getInstance().d("param=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
         } catch (e: JSONException) {
-            DebugLog.getInstance().d("JSONException=" + e.toString())
             e.printStackTrace()
         }
     }
 
-    private fun setPreventCntrlMeasurWebView(param: String) {
-        preventCntrlMeasur!!.loadDataWithBaseURL(
+    private fun setPreventControlMeasureWebView(param: String) {
+        preventControlMeasure!!.loadDataWithBaseURL(
             "file:///android_asset/",
             param, "text/html", "utf-8", null
         )
-        Log.d("languageToLoad4",languageToLoad)
         changeLocalLang()
     }
 
     private fun changeLocalLang() {
-        if (languageToLoad.equals("mr")){
+        if (languageToLoad == "mr") {
             val languageToLoad = "hi"
 
             val locale = Locale(languageToLoad)
@@ -175,44 +148,44 @@ class DiseaseInformation : AppCompatActivity() , ApiCallbackCode {
     }
 
     private fun setSymptomsWebView(param: String) {
-        symptomDescrpListWebView!!.loadDataWithBaseURL(
+        symptomDescriptionListWebView!!.loadDataWithBaseURL(
             "file:///android_asset/",
             param, "text/html", "utf-8", null
         )
     }
+
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 1) {
             if (jSONObject != null) {
                 DebugLog.getInstance().d("onResponse=$jSONObject")
                 val response = ResponseModel(jSONObject)
                 if (response.getStatus()) {
-                    Log.d("languageToLoad1",languageToLoad)
-                    symptomDescrpListWebView?.visibility=View.VISIBLE
+                    symptomDescriptionListWebView?.visibility = View.VISIBLE
                     pestAndDiseaseDetailsJson = response.getJSONObject()
                     symptomDescriptionList = pestAndDiseaseDetailsJson.getString("symptoms")
                     preventiveMeasures = pestAndDiseaseDetailsJson.getString("preventive_measures")
                     curativeMeasures = pestAndDiseaseDetailsJson.getString("curative_measures")
-                    var diseaseImages: JSONArray = pestAndDiseaseDetailsJson.getJSONArray("image")
-                    for (j in 0 until diseaseImages.length()){
-                        val diseaseImagesJsonObject:JSONObject = diseaseImages.get(j) as JSONObject
-                        var img :String = diseaseImagesJsonObject.get("img") as String
+                    val diseaseImages: JSONArray = pestAndDiseaseDetailsJson.getJSONArray("image")
+                    for (j in 0 until diseaseImages.length()) {
+                        val diseaseImagesJsonObject: JSONObject = diseaseImages.get(j) as JSONObject
+                        val img: String = diseaseImagesJsonObject.get("img") as String
                         diseasesImages.add(img)
                     }
                     viewPager!!.adapter = DiseasesInformationImgAdapter(this, diseasesImages)
                     indicator!!.setupWithViewPager(viewPager, true)
 
-
-                    setPreventCntrlMeasurWebView(preventiveMeasures)
+                    setPreventControlMeasureWebView(preventiveMeasures)
                     setSymptomsWebView(symptomDescriptionList)
 
-                }else {
+                } else {
                     UIToastMessage.show(this, response.response)
                 }
             }
         }
     }
+
     override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        TODO("Not yet implemented")
+        th?.printStackTrace()
     }
 
 }

@@ -592,7 +592,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                 api.postRequest(responseCall, this@FertilizerCalculatorActivity, 3)
             }
         } catch (e: JSONException) {
-            DebugLog.getInstance().d("JSONException=$e")
             e.printStackTrace()
         }
     }
