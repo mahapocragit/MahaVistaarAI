@@ -34,7 +34,7 @@
                 android:scaleType="centerInside"
                 android:layout_marginStart="@dimen/_16sdp"
                 android:adjustViewBounds="true"
-                android:src="@drawable/pocra_logo" />
+                android:src="@drawable/pocra_latest_logo" />
 
             <ImageView
                 android:id="@+id/imgCallIcon"

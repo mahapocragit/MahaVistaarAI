@@ -96,19 +96,19 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
     private JSONArray jsonArray;
 
     private static final String[] arrayCategory = new String[]{
-            "Weather", "Identify Pest/Disease", "Pests and Diseases", "Fertilizer Calculator", "Climate Resilent Technology", "Soil Health Card",
+            "Weather", "Identify Pest/Disease", "Crop Advisory", "Fertilizer Calculator", "Climate Resilent Technology", "Soil Health Card",
             "Market Price", "Warehouse Availabilities", "DBT Schemes"
 
     };
 
     private static final String[] arrayCategoryMarathi = new String[]{
-            "हवामान", "किटक/रोग ओळखा", "कीड व रोग", "खत मात्रा गणक (कॅलक्यूलेटर)", "हवामान अनुकूल तंत्रज्ञान", "मृदा आरोग्य पत्रिका",
+            "हवामान", "किटक/रोग ओळखा", "पीक सल्ला", "खत मात्रा गणक (कॅलक्यूलेटर)", "हवामान अनुकूल तंत्रज्ञान", "मृदा आरोग्य पत्रिका",
             "बाजारभाव", " गोदाम उपलब्धता", "थेट लाभ हस्तांतरण योजना"
 
     };
 
     static int[] arrayCategoryImg = new int[]{
-            R.drawable.ecology, R.drawable.pest, R.drawable.ladybug, R.drawable.fertilizer, R.drawable.climate_change, R.drawable.soil,
+            R.drawable.sun, R.drawable.pest, R.drawable.ecology, R.drawable.fertilizer, R.drawable.climate_change, R.drawable.soil,
             R.drawable.commodity, R.drawable.warehouse, R.drawable.world_news
     };
 
