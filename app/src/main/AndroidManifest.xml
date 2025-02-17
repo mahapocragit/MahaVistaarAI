@@ -46,6 +46,12 @@
         android:theme="@style/Theme.FarmerApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activity.TempDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.WeatherTempActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.AdvisoryCropActivity"
             android:exported="false" />
         <activity

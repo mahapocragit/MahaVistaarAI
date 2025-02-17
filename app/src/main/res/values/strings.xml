@@ -13,6 +13,11 @@
         <item>Pest Management</item>
         <item>Bandhavan</item>
     </string-array>
+    <string name="pesticide_info" translatable="false">
+    Sure! Here are two common pesticides:\n<br /><br />
+    <b>1. Malathion</b> – An organophosphate insecticide used to control a variety of insects in agriculture and public health programs.\n<br /><br />
+    <b>2. Chlorpyrifos</b> – Another organophosphate insecticide used to manage pests on crops and in residential settings (though its use has been restricted in some countries due to health concerns).
+    </string>
     <string name="weather">  Weather</string>
     <string name="climateTechnology">Climate Resilient Technology</string>
     <string name="dbtschema"> DBT Schemes</string>

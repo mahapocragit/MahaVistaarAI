@@ -36,6 +36,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.JsonObject;
@@ -87,6 +88,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
     private ImageView imgNotification;
     private ImageView imgCallIcon;
     private ListView menuListView;
+    private FloatingActionButton floatingActionButton;
     private RecyclerView selectedCropListRecyc;
     String languageToLoad;
     private int farmerId = 0;
@@ -133,8 +135,12 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         init();
         LinearLayout temperatureLayout = findViewById(R.id.temperatureLayout);
         temperatureLayout.setOnClickListener(view->{
-            Intent weather = new Intent(DashboardScreen.this, WeatherHome.class);
+            Intent weather = new Intent(DashboardScreen.this, WeatherTempActivity.class);
             startActivity(weather);
+        });
+
+        floatingActionButton.setOnClickListener(view -> {
+           startActivity(new Intent(DashboardScreen.this, TempDashboardActivity.class));
         });
 
         getFirebaseTokenFromServer();
@@ -299,6 +305,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         imgCallIcon = findViewById(R.id.imgCallIcon);
         menuListView = findViewById(R.id.menuListView1);
         alertHeadingTv = findViewById(R.id.textView5);
+        floatingActionButton = findViewById(R.id.floatingActionButton);
     }
 
     private void setConfiguration() {

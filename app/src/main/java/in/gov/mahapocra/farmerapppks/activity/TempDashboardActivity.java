@@ -1,0 +1,58 @@
+package in.gov.mahapocra.farmerapppks.activity;
+
+import android.os.Bundle;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import in.gov.mahapocra.farmerapppks.R;
+import in.gov.mahapocra.farmerapppks.ui.ChatbotFragment;
+
+public class TempDashboardActivity extends AppCompatActivity {
+
+    private BottomNavigationView bottomNavigationView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_temp_dashboard);
+
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.nav_home:
+                    Toast.makeText(TempDashboardActivity.this, "nav_home", Toast.LENGTH_SHORT).show();
+                    return true;
+
+                case R.id.nav_about:
+                    Toast.makeText(TempDashboardActivity.this, "nav_about", Toast.LENGTH_SHORT).show();
+                    return true;
+
+                case R.id.nav_help:
+                    Toast.makeText(TempDashboardActivity.this, "nav_help", Toast.LENGTH_SHORT).show();
+                    return true;
+
+                case R.id.nav_chatbot:
+                    loadFragment(new ChatbotFragment());
+                    return true;
+
+                case R.id.nav_profile:
+                    Toast.makeText(TempDashboardActivity.this, "nav_profile", Toast.LENGTH_SHORT).show();
+                    return true;
+
+                default:
+                    return false;
+            }
+        });
+    }
+
+    private void loadFragment(Fragment fragment){
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.frameLayout, fragment);
+        fragmentTransaction.commit();
+    }
+}
