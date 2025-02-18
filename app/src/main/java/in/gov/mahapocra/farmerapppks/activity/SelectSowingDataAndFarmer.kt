@@ -68,7 +68,7 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
             1,
             this
         )
-        val source = AppPreferenceManager(this).getString(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD)
+        val source = AppPreferenceManager(this).getString(AppConstants.ACTION_FROM_DASHBOARD)
         binding.saveDateForFarmButton.setOnClickListener {
             if (source.equals(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD)) {
                 val intent = Intent(this, AdvisoryCropActivity::class.java)
@@ -86,6 +86,14 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
                 intent.putExtra("mName", mName)
                 intent.putExtra("sowingDate", sowingDate)
                 intent.putExtra("editCrop", editCrop)
+                startActivity(intent)
+            }else if (source.equals(AppConstants.PEST_AND_DISEASES_STAGES)) {
+                val intent = Intent(this, PestsAndDiseasesStages::class.java)
+                intent.putExtra("cropId", cropId)
+                intent.putExtra("wotr_crop_id", wotrCropId)
+                intent.putExtra("mUrl", mUrl)
+                intent.putExtra("mName", mName)
+                intent.putExtra("sowingDate", sowingDate)
                 startActivity(intent)
             } else {
                 saveFarmerSelectedCrop()

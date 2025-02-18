@@ -78,6 +78,11 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             languageToLoad = "en"
         }
 
+        binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
+        binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
         cropId = intent.getIntExtra("id", 0)
         cropName = intent.getStringExtra("mName")
         wotrCropId = intent.getStringExtra("wotr_crop_id")
@@ -137,8 +142,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
 
         binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {
-            val intent = Intent(this, CropStageAdvisory::class.java)
-            intent.putExtra("dataSavedInLocal", "dataSavedInLocal")
+            val intent = Intent(this, DashboardScreen::class.java)
             startActivity(intent)
         }
 

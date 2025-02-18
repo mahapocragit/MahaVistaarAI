@@ -193,13 +193,19 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         gridView.setOnItemClickListener((parent, v, position, id) -> {
             switch (position) {
                 case 0:
-                    Intent intentPestsAndDiseases = new Intent(this, PestsAndDiseasesStages.class);
-                    intentPestsAndDiseases.putExtra("cropId", savedCropId);
-                    intentPestsAndDiseases.putExtra("wotr_crop_id", savedCropWoTRId);
-                    intentPestsAndDiseases.putExtra("sowingDate", savedCropSowingDate);
-                    intentPestsAndDiseases.putExtra("mUrl", savedCropImageUrl);
-                    intentPestsAndDiseases.putExtra("mName", savedCropName);
-                    startActivity(intentPestsAndDiseases);
+                    if (savedCropName.isEmpty()) {
+                        Intent sharing = new Intent(DashboardScreen.this, AddCropActivity.class);
+                        appPreferenceManager.saveString(AppConstants.ACTION_FROM_DASHBOARD, AppConstants.PEST_AND_DISEASES_STAGES);
+                        startActivity(sharing);
+                    } else {
+                        Intent intentPestsAndDiseases = new Intent(this, PestsAndDiseasesStages.class);
+                        intentPestsAndDiseases.putExtra("cropId", savedCropId);
+                        intentPestsAndDiseases.putExtra("wotr_crop_id", savedCropWoTRId);
+                        intentPestsAndDiseases.putExtra("sowingDate", savedCropSowingDate);
+                        intentPestsAndDiseases.putExtra("mUrl", savedCropImageUrl);
+                        intentPestsAndDiseases.putExtra("mName", savedCropName);
+                        startActivity(intentPestsAndDiseases);
+                    }
                     break;
                 case 1:
                     Intent identify = new Intent(getApplicationContext(), Identify_dashboard.class);
@@ -208,7 +214,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                 case 2:
                     if (savedCropName.isEmpty()) {
                         Intent sharing = new Intent(DashboardScreen.this, AddCropActivity.class);
-                        appPreferenceManager.saveString(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD, AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD);
+                        appPreferenceManager.saveString(AppConstants.ACTION_FROM_DASHBOARD, AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD);
                         startActivity(sharing);
                     } else {
                         Intent intent = new Intent(this, AdvisoryCropActivity.class);
@@ -223,7 +229,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                 case 3:
                     if (savedCropName.isEmpty()) {
                         Intent comingSoonIntent = new Intent(DashboardScreen.this, AddCropActivity.class);
-                        appPreferenceManager.saveString(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD, AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD);
+                        appPreferenceManager.saveString(AppConstants.ACTION_FROM_DASHBOARD, AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD);
                         startActivity(comingSoonIntent);
                     } else {
                         Intent intent = new Intent(this, FertilizerCalculatorActivity.class);
@@ -271,6 +277,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
         addCrop.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardScreen.this, AddCropActivity.class);
+            appPreferenceManager.clearPreference(AppConstants.ACTION_FROM_DASHBOARD);
             startActivity(intent);
         });
         setVersion();
@@ -382,7 +389,6 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
             e.printStackTrace();
         }
     }
-
 
 
     private void setVersion() {
@@ -627,7 +633,9 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                             AppSettings.getInstance().setList(
                                     this, AppConstants.kFarmerCrop,
                                     Arrays.asList(selectedCropList.toArray()));
+                            Log.d(TAG, "onResponse: is Not Empty");
                         } else {
+                            savedCropName = "";
                             Log.d(TAG, "onResponse: is Empty");
                         }
                         if (selectedCropList != null) {

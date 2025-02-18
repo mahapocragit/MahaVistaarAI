@@ -42,28 +42,25 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
     private var gridView1: GridView? = null
     private var textViewHeaderTitle: TextView? = null
     private var tvAgroMetAdvisory: TextView? = null
-     private var diseaseStageTv: TextView? = null
+    private var diseaseStageTv: TextView? = null
     private lateinit var cropNametxt: TextView
     private var imageMenushow: ImageView? = null
+    private lateinit var imageHome: ImageView
 
     private var diseasesByStage: RecyclerView? = null
-     var diseasesDetails: ArrayList<DiseasesDetails>? = null
+    var diseasesDetails: ArrayList<DiseasesDetails>? = null
     lateinit var diseaseStages: ArrayList<DiseaseStages>
 
     private var particularStagesDiseases: String = "AllStagesDiseases"
     private var stagesId: Int = 0
     var cropId: Int? = 0
-    var wotrCropId : String? = null
+    var wotrCropId: String? = null
     var sowingDate: String? = null
-    var mUrl: String? =null
-    var cropName: String? =null
-     var  stagesName: String =""
+    var mUrl: String? = null
+    var cropName: String? = null
+    var stagesName: String = ""
     lateinit var stageJsonArray: JSONArray
     lateinit var languageToLoad: String
-
-
-
-    var groupImagePath: ArrayList<String> = ArrayList()
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,22 +77,28 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         diseaseStageTv = findViewById(R.id.disease_stage)
         cropNametxt = findViewById(R.id.tvCropName)
         imageMenushow = findViewById(R.id.imgBackArrow)
+        imageHome = findViewById(R.id.imageMenushow)
         diseasesByStage = findViewById(R.id.diseasesByStage)
 
         textViewHeaderTitle?.setText(R.string.pests_n_diseases)
-        imageMenushow?.setVisibility(View.VISIBLE)
+        imageMenushow?.visibility = View.VISIBLE
 
+        imageHome.visibility = View.VISIBLE
+        imageHome.setOnClickListener {
+            startActivity(Intent(this, DashboardScreen::class.java))
+        }
 
-        cropId = intent.getIntExtra("cropId",0)
+        cropId = intent.getIntExtra("cropId", 0)
         wotrCropId = intent.getStringExtra("wotr_crop_id")
         sowingDate = intent.getStringExtra("sowingDate")
         mUrl = intent.getStringExtra("mUrl")
         cropName = intent.getStringExtra("mName")
-        stagesName  = intent.getStringExtra("name").toString()
+        stagesName = intent.getStringExtra("name").toString()
         particularStagesDiseases = intent.getStringExtra("ParticularStagesDiseases").toString()
         stagesId = intent.getIntExtra("id", 0)
-        if(cropName.isNullOrBlank()){
-            cropName = AppSettings.getInstance().getValue(this, AppConstants.tmpCROPNAME, AppConstants.tmpCROPNAME)
+        if (cropName.isNullOrBlank()) {
+            cropName = AppSettings.getInstance()
+                .getValue(this, AppConstants.tmpCROPNAME, AppConstants.tmpCROPNAME)
         }
 
         imageMenushow?.setOnClickListener(View.OnClickListener {
@@ -104,8 +107,8 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
             intent.putExtra("id", cropId)
             intent.putExtra("mUrl", mUrl)
             intent.putExtra("mName", cropName)
-            intent.putExtra("wotr_crop_id",wotrCropId)
-            intent.putExtra("dataSavedInLocal","dataSavedInLocal")
+            intent.putExtra("wotr_crop_id", wotrCropId)
+            intent.putExtra("dataSavedInLocal", "dataSavedInLocal")
             //  intent.putExtra("name",stagesName)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -114,22 +117,23 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         })
 
 
-        if (cropId!! > 0){
+        if (cropId!! > 0) {
             getCropStages()
-        }else{
+        } else {
 
             val args = intent.getBundleExtra("BUNDLE")
-            diseasesDetails = args?.getSerializable("diseasesDetails") as  ArrayList<DiseasesDetails>?
+            diseasesDetails =
+                args?.getSerializable("diseasesDetails") as ArrayList<DiseasesDetails>?
             showParticularStagesByList()
         }
 
-        cropNametxt.setText(cropName+" ")
+        cropNametxt.text = cropName + " "
 
     }
 
     private fun showParticularStagesByList() {
         if (particularStagesDiseases.equals("ParticularStagesDiseases")) {
-            diseaseStageTv?.setText(stagesName)
+            diseaseStageTv?.text = stagesName
             val particularDiseasesAdpter =
                 ParticularStagesDiseasesAdpater(
                     this,
@@ -150,8 +154,8 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
     private fun getCropStages() {
         val jsonObject = JSONObject()
         try {
-            jsonObject.put("crop_id",cropId)
-            jsonObject.put("lang",languageToLoad)
+            jsonObject.put("crop_id", cropId)
+            jsonObject.put("lang", languageToLoad)
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api = AppInventorApi(
                 this,
@@ -177,7 +181,7 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
     }
 
 
-    override fun onResponse(jSONObject: JSONObject?, n :Int) {
+    override fun onResponse(jSONObject: JSONObject?, n: Int) {
         if (n == 1) {
             if (jSONObject != null) {
                 DebugLog.getInstance().d("onResponse=$jSONObject")
@@ -186,28 +190,41 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
                     stageJsonArray = response.getdataArray()
                     diseaseStages = ArrayList()
                     for (i in 0 until stageJsonArray.length()) {
-                        val stagesJsonObject:JSONObject = stageJsonArray.get(i) as JSONObject
+                        val stagesJsonObject: JSONObject = stageJsonArray.get(i) as JSONObject
                         val stageName: String = stagesJsonObject.getString("stage")
-                        val pestAndDiseasesJsonArray: JSONArray = stagesJsonObject.getJSONArray("pest_and_diseases")
+                        val pestAndDiseasesJsonArray: JSONArray =
+                            stagesJsonObject.getJSONArray("pest_and_diseases")
                         diseasesDetails = ArrayList()
-                        for (j in 0 until pestAndDiseasesJsonArray.length()){
-                            val pestAndDiseasesJsonObject:JSONObject = pestAndDiseasesJsonArray.get(j) as JSONObject
+                        for (j in 0 until pestAndDiseasesJsonArray.length()) {
+                            val pestAndDiseasesJsonObject: JSONObject =
+                                pestAndDiseasesJsonArray.get(j) as JSONObject
                             val peastAndDiseaseId: Int = pestAndDiseasesJsonObject.get("id") as Int
-                            val stageTitle :String = pestAndDiseasesJsonObject.get("title") as String
-                            val stagesubtitle :String = pestAndDiseasesJsonObject.get("subtitle") as String
-                            val type :String = pestAndDiseasesJsonObject.get("type") as String
-                            var cropsImgUrl : String? = ""
+                            val stageTitle: String =
+                                pestAndDiseasesJsonObject.get("title") as String
+                            val stagesubtitle: String =
+                                pestAndDiseasesJsonObject.get("subtitle") as String
+                            val type: String = pestAndDiseasesJsonObject.get("type") as String
+                            var cropsImgUrl: String? = ""
                             cropsImgUrl = pestAndDiseasesJsonObject.get("image").toString()
-                            if(cropsImgUrl == null){
-                                cropsImgUrl = "https://c1.wallpaperflare.com/preview/1015/28/863/leaf-maple-disease-pest.jpg"
+                            if (cropsImgUrl == null) {
+                                cropsImgUrl =
+                                    "https://c1.wallpaperflare.com/preview/1015/28/863/leaf-maple-disease-pest.jpg"
                             }
-                            diseasesDetails!!.add(DiseasesDetails(peastAndDiseaseId,stageTitle,stagesubtitle,cropsImgUrl,type))
+                            diseasesDetails!!.add(
+                                DiseasesDetails(
+                                    peastAndDiseaseId,
+                                    stageTitle,
+                                    stagesubtitle,
+                                    cropsImgUrl,
+                                    type
+                                )
+                            )
                         }
-                        diseaseStages.add(DiseaseStages(i,stageName, diseasesDetails!!))
+                        diseaseStages.add(DiseaseStages(i, stageName, diseasesDetails!!))
                     }
                     showStages(diseaseStages)
 
-                }else {
+                } else {
                     UIToastMessage.show(this, response.response)
                 }
             }
@@ -216,29 +233,26 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
 
     private fun showStages(diseaseStages: ArrayList<DiseaseStages>) {
 
-            val pestAndDiseasesAdapter =
-                PestAndDiseasesAdpater(
-                    this,
-                    diseaseStages
-                )
-
-            diseasesByStage?.setLayoutManager(
-                LinearLayoutManager(
-                    this,
-                    LinearLayoutManager.VERTICAL,
-                    false
-                )
+        val pestAndDiseasesAdapter =
+            PestAndDiseasesAdpater(
+                this,
+                diseaseStages
             )
-            diseasesByStage?.setAdapter(pestAndDiseasesAdapter)
-            pestAndDiseasesAdapter.notifyDataSetChanged()
+
+        diseasesByStage?.setLayoutManager(
+            LinearLayoutManager(
+                this,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+        )
+        diseasesByStage?.setAdapter(pestAndDiseasesAdapter)
+        pestAndDiseasesAdapter.notifyDataSetChanged()
     }
 
     override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
         TODO("Not yet implemented")
     }
-
-
-
 
 
 }

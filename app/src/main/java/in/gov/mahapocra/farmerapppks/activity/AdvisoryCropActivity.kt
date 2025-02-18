@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.farmerapppks.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -53,6 +54,10 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
             languageToLoad = "en"
         }
 
+        binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
+        binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {
+            startActivity(Intent(this, DashboardScreen::class.java))
+        }
         //fetching values
         cropId = intent.getIntExtra("id", 0)
         cropName = intent.getStringExtra("mName")
