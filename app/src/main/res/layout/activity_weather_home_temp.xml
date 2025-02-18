@@ -20,10 +20,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rl_toolbar">
 
-        <!--        <HorizontalScrollView-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content">-->
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -59,6 +55,7 @@
                             android:textSize="22sp" />
 
                         <TextView
+                            android:id="@+id/timestampTV"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="13 February 2025 | 14:00"
@@ -212,7 +209,7 @@
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_86sdp"
+                android:layout_height="@dimen/_90sdp"
                 android:layout_marginHorizontal="5dp"
                 android:padding="5dp"
                 android:layout_marginTop="@dimen/_2sdp"
@@ -265,6 +262,32 @@
                 android:layout_width="match_parent"
                 android:layout_marginHorizontal="5dp"
                 android:layout_height="match_parent" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/status_green"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:textSize="@dimen/_12sdp"
+                android:textStyle="bold"
+                android:text="Agro-Met Advisory" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="5dp"
+                android:background="@color/status_green"/>
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="10dp"
+                android:textSize="@dimen/_10sdp"
+                android:justificationMode="inter_word"
+                android:text="@string/agromet_details" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

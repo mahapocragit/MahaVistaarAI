@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.RadioButton
 import android.widget.Toast
@@ -22,6 +23,7 @@ import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
+import `in`.gov.mahapocra.farmerapppks.AppPreferenceManager
 import `in`.gov.mahapocra.farmerapppks.R
 import `in`.gov.mahapocra.farmerapppks.adapter.FertilizersRecyclerAdapter
 import `in`.gov.mahapocra.farmerapppks.api.APIRequest
@@ -53,6 +55,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     private var villageID: Int = 0
     private var cropId: Int? = 0
     private var wotrCropId: String? = null
+    private var mUrl: String? = null
     private var sowingDate: String? = null
     private var cropName: String? = null
     private lateinit var token: String
@@ -86,7 +89,37 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         cropId = intent.getIntExtra("id", 0)
         cropName = intent.getStringExtra("mName")
         wotrCropId = intent.getStringExtra("wotr_crop_id")
+        mUrl = intent.getStringExtra("mUrl")
         sowingDate = intent.getStringExtra("sowingDate")
+
+        binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {
+            val sharing = Intent(this, AddCropActivity::class.java)
+            Log.d("TAGGER", "onCreate: $cropName")
+            sharing.putExtra("id", cropId)
+            sharing.putExtra("mName", cropName)
+            sharing.putExtra("wotr_crop_id", wotrCropId)
+            sharing.putExtra("mUrl", mUrl)
+            AppPreferenceManager(this).saveString(
+                AppConstants.ACTION_FROM_DASHBOARD,
+                AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD
+            )
+            startActivity(sharing)
+        }
+
+        binding.sowingInfoLayout.editSowingDateIcon.setOnClickListener {
+            val sharing = Intent(this, SelectSowingDataAndFarmer::class.java)
+            sharing.putExtra("id", cropId)
+            sharing.putExtra("mName", cropName)
+            sharing.putExtra("wotr_crop_id", wotrCropId)
+            sharing.putExtra("mUrl", mUrl)
+            AppPreferenceManager(this).saveString(
+                AppConstants.ACTION_FROM_DASHBOARD,
+                AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD
+            )
+            startActivity(sharing)
+        }
+
+
 
         villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
 

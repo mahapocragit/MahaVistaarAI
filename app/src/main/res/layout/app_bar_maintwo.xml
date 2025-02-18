@@ -19,8 +19,8 @@
 
             <com.mikhaellopez.circularimageview.CircularImageView
                 android:id="@+id/FarmerlogoXmarks"
-                android:layout_width="@dimen/height50"
-                android:layout_height="@dimen/height50"
+                android:layout_width="@dimen/height40"
+                android:layout_height="@dimen/height40"
                 android:layout_gravity="start"
                 android:scaleType="centerInside"
                 android:adjustViewBounds="true"
@@ -28,8 +28,8 @@
 
             <com.mikhaellopez.circularimageview.CircularImageView
                 android:id="@+id/logoXmarks"
-                android:layout_width="@dimen/height50"
-                android:layout_height="@dimen/height50"
+                android:layout_width="@dimen/height40"
+                android:layout_height="@dimen/height40"
                 android:layout_gravity="start"
                 android:scaleType="centerInside"
                 android:layout_marginStart="@dimen/_16sdp"

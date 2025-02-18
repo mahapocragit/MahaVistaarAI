@@ -40,6 +40,8 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
     private var cropName: String? = null
     private var farmerId: Int = 0
     private var villageID: Int = 0
+    private var wotrCropId: String? = null
+    private var mUrl: String? = null
     lateinit var languageToLoad: String
     private var sowingDate: String = ""
 
@@ -58,12 +60,40 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {
             startActivity(Intent(this, DashboardScreen::class.java))
         }
+
+        binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {
+            val sharing = Intent(this, AddCropActivity::class.java)
+            AppPreferenceManager(this).saveString(
+                AppConstants.ACTION_FROM_DASHBOARD,
+                AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD
+            )
+            startActivity(sharing)
+        }
+
         //fetching values
         cropId = intent.getIntExtra("id", 0)
         cropName = intent.getStringExtra("mName")
         sowingDate = intent.getStringExtra("sowingDate").toString()
+        wotrCropId = intent.getStringExtra("wotr_crop_id")
+        mUrl = intent.getStringExtra("mUrl")
         villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
+
+
+        binding.sowingInfoLayout.editSowingDateIcon.setOnClickListener {
+            val sharing = Intent(this, SelectSowingDataAndFarmer::class.java)
+            sharing.putExtra("id", cropId)
+            sharing.putExtra("mName", cropName)
+            sharing.putExtra("wotr_crop_id", wotrCropId)
+            sharing.putExtra("mUrl", wotrCropId)
+            AppPreferenceManager(this).saveString(
+                AppConstants.ACTION_FROM_DASHBOARD,
+                AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD
+            )
+            startActivity(sharing)
+        }
+
+
 
         val cropStageResponseString = AppPreferenceManager(this).getString("CROP_STAGE_RESPONSE")
         binding.sowingInfoLayout.cropNameTextView.text = cropName
@@ -73,11 +103,14 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
-        if (!cropStageResponseString.equals("default_value")){
+
+        getCropStagesAndAdvisory()
+
+        /*if (!cropStageResponseString.equals("default_value")){
             initializeDataFromJson()
         }else{
             getCropStagesAndAdvisory()
-        }
+        }*/
     }
 
     private fun initializeDataFromJson(){
@@ -142,6 +175,10 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
             if (jSONObject != null) {
                 val response = ResponseModel(jSONObject)
                 if (response.status) {
+                    if (jSONObject.getString("sowing_date").isNotEmpty()) {
+                        binding.sowingInfoLayout.sowingDateTextView.text =
+                            jSONObject.getString("sowing_date")
+                    }
                     cropAdvisoryDetailsJSONArray = response.getdataArray()
                     if (cropAdvisoryDetailsJSONArray?.length()!! > 0) {
                         val stagesAdvisoryAdapter =

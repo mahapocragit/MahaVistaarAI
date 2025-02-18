@@ -12,6 +12,9 @@ import `in`.gov.mahapocra.farmerapppks.adapter.ViewPagerAdapter
 import `in`.gov.mahapocra.farmerapppks.databinding.ActivityWeatherHomeTempBinding
 import `in`.gov.mahapocra.farmerapppks.ui.weather.Item
 import `in`.gov.mahapocra.farmerapppks.ui.weather.WindAdapter
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class WeatherTempActivity : AppCompatActivity() {
 
@@ -33,6 +36,8 @@ class WeatherTempActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
+        binding.relativeLayoutTopBar.textViewHeaderTitle.text = "Weather"
+
         binding.previousSevenDayTV.setOnClickListener {
             binding.previousSevenDayTV.apply {
                 background =
@@ -48,6 +53,8 @@ class WeatherTempActivity : AppCompatActivity() {
                 setTextColor(Color.BLACK)
             }
         }
+
+        binding.timestampTV.text = getFormattedTimestamp()
 
         binding.nextSevenDayTV.setOnClickListener {
             binding.nextSevenDayTV.apply {
@@ -93,5 +100,10 @@ class WeatherTempActivity : AppCompatActivity() {
         // Set adapter
         recyclerAdapter = WindAdapter(itemList, "temp")
         binding.recyclerView.adapter = recyclerAdapter
+    }
+
+    fun getFormattedTimestamp(): String {
+        val dateFormat = SimpleDateFormat("dd MMMM yyyy | HH:mm", Locale.getDefault())
+        return dateFormat.format(Date())
     }
 }

@@ -52,6 +52,7 @@
                     android:textSize="22sp" />
 
                 <TextView
+                    android:id="@+id/textView7"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="13 February 2025 | 14:00"
@@ -121,7 +122,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_weight="1"
-                            android:text="My Crops"
+                            android:text="My Crop"
                             android:textSize="@dimen/_16sdp"
                             android:textStyle="bold" />
 

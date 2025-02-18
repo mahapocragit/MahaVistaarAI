@@ -45,8 +45,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -84,6 +86,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
     private GridView gridView;
     private CardView addCrop;
     private TextView nav_user_name;
+    private TextView timestamp_textView;
     private TextView nav_user_phone;
     private ImageView imgLangChange;
     private ImageView imgNotification;
@@ -139,6 +142,8 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         setContentView(R.layout.activity_dashboard_screen);
         appPreferenceManager = new AppPreferenceManager(this);
         init();
+
+        timestamp_textView.setText(getFormattedTimestamp());
         LinearLayout temperatureLayout = findViewById(R.id.temperatureLayout);
         temperatureLayout.setOnClickListener(view -> {
             Intent weather = new Intent(DashboardScreen.this, WeatherTempActivity.class);
@@ -285,6 +290,12 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         requestingPermissions();
     }
 
+    public static String getFormattedTimestamp() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy | HH:mm", Locale.getDefault());
+        return dateFormat.format(new Date());
+    }
+
+
     private void getFirebaseTokenFromServer() {
 
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
@@ -335,6 +346,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
             getUserDetails();
         }
         addCrop = findViewById(R.id.AddCropTv);
+        timestamp_textView = findViewById(R.id.textView7);
         selectedCropListRecyc = findViewById(R.id.selectedCrops);
         gridView = findViewById(R.id.gridViewJobs);
         imgLangChange = findViewById(R.id.imgLangChange);

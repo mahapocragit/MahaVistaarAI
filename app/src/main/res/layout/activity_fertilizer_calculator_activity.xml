@@ -804,12 +804,13 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/fertlizerOpt_Rcl"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/_300sdp"
                     android:layout_marginTop="@dimen/height5"
                     android:layout_marginBottom="@dimen/height5"
                     android:scrollbarAlwaysDrawHorizontalTrack="true"
                     android:scrollbarStyle="insideOverlay"
-                    android:scrollbars="horizontal"
+                    android:scrollbars="vertical"
+                    android:fastScrollEnabled="true"
                     android:visibility="gone" />
 
                 <LinearLayout

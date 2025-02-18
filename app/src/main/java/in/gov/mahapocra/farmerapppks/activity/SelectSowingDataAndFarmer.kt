@@ -58,6 +58,7 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
         mUrl = intent.getStringExtra("mUrl")
         mName = intent.getStringExtra("mName")
         editCrop = intent.getStringExtra("editCrop")
+        Log.d("TAGGER", "onCreate: $mName")
 
 
         binding.relativeLayoutTopBar.textViewHeaderTitle.text =
