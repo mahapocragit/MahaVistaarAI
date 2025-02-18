@@ -46,6 +46,16 @@
         app:layout_constraintStart_toEndOf="@+id/stage"
         app:layout_constraintTop_toTopOf="@+id/stage"/>
 
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:text="Swipe to see more >>"
+        app:layout_constraintBottom_toBottomOf="@+id/titleTextView"
+        app:layout_constraintEnd_toEndOf="@+id/cropStagesInfoRecyclerView"
+        app:layout_constraintTop_toTopOf="@+id/titleTextView" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cropStagesInfoRecyclerView"
         android:layout_width="@dimen/_250sdp"

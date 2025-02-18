@@ -79,6 +79,7 @@ import retrofit2.Retrofit;
 
 public class DashboardScreen extends AppCompatActivity implements ApiCallbackCode, AdapterView.OnItemClickListener, ForceUpdateChecker.OnUpdateNeededListener, OnMultiRecyclerItemClickListener {
     private NavigationView navigationView;
+    private String TAG = "DashboardScreenTAG";
     private static final int PERMISSION_REQUEST_CODE = 100;
     private GridView gridView;
     private CardView addCrop;
@@ -93,24 +94,29 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
     String languageToLoad;
     private int farmerId = 0;
     private int cropId = 0;
+    private String savedCropName = "";
+    private int savedCropId;
+    private String savedCropSowingDate;
+    private String savedCropWoTRId;
+    private String savedCropImageUrl;
     TextView alertHeadingTv;
     private AppPreferenceManager appPreferenceManager;
     private JSONArray jsonArray;
 
     private static final String[] arrayCategory = new String[]{
-            "Weather", "Identify Pest/Disease", "Crop Advisory", "Fertilizer Calculator", "Climate Resilent Technology", "Soil Health Card",
+            "Pest and Diseases", "Identify Pest/Disease", "Crop Advisory", "Fertilizer Calculator", "Climate Resilent Technology", "Soil Health Card",
             "Market Price", "Warehouse Availabilities", "DBT Schemes"
 
     };
 
     private static final String[] arrayCategoryMarathi = new String[]{
-            "हवामान", "किटक/रोग ओळखा", "पीक सल्ला", "खत मात्रा गणक (कॅलक्यूलेटर)", "हवामान अनुकूल तंत्रज्ञान", "मृदा आरोग्य पत्रिका",
+            "कीड व रोग", "किटक/रोग ओळखा", "पीक सल्ला", "खत मात्रा गणक (कॅलक्यूलेटर)", "हवामान अनुकूल तंत्रज्ञान", "मृदा आरोग्य पत्रिका",
             "बाजारभाव", " गोदाम उपलब्धता", "थेट लाभ हस्तांतरण योजना"
 
     };
 
     static int[] arrayCategoryImg = new int[]{
-            R.drawable.sun, R.drawable.pest, R.drawable.ecology, R.drawable.fertilizer, R.drawable.climate_change, R.drawable.soil,
+            R.drawable.ladybug, R.drawable.pest, R.drawable.ecology, R.drawable.fertilizer, R.drawable.climate_change, R.drawable.soil,
             R.drawable.commodity, R.drawable.warehouse, R.drawable.world_news
     };
 
@@ -134,13 +140,13 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         appPreferenceManager = new AppPreferenceManager(this);
         init();
         LinearLayout temperatureLayout = findViewById(R.id.temperatureLayout);
-        temperatureLayout.setOnClickListener(view->{
+        temperatureLayout.setOnClickListener(view -> {
             Intent weather = new Intent(DashboardScreen.this, WeatherTempActivity.class);
             startActivity(weather);
         });
 
         floatingActionButton.setOnClickListener(view -> {
-           startActivity(new Intent(DashboardScreen.this, TempDashboardActivity.class));
+            startActivity(new Intent(DashboardScreen.this, TempDashboardActivity.class));
         });
 
         getFirebaseTokenFromServer();
@@ -187,23 +193,47 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         gridView.setOnItemClickListener((parent, v, position, id) -> {
             switch (position) {
                 case 0:
-                    Intent weather = new Intent(DashboardScreen.this, WeatherHome.class);
-                    startActivity(weather);
+                    Intent intentPestsAndDiseases = new Intent(this, PestsAndDiseasesStages.class);
+                    intentPestsAndDiseases.putExtra("cropId", savedCropId);
+                    intentPestsAndDiseases.putExtra("wotr_crop_id", savedCropWoTRId);
+                    intentPestsAndDiseases.putExtra("sowingDate", savedCropSowingDate);
+                    intentPestsAndDiseases.putExtra("mUrl", savedCropImageUrl);
+                    intentPestsAndDiseases.putExtra("mName", savedCropName);
+                    startActivity(intentPestsAndDiseases);
                     break;
                 case 1:
                     Intent identify = new Intent(getApplicationContext(), Identify_dashboard.class);
                     startActivity(identify);
                     break;
                 case 2:
-                    Intent sharing = new Intent(DashboardScreen.this, AddCropActivity.class);
-                    appPreferenceManager.saveString(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD, AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD);
-                    startActivity(sharing);
+                    if (savedCropName.isEmpty()) {
+                        Intent sharing = new Intent(DashboardScreen.this, AddCropActivity.class);
+                        appPreferenceManager.saveString(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD, AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD);
+                        startActivity(sharing);
+                    } else {
+                        Intent intent = new Intent(this, AdvisoryCropActivity.class);
+                        intent.putExtra("id", savedCropId);
+                        intent.putExtra("wotr_crop_id", savedCropWoTRId);
+                        intent.putExtra("mUrl", savedCropImageUrl);
+                        intent.putExtra("mName", savedCropName);
+                        startActivity(intent);
+                    }
                     break;
 
                 case 3:
-                    Intent comingSoonIntent = new Intent(DashboardScreen.this, AddCropActivity.class);
-                    appPreferenceManager.saveString(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD, AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD);
-                    startActivity(comingSoonIntent);
+                    if (savedCropName.isEmpty()) {
+                        Intent comingSoonIntent = new Intent(DashboardScreen.this, AddCropActivity.class);
+                        appPreferenceManager.saveString(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD, AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD);
+                        startActivity(comingSoonIntent);
+                    } else {
+                        Intent intent = new Intent(this, FertilizerCalculatorActivity.class);
+                        intent.putExtra("id", savedCropId);
+                        intent.putExtra("wotr_crop_id", savedCropWoTRId);
+                        intent.putExtra("mUrl", savedCropImageUrl);
+                        intent.putExtra("mName", savedCropName);
+                        intent.putExtra("sowingDate", savedCropSowingDate);
+                        startActivity(intent);
+                    }
                     break;
                 case 4:
                     Intent addPeople = new Intent(DashboardScreen.this, ClimateResilintTechnology.class);
@@ -323,6 +353,36 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
             e.printStackTrace();
         }
     }
+
+    //API FOR GETTING SOWING DATE INFORMATION
+    private void getCropStagesAndAdvisory() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("crop_id", savedCropId);
+            jsonObject.put("farmer_id", farmerId);
+            jsonObject.put("lang", languageToLoad);
+            Log.d("RESPONSE_TAG", "getCropStagesAndAdvisory: " + jsonObject);
+
+            RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
+
+            AppInventorApi api = new AppInventorApi(
+                    this,
+                    APIServices.SSO,
+                    "",
+                    new AppString(this).getkMSG_WAIT(),
+                    true
+            );
+
+            Retrofit retrofit = api.getRetrofitInstance();
+            APIRequest apiRequest = retrofit.create(APIRequest.class);
+            Call<JsonObject> responseCall = apiRequest.getCropStagesAndAdvisory(requestBody);
+
+            api.postRequest(responseCall, this, 4);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     private void setVersion() {
@@ -554,6 +614,11 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                             for (int j = 0; j < selectedCrops.length(); j++) {
                                 try {
                                     JSONObject selectedCrop = selectedCrops.getJSONObject(j);
+                                    savedCropId = selectedCrop.getInt("crop_id");
+                                    savedCropName = selectedCrop.getString("name");
+                                    savedCropImageUrl = selectedCrop.getString("image");
+                                    savedCropWoTRId = selectedCrop.getString("wotr_crop_id");
+                                    getCropStagesAndAdvisory();
                                     selectedCropList.add(new CropsCategName(selectedCrop.getInt("crop_id"), selectedCrop.getString("name"), selectedCrop.getString("image"), selectedCrop.getString("wotr_crop_id")));
                                 } catch (JSONException e) {
                                     throw new RuntimeException(e);
@@ -562,11 +627,13 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                             AppSettings.getInstance().setList(
                                     this, AppConstants.kFarmerCrop,
                                     Arrays.asList(selectedCropList.toArray()));
+                        } else {
+                            Log.d(TAG, "onResponse: is Empty");
                         }
                         if (selectedCropList != null) {
                             alertHeadingTv.setVisibility(View.GONE);
                             showCropList(selectedCropList);
-                        }else{
+                        } else {
                             alertHeadingTv.setVisibility(View.VISIBLE);
                             selectedCropListRecyc.setVisibility(View.GONE);
                         }
@@ -583,6 +650,22 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                         getFarmerSelectedCrop(languageToLoad);
                     } else {
                         UIToastMessage.show(this, deleteSelectedCropResponse.getResponse());
+                    }
+                    break;
+                case 4:
+                    if (jSONObject != null) {
+                        new AppPreferenceManager(this).saveString("CROP_STAGE_RESPONSE", jSONObject.toString());
+
+                        ResponseModel response = new ResponseModel(jSONObject);
+                        if (response.getStatus()) {
+                            try {
+                                savedCropSowingDate = jSONObject.getString("sowing_date");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            UIToastMessage.show(this, response.getResponse());
+                        }
                     }
                     break;
             }
