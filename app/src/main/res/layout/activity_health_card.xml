@@ -165,11 +165,12 @@
             android:id="@+id/submitButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="end"
             android:backgroundTint="@color/light_green"
             android:padding="@dimen/padding12"
             android:text="@string/reg_submit"
             android:textAllCaps="false"
+            android:layout_marginEnd="@dimen/_20sdp"
             android:textColor="@color/white"
             android:textSize="@dimen/text16" />
 

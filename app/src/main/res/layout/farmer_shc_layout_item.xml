@@ -5,6 +5,7 @@
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/farmerSoilHealthCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_2sdp"
@@ -17,15 +18,32 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
             android:layout_margin="@dimen/_2sdp"
+            android:gravity="center_vertical"
             android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Farmer Name"
-                android:textStyle="bold" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Farmer Name"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textView14"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:textColor="@color/actionbar_color_figma"
+                    android:layout_weight="1"
+                    android:textStyle="bold"
+                    android:text="VIEW PDF" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/farmerName"
@@ -37,8 +55,8 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Soil Health Card Number"
                 android:layout_marginTop="@dimen/_2sdp"
+                android:text="Soil Health Card Number"
                 android:textStyle="bold" />
 
             <TextView

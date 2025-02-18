@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.AD_ID" />
@@ -44,7 +44,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FarmerApp"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true" >
+        <activity
+            android:name=".ui.PdfWebViewActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.TempDashboardActivity"
             android:exported="false" />
@@ -99,7 +102,7 @@
         <activity android:name=".activity.CropAdvisory" />
         <activity
             android:name=".notification.PocraFarmerNews"
-            android:exported="false">
+            android:exported="false" >
             <intent-filter>
                 <action android:name="PocraFarmerNews" />
 
@@ -108,7 +111,7 @@
         </activity>
         <activity
             android:name=".notification.ReadNotificationActivity"
-            android:exported="false">
+            android:exported="false" >
             <intent-filter>
                 <action android:name="ReadNotificationActivity" />
 
@@ -192,7 +195,7 @@
 
         <service
             android:name=".webServices.FBaseMessagingService"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -200,7 +203,7 @@
 
         <activity
             android:name=".activity.SplashScreenActivity"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -232,7 +235,7 @@
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.android.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true" >
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />

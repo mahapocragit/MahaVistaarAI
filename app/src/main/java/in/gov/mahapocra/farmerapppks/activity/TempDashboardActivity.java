@@ -1,6 +1,9 @@
 package in.gov.mahapocra.farmerapppks.activity;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,11 +18,20 @@ import in.gov.mahapocra.farmerapppks.ui.ChatbotFragment;
 public class TempDashboardActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
+    private ImageView imageViewHeaderBack;
+    private TextView headerTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temp_dashboard);
+
+        headerTextView = findViewById(R.id.textViewHeaderTitle);
+        imageViewHeaderBack = findViewById(R.id.imageViewHeaderBack);
+        imageViewHeaderBack.setVisibility(View.VISIBLE);
+        imageViewHeaderBack.setOnClickListener(view -> getOnBackPressedDispatcher().onBackPressed());
+        headerTextView.setText("Agro Assistant");
+        loadFragment(new ChatbotFragment());
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(item -> {
@@ -50,7 +62,7 @@ public class TempDashboardActivity extends AppCompatActivity {
         });
     }
 
-    private void loadFragment(Fragment fragment){
+    private void loadFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.frameLayout, fragment);
         fragmentTransaction.commit();
