@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonObject
@@ -19,6 +20,7 @@ import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
+import `in`.gov.mahapocra.farmerapppks.AppPreferenceManager
 import `in`.gov.mahapocra.farmerapppks.R
 import `in`.gov.mahapocra.farmerapppks.adapter.ParticularStagesDiseasesAdpater
 import `in`.gov.mahapocra.farmerapppks.adapter.PestAndDiseasesAdpater
@@ -42,10 +44,11 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
     private var gridView1: GridView? = null
     private var textViewHeaderTitle: TextView? = null
     private var tvAgroMetAdvisory: TextView? = null
+    private var cropNameTextView: TextView? = null
     private var diseaseStageTv: TextView? = null
-    private lateinit var cropNametxt: TextView
     private var imageMenushow: ImageView? = null
     private lateinit var imageHome: ImageView
+    private lateinit var cropInfoCardView: CardView
 
     private var diseasesByStage: RecyclerView? = null
     var diseasesDetails: ArrayList<DiseasesDetails>? = null
@@ -73,9 +76,10 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         setContentView(R.layout.activity_pests_and_diseases_activitry)
 
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
+        cropInfoCardView = findViewById(R.id.cropInfoCardView)
+        cropNameTextView = findViewById(R.id.cropNameTextView)
         tvAgroMetAdvisory = findViewById(R.id.tvAgroMetAdvisory)
         diseaseStageTv = findViewById(R.id.disease_stage)
-        cropNametxt = findViewById(R.id.tvCropName)
         imageMenushow = findViewById(R.id.imgBackArrow)
         imageHome = findViewById(R.id.imageMenushow)
         diseasesByStage = findViewById(R.id.diseasesByStage)
@@ -96,6 +100,22 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         stagesName = intent.getStringExtra("name").toString()
         particularStagesDiseases = intent.getStringExtra("ParticularStagesDiseases").toString()
         stagesId = intent.getIntExtra("id", 0)
+
+        cropInfoCardView.setOnClickListener {
+            val sharing = Intent(this, AddCropActivity::class.java)
+            Log.d("TAGGER", "onCreate: $cropName")
+            sharing.putExtra("id", cropId)
+            sharing.putExtra("mName", cropName)
+            sharing.putExtra("wotr_crop_id", wotrCropId)
+            sharing.putExtra("mUrl", mUrl)
+            AppPreferenceManager(this).saveString(
+                AppConstants.ACTION_FROM_DASHBOARD,
+                AppConstants.PEST_AND_DISEASES_STAGES
+            )
+            startActivity(sharing)
+        }
+
+
         if (cropName.isNullOrBlank()) {
             cropName = AppSettings.getInstance()
                 .getValue(this, AppConstants.tmpCROPNAME, AppConstants.tmpCROPNAME)
@@ -127,7 +147,7 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
             showParticularStagesByList()
         }
 
-        cropNametxt.text = cropName + " "
+        cropNameTextView?.text = "$cropName"
 
     }
 

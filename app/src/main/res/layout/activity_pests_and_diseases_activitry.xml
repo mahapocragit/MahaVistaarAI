@@ -11,21 +11,15 @@
         android:id="@+id/relativeLayoutTopBar"
         layout="@layout/layout_toolbar" />
 
-    <TextView
-        android:id="@+id/tvCropName"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/height30"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/height5"
-        android:background="@drawable/text_bg_with_border"
-        android:gravity="center"
-        android:padding="@dimen/padding3"
-        android:paddingRight="@dimen/padding2"
-        android:text="@string/Crop_name"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text14"
-        android:textStyle="italic"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <include
+            android:id="@+id/sowingInfoLayout"
+            layout="@layout/sowing_date_layout" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
