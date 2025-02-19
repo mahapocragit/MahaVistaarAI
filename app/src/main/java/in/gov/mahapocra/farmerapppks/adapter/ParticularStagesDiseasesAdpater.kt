@@ -2,7 +2,6 @@ package `in`.gov.mahapocra.farmerapppks.adapter
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,8 +14,6 @@ import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
 import `in`.gov.mahapocra.farmerapppks.R
 import `in`.gov.mahapocra.farmerapppks.activity.DiseaseInformation
-import `in`.gov.mahapocra.farmerapppks.activity.PestsAndDiseasesStages
-import `in`.gov.mahapocra.farmerapppks.models.response.DiseaseStages
 import `in`.gov.mahapocra.farmerapppks.models.response.DiseasesDetails
 import org.json.JSONException
 
@@ -32,21 +29,21 @@ class ParticularStagesDiseasesAdpater (private var context: Context? = null,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         try {
-            holder.diseaseName.text = diseasesDetails.get(position).type
-            holder.diseaseScrpt.text = diseasesDetails.get(position).decription
-            loadImage(holder.climateImage, diseasesDetails.get(position).img)
+            holder.diseaseName.text = diseasesDetails[position].type
+            holder.diseaseScrpt.text = diseasesDetails[position].decription
+            loadImage(holder.climateImage, diseasesDetails[position].img)
 
         } catch (e: JSONException) {
             e.printStackTrace()
         }
 
-        holder.main_ln.setOnClickListener(View.OnClickListener {
+        holder.main_ln.setOnClickListener {
             val intent = Intent(context, DiseaseInformation::class.java)
-            intent.putExtra("name",diseasesDetails.get(position).name)
-            intent.putExtra("id",diseasesDetails.get(position).id)
+            intent.putExtra("name", diseasesDetails.get(position).name)
+            intent.putExtra("id", diseasesDetails.get(position).id)
             context?.startActivity(intent)
 
-        })
+        }
     }
 
     override fun getItemCount(): Int {
@@ -54,13 +51,13 @@ class ParticularStagesDiseasesAdpater (private var context: Context? = null,
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var diseaseName: TextView = itemView.findViewById<TextView>(R.id.disease_name)
-        var diseaseScrpt: TextView = itemView.findViewById<TextView>(R.id.diseases_scrpt)
-        var climateImage: ImageView = itemView.findViewById<ImageView>(R.id.climate_image)
-        var main_ln: LinearLayout = itemView.findViewById<LinearLayout>(R.id.main_ln)
+        var diseaseName: TextView = itemView.findViewById(R.id.disease_name)
+        var diseaseScrpt: TextView = itemView.findViewById(R.id.diseases_scrpt)
+        var climateImage: ImageView = itemView.findViewById(R.id.climate_image)
+        var main_ln: LinearLayout = itemView.findViewById(R.id.main_ln)
     }
 
-    fun loadImage(climateImage: ImageView?, image_url: String?) {
+    private fun loadImage(climateImage: ImageView?, image_url: String?) {
         try {
             Picasso.get().invalidate(image_url)
             Picasso.get()

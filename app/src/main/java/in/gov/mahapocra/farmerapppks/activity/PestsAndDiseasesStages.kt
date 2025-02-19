@@ -5,7 +5,6 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.GridView
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
@@ -23,7 +22,7 @@ import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.farmerapppks.AppPreferenceManager
 import `in`.gov.mahapocra.farmerapppks.R
 import `in`.gov.mahapocra.farmerapppks.adapter.ParticularStagesDiseasesAdpater
-import `in`.gov.mahapocra.farmerapppks.adapter.PestAndDiseasesAdpater
+import `in`.gov.mahapocra.farmerapppks.adapter.PestAndDiseasesAdapter
 import `in`.gov.mahapocra.farmerapppks.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
@@ -40,29 +39,29 @@ import retrofit2.Retrofit
 
 class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
 
-    private var gridView: GridView? = null
-    private var gridView1: GridView? = null
     private var textViewHeaderTitle: TextView? = null
     private var tvAgroMetAdvisory: TextView? = null
     private var cropNameTextView: TextView? = null
-    private var diseaseStageTv: TextView? = null
+    private lateinit var diseaseStageTv: TextView
     private var imageMenushow: ImageView? = null
+    private lateinit var imageViewHeaderBack: ImageView
+    private lateinit var editSowingDateIcon: ImageView
     private lateinit var imageHome: ImageView
     private lateinit var cropInfoCardView: CardView
 
     private var diseasesByStage: RecyclerView? = null
-    var diseasesDetails: ArrayList<DiseasesDetails>? = null
-    lateinit var diseaseStages: ArrayList<DiseaseStages>
+    private var diseasesDetails: ArrayList<DiseasesDetails>? = null
+    private lateinit var diseaseStages: ArrayList<DiseaseStages>
 
     private var particularStagesDiseases: String = "AllStagesDiseases"
     private var stagesId: Int = 0
     var cropId: Int? = 0
-    var wotrCropId: String? = null
-    var sowingDate: String? = null
-    var mUrl: String? = null
+    private var wotrCropId: String? = null
+    private var sowingDate: String? = null
+    private var mUrl: String? = null
     var cropName: String? = null
-    var stagesName: String = ""
-    lateinit var stageJsonArray: JSONArray
+    private var stagesName: String = ""
+    private lateinit var stageJsonArray: JSONArray
     lateinit var languageToLoad: String
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -79,8 +78,10 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         cropInfoCardView = findViewById(R.id.cropInfoCardView)
         cropNameTextView = findViewById(R.id.cropNameTextView)
         tvAgroMetAdvisory = findViewById(R.id.tvAgroMetAdvisory)
+        imageViewHeaderBack = findViewById(R.id.imageViewHeaderBack)
         diseaseStageTv = findViewById(R.id.disease_stage)
         imageMenushow = findViewById(R.id.imgBackArrow)
+        editSowingDateIcon = findViewById(R.id.editSowingDateIcon)
         imageHome = findViewById(R.id.imageMenushow)
         diseasesByStage = findViewById(R.id.diseasesByStage)
 
@@ -92,6 +93,12 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
             startActivity(Intent(this, DashboardScreen::class.java))
         }
 
+        editSowingDateIcon.visibility = View.GONE
+        imageViewHeaderBack.visibility = View.VISIBLE
+        imageViewHeaderBack.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
         cropId = intent.getIntExtra("cropId", 0)
         wotrCropId = intent.getStringExtra("wotr_crop_id")
         sowingDate = intent.getStringExtra("sowingDate")
@@ -100,10 +107,11 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         stagesName = intent.getStringExtra("name").toString()
         particularStagesDiseases = intent.getStringExtra("ParticularStagesDiseases").toString()
         stagesId = intent.getIntExtra("id", 0)
+        AppSettings.getInstance()
+            .setValue(this, AppConstants.tmpCROPNAME, cropName)
 
         cropInfoCardView.setOnClickListener {
             val sharing = Intent(this, AddCropActivity::class.java)
-            Log.d("TAGGER", "onCreate: $cropName")
             sharing.putExtra("id", cropId)
             sharing.putExtra("mName", cropName)
             sharing.putExtra("wotr_crop_id", wotrCropId)
@@ -121,7 +129,7 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
                 .getValue(this, AppConstants.tmpCROPNAME, AppConstants.tmpCROPNAME)
         }
 
-        imageMenushow?.setOnClickListener(View.OnClickListener {
+        imageMenushow?.setOnClickListener {
             val intent = Intent(this, CropStageAdvisory::class.java)
             //here id means cropID not stageID
             intent.putExtra("id", cropId)
@@ -134,13 +142,14 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
-        })
+        }
 
 
         if (cropId!! > 0) {
+            diseaseStageTv.visibility = View.VISIBLE
             getCropStages()
         } else {
-
+            diseaseStageTv.visibility = View.GONE
             val args = intent.getBundleExtra("BUNDLE")
             diseasesDetails =
                 args?.getSerializable("diseasesDetails") as ArrayList<DiseasesDetails>?
@@ -152,8 +161,8 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
     }
 
     private fun showParticularStagesByList() {
-        if (particularStagesDiseases.equals("ParticularStagesDiseases")) {
-            diseaseStageTv?.text = stagesName
+        if (particularStagesDiseases == "ParticularStagesDiseases") {
+            diseaseStageTv.text = stagesName
             val particularDiseasesAdpter =
                 ParticularStagesDiseasesAdpater(
                     this,
@@ -187,19 +196,11 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(APIRequest::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getCropStages(requestBody)
-            DebugLog.getInstance().d("param1=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()))
             api.postRequest(responseCall, this, 1)
-            DebugLog.getInstance().d("param=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
         } catch (e: JSONException) {
-            DebugLog.getInstance().d("JSONException=" + e.toString())
             e.printStackTrace()
         }
     }
-
 
     override fun onResponse(jSONObject: JSONObject?, n: Int) {
         if (n == 1) {
@@ -254,7 +255,7 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
     private fun showStages(diseaseStages: ArrayList<DiseaseStages>) {
 
         val pestAndDiseasesAdapter =
-            PestAndDiseasesAdpater(
+            PestAndDiseasesAdapter(
                 this,
                 diseaseStages
             )

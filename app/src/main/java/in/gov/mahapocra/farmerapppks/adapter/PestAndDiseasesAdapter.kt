@@ -18,9 +18,9 @@ import org.json.JSONException
 import java.io.Serializable
 
 
-class PestAndDiseasesAdpater(
+class PestAndDiseasesAdapter(
     private var context: Context? = null, private var diseaseStages: List<DiseaseStages>,
-) : RecyclerView.Adapter<PestAndDiseasesAdpater.ViewHolder>() {
+) : RecyclerView.Adapter<PestAndDiseasesAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,44 +31,41 @@ class PestAndDiseasesAdpater(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         try {
-            holder.stages.text = diseaseStages.get(position).name
-            val climateModelArrayList: ArrayList<ClimateGridModel> = ArrayList<ClimateGridModel>()
-            var groupName: ArrayList<String> = ArrayList()
-            var webUrl: ArrayList<String> = ArrayList()
+            holder.stages.text = diseaseStages[position].name
+            val climateModelArrayList: ArrayList<ClimateGridModel> = ArrayList()
+            val groupName: ArrayList<String> = ArrayList()
             climateModelArrayList.clear()
             val diseasesDetails: ArrayList<DiseasesDetails> =
-                diseaseStages.get(position).diseasesDetails
-            var diseasesDetailsSize = diseasesDetails.size
-//            if(diseasesDetailsSize > 2){
-//                holder.seeMoreTx2.visibility = View.VISIBLE
-//            }
-            val enrolmentData: ArrayList<Any?> = ArrayList<Any?>()
+                diseaseStages[position].diseasesDetails
+            val diseasesDetailsSize = diseasesDetails.size
             for (i in 0 until diseasesDetailsSize) {
-                val groupimagePath: String? = diseasesDetails.get(i).img
-                val id: Int = diseasesDetails.get(i).id
-                groupName.add(diseasesDetails.get(i).decription + "\n")
+                val groupImagePath: String? = diseasesDetails[i].img
+                val id: Int = diseasesDetails[i].id
+                groupName.add(diseasesDetails[i].decription + "\n")
                 climateModelArrayList.add(
                     ClimateGridModel(
                         groupName[i],
-                        groupimagePath,
+                        groupImagePath,
                         id.toString()
                     )
                 )
             }
             val adapter = context?.let { ClimateGridAdapter(it, climateModelArrayList, "PestAndDiseasesAdpater") }
-            holder.gridView?.setAdapter(adapter)
+            holder.gridView.adapter = adapter
             adapter?.notifyDataSetChanged()
-            holder.seeMoreTx2.setOnClickListener(View.OnClickListener {
+            holder.seeMoreTx2.setOnClickListener {
                 val intent = Intent(context, PestsAndDiseasesStages::class.java)
-                intent.putExtra("id", diseaseStages?.get(position)?.id)
-                intent.putExtra("name", diseaseStages?.get(position)?.name)
+                intent.putExtra("id", diseaseStages[position].id)
+                intent.putExtra("name", diseaseStages[position].name)
                 val args = Bundle()
-                args.putSerializable("diseasesDetails", diseaseStages.get(position).diseasesDetails as Serializable?)
-              //  args.putSerializable("diseasesDetails", 'diseaseStages?.get(position)?.diseasesDetails' as Serializable?)
-                intent.putExtra("BUNDLE",args)
+                args.putSerializable(
+                    "diseasesDetails",
+                    diseaseStages[position].diseasesDetails as Serializable?
+                )
+                intent.putExtra("BUNDLE", args)
                 intent.putExtra("ParticularStagesDiseases", "ParticularStagesDiseases")
                 context?.startActivity(intent)
-            })
+            }
 
         } catch (e: JSONException) {
             e.printStackTrace()
