@@ -2,6 +2,7 @@ package in.gov.mahapocra.farmerapppks.activity;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -40,6 +41,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.JsonObject;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -88,8 +90,15 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
     private TextView nav_user_name;
     private TextView timestamp_textView;
     private TextView nav_user_phone;
+    private TextView yourCropTv;
+    private TextView addChangeCropTV;
+    private ImageView addChangeCropIV;
+    private TextView savedCropNameTextView;
+    private ImageView savedCropNameImageView;
     private ImageView imgLangChange;
     private ImageView imgNotification;
+    private CardView savedCropNameCardView;
+    private ImageView deleteCropImageView;
     private ImageView imgCallIcon;
     private ListView menuListView;
     private FloatingActionButton floatingActionButton;
@@ -105,6 +114,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
     TextView alertHeadingTv;
     private AppPreferenceManager appPreferenceManager;
     private JSONArray jsonArray;
+    private boolean showToast = true;
 
     private static final String[] arrayCategory = new String[]{
             "Pest and Diseases", "Identify Pest/Disease", "Crop Advisory", "Fertilizer Calculator", "Climate Resilent Technology", "Soil Health Card",
@@ -133,6 +143,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         if (AppSettings.getLanguage(DashboardScreen.this).equalsIgnoreCase("2")) {
             languageToLoad = "hi";
         }
+        showToast = true;
         Locale locale = new Locale(languageToLoad);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
@@ -142,6 +153,11 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         setContentView(R.layout.activity_dashboard_screen);
         appPreferenceManager = new AppPreferenceManager(this);
         init();
+
+        deleteCropImageView.setOnClickListener(view -> {
+            cropId = savedCropId;
+            deleteDialog();
+        });
 
         timestamp_textView.setText(getFormattedTimestamp());
         LinearLayout temperatureLayout = findViewById(R.id.temperatureLayout);
@@ -195,6 +211,31 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         }
 
         appPreferenceManager.clearAll();
+        dashboardGridItemsLayoutSetup();
+        imgLangChange.setOnClickListener(v -> openChangeLangPopup());
+        imgNotification.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardScreen.this, ComingSoonActivity.class);
+            intent.putExtra("notification", "mayu");
+            startActivity(intent);
+        });
+        imgCallIcon.setOnClickListener(v -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                callingFun();
+            }
+        });
+
+        addCrop.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardScreen.this, AddCropActivity.class);
+            appPreferenceManager.clearPreference(AppConstants.ACTION_FROM_DASHBOARD);
+            startActivity(intent);
+        });
+        setVersion();
+        getFarmerSelectedCrop(languageToLoad);
+        requestingPermissions();
+
+    }
+
+    private void dashboardGridItemsLayoutSetup() {
         gridView.setOnItemClickListener((parent, v, position, id) -> {
             switch (position) {
                 case 0:
@@ -268,26 +309,6 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                     break;
             }
         });
-        imgLangChange.setOnClickListener(v -> openChangeLangPopup());
-        imgNotification.setOnClickListener(v -> {
-            Intent intent = new Intent(DashboardScreen.this, ComingSoonActivity.class);
-            intent.putExtra("notification", "mayu");
-            startActivity(intent);
-        });
-        imgCallIcon.setOnClickListener(v -> {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                callingFun();
-            }
-        });
-
-        addCrop.setOnClickListener(v -> {
-            Intent intent = new Intent(DashboardScreen.this, AddCropActivity.class);
-            appPreferenceManager.clearPreference(AppConstants.ACTION_FROM_DASHBOARD);
-            startActivity(intent);
-        });
-        setVersion();
-        getFarmerSelectedCrop(languageToLoad);
-        requestingPermissions();
     }
 
     public static String getFormattedTimestamp() {
@@ -346,8 +367,15 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
             getUserDetails();
         }
         addCrop = findViewById(R.id.AddCropTv);
+        yourCropTv = findViewById(R.id.yourCropTv);
+        savedCropNameTextView = findViewById(R.id.savedCropNameTextView);
+        savedCropNameImageView = findViewById(R.id.savedCropNameImageView);
+        addChangeCropTV = findViewById(R.id.addChangeCropTV);
+        addChangeCropIV = findViewById(R.id.addChangeCropIV);
         timestamp_textView = findViewById(R.id.textView7);
         selectedCropListRecyc = findViewById(R.id.selectedCrops);
+        savedCropNameCardView = findViewById(R.id.savedCropNameCardView);
+        deleteCropImageView = findViewById(R.id.deleteCropImageView);
         gridView = findViewById(R.id.gridViewJobs);
         imgLangChange = findViewById(R.id.imgLangChange);
         imgNotification = findViewById(R.id.imgNotification);
@@ -636,35 +664,47 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                                     savedCropName = selectedCrop.getString("name");
                                     savedCropImageUrl = selectedCrop.getString("image");
                                     savedCropWoTRId = selectedCrop.getString("wotr_crop_id");
+                                    addChangeCropTV.setText("Change Crop");
+                                    addChangeCropIV.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_swap));
+                                    savedCropNameCardView.setVisibility(View.VISIBLE);
+                                    savedCropNameTextView.setText(savedCropName);
+                                    Picasso.get().load(savedCropImageUrl).fit().centerCrop().into(savedCropNameImageView);
+                                    yourCropTv.setVisibility(View.GONE);
                                     getCropStagesAndAdvisory();
                                     selectedCropList.add(new CropsCategName(selectedCrop.getInt("crop_id"), selectedCrop.getString("name"), selectedCrop.getString("image"), selectedCrop.getString("wotr_crop_id")));
                                 } catch (JSONException e) {
                                     throw new RuntimeException(e);
                                 }
                             }
+                            Log.d(TAG, "onResponse: " + selectedCropList);
                             AppSettings.getInstance().setList(
                                     this, AppConstants.kFarmerCrop,
                                     Arrays.asList(selectedCropList.toArray()));
-                            Log.d(TAG, "onResponse: is Not Empty");
                         } else {
-                            savedCropName = "";
-                            Log.d(TAG, "onResponse: is Empty");
+                            savedCropNameCardView.setVisibility(View.GONE);
+                            yourCropTv.setVisibility(View.VISIBLE);
+                            yourCropTv.setText("My Crop");
+                            addChangeCropTV.setText("Add Crop");
+                            addChangeCropIV.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.baseline_add_24));
                         }
                         if (selectedCropList != null) {
                             alertHeadingTv.setVisibility(View.GONE);
                             showCropList(selectedCropList);
                         } else {
-                            alertHeadingTv.setVisibility(View.VISIBLE);
+//                            alertHeadingTv.setVisibility(View.VISIBLE);
                             selectedCropListRecyc.setVisibility(View.GONE);
                         }
                     } else {
                         UIToastMessage.show(this, farmersSelectedCropResponse.getResponse());
                     }
+                    updateSavedCropDetails();
                     break;
                 case 3:
                     ResponseModel deleteSelectedCropResponse = new ResponseModel(jSONObject);
                     if (deleteSelectedCropResponse.getStatus()) {
-                        UIToastMessage.show(this, deleteSelectedCropResponse.getResponse());
+                        if (showToast) {
+                            UIToastMessage.show(this, deleteSelectedCropResponse.getResponse());
+                        }
                         AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null);
                         selectedCropList.clear();
                         getFarmerSelectedCrop(languageToLoad);
@@ -692,8 +732,18 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         }
     }
 
+    private void updateSavedCropDetails() {
+        if (selectedCropList != null) {
+            if (selectedCropList.size() > 1) {
+                showToast = false;
+                cropId = selectedCropList.get(0).getId();
+                deleteFarmerSelectedCrop();
+            }
+        }
+    }
+
     private void showCropList(ArrayList<CropsCategName> selectedCropList) {
-        selectedCropListRecyc.setVisibility(View.VISIBLE);
+//        selectedCropListRecyc.setVisibility(View.VISIBLE);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         selectedCropListRecyc.setLayoutManager(layoutManager);
         selectedCropListRecyc.setHasFixedSize(true);
@@ -701,6 +751,18 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         VideosImageDetailsAdapter adapter = new VideosImageDetailsAdapter(this, selectedCropList, this, "dashboardScreen");
         selectedCropListRecyc.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+    }
+
+    void deleteDialog() {
+        Dialog dialog = new AlertDialog.Builder(this)
+                .setCancelable(false)
+                .setTitle("Delete Crop")
+                .setMessage("Are you sure you want to delete?")
+                .setPositiveButton("Yes", (dialogInterface, i) -> deleteFarmerSelectedCrop())
+                .setNegativeButton("No, Thanks", (dialogInterface, i) -> dialogInterface.dismiss())
+                .create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 
     @Override

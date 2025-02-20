@@ -22,6 +22,7 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
@@ -132,7 +133,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
             villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
             passwordEditText.visibility = View.GONE
             confirmPasswordEditText.visibility = View.GONE
-            deleteAccountButton.visibility = View.VISIBLE
+            deleteAccountButton.visibility = View.GONE
             nameEditText.setText(userName)
             mobNoEditText.setText(registerMob)
             emailId.setText(emailid)
@@ -489,7 +490,8 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
     }
 
     private fun addVerificationDialog(sentOTP: String) {
-        Log.d("sentOTP", sentOTP)
+        var countDownTimer: CountDownTimer? = null
+        countDownTimer?.cancel()
         dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -500,9 +502,22 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
+        val countdownTextview = dialog.findViewById<TextView>(R.id.countdownTextview)
+        countDownTimer = object : CountDownTimer(90000 , 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val minutes = (millisUntilFinished / 1000) / 60
+                val seconds = (millisUntilFinished / 1000) % 60
+                countdownTextview.text = String.format("%02d:%02d", minutes, seconds)
+            }
+
+            override fun onFinish() {
+                countdownTextview.text = "00:00"
+            }
+        }
+        countDownTimer.start()
+
         val dialogTitle = dialog.findViewById<TextView>(R.id.dialogTitle)
         dialogTitle.text = "Enter OTP"
-        Log.d("sentOTP22222", sentOTP)
 
         val receiveOTPEditText = dialog.findViewById<EditText>(R.id.OptEditText)
         val submitButton = dialog.findViewById<Button>(R.id.submitButton)

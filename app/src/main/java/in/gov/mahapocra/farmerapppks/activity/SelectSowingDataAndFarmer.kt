@@ -161,8 +161,7 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
             val response = ResponseModel(jSONObject)
             if (response.status) {
                 if (response.response.equals("crop saved")) {
-                    var selectedArrayLists: List<Objects>? = null
-                    selectedArrayLists = AppSettings.getInstance()
+                    val selectedArrayLists: List<Objects>? = AppSettings.getInstance()
                         ?.getList(this, AppConstants.kFarmerCrop) as? List<Objects>
                     if (selectedArrayLists != null) {
                         selectedCropList = ArrayList()
@@ -172,10 +171,10 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
                             val gson = Gson()
                             val element = gson.toJson(
                                 selectedArrayLists,
-                                object : TypeToken<java.util.ArrayList<CropsCategName?>?>() {}.type
+                                object : TypeToken<ArrayList<CropsCategName?>?>() {}.type
                             )
                             val listType =
-                                object : TypeToken<java.util.ArrayList<CropsCategName?>?>() {}.type
+                                object : TypeToken<ArrayList<CropsCategName?>?>() {}.type
                             selectedCropList = Gson().fromJson(element, listType)
                             selectedCropList.add(CropsCategName(cropId!!, mName, mUrl, wotrCropId))
                             AppSettings.getInstance().setList(
