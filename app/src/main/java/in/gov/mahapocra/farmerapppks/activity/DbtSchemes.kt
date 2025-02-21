@@ -30,7 +30,8 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
 
-class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback, OnMultiRecyclerItemClickListener {
+class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
+    OnMultiRecyclerItemClickListener {
 
     private var activityGrpWiseDetailsJSONArray: JSONArray? = null
     private var dbtActivityGrp: RecyclerView? = null
@@ -42,29 +43,29 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback, OnM
         super.onCreate(savedInstanceState)
         if (AppSettings.getLanguage(this@DbtSchemes).equals("2", ignoreCase = true)) {
             languageToLoad = "mr"
-        }else{
+        } else {
             languageToLoad = "en"
         }
         setContentView(R.layout.activity_dbt_schemes)
         init()
 
-        imageMenushow?.setVisibility(View.VISIBLE);
+        imageMenushow?.visibility = View.VISIBLE
         textViewHeaderTitle?.setText(R.string.dbtschema)
-        imageMenushow?.setOnClickListener(View.OnClickListener {
+        imageMenushow?.setOnClickListener {
             val intent = Intent(this, DashboardScreen::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
-        })
+        }
         dbtSchemesLists()
     }
 
     private fun init() {
         dbtActivityGrp = findViewById(R.id.dbtActivityGrp)
-       // dbtActivityGrp.setHasFixedSize(false)
-        textViewHeaderTitle=findViewById(R.id.textViewHeaderTitle);
-        imageMenushow=findViewById(R.id.imageMenushow);
+        // dbtActivityGrp.setHasFixedSize(false)
+        textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
+        imageMenushow = findViewById(R.id.imageMenushow)
 
     }
 
@@ -72,7 +73,7 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback, OnM
         Log.d("languageToLoad12121", languageToLoad.toString())
         try {
             val secreateKey: String = APIServices.SSO_KEY
-         //   val lang: String = "mr"
+            //   val lang: String = "mr"
             val data: String = "No"
 
             //val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
@@ -86,16 +87,10 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback, OnM
                 )
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getDbtActivitiesDetails(secreateKey, languageToLoad, data)
-            DebugLog.getInstance().d("param1=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                    .d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()))
+            val responseCall: Call<JsonObject> =
+                apiRequest.getDbtActivitiesDetails(secreateKey, languageToLoad, data)
             api.postRequest(responseCall, this, 1)
-            DebugLog.getInstance().d("param=" + responseCall.request().toString())
-            DebugLog.getInstance()
-                    .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
         } catch (e: JSONException) {
-            DebugLog.getInstance().d("JSONException=" + e.toString())
             e.printStackTrace()
         }
     }
@@ -111,43 +106,34 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback, OnM
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 1 && jSONObject != null) {
             val response = ResponseModel(jSONObject)
-            Log.d("jSONObject121212", jSONObject.toString())
             if (response.status) {
                 activityGrpWiseDetailsJSONArray = response.getActivityGrpArray()
-
-                Log.d("warehouseAvailability",activityGrpWiseDetailsJSONArray.toString())
-
-               // if (activityGrpWiseDetailsJSONArray?.length()!! > 0) {
-                    val adaptorDbtActivityGrp =
-                        BbtActivityGrpAdapter(
-                            this,
-                            this,
-                            activityGrpWiseDetailsJSONArray,
-                            "dbtSchemes"
-                        )
-                    dbtActivityGrp?.setLayoutManager(
-                            LinearLayoutManager(
-                                    this,
-                                    LinearLayoutManager.VERTICAL,
-                                    false
-                            )
+                val adaptorDbtActivityGrp =
+                    BbtActivityGrpAdapter(
+                        this,
+                        this,
+                        activityGrpWiseDetailsJSONArray,
+                        "dbtSchemes"
                     )
-                Log.d("dbtdata","adaptorDbtActivityGrp="+adaptorDbtActivityGrp);
-                    dbtActivityGrp?.setAdapter(adaptorDbtActivityGrp)
-                    adaptorDbtActivityGrp.notifyDataSetChanged()
-               // }
-
-
+                dbtActivityGrp?.setLayoutManager(
+                    LinearLayoutManager(
+                        this,
+                        LinearLayoutManager.VERTICAL,
+                        false
+                    )
+                )
+                dbtActivityGrp?.setAdapter(adaptorDbtActivityGrp)
+                adaptorDbtActivityGrp.notifyDataSetChanged()
             } else {
-                 UIToastMessage.show(this, response.response)
+                UIToastMessage.show(this, response.response)
             }
         }
     }
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
         val jsonObject = obj as JSONObject
-        val dbtGrpID:String = jsonObject.getString("ActivityGroupID")
-        var dbtGrpActivityName:String = jsonObject.getString("ActivityGroupName")
+        val dbtGrpID: String = jsonObject.getString("ActivityGroupID")
+        val dbtGrpActivityName: String = jsonObject.getString("ActivityGroupName")
         DebugLog.getInstance().d("jsonObject=$jsonObject")
 
         if (i == 2) {

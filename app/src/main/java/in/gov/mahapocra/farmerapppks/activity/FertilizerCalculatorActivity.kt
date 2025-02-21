@@ -279,13 +279,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     Toast.LENGTH_SHORT
                 ).show()
                 return
-            } else if ((nitrogenValue.toInt() < 60 || nitrogenValue.toInt() > 100) ||
-                (phosphorusValue.toInt() < 60 || phosphorusValue.toInt() > 100) ||
-                (potassiumValue.toInt() < 60 || potassiumValue.toInt() > 100)
-            ) {
-                Toast.makeText(this, "NPK values should be between 60 and 100", Toast.LENGTH_SHORT)
-                    .show()
-                return
             }
         }
         if (cropId == 0) {

@@ -40,4 +40,5 @@ public interface AppConstants {
     String tmpSOWINGDATE = "tmpSOWINGDATE";
     String tmpMURL = "tmpMURL";
     String tmpCROPNAME = "tmpCROPNAME";
+    String WEATHER_RESPONSE = "WEATHER_RESPONSE";
 }

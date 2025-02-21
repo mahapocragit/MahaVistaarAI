@@ -228,18 +228,18 @@ class WeatherHome : AppCompatActivity(), ApiCallbackCode, AlertListEventListener
             jsonObject.put("lang", languageToLoad)
 
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-//            val api =
-//                AppInventorApi(
-//                    this,
-//                    APIServices.SSO,
-//                    "",
-//                    AppString(this).getkMSG_WAIT(),
-//                    true
-//                )
-//            val retrofit: Retrofit = api.getRetrofitInstance()
-//            val apiRequest = retrofit.create(APIRequest::class.java)
-//            val responseCall: Call<JsonObject> = apiRequest.getWeatherDetails(requestBody)
-//            api.postRequest(responseCall, this, 3)
+            val api =
+                AppInventorApi(
+                    this,
+                    APIServices.SSO,
+                    "",
+                    AppString(this).getkMSG_WAIT(),
+                    true
+                )
+            val retrofit: Retrofit = api.getRetrofitInstance()
+            val apiRequest = retrofit.create(APIRequest::class.java)
+            val responseCall: Call<JsonObject> = apiRequest.getWeatherDetails(requestBody)
+            api.postRequest(responseCall, this, 3)
         } catch (e: JSONException) {
             e.printStackTrace()
         }

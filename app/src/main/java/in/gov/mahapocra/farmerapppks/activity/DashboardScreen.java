@@ -40,6 +40,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 
@@ -89,6 +90,8 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
     private CardView addCrop;
     private TextView nav_user_name;
     private TextView timestamp_textView;
+    private TextView temperatureTextView;
+    private TextView weatherTalukaTV;
     private TextView nav_user_phone;
     private TextView yourCropTv;
     private TextView addChangeCropTV;
@@ -130,9 +133,8 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
     static int[] arrayCategoryImg = new int[]{
             R.drawable.ladybug, R.drawable.pest, R.drawable.ecology, R.drawable.fertilizer, R.drawable.climate_change, R.drawable.soil,
-            R.drawable.commodity, R.drawable.warehouse, R.drawable.world_news
+            R.drawable.commodity, R.drawable.warehouse, R.drawable.ic_dbt
     };
-
     ArrayList<CropsCategName> selectedCropList;
 
     @Override
@@ -232,7 +234,13 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         setVersion();
         getFarmerSelectedCrop(languageToLoad);
         requestingPermissions();
+        int talukaID = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0);
+        String talukaName = AppSettings.getInstance().getSavedValue(this, AppConstants.uTALUKA);
 
+        if (talukaID!=0) {
+            callForWeatherApi(talukaID);
+            weatherTalukaTV.setText(talukaName);
+        }
     }
 
     private void dashboardGridItemsLayoutSetup() {
@@ -373,6 +381,8 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         addChangeCropTV = findViewById(R.id.addChangeCropTV);
         addChangeCropIV = findViewById(R.id.addChangeCropIV);
         timestamp_textView = findViewById(R.id.textView7);
+        temperatureTextView = findViewById(R.id.temperatureTextView);
+        weatherTalukaTV = findViewById(R.id.weatherTalukaTV);
         selectedCropListRecyc = findViewById(R.id.selectedCrops);
         savedCropNameCardView = findViewById(R.id.savedCropNameCardView);
         deleteCropImageView = findViewById(R.id.deleteCropImageView);
@@ -646,6 +656,8 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                                     e.printStackTrace();
                                 }
                             }
+
+                            callForWeatherApi(strTalukaId);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -676,14 +688,13 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                                     throw new RuntimeException(e);
                                 }
                             }
-                            Log.d(TAG, "onResponse: " + selectedCropList);
                             AppSettings.getInstance().setList(
                                     this, AppConstants.kFarmerCrop,
                                     Arrays.asList(selectedCropList.toArray()));
                         } else {
                             savedCropNameCardView.setVisibility(View.GONE);
                             yourCropTv.setVisibility(View.VISIBLE);
-                            yourCropTv.setText("My Crop");
+                            yourCropTv.setText("No crop added");
                             addChangeCropTV.setText("Add Crop");
                             addChangeCropIV.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.baseline_add_24));
                         }
@@ -728,16 +739,59 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                         }
                     }
                     break;
+                case 5:
+                    if (jSONObject != null){
+                        appPreferenceManager.saveString(AppConstants.WEATHER_RESPONSE, jSONObject.toString());
+                        ResponseModel response = new ResponseModel(jSONObject);
+                        if (response.getStatus()) {
+                            JSONObject temperatureObject = jSONObject.optJSONObject("Temperature");
+                            int tempMin = temperatureObject.optInt("min");
+                            int tempMax = temperatureObject.optInt("max");
+                            String temperature = tempMin+"°C / "+tempMax+"°C";
+                            temperatureTextView.setText(temperature);
+                        }
+                    }
+                    break;
             }
+        }
+    }
+
+    private void callForWeatherApi(int talukaID) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("taluka", talukaID);
+            jsonObject.put("lang", languageToLoad);
+
+            RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
+            AppInventorApi api = new AppInventorApi(
+                    this,
+                    APIServices.SSO,
+                    "",
+                    new AppString(this).getkMSG_WAIT(),
+                    true
+            );
+
+            Retrofit retrofit = api.getRetrofitInstance();
+            APIRequest apiRequest = retrofit.create(APIRequest.class);
+            Call<JsonObject> responseCall = apiRequest.getWeatherDetails(requestBody);
+
+            api.postRequest(responseCall, this, 5);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
     private void updateSavedCropDetails() {
         if (selectedCropList != null) {
-            if (selectedCropList.size() > 1) {
-                showToast = false;
-                cropId = selectedCropList.get(0).getId();
-                deleteFarmerSelectedCrop();
+            if (selectedCropList.size()>1) {
+                for (int i = 0; i < selectedCropList.size(); i++) {
+                    Log.d(TAG, "updateSavedCropDetails: " + savedCropName + "   " + selectedCropList.get(i).getmName());
+                    if (selectedCropList.get(i).getmName().equals(savedCropName)) {
+                        cropId = selectedCropList.get(i).getId();
+                        showToast = false;
+                        deleteFarmerSelectedCrop();
+                    }
+                }
             }
         }
     }

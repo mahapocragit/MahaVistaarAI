@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.ChatbotFragment">
+    tools:context=".ui.chatbot.ChatbotFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -116,9 +116,18 @@
                 android:background="#E2E8F0"
                 android:padding="12dp"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/mic"
+                app:srcCompat="@drawable/ic_send"
                 app:tint="#4B5563" />
 
         </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

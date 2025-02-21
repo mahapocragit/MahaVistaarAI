@@ -46,7 +46,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/weatherTalukaTV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Mumbai"
@@ -62,12 +62,12 @@
                     android:textSize="@dimen/_12sdp" />
 
                 <TextView
-                    android:id="@+id/textView6"
+                    android:id="@+id/temperatureTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="22°C"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/_42sdp"
+                    android:textSize="@dimen/_18sdp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -125,9 +125,8 @@
                             android:paddingStart="@dimen/_10sdp"
                             android:layout_weight="1"
                             android:visibility="visible"
-                            android:text="My Crop"
-                            android:textSize="@dimen/_16sdp"
-                            android:textStyle="bold" />
+                            android:text="No crop added"
+                            android:textSize="@dimen/_12sdp" />
 
                         <androidx.cardview.widget.CardView
                             android:id="@+id/savedCropNameCardView"

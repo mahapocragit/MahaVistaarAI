@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import in.gov.mahapocra.farmerapppks.R;
-import in.gov.mahapocra.farmerapppks.ui.ChatbotFragment;
+import in.gov.mahapocra.farmerapppks.ui.chatbot.ChatbotFragment;
 
 public class TempDashboardActivity extends AppCompatActivity {
 

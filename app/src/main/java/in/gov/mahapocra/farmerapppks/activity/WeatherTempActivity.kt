@@ -7,11 +7,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayoutMediator
+import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.gov.mahapocra.farmerapppks.AppPreferenceManager
 import `in`.gov.mahapocra.farmerapppks.R
+import `in`.gov.mahapocra.farmerapppks.adapter.TemperatureAdapter
 import `in`.gov.mahapocra.farmerapppks.adapter.ViewPagerAdapter
+import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.databinding.ActivityWeatherHomeTempBinding
+import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
 import `in`.gov.mahapocra.farmerapppks.ui.weather.Item
-import `in`.gov.mahapocra.farmerapppks.ui.weather.WindAdapter
+import org.json.JSONArray
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -19,8 +25,10 @@ import java.util.Locale
 class WeatherTempActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityWeatherHomeTempBinding
-    private lateinit var recyclerAdapter: WindAdapter
+    private lateinit var recyclerAdapter: TemperatureAdapter
     private lateinit var itemList: List<Item>
+    private lateinit var jsonArrayForecast: JSONArray
+    private lateinit var jsonArrayPrevious: JSONArray
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,10 +38,34 @@ class WeatherTempActivity : AppCompatActivity() {
         val viewPagerAdapter = ViewPagerAdapter(this)
         binding.viewPager.adapter = viewPagerAdapter
 
-        binding.relativeLayoutTopBar.relativeLayoutToolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.gradient_top_figma))
+        binding.relativeLayoutTopBar.relativeLayoutToolbar.setBackgroundColor(
+            ContextCompat.getColor(
+                this,
+                R.color.gradient_top_figma
+            )
+        )
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
+        }
+
+        val weatherResponse = AppPreferenceManager(this).getString(AppConstants.WEATHER_RESPONSE)
+        val talukaName: String = AppSettings.getInstance().getSavedValue(this, AppConstants.uTALUKA)
+        binding.weatherTalukaTV.text = talukaName
+        if (!weatherResponse.equals(AppConstants.WEATHER_RESPONSE)) {
+            val jSONObject = JSONObject(weatherResponse)
+            val response = ResponseModel(jSONObject)
+            if (response.status) {
+                val advisory = jSONObject.optString("AgroMetAdvisory")
+                jsonArrayForecast = jSONObject.optJSONArray("Forcast")
+                jsonArrayPrevious = jSONObject.optJSONArray("Previous")
+                val temperatureObject = jSONObject.optJSONObject("Temperature")
+                val tempMin: Int = temperatureObject.optInt("min")
+                val tempMax: Int = temperatureObject.optInt("max")
+                val temperature = "$tempMin°C / $tempMax°C"
+                binding.temperatureTextView.text = temperature
+                binding.tvAgroMetAdvisory.text = advisory
+            }
         }
 
         binding.relativeLayoutTopBar.textViewHeaderTitle.text = "Weather"
@@ -52,6 +84,8 @@ class WeatherTempActivity : AppCompatActivity() {
                     ContextCompat.getDrawable(this@WeatherTempActivity, R.drawable.shape_left_white)
                 setTextColor(Color.BLACK)
             }
+            setRecyclerViewUsingArray(jsonArrayPrevious)
+            recyclerAdapter.notifyDataSetChanged()
         }
 
         binding.timestampTV.text = getFormattedTimestamp()
@@ -70,6 +104,8 @@ class WeatherTempActivity : AppCompatActivity() {
                     ContextCompat.getDrawable(this@WeatherTempActivity, R.drawable.shape_right)
                 setTextColor(Color.BLACK)
             }
+            setRecyclerViewUsingArray(jsonArrayForecast)
+            recyclerAdapter.notifyDataSetChanged()
         }
 
         // Connect TabLayout and ViewPager2
@@ -83,22 +119,15 @@ class WeatherTempActivity : AppCompatActivity() {
         }.attach()
 
 
+        setRecyclerViewUsingArray(jsonArrayForecast)
+        recyclerAdapter.notifyDataSetChanged()
+    }
+
+    private fun setRecyclerViewUsingArray(jsonArray:JSONArray){
         binding.recyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-
-        // Initialize data list
-        itemList = listOf(
-            Item("Tue"),
-            Item("Wed"),
-            Item("Thur"),
-            Item("Fri"),
-            Item("Sat"),
-            Item("Sun"),
-            Item("Mon")
-        )
-
         // Set adapter
-        recyclerAdapter = WindAdapter(itemList, "temp")
+        recyclerAdapter = TemperatureAdapter(jsonArray)
         binding.recyclerView.adapter = recyclerAdapter
     }
 
