@@ -43,6 +43,8 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
     private var tvAgroMetAdvisory: TextView? = null
     private var cropNameTextView: TextView? = null
     private lateinit var diseaseStageTv: TextView
+    private lateinit var sowingDateTextView: TextView
+    private lateinit var sowingDateLabel: TextView
     private var imageMenushow: ImageView? = null
     private lateinit var imageViewHeaderBack: ImageView
     private lateinit var editSowingDateIcon: ImageView
@@ -80,6 +82,8 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         tvAgroMetAdvisory = findViewById(R.id.tvAgroMetAdvisory)
         imageViewHeaderBack = findViewById(R.id.imageViewHeaderBack)
         diseaseStageTv = findViewById(R.id.disease_stage)
+        sowingDateTextView = findViewById(R.id.sowingDateTextView)
+        sowingDateLabel = findViewById(R.id.textView7)
         imageMenushow = findViewById(R.id.imgBackArrow)
         editSowingDateIcon = findViewById(R.id.editSowingDateIcon)
         imageHome = findViewById(R.id.imageMenushow)
@@ -88,6 +92,8 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         textViewHeaderTitle?.setText(R.string.pests_n_diseases)
         imageMenushow?.visibility = View.VISIBLE
 
+        sowingDateTextView.visibility = View.GONE
+        sowingDateLabel.text = "Selected Crop"
         imageHome.visibility = View.VISIBLE
         imageHome.setOnClickListener {
             startActivity(Intent(this, DashboardScreen::class.java))
