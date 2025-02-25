@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.view.marginLeft
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
@@ -64,9 +65,6 @@ class StageAdvisoryAdapter(
         )
         holder.cropStagesInfoRecyclerView.adapter = sAdapter
         val status = advisoryJsonDetails.getString("status")
-        if (position == (cropAdvisoryDetailsJSONArray?.length())!! - 1) {
-            holder.stepLine.visibility = View.GONE
-        }
         if (status.equals("current")) {
             holder.stage.setBackgroundResource(R.drawable.current_round_background_status)
             holder.rightTick.visibility = View.GONE
@@ -91,5 +89,9 @@ class StageAdvisoryAdapter(
                 cropAdvisoryDetailsJSONArray?.get(position) as JSONObject
             )
         }
+    }
+
+    fun Int.dpToPx(context: Context): Int {
+        return (this * context.resources.displayMetrics.density).toInt()
     }
 }

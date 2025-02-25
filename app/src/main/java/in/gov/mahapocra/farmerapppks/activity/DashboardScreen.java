@@ -54,6 +54,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executors;
 
 import in.co.appinventor.services_api.api.AppInventorApi;
 import in.co.appinventor.services_api.app_util.AppUtility;
@@ -758,27 +759,29 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
     private void callForWeatherApi(int talukaID) {
         JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("taluka", talukaID);
-            jsonObject.put("lang", languageToLoad);
+        Executors.newSingleThreadExecutor().execute(() -> {
+            try {
+                jsonObject.put("taluka", talukaID);
+                jsonObject.put("lang", languageToLoad);
 
-            RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
-            AppInventorApi api = new AppInventorApi(
-                    this,
-                    APIServices.SSO,
-                    "",
-                    new AppString(this).getkMSG_WAIT(),
-                    true
-            );
+                RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
+                AppInventorApi api = new AppInventorApi(
+                        this,
+                        APIServices.SSO,
+                        "",
+                        new AppString(this).getkMSG_WAIT(),
+                        false
+                );
 
-            Retrofit retrofit = api.getRetrofitInstance();
-            APIRequest apiRequest = retrofit.create(APIRequest.class);
-            Call<JsonObject> responseCall = apiRequest.getWeatherDetails(requestBody);
+                Retrofit retrofit = api.getRetrofitInstance();
+                APIRequest apiRequest = retrofit.create(APIRequest.class);
+                Call<JsonObject> responseCall = apiRequest.getWeatherDetails(requestBody);
 
-            api.postRequest(responseCall, this, 5);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+                api.postRequest(responseCall, this, 5);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private void updateSavedCropDetails() {
