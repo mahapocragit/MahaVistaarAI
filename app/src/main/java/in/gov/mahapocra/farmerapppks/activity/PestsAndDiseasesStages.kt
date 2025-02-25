@@ -146,10 +146,10 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
 
 
         if (cropId!! > 0) {
-            diseaseStageTv.visibility = View.VISIBLE
+//            diseaseStageTv.visibility = View.VISIBLE
             getCropStages()
         } else {
-            diseaseStageTv.visibility = View.GONE
+//            diseaseStageTv.visibility = View.GONE
             val args = intent.getBundleExtra("BUNDLE")
             diseasesDetails =
                 args?.getSerializable("diseasesDetails") as ArrayList<DiseasesDetails>?
@@ -161,7 +161,6 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
     }
 
     private fun showParticularStagesByList() {
-        if (particularStagesDiseases == "ParticularStagesDiseases") {
             diseaseStageTv.text = stagesName
             val particularDiseasesAdpter =
                 ParticularStagesDiseasesAdpater(
@@ -177,7 +176,6 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
             )
             diseasesByStage?.setAdapter(particularDiseasesAdpter)
             particularDiseasesAdpter.notifyDataSetChanged()
-        }
     }
 
     private fun getCropStages() {
@@ -243,8 +241,8 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
                         }
                         diseaseStages.add(DiseaseStages(i, stageName, diseasesDetails!!))
                     }
-                    showStages(diseaseStages)
-
+//                    showStages(diseaseStages)
+                    showParticularStagesByList()
                 } else {
                     UIToastMessage.show(this, response.response)
                 }

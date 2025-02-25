@@ -32,15 +32,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:visibility="gone"
             android:text="@string/Pests_n_diseases_by_stage"
             android:textColor="@color/black"
-            android:textSize="@dimen/text16"></TextView>
+            android:textSize="@dimen/text16"/>
 
         <TextView
             android:id="@+id/tvAgroMetAdvisory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/different_stages_text"></TextView>
+            android:text="@string/different_stages_text"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/diseasesByStage"
@@ -49,7 +50,7 @@
             android:layout_marginTop="@dimen/height5"
             android:scrollbarAlwaysDrawHorizontalTrack="true"
             android:scrollbarStyle="insideOverlay"
-            android:scrollbars="vertical"></androidx.recyclerview.widget.RecyclerView>
+            android:scrollbars="vertical"/>
 
     </LinearLayout>
 </LinearLayout>
