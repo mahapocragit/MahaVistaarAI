@@ -121,21 +121,21 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
     private boolean showToast = true;
 
     private static final String[] arrayCategory = new String[]{
-            "Pest and Diseases", "Identify Pest/Disease", "Crop Advisory", "Fertilizer Calculator", "Climate Resilent Technology", "Soil Health Card",
+            "Crop Advisory", "Soil Health Card", "Fertilizer Calculator", "Climate Resilent Technology", "Pest and Diseases", "Identify Pest/Disease",
             "Market Price", "Warehouse Availabilities", "DBT Schemes"
-
     };
 
     private static final String[] arrayCategoryMarathi = new String[]{
-            "कीड व रोग", "किटक/रोग ओळखा", "पीक सल्ला", "खत मात्रा गणक (कॅलक्यूलेटर)", "हवामान अनुकूल तंत्रज्ञान", "मृदा आरोग्य पत्रिका",
+            "पीक सल्ला", "मृदा आरोग्य पत्रिका", "खत मात्रा गणक (कॅलक्यूलेटर)", "हवामान अनुकूल तंत्रज्ञान", "कीड व रोग", "किटक/रोग ओळखा",
             "बाजारभाव", " गोदाम उपलब्धता", "थेट लाभ हस्तांतरण योजना"
 
     };
 
     static int[] arrayCategoryImg = new int[]{
-            R.drawable.ladybug, R.drawable.pest, R.drawable.ecology, R.drawable.fertilizer, R.drawable.climate_change, R.drawable.soil,
+            R.drawable.ecology, R.drawable.soil, R.drawable.fertilizer, R.drawable.climate_change, R.drawable.ladybug, R.drawable.pest,
             R.drawable.commodity, R.drawable.warehouse, R.drawable.ic_dbt
     };
+
     ArrayList<CropsCategName> selectedCropList;
 
     @Override
@@ -238,7 +238,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         int talukaID = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0);
         String talukaName = AppSettings.getInstance().getSavedValue(this, AppConstants.uTALUKA);
 
-        if (talukaID!=0) {
+        if (talukaID != 0) {
             callForWeatherApi(talukaID);
             weatherTalukaTV.setText(talukaName);
         }
@@ -248,25 +248,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         gridView.setOnItemClickListener((parent, v, position, id) -> {
             switch (position) {
                 case 0:
-                    if (savedCropName.isEmpty()) {
-                        Intent sharing = new Intent(DashboardScreen.this, AddCropActivity.class);
-                        appPreferenceManager.saveString(AppConstants.ACTION_FROM_DASHBOARD, AppConstants.PEST_AND_DISEASES_STAGES);
-                        startActivity(sharing);
-                    } else {
-                        Intent intentPestsAndDiseases = new Intent(this, PestsAndDiseasesStages.class);
-                        intentPestsAndDiseases.putExtra("cropId", savedCropId);
-                        intentPestsAndDiseases.putExtra("wotr_crop_id", savedCropWoTRId);
-                        intentPestsAndDiseases.putExtra("sowingDate", savedCropSowingDate);
-                        intentPestsAndDiseases.putExtra("mUrl", savedCropImageUrl);
-                        intentPestsAndDiseases.putExtra("mName", savedCropName);
-                        startActivity(intentPestsAndDiseases);
-                    }
-                    break;
-                case 1:
-                    Intent identify = new Intent(getApplicationContext(), Identify_dashboard.class);
-                    startActivity(identify);
-                    break;
-                case 2:
+
                     if (savedCropName.isEmpty()) {
                         Intent sharing = new Intent(DashboardScreen.this, AddCropActivity.class);
                         appPreferenceManager.saveString(AppConstants.ACTION_FROM_DASHBOARD, AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD);
@@ -281,7 +263,11 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                     }
                     break;
 
-                case 3:
+                case 1:
+                    Intent healthIntent = new Intent(DashboardScreen.this, HealthCardActivity.class);
+                    startActivity(healthIntent);
+                    break;
+                case 2:
                     if (savedCropName.isEmpty()) {
                         Intent comingSoonIntent = new Intent(DashboardScreen.this, AddCropActivity.class);
                         appPreferenceManager.saveString(AppConstants.ACTION_FROM_DASHBOARD, AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD);
@@ -296,14 +282,32 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                         startActivity(intent);
                     }
                     break;
-                case 4:
+                case 3:
                     Intent addPeople = new Intent(DashboardScreen.this, ClimateResilintTechnology.class);
                     startActivity(addPeople);
                     break;
-                case 5:
-                    Intent healthIntent = new Intent(DashboardScreen.this, HealthCardActivity.class);
-                    startActivity(healthIntent);
+
+                case 4:
+                    if (savedCropName.isEmpty()) {
+                        Intent sharing = new Intent(DashboardScreen.this, AddCropActivity.class);
+                        appPreferenceManager.saveString(AppConstants.ACTION_FROM_DASHBOARD, AppConstants.PEST_AND_DISEASES_STAGES);
+                        startActivity(sharing);
+                    } else {
+                        Intent intentPestsAndDiseases = new Intent(this, PestsAndDiseasesStages.class);
+                        intentPestsAndDiseases.putExtra("cropId", savedCropId);
+                        intentPestsAndDiseases.putExtra("wotr_crop_id", savedCropWoTRId);
+                        intentPestsAndDiseases.putExtra("sowingDate", savedCropSowingDate);
+                        intentPestsAndDiseases.putExtra("mUrl", savedCropImageUrl);
+                        intentPestsAndDiseases.putExtra("mName", savedCropName);
+                        startActivity(intentPestsAndDiseases);
+                    }
                     break;
+
+                case 5:
+                    Intent identify = new Intent(getApplicationContext(), Identify_dashboard.class);
+                    startActivity(identify);
+                    break;
+
                 case 6:
                     Intent marketIntent = new Intent(DashboardScreen.this, MarketPrice.class);
                     startActivity(marketIntent);
@@ -741,14 +745,14 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                     }
                     break;
                 case 5:
-                    if (jSONObject != null){
+                    if (jSONObject != null) {
                         appPreferenceManager.saveString(AppConstants.WEATHER_RESPONSE, jSONObject.toString());
                         ResponseModel response = new ResponseModel(jSONObject);
                         if (response.getStatus()) {
                             JSONObject temperatureObject = jSONObject.optJSONObject("Temperature");
                             int tempMin = temperatureObject.optInt("min");
                             int tempMax = temperatureObject.optInt("max");
-                            String temperature = tempMin+"°C / "+tempMax+"°C";
+                            String temperature = tempMin + "°C / " + tempMax + "°C";
                             temperatureTextView.setText(temperature);
                         }
                     }
@@ -786,7 +790,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
     private void updateSavedCropDetails() {
         if (selectedCropList != null) {
-            if (selectedCropList.size()>1) {
+            if (selectedCropList.size() > 1) {
                 for (int i = 0; i < selectedCropList.size(); i++) {
                     Log.d(TAG, "updateSavedCropDetails: " + savedCropName + "   " + selectedCropList.get(i).getmName());
                     if (selectedCropList.get(i).getmName().equals(savedCropName)) {

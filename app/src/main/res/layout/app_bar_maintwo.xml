@@ -65,6 +65,8 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_maintwo" />
+    <include
+        android:id="@+id/dashboardScreenLayout"
+        layout="@layout/content_maintwo" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -256,6 +256,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     }
 
     private fun validation() {
+        binding.fertlizerOptRcl.visibility = View.VISIBLE
         acrArea = binding.edtAcre.text.toString()
         gunthaArea = binding.edtGuntha.text.toString()
         if (gunthaArea.isBlank()) {
@@ -535,6 +536,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
 
     private fun showCalculatorData() {
         if (fertilizerOptionValue?.length()!! > 0) {
+            binding.fertlizerOptRcl.visibility = View.VISIBLE
             binding.selectedOptionTv.visibility = View.VISIBLE
             binding.availableOptionTv.visibility = View.VISIBLE
             if (availableOption == "fertilizerSelectedValue") {
@@ -590,6 +592,9 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             optionRclAdapter.setItemClickListener(deleteApi = itemClickListener)
             binding.fertlizerOptRcl.adapter = optionRclAdapter
             optionRclAdapter.notifyDataSetChanged()
+        }else{
+            binding.fertlizerOptRcl.visibility = View.GONE
+            Toast.makeText(this, "NO DATA FOUND", Toast.LENGTH_SHORT).show()
         }
     }
 
