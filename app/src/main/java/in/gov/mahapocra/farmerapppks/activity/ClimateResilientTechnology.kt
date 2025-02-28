@@ -2,7 +2,6 @@ package `in`.gov.mahapocra.farmerapppks.activity
 
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
-import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
@@ -12,11 +11,10 @@ import `in`.gov.mahapocra.farmerapppks.adapter.ClimateResilientTechnology
 import `in`.gov.mahapocra.farmerapppks.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
-import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -103,7 +101,8 @@ class ClimateResilientTechnology : AppCompatActivity(), ApiJSONObjCallback, ApiC
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 2) {
             if (jSONObject != null) {
-                val response = ResponseModel(jSONObject)
+                val response =
+                    ResponseModel(jSONObject)
                 if (response.getStatus()) {
                     resilientGrpWiseDetailsJSONArray = response.getResilientyGrpArray()
                     val adaptorResilientTechnologyGrp =

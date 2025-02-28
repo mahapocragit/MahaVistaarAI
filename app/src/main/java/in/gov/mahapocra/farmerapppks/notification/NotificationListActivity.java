@@ -32,7 +32,7 @@ import in.gov.mahapocra.farmerapppks.activity.DashboardScreen;
 import in.gov.mahapocra.farmerapppks.api.APIRequest;
 import in.gov.mahapocra.farmerapppks.api.APIServices;
 import in.gov.mahapocra.farmerapppks.app_util.AppConstants;
-import in.gov.mahapocra.farmerapppks.models.response.ResponseModel;
+import in.gov.mahapocra.farmerapppks.data.ResponseModel;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;

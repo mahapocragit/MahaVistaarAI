@@ -22,9 +22,9 @@ import `in`.gov.mahapocra.farmerapppks.adapter.TitleVideosDetailsAdapter
 import `in`.gov.mahapocra.farmerapppks.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
-import `in`.gov.mahapocra.farmerapppks.models.response.CropsCategName
-import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
-import `in`.gov.mahapocra.farmerapppks.models.response.VideoDetails
+import `in`.gov.mahapocra.farmerapppks.data.CropsCategName
+import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.data.VideoDetails
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -132,7 +132,8 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
 
     override fun onResponse(jSONObject: JSONObject?, k: Int) {
         if (k == 1 && jSONObject != null) {
-            val response = ResponseModel(jSONObject)
+            val response =
+                ResponseModel(jSONObject)
 
             if (response.status) {
                 cropJsonArray = response.getdataArray()

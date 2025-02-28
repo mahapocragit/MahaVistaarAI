@@ -24,8 +24,8 @@ import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
 import `in`.gov.mahapocra.farmerapppks.databinding.ActivitySelectSowingDataAndFarmerBinding
-import `in`.gov.mahapocra.farmerapppks.models.response.CropsCategName
-import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.data.CropsCategName
+import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
@@ -158,7 +158,8 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 1 && jSONObject != null) {
-            val response = ResponseModel(jSONObject)
+            val response =
+                ResponseModel(jSONObject)
             if (response.status) {
                 if (response.response.equals("crop saved")) {
                     val selectedArrayLists: List<Objects>? = AppSettings.getInstance()

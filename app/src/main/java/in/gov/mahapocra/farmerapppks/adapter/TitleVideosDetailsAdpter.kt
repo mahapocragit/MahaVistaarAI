@@ -11,12 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.gov.mahapocra.farmerapppks.R
-import `in`.gov.mahapocra.farmerapppks.models.response.CropsCategName
-import `in`.gov.mahapocra.farmerapppks.models.response.VideoDetails
+import `in`.gov.mahapocra.farmerapppks.data.CropsCategName
+import `in`.gov.mahapocra.farmerapppks.data.VideoDetails
 import org.json.JSONException
 import java.util.ArrayList
 
-class TitleVideosDetailsAdapter(private var context: Context? = null, private var videoDetailsList: List<VideoDetails>,private var callerActivity:String): RecyclerView.Adapter<TitleVideosDetailsAdapter.ViewHolder>(),
+class TitleVideosDetailsAdapter(private var context: Context? = null, private var videoDetailsList: List<VideoDetails>, private var callerActivity:String): RecyclerView.Adapter<TitleVideosDetailsAdapter.ViewHolder>(),
     OnMultiRecyclerItemClickListener {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

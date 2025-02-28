@@ -27,9 +27,9 @@ import `in`.gov.mahapocra.farmerapppks.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
-import `in`.gov.mahapocra.farmerapppks.models.response.DiseaseStages
-import `in`.gov.mahapocra.farmerapppks.models.response.DiseasesDetails
-import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.data.DiseaseStages
+import `in`.gov.mahapocra.farmerapppks.data.DiseasesDetails
+import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -210,7 +210,8 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         if (n == 1) {
             if (jSONObject != null) {
                 DebugLog.getInstance().d("onResponse=$jSONObject")
-                val response = ResponseModel(jSONObject)
+                val response =
+                    ResponseModel(jSONObject)
                 if (response.getStatus()) {
                     stageJsonArray = response.getdataArray()
                     diseaseStages = ArrayList()

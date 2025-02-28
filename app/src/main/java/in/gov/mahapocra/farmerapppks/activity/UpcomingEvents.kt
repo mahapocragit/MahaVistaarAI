@@ -13,7 +13,7 @@ import `in`.gov.mahapocra.farmerapppks.adapter.AdaptorComingEvent
 import `in`.gov.mahapocra.farmerapppks.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
-import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -133,7 +133,8 @@ class UpcomingEvents : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 2 && jSONObject != null) {
-            val responseModel = ResponseModel(jSONObject)
+            val responseModel =
+                ResponseModel(jSONObject)
             if (responseModel.status) {
                 if (jSONObject != null) {
                     scheduleJSONArray = responseModel.getdataArray()

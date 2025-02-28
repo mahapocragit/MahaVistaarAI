@@ -20,7 +20,7 @@ import org.json.JSONObject;
 
 import in.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener;
 import in.gov.mahapocra.farmerapppks.R;
-import in.gov.mahapocra.farmerapppks.models.response.WareHouseModel;
+import in.gov.mahapocra.farmerapppks.data.WareHouseModel;
 
 public class WarehouseAvailabilityAdapterreport  extends RecyclerView.Adapter<WarehouseAvailabilityAdapterreport.ViewHolder> {
 

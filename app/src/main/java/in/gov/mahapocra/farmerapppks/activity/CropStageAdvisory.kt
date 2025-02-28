@@ -23,7 +23,7 @@ import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
 import `in`.gov.mahapocra.farmerapppks.databinding.ActivityCropStageAdvisoryBinding
-import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
@@ -205,7 +205,8 @@ class CropStageAdvisory : AppCompatActivity(), ApiCallbackCode {
         if (i == 1) {
             if (jSONObject != null) {
                 AppPreferenceManager(this).saveString("CROP_STAGE_RESPONSE", jSONObject.toString())
-                val response = ResponseModel(jSONObject)
+                val response =
+                    ResponseModel(jSONObject)
                 if (response.status) {
                     sowingDate = jSONObject.getString("sowing_date")
                     binding.sowingInfoLayout.sowingDateTextView.text = sowingDate

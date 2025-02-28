@@ -14,7 +14,7 @@ import `in`.gov.mahapocra.farmerapppks.adapter.TemperatureAdapter
 import `in`.gov.mahapocra.farmerapppks.adapter.ViewPagerAdapter
 import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.databinding.ActivityWeatherHomeTempBinding
-import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
 import `in`.gov.mahapocra.farmerapppks.ui.weather.Item
 import org.json.JSONArray
 import org.json.JSONObject
@@ -54,7 +54,8 @@ class WeatherTempActivity : AppCompatActivity() {
         binding.weatherTalukaTV.text = talukaName
         if (!weatherResponse.equals(AppConstants.WEATHER_RESPONSE)) {
             val jSONObject = JSONObject(weatherResponse)
-            val response = ResponseModel(jSONObject)
+            val response =
+                ResponseModel(jSONObject)
             if (response.status) {
                 val advisory = jSONObject.optString("AgroMetAdvisory")
                 jsonArrayForecast = jSONObject.optJSONArray("Forcast")

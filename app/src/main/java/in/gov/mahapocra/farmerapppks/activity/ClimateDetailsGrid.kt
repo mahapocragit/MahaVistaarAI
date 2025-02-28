@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.farmerapppks.R
 import `in`.gov.mahapocra.farmerapppks.adapter.ClimateGridAdapter
-import `in`.gov.mahapocra.farmerapppks.models.response.ClimateGridModel
+import `in`.gov.mahapocra.farmerapppks.data.ClimateGridModel
 
 class ClimateDetailsGrid : AppCompatActivity() {
     private var gridView: GridView? = null

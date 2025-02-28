@@ -32,7 +32,7 @@ import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
 import `in`.gov.mahapocra.farmerapppks.app_util.DeleteApi
 import `in`.gov.mahapocra.farmerapppks.databinding.ActivityFertilizerCalculatorActivityBinding
-import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -488,7 +488,10 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     }
 
                     2 -> {
-                        val response = ResponseModel(jSONObject)
+                        val response =
+                            ResponseModel(
+                                jSONObject
+                            )
                         val tokenData: JSONArray = response.getuserDataArray()
                         val tokenJsonObject: JSONObject = tokenData.getJSONObject(0)
                         token = tokenJsonObject.getString("Token")
@@ -499,7 +502,10 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     }
 
                     3 -> {
-                        val response = ResponseModel(jSONObject)
+                        val response =
+                            ResponseModel(
+                                jSONObject
+                            )
                         if (response.status) {
                             Toast.makeText(
                                 this@FertilizerCalculatorActivity,
@@ -510,7 +516,10 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     }
 
                     4 -> {
-                        val response = ResponseModel(jSONObject)
+                        val response =
+                            ResponseModel(
+                                jSONObject
+                            )
                         if (response.status) {
                             fertilizerOptionValue = response.getdataArray()
                             availableOption = "fertilizerSelectedValue"

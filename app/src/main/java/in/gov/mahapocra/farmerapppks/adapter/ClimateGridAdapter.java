@@ -1,9 +1,7 @@
 package in.gov.mahapocra.farmerapppks.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +21,7 @@ import java.util.ArrayList;
 
 import in.gov.mahapocra.farmerapppks.R;
 import in.gov.mahapocra.farmerapppks.activity.DiseaseInformation;
-import in.gov.mahapocra.farmerapppks.models.response.ClimateGridModel;
+import in.gov.mahapocra.farmerapppks.data.ClimateGridModel;
 
 public class ClimateGridAdapter extends ArrayAdapter<ClimateGridModel> {
 

@@ -2,7 +2,6 @@ package `in`.gov.mahapocra.farmerapppks.activity
 
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
-import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.listener.AlertListEventListener
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
@@ -12,7 +11,7 @@ import `in`.gov.mahapocra.farmerapppks.R
 import `in`.gov.mahapocra.farmerapppks.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
-import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -340,7 +339,8 @@ class MyVillageProfilePdf : AppCompatActivity(), ApiCallbackCode,
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
 
         if (i == 1 && jSONObject != null) {
-            val response = ResponseModel(jSONObject)
+            val response =
+                ResponseModel(jSONObject)
 
             if (response.status) {
                 districtJSONArray = response.getdataArray()
@@ -368,7 +368,8 @@ class MyVillageProfilePdf : AppCompatActivity(), ApiCallbackCode,
         }
 
         if (i == 2 && jSONObject != null) {
-            val response = ResponseModel(jSONObject)
+            val response =
+                ResponseModel(jSONObject)
 
             if (response.status) {
                 talukaJSONArray = response.getdataArray()
@@ -394,7 +395,8 @@ class MyVillageProfilePdf : AppCompatActivity(), ApiCallbackCode,
         }
 
         if (i == 3 && jSONObject != null) {
-            val response = ResponseModel(jSONObject)
+            val response =
+                ResponseModel(jSONObject)
 
             if (response.status) {
                 villJSONArray = response.getdataArray()
@@ -422,7 +424,8 @@ class MyVillageProfilePdf : AppCompatActivity(), ApiCallbackCode,
         }
 
         if (i == 4 && jSONObject != null) {
-            val response = ResponseModel(jSONObject)
+            val response =
+                ResponseModel(jSONObject)
 
             if (response.status) {
                pdfUrl = jSONObject.getString("data")

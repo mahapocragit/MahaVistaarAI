@@ -1,4 +1,4 @@
-package in.gov.mahapocra.farmerapppks.models.response;
+package in.gov.mahapocra.farmerapppks.data;
 
 public class DataModel {
     public String text;

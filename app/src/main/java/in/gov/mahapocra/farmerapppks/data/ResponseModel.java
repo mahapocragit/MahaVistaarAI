@@ -1,10 +1,9 @@
-package in.gov.mahapocra.farmerapppks.models.response;
+package in.gov.mahapocra.farmerapppks.data;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import in.co.appinventor.services_api.app_util.AppUtility;
-import in.co.appinventor.services_api.helper.JsonObject;
 
 public class ResponseModel {
     private boolean status = false;

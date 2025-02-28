@@ -21,7 +21,7 @@ import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
 import `in`.gov.mahapocra.farmerapppks.databinding.ActivityWarehouseBinding
-import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -154,7 +154,8 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
 
         if (i == 1 && jSONObject != null) {
-            val response = ResponseModel(jSONObject)
+            val response =
+                ResponseModel(jSONObject)
 
             if (response.status) {
                 districtJSONArray = response.getdataArray()
@@ -179,7 +180,8 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
             }
         }
         if (i == 3 && jSONObject != null) {
-            val response = ResponseModel(jSONObject)
+            val response =
+                ResponseModel(jSONObject)
             if (response.status) {
                 warehouseAvailabilityJSONArray = response.dataArrays
                 totalWareHouse = response.total_available_capacity()

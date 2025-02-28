@@ -11,7 +11,7 @@ import `in`.gov.mahapocra.farmerapppks.adapter.*
 import `in`.gov.mahapocra.farmerapppks.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
-import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
@@ -287,7 +287,8 @@ class DbtActivityDetails : AppCompatActivity(), ApiCallbackCode, OnMultiRecycler
     }
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 1 && jSONObject != null) {
-            val response = ResponseModel(jSONObject)
+            val response =
+                ResponseModel(jSONObject)
             Log.d("jSONObject121212", jSONObject.toString())
             if (response.status) {
                 poCRADBTActivityJSONArray = response.getActivityGrpDetailsArray()
@@ -319,7 +320,8 @@ class DbtActivityDetails : AppCompatActivity(), ApiCallbackCode, OnMultiRecycler
 
 
         if (i == 2 && jSONObject != null) {
-            val response = ResponseModel(jSONObject)
+            val response =
+                ResponseModel(jSONObject)
             if (response.status) {
 
                 requiredDocumentsJSONArray = response.getActivityGrpreqrDocArray()

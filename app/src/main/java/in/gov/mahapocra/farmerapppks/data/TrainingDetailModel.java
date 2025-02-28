@@ -1,4 +1,4 @@
-package in.gov.mahapocra.farmerapppks.models.response;
+package in.gov.mahapocra.farmerapppks.data;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

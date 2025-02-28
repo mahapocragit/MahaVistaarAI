@@ -1,4 +1,4 @@
-package in.gov.mahapocra.farmerapppks.models.response;
+package in.gov.mahapocra.farmerapppks.data;
 
 public class CropsCategName {
     public void setId(int id) {

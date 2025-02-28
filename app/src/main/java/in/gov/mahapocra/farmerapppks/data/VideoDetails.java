@@ -1,4 +1,4 @@
-package in.gov.mahapocra.farmerapppks.models.response;
+package in.gov.mahapocra.farmerapppks.data;
 
 import java.util.ArrayList;
 public class VideoDetails {

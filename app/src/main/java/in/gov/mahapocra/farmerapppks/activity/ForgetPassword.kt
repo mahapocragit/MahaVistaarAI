@@ -11,7 +11,7 @@ import `in`.gov.mahapocra.farmerapppks.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
-import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
 import android.app.Dialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -219,7 +219,8 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
         if (i == 2) {
             if (jSONObject != null) {
                 DebugLog.getInstance().d("onResponse=$jSONObject")
-                val response = ResponseModel(jSONObject)
+                val response =
+                    ResponseModel(jSONObject)
                 if (response.getStatus()) {
                     var notifiCountValue: String = jSONObject.getString("Message")
                     Toast.makeText(this, notifiCountValue, Toast.LENGTH_LONG).show()
@@ -232,7 +233,8 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
         if (i == 3) {
             if (jSONObject != null) {
                 DebugLog.getInstance().d("onResponse=$jSONObject")
-                val response = ResponseModel(jSONObject)
+                val response =
+                    ResponseModel(jSONObject)
                 if (response.getStatus()) {
                     if(loginOption == 1) {
                         var message: String = jSONObject.getString("Message")

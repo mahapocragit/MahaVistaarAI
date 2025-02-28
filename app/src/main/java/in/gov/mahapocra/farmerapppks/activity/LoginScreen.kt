@@ -14,7 +14,6 @@ import android.widget.RadioButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
@@ -27,7 +26,7 @@ import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
 import `in`.gov.mahapocra.farmerapppks.databinding.ActivityLoginScreenBinding
-import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
@@ -212,7 +211,8 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         if(i==4) {
             if (jSONObject != null) {
                 DebugLog.getInstance().d("onResponse=$jSONObject")
-                val response = ResponseModel(jSONObject)
+                val response =
+                    ResponseModel(jSONObject)
                 if (response.getStatus()) {
                     refreshToken = jSONObject.getString("refresh_token")
                     callLoginAPI(refreshToken)
@@ -225,7 +225,8 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         if (i == 2) {
             if (jSONObject != null) {
                 DebugLog.getInstance().d("onResponse=$jSONObject")
-                val response = ResponseModel(jSONObject)
+                val response =
+                    ResponseModel(jSONObject)
                 if (response.getStatus()) {
                     if(loginOption == 1) {
                         val message: String = jSONObject.getString("Message")

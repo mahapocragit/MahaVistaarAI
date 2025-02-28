@@ -14,7 +14,7 @@ import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
 import `in`.gov.mahapocra.farmerapppks.R
 import `in`.gov.mahapocra.farmerapppks.activity.DiseaseInformation
-import `in`.gov.mahapocra.farmerapppks.models.response.DiseasesDetails
+import `in`.gov.mahapocra.farmerapppks.data.DiseasesDetails
 import org.json.JSONException
 
 class ParticularStagesDiseasesAdpater (private var context: Context? = null,

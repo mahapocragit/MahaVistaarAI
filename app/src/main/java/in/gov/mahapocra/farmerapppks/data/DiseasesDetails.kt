@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.farmerapppks.models.response
+package `in`.gov.mahapocra.farmerapppks.data
 
 import android.os.Parcel
 import android.os.Parcelable

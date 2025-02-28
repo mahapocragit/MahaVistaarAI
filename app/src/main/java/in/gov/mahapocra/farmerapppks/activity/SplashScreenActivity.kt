@@ -11,7 +11,7 @@ import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.app_util.AppSession
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
-import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
@@ -111,7 +111,8 @@ class SplashScreenActivity : AppCompatActivity(), ApiCallbackCode {
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 1) {
             if (jSONObject != null) {
-                val response = ResponseModel(jSONObject)
+                val response =
+                    ResponseModel(jSONObject)
                 if (response.getStatus()) {
                     username = jSONObject.getString("Name")
                     val strMobNo: String = jSONObject.getString("MobileNo")

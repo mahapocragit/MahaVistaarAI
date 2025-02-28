@@ -11,9 +11,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.farmerapppks.R
 import `in`.gov.mahapocra.farmerapppks.activity.PestsAndDiseasesStages
-import `in`.gov.mahapocra.farmerapppks.models.response.ClimateGridModel
-import `in`.gov.mahapocra.farmerapppks.models.response.DiseaseStages
-import `in`.gov.mahapocra.farmerapppks.models.response.DiseasesDetails
+import `in`.gov.mahapocra.farmerapppks.data.ClimateGridModel
+import `in`.gov.mahapocra.farmerapppks.data.DiseaseStages
+import `in`.gov.mahapocra.farmerapppks.data.DiseasesDetails
 import org.json.JSONException
 import java.io.Serializable
 

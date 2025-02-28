@@ -14,7 +14,7 @@ import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.app_util.AppHelper
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
-import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -169,7 +169,8 @@ class TrainingLocationSelection : AppCompatActivity(), OnMultiRecyclerItemClickL
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 1 && jSONObject != null) {
-            val response = ResponseModel(jSONObject)
+            val response =
+                ResponseModel(jSONObject)
             if (response.status) {
                 districtJSONArray = response.getdataArray()
                 Log.d("Weather::districtArray", districtJSONArray.toString())

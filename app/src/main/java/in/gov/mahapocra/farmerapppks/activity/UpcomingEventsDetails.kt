@@ -27,8 +27,8 @@ import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.ApUtil
 import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
-import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
-import `in`.gov.mahapocra.farmerapppks.models.response.TrainingDetailModel
+import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.data.TrainingDetailModel
 import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONException
@@ -345,7 +345,8 @@ class UpcomingEventsDetails : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCa
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 5 && jSONObject != null) {
             // get Event detail Response
-            val responseModel = ResponseModel(jSONObject)
+            val responseModel =
+                ResponseModel(jSONObject)
             if (responseModel.status) {
                 val eventJSONArray: JSONArray = responseModel.getdataArray()
                 setScheduledEventData(eventJSONArray)

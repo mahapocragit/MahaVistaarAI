@@ -11,7 +11,7 @@ import `in`.gov.mahapocra.farmerapppks.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
-import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -126,7 +126,8 @@ class BandavarActivity : AppCompatActivity() , ApiCallbackCode {
         if (i == 1) {
             if (jSONObject != null) {
                 DebugLog.getInstance().d("onResponse=$jSONObject")
-                val response = ResponseModel(jSONObject)
+                val response =
+                    ResponseModel(jSONObject)
                 if (response.getStatus()) {
                         val message: String = jSONObject.getString("response")
                         Toast.makeText(this, message, Toast.LENGTH_LONG).show()

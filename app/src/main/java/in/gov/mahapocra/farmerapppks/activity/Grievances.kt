@@ -17,7 +17,7 @@ import `in`.gov.mahapocra.farmerapppks.app_util.ApUtil
 import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
 import `in`.gov.mahapocra.farmerapppks.app_util.ManagePermission
-import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -487,7 +487,8 @@ class Grievances : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
 
         if (i == 1 && jSONObject != null) {
-            val response = ResponseModel(jSONObject)
+            val response =
+                ResponseModel(jSONObject)
 
             if (response.status) {
                 categoryJSONArray = response.getdataArray()
@@ -500,7 +501,8 @@ class Grievances : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
             if (jSONObject != null) {
               //  Log.d("jSONObject232dacsboard", jSONObject.toString())
                 DebugLog.getInstance().d("onResponse=$jSONObject")
-                val response = ResponseModel(jSONObject)
+                val response =
+                    ResponseModel(jSONObject)
                 if (response.status) {
                 Toast.makeText(this, response.response, Toast.LENGTH_LONG).show()
                  }

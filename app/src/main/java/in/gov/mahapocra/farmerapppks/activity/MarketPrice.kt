@@ -26,7 +26,7 @@ import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
 import `in`.gov.mahapocra.farmerapppks.databinding.ActivityMarketPriceBinding
-import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -314,7 +314,8 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 1 && jSONObject != null) {
-            val response = ResponseModel(jSONObject)
+            val response =
+                ResponseModel(jSONObject)
 
             if (response.status) {
                 districtJSONArray = response.getdataArray()
@@ -340,7 +341,8 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
         }
 
         if (i == 2 && jSONObject != null) {
-            val response = ResponseModel(jSONObject)
+            val response =
+                ResponseModel(jSONObject)
 
             if (response.status) {
                 talukaJSONArray = response.getdataArray()
@@ -350,7 +352,8 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
         }
 
         if (i == 3 && jSONObject != null) {
-            val response = ResponseModel(jSONObject)
+            val response =
+                ResponseModel(jSONObject)
 
             if (response.status) {
                 marketJSONArray = response.getdataArray()
@@ -360,7 +363,8 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
         }
 
         if (i == 4 && jSONObject != null) {
-            val response = ResponseModel(jSONObject)
+            val response =
+                ResponseModel(jSONObject)
             if (response.status) {
                 binding.calenderLayout.visibility = View.VISIBLE
                 val simpleDateFormat = SimpleDateFormat("dd-MM-yyyy")
@@ -414,7 +418,8 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
         }
 
         if (i == 5 && jSONObject != null) {
-            val response = ResponseModel(jSONObject)
+            val response =
+                ResponseModel(jSONObject)
             if (response.status) {
 
                 val marketPriceAndMarketName = response.getData()

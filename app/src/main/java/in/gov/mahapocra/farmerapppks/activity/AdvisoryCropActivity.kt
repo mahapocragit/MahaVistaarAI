@@ -23,7 +23,7 @@ import `in`.gov.mahapocra.farmerapppks.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.app_util.AppString
 import `in`.gov.mahapocra.farmerapppks.databinding.ActivityAdvisoryCropBinding
-import `in`.gov.mahapocra.farmerapppks.models.response.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -117,7 +117,8 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         try {
             val cropStageResponseString = AppPreferenceManager(this).getString("CROP_STAGE_RESPONSE")
             val jSONObject = JSONObject(cropStageResponseString)
-            val response = ResponseModel(jSONObject)
+            val response =
+                ResponseModel(jSONObject)
             if (response.status) {
                 sowingDate = jSONObject.getString("sowing_date")
                 binding.sowingInfoLayout.sowingDateTextView.text = jSONObject.getString("sowing_date")
@@ -173,7 +174,8 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 1) {
             if (jSONObject != null) {
-                val response = ResponseModel(jSONObject)
+                val response =
+                    ResponseModel(jSONObject)
                 if (response.status) {
                     if (jSONObject.getString("sowing_date").isNotEmpty()) {
                         binding.sowingInfoLayout.sowingDateTextView.text =

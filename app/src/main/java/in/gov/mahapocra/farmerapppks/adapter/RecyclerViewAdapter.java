@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import in.gov.mahapocra.farmerapppks.R;
-import in.gov.mahapocra.farmerapppks.models.response.DataModel;
+import in.gov.mahapocra.farmerapppks.data.DataModel;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     ArrayList mValues;
