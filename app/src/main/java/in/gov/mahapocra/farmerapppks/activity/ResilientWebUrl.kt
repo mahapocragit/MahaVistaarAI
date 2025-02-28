@@ -18,8 +18,7 @@ class ResilientWebUrl : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_resilient_web_url)
         languageToLoad = "hi"
-        if (AppSettings.getLanguage(this@ResilientWebUrl).equals("1", ignoreCase = true))
-        {
+        if (AppSettings.getLanguage(this@ResilientWebUrl).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
         val locale = Locale(languageToLoad)
@@ -33,19 +32,14 @@ class ResilientWebUrl : AppCompatActivity() {
         init()
         val b = intent.extras
         val url = b?.getString("webUrl")
-        Log.d("urlResilientWebUrl", url.toString())
-       // climateWebView?.settings!!.javaScriptEnabled = true
-
-            openWebview(url.toString())
-
+        openWebView(url.toString())
     }
 
     fun init() {
         climateWebView = findViewById<View>(R.id.climateWebView) as WebView
     }
 
-    fun openWebview(url:String)
-    {
+    private fun openWebView(url: String) {
         climateWebView?.loadUrl(url);
     }
 

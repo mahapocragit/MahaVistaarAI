@@ -26,7 +26,6 @@ import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListene
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.farmerapppks.R
 import `in`.gov.mahapocra.farmerapppks.activity.AdvisoryCropActivity
-import `in`.gov.mahapocra.farmerapppks.activity.CropStageAdvisory
 import `in`.gov.mahapocra.farmerapppks.fragment.advisory.AdvisoryFeedback
 import org.json.JSONArray
 import org.json.JSONObject

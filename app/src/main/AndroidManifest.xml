@@ -96,8 +96,6 @@
         <activity
             android:name=".activity.AddCropActivity"
             android:exported="false" />
-        <activity android:name=".activity.NewUpdateKharip" />
-        <activity android:name=".activity.NewUpdateCRT" />
         <activity android:name=".activity.CropAdvisoryDetails" />
         <activity android:name=".activity.CropAdvisory" />
         <activity
@@ -121,9 +119,6 @@
         <activity android:name=".notification.NotificationListActivity" />
         <activity
             android:name=".activity.ViewStoriesBandavar"
-            android:exported="false" />
-        <activity
-            android:name=".activity.CropCurrentAdvisoryAndFeedback"
             android:exported="false" />
         <activity
             android:name=".activity.BandavarActivity"
@@ -160,9 +155,6 @@
             android:exported="false" />
         <activity
             android:name=".activity.MarketPrice"
-            android:exported="false" />
-        <activity
-            android:name=".activity.WeatherHome"
             android:exported="false" />
         <activity
             android:name=".activity.MyVillageProfilePdf"
@@ -210,11 +202,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.Dashboard"
-            android:exported="false"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.DashboardScreen"
             android:exported="false"

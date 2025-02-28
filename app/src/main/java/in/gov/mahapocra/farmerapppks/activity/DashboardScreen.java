@@ -43,6 +43,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 
 import in.co.appinventor.services_api.api.AppInventorApi;
@@ -145,7 +146,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         this.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         setSupportActionBar(binding.appBarMain.toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         DrawerLayout drawer = findViewById(R.id.drawer_layout1);
 
 
@@ -265,7 +266,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                     }
                     break;
                 case 3:
-                    Intent addPeople = new Intent(DashboardScreen.this, ClimateResilintTechnology.class);
+                    Intent addPeople = new Intent(DashboardScreen.this, ClimateResilientTechnology.class);
                     startActivity(addPeople);
                     break;
 
@@ -275,13 +276,13 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                         appPreferenceManager.saveString(AppConstants.ACTION_FROM_DASHBOARD, AppConstants.PEST_AND_DISEASES_STAGES);
                         startActivity(sharing);
                     } else {
-                        Intent intentPestsAndDiseases = new Intent(this, PestsAndDiseasesStages.class);
-                        intentPestsAndDiseases.putExtra("cropId", savedCropId);
-                        intentPestsAndDiseases.putExtra("wotr_crop_id", savedCropWoTRId);
-                        intentPestsAndDiseases.putExtra("sowingDate", savedCropSowingDate);
-                        intentPestsAndDiseases.putExtra("mUrl", savedCropImageUrl);
-                        intentPestsAndDiseases.putExtra("mName", savedCropName);
-                        startActivity(intentPestsAndDiseases);
+                        Intent intent = new Intent(this, PestsAndDiseasesStages.class);
+                        intent.putExtra("cropId", savedCropId);
+                        intent.putExtra("wotr_crop_id", savedCropWoTRId);
+                        intent.putExtra("sowingDate", savedCropSowingDate);
+                        intent.putExtra("mUrl", savedCropImageUrl);
+                        intent.putExtra("mName", savedCropName);
+                        startActivity(intent);
                     }
                     break;
 
@@ -316,7 +317,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
             if (!task.isSuccessful()) {
-                task.getException().printStackTrace();
+                Objects.requireNonNull(task.getException()).printStackTrace();
             }
             String token = task.getResult();
             appPreferenceManager.saveString("FCM_TOKEN", token);
@@ -708,6 +709,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                         ResponseModel response = new ResponseModel(jSONObject);
                         if (response.getStatus()) {
                             JSONObject temperatureObject = jSONObject.optJSONObject("Temperature");
+                            assert temperatureObject != null;
                             int tempMin = temperatureObject.optInt("min");
                             int tempMax = temperatureObject.optInt("max");
                             String temperature = tempMin + "°C / " + tempMax + "°C";
@@ -810,10 +812,6 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                     Intent notificationIntent = new Intent(DashboardScreen.this, NotificationListActivity.class);
                     startActivity(notificationIntent);
                     break;
-                case 4:
-                    Intent gisIntent = new Intent(DashboardScreen.this, GisActivity.class);
-                    startActivity(gisIntent);
-                    break;
                 case 5:
                     Intent trainingLocationIntent = new Intent(DashboardScreen.this, TrainingLocationSelection.class);
                     startActivity(trainingLocationIntent);
@@ -825,14 +823,8 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                 case 7:
                     logoutFromApp();
                     break;
-                case 10:
-                    startActivity(new Intent(DashboardScreen.this, AboutPocra.class));
-                    break;
                 case 11:
                     startActivity(new Intent(DashboardScreen.this, MyVillageProfilePdf.class));
-                    break;
-                case 12:
-                    startActivity(new Intent(DashboardScreen.this, DbtStatus.class));
                     break;
                 case 13:
                     if (farmerId > 0) {

@@ -38,52 +38,45 @@ class ClimateDetailsGrid : AppCompatActivity() {
         init()
         textViewHeaderTitle?.setText(R.string.climate_resilient_technology)
         val b = intent.extras
-        val craGroppLength = b!!.getInt("craGroppLength")
-         groupName = b.getStringArrayList("GroupName") as ArrayList<String>
-         groupImagePath = b.getStringArrayList("GroupImagePath") as ArrayList<String>
-         webUrl = b.getStringArrayList("WebUrl") as ArrayList<String>
-        Log.d("ClimateResilent","groupName==="+groupName.toString())
-        Log.d("ClimateResilent","groupImagePath==="+groupImagePath.toString())
-        Log.d("ClimateResilent","webUrl==="+webUrl.toString())
+        b!!.getInt("craGroppLength")
+        groupName = b.getStringArrayList("GroupName") as ArrayList<String>
+        groupImagePath = b.getStringArrayList("GroupImagePath") as ArrayList<String>
+        webUrl = b.getStringArrayList("WebUrl") as ArrayList<String>
         climateModelArrayList.clear()
         for (i in 0 until groupName.size) {
-           val groupimagePath: String = groupImagePath[i]
-           val webUrl: String = webUrl[i]
-            Log.d("groupImagePath[i]",groupImagePath[i])
-            climateModelArrayList.add(ClimateGridModel(groupName[i], groupimagePath,webUrl))
+            val groupimagePath: String = groupImagePath[i]
+            val webUrl: String = webUrl[i]
+            climateModelArrayList.add(ClimateGridModel(groupName[i], groupimagePath, webUrl))
         }
-        val adapter = ClimateGridAdapter(this, climateModelArrayList,"ClimateDetailsGrid")
-        gridView?.setAdapter(adapter)
+        val adapter = ClimateGridAdapter(this, climateModelArrayList, "ClimateDetailsGrid")
+        gridView?.adapter = adapter
         adapter.notifyDataSetChanged()
         gridView!!.onItemClickListener =
             OnItemClickListener { parents, view, position, ids ->
-                Log.d("gridView", "Pos=$position")
-                val url:String= webUrl[position]
-                Log.d("url", url)
+                val url: String = webUrl[position]
                 val intent = Intent(this, ResilientWebUrl::class.java)
                 val b = Bundle()
                 b.putSerializable("webUrl", url)
                 intent.putExtras(b)
                 startActivity(intent)
             }
-        imgBackArrow?.setVisibility(View.VISIBLE)
-        imgBackArrow?.setOnClickListener(View.OnClickListener {
-            val intent = Intent(this, ClimateResilintTechnology::class.java)
+        imgBackArrow?.visibility = View.VISIBLE
+        imgBackArrow?.setOnClickListener {
+            val intent = Intent(this, ClimateResilientTechnology::class.java)
             startActivity(intent)
-        })
+        }
     }
-    override fun onResume() {
-        super.onResume()
+
+    fun init() {
+        gridView = findViewById<View>(R.id.gridViewJobs) as GridView
+        relClimateDeatils = findViewById<View>(R.id.relClimateDeatils) as RelativeLayout
+        textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
+        imgBackArrow = findViewById(R.id.imgBackArrow)
     }
-     fun init() {
-         gridView = findViewById<View>(R.id.gridViewJobs) as GridView
-         relClimateDeatils = findViewById<View>(R.id.relClimateDeatils) as RelativeLayout
-         textViewHeaderTitle=findViewById(R.id.textViewHeaderTitle)
-         imgBackArrow=findViewById(R.id.imgBackArrow)
-     }
+
     override fun onBackPressed() {
         climateModelArrayList.clear()
-        val intent = Intent(this, ClimateResilintTechnology::class.java)
+        val intent = Intent(this, ClimateResilientTechnology::class.java)
         startActivity(intent)
         finish()
     }

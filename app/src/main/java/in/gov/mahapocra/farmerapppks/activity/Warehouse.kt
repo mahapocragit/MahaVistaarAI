@@ -47,7 +47,6 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
         super.onCreate(savedInstanceState)
         languageToLoad = "mr"
         if (AppSettings.getLanguage(this@Warehouse).equals("1", ignoreCase = true)) {
-            Log.d("getStrName=", AppSettings.getLanguage(this@Warehouse))
             languageToLoad = "en"
         }
         binding = ActivityWarehouseBinding.inflate(layoutInflater)
@@ -62,7 +61,6 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
     private fun init() {
         languageToLoad = "mr"
         if (AppSettings.getLanguage(this@Warehouse).equals("1", ignoreCase = true)) {
-            Log.d("getStrName=", AppSettings.getLanguage(this@Warehouse))
             languageToLoad = "en"
         }
 
@@ -234,6 +232,5 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
     }
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
-        TODO("Not yet implemented")
     }
 }

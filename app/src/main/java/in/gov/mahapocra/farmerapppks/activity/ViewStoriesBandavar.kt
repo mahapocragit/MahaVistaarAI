@@ -27,7 +27,7 @@ class ViewStoriesBandavar : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCall
     lateinit var textViewHeaderTitle: TextView
     lateinit var imageMenushow: ImageView
     private var recyclerViewFarmerSuccessStory: RecyclerView? = null
-    lateinit var userMobileNo: String
+    private lateinit var userMobileNo: String
     private var farmerStoryJSONArray: JSONArray? = null
     var languageToLoad: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +41,7 @@ class ViewStoriesBandavar : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCall
 
         init()
         onClick()
-        imageMenushow.setVisibility(View.VISIBLE);
+        imageMenushow.visibility = View.VISIBLE
         textViewHeaderTitle.setText(R.string.success_farmer)
         userMobileNo = AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
         getFarmerStoryList()
@@ -54,16 +54,14 @@ class ViewStoriesBandavar : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCall
     }
     private fun onClick()
     {
-        imageMenushow.setOnClickListener(View.OnClickListener {
+        imageMenushow.setOnClickListener {
             val intent = Intent(this, DashboardScreen::class.java)
             startActivity(intent)
-        })
+        }
     }
 
     private fun getFarmerStoryList() {
-        var url: String = APIServices.kBandhavarViewStory+userMobileNo
-        Log.d("ViewStoriesBandavar=","getFarmerStoryListURL="+ url)
-        Log.d("param",APIServices.SSO + url)
+        val url: String = APIServices.kBandhavarViewStory+userMobileNo
         val api = AppinventorIncAPI(this, APIServices.SSO, APIServices.SSO_KEY, "", true)
         api.getRequestData(url, this, 1)
     }
@@ -78,7 +76,6 @@ class ViewStoriesBandavar : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCall
 
             if (response.status) {
                 farmerStoryJSONArray = response.getResponseArray()
-                Log.d("ViewStoriesBandavar=","farmerStoryJSONArray="+ farmerStoryJSONArray.toString())
                 val adaptorDbtActivityGrp =
                     FarmerStoryAdapter(
                         this,
