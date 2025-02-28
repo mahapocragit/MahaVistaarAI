@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/bottom_bg_color"
-    tools:context=".activity.Grievances">
+    tools:context=".ui.screens.dashboard.sidenavigation.Grievances">
 
     <include
         android:id="@+id/relativeLayoutTopBar"

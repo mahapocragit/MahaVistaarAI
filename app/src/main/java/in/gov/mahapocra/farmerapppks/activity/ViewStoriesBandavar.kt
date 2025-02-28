@@ -7,10 +7,10 @@ import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListene
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.farmerapppks.R
-import `in`.gov.mahapocra.farmerapppks.adapter.FarmerStoryAdapter
-import `in`.gov.mahapocra.farmerapppks.api.APIServices
-import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
-import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.ui.adapters.FarmerStoryAdapter
+import `in`.gov.mahapocra.farmerapppks.data.api.APIServices
+import `in`.gov.mahapocra.farmerapppks.util.app_util.AppConstants
+import `in`.gov.mahapocra.farmerapppks.data.model.ResponseModel
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -19,6 +19,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.DashboardScreen
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -72,7 +73,9 @@ class ViewStoriesBandavar : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCall
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 1 && jSONObject != null) {
             val response =
-                ResponseModel(jSONObject)
+                ResponseModel(
+                    jSONObject
+                )
 
             if (response.status) {
                 farmerStoryJSONArray = response.getResponseArray()

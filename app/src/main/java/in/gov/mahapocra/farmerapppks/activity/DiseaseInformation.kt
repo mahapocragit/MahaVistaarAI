@@ -18,12 +18,12 @@ import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.farmerapppks.R
-import `in`.gov.mahapocra.farmerapppks.adapter.DiseasesInformationImgAdapter
-import `in`.gov.mahapocra.farmerapppks.api.APIRequest
-import `in`.gov.mahapocra.farmerapppks.api.APIServices
-import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
-import `in`.gov.mahapocra.farmerapppks.app_util.AppString
-import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.ui.adapters.DiseasesInformationImgAdapter
+import `in`.gov.mahapocra.farmerapppks.data.api.APIRequest
+import `in`.gov.mahapocra.farmerapppks.data.api.APIServices
+import `in`.gov.mahapocra.farmerapppks.util.app_util.AppConstants
+import `in`.gov.mahapocra.farmerapppks.util.app_util.AppString
+import `in`.gov.mahapocra.farmerapppks.data.model.ResponseModel
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -159,7 +159,9 @@ class DiseaseInformation : AppCompatActivity(), ApiCallbackCode {
             if (jSONObject != null) {
                 DebugLog.getInstance().d("onResponse=$jSONObject")
                 val response =
-                    ResponseModel(jSONObject)
+                    ResponseModel(
+                        jSONObject
+                    )
                 if (response.getStatus()) {
                     symptomDescriptionListWebView?.visibility = View.VISIBLE
                     pestAndDiseaseDetailsJson = response.getJSONObject()

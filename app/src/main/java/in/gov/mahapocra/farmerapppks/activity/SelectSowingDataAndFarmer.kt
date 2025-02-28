@@ -17,15 +17,19 @@ import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.listener.DatePickerRequestListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
-import `in`.gov.mahapocra.farmerapppks.AppPreferenceManager
+import `in`.gov.mahapocra.farmerapppks.util.AppPreferenceManager
 import `in`.gov.mahapocra.farmerapppks.R
-import `in`.gov.mahapocra.farmerapppks.api.APIRequest
-import `in`.gov.mahapocra.farmerapppks.api.APIServices
-import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
-import `in`.gov.mahapocra.farmerapppks.app_util.AppString
+import `in`.gov.mahapocra.farmerapppks.data.api.APIRequest
+import `in`.gov.mahapocra.farmerapppks.data.api.APIServices
+import `in`.gov.mahapocra.farmerapppks.util.app_util.AppConstants
+import `in`.gov.mahapocra.farmerapppks.util.app_util.AppString
 import `in`.gov.mahapocra.farmerapppks.databinding.ActivitySelectSowingDataAndFarmerBinding
-import `in`.gov.mahapocra.farmerapppks.data.CropsCategName
-import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.data.model.CropsCategName
+import `in`.gov.mahapocra.farmerapppks.data.model.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.FertilizerCalculatorActivity
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.PestsAndDiseasesStages
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
@@ -159,7 +163,9 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 1 && jSONObject != null) {
             val response =
-                ResponseModel(jSONObject)
+                ResponseModel(
+                    jSONObject
+                )
             if (response.status) {
                 if (response.response.equals("crop saved")) {
                     val selectedArrayLists: List<Objects>? = AppSettings.getInstance()

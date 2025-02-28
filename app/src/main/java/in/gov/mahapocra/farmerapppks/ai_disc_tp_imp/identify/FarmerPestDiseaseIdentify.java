@@ -37,7 +37,6 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 import com.google.mlkit.vision.common.InputImage;
@@ -54,13 +53,12 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import in.gov.mahapocra.farmerapppks.R;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.model_identify.disease_prediction_model1;
-import in.gov.mahapocra.farmerapppks.app_util.AppConstants;
+import in.gov.mahapocra.farmerapppks.util.app_util.AppConstants;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;

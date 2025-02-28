@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bottom_bg_color"
-    tools:context=".activity.Registration">
+    tools:context=".ui.screens.authentication.Registration">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">

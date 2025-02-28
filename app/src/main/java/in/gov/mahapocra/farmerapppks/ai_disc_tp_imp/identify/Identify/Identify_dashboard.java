@@ -4,13 +4,11 @@ package in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.Identify;
 import android.content.Intent;
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,14 +25,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import in.gov.mahapocra.farmerapppks.R;
-import in.gov.mahapocra.farmerapppks.activity.DashboardScreen;
+import in.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.DashboardScreen;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.Farmer.RecyclerTouchListener;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.adapter.DashboardAdapter;
 
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.FarmerPestDiseaseIdentify;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.model_identify.Model_Dashboard;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.model_identify.detect_ins;
-import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.model_identify.getIdentify_crops_response;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.model_identify.identify_model_croplist;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.vw_model.identify_croplist;
 

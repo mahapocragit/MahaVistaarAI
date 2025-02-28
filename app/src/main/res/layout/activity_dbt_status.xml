@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.DbtStatus">
+    tools:context=".ui.screens.dashboard.sidenavigation.DbtStatus">
         <include
             android:id="@+id/relativeLayoutTopBar"
             layout="@layout/layout_toolbar" />

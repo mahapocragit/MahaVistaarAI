@@ -15,15 +15,20 @@ import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
-import `in`.gov.mahapocra.farmerapppks.AppPreferenceManager
+import `in`.gov.mahapocra.farmerapppks.util.AppPreferenceManager
 import `in`.gov.mahapocra.farmerapppks.R
-import `in`.gov.mahapocra.farmerapppks.adapter.DashboardAdapter
-import `in`.gov.mahapocra.farmerapppks.api.APIRequest
-import `in`.gov.mahapocra.farmerapppks.api.APIServices
-import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
-import `in`.gov.mahapocra.farmerapppks.app_util.AppString
+import `in`.gov.mahapocra.farmerapppks.ui.adapters.DashboardAdapter
+import `in`.gov.mahapocra.farmerapppks.data.api.APIRequest
+import `in`.gov.mahapocra.farmerapppks.data.api.APIServices
+import `in`.gov.mahapocra.farmerapppks.util.app_util.AppConstants
+import `in`.gov.mahapocra.farmerapppks.util.app_util.AppString
 import `in`.gov.mahapocra.farmerapppks.databinding.ActivityCropStageAdvisoryBinding
-import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.data.model.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.AddCropActivity
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.FertilizerCalculatorActivity
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.PestsAndDiseasesStages
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
@@ -206,7 +211,9 @@ class CropStageAdvisory : AppCompatActivity(), ApiCallbackCode {
             if (jSONObject != null) {
                 AppPreferenceManager(this).saveString("CROP_STAGE_RESPONSE", jSONObject.toString())
                 val response =
-                    ResponseModel(jSONObject)
+                    ResponseModel(
+                        jSONObject
+                    )
                 if (response.status) {
                     sowingDate = jSONObject.getString("sowing_date")
                     binding.sowingInfoLayout.sowingDateTextView.text = sowingDate

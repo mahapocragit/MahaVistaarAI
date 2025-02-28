@@ -20,15 +20,16 @@ import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.farmerapppks.R
-import `in`.gov.mahapocra.farmerapppks.adapter.AdaptorSelectedCoCoord
-import `in`.gov.mahapocra.farmerapppks.adapter.AdaptorSelectedCoordinator
-import `in`.gov.mahapocra.farmerapppks.api.APIRequest
-import `in`.gov.mahapocra.farmerapppks.api.APIServices
-import `in`.gov.mahapocra.farmerapppks.app_util.ApUtil
-import `in`.gov.mahapocra.farmerapppks.app_util.AppConstants
-import `in`.gov.mahapocra.farmerapppks.app_util.AppString
-import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
-import `in`.gov.mahapocra.farmerapppks.data.TrainingDetailModel
+import `in`.gov.mahapocra.farmerapppks.ui.adapters.AdaptorSelectedCoCoord
+import `in`.gov.mahapocra.farmerapppks.ui.adapters.AdaptorSelectedCoordinator
+import `in`.gov.mahapocra.farmerapppks.data.api.APIRequest
+import `in`.gov.mahapocra.farmerapppks.data.api.APIServices
+import `in`.gov.mahapocra.farmerapppks.util.app_util.ApUtil
+import `in`.gov.mahapocra.farmerapppks.util.app_util.AppConstants
+import `in`.gov.mahapocra.farmerapppks.util.app_util.AppString
+import `in`.gov.mahapocra.farmerapppks.data.model.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.data.model.TrainingDetailModel
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.TrainingLocationSelection
 import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONException
@@ -337,7 +338,8 @@ class UpcomingEventsDetails : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCa
             true
         )
         val retrofit: Retrofit = api.getRetrofitInstance()
-        val apiRequest: APIRequest = retrofit.create(APIRequest::class.java)
+        val apiRequest: APIRequest = retrofit.create(
+            APIRequest::class.java)
         val responseCall: Call<JsonObject> = apiRequest.psGetEventDetailRequest(requestBody)
         api.postRequest(responseCall, this, 5)
     }
@@ -346,7 +348,9 @@ class UpcomingEventsDetails : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCa
         if (i == 5 && jSONObject != null) {
             // get Event detail Response
             val responseModel =
-                ResponseModel(jSONObject)
+                ResponseModel(
+                    jSONObject
+                )
             if (responseModel.status) {
                 val eventJSONArray: JSONArray = responseModel.getdataArray()
                 setScheduledEventData(eventJSONArray)

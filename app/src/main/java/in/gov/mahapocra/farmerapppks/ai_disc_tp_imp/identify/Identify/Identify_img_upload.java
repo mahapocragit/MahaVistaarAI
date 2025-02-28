@@ -20,8 +20,6 @@ import android.view.Surface;
 
 
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -55,7 +53,7 @@ import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.model_identify.dis_
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.model_identify.user;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.util.Cam;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.util.IntReceiver;
-import in.gov.mahapocra.farmerapppks.app_util.AppConstants;
+import in.gov.mahapocra.farmerapppks.util.app_util.AppConstants;
 import in.gov.mahapocra.farmerapppks.databinding.ActivityIdentifyImgUploadBinding;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;

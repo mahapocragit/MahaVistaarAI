@@ -11,7 +11,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".activity.FertilizerCalculatorActivity">
+        tools:context=".ui.screens.dashboard.menugrid.FertilizerCalculatorActivity">
 
         <include
             android:id="@+id/relativeLayoutTopBar"

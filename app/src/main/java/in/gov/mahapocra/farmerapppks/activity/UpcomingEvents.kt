@@ -9,11 +9,11 @@ import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListene
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.farmerapppks.R
-import `in`.gov.mahapocra.farmerapppks.adapter.AdaptorComingEvent
-import `in`.gov.mahapocra.farmerapppks.api.APIRequest
-import `in`.gov.mahapocra.farmerapppks.api.APIServices
-import `in`.gov.mahapocra.farmerapppks.app_util.AppString
-import `in`.gov.mahapocra.farmerapppks.data.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.ui.adapters.AdaptorComingEvent
+import `in`.gov.mahapocra.farmerapppks.data.api.APIRequest
+import `in`.gov.mahapocra.farmerapppks.data.api.APIServices
+import `in`.gov.mahapocra.farmerapppks.util.app_util.AppString
+import `in`.gov.mahapocra.farmerapppks.data.model.ResponseModel
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonObject
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.TrainingLocationSelection
 import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONException
@@ -120,7 +121,8 @@ class UpcomingEvents : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
             true
         )
         val retrofit: Retrofit = api.getRetrofitInstance()
-        val apiRequest: APIRequest = retrofit.create(APIRequest::class.java)
+        val apiRequest: APIRequest = retrofit.create(
+            APIRequest::class.java)
         val responseCall: Call<JsonObject> = apiRequest.getSubdivisionUpcomingList(requestBody)
         api.postRequest(responseCall, this, 2)
         DebugLog.getInstance()
@@ -134,7 +136,9 @@ class UpcomingEvents : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 2 && jSONObject != null) {
             val responseModel =
-                ResponseModel(jSONObject)
+                ResponseModel(
+                    jSONObject
+                )
             if (responseModel.status) {
                 if (jSONObject != null) {
                     scheduleJSONArray = responseModel.getdataArray()

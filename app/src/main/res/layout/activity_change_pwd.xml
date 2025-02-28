@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".activity.ConfirmPassword">
+    tools:context=".ui.screens.authentication.ConfirmPassword">
     <include
         android:id="@+id/relativeLayoutTopBar"
         layout="@layout/layout_toolbar" />

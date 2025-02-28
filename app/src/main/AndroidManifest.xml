@@ -36,7 +36,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
-        android:name=".AppDelegate"
+        android:name=".application.AppDelegate"
         android:allowBackup="true"
         android:icon="@drawable/farmer_appfinal_logo"
         android:label="@string/app_name"
@@ -46,22 +46,22 @@
         android:theme="@style/Theme.FarmerApp"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.PdfWebViewActivity"
+            android:name=".ui.screens.PdfWebViewActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.TempDashboardActivity"
+            android:name=".ui.screens.chatbot.TempDashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.WeatherTempActivity"
+            android:name=".ui.screens.weather.WeatherTempActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.AdvisoryCropActivity"
+            android:name=".ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity"
             android:exported="false" />
         <activity
             android:name=".activity.CropStageActivity"
             android:exported="false" />
-        <activity android:name=".activity.FertilizerCalculatorActivity" />
-        <activity android:name=".activity.PestsAndDiseasesStages" />
+        <activity android:name=".ui.screens.dashboard.menugrid.FertilizerCalculatorActivity" />
+        <activity android:name=".ui.screens.dashboard.menugrid.PestsAndDiseasesStages" />
         <activity android:name=".activity.DiseaseInformation" />
         <activity
             android:name=".activity.CropStageAdvisory"
@@ -94,7 +94,7 @@
             android:name=".activity.SelectSowingDataAndFarmer"
             android:exported="false" />
         <activity
-            android:name=".activity.AddCropActivity"
+            android:name=".ui.screens.dashboard.menugrid.AddCropActivity"
             android:exported="false" />
         <activity android:name=".activity.CropAdvisoryDetails" />
         <activity
@@ -120,10 +120,10 @@
             android:name=".activity.ViewStoriesBandavar"
             android:exported="false" />
         <activity
-            android:name=".activity.BandavarActivity"
+            android:name=".ui.screens.dashboard.sidenavigation.BandavarActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.ResilientWebUrl"
+            android:name=".ui.screens.dashboard.menugrid.climate.ResilientWebUrl"
             android:exported="false" />
         <activity
             android:name=".activity.UpcomingEventsDetails"
@@ -132,49 +132,49 @@
             android:name=".activity.UpcomingEvents"
             android:exported="false" />
         <activity
-            android:name=".activity.TrainingLocationSelection"
+            android:name=".ui.screens.dashboard.sidenavigation.TrainingLocationSelection"
             android:exported="false" />
         <activity
-            android:name=".activity.ClimateDetailsGrid"
+            android:name=".ui.screens.dashboard.menugrid.climate.ClimateDetailsGrid"
             android:exported="false" />
         <activity
-            android:name=".activity.DbtStatus"
+            android:name=".ui.screens.dashboard.sidenavigation.DbtStatus"
             android:exported="false" />
         <activity
-            android:name=".activity.ClimateResilientTechnology"
+            android:name=".ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology"
             android:exported="false" />
         <activity
-            android:name=".activity.Grievances"
+            android:name=".ui.screens.dashboard.sidenavigation.Grievances"
             android:exported="false" />
         <activity
-            android:name=".activity.ConfirmPassword"
+            android:name=".ui.screens.authentication.ConfirmPassword"
             android:exported="false" />
         <activity
-            android:name=".activity.ForgetPassword"
+            android:name=".ui.screens.authentication.ForgetPassword"
             android:exported="false" />
         <activity
-            android:name=".activity.MarketPrice"
+            android:name=".ui.screens.dashboard.menugrid.MarketPrice"
             android:exported="false" />
         <activity
-            android:name=".activity.MyVillageProfilePdf"
+            android:name=".ui.screens.dashboard.sidenavigation.MyVillageProfilePdf"
             android:exported="false" />
         <activity
             android:name=".activity.PocraVillages"
             android:exported="false" />
         <activity
-            android:name=".activity.DbtSchemes"
+            android:name=".ui.screens.dashboard.menugrid.dbt.DbtSchemes"
             android:exported="false" />
         <activity
-            android:name=".activity.DbtActivityDetails"
+            android:name=".ui.screens.dashboard.menugrid.dbt.DbtActivityDetails"
             android:exported="false" />
         <activity
-            android:name=".activity.HealthCardActivity"
+            android:name=".ui.screens.dashboard.menugrid.HealthCardActivity"
             android:exported="false" />
         <activity
             android:name=".activity.GisActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.Warehouse"
+            android:name=".ui.screens.dashboard.menugrid.Warehouse"
             android:exported="false" />
         <activity
             android:name=".activity.AboutPocra"
@@ -182,10 +182,10 @@
         <activity
             android:name=".activity.ComingSoonActivity"
             android:exported="false" />
-        <activity android:name=".activity.LoginScreen" />
+        <activity android:name=".ui.screens.authentication.LoginScreen" />
 
         <service
-            android:name=".webServices.FBaseMessagingService"
+            android:name=".data.services.FBaseMessagingService"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -193,7 +193,7 @@
         </service>
 
         <activity
-            android:name=".activity.SplashScreenActivity"
+            android:name=".ui.screens.splash.SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -202,16 +202,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.DashboardScreen"
+            android:name=".ui.screens.dashboard.menugrid.DashboardScreen"
             android:exported="false"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.MobileOTP"
+            android:name=".ui.screens.authentication.MobileOTP"
             android:exported="false"
             android:label="@string/app_name" />
         <activity
-            android:name=".activity.Registration"
+            android:name=".ui.screens.authentication.Registration"
             android:exported="false" />
         <activity
             android:name=".activity.MyVillageProfile"
