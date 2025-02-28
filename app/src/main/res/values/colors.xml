@@ -90,4 +90,8 @@
     <color name="green">#98D850</color>
     <color name="white1">#FFFFFF</color>
     <color name="yeellowies">#F6EDA1</color>
+
+    <color name="nav_selected">#008D36</color> <!-- Green -->
+    <color name="nav_unselected">#B0BEC5</color> <!-- Light gray -->
+    <color name="nav_text">#263238</color> <!-- Dark gray for text -->
 </resources>

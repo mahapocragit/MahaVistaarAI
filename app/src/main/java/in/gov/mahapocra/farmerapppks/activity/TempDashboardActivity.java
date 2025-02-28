@@ -48,7 +48,7 @@ public class TempDashboardActivity extends AppCompatActivity {
                     Toast.makeText(TempDashboardActivity.this, "nav_help", Toast.LENGTH_SHORT).show();
                     return true;
 
-                case R.id.nav_chatbot:
+                case R.id.nav_chat:
                     loadFragment(new ChatbotFragment());
                     return true;
 

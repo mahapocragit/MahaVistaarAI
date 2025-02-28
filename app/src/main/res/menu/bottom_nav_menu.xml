@@ -1,33 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_home"
         android:icon="@drawable/ic_home"
-        app:showAsAction="always"
-        android:title="Home" />
+        android:title="Home"/>
 
     <item
         android:id="@+id/nav_about"
         android:icon="@drawable/ic_about"
-        app:showAsAction="always"
-        android:title="About" />
+        android:title="About"/>
 
     <item
-        android:id="@+id/nav_chatbot"
-        android:icon="@drawable/ic_chatbot"
-        app:showAsAction="always"
-        android:title="Chatbot" />
+        android:id="@+id/nav_chat"
+        android:icon="@drawable/ic_bot"
+        android:title="Chat"/>
 
     <item
         android:id="@+id/nav_help"
         android:icon="@drawable/ic_help"
-        app:showAsAction="always"
-        android:title="Help" />
+        android:title="Help"/>
 
     <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/ic_profile"
-        app:showAsAction="always"
-        android:title="Profile" />
+        android:title="Profile"/>
 </menu>

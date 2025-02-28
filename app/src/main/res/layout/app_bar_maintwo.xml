@@ -18,7 +18,6 @@
             app:popupTheme="@style/AppTheme.AppBarOverlay">
 
             <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/FarmerlogoXmarks"
                 android:layout_width="@dimen/height40"
                 android:layout_height="@dimen/height40"
                 android:layout_gravity="start"
@@ -27,7 +26,6 @@
                 android:src="@drawable/pocra_farmer_logo" />
 
             <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/logoXmarks"
                 android:layout_width="@dimen/height40"
                 android:layout_height="@dimen/height40"
                 android:layout_gravity="start"
@@ -66,7 +64,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <include
-        android:id="@+id/dashboardScreenLayout"
+        android:id="@+id/dashboardScreen"
         layout="@layout/content_maintwo" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

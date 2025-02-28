@@ -8,20 +8,6 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/app_bar_maintwo">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/_10sdp"
-        android:layout_marginEnd="@dimen/_10sdp"
-        android:backgroundTint="@color/actionbar_color_figma"
-        android:scaleType="centerCrop"
-        android:clickable="true"
-        android:gravity="bottom"
-        app:srcCompat="@drawable/ic_bot" />
-
     <RelativeLayout
         android:id="@+id/appBar1"
         android:layout_width="match_parent"
@@ -54,7 +40,7 @@
                     android:textSize="22sp" />
 
                 <TextView
-                    android:id="@+id/textView7"
+                    android:id="@+id/timestamp_textView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="13 February 2025 | 14:00"
@@ -73,7 +59,6 @@
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/imageView4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -185,7 +170,7 @@
                         </androidx.cardview.widget.CardView>
 
                         <androidx.cardview.widget.CardView
-                            android:id="@+id/AddCropTv"
+                            android:id="@+id/addCropCardView"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_40sdp"
                             android:layout_margin="@dimen/_2sdp"
@@ -206,7 +191,6 @@
                                     android:background="@drawable/shape_round_gray">
 
                                     <ImageView
-                                        android:id="@+id/imageView6"
                                         android:layout_width="@dimen/_30sdp"
                                         android:layout_height="@dimen/_30sdp"
                                         android:padding="@dimen/_8sdp"
@@ -224,7 +208,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:layout_marginStart="@dimen/_6sdp"
-                                    android:text="Add Crop"
+                                    android:text="@string/add_Crop"
                                     android:textColor="@color/font_color_figma"
                                     android:textStyle="bold" />
 
@@ -250,17 +234,8 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:background="?android:attr/listDivider" />
 
-                    <TextView
-                        android:id="@+id/textView5"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:visibility="gone"
-                        android:text="No Crops Added" />
-
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/selectedCrops"
+                        android:id="@+id/selectedCropRecyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -277,14 +252,13 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linLayGridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/AddCrop"
         android:layout_marginBottom="5dp">
 
         <GridView
-            android:id="@+id/gridViewJobs"
+            android:id="@+id/gridViewDashboard"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:horizontalSpacing="10dp"
@@ -293,4 +267,15 @@
             android:paddingTop="10dp"
             android:verticalSpacing="10dp"/>
     </LinearLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:itemIconTint="@color/black"
+        app:itemTextColor="@color/black"
+        android:background="@color/white"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_nav_menu" />
 </RelativeLayout>

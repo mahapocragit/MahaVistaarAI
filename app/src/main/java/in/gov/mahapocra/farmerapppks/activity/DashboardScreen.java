@@ -2,7 +2,6 @@ package in.gov.mahapocra.farmerapppks.activity;
 
 import android.Manifest;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -11,15 +10,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,20 +22,14 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 
@@ -74,6 +63,7 @@ import in.gov.mahapocra.farmerapppks.app_util.ApUtil;
 import in.gov.mahapocra.farmerapppks.app_util.AppConstants;
 import in.gov.mahapocra.farmerapppks.app_util.AppHelper;
 import in.gov.mahapocra.farmerapppks.app_util.AppString;
+import in.gov.mahapocra.farmerapppks.databinding.ActivityDashboardScreenBinding;
 import in.gov.mahapocra.farmerapppks.models.response.CropsCategName;
 import in.gov.mahapocra.farmerapppks.models.response.ResponseModel;
 import in.gov.mahapocra.farmerapppks.notification.NotificationListActivity;
@@ -84,29 +74,10 @@ import retrofit2.Retrofit;
 
 
 public class DashboardScreen extends AppCompatActivity implements ApiCallbackCode, AdapterView.OnItemClickListener, ForceUpdateChecker.OnUpdateNeededListener, OnMultiRecyclerItemClickListener {
-    private NavigationView navigationView;
-    private String TAG = "DashboardScreenTAG";
+    private ActivityDashboardScreenBinding binding;
     private static final int PERMISSION_REQUEST_CODE = 100;
-    private GridView gridView;
-    private CardView addCrop;
     private TextView nav_user_name;
-    private TextView timestamp_textView;
-    private TextView temperatureTextView;
-    private TextView weatherTalukaTV;
     private TextView nav_user_phone;
-    private TextView yourCropTv;
-    private TextView addChangeCropTV;
-    private ImageView addChangeCropIV;
-    private TextView savedCropNameTextView;
-    private ImageView savedCropNameImageView;
-    private ImageView imgLangChange;
-    private ImageView imgNotification;
-    private CardView savedCropNameCardView;
-    private ImageView deleteCropImageView;
-    private ImageView imgCallIcon;
-    private ListView menuListView;
-    private FloatingActionButton floatingActionButton;
-    private RecyclerView selectedCropListRecyc;
     String languageToLoad;
     private int farmerId = 0;
     private int cropId = 0;
@@ -115,7 +86,6 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
     private String savedCropSowingDate;
     private String savedCropWoTRId;
     private String savedCropImageUrl;
-    TextView alertHeadingTv;
     private AppPreferenceManager appPreferenceManager;
     private JSONArray jsonArray;
     private boolean showToast = true;
@@ -153,24 +123,20 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         config.locale = locale;
         getBaseContext().getResources().updateConfiguration(config,
                 getBaseContext().getResources().getDisplayMetrics());
-        setContentView(R.layout.activity_dashboard_screen);
+        binding = ActivityDashboardScreenBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         appPreferenceManager = new AppPreferenceManager(this);
         init();
 
-        deleteCropImageView.setOnClickListener(view -> {
+        binding.appBarMain.dashboardScreen.deleteCropImageView.setOnClickListener(view -> {
             cropId = savedCropId;
             deleteDialog();
         });
 
-        timestamp_textView.setText(getFormattedTimestamp());
-        LinearLayout temperatureLayout = findViewById(R.id.temperatureLayout);
-        temperatureLayout.setOnClickListener(view -> {
+        binding.appBarMain.dashboardScreen.timestampTextView.setText(getFormattedTimestamp());
+        binding.appBarMain.dashboardScreen.temperatureLayout.setOnClickListener(view -> {
             Intent weather = new Intent(DashboardScreen.this, WeatherTempActivity.class);
             startActivity(weather);
-        });
-
-        floatingActionButton.setOnClickListener(view -> {
-            startActivity(new Intent(DashboardScreen.this, TempDashboardActivity.class));
         });
 
         getFirebaseTokenFromServer();
@@ -178,15 +144,13 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         setConfiguration();
         this.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(binding.appBarMain.toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         DrawerLayout drawer = findViewById(R.id.drawer_layout1);
 
 
-        // navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, binding.appBarMain.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         toggle.setDrawerSlideAnimationEnabled(true);
@@ -194,8 +158,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         // Set Data
         String userName = AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName);
         String userNumber = AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo);
-        navigationView = findViewById(R.id.nav_view);
-        View hView = navigationView.getHeaderView(0);
+        View hView = binding.navView.getHeaderView(0);
         nav_user_name = hView.findViewById(R.id.tv_farmerName);
         nav_user_phone = hView.findViewById(R.id.tv_famerPhoneNumber);
         if (!userName.equals("USER_NAME")) {
@@ -205,29 +168,27 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         }
 
         // navigationView.setNavigationItemSelectedListener(this);
-        gridView = findViewById(R.id.gridViewJobs);
-        gridView.setColumnWidth(GridView.STRETCH_COLUMN_WIDTH);
+        binding.appBarMain.dashboardScreen.gridViewDashboard.setColumnWidth(GridView.STRETCH_COLUMN_WIDTH);
         if (languageToLoad.equalsIgnoreCase("en")) {
-            gridView.setAdapter(new DashboardAdapter(this, arrayCategory, arrayCategoryImg, "single_item_grid"));
+            binding.appBarMain.dashboardScreen.gridViewDashboard.setAdapter(new DashboardAdapter(this, arrayCategory, arrayCategoryImg, "single_item_grid"));
         } else if (languageToLoad.equalsIgnoreCase("hi")) {
-            gridView.setAdapter(new DashboardAdapter(this, arrayCategoryMarathi, arrayCategoryImg, "single_item_grid"));
+            binding.appBarMain.dashboardScreen.gridViewDashboard.setAdapter(new DashboardAdapter(this, arrayCategoryMarathi, arrayCategoryImg, "single_item_grid"));
         }
 
         appPreferenceManager.clearAll();
         dashboardGridItemsLayoutSetup();
-        imgLangChange.setOnClickListener(v -> openChangeLangPopup());
-        imgNotification.setOnClickListener(v -> {
+        binding.appBarMain.imgLangChange.setOnClickListener(v -> openChangeLangPopup());
+        binding.appBarMain.imgNotification.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardScreen.this, ComingSoonActivity.class);
-            intent.putExtra("notification", "mayu");
             startActivity(intent);
         });
-        imgCallIcon.setOnClickListener(v -> {
+        binding.appBarMain.imgCallIcon.setOnClickListener(v -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 callingFun();
             }
         });
 
-        addCrop.setOnClickListener(v -> {
+        binding.appBarMain.dashboardScreen.addCropCardView.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardScreen.this, AddCropActivity.class);
             appPreferenceManager.clearPreference(AppConstants.ACTION_FROM_DASHBOARD);
             startActivity(intent);
@@ -240,12 +201,33 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
         if (talukaID != 0) {
             callForWeatherApi(talukaID);
-            weatherTalukaTV.setText(talukaName);
+            binding.appBarMain.dashboardScreen.weatherTalukaTV.setText(talukaName);
         }
+
+        binding.appBarMain.dashboardScreen.bottomNavigation.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()){
+                case R.id.nav_home:
+                    startActivity(new Intent(DashboardScreen.this, DashboardScreen.class));
+                    break;
+                case  R.id.nav_about:
+                    startActivity(new Intent(DashboardScreen.this, TempDashboardActivity.class));
+                    break;
+                case R.id.nav_chat:
+                    startActivity(new Intent(DashboardScreen.this, TempDashboardActivity.class));
+                    break;
+                case  R.id.nav_help:
+                    startActivity(new Intent(DashboardScreen.this, TempDashboardActivity.class));
+                    break;
+                case R.id.nav_profile:
+                    startActivity(new Intent(DashboardScreen.this, Registration.class));
+                    break;
+            }
+            return false;
+        });
     }
 
     private void dashboardGridItemsLayoutSetup() {
-        gridView.setOnItemClickListener((parent, v, position, id) -> {
+        binding.appBarMain.dashboardScreen.gridViewDashboard.setOnItemClickListener((parent, v, position, id) -> {
             switch (position) {
                 case 0:
 
@@ -334,10 +316,10 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
             if (!task.isSuccessful()) {
-                Log.w("firebaseMessage", "Fetching FCM registration token failed", task.getException());
+                task.getException().printStackTrace();
             }
             String token = task.getResult();
-            Log.d("firebaseMessage", "FCM Token: " + token);
+            appPreferenceManager.saveString("FCM_TOKEN", token);
         });
     }
 
@@ -379,25 +361,6 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         if (farmerId > 0) {
             getUserDetails();
         }
-        addCrop = findViewById(R.id.AddCropTv);
-        yourCropTv = findViewById(R.id.yourCropTv);
-        savedCropNameTextView = findViewById(R.id.savedCropNameTextView);
-        savedCropNameImageView = findViewById(R.id.savedCropNameImageView);
-        addChangeCropTV = findViewById(R.id.addChangeCropTV);
-        addChangeCropIV = findViewById(R.id.addChangeCropIV);
-        timestamp_textView = findViewById(R.id.textView7);
-        temperatureTextView = findViewById(R.id.temperatureTextView);
-        weatherTalukaTV = findViewById(R.id.weatherTalukaTV);
-        selectedCropListRecyc = findViewById(R.id.selectedCrops);
-        savedCropNameCardView = findViewById(R.id.savedCropNameCardView);
-        deleteCropImageView = findViewById(R.id.deleteCropImageView);
-        gridView = findViewById(R.id.gridViewJobs);
-        imgLangChange = findViewById(R.id.imgLangChange);
-        imgNotification = findViewById(R.id.imgNotification);
-        imgCallIcon = findViewById(R.id.imgCallIcon);
-        menuListView = findViewById(R.id.menuListView1);
-        alertHeadingTv = findViewById(R.id.textView5);
-        floatingActionButton = findViewById(R.id.floatingActionButton);
     }
 
     private void setConfiguration() {
@@ -408,8 +371,8 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                 jsonArray = AppHelper.getInstance().getMenuOptionMarathi();
             }
             DrawerMenuAdapter menuAdapter = new DrawerMenuAdapter(this, jsonArray, farmerId);
-            menuListView.setAdapter(menuAdapter);
-            menuListView.setOnItemClickListener(this);
+            binding.menuListView.setAdapter(menuAdapter);
+            binding.menuListView.setOnItemClickListener(this);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -423,7 +386,6 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
             jsonObject.put("crop_id", savedCropId);
             jsonObject.put("farmer_id", farmerId);
             jsonObject.put("lang", languageToLoad);
-            Log.d("RESPONSE_TAG", "getCropStagesAndAdvisory: " + jsonObject);
 
             RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
 
@@ -447,7 +409,6 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
 
     private void setVersion() {
-        TextView appVersionTextView = findViewById(R.id.appVerTextView);
         PackageInfo pinfo = null;
         try {
             pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -456,9 +417,9 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         }
         String versionName = pinfo.versionName;
         if (APIServices.DBT.equalsIgnoreCase("https://ilab-sso.mahapocra.gov.in/")) {
-            appVersionTextView.setText("App Version " + versionName + " S");
+            binding.appVerTextView.setText("App Version " + versionName + " S");
         } else {
-            appVersionTextView.setText("App Version " + versionName);
+            binding.appVerTextView.setText("App Version " + versionName);
         }
         AppSettings.getInstance().setValue(DashboardScreen.this, AppConstants.kAPP_BUILD_VERSION, versionName);
     }
@@ -648,8 +609,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
 
                             String userName = AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName);
                             String userNumber = AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo);
-                            navigationView = findViewById(R.id.nav_view);
-                            View hView = navigationView.getHeaderView(0);
+                            View hView = binding.navView.getHeaderView(0);
                             nav_user_name = hView.findViewById(R.id.tv_farmerName);
                             nav_user_phone = hView.findViewById(R.id.tv_famerPhoneNumber);
                             if (!userName.equals("USER_NAME")) {
@@ -681,12 +641,12 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                                     savedCropName = selectedCrop.getString("name");
                                     savedCropImageUrl = selectedCrop.getString("image");
                                     savedCropWoTRId = selectedCrop.getString("wotr_crop_id");
-                                    addChangeCropTV.setText("Change Crop");
-                                    addChangeCropIV.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_swap));
-                                    savedCropNameCardView.setVisibility(View.VISIBLE);
-                                    savedCropNameTextView.setText(savedCropName);
-                                    Picasso.get().load(savedCropImageUrl).fit().centerCrop().into(savedCropNameImageView);
-                                    yourCropTv.setVisibility(View.GONE);
+                                    binding.appBarMain.dashboardScreen.addChangeCropTV.setText(R.string.change_Crop);
+                                    binding.appBarMain.dashboardScreen.addChangeCropIV.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_swap));
+                                    binding.appBarMain.dashboardScreen.savedCropNameCardView.setVisibility(View.VISIBLE);
+                                    binding.appBarMain.dashboardScreen.savedCropNameTextView.setText(savedCropName);
+                                    Picasso.get().load(savedCropImageUrl).fit().centerCrop().into(binding.appBarMain.dashboardScreen.savedCropNameImageView);
+                                    binding.appBarMain.dashboardScreen.yourCropTv.setVisibility(View.GONE);
                                     getCropStagesAndAdvisory();
                                     selectedCropList.add(new CropsCategName(selectedCrop.getInt("crop_id"), selectedCrop.getString("name"), selectedCrop.getString("image"), selectedCrop.getString("wotr_crop_id")));
                                 } catch (JSONException e) {
@@ -697,18 +657,16 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                                     this, AppConstants.kFarmerCrop,
                                     Arrays.asList(selectedCropList.toArray()));
                         } else {
-                            savedCropNameCardView.setVisibility(View.GONE);
-                            yourCropTv.setVisibility(View.VISIBLE);
-                            yourCropTv.setText("No crop added");
-                            addChangeCropTV.setText("Add Crop");
-                            addChangeCropIV.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.baseline_add_24));
+                            binding.appBarMain.dashboardScreen.savedCropNameCardView.setVisibility(View.GONE);
+                            binding.appBarMain.dashboardScreen.yourCropTv.setVisibility(View.VISIBLE);
+                            binding.appBarMain.dashboardScreen.yourCropTv.setText(R.string.no_crops_added);
+                            binding.appBarMain.dashboardScreen.addChangeCropTV.setText(R.string.add_Crop);
+                            binding.appBarMain.dashboardScreen.addChangeCropIV.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.baseline_add_24));
                         }
                         if (selectedCropList != null) {
-                            alertHeadingTv.setVisibility(View.GONE);
                             showCropList(selectedCropList);
                         } else {
-//                            alertHeadingTv.setVisibility(View.VISIBLE);
-                            selectedCropListRecyc.setVisibility(View.GONE);
+                            binding.appBarMain.dashboardScreen.selectedCropRecyclerView.setVisibility(View.GONE);
                         }
                     } else {
                         UIToastMessage.show(this, farmersSelectedCropResponse.getResponse());
@@ -753,7 +711,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                             int tempMin = temperatureObject.optInt("min");
                             int tempMax = temperatureObject.optInt("max");
                             String temperature = tempMin + "°C / " + tempMax + "°C";
-                            temperatureTextView.setText(temperature);
+                            binding.appBarMain.dashboardScreen.temperatureTextView.setText(temperature);
                         }
                     }
                     break;
@@ -792,7 +750,6 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         if (selectedCropList != null) {
             if (selectedCropList.size() > 1) {
                 for (int i = 0; i < selectedCropList.size(); i++) {
-                    Log.d(TAG, "updateSavedCropDetails: " + savedCropName + "   " + selectedCropList.get(i).getmName());
                     if (selectedCropList.get(i).getmName().equals(savedCropName)) {
                         cropId = selectedCropList.get(i).getId();
                         showToast = false;
@@ -804,23 +761,22 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
     }
 
     private void showCropList(ArrayList<CropsCategName> selectedCropList) {
-//        selectedCropListRecyc.setVisibility(View.VISIBLE);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        selectedCropListRecyc.setLayoutManager(layoutManager);
-        selectedCropListRecyc.setHasFixedSize(true);
-        selectedCropListRecyc.setItemAnimator(new DefaultItemAnimator());
+        binding.appBarMain.dashboardScreen.selectedCropRecyclerView.setLayoutManager(layoutManager);
+        binding.appBarMain.dashboardScreen.selectedCropRecyclerView.setHasFixedSize(true);
+        binding.appBarMain.dashboardScreen.selectedCropRecyclerView.setItemAnimator(new DefaultItemAnimator());
         VideosImageDetailsAdapter adapter = new VideosImageDetailsAdapter(this, selectedCropList, this, "dashboardScreen");
-        selectedCropListRecyc.setAdapter(adapter);
+        binding.appBarMain.dashboardScreen.selectedCropRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
 
     void deleteDialog() {
         Dialog dialog = new AlertDialog.Builder(this)
                 .setCancelable(false)
-                .setTitle("Delete Crop")
-                .setMessage("Are you sure you want to delete?")
-                .setPositiveButton("Yes", (dialogInterface, i) -> deleteFarmerSelectedCrop())
-                .setNegativeButton("No, Thanks", (dialogInterface, i) -> dialogInterface.dismiss())
+                .setTitle(R.string.delete_crop_title)
+                .setMessage(R.string.delete_crop_message)
+                .setPositiveButton(R.string.delete_crop_yes, (dialogInterface, i) -> deleteFarmerSelectedCrop())
+                .setNegativeButton(R.string.delete_crop_no, (dialogInterface, i) -> dialogInterface.dismiss())
                 .create();
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();

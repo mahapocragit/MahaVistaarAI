@@ -36,12 +36,21 @@
     <string name="climate_resilient_technology">Climate Resilient Details</string>
     <string name="climate_resilient_Newupdate">खरीप विशेष</string>
 
-    <string name="add_Crop"> + Add Crop</string>
+    <string name="add_Crop">Add Crop</string>
+    <string name="change_Crop">Change Crop</string>
+    <string name="no_crops_added">No Crops Added</string>
+
+    <!--NAMES FOR DELETE CROP DIALOG-->
+    <string name="delete_crop_title">Delete Crop</string>
+    <string name="delete_crop_message">Are you sure you want to delete?</string>
+    <string name="delete_crop_yes">Yes</string>
+    <string name="delete_crop_no">No</string>
 
     <string name="agri_forums"> Agri Forums</string>
     <string name="forums"> My Application </string>
     <string name="supportgrivience">Suggestion &amp; Grievances</string>
     <string name="profile">Profile</string>
+
 
     <string name="news">News</string>
     <string name="news_details">News Details</string>
