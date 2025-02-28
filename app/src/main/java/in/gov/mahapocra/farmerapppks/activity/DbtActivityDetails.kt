@@ -34,8 +34,8 @@ import retrofit2.Call
 import retrofit2.Retrofit
 
 class DbtActivityDetails : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerItemClickListener {
-        private lateinit var activityID:String
-        private lateinit var activityName:String
+    private lateinit var activityID: String
+    private lateinit var activityName: String
 
     private var poCRADBTActivityJSONArray: JSONArray? = null
     private var requiredDocumentsJSONArray: JSONArray? = null
@@ -84,7 +84,7 @@ class DbtActivityDetails : AppCompatActivity(), ApiCallbackCode, OnMultiRecycler
         super.onCreate(savedInstanceState)
         if (AppSettings.getLanguage(this@DbtActivityDetails).equals("2", ignoreCase = true)) {
             languageToLoad = "mr"
-        }else{
+        } else {
             languageToLoad = "en"
         }
         setContentView(R.layout.activity_dbt_details)
@@ -215,10 +215,10 @@ class DbtActivityDetails : AppCompatActivity(), ApiCallbackCode, OnMultiRecycler
         imgViewup4 = findViewById(R.id.imgViewup4)
         imgViewDown4 = findViewById(R.id.imgViewDown4)
         // dbtActivityGrp.setHasFixedSize(false)
-        textViewHeaderTitle=findViewById(R.id.textViewHeaderTitle)
-        imageMenushow=findViewById(R.id.imageMenushow)
-        textViewHeaderTitle=findViewById(R.id.textViewHeaderTitle)
-        imageBackArrow=findViewById(R.id.imgBackArrow)
+        textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
+        imageMenushow = findViewById(R.id.imageMenushow)
+        textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
+        imageBackArrow = findViewById(R.id.imgBackArrow)
 
     }
 
@@ -238,7 +238,8 @@ class DbtActivityDetails : AppCompatActivity(), ApiCallbackCode, OnMultiRecycler
                 )
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getDbtActivitiesGrpDetails(secreateKey, lang, data,activityID)
+            val responseCall: Call<JsonObject> =
+                apiRequest.getDbtActivitiesGrpDetails(secreateKey, lang, data, activityID)
             DebugLog.getInstance().d("param1=" + responseCall.request().toString())
             DebugLog.getInstance()
                 .d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()))
@@ -269,7 +270,12 @@ class DbtActivityDetails : AppCompatActivity(), ApiCallbackCode, OnMultiRecycler
                 )
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getDbtActivitiesGrpDocDetails(secreateKey, languageToLoad, data,activityID)
+            val responseCall: Call<JsonObject> = apiRequest.getDbtActivitiesGrpDocDetails(
+                secreateKey,
+                languageToLoad,
+                data,
+                activityID
+            )
             DebugLog.getInstance().d("param1=" + responseCall.request().toString())
             DebugLog.getInstance()
                 .d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()))
@@ -282,9 +288,11 @@ class DbtActivityDetails : AppCompatActivity(), ApiCallbackCode, OnMultiRecycler
             e.printStackTrace()
         }
     }
+
     override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
         TODO("Not yet implemented")
     }
+
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 1 && jSONObject != null) {
             val response =
@@ -292,7 +300,7 @@ class DbtActivityDetails : AppCompatActivity(), ApiCallbackCode, OnMultiRecycler
             Log.d("jSONObject121212", jSONObject.toString())
             if (response.status) {
                 poCRADBTActivityJSONArray = response.getActivityGrpDetailsArray()
-                Log.d("warehouseAvailability",poCRADBTActivityJSONArray.toString())
+                Log.d("warehouseAvailability", poCRADBTActivityJSONArray.toString())
 
                 // if (activityGrpWiseDetailsJSONArray?.length()!! > 0) {
                 val adaptorDbtActivityGrp =
@@ -333,66 +341,65 @@ class DbtActivityDetails : AppCompatActivity(), ApiCallbackCode, OnMultiRecycler
                 Log.d("notesJSONArray", notesJSONArray.toString())
 
 
-               //  if (requiredDocumentsJSONArray?.length()!! > 0) {
-                val adaptorDbtActivityGrpReqirdDoc =
+                //  if (requiredDocumentsJSONArray?.length()!! > 0) {
+                val adaptorDbtActivityGrpRequiredDocuments =
                     BbtActivityGrpRequiredDocAdapter(this, requiredDocumentsJSONArray)
-                     recyclerViewRequiredDocuments?.setLayoutManager(
+                recyclerViewRequiredDocuments?.setLayoutManager(
                     LinearLayoutManager(
                         this,
                         LinearLayoutManager.VERTICAL,
                         false
                     )
                 )
-                     recyclerViewRequiredDocuments?.setAdapter(adaptorDbtActivityGrpReqirdDoc)
-                     adaptorDbtActivityGrpReqirdDoc.notifyDataSetChanged()
-             //   }
+                recyclerViewRequiredDocuments?.setAdapter(adaptorDbtActivityGrpRequiredDocuments)
+                adaptorDbtActivityGrpRequiredDocuments.notifyDataSetChanged()
+                //   }
 
-               // if (eligibilityCriteriaJSONArray?.length()!! > 0) {
-                    val adaptorDbtActivityGrpElig =
-                        BbtActivityGrpEligibilityAdapter(this, eligibilityCriteriaJSONArray)
-                    recyclerViewEligibility?.setLayoutManager(
-                        LinearLayoutManager(
-                            this,
-                            LinearLayoutManager.VERTICAL,
-                            false
-                        )
+                // if (eligibilityCriteriaJSONArray?.length()!! > 0) {
+                val adaptorDbtActivityGrpElig =
+                    BbtActivityGrpEligibilityAdapter(this, eligibilityCriteriaJSONArray)
+                recyclerViewEligibility?.setLayoutManager(
+                    LinearLayoutManager(
+                        this,
+                        LinearLayoutManager.VERTICAL,
+                        false
                     )
-                    recyclerViewEligibility?.setAdapter(adaptorDbtActivityGrpElig)
-                    adaptorDbtActivityGrpElig.notifyDataSetChanged()
-               // }
+                )
+                recyclerViewEligibility?.setAdapter(adaptorDbtActivityGrpElig)
+                adaptorDbtActivityGrpElig.notifyDataSetChanged()
+                // }
 
-              //  if (notesJSONArray?.length()!! > 0) {
-                    val adaptorDbtActivityGrpNote =
-                        BbtActivityGrpNotesAdapter(this, notesJSONArray)
-                    recyclerViewNotes?.setLayoutManager(
-                        LinearLayoutManager(
-                            this,
-                            LinearLayoutManager.VERTICAL,
-                            false
-                        )
+                //  if (notesJSONArray?.length()!! > 0) {
+                val adaptorDbtActivityGrpNote =
+                    BbtActivityGrpNotesAdapter(this, notesJSONArray)
+                recyclerViewNotes?.setLayoutManager(
+                    LinearLayoutManager(
+                        this,
+                        LinearLayoutManager.VERTICAL,
+                        false
                     )
-                    recyclerViewNotes?.setAdapter(adaptorDbtActivityGrpNote)
-                    adaptorDbtActivityGrpNote.notifyDataSetChanged()
-                }
-
-
-
-            } else {
-                // UIToastMessage.show(this, response.response)
+                )
+                recyclerViewNotes?.setAdapter(adaptorDbtActivityGrpNote)
+                adaptorDbtActivityGrpNote.notifyDataSetChanged()
             }
+
+
+        } else {
+            // UIToastMessage.show(this, response.response)
         }
+    }
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
         val jsonObject = obj as JSONObject
         DebugLog.getInstance().d("onMultiRecyclerViewItemClick=$jsonObject")
-        if (i==1){
+        if (i == 1) {
             showSubsideyDialog(jsonObject)
         }
     }
 
     private fun showSubsideyDialog(jsonObject: JSONObject) {
         subsideyCriteriaJSONArray = jsonObject.getJSONArray("SubsidyDetails")
-        var activityName: String= jsonObject.getString("ActivityName")
+        var activityName: String = jsonObject.getString("ActivityName")
 
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
