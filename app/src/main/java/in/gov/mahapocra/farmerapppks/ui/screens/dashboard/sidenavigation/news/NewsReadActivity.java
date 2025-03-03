@@ -92,7 +92,7 @@ public class NewsReadActivity extends AppCompatActivity implements ApiCallbackCo
         imageMenushow.setVisibility(View.VISIBLE);
         textViewHeaderTitle.setText(R.string.news_details);
         imageMenushow.setOnClickListener(v -> {
-            Intent intent = new Intent(NewsReadActivity.this, NotificationListActivity.class);
+            Intent intent = new Intent(NewsReadActivity.this, NewsListActivity.class);
             startActivity(intent);
         });
 

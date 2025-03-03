@@ -57,6 +57,7 @@ import in.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.climate.Clima
 import in.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.dbt.DbtSchemes;
 import in.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages;
 import in.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.bandavar.BandavarActivity;
+import in.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.news.NewsListActivity;
 import in.gov.mahapocra.farmerapppks.ui.screens.notification.ComingSoonActivity;
 import in.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.DbtStatus;
 import in.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.Grievances;
@@ -82,7 +83,6 @@ import in.gov.mahapocra.farmerapppks.util.app_util.AppString;
 import in.gov.mahapocra.farmerapppks.databinding.ActivityDashboardScreenBinding;
 import in.gov.mahapocra.farmerapppks.data.model.CropsCategName;
 import in.gov.mahapocra.farmerapppks.data.model.ResponseModel;
-import in.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.news.NotificationListActivity;
 import in.gov.mahapocra.farmerapppks.util.ForceUpdateChecker;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -824,7 +824,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                     startActivity(dbtStatusIntent);
                     break;
                 case 3:
-                    Intent notificationIntent = new Intent(DashboardScreen.this, NotificationListActivity.class);
+                    Intent notificationIntent = new Intent(DashboardScreen.this, NewsListActivity.class);
                     startActivity(notificationIntent);
                     break;
                 case 5:
