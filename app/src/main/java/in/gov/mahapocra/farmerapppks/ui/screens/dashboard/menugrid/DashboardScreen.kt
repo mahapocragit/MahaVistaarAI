@@ -1,939 +1,1130 @@
-package in.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid;
+package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid
 
-import android.Manifest;
-import android.app.Dialog;
-import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.TextView;
+import android.Manifest
+import android.app.Dialog
+import android.content.DialogInterface
+import android.content.Intent
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
+import android.content.res.Configuration
+import android.net.Uri
+import android.os.Build
+import android.os.Bundle
+import android.os.Handler
+import android.view.MenuItem
+import android.view.View
+import android.view.Window
+import android.view.WindowManager
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemClickListener
+import android.widget.GridView
+import android.widget.TextView
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.tasks.Task
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.JsonObject
+import com.squareup.picasso.Picasso
+import `in`.co.appinventor.services_api.api.AppInventorApi
+import `in`.co.appinventor.services_api.app_util.AppUtility
+import `in`.co.appinventor.services_api.listener.ApiCallbackCode
+import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
+import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.co.appinventor.services_api.widget.UIToastMessage
+import `in`.gov.mahapocra.farmerapppks.R
+import `in`.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.Identify.Identify_dashboard
+import `in`.gov.mahapocra.farmerapppks.data.api.APIRequest
+import `in`.gov.mahapocra.farmerapppks.data.api.APIServices
+import `in`.gov.mahapocra.farmerapppks.data.model.CropsCategName
+import `in`.gov.mahapocra.farmerapppks.data.model.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.databinding.ActivityDashboardScreenBinding
+import `in`.gov.mahapocra.farmerapppks.ui.adapters.DashboardAdapter
+import `in`.gov.mahapocra.farmerapppks.ui.adapters.DrawerMenuAdapter
+import `in`.gov.mahapocra.farmerapppks.ui.adapters.VideosImageDetailsAdapter
+import `in`.gov.mahapocra.farmerapppks.ui.screens.authentication.LoginScreen
+import `in`.gov.mahapocra.farmerapppks.ui.screens.authentication.Registration
+import `in`.gov.mahapocra.farmerapppks.ui.screens.chatbot.TempDashboardActivity
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.dbt.DbtSchemes
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.DbtStatus
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.Grievances
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.MyVillageProfilePdf
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.bandavar.BandavarActivity
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.news.NewsListActivity
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.training.TrainingLocationSelection
+import `in`.gov.mahapocra.farmerapppks.ui.screens.notification.ComingSoonActivity
+import `in`.gov.mahapocra.farmerapppks.ui.screens.splash.SplashScreenActivity
+import `in`.gov.mahapocra.farmerapppks.ui.screens.weather.WeatherTempActivity
+import `in`.gov.mahapocra.farmerapppks.util.AppPreferenceManager
+import `in`.gov.mahapocra.farmerapppks.util.ForceUpdateChecker
+import `in`.gov.mahapocra.farmerapppks.util.app_util.ApUtil
+import `in`.gov.mahapocra.farmerapppks.util.app_util.AppConstants
+import `in`.gov.mahapocra.farmerapppks.util.app_util.AppHelper
+import `in`.gov.mahapocra.farmerapppks.util.app_util.AppString
+import okhttp3.RequestBody
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Retrofit
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+import java.util.Objects
+import java.util.concurrent.Executors
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
+class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
+    OnItemClickListener, ForceUpdateChecker.OnUpdateNeededListener,
+    OnMultiRecyclerItemClickListener {
 
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.gson.JsonObject;
-import com.squareup.picasso.Picasso;
+    private lateinit var binding: ActivityDashboardScreenBinding
+    private lateinit var navUserName: TextView
+    private lateinit var navUserPhone: TextView
+    var languageToLoad: String? = null
+    private var farmerId = 0
+    private var cropId = 0
+    private var savedCropName = ""
+    private var savedCropId = 0
+    private var savedCropSowingDate: String? = null
+    private var savedCropWoTRId: String? = null
+    private var savedCropImageUrl: String? = null
+    private var appPreferenceManager: AppPreferenceManager? = null
+    private var jsonArray: JSONArray? = null
+    private var showToast = true
+    private var selectedCropList: ArrayList<CropsCategName>? = null
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.concurrent.Executors;
-
-import in.co.appinventor.services_api.api.AppInventorApi;
-import in.co.appinventor.services_api.app_util.AppUtility;
-import in.co.appinventor.services_api.listener.ApiCallbackCode;
-import in.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener;
-import in.co.appinventor.services_api.settings.AppSettings;
-import in.co.appinventor.services_api.widget.UIToastMessage;
-import in.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity;
-import in.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology;
-import in.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.dbt.DbtSchemes;
-import in.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages;
-import in.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.bandavar.BandavarActivity;
-import in.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.news.NewsListActivity;
-import in.gov.mahapocra.farmerapppks.ui.screens.notification.ComingSoonActivity;
-import in.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.DbtStatus;
-import in.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.Grievances;
-import in.gov.mahapocra.farmerapppks.ui.screens.authentication.LoginScreen;
-import in.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.MyVillageProfilePdf;
-import in.gov.mahapocra.farmerapppks.ui.screens.authentication.Registration;
-import in.gov.mahapocra.farmerapppks.ui.screens.splash.SplashScreenActivity;
-import in.gov.mahapocra.farmerapppks.ui.screens.chatbot.TempDashboardActivity;
-import in.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.training.TrainingLocationSelection;
-import in.gov.mahapocra.farmerapppks.ui.screens.weather.WeatherTempActivity;
-import in.gov.mahapocra.farmerapppks.util.AppPreferenceManager;
-import in.gov.mahapocra.farmerapppks.R;
-import in.gov.mahapocra.farmerapppks.ui.adapters.DashboardAdapter;
-import in.gov.mahapocra.farmerapppks.ui.adapters.DrawerMenuAdapter;
-import in.gov.mahapocra.farmerapppks.ui.adapters.VideosImageDetailsAdapter;
-import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.Identify.Identify_dashboard;
-import in.gov.mahapocra.farmerapppks.data.api.APIRequest;
-import in.gov.mahapocra.farmerapppks.data.api.APIServices;
-import in.gov.mahapocra.farmerapppks.util.app_util.ApUtil;
-import in.gov.mahapocra.farmerapppks.util.app_util.AppConstants;
-import in.gov.mahapocra.farmerapppks.util.app_util.AppHelper;
-import in.gov.mahapocra.farmerapppks.util.app_util.AppString;
-import in.gov.mahapocra.farmerapppks.databinding.ActivityDashboardScreenBinding;
-import in.gov.mahapocra.farmerapppks.data.model.CropsCategName;
-import in.gov.mahapocra.farmerapppks.data.model.ResponseModel;
-import in.gov.mahapocra.farmerapppks.util.ForceUpdateChecker;
-import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Retrofit;
-
-
-public class DashboardScreen extends AppCompatActivity implements ApiCallbackCode, AdapterView.OnItemClickListener, ForceUpdateChecker.OnUpdateNeededListener, OnMultiRecyclerItemClickListener {
-    private ActivityDashboardScreenBinding binding;
-    private static final int PERMISSION_REQUEST_CODE = 100;
-    private TextView nav_user_name;
-    private TextView nav_user_phone;
-    String languageToLoad;
-    private int farmerId = 0;
-    private int cropId = 0;
-    private String savedCropName = "";
-    private int savedCropId;
-    private String savedCropSowingDate;
-    private String savedCropWoTRId;
-    private String savedCropImageUrl;
-    private AppPreferenceManager appPreferenceManager;
-    private JSONArray jsonArray;
-    private boolean showToast = true;
-
-    private static final String[] arrayCategory = new String[]{
-            "Crop Advisory", "Soil Health Card", "Fertilizer Calculator", "Climate Resilent Technology", "Pest and Diseases", "Identify Pest/Disease",
-            "Market Price", "Warehouse Availabilities", "DBT Schemes"
-    };
-
-    private static final String[] arrayCategoryMarathi = new String[]{
-            "पीक सल्ला", "मृदा आरोग्य पत्रिका", "खत मात्रा गणक (कॅलक्यूलेटर)", "हवामान अनुकूल तंत्रज्ञान", "कीड व रोग", "किटक/रोग ओळखा",
-            "बाजारभाव", " गोदाम उपलब्धता", "थेट लाभ हस्तांतरण योजना"
-
-    };
-
-    static int[] arrayCategoryImg = new int[]{
-            R.drawable.ecology, R.drawable.soil, R.drawable.fertilizer, R.drawable.climate_change, R.drawable.ladybug, R.drawable.pest,
-            R.drawable.commodity, R.drawable.warehouse, R.drawable.ic_dbt
-    };
-
-    ArrayList<CropsCategName> selectedCropList;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        languageToLoad = "en";
-        if (AppSettings.getLanguage(DashboardScreen.this).equalsIgnoreCase("2")) {
-            languageToLoad = "hi";
+        languageToLoad = "en"
+        if (AppSettings.getLanguage(this@DashboardScreen).equals("2", ignoreCase = true)) {
+            languageToLoad = "hi"
         }
-        showToast = true;
-        Locale locale = new Locale(languageToLoad);
-        Locale.setDefault(locale);
-        Configuration config = new Configuration();
-        config.locale = locale;
-        getBaseContext().getResources().updateConfiguration(config,
-                getBaseContext().getResources().getDisplayMetrics());
-        binding = ActivityDashboardScreenBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        appPreferenceManager = new AppPreferenceManager(this);
-        init();
+        showToast = true
+        val locale = Locale(languageToLoad)
+        Locale.setDefault(locale)
+        val config = Configuration()
+        config.locale = locale
+        baseContext.resources.updateConfiguration(
+            config,
+            baseContext.resources.displayMetrics
+        )
+        binding = ActivityDashboardScreenBinding.inflate(
+            layoutInflater
+        )
+        setContentView(binding.root)
+        appPreferenceManager = AppPreferenceManager(this)
+        init()
 
-        binding.appBarMain.dashboardScreen.deleteCropImageView.setOnClickListener(view -> {
-            cropId = savedCropId;
-            deleteDialog();
-        });
+        binding.appBarMain.dashboardScreen.deleteCropImageView.setOnClickListener {
+            cropId = savedCropId
+            deleteDialog()
+        }
 
-        binding.appBarMain.dashboardScreen.greetingsTextView.setText(getGreetingMessage());
-        binding.appBarMain.dashboardScreen.timestampTextView.setText(getFormattedTimestamp());
-        binding.appBarMain.dashboardScreen.temperatureLayout.setOnClickListener(view -> {
-            Intent weather = new Intent(DashboardScreen.this, WeatherTempActivity.class);
-            startActivity(weather);
-        });
+        binding.appBarMain.dashboardScreen.greetingsTextView.text = greetingMessage
+        binding.appBarMain.dashboardScreen.timestampTextView.text = formattedTimestamp
+        binding.appBarMain.dashboardScreen.temperatureLayout.setOnClickListener {
+            val weather = Intent(
+                this@DashboardScreen,
+                WeatherTempActivity::class.java
+            )
+            startActivity(weather)
+        }
 
-        getFirebaseTokenFromServer();
-        ForceUpdateChecker.with(this).onUpdateNeeded(this).check();
-        setConfiguration();
-        this.getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        setSupportActionBar(binding.appBarMain.toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
-        DrawerLayout drawer = findViewById(R.id.drawer_layout1);
+        firebaseTokenFromServer
+        ForceUpdateChecker.with(this).onUpdateNeeded(this).check()
+        setConfiguration()
+        this.window.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        )
+        setSupportActionBar(binding.appBarMain.toolbar)
+        Objects.requireNonNull(supportActionBar)?.setDisplayShowTitleEnabled(false)
+        val drawer = findViewById<DrawerLayout>(R.id.drawer_layout1)
 
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, binding.appBarMain.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        toggle.setDrawerSlideAnimationEnabled(true);
+        val toggle = ActionBarDrawerToggle(
+            this,
+            drawer,
+            binding.appBarMain.toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        )
+        drawer.addDrawerListener(toggle)
+        toggle.syncState()
+        toggle.isDrawerSlideAnimationEnabled = true
 
         // Set Data
-        String userName = AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName);
-        String userNumber = AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo);
-        binding.appBarMain.dashboardScreen.userFullNameTextView.setText(userName);
-        View hView = binding.navView.getHeaderView(0);
-        nav_user_name = hView.findViewById(R.id.tv_farmerName);
-        nav_user_phone = hView.findViewById(R.id.tv_famerPhoneNumber);
-        if (!userName.equals("USER_NAME")) {
-            String capitalizeStrName = ApUtil.getCamelCaseStreing(userName);
-            nav_user_name.setText(!capitalizeStrName.isEmpty() ? capitalizeStrName : userName);
-            nav_user_phone.setText(userNumber);
+        val userName: String =
+            AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName)
+        val userNumber: String =
+            AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
+        binding.appBarMain.dashboardScreen.userFullNameTextView.text = userName
+        val hView = binding.navView.getHeaderView(0)
+        navUserName = hView.findViewById(R.id.tv_farmerName)
+        navUserPhone = hView.findViewById(R.id.tv_famerPhoneNumber)
+        if (userName != "USER_NAME") {
+            val capitalizeStrName: String = ApUtil.getCamelCaseStreing(userName)
+            navUserName.text = capitalizeStrName.ifEmpty { userName }
+            navUserPhone.text = userNumber
         }
 
         // navigationView.setNavigationItemSelectedListener(this);
-        binding.appBarMain.dashboardScreen.gridViewDashboard.setColumnWidth(GridView.STRETCH_COLUMN_WIDTH);
-        if (languageToLoad.equalsIgnoreCase("en")) {
-            binding.appBarMain.dashboardScreen.gridViewDashboard.setAdapter(new DashboardAdapter(this, arrayCategory, arrayCategoryImg, "single_item_grid"));
-        } else if (languageToLoad.equalsIgnoreCase("hi")) {
-            binding.appBarMain.dashboardScreen.gridViewDashboard.setAdapter(new DashboardAdapter(this, arrayCategoryMarathi, arrayCategoryImg, "single_item_grid"));
+        binding.appBarMain.dashboardScreen.gridViewDashboard.columnWidth =
+            GridView.STRETCH_COLUMN_WIDTH
+        if (languageToLoad.equals("en", ignoreCase = true)) {
+            binding.appBarMain.dashboardScreen.gridViewDashboard.adapter = DashboardAdapter(
+                this, arrayCategory, arrayCategoryImg, "single_item_grid"
+            )
+        } else if (languageToLoad.equals("hi", ignoreCase = true)) {
+            binding.appBarMain.dashboardScreen.gridViewDashboard.adapter = DashboardAdapter(
+                this, arrayCategoryMarathi, arrayCategoryImg, "single_item_grid"
+            )
         }
 
-        appPreferenceManager.clearAll();
-        dashboardGridItemsLayoutSetup();
-        binding.appBarMain.imgLangChange.setOnClickListener(v -> openChangeLangPopup());
-        binding.appBarMain.imgNotification.setOnClickListener(v -> {
-            Intent intent = new Intent(DashboardScreen.this, ComingSoonActivity.class);
-            startActivity(intent);
-        });
-        binding.appBarMain.imgCallIcon.setOnClickListener(v -> {
+        appPreferenceManager?.clearAll()
+        dashboardGridItemsLayoutSetup()
+        binding.appBarMain.imgLangChange.setOnClickListener { openChangeLangPopup() }
+        binding.appBarMain.imgNotification.setOnClickListener {
+            val intent = Intent(
+                this@DashboardScreen,
+                ComingSoonActivity::class.java
+            )
+            startActivity(intent)
+        }
+        binding.appBarMain.imgCallIcon.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                callingFun();
+                callingFun()
             }
-        });
+        }
 
-        binding.appBarMain.dashboardScreen.addCropCardView.setOnClickListener(v -> {
-            Intent intent = new Intent(DashboardScreen.this, AddCropActivity.class);
-            appPreferenceManager.clearPreference(AppConstants.ACTION_FROM_DASHBOARD);
-            startActivity(intent);
-        });
-        setVersion();
-        getFarmerSelectedCrop(languageToLoad);
-        requestingPermissions();
-        int talukaID = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0);
-        String talukaName = AppSettings.getInstance().getSavedValue(this, AppConstants.uTALUKA);
+        binding.appBarMain.dashboardScreen.addCropCardView.setOnClickListener {
+            val intent = Intent(
+                this@DashboardScreen,
+                AddCropActivity::class.java
+            )
+            appPreferenceManager?.clearPreference(AppConstants.ACTION_FROM_DASHBOARD)
+            startActivity(intent)
+        }
+        setVersion()
+        getFarmerSelectedCrop(languageToLoad)
+        requestingPermissions()
+        val talukaID: Int = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
+        val talukaName: String = AppSettings.getInstance().getSavedValue(this, AppConstants.uTALUKA)
 
         if (talukaID != 0) {
-            callForWeatherApi(talukaID);
-            binding.appBarMain.dashboardScreen.weatherTalukaTV.setText(talukaName);
+            callForWeatherApi(talukaID)
+            binding.appBarMain.dashboardScreen.weatherTalukaTV.text = talukaName
         }
 
-        binding.appBarMain.dashboardScreen.bottomNavigation.setOnItemSelectedListener(item -> {
-            switch (item.getItemId()){
-                case R.id.nav_home:
-                    startActivity(new Intent(DashboardScreen.this, DashboardScreen.class));
-                    break;
-                case  R.id.nav_about:
-                    startActivity(new Intent(DashboardScreen.this, TempDashboardActivity.class));
-                    break;
-                case R.id.nav_chat:
-                    startActivity(new Intent(DashboardScreen.this, TempDashboardActivity.class));
-                    break;
-                case  R.id.nav_help:
-                    startActivity(new Intent(DashboardScreen.this, TempDashboardActivity.class));
-                    break;
-                case R.id.nav_profile:
-                    Intent intent = new Intent(DashboardScreen.this, Registration.class);
-                    intent.putExtra("FAAPRegistrationID", farmerId);
-                    startActivity(intent);
-                    break;
+        binding.appBarMain.dashboardScreen.bottomNavigation.setOnItemSelectedListener { item: MenuItem ->
+            when (item.itemId) {
+                R.id.nav_home -> startActivity(
+                    Intent(
+                        this@DashboardScreen,
+                        DashboardScreen::class.java
+                    )
+                )
+
+                R.id.nav_about -> startActivity(
+                    Intent(
+                        this@DashboardScreen,
+                        TempDashboardActivity::class.java
+                    )
+                )
+
+                R.id.nav_chat -> startActivity(
+                    Intent(
+                        this@DashboardScreen,
+                        TempDashboardActivity::class.java
+                    )
+                )
+
+                R.id.nav_help -> startActivity(
+                    Intent(
+                        this@DashboardScreen,
+                        TempDashboardActivity::class.java
+                    )
+                )
+
+                R.id.nav_profile -> {
+                    val intent = Intent(
+                        this@DashboardScreen,
+                        Registration::class.java
+                    )
+                    intent.putExtra("FAAPRegistrationID", farmerId)
+                    startActivity(intent)
+                }
             }
-            return false;
-        });
-    }
-
-    private String getGreetingMessage() {
-        Calendar calendar = Calendar.getInstance();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-
-        if (hour >= 5 && hour < 12) {
-            return "Good Morning,";
-        } else if (hour >= 12 && hour < 17) {
-            return "Good Afternoon,";
-        } else if (hour >= 17 && hour < 21) {
-            return "Good Evening,";
-        } else {
-            return "Good Night,";
+            false
         }
     }
 
-    private void dashboardGridItemsLayoutSetup() {
-        binding.appBarMain.dashboardScreen.gridViewDashboard.setOnItemClickListener((parent, v, position, id) -> {
-            switch (position) {
-                case 0:
+    private val greetingMessage: String
+        get() {
+            val calendar = Calendar.getInstance()
+            val hour = calendar[Calendar.HOUR_OF_DAY]
 
-                    if (savedCropName.isEmpty()) {
-                        Intent sharing = new Intent(DashboardScreen.this, AddCropActivity.class);
-                        appPreferenceManager.saveString(AppConstants.ACTION_FROM_DASHBOARD, AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD);
-                        startActivity(sharing);
-                    } else {
-                        Intent intent = new Intent(this, AdvisoryCropActivity.class);
-                        intent.putExtra("id", savedCropId);
-                        intent.putExtra("wotr_crop_id", savedCropWoTRId);
-                        intent.putExtra("mUrl", savedCropImageUrl);
-                        intent.putExtra("mName", savedCropName);
-                        startActivity(intent);
-                    }
-                    break;
+            return when (hour) {
+                in 5..11 -> {
+                    "Good Morning,"
+                }
 
-                case 1:
-                    Intent healthIntent = new Intent(DashboardScreen.this, HealthCardActivity.class);
-                    startActivity(healthIntent);
-                    break;
-                case 2:
-                    if (savedCropName.isEmpty()) {
-                        Intent comingSoonIntent = new Intent(DashboardScreen.this, AddCropActivity.class);
-                        appPreferenceManager.saveString(AppConstants.ACTION_FROM_DASHBOARD, AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD);
-                        startActivity(comingSoonIntent);
-                    } else {
-                        Intent intent = new Intent(this, FertilizerCalculatorActivity.class);
-                        intent.putExtra("id", savedCropId);
-                        intent.putExtra("wotr_crop_id", savedCropWoTRId);
-                        intent.putExtra("mUrl", savedCropImageUrl);
-                        intent.putExtra("mName", savedCropName);
-                        intent.putExtra("sowingDate", savedCropSowingDate);
-                        startActivity(intent);
-                    }
-                    break;
-                case 3:
-                    Intent addPeople = new Intent(DashboardScreen.this, ClimateResilientTechnology.class);
-                    startActivity(addPeople);
-                    break;
+                in 12..16 -> {
+                    "Good Afternoon,"
+                }
 
-                case 4:
-                    if (savedCropName.isEmpty()) {
-                        Intent sharing = new Intent(DashboardScreen.this, AddCropActivity.class);
-                        appPreferenceManager.saveString(AppConstants.ACTION_FROM_DASHBOARD, AppConstants.PEST_AND_DISEASES_STAGES);
-                        startActivity(sharing);
-                    } else {
-                        Intent intent = new Intent(this, PestsAndDiseasesStages.class);
-                        intent.putExtra("cropId", savedCropId);
-                        intent.putExtra("wotr_crop_id", savedCropWoTRId);
-                        intent.putExtra("sowingDate", savedCropSowingDate);
-                        intent.putExtra("mUrl", savedCropImageUrl);
-                        intent.putExtra("mName", savedCropName);
-                        startActivity(intent);
-                    }
-                    break;
+                in 17..20 -> {
+                    "Good Evening,"
+                }
 
-                case 5:
-                    Intent identify = new Intent(getApplicationContext(), Identify_dashboard.class);
-                    startActivity(identify);
-                    break;
-
-                case 6:
-                    Intent marketIntent = new Intent(DashboardScreen.this, MarketPrice.class);
-                    startActivity(marketIntent);
-                    break;
-                case 7:
-                    Intent warehouseIntent = new Intent(DashboardScreen.this, Warehouse.class);
-                    startActivity(warehouseIntent);
-                    break;
-                case 8:
-                    Intent dbtIntent = new Intent(DashboardScreen.this, DbtSchemes.class);
-                    startActivity(dbtIntent);
-                    break;
+                else -> {
+                    "Good Night,"
+                }
             }
-        });
-    }
+        }
 
-    public static String getFormattedTimestamp() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy | HH:mm", Locale.getDefault());
-        return dateFormat.format(new Date());
-    }
+    private fun dashboardGridItemsLayoutSetup() {
+        binding.appBarMain.dashboardScreen.gridViewDashboard.onItemClickListener =
+            OnItemClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
+                when (position) {
+                    0 -> if (savedCropName.isEmpty()) {
+                        val sharing = Intent(this@DashboardScreen, AddCropActivity::class.java)
+                        appPreferenceManager?.saveString(
+                            AppConstants.ACTION_FROM_DASHBOARD,
+                            AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD
+                        )
+                        startActivity(sharing)
+                    } else {
+                        val intent = Intent(this, AdvisoryCropActivity::class.java)
+                        intent.putExtra("id", savedCropId)
+                        intent.putExtra("wotr_crop_id", savedCropWoTRId)
+                        intent.putExtra("mUrl", savedCropImageUrl)
+                        intent.putExtra("mName", savedCropName)
+                        startActivity(intent)
+                    }
 
+                    1 -> {
+                        val healthIntent = Intent(
+                            this@DashboardScreen,
+                            HealthCardActivity::class.java
+                        )
+                        startActivity(healthIntent)
+                    }
 
-    private void getFirebaseTokenFromServer() {
+                    2 -> if (savedCropName.isEmpty()) {
+                        val comingSoonIntent = Intent(
+                            this@DashboardScreen,
+                            AddCropActivity::class.java
+                        )
+                        appPreferenceManager?.saveString(
+                            AppConstants.ACTION_FROM_DASHBOARD,
+                            AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD
+                        )
+                        startActivity(comingSoonIntent)
+                    } else {
+                        val intent = Intent(this, FertilizerCalculatorActivity::class.java)
+                        intent.putExtra("id", savedCropId)
+                        intent.putExtra("wotr_crop_id", savedCropWoTRId)
+                        intent.putExtra("mUrl", savedCropImageUrl)
+                        intent.putExtra("mName", savedCropName)
+                        intent.putExtra("sowingDate", savedCropSowingDate)
+                        startActivity(intent)
+                    }
 
-        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) {
-                Objects.requireNonNull(task.getException()).printStackTrace();
+                    3 -> {
+                        val addPeople =
+                            Intent(this@DashboardScreen, ClimateResilientTechnology::class.java)
+                        startActivity(addPeople)
+                    }
+
+                    4 -> if (savedCropName.isEmpty()) {
+                        val sharing = Intent(this@DashboardScreen, AddCropActivity::class.java)
+                        appPreferenceManager?.saveString(
+                            AppConstants.ACTION_FROM_DASHBOARD,
+                            AppConstants.PEST_AND_DISEASES_STAGES
+                        )
+                        startActivity(sharing)
+                    } else {
+                        val intent = Intent(this, PestsAndDiseasesStages::class.java)
+                        intent.putExtra("cropId", savedCropId)
+                        intent.putExtra("wotr_crop_id", savedCropWoTRId)
+                        intent.putExtra("sowingDate", savedCropSowingDate)
+                        intent.putExtra("mUrl", savedCropImageUrl)
+                        intent.putExtra("mName", savedCropName)
+                        startActivity(intent)
+                    }
+
+                    5 -> {
+                        val identify = Intent(applicationContext, Identify_dashboard::class.java)
+                        startActivity(identify)
+                    }
+
+                    6 -> {
+                        val marketIntent = Intent(this@DashboardScreen, MarketPrice::class.java)
+                        startActivity(marketIntent)
+                    }
+
+                    7 -> {
+                        val warehouseIntent = Intent(this@DashboardScreen, Warehouse::class.java)
+                        startActivity(warehouseIntent)
+                    }
+
+                    8 -> {
+                        val dbtIntent = Intent(this@DashboardScreen, DbtSchemes::class.java)
+                        startActivity(dbtIntent)
+                    }
+                }
             }
-            String token = task.getResult();
-            appPreferenceManager.saveString("FCM_TOKEN", token);
-        });
     }
 
-    private void requestingPermissions() {
-        String[] permissions = {
+    private val firebaseTokenFromServer: Unit
+        get() {
+            FirebaseMessaging.getInstance().token
+                .addOnCompleteListener { task: Task<String?> ->
+                    if (!task.isSuccessful) {
+                        Objects.requireNonNull(task.exception)
+                            ?.printStackTrace()
+                    }
+                    val token = task.result
+                    appPreferenceManager?.saveString("FCM_TOKEN", token)
+                }
+        }
+
+    private fun requestingPermissions() {
+        var permissions = arrayOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissions = arrayOf(
                 Manifest.permission.CAMERA,
                 Manifest.permission.READ_PHONE_STATE,
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-        };
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            permissions = new String[]{
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.READ_PHONE_STATE,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.POST_NOTIFICATIONS
-            };
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.POST_NOTIFICATIONS
+            )
         }
 
         // Check which permissions are not granted
-        List<String> permissionsToRequest = new ArrayList<>();
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                permissionsToRequest.add(permission);
+        val permissionsToRequest: MutableList<String> = ArrayList()
+        for (permission in permissions) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    permission
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                permissionsToRequest.add(permission)
             }
         }
 
         // Request the permissions that are not granted
-        if (!permissionsToRequest.isEmpty()) {
-            ActivityCompat.requestPermissions(this, permissionsToRequest.toArray(new String[0]), PERMISSION_REQUEST_CODE);
+        if (permissionsToRequest.isNotEmpty()) {
+            ActivityCompat.requestPermissions(
+                this,
+                permissionsToRequest.toTypedArray<String>(),
+                PERMISSION_REQUEST_CODE
+            )
         }
     }
 
 
-    public void init() {
-        farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0);
+    fun init() {
+        farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
         if (farmerId > 0) {
-            getUserDetails();
+            userDetails
         }
     }
 
-    private void setConfiguration() {
+    private fun setConfiguration() {
         try {
-            if (languageToLoad.equalsIgnoreCase("en")) {
-                jsonArray = AppHelper.getInstance().getMenuOption();
-            } else if (languageToLoad.equalsIgnoreCase("hi")) {
-                jsonArray = AppHelper.getInstance().getMenuOptionMarathi();
+            if (languageToLoad.equals("en", ignoreCase = true)) {
+                jsonArray = AppHelper.getInstance().getMenuOption()
+            } else if (languageToLoad.equals("hi", ignoreCase = true)) {
+                jsonArray = AppHelper.getInstance().getMenuOptionMarathi()
             }
-            DrawerMenuAdapter menuAdapter = new DrawerMenuAdapter(this, jsonArray, farmerId);
-            binding.menuListView.setAdapter(menuAdapter);
-            binding.menuListView.setOnItemClickListener(this);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            val menuAdapter = DrawerMenuAdapter(this, jsonArray, farmerId)
+            binding.menuListView.adapter = menuAdapter
+            binding.menuListView.onItemClickListener = this
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
-    //API FOR GETTING SOWING DATE INFORMATION
-    private void getCropStagesAndAdvisory() {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("crop_id", savedCropId);
-            jsonObject.put("farmer_id", farmerId);
-            jsonObject.put("lang", languageToLoad);
+    private val cropStagesAndAdvisory: Unit
+        //API FOR GETTING SOWING DATE INFORMATION
+        get() {
+            val jsonObject = JSONObject()
+            try {
+                jsonObject.put("crop_id", savedCropId)
+                jsonObject.put("farmer_id", farmerId)
+                jsonObject.put("lang", languageToLoad)
 
-            RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
+                val requestBody: RequestBody =
+                    AppUtility.getInstance().getRequestBody(jsonObject.toString())
 
-            AppInventorApi api = new AppInventorApi(
+                val api = AppInventorApi(
                     this,
                     APIServices.SSO,
                     "",
-                    new AppString(this).getkMSG_WAIT(),
+                    AppString(this).getkMSG_WAIT(),
                     true
-            );
+                )
 
-            Retrofit retrofit = api.getRetrofitInstance();
-            APIRequest apiRequest = retrofit.create(APIRequest.class);
-            Call<JsonObject> responseCall = apiRequest.getCropStagesAndAdvisory(requestBody);
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest: APIRequest = retrofit.create(APIRequest::class.java)
+                val responseCall: Call<JsonObject> =
+                    apiRequest.getCropStagesAndAdvisory(requestBody)
 
-            api.postRequest(responseCall, this, 4);
-        } catch (JSONException e) {
-            e.printStackTrace();
+                api.postRequest(responseCall, this, 4)
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
         }
-    }
 
 
-    private void setVersion() {
-        PackageInfo pinfo = null;
+    private fun setVersion() {
+        var pinfo: PackageInfo? = null
         try {
-            pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            pinfo = packageManager.getPackageInfo(packageName, 0)
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
         }
-        String versionName = pinfo.versionName;
-        if (APIServices.DBT.equalsIgnoreCase("https://ilab-sso.mahapocra.gov.in/")) {
-            binding.appVerTextView.setText("App Version " + versionName + " S");
+        val versionName = pinfo!!.versionName
+        if (APIServices.DBT.equals("https://ilab-sso.mahapocra.gov.in/", ignoreCase = true)) {
+            binding.appVerTextView.text = "App Version $versionName S"
         } else {
-            binding.appVerTextView.setText("App Version " + versionName);
+            binding.appVerTextView.text = "App Version $versionName"
         }
-        AppSettings.getInstance().setValue(DashboardScreen.this, AppConstants.kAPP_BUILD_VERSION, versionName);
+        AppSettings.getInstance()
+            .setValue(this@DashboardScreen, AppConstants.kAPP_BUILD_VERSION, versionName)
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void callingFun() {
-        Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:02222163352"));
-        startActivity(intent);
+    private fun callingFun() {
+        val intent = Intent(Intent.ACTION_DIAL)
+        intent.setData(Uri.parse("tel:02222163352"))
+        startActivity(intent)
     }
 
 
-    private void getUserDetails() {
-        boolean isLogin = AppSettings.getInstance().getBooleanValue(this, AppConstants.userDataSaved, false);
-        if (!isLogin) {
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("SecurityKey", APIServices.SSO_KEY);
-                jsonObject.put("FAAPRegistrationID", farmerId);
+    private val userDetails: Unit
+        get() {
+            val isLogin: Boolean = AppSettings.getInstance().getBooleanValue(
+                this,
+                AppConstants.userDataSaved,
+                false
+            )
+            if (!isLogin) {
+                val jsonObject = JSONObject()
+                try {
+                    jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+                    jsonObject.put("FAAPRegistrationID", farmerId)
 
-                RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
-                AppInventorApi api = new AppInventorApi(this, APIServices.DBT, "", new AppString(this).getkMSG_WAIT(), true);
+                    val requestBody: RequestBody =
+                        AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                    val api = AppInventorApi(
+                        this,
+                        APIServices.DBT,
+                        "",
+                        AppString(this).getkMSG_WAIT(),
+                        true
+                    )
 
-                Handler handler = new Handler();
-                Runnable runnable = () -> {
-                    Retrofit retrofit = api.getRetrofitInstance();
-                    APIRequest apiRequest = retrofit.create(APIRequest.class);
-                    Call<JsonObject> responseCall = apiRequest.getGetRegistration(requestBody);
-                    api.postRequest(responseCall, this, 1);
-                };
-                handler.post(runnable);
-            } catch (JSONException e) {
-                e.printStackTrace();
+                    val handler = Handler()
+                    val runnable = Runnable {
+                        val retrofit: Retrofit = api.getRetrofitInstance()
+                        val apiRequest: APIRequest =
+                            retrofit.create(APIRequest::class.java)
+                        val responseCall: Call<JsonObject> =
+                            apiRequest.getGetRegistration(requestBody)
+                        api.postRequest(responseCall, this, 1)
+                    }
+                    handler.post(runnable)
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
             }
         }
-    }
 
-    private void getFarmerSelectedCrop(String language) {
-
-        JSONObject jsonObject = new JSONObject();
+    private fun getFarmerSelectedCrop(language: String?) {
+        val jsonObject = JSONObject()
         try {
-            jsonObject.put("lang", language);
-            jsonObject.put("farmer_id", farmerId);
+            jsonObject.put("lang", language)
+            jsonObject.put("farmer_id", farmerId)
 
-            RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
-            AppInventorApi api = new AppInventorApi(this, APIServices.SSO, "", new AppString(this).getkMSG_WAIT(), true);
+            val requestBody: RequestBody =
+                AppUtility.getInstance().getRequestBody(jsonObject.toString())
+            val api =
+                AppInventorApi(this, APIServices.SSO, "", AppString(this).getkMSG_WAIT(), true)
 
-            Handler handler = new Handler();
-            Runnable runnable = () -> {
-                Retrofit retrofit = api.getRetrofitInstance();
-                APIRequest apiRequest = retrofit.create(APIRequest.class);
-                Call<JsonObject> responseCall = apiRequest.getFarmersSelectedCrop(requestBody);
-                api.postRequest(responseCall, this, 2);
-            };
-            handler.post(runnable);
-        } catch (JSONException e) {
-            e.printStackTrace();
+            val handler = Handler()
+            val runnable = Runnable {
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest: APIRequest = retrofit.create(APIRequest::class.java)
+                val responseCall: Call<JsonObject> = apiRequest.getFarmersSelectedCrop(requestBody)
+                api.postRequest(responseCall, this, 2)
+            }
+            handler.post(runnable)
+        } catch (e: JSONException) {
+            e.printStackTrace()
         }
     }
 
-    private void deleteFarmerSelectedCrop() {
-        JSONObject jsonObject = new JSONObject();
+    private fun deleteFarmerSelectedCrop() {
+        val jsonObject = JSONObject()
         try {
-            jsonObject.put("crop_id", cropId);
-            jsonObject.put("farmer_id", farmerId);
+            jsonObject.put("crop_id", cropId)
+            jsonObject.put("farmer_id", farmerId)
 
-            RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
-            AppInventorApi api = new AppInventorApi(this, APIServices.SSO, "", new AppString(this).getkMSG_WAIT(), true);
+            val requestBody: RequestBody =
+                AppUtility.getInstance().getRequestBody(jsonObject.toString())
+            val api: AppInventorApi =
+                AppInventorApi(this, APIServices.SSO, "", AppString(this).getkMSG_WAIT(), true)
 
-            Handler handler = new Handler();
-            Runnable runnable = () -> {
-                Retrofit retrofit = api.getRetrofitInstance();
-                APIRequest apiRequest = retrofit.create(APIRequest.class);
-                Call<JsonObject> responseCall = apiRequest.deleteSelectedCrop(requestBody);
-                api.postRequest(responseCall, this, 3);
-            };
-            handler.post(runnable);
-        } catch (JSONException e) {
-            e.printStackTrace();
+            val handler = Handler()
+            val runnable = Runnable {
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest: APIRequest = retrofit.create(APIRequest::class.java)
+                val responseCall: Call<JsonObject> = apiRequest.deleteSelectedCrop(requestBody)
+                api.postRequest(responseCall, this, 3)
+            }
+            handler.post(runnable)
+        } catch (e: JSONException) {
+            e.printStackTrace()
         }
     }
 
-    private void openChangeLangPopup() {
-        final Dialog dialog = new Dialog(DashboardScreen.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(true);
-        dialog.setContentView(R.layout.popup_language_selector);
+    private fun openChangeLangPopup() {
+        val dialog = Dialog(this@DashboardScreen)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(true)
+        dialog.setContentView(R.layout.popup_language_selector)
 
-        TextView tvEnglish = dialog.findViewById(R.id.tv_eng);
-        TextView tvMarathi = dialog.findViewById(R.id.tv_mar);
+        val tvEnglish = dialog.findViewById<TextView>(R.id.tv_eng)
+        val tvMarathi = dialog.findViewById<TextView>(R.id.tv_mar)
 
-        tvEnglish.setOnClickListener(view -> {
+        tvEnglish.setOnClickListener {
+            val languageToLoad = "en"
+            val locale = Locale(languageToLoad)
+            Locale.setDefault(locale)
+            val config = Configuration()
+            config.locale = locale
+            baseContext.resources.updateConfiguration(
+                config,
+                baseContext.resources.displayMetrics
+            )
 
-            String languageToLoad = "en";
-            Locale locale = new Locale(languageToLoad);
-            Locale.setDefault(locale);
-            Configuration config = new Configuration();
-            config.locale = locale;
-            getBaseContext().getResources().updateConfiguration(config,
-                    getBaseContext().getResources().getDisplayMetrics());
+            AppSettings.setLanguage(this@DashboardScreen, "1")
 
-            AppSettings.setLanguage(DashboardScreen.this, "1");
+            finish()
+            startActivity(intent)
 
-            finish();
-            startActivity(getIntent());
+            dialog.dismiss()
+            getFarmerSelectedCrop(languageToLoad)
+        }
 
-            dialog.dismiss();
-            getFarmerSelectedCrop(languageToLoad);
+        tvMarathi.setOnClickListener {
+            val languageToLoad = "hi"
+            val locale = Locale(languageToLoad)
+            Locale.setDefault(locale)
+            val config = Configuration()
+            config.locale = locale
+            baseContext.resources.updateConfiguration(
+                config,
+                baseContext.resources.displayMetrics
+            )
 
-        });
+            AppSettings.setLanguage(this@DashboardScreen, "2")
 
-        tvMarathi.setOnClickListener(view -> {
+            finish()
+            startActivity(intent)
 
-            String languageToLoad = "hi";
+            dialog.dismiss()
+            getFarmerSelectedCrop(languageToLoad)
+        }
 
-            Locale locale = new Locale(languageToLoad);
-            Locale.setDefault(locale);
-            Configuration config = new Configuration();
-            config.locale = locale;
-            getBaseContext().getResources().updateConfiguration(config,
-                    getBaseContext().getResources().getDisplayMetrics());
-
-            AppSettings.setLanguage(DashboardScreen.this, "2");
-
-            finish();
-            startActivity(getIntent());
-
-            dialog.dismiss();
-            getFarmerSelectedCrop(languageToLoad);
-        });
-
-        dialog.show();
-
+        dialog.show()
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_CODE) {
-            for (int i = 0; i < permissions.length; i++) {
+            for (i in permissions.indices) {
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                     // Permission was granted
                     // Perform the related action (e.g., accessing the camera)
-                    UIToastMessage.show(DashboardScreen.this, "Access Permission granted");
+                    UIToastMessage.show(this@DashboardScreen, "Access Permission granted")
                 } else {
                     // Permission was denied
                     // Notify the user and handle the situation gracefully
-                    UIToastMessage.show(DashboardScreen.this, "Access Permission denied");
+                    UIToastMessage.show(this@DashboardScreen, "Access Permission denied")
                 }
             }
         }
     }
 
-    @Override
-    public void onFailure(Object obj, Throwable th, int i) {
+    override fun onFailure(obj: Any, th: Throwable, i: Int) {
     }
 
-    @Override
-    public void onResponse(JSONObject jSONObject, int i) {
+    override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (jSONObject != null) {
-            switch (i) {
-                case 1:
-                    ResponseModel registrationResponse = new ResponseModel(jSONObject);
+            when (i) {
+                1 -> {
+                    val registrationResponse = ResponseModel(jSONObject)
                     if (registrationResponse.getStatus()) {
                         try {
-                            String strName = jSONObject.getString("Name");
-                            String strMobNo = jSONObject.getString("MobileNo");
-                            String strEmailId = jSONObject.getString("EmailId");
-                            int strFFAReg = jSONObject.getInt("FAAPRegistrationID");
-                            String strDistName = jSONObject.getString("DistrictName");
-                            int strDistId = jSONObject.getInt("DistrictID");
-                            String strTalukaName = jSONObject.getString("TalukaName");
-                            int strTalukaId = jSONObject.getInt("TalukaID");
-                            int strVillageId = jSONObject.getInt("VillageID");
-                            String strVillageName = jSONObject.getString("VillageName");
-                            AppSettings.getInstance().setValue(this, AppConstants.uName, strName);
-                            AppSettings.getInstance().setValue(this, AppConstants.uMobileNo, strMobNo);
-                            AppSettings.getInstance().setValue(this, AppConstants.uEmail, strEmailId);
-                            AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, strFFAReg);
-                            AppSettings.getInstance().setValue(this, AppConstants.uDIST, strDistName);
-                            AppSettings.getInstance().setIntValue(this, AppConstants.uDISTId, strDistId);
-                            AppSettings.getInstance().setValue(this, AppConstants.uTALUKA, strTalukaName);
-                            AppSettings.getInstance().setIntValue(this, AppConstants.uTALUKAID, strTalukaId);
-                            AppSettings.getInstance().setValue(this, AppConstants.uVILLAGE, strVillageName);
-                            AppSettings.getInstance().setIntValue(this, AppConstants.uVILLAGEID, strVillageId);
-                            AppSettings.getInstance().setBooleanValue(this, AppConstants.userDataSaved, true);
+                            val strName = jSONObject.getString("Name")
+                            val strMobNo = jSONObject.getString("MobileNo")
+                            val strEmailId = jSONObject.getString("EmailId")
+                            val strFFAReg = jSONObject.getInt("FAAPRegistrationID")
+                            val strDistName = jSONObject.getString("DistrictName")
+                            val strDistId = jSONObject.getInt("DistrictID")
+                            val strTalukaName = jSONObject.getString("TalukaName")
+                            val strTalukaId = jSONObject.getInt("TalukaID")
+                            val strVillageId = jSONObject.getInt("VillageID")
+                            val strVillageName = jSONObject.getString("VillageName")
+                            AppSettings.getInstance().setValue(this, AppConstants.uName, strName)
+                            AppSettings.getInstance()
+                                .setValue(this, AppConstants.uMobileNo, strMobNo)
+                            AppSettings.getInstance()
+                                .setValue(this, AppConstants.uEmail, strEmailId)
+                            AppSettings.getInstance()
+                                .setIntValue(this, AppConstants.fREGISTER_ID, strFFAReg)
+                            AppSettings.getInstance()
+                                .setValue(this, AppConstants.uDIST, strDistName)
+                            AppSettings.getInstance()
+                                .setIntValue(this, AppConstants.uDISTId, strDistId)
+                            AppSettings.getInstance()
+                                .setValue(this, AppConstants.uTALUKA, strTalukaName)
+                            AppSettings.getInstance()
+                                .setIntValue(this, AppConstants.uTALUKAID, strTalukaId)
+                            AppSettings.getInstance()
+                                .setValue(this, AppConstants.uVILLAGE, strVillageName)
+                            AppSettings.getInstance()
+                                .setIntValue(this, AppConstants.uVILLAGEID, strVillageId)
+                            AppSettings.getInstance()
+                                .setBooleanValue(this, AppConstants.userDataSaved, true)
 
-                            String userName = AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName);
-                            String userNumber = AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo);
-                            View hView = binding.navView.getHeaderView(0);
-                            nav_user_name = hView.findViewById(R.id.tv_farmerName);
-                            nav_user_phone = hView.findViewById(R.id.tv_famerPhoneNumber);
-                            if (!userName.equals("USER_NAME")) {
+                            val userName: String = AppSettings.getInstance()
+                                .getValue(this, AppConstants.uName, AppConstants.uName)
+                            val userNumber: String = AppSettings.getInstance()
+                                .getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
+                            val hView = binding.navView.getHeaderView(0)
+                            navUserName = hView.findViewById(R.id.tv_farmerName)
+                            navUserPhone = hView.findViewById(R.id.tv_famerPhoneNumber)
+                            if (userName != "USER_NAME") {
                                 try {
-                                    String capitalizeStrName = ApUtil.getCamelCaseStreing(userName);
-                                    nav_user_name.setText(!capitalizeStrName.isEmpty() ? capitalizeStrName : userName);
-                                    nav_user_phone.setText(userNumber);
-                                } catch (StringIndexOutOfBoundsException e) {
-                                    e.printStackTrace();
+                                    val capitalizeStrName: String =
+                                        ApUtil.getCamelCaseStreing(userName)
+                                    navUserName.text = capitalizeStrName.ifEmpty { userName }
+                                    navUserPhone.text = userNumber
+                                } catch (e: StringIndexOutOfBoundsException) {
+                                    e.printStackTrace()
                                 }
                             }
 
-                            callForWeatherApi(strTalukaId);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            callForWeatherApi(strTalukaId)
+                        } catch (e: JSONException) {
+                            e.printStackTrace()
                         }
                     }
-                    break;
-                case 2:
-                    ResponseModel farmersSelectedCropResponse = new ResponseModel(jSONObject);
+                }
+
+                2 -> {
+                    val farmersSelectedCropResponse = ResponseModel(jSONObject)
                     if (farmersSelectedCropResponse.getStatus()) {
-                        JSONArray selectedCrops = farmersSelectedCropResponse.getDataArrays();
+                        val selectedCrops: JSONArray = farmersSelectedCropResponse.getDataArrays()
                         if (selectedCrops.length() > 0) {
-                            selectedCropList = new ArrayList<>();
-                            for (int j = 0; j < selectedCrops.length(); j++) {
+                            selectedCropList = ArrayList()
+                            var j = 0
+                            while (j < selectedCrops.length()) {
                                 try {
-                                    JSONObject selectedCrop = selectedCrops.getJSONObject(j);
-                                    savedCropId = selectedCrop.getInt("crop_id");
-                                    savedCropName = selectedCrop.getString("name");
-                                    savedCropImageUrl = selectedCrop.getString("image");
-                                    savedCropWoTRId = selectedCrop.getString("wotr_crop_id");
-                                    binding.appBarMain.dashboardScreen.addChangeCropTV.setText(R.string.change_Crop);
-                                    binding.appBarMain.dashboardScreen.addChangeCropIV.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_swap));
-                                    binding.appBarMain.dashboardScreen.savedCropNameCardView.setVisibility(View.VISIBLE);
-                                    binding.appBarMain.dashboardScreen.savedCropNameTextView.setText(savedCropName);
-                                    Picasso.get().load(savedCropImageUrl).fit().centerCrop().into(binding.appBarMain.dashboardScreen.savedCropNameImageView);
-                                    binding.appBarMain.dashboardScreen.yourCropTv.setVisibility(View.GONE);
-                                    getCropStagesAndAdvisory();
-                                    selectedCropList.add(new CropsCategName(selectedCrop.getInt("crop_id"), selectedCrop.getString("name"), selectedCrop.getString("image"), selectedCrop.getString("wotr_crop_id")));
-                                } catch (JSONException e) {
-                                    throw new RuntimeException(e);
+                                    val selectedCrop = selectedCrops.getJSONObject(j)
+                                    savedCropId = selectedCrop.getInt("crop_id")
+                                    savedCropName = selectedCrop.getString("name")
+                                    savedCropImageUrl = selectedCrop.getString("image")
+                                    savedCropWoTRId = selectedCrop.getString("wotr_crop_id")
+                                    binding.appBarMain.dashboardScreen.addChangeCropTV.setText(R.string.change_Crop)
+                                    binding.appBarMain.dashboardScreen.addChangeCropIV.setImageDrawable(
+                                        ContextCompat.getDrawable(
+                                            this, R.drawable.ic_swap
+                                        )
+                                    )
+                                    binding.appBarMain.dashboardScreen.savedCropNameCardView.visibility =
+                                        View.VISIBLE
+                                    binding.appBarMain.dashboardScreen.savedCropNameTextView.text =
+                                        savedCropName
+                                    Picasso.get().load(savedCropImageUrl).fit().centerCrop().into(
+                                        binding.appBarMain.dashboardScreen.savedCropNameImageView
+                                    )
+                                    binding.appBarMain.dashboardScreen.yourCropTv.visibility =
+                                        View.GONE
+                                    cropStagesAndAdvisory
+                                    selectedCropList!!.add(
+                                        CropsCategName(
+                                            selectedCrop.getInt("crop_id"),
+                                            selectedCrop.getString("name"),
+                                            selectedCrop.getString("image"),
+                                            selectedCrop.getString("wotr_crop_id")
+                                        )
+                                    )
+                                } catch (e: JSONException) {
+                                    throw RuntimeException(e)
                                 }
+                                j++
                             }
                             AppSettings.getInstance().setList(
-                                    this, AppConstants.kFarmerCrop,
-                                    Arrays.asList(selectedCropList.toArray()));
+                                this, AppConstants.kFarmerCrop,
+                                mutableListOf<Any>(*selectedCropList!!.toTypedArray())
+                            )
                         } else {
-                            binding.appBarMain.dashboardScreen.savedCropNameCardView.setVisibility(View.GONE);
-                            binding.appBarMain.dashboardScreen.yourCropTv.setVisibility(View.VISIBLE);
-                            binding.appBarMain.dashboardScreen.yourCropTv.setText(R.string.no_crops_added);
-                            binding.appBarMain.dashboardScreen.addChangeCropTV.setText(R.string.add_Crop);
-                            binding.appBarMain.dashboardScreen.addChangeCropIV.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.baseline_add_24));
+                            binding.appBarMain.dashboardScreen.savedCropNameCardView.visibility =
+                                View.GONE
+                            binding.appBarMain.dashboardScreen.yourCropTv.visibility =
+                                View.VISIBLE
+                            binding.appBarMain.dashboardScreen.yourCropTv.setText(R.string.no_crops_added)
+                            binding.appBarMain.dashboardScreen.addChangeCropTV.setText(R.string.add_Crop)
+                            binding.appBarMain.dashboardScreen.addChangeCropIV.setImageDrawable(
+                                ContextCompat.getDrawable(
+                                    this, R.drawable.baseline_add_24
+                                )
+                            )
                         }
                         if (selectedCropList != null) {
-                            showCropList(selectedCropList);
+                            showCropList(selectedCropList!!)
                         } else {
-                            binding.appBarMain.dashboardScreen.selectedCropRecyclerView.setVisibility(View.GONE);
+                            binding.appBarMain.dashboardScreen.selectedCropRecyclerView.visibility =
+                                View.GONE
                         }
                     } else {
-                        UIToastMessage.show(this, farmersSelectedCropResponse.getResponse());
+                        UIToastMessage.show(this, farmersSelectedCropResponse.getResponse())
                     }
-                    updateSavedCropDetails();
-                    break;
-                case 3:
-                    ResponseModel deleteSelectedCropResponse = new ResponseModel(jSONObject);
+                    updateSavedCropDetails()
+                }
+
+                3 -> {
+                    val deleteSelectedCropResponse = ResponseModel(jSONObject)
                     if (deleteSelectedCropResponse.getStatus()) {
                         if (showToast) {
-                            UIToastMessage.show(this, deleteSelectedCropResponse.getResponse());
+                            UIToastMessage.show(this, deleteSelectedCropResponse.getResponse())
                         }
-                        AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null);
-                        selectedCropList.clear();
-                        getFarmerSelectedCrop(languageToLoad);
+                        AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null)
+                        selectedCropList!!.clear()
+                        getFarmerSelectedCrop(languageToLoad)
                     } else {
-                        UIToastMessage.show(this, deleteSelectedCropResponse.getResponse());
+                        UIToastMessage.show(this, deleteSelectedCropResponse.getResponse())
                     }
-                    break;
-                case 4:
-                    if (jSONObject != null) {
-                        new AppPreferenceManager(this).saveString("CROP_STAGE_RESPONSE", jSONObject.toString());
+                }
 
-                        ResponseModel response = new ResponseModel(jSONObject);
-                        if (response.getStatus()) {
-                            try {
-                                savedCropSowingDate = jSONObject.getString("sowing_date");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            UIToastMessage.show(this, response.getResponse());
+                4 -> if (jSONObject != null) {
+                    AppPreferenceManager(this).saveString(
+                        "CROP_STAGE_RESPONSE",
+                        jSONObject.toString()
+                    )
+
+                    val response = ResponseModel(jSONObject)
+                    if (response.getStatus()) {
+                        try {
+                            savedCropSowingDate = jSONObject.getString("sowing_date")
+                        } catch (e: JSONException) {
+                            e.printStackTrace()
                         }
+                    } else {
+                        UIToastMessage.show(this, response.getResponse())
                     }
-                    break;
-                case 5:
-                    if (jSONObject != null) {
-                        appPreferenceManager.saveString(AppConstants.WEATHER_RESPONSE, jSONObject.toString());
-                        ResponseModel response = new ResponseModel(jSONObject);
-                        if (response.getStatus()) {
-                            JSONObject temperatureObject = jSONObject.optJSONObject("Temperature");
-                            assert temperatureObject != null;
-                            int tempMin = temperatureObject.optInt("min");
-                            int tempMax = temperatureObject.optInt("max");
-                            String temperature = tempMin + "°C / " + tempMax + "°C";
-                            binding.appBarMain.dashboardScreen.temperatureTextView.setText(temperature);
-                        }
-                    }
-                    break;
-            }
-        }
-    }
+                }
 
-    private void callForWeatherApi(int talukaID) {
-        JSONObject jsonObject = new JSONObject();
-        Executors.newSingleThreadExecutor().execute(() -> {
-            try {
-                jsonObject.put("taluka", talukaID);
-                jsonObject.put("lang", languageToLoad);
-
-                RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
-                AppInventorApi api = new AppInventorApi(
-                        this,
-                        APIServices.SSO,
-                        "",
-                        new AppString(this).getkMSG_WAIT(),
-                        false
-                );
-
-                Retrofit retrofit = api.getRetrofitInstance();
-                APIRequest apiRequest = retrofit.create(APIRequest.class);
-                Call<JsonObject> responseCall = apiRequest.getWeatherDetails(requestBody);
-
-                api.postRequest(responseCall, this, 5);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    private void updateSavedCropDetails() {
-        if (selectedCropList != null) {
-            if (selectedCropList.size() > 1) {
-                for (int i = 0; i < selectedCropList.size(); i++) {
-                    if (selectedCropList.get(i).getmName().equals(savedCropName)) {
-                        cropId = selectedCropList.get(i).getId();
-                        showToast = false;
-                        deleteFarmerSelectedCrop();
+                5 -> if (jSONObject != null) {
+                    appPreferenceManager?.saveString(
+                        AppConstants.WEATHER_RESPONSE,
+                        jSONObject.toString()
+                    )
+                    val response = ResponseModel(jSONObject)
+                    if (response.getStatus()) {
+                        val temperatureObject =
+                            checkNotNull(jSONObject.optJSONObject("Temperature"))
+                        val tempMin = temperatureObject.optInt("min")
+                        val tempMax = temperatureObject.optInt("max")
+                        val temperature = "$tempMin°C / $tempMax°C"
+                        binding.appBarMain.dashboardScreen.temperatureTextView.text = temperature
                     }
                 }
             }
         }
     }
 
-    private void showCropList(ArrayList<CropsCategName> selectedCropList) {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        binding.appBarMain.dashboardScreen.selectedCropRecyclerView.setLayoutManager(layoutManager);
-        binding.appBarMain.dashboardScreen.selectedCropRecyclerView.setHasFixedSize(true);
-        binding.appBarMain.dashboardScreen.selectedCropRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        VideosImageDetailsAdapter adapter = new VideosImageDetailsAdapter(this, selectedCropList, this, "dashboardScreen");
-        binding.appBarMain.dashboardScreen.selectedCropRecyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+    private fun callForWeatherApi(talukaID: Int) {
+        val jsonObject = JSONObject()
+        Executors.newSingleThreadExecutor().execute {
+            try {
+                jsonObject.put("taluka", talukaID)
+                jsonObject.put("lang", languageToLoad)
+
+                val requestBody: RequestBody =
+                    AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api = AppInventorApi(
+                    this,
+                    APIServices.SSO,
+                    "",
+                    AppString(this).getkMSG_WAIT(),
+                    false
+                )
+
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest: APIRequest = retrofit.create(APIRequest::class.java)
+                val responseCall: Call<JsonObject> =
+                    apiRequest.getWeatherDetails(requestBody)
+
+                api.postRequest(responseCall, this, 5)
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+        }
     }
 
-    void deleteDialog() {
-        Dialog dialog = new AlertDialog.Builder(this)
-                .setCancelable(false)
-                .setTitle(R.string.delete_crop_title)
-                .setMessage(R.string.delete_crop_message)
-                .setPositiveButton(R.string.delete_crop_yes, (dialogInterface, i) -> deleteFarmerSelectedCrop())
-                .setNegativeButton(R.string.delete_crop_no, (dialogInterface, i) -> dialogInterface.dismiss())
-                .create();
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
+    private fun updateSavedCropDetails() {
+        if (selectedCropList != null) {
+            if (selectedCropList!!.size > 1) {
+                for (i in selectedCropList!!.indices) {
+                    if (selectedCropList!![i].getmName() == savedCropName) {
+                        cropId = selectedCropList!![i].id
+                        showToast = false
+                        deleteFarmerSelectedCrop()
+                    }
+                }
+            }
+        }
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
+    private fun showCropList(selectedCropList: ArrayList<CropsCategName>) {
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.appBarMain.dashboardScreen.selectedCropRecyclerView.layoutManager = layoutManager
+        binding.appBarMain.dashboardScreen.selectedCropRecyclerView.setHasFixedSize(true)
+        binding.appBarMain.dashboardScreen.selectedCropRecyclerView.itemAnimator =
+            DefaultItemAnimator()
+        val adapter = VideosImageDetailsAdapter(
+            this, selectedCropList,
+            this, "dashboardScreen"
+        )
+        binding.appBarMain.dashboardScreen.selectedCropRecyclerView.adapter = adapter
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun deleteDialog() {
+        val dialog: Dialog = AlertDialog.Builder(this)
+            .setCancelable(false)
+            .setTitle(R.string.delete_crop_title)
+            .setMessage(R.string.delete_crop_message)
+            .setPositiveButton(
+                R.string.delete_crop_yes
+            ) { _: DialogInterface?, _: Int -> deleteFarmerSelectedCrop() }
+            .setNegativeButton(
+                R.string.delete_crop_no
+            ) { dialogInterface: DialogInterface, _: Int -> dialogInterface.dismiss() }
+            .create()
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.show()
+    }
+
+    override fun onItemClick(parent: AdapterView<*>?, view: View, position: Int, l: Long) {
         try {
-            JSONObject jsonObject = jsonArray.getJSONObject(position);
-            int id = jsonObject.getInt("id");
-            switch (id) {
-                case 0:
-                    Intent intent = new Intent(DashboardScreen.this, Registration.class);
-                    intent.putExtra("FAAPRegistrationID", farmerId);
-                    startActivity(intent);
-                    break;
-                case 1:
-                    if (farmerId > 0) {
-                        Intent sharing = new Intent(DashboardScreen.this, BandavarActivity.class);
-                        startActivity(sharing);
-                    } else {
-                        UIToastMessage.show(DashboardScreen.this, "Please Login First...");
-                    }
-                    break;
-                case 2:
-                    Intent dbtStatusIntent = new Intent(DashboardScreen.this, DbtStatus.class);
-                    dbtStatusIntent.putExtra("userPhoneNumber", String.valueOf(nav_user_phone));
-                    startActivity(dbtStatusIntent);
-                    break;
-                case 3:
-                    Intent notificationIntent = new Intent(DashboardScreen.this, NewsListActivity.class);
-                    startActivity(notificationIntent);
-                    break;
-                case 5:
-                    Intent trainingLocationIntent = new Intent(DashboardScreen.this, TrainingLocationSelection.class);
-                    startActivity(trainingLocationIntent);
-                    break;
-                case 6:
-                    Intent loginIntent = new Intent(DashboardScreen.this, LoginScreen.class);
-                    startActivity(loginIntent);
-                    break;
-                case 7:
-                    logoutFromApp();
-                    break;
-                case 11:
-                    startActivity(new Intent(DashboardScreen.this, MyVillageProfilePdf.class));
-                    break;
-                case 13:
-                    if (farmerId > 0) {
-                        Intent grievanceIntent = new Intent(DashboardScreen.this, Grievances.class);
-                        grievanceIntent.putExtra("FAAPRegistrationID", farmerId);
-                        startActivity(grievanceIntent);
-                    } else {
-                        UIToastMessage.show(DashboardScreen.this, "Please Login First...");
-                    }
-                    break;
+            val jsonObject = jsonArray!!.getJSONObject(position)
+            val id = jsonObject.getInt("id")
+            when (id) {
+                0 -> {
+                    val intent = Intent(this@DashboardScreen, Registration::class.java)
+                    intent.putExtra("FAAPRegistrationID", farmerId)
+                    startActivity(intent)
+                }
+
+                1 -> if (farmerId > 0) {
+                    val sharing = Intent(
+                        this@DashboardScreen,
+                        BandavarActivity::class.java
+                    )
+                    startActivity(sharing)
+                } else {
+                    UIToastMessage.show(this@DashboardScreen, "Please Login First...")
+                }
+
+                2 -> {
+                    val dbtStatusIntent = Intent(
+                        this@DashboardScreen,
+                        DbtStatus::class.java
+                    )
+                    dbtStatusIntent.putExtra("userPhoneNumber", navUserPhone.toString())
+                    startActivity(dbtStatusIntent)
+                }
+
+                3 -> {
+                    val notificationIntent = Intent(
+                        this@DashboardScreen,
+                        NewsListActivity::class.java
+                    )
+                    startActivity(notificationIntent)
+                }
+
+                5 -> {
+                    val trainingLocationIntent = Intent(
+                        this@DashboardScreen,
+                        TrainingLocationSelection::class.java
+                    )
+                    startActivity(trainingLocationIntent)
+                }
+
+                6 -> {
+                    val loginIntent = Intent(
+                        this@DashboardScreen,
+                        LoginScreen::class.java
+                    )
+                    startActivity(loginIntent)
+                }
+
+                7 -> logoutFromApp()
+                11 -> startActivity(Intent(this@DashboardScreen, MyVillageProfilePdf::class.java))
+                13 -> if (farmerId > 0) {
+                    val grievanceIntent = Intent(
+                        this@DashboardScreen,
+                        Grievances::class.java
+                    )
+                    grievanceIntent.putExtra("FAAPRegistrationID", farmerId)
+                    startActivity(grievanceIntent)
+                } else {
+                    UIToastMessage.show(this@DashboardScreen, "Please Login First...")
+                }
             }
-            DrawerLayout drawer = findViewById(R.id.drawer_layout1);
+            val drawer = findViewById<DrawerLayout>(R.id.drawer_layout1)
             if (drawer.isDrawerOpen(GravityCompat.START)) {
-                drawer.closeDrawer(GravityCompat.START);
+                drawer.closeDrawer(GravityCompat.START)
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (e: JSONException) {
+            e.printStackTrace()
         }
     }
 
-    private void logoutFromApp() {
-
-        AppSettings.getInstance().setValue(this, AppConstants.uName, AppConstants.uName);
-        AppSettings.getInstance().setValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo);
-        AppSettings.getInstance().setValue(this, AppConstants.uEmail, AppConstants.uEmail);
-        AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, 0);
-        AppSettings.getInstance().setValue(this, AppConstants.uDIST, AppConstants.uDIST);
-        AppSettings.getInstance().setIntValue(this, AppConstants.uDISTId, 0);
-        AppSettings.getInstance().setValue(this, AppConstants.uTALUKA, AppConstants.uTALUKA);
-        AppSettings.getInstance().setIntValue(this, AppConstants.uTALUKAID, 0);
-        AppSettings.getInstance().setValue(this, AppConstants.uVILLAGE, AppConstants.uVILLAGE);
-        AppSettings.getInstance().setIntValue(this, AppConstants.uVILLAGEID, 0);
-        AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null);
-        AppUtility.getInstance().clearAppSharedPrefData(this, AppConstants.kSHARED_PREF);
-        AppSettings.getInstance().setBooleanValue(this, AppConstants.userDataSaved, false);
-        Intent intent = new Intent(DashboardScreen.this, SplashScreenActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
+    private fun logoutFromApp() {
+        AppSettings.getInstance().setValue(this, AppConstants.uName, AppConstants.uName)
+        AppSettings.getInstance().setValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
+        AppSettings.getInstance().setValue(this, AppConstants.uEmail, AppConstants.uEmail)
+        AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, 0)
+        AppSettings.getInstance().setValue(this, AppConstants.uDIST, AppConstants.uDIST)
+        AppSettings.getInstance().setIntValue(this, AppConstants.uDISTId, 0)
+        AppSettings.getInstance().setValue(this, AppConstants.uTALUKA, AppConstants.uTALUKA)
+        AppSettings.getInstance().setIntValue(this, AppConstants.uTALUKAID, 0)
+        AppSettings.getInstance().setValue(this, AppConstants.uVILLAGE, AppConstants.uVILLAGE)
+        AppSettings.getInstance().setIntValue(this, AppConstants.uVILLAGEID, 0)
+        AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null)
+        AppUtility.getInstance().clearAppSharedPrefData(this, AppConstants.kSHARED_PREF)
+        AppSettings.getInstance().setBooleanValue(this, AppConstants.userDataSaved, false)
+        val intent = Intent(this@DashboardScreen, SplashScreenActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        finish()
     }
 
-    @Override
-    public void onUpdateNeeded(String updateUrl) {
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setCancelable(false)
-                .setTitle("New version available")
-                .setMessage("Please, update app to new version to continue reposting.")
-                .setPositiveButton("Update",
-                        (dialog1, which) -> redirectStore(updateUrl)).setNegativeButton("No, thanks",
-                        (dialog12, which) -> finish()).create();
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
+    override fun onUpdateNeeded(updateUrl: String) {
+        val dialog = AlertDialog.Builder(this)
+            .setCancelable(false)
+            .setTitle("New version available")
+            .setMessage("Please, update app to new version to continue reposting.")
+            .setPositiveButton(
+                "Update"
+            ) { _: DialogInterface?, _: Int -> redirectStore(updateUrl) }
+            .setNegativeButton(
+                "No, thanks"
+            ) { dialog: DialogInterface?, _: Int ->
+                dialog?.dismiss()
+                finish()
+            }.create()
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.show()
     }
 
-    private void redirectStore(String updateUrl) {
-        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(updateUrl));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+    private fun redirectStore(updateUrl: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(updateUrl))
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
     }
 
-    @Override
-    public void onMultiRecyclerViewItemClick(int i, Object id) {
+    override fun onMultiRecyclerViewItemClick(i: Int, id: Any) {
         if (i == 2) {
-            cropId = ((int) id);
-            deleteFarmerSelectedCrop();
+            cropId = (id as Int)
+            deleteFarmerSelectedCrop()
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finishAffinity();
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finishAffinity()
+    }
+
+    companion object {
+        private const val PERMISSION_REQUEST_CODE = 100
+        private val arrayCategory = arrayOf(
+            "Crop Advisory",
+            "Soil Health Card",
+            "Fertilizer Calculator",
+            "Climate Resilent Technology",
+            "Pest and Diseases",
+            "Identify Pest/Disease",
+            "Market Price",
+            "Warehouse Availabilities",
+            "DBT Schemes"
+        )
+
+        private val arrayCategoryMarathi = arrayOf(
+            "पीक सल्ला",
+            "मृदा आरोग्य पत्रिका",
+            "खत मात्रा गणक (कॅलक्यूलेटर)",
+            "हवामान अनुकूल तंत्रज्ञान",
+            "कीड व रोग",
+            "किटक/रोग ओळखा",
+            "बाजारभाव",
+            " गोदाम उपलब्धता",
+            "थेट लाभ हस्तांतरण योजना"
+
+        )
+
+        var arrayCategoryImg: IntArray = intArrayOf(
+            R.drawable.ecology,
+            R.drawable.soil,
+            R.drawable.fertilizer,
+            R.drawable.climate_change,
+            R.drawable.ladybug,
+            R.drawable.pest,
+            R.drawable.commodity,
+            R.drawable.warehouse,
+            R.drawable.ic_dbt
+        )
+
+        val formattedTimestamp: String
+            get() {
+                val dateFormat = SimpleDateFormat(
+                    "dd MMMM yyyy | HH:mm",
+                    Locale.getDefault()
+                )
+                return dateFormat.format(Date())
+            }
     }
 }
