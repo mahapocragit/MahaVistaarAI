@@ -2,14 +2,17 @@ package `in`.gov.mahapocra.farmerapppks.ui.adapters
 
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Typeface
+import android.net.Uri
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -85,7 +88,7 @@ class StageAdvisoryDetailAdaptr(
         } else {
             holder.cropSapadvisoryTv.text = data
         }
-        holder.cropSapadvisoryTv.setOnClickListener(View.OnClickListener {
+        holder.cropSapadvisoryTv.setOnClickListener {
             val alert = AlertDialog.Builder(context!!)
             val wv = WebView(context!!)
             wv.loadDataWithBaseURL(
@@ -94,21 +97,30 @@ class StageAdvisoryDetailAdaptr(
             )
             wv.webViewClient = object : WebViewClient() {
                 override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+                    Log.d("TAGGER", "onBindViewHolder: $url")
+
+                    if (url.contains("youtube.com") || url.contains("youtu.be")) {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                        view.context.startActivity(intent)
+                        return true  // Prevents WebView from loading it
+                    }
+
                     view.loadUrl(url)
                     return true
                 }
             }
+
             alert.setView(wv)
             changeLocalLang()
             alert.setTitle(context!!.getString(R.string.Crop_details))
             alert.setNegativeButton(
                 context!!.getString(R.string.cancel)
-            ) {
-                    dialog, _ -> dialog.dismiss()
+            ) { dialog, _ ->
+                dialog.dismiss()
             }
 
             alert.show()
-        })
+        }
 
         try {
             Picasso.get().invalidate(img)
