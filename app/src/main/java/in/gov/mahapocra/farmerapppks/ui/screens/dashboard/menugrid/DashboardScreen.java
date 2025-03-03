@@ -40,6 +40,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -149,6 +150,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
             deleteDialog();
         });
 
+        binding.appBarMain.dashboardScreen.greetingsTextView.setText(getGreetingMessage());
         binding.appBarMain.dashboardScreen.timestampTextView.setText(getFormattedTimestamp());
         binding.appBarMain.dashboardScreen.temperatureLayout.setOnClickListener(view -> {
             Intent weather = new Intent(DashboardScreen.this, WeatherTempActivity.class);
@@ -174,6 +176,7 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
         // Set Data
         String userName = AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName);
         String userNumber = AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo);
+        binding.appBarMain.dashboardScreen.userFullNameTextView.setText(userName);
         View hView = binding.navView.getHeaderView(0);
         nav_user_name = hView.findViewById(R.id.tv_farmerName);
         nav_user_phone = hView.findViewById(R.id.tv_famerPhoneNumber);
@@ -235,11 +238,28 @@ public class DashboardScreen extends AppCompatActivity implements ApiCallbackCod
                     startActivity(new Intent(DashboardScreen.this, TempDashboardActivity.class));
                     break;
                 case R.id.nav_profile:
-                    startActivity(new Intent(DashboardScreen.this, Registration.class));
+                    Intent intent = new Intent(DashboardScreen.this, Registration.class);
+                    intent.putExtra("FAAPRegistrationID", farmerId);
+                    startActivity(intent);
                     break;
             }
             return false;
         });
+    }
+
+    private String getGreetingMessage() {
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+
+        if (hour >= 5 && hour < 12) {
+            return "Good Morning,";
+        } else if (hour >= 12 && hour < 17) {
+            return "Good Afternoon,";
+        } else if (hour >= 17 && hour < 21) {
+            return "Good Evening,";
+        } else {
+            return "Good Night,";
+        }
     }
 
     private void dashboardGridItemsLayoutSetup() {

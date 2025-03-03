@@ -84,6 +84,26 @@
             tools:layout_editor_absoluteX="1dp"
             tools:layout_editor_absoluteY="235dp">
 
+            <TextView
+                android:id="@+id/greetingsTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_weight="1"
+                android:text="Good Morning,"
+                android:textSize="@dimen/_12sdp" />
+
+            <TextView
+                android:id="@+id/userFullNameTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_weight="1"
+                android:text="Lorem Ipsum"
+                android:textSize="@dimen/_16sdp"
+                android:textStyle="bold" />
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_60sdp"
