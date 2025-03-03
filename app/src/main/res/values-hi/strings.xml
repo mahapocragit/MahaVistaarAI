@@ -273,7 +273,9 @@
     <string name="fertilizer_calculator">खताच्या मात्रेची गणना</string>
     <string name="plot_size">प्लॉटचा आकार</string>
     <string name="hectare">हेक्टर</string>
+    <string name="hectare_selected">हेक्टर निवडले</string>
     <string name="acre">एकर</string>
+    <string name="acre_selected">एकर निवडले</string>
     <string name="guntha">गुंठा</string>
     <string name="do_you_have_soil_test_report">तुमच्याकडे माती परीक्षण अहवाल आहे का?</string>
     <string name="yes">होय </string>

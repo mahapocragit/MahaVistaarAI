@@ -50,6 +50,30 @@
 
             </LinearLayout>
 
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_120sdp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/acreRadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:checked="true"
+                    android:layout_weight="1"
+                    android:text="@string/acre" />
+
+                <RadioButton
+                    android:id="@+id/radioButton2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/hectare" />
+
+            </RadioGroup>
+
             <LinearLayout
                 android:id="@+id/lnr_plot_size"
                 android:layout_width="@dimen/_220sdp"
@@ -68,6 +92,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/areaTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_5sdp"
@@ -210,24 +235,24 @@
                 android:id="@+id/radioGroup2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/padding25"
-                android:layout_marginTop="@dimen/padding5"
+                android:layout_marginEnd="@dimen/_120sdp"
                 android:orientation="horizontal">
 
                 <RadioButton
                     android:id="@+id/yesRadioButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:checked="true"
+                    android:layout_weight="1"
                     android:text="@string/yes"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
                 <RadioButton
                     android:id="@+id/noRadioButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/padding20"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:checked="false"
                     android:text="@string/no"
                     android:textColor="@color/black"

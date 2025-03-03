@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.chip.ChipGroup.OnCheckedChangeListener
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
@@ -105,6 +106,21 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                 AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD
             )
             startActivity(sharing)
+        }
+
+        binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.acreRadioButton -> {
+                    // Acre selected
+                    binding.areaTextView.text = getString(R.string.acre)
+                    Toast.makeText(this, R.string.acre_selected, Toast.LENGTH_SHORT).show()
+                }
+                R.id.radioButton2 -> {
+                    // Guntha selected
+                    binding.areaTextView.text = getString(R.string.hectare)
+                    Toast.makeText(this, R.string.hectare_selected, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
         binding.sowingInfoLayout.editSowingDateIcon.setOnClickListener {

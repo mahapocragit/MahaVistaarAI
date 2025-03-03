@@ -273,7 +273,9 @@
     <string name="fertilizer_calculator">Fertilizer Calculator</string>
     <string name="plot_size">Plot Size</string>
     <string name="hectare">Hectare</string>
+    <string name="hectare_selected">Hectare selected</string>
     <string name="acre">Acre</string>
+    <string name="acre_selected">Acre selected</string>
     <string name="guntha">Guntha</string>
     <string name="do_you_have_soil_test_report">Do you have Soil Test Report?</string>
     <string name="yes">Yes</string>
