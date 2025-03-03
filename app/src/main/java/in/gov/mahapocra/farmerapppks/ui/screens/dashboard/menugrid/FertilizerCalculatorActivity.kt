@@ -25,7 +25,7 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.farmerapppks.util.AppPreferenceManager
 import `in`.gov.mahapocra.farmerapppks.R
-import `in`.gov.mahapocra.farmerapppks.activity.SelectSowingDataAndFarmer
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.pest.SelectSowingDataAndFarmer
 import `in`.gov.mahapocra.farmerapppks.ui.adapters.FertilizersRecyclerAdapter
 import `in`.gov.mahapocra.farmerapppks.data.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.data.api.APIServices

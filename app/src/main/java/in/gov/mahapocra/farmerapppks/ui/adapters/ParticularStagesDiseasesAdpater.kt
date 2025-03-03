@@ -13,7 +13,7 @@ import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
 import `in`.gov.mahapocra.farmerapppks.R
-import `in`.gov.mahapocra.farmerapppks.activity.DiseaseInformation
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.pest.DiseaseInformation
 import `in`.gov.mahapocra.farmerapppks.data.model.DiseasesDetails
 import org.json.JSONException
 

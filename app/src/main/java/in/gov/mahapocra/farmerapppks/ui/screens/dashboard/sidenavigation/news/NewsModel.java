@@ -1,10 +1,10 @@
-package in.gov.mahapocra.farmerapppks.notification;
+package in.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.news;
 
 import org.json.JSONObject;
 
 import in.co.appinventor.services_api.app_util.AppUtility;
 
-public class NotificationNewsModel {
+public class NewsModel {
 
     private String id;
     private String newsHeading;
@@ -16,7 +16,7 @@ public class NotificationNewsModel {
     private JSONObject jsonObject;
 
 
-    public NotificationNewsModel(JSONObject jsonObject) {
+    public NewsModel(JSONObject jsonObject) {
         this.jsonObject = jsonObject;
     }
 

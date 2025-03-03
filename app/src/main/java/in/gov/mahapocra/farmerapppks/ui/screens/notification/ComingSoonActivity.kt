@@ -1,9 +1,8 @@
-package `in`.gov.mahapocra.farmerapppks.activity
+package `in`.gov.mahapocra.farmerapppks.ui.screens.notification
 
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.farmerapppks.R
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity

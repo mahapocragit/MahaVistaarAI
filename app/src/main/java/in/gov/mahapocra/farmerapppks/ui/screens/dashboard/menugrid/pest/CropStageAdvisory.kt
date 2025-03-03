@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.farmerapppks.activity
+package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.pest
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -28,7 +28,6 @@ import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.AddCropActi
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.FertilizerCalculatorActivity
-import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.PestsAndDiseasesStages
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call

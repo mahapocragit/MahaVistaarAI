@@ -20,7 +20,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import in.gov.mahapocra.farmerapppks.R;
-import in.gov.mahapocra.farmerapppks.activity.DiseaseInformation;
+import in.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.pest.DiseaseInformation;
 import in.gov.mahapocra.farmerapppks.data.model.ClimateGridModel;
 
 public class ClimateGridAdapter extends ArrayAdapter<ClimateGridModel> {

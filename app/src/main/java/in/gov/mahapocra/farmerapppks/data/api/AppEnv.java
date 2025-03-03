@@ -1,13 +1,3 @@
-/*
- * Copyright (c) 2018. Runtime Solutions Pvt Ltd. All right reserved.
- * Web URL  http://runtime-solutions.com
- * Author Name: Vinod Vishwakarma
- * Linked In: https://www.linkedin.com/in/vvishwakarma
- * Official Email ID : vinod@runtime-solutions.com
- * Email ID: vish.vino@gmail.com
- * Last Modified : 29/12/18 11:26 AM
- */
-
 package in.gov.mahapocra.farmerapppks.data.api;
 
 public enum AppEnv {

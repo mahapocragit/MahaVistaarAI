@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/parti_list_border_bg_green"
-    tools:context=".activity.UpcomingEventsDetails">
+    tools:context=".ui.screens.dashboard.sidenavigation.training.UpcomingEventsDetails">
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"

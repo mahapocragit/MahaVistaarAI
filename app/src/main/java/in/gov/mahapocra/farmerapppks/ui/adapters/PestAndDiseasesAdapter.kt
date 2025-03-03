@@ -10,7 +10,7 @@ import android.widget.GridView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.farmerapppks.R
-import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.PestsAndDiseasesStages
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
 import `in`.gov.mahapocra.farmerapppks.data.model.ClimateGridModel
 import `in`.gov.mahapocra.farmerapppks.data.model.DiseaseStages
 import `in`.gov.mahapocra.farmerapppks.data.model.DiseasesDetails

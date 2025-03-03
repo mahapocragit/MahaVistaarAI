@@ -8,7 +8,7 @@
  * Last Modified : 31/8/19 2:48 PM
  */
 
-package in.gov.mahapocra.farmerapppks.notification;
+package in.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.news;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -32,7 +32,7 @@ import in.gov.mahapocra.farmerapppks.R;
 
 
 
-public class NotificationMsgListAdapter extends RecyclerView.Adapter<NotificationMsgListAdapter.ViewHolder> {
+public class NewsMessageListAdapter extends RecyclerView.Adapter<NewsMessageListAdapter.ViewHolder> {
 
 
     private OnMultiRecyclerItemClickListener listener;
@@ -40,7 +40,7 @@ public class NotificationMsgListAdapter extends RecyclerView.Adapter<Notificatio
     public JSONArray mDataArray;
 
 
-    public NotificationMsgListAdapter(Context mContext, OnMultiRecyclerItemClickListener listener, JSONArray jsonArray) {
+    public NewsMessageListAdapter(Context mContext, OnMultiRecyclerItemClickListener listener, JSONArray jsonArray) {
         this.mContext = mContext;
         this.listener = listener;
         this.mDataArray = jsonArray;
@@ -100,7 +100,7 @@ public class NotificationMsgListAdapter extends RecyclerView.Adapter<Notificatio
         private void onBind(final JSONObject jsonObject, final int position, final OnMultiRecyclerItemClickListener listener) throws ParseException {
 
 
-            NotificationNewsModel model = new NotificationNewsModel(jsonObject);
+            NewsModel model = new NewsModel(jsonObject);
 
             title=model.getDate();
             notificationstr=model.getNewsHeading();

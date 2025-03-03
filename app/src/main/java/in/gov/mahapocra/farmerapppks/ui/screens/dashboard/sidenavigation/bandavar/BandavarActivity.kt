@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation
+package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.bandavar
 
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
@@ -22,7 +22,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.JsonObject
-import `in`.gov.mahapocra.farmerapppks.activity.ViewStoriesBandavar
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.DashboardScreen
 import org.json.JSONException
 import org.json.JSONObject

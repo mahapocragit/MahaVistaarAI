@@ -1,4 +1,4 @@
-package in.gov.mahapocra.farmerapppks.notification;
+package in.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.news;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -37,7 +37,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 
-public class NotificationListActivity extends AppCompatActivity implements ApiCallbackCode, OnMultiRecyclerItemClickListener {
+public class NewsListActivity extends AppCompatActivity implements ApiCallbackCode, OnMultiRecyclerItemClickListener {
     private RecyclerView recyclerView;
     // private AppSession session;
     private int ca_id;
@@ -84,7 +84,7 @@ public class NotificationListActivity extends AppCompatActivity implements ApiCa
         imageMenushow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(NotificationListActivity.this, DashboardScreen.class);
+                Intent intent = new Intent(NewsListActivity.this, DashboardScreen.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -96,7 +96,7 @@ public class NotificationListActivity extends AppCompatActivity implements ApiCa
         if (Utility.checkConnection(this)) {
             getnoticationList();
         } else {
-            UIToastMessage.show(NotificationListActivity.this, "No internet connection");
+            UIToastMessage.show(NewsListActivity.this, "No internet connection");
         }
 
     }
@@ -111,7 +111,7 @@ public class NotificationListActivity extends AppCompatActivity implements ApiCa
                 e.printStackTrace();
             }
         } else {
-            UIToastMessage.show(NotificationListActivity.this, "No internet connection");
+            UIToastMessage.show(NewsListActivity.this, "No internet connection");
         }
     }
 
@@ -158,7 +158,7 @@ public class NotificationListActivity extends AppCompatActivity implements ApiCa
 
         JSONObject jsonObject = (JSONObject)o;
 
-        Intent intent = new Intent(this, ReadNotificationActivity.class);
+        Intent intent = new Intent(this, NewsReadActivity.class);
         intent.putExtra("noticationData", jsonObject.toString());
         startActivity(intent);
     }
@@ -208,7 +208,7 @@ public class NotificationListActivity extends AppCompatActivity implements ApiCa
                 if (responseModel.getStatus()) {
                     JSONArray jsonArray = responseModel.getNewsArray();
                     if (jsonArray.length() > 0) {
-                        NotificationMsgListAdapter adapter = new NotificationMsgListAdapter(this, this, jsonArray);
+                        NewsMessageListAdapter adapter = new NewsMessageListAdapter(this, this, jsonArray);
                         recyclerView.setAdapter(adapter);
                     }
 

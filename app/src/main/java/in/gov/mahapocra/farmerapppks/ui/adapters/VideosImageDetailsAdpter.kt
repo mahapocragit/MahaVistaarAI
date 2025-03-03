@@ -16,8 +16,8 @@ import com.makeramen.roundedimageview.RoundedTransformationBuilder
 import com.squareup.picasso.Picasso
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.gov.mahapocra.farmerapppks.R
-import `in`.gov.mahapocra.farmerapppks.activity.CropStageAdvisory
-import `in`.gov.mahapocra.farmerapppks.activity.SelectSowingDataAndFarmer
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.pest.CropStageAdvisory
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.pest.SelectSowingDataAndFarmer
 import `in`.gov.mahapocra.farmerapppks.data.model.CropsCategName
 import org.json.JSONException
 

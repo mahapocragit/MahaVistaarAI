@@ -36,7 +36,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
-        android:name=".application.AppDelegate"
+        android:name=".application.MyApplication"
         android:allowBackup="true"
         android:icon="@drawable/farmer_appfinal_logo"
         android:label="@string/app_name"
@@ -58,10 +58,10 @@
             android:name=".ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity"
             android:exported="false" />
         <activity android:name=".ui.screens.dashboard.menugrid.FertilizerCalculatorActivity" />
-        <activity android:name=".ui.screens.dashboard.menugrid.PestsAndDiseasesStages" />
-        <activity android:name=".activity.DiseaseInformation" />
+        <activity android:name=".ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages" />
+        <activity android:name=".ui.screens.dashboard.menugrid.pest.DiseaseInformation" />
         <activity
-            android:name=".activity.CropStageAdvisory"
+            android:name=".ui.screens.dashboard.menugrid.pest.CropStageAdvisory"
             android:exported="false" />
         <activity
             android:name=".ai_disc_tp_imp.identify.Identify.Identify_dashboard"
@@ -88,13 +88,13 @@
             android:exported="true"
             android:parentActivityName=".ai_disc_tp_imp.identify.Identify.Identify_img_upload" />
         <activity
-            android:name=".activity.SelectSowingDataAndFarmer"
+            android:name=".ui.screens.dashboard.menugrid.pest.SelectSowingDataAndFarmer"
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.menugrid.AddCropActivity"
             android:exported="false" />
         <activity
-            android:name=".notification.ReadNotificationActivity"
+            android:name=".ui.screens.dashboard.sidenavigation.news.NewsReadActivity"
             android:exported="false">
             <intent-filter>
                 <action android:name="ReadNotificationActivity" />
@@ -102,24 +102,24 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".notification.NotificationListActivity" />
+        <activity android:name=".ui.screens.dashboard.sidenavigation.news.NewsListActivity" />
         <activity
-            android:name=".activity.ViewStoriesBandavar"
+            android:name=".ui.screens.dashboard.sidenavigation.bandavar.ViewStoriesBandavar"
             android:exported="false" />
         <activity
-            android:name=".ui.screens.dashboard.sidenavigation.BandavarActivity"
+            android:name=".ui.screens.dashboard.sidenavigation.bandavar.BandavarActivity"
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.menugrid.climate.ResilientWebUrl"
             android:exported="false" />
         <activity
-            android:name=".activity.UpcomingEventsDetails"
+            android:name=".ui.screens.dashboard.sidenavigation.training.UpcomingEventsDetails"
             android:exported="false" />
         <activity
-            android:name=".activity.UpcomingEvents"
+            android:name=".ui.screens.dashboard.sidenavigation.training.UpcomingEvents"
             android:exported="false" />
         <activity
-            android:name=".ui.screens.dashboard.sidenavigation.TrainingLocationSelection"
+            android:name=".ui.screens.dashboard.sidenavigation.training.TrainingLocationSelection"
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.menugrid.climate.ClimateDetailsGrid"
@@ -146,9 +146,6 @@
             android:name=".ui.screens.dashboard.sidenavigation.MyVillageProfilePdf"
             android:exported="false" />
         <activity
-            android:name=".activity.PocraVillages"
-            android:exported="false" />
-        <activity
             android:name=".ui.screens.dashboard.menugrid.dbt.DbtSchemes"
             android:exported="false" />
         <activity
@@ -161,7 +158,7 @@
             android:name=".ui.screens.dashboard.menugrid.Warehouse"
             android:exported="false" />
         <activity
-            android:name=".activity.ComingSoonActivity"
+            android:name=".ui.screens.notification.ComingSoonActivity"
             android:exported="false" />
         <activity android:name=".ui.screens.authentication.LoginScreen" />
 

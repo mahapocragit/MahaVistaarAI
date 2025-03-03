@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid
+package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.pest
 
 import android.content.Intent
 import android.os.Build
@@ -21,7 +21,6 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.farmerapppks.util.AppPreferenceManager
 import `in`.gov.mahapocra.farmerapppks.R
-import `in`.gov.mahapocra.farmerapppks.activity.CropStageAdvisory
 import `in`.gov.mahapocra.farmerapppks.ui.adapters.ParticularStagesDiseasesAdpater
 import `in`.gov.mahapocra.farmerapppks.ui.adapters.PestAndDiseasesAdapter
 import `in`.gov.mahapocra.farmerapppks.data.api.APIRequest
@@ -31,6 +30,8 @@ import `in`.gov.mahapocra.farmerapppks.util.app_util.AppString
 import `in`.gov.mahapocra.farmerapppks.data.model.DiseaseStages
 import `in`.gov.mahapocra.farmerapppks.data.model.DiseasesDetails
 import `in`.gov.mahapocra.farmerapppks.data.model.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.AddCropActivity
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.DashboardScreen
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject

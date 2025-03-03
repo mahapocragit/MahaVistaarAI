@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.farmerapppks.activity
+package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.pest
 
 import android.content.res.Configuration
 import android.os.Bundle

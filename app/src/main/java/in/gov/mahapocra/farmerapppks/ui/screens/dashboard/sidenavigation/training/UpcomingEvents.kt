@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.farmerapppks.activity
+package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.training
 
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
@@ -26,7 +26,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonObject
-import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.TrainingLocationSelection
 import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONException

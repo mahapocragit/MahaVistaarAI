@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".activity.UpcomingEvents">
+    tools:context=".ui.screens.dashboard.sidenavigation.training.UpcomingEvents">
 
     <include
         android:id="@+id/relativeLayoutTopBar"

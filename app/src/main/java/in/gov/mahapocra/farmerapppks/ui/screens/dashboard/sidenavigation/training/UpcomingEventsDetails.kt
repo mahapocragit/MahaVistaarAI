@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.farmerapppks.activity
+package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.training
 
 import android.app.ProgressDialog
 import android.content.Intent
@@ -29,7 +29,6 @@ import `in`.gov.mahapocra.farmerapppks.util.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.util.app_util.AppString
 import `in`.gov.mahapocra.farmerapppks.data.model.ResponseModel
 import `in`.gov.mahapocra.farmerapppks.data.model.TrainingDetailModel
-import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.TrainingLocationSelection
 import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONException
