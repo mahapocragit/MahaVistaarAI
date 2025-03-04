@@ -207,6 +207,7 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
                         startActivity(intent)
                     } else {
                         val intent = Intent(this, DashboardScreen::class.java)
+                        intent.putExtra("helloCrop", cropId)
                         startActivity(intent)
                     }
                 } else {

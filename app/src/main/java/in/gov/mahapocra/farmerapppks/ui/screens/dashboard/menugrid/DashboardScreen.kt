@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.Window
@@ -99,7 +100,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
     private var savedCropSowingDate: String? = null
     private var savedCropWoTRId: String? = null
     private var savedCropImageUrl: String? = null
-    private var appPreferenceManager: AppPreferenceManager? = null
+    private lateinit var appPreferenceManager: AppPreferenceManager
     private var jsonArray: JSONArray? = null
     private var showToast = true
     private var selectedCropList: ArrayList<CropsCategName>? = null
@@ -702,6 +703,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                             val strVillageId = jSONObject.getInt("VillageID")
                             val strVillageName = jSONObject.getString("VillageName")
                             AppSettings.getInstance().setValue(this, AppConstants.uName, strName)
+                            binding.appBarMain.dashboardScreen.userFullNameTextView.text = strName
                             AppSettings.getInstance()
                                 .setValue(this, AppConstants.uMobileNo, strMobNo)
                             AppSettings.getInstance()
@@ -901,14 +903,18 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
     }
 
     private fun updateSavedCropDetails() {
+        val newCropID = intent.getIntExtra("helloCrop", 0)
         if (selectedCropList != null) {
             if (selectedCropList!!.size > 1) {
                 for (i in selectedCropList!!.indices) {
-                    if (selectedCropList!![i].getmName() == savedCropName) {
-                        cropId = selectedCropList!![i].id
-                        showToast = false
-                        deleteFarmerSelectedCrop()
+                    if (newCropID!=0) {
+                        if (selectedCropList!![i].id != newCropID) {
+                            cropId = selectedCropList!![i].id
+                            showToast = false
+                            deleteFarmerSelectedCrop()
+                        }
                     }
+                    Log.d("TAGGER", "updateSavedCropDetails: saved ${selectedCropList!![i].id} and received $newCropID")
                 }
             }
         }
