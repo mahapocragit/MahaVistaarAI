@@ -104,12 +104,20 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode {
     }
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
-        Log.d("HCA_TAG", "onResponse: $jSONObject")
         if (jSONObject != null) {
             val farmerJsonArray = jSONObject.optJSONArray("data")
-            farmerAdapter = FarmerAdapter(farmerJsonArray)
-            binding.farmerRecyclerView.layoutManager = LinearLayoutManager(this)
-            binding.farmerRecyclerView.adapter = farmerAdapter
+            if (farmerJsonArray!=null) {
+                binding.farmerRecyclerView.visibility = View.VISIBLE
+                binding.noDataFoundText.visibility = View.GONE
+                binding.noDataFoundImageView.visibility = View.GONE
+                farmerAdapter = FarmerAdapter(farmerJsonArray)
+                binding.farmerRecyclerView.layoutManager = LinearLayoutManager(this)
+                binding.farmerRecyclerView.adapter = farmerAdapter
+            }else{
+                binding.farmerRecyclerView.visibility = View.GONE
+                binding.noDataFoundText.visibility = View.VISIBLE
+                binding.noDataFoundImageView.visibility = View.VISIBLE
+            }
         }
     }
 }
