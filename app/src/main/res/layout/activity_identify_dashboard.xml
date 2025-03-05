@@ -6,30 +6,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:background="@drawable/news_bg"
     tools:context=".ai_disc_tp_imp.identify.Identify.Identify_dashboard">
 
     <include
         android:id="@+id/relativeLayoutTopBar"
         layout="@layout/layout_toolbar" />
 
-    <ImageView
-        android:id="@+id/imageView10"
-        android:scaleType="fitXY"
-        android:layout_width="100dp"
-        android:layout_marginTop="10dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:src="@drawable/idn1" />
-
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:text="Choose your Crop"
         android:textStyle="bold"
-        android:textSize="20dp"
+        android:textSize="@dimen/_12sdp"
         android:layout_marginTop="20dp"
-        android:textColor="@color/greendark"
+        android:textColor="@color/font_color_figma"
         android:layout_height="wrap_content" >
 
     </TextView>

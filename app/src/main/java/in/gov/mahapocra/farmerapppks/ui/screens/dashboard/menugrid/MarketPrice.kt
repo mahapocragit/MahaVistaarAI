@@ -234,13 +234,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
             marketPriceDetailsJSONArray = null
             talukaID = 0
             binding.tvMarketDetails.visibility = View.VISIBLE
-            if (marketName == null) {
-                binding.tvMarketDetails.text = (districtName
-                        + "," + "\n" + resources.getString(R.string.market_c_price))
-            } else {
-                binding.tvMarketDetails.text = (districtName
-                        + "," + "\n" + resources.getString(R.string.market_c_price))
-            }
+            binding.tvMarketDetails.text = ("$districtName, ${resources.getString(R.string.market_c_price)}" )
             binding.tvMarketDate.text = ""
             binding.tvMarketDate.hint = resources.getString(R.string.farmer_select_date)
             binding.tvMarketDate.setHintTextColor(Color.GRAY)
@@ -385,10 +379,10 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
                     binding.tvMarketDetails.visibility = View.VISIBLE
                     if (marketName == null) {
                         binding.tvMarketDetails.text = (districtName
-                                + "," + "\n" + resources.getString(R.string.market_c_price))
+                                + ", " + resources.getString(R.string.market_c_price))
                     } else {
-                        binding.tvMarketDetails.text = (districtName + ","
-                                + marketName + "\n" + resources.getString(R.string.market_c_price))
+                        binding.tvMarketDetails.text = (districtName + ", "
+                                + marketName+" "+ resources.getString(R.string.market_c_price))
                     }
                     val marketPriceAdapter =
                         MarketPriceAdapter(
@@ -408,11 +402,11 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
                     binding.tvMarketDetails.visibility = View.VISIBLE
                     if (marketName == null) {
                         binding.tvMarketDetails.text = (districtName
-                                + "," + "\n" + resources.getString(R.string.market_c_price))
+                                + ", " + resources.getString(R.string.market_c_price))
 
                     } else {
-                        binding.tvMarketDetails.text = (districtName + ","
-                                + marketName + "\n" + resources.getString(R.string.market_c_price))
+                        binding.tvMarketDetails.text = (districtName + ", "
+                                + marketName +" "+ resources.getString(R.string.market_c_price))
                     }
                     Toast.makeText(
                         this,
@@ -440,10 +434,10 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
                     binding.tvMarketDetails.visibility = View.VISIBLE
                     if (marketName == null) {
                         binding.tvMarketDetails.text =
-                            districtName + "," + "\n" + resources.getString(R.string.market_c_price)
+                            districtName + ", " + resources.getString(R.string.market_c_price)
                     } else {
                         binding.tvMarketDetails.text = (resources.getString(R.string.market_state)
-                                + "" + "\n" + resources.getString(R.string.market_c_price))
+                                + "" + resources.getString(R.string.market_c_price))
                     }
                     val marketPriceAdapter =
                         MarketPriceAdapter(
@@ -464,7 +458,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
                 } else {
                     binding.tvMarketDetails.visibility = View.VISIBLE
                     binding.tvMarketDetails.text =
-                        districtName + "," + marketName + "\n" + resources.getString(R.string.market_c_price)
+                        districtName + ", " + marketName +" "+ resources.getString(R.string.market_c_price)
                     Toast.makeText(
                         this,
                         "Data Not Available on $marketPreceDate for $marketName",

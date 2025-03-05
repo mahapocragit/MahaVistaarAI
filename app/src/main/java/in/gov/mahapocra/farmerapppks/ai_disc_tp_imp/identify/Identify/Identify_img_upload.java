@@ -1,5 +1,7 @@
 package in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.Identify;
 
+import static android.view.View.VISIBLE;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -98,6 +100,10 @@ public class Identify_img_upload extends AppCompatActivity {
         internet = new IntReceiver();
         binding.warningHeadingTextView.setVisibility(View.GONE);
 
+        binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.identify_Pest_Disease);
+        binding.relativeLayoutTopBar.imgBackArrow.setVisibility(VISIBLE);
+        binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener(view -> getOnBackPressedDispatcher().onBackPressed());
+
         binding.radioPest.setOnCheckedChangeListener((buttonView, isChecked) -> identificationType = isChecked ? "Insect" : "Disease");
 
         try {
@@ -107,7 +113,7 @@ public class Identify_img_upload extends AppCompatActivity {
             farmerIdentificationString = data.getString("farmerIdentification");
             type = data.getString("type");
             url = data.getString("url");
-            binding.cropNameTextView.setText("Crop : " + crop);
+            binding.cropNameTextView.setText("Crop: " + crop);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -116,7 +122,7 @@ public class Identify_img_upload extends AppCompatActivity {
                 type = detect_ins.getInstance().gettype();
                 url = detect_ins.getInstance().geturl();
                 farmerIdentificationString = detect_ins.getInstance().getdetection();
-                binding.cropNameTextView.setText("Crop : " + crop);
+                binding.cropNameTextView.setText("Crop: " + crop);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
@@ -546,10 +552,10 @@ public class Identify_img_upload extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     binding.identifyCropLinearLayout.setVisibility(View.GONE);
-                    binding.uploadImageLinearLayout.setVisibility(View.VISIBLE);
-                    binding.imgCardView.setVisibility(View.VISIBLE);
-                    binding.previewImageView.setVisibility(View.VISIBLE);
-                    binding.identifyButton.setVisibility(View.VISIBLE);
+                    binding.uploadImageLinearLayout.setVisibility(VISIBLE);
+                    binding.imgCardView.setVisibility(VISIBLE);
+                    binding.previewImageView.setVisibility(VISIBLE);
+                    binding.identifyButton.setVisibility(VISIBLE);
                     file_path = String.valueOf(address);
                 } else {
                     Toast.makeText(Identify_img_upload.this, "File is not selected.", Toast.LENGTH_LONG).show();
@@ -569,9 +575,9 @@ public class Identify_img_upload extends AppCompatActivity {
                     }
                     binding.identifyCropLinearLayout.setVisibility(View.GONE);
                     binding.uploadImageLinearLayout.setVisibility(View.GONE);
-                    binding.imgCardView.setVisibility(View.VISIBLE);
-                    binding.previewImageView.setVisibility(View.VISIBLE);
-                    binding.identifyButton.setVisibility(View.VISIBLE);
+                    binding.imgCardView.setVisibility(VISIBLE);
+                    binding.previewImageView.setVisibility(VISIBLE);
+                    binding.identifyButton.setVisibility(VISIBLE);
                     file_path = url;
                 } else {
                     Toast.makeText(Identify_img_upload.this, "No image captured", Toast.LENGTH_LONG).show();

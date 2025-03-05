@@ -14,7 +14,7 @@
     android:shape="rectangle">
 
     <corners android:radius="10dp" />
-    <solid android:color="#ffffff" />
+    <solid android:color="@color/card_background_color_figma" />
     <stroke
         android:width="0.5dp"
         android:color="#000000" />

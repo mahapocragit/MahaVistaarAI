@@ -1,201 +1,289 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/news_bg"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".ai_disc_tp_imp.identify.Identify.Identify_img_upload">
 
-    <LinearLayout
+    <include
+        android:id="@+id/relativeLayoutTopBar"
+        layout="@layout/layout_toolbar" />
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/uploadImageLinearLayout"
+
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="5dp"
-                android:gravity="center"
-                android:fontFamily="sans-serif-condensed"
-                android:text="Upload an image of your problem:"
-                android:textColor="#000"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                tools:ignore="RtlCompat" />
-            <TextView
-                android:id="@+id/cropNameTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="5dp"
-                android:gravity="center"
-                android:fontFamily="sans-serif-condensed"
-                android:text="Crop"
-                android:textColor="@color/brown"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                tools:ignore="RtlCompat" />
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/identifyCropLinearLayout"
-            android:layout_width="match_parent"
-            android:layout_marginTop="10dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/takePhotoButton"
-                android:layout_weight="50"
-                android:layout_marginHorizontal="10sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="take photo"/>
-
-
-
-            <Button
-                android:id="@+id/openGalleryButton"
-                android:layout_weight="50"
-                android:layout_marginHorizontal="10sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Open Gallery"/>
-
-        </LinearLayout>
-
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:layout_marginHorizontal="10sp"
-            android:orientation="horizontal">
-            <RadioButton android:id="@+id/radioPest"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:buttonTint="@color/black"
-                android:text="Pest"/>
-            <RadioButton android:id="@+id/radioDisease"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:buttonTint="@color/black"
-                android:checked="true"
-                android:text="Diseases"/>
-        </RadioGroup>
-
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/img_card_view"
-                android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="12dp"
-                android:elevation="5dp"
-                app:cardCornerRadius="10dp"
-                android:visibility="gone">
-
-                <ImageView
-                    android:id="@+id/previewImageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:scaleType="fitXY" />
-            </androidx.cardview.widget.CardView>
-
-
-            <ProgressBar
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:id="@+id/progress_bar"
-                android:visibility="gone"
-                android:layout_gravity="center"/>
-
-        </FrameLayout>
-        <androidx.cardview.widget.CardView
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="10dp"
-            android:visibility="gone">
             <LinearLayout
-                android:layout_height="wrap_content"
+                android:id="@+id/uploadImageLinearLayout"
                 android:layout_width="match_parent"
-                android:orientation="vertical"
-                >
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/warningHeadingTextView"
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginRight="5dp"
-                    android:fontFamily="sans-serif-condensed"
-                    android:gravity="center"
-                    android:text="WARNING"
-                    android:textAlignment="center"
-                    android:textColor="@color/red"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    />
+                    android:layout_marginEnd="5dp"
+                    android:backgroundTint="@color/card_background_color_figma"
+                    app:cardCornerRadius="@dimen/_10sdp">
 
-                <TextView
-                    android:id="@+id/warningDescriptionTextView"
+                    <TextView
+                        android:id="@+id/cropNameTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="Crop"
+                        android:textColor="@color/font_color_figma"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        tools:ignore="RtlCompat" />
+                </androidx.cardview.widget.CardView>
+
+                <RadioGroup
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:fontFamily="sans-serif-condensed"
+                    android:layout_marginHorizontal="@dimen/_80sdp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radioPest"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:buttonTint="@color/greendark"
+                        android:text="Pest" />
+
+                    <RadioButton
+                        android:id="@+id/radioDisease"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:buttonTint="@color/greendark"
+                        android:checked="true"
+                        android:text="Diseases" />
+                </RadioGroup>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="5dp"
                     android:gravity="center"
-                    android:text="WARNING!!!"
-                    android:textAlignment="center"
-                    android:textStyle="bold" />
+                    android:text="Upload an image of your problem:"
+                    android:textColor="@color/font_color_figma"
+                    android:textSize="@dimen/_11sdp"
+                    android:textStyle="bold"
+                    tools:ignore="RtlCompat" />
 
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
-        <Button
-            android:id="@+id/identifyButton"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Identify"
-            />
-        <Button
-            android:id="@+id/tryAgainButton"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Try again"/>
+
+            <LinearLayout
+                android:id="@+id/identifyCropLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/takePhotoButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_margin="10sp"
+                    android:layout_weight="50"
+                    app:cardCornerRadius="@dimen/_25sdp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/imageView13"
+                            android:layout_width="@dimen/_62sdp"
+                            android:layout_height="match_parent"
+                            android:padding="@dimen/_2sdp"
+                            app:tint="@color/greendark"
+                            android:layout_marginStart="@dimen/_10sdp"
+                            android:layout_weight="50"
+                            app:srcCompat="@drawable/ic_menu_camera" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="50"
+                            android:gravity="center"
+                            android:text="take photo" />
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
 
 
-    </LinearLayout>
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/openGalleryButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_margin="10sp"
+                    android:layout_weight="50"
+                    app:cardCornerRadius="@dimen/_25sdp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/imageView14"
+                            android:layout_width="@dimen/_62sdp"
+                            android:layout_height="match_parent"
+                            app:tint="@color/greendark"
+                            android:padding="@dimen/_2sdp"
+                            android:layout_marginStart="@dimen/_10sdp"
+                            android:layout_weight="50"
+                            app:srcCompat="@drawable/ic_menu_gallery" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="50"
+                            android:gravity="center"
+                            android:text="Open Gallery" />
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
 
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
 
-</ScrollView>
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/img_card_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="500dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="12dp"
+                    android:elevation="5dp"
+                    android:visibility="gone"
+                    app:cardCornerRadius="10dp">
+
+                    <ImageView
+                        android:id="@+id/previewImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:scaleType="fitXY" />
+                </androidx.cardview.widget.CardView>
+
+
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/warningHeadingTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="5dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center"
+                        android:text="WARNING"
+                        android:textAlignment="center"
+                        android:textColor="@color/red"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/warningDescriptionTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center"
+                        android:text="WARNING!!!"
+                        android:textAlignment="center"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tryAgainButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginHorizontal="10sp"
+                    android:layout_weight="1"
+                    android:background="@drawable/yellow_bg_gradient"
+                    android:gravity="center"
+                    android:text="Try again"
+                    android:textColor="@color/actionbar_color_figma"
+                    android:textSize="@dimen/_10sdp" />
+
+                <TextView
+                    android:id="@+id/identifyButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginHorizontal="@dimen/height10"
+                    android:layout_weight="1"
+                    android:background="@drawable/green_bg_gradient"
+                    android:gravity="center"
+                    android:text="Identify"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_10sdp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

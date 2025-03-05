@@ -6,27 +6,34 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.screens.dashboard.menugrid.MarketPrice">
+
     <include
         android:id="@+id/relativeLayoutTopBar"
         layout="@layout/layout_toolbar" />
-    <TextView
-        android:id="@+id/tv_source_information"
+
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:gravity="center"
-        android:text="@string/source_info_market"
-        android:textColor="@color/gray_light"
-        android:visibility="visible"
-        android:textSize="@dimen/text16">
-    </TextView>
+        android:layout_margin="@dimen/_10sdp"
+        android:backgroundTint="@color/card_background_color_figma"
+        app:cardCornerRadius="@dimen/_5sdp">
+
+        <TextView
+            android:id="@+id/tv_source_information"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/_4sdp"
+            android:paddingVertical="@dimen/_8sdp"
+            android:text="@string/source_info_market"
+            android:textColor="@color/gray_light"
+            android:textSize="@dimen/text16"
+            android:visibility="visible" />
+    </androidx.cardview.widget.CardView>
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height35"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_height="@dimen/_34sdp"
         android:layout_marginTop="@dimen/height10"
         android:orientation="horizontal">
 
@@ -37,14 +44,15 @@
             android:layout_marginStart="@dimen/padding20"
             android:layout_marginEnd="@dimen/padding20"
             android:background="@drawable/layout_warehouse_dropdown"
-            android:gravity="center"
-            android:text="@string/farmer_select_district"
+            android:gravity="start|center_vertical"
             android:hint="@string/farmer_select_district"
             android:paddingStart="@dimen/padding20"
             android:paddingEnd="@dimen/padding20"
+            android:text="@string/farmer_select_district"
             android:textColor="@color/heading"
             android:textSize="@dimen/text14"
             android:textStyle="normal" />
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -58,48 +66,46 @@
             tools:ignore="VectorDrawableCompat" />
     </RelativeLayout>
 
-<!--    <RelativeLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="@dimen/height35"-->
-<!--        android:layout_marginTop="@dimen/height10"-->
-<!--        android:layout_marginLeft="10dp"-->
-<!--        android:layout_marginRight="10dp"-->
-<!--        android:orientation="horizontal">-->
+    <!--    <RelativeLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="@dimen/height35"-->
+    <!--        android:layout_marginTop="@dimen/height10"-->
+    <!--        android:layout_marginLeft="10dp"-->
+    <!--        android:layout_marginRight="10dp"-->
+    <!--        android:orientation="horizontal">-->
 
-<!--        <TextView-->
-<!--            android:id="@+id/textViewTaluka"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_marginStart="@dimen/padding20"-->
-<!--            android:layout_marginEnd="@dimen/padding20"-->
-<!--            android:background="@drawable/layout_warehouse_dropdown"-->
-<!--            android:gravity="center"-->
-<!--            android:hint="@string/farmer_select_taluka"-->
-<!--            android:paddingStart="@dimen/padding20"-->
-<!--            android:paddingEnd="@dimen/padding20"-->
-<!--            android:textColor="@color/heading"-->
-<!--            android:textSize="@dimen/text14"-->
-<!--            android:textStyle="normal" />-->
+    <!--        <TextView-->
+    <!--            android:id="@+id/textViewTaluka"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:layout_marginStart="@dimen/padding20"-->
+    <!--            android:layout_marginEnd="@dimen/padding20"-->
+    <!--            android:background="@drawable/layout_warehouse_dropdown"-->
+    <!--            android:gravity="center"-->
+    <!--            android:hint="@string/farmer_select_taluka"-->
+    <!--            android:paddingStart="@dimen/padding20"-->
+    <!--            android:paddingEnd="@dimen/padding20"-->
+    <!--            android:textColor="@color/heading"-->
+    <!--            android:textSize="@dimen/text14"-->
+    <!--            android:textStyle="normal" />-->
 
-<!--        <ImageView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_alignParentEnd="true"-->
-<!--            android:layout_alignParentRight="true"-->
-<!--            android:layout_centerVertical="true"-->
-<!--            android:layout_marginEnd="@dimen/padding30"-->
-<!--            android:layout_marginRight="@dimen/padding30"-->
-<!--            android:contentDescription="@string/app_name"-->
-<!--            app:srcCompat="@drawable/ic_baseline_arrow_drop_down_24"-->
-<!--            tools:ignore="VectorDrawableCompat" />-->
+    <!--        <ImageView-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_alignParentEnd="true"-->
+    <!--            android:layout_alignParentRight="true"-->
+    <!--            android:layout_centerVertical="true"-->
+    <!--            android:layout_marginEnd="@dimen/padding30"-->
+    <!--            android:layout_marginRight="@dimen/padding30"-->
+    <!--            android:contentDescription="@string/app_name"-->
+    <!--            app:srcCompat="@drawable/ic_baseline_arrow_drop_down_24"-->
+    <!--            tools:ignore="VectorDrawableCompat" />-->
 
-<!--    </RelativeLayout>-->
+    <!--    </RelativeLayout>-->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height35"
+        android:layout_height="@dimen/_36sdp"
         android:layout_marginTop="@dimen/height10"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:orientation="horizontal">
 
         <TextView
@@ -109,11 +115,11 @@
             android:layout_marginStart="@dimen/padding20"
             android:layout_marginEnd="@dimen/padding20"
             android:background="@drawable/layout_warehouse_dropdown"
-            android:gravity="center"
-            android:text="@string/farmer_select_market"
+            android:gravity="start|center_vertical"
             android:hint="@string/farmer_select_market"
             android:paddingStart="@dimen/padding20"
             android:paddingEnd="@dimen/padding20"
+            android:text="@string/farmer_select_market"
             android:textColor="@color/heading"
             android:textSize="@dimen/text14"
             android:textStyle="normal" />
@@ -135,12 +141,10 @@
     <RelativeLayout
         android:id="@+id/calenderLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height35"
+        android:layout_height="@dimen/_36sdp"
         android:layout_marginTop="@dimen/height10"
-        android:visibility="gone"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/tvMarketDate"
@@ -149,7 +153,7 @@
             android:layout_marginStart="@dimen/padding20"
             android:layout_marginEnd="@dimen/padding20"
             android:background="@drawable/layout_warehouse_dropdown"
-            android:gravity="center"
+            android:gravity="start|center_vertical"
             android:hint="@string/date_text"
             android:paddingStart="@dimen/padding20"
             android:paddingEnd="@dimen/padding20"
@@ -166,8 +170,8 @@
             android:layout_marginEnd="@dimen/padding30"
             android:layout_marginRight="@dimen/padding30"
             android:contentDescription="@string/app_name"
-            app:srcCompat="@mipmap/ic_calendar"
             android:padding="5dp"
+            app:srcCompat="@mipmap/ic_calendar"
             tools:ignore="VectorDrawableCompat" />
 
     </RelativeLayout>
@@ -175,35 +179,31 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
         android:layout_marginTop="@dimen/height10"
-        android:layout_marginStart="@dimen/padding30"
-        android:layout_marginEnd="@dimen/padding30"
-        android:orientation="vertical"
-        android:background="@color/transparent_green">
+        android:orientation="vertical">
+
         <TextView
             android:id="@+id/tv_market_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:gravity="center"
-            android:textColor="@color/status_green"
-            android:visibility="invisible"
+            android:textColor="@color/font_color_figma"
             android:textSize="@dimen/text16"
-            android:textStyle="bold">
-        </TextView>
+            android:textStyle="bold"
+            android:visibility="invisible"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewMarketPriceList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_market_details"
-            android:layout_margin="5dp"
-            android:padding="@dimen/height5">
-        </androidx.recyclerview.widget.RecyclerView>
+            android:layout_marginTop="5dp"
+            android:padding="@dimen/height5"/>
 
     </RelativeLayout>
-
 
 
 </LinearLayout>

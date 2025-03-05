@@ -1,6 +1,7 @@
 package in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.Identify;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -44,7 +45,7 @@ public class Identify_dashboard extends AppCompatActivity {
     ArrayList<Model_Dashboard> model_dashboardContents;
     TextView textViewHeaderTitle;
     ImageView imageMenuShow;
-
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,9 @@ public class Identify_dashboard extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle);
         imageMenuShow = findViewById(R.id.imageMenushow);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getString(R.string.please_wait));
 
         imageMenuShow.setVisibility(View.VISIBLE);
         textViewHeaderTitle.setText(R.string.identify_Pest_Disease);
@@ -121,6 +125,7 @@ public class Identify_dashboard extends AppCompatActivity {
     }
 
     void getInfo() {
+        progressDialog.show();
         identify_croplist viewmodel = ViewModelProviders.of(this).get(identify_croplist.class);
         viewmodel.getting_crops().observe(this, getIdentify_crops_response -> {
             if (getIdentify_crops_response.getModel() != null) {
@@ -144,6 +149,7 @@ public class Identify_dashboard extends AppCompatActivity {
                         .getAsJSONObject(new JSONObjectRequestListener() {
                             @Override
                             public void onResponse(JSONObject jsonObject) {
+                                progressDialog.dismiss();
                                 try {
                                     discrops_img.clear();
                                     JSONArray array = jsonObject.getJSONArray("list");
@@ -167,6 +173,7 @@ public class Identify_dashboard extends AppCompatActivity {
 
                             @Override
                             public void onError(ANError anError) {
+                                progressDialog.dismiss();
                             }
                         });
 
