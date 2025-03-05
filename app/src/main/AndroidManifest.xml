@@ -53,6 +53,7 @@
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.weather.WeatherTempActivity"
+            android:theme="@style/WeatherTheme"
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity"

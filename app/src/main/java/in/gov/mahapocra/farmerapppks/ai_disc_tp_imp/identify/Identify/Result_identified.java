@@ -1,5 +1,7 @@
 package in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.Identify;
 
+import static android.view.View.VISIBLE;
+
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -88,6 +90,9 @@ public class Result_identified extends AppCompatActivity {
     }
 
     private void setDataInViews() {
+        binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.identify_Pest_Disease);
+        binding.relativeLayoutTopBar.imgBackArrow.setVisibility(VISIBLE);
+        binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener(view -> getOnBackPressedDispatcher().onBackPressed());
         Intent intent = getIntent();
         String result = intent.getStringExtra("result");
         String filePath = intent.getStringExtra("file_path");

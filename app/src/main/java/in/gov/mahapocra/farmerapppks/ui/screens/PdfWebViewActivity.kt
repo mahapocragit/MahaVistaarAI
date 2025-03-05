@@ -2,65 +2,40 @@ package `in`.gov.mahapocra.farmerapppks.ui.screens
 
 import android.os.Bundle
 import android.view.View
-import android.webkit.WebChromeClient
 import android.webkit.WebSettings
-import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import `in`.gov.mahapocra.farmerapppks.R
+import `in`.gov.mahapocra.farmerapppks.databinding.ActivityPdfViewBinding
 
 class PdfWebViewActivity : AppCompatActivity() {
 
-    private lateinit var webView: WebView
+    private lateinit var binding: ActivityPdfViewBinding
     private lateinit var progressBar: ProgressBar
-    private lateinit var headerTitle: TextView
-    private lateinit var backButton: ImageView
+    private val googleDriveView: String = "https://mozilla.github.io/pdf.js/web/viewer.html?file="
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_pdf_view)
+        binding= ActivityPdfViewBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val url = intent.getStringExtra("pdf_url")
-        webView = findViewById(R.id.webView)
-        progressBar = findViewById(R.id.progressBar)
-        headerTitle = findViewById(R.id.textViewHeaderTitle)
-        headerTitle.text = "Soil Health Card"
-        backButton = findViewById(R.id.imageViewHeaderBack)
-
-        // Show ProgressBar while loading
-        progressBar.visibility = View.VISIBLE
-        backButton.visibility = View.VISIBLE
-        backButton.setOnClickListener {
+        binding.relativeLayoutTopBar.textViewHeaderTitle.text = "Soil Health Card"
+        binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
+        binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        // Enable JavaScript and other settings
-        val webSettings: WebSettings = webView.settings
-        webSettings.javaScriptEnabled = true
-        webSettings.builtInZoomControls = true
-        webSettings.displayZoomControls = false
-        webSettings.loadWithOverviewMode = true
-        webSettings.useWideViewPort = true
+        val url = intent.getStringExtra("pdf_url")
+        progressBar = findViewById(R.id.progressBar)
+        val settings: WebSettings = binding.webView.settings
+        settings.javaScriptEnabled = true
+        settings.builtInZoomControls = true
+        settings.displayZoomControls = false
 
-        webView.webChromeClient = object : WebChromeClient() {
-            override fun onProgressChanged(view: WebView?, newProgress: Int) {
-                if (newProgress == 100) {
-                    progressBar.visibility = View.GONE // Hide ProgressBar once fully loaded
-                }
-            }
-        }
-
-        webView.webViewClient = object : WebViewClient() {
-            override fun onPageFinished(view: WebView?, url: String?) {
-                progressBar.visibility = View.GONE // Hide ProgressBar when the page is done loading
-            }
-        }
-
-        // Load the PDF using Google Docs Viewer (Recommended)
-        val pdfViewerUrl = "https://docs.google.com/gview?embedded=true&url=$url"
-        webView.loadUrl(pdfViewerUrl)
+        binding.webView.webViewClient = WebViewClient()
+        binding.webView.loadUrl(googleDriveView + url)
     }
 }

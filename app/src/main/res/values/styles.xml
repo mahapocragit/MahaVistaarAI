@@ -16,6 +16,11 @@
         <item name="android:statusBarColor" tools:ignore="NewApi">@color/actionbar_color_figma</item>
     </style>
 
+    <style name="WeatherTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:statusBarColor" tools:ignore="NewApi">@color/gradient_top_figma</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
