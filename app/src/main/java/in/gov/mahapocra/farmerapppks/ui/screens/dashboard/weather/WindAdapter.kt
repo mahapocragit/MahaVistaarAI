@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.farmerapppks.ui.screens.weather
+package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.weather
 
 import android.view.LayoutInflater
 import android.view.View
@@ -19,10 +19,22 @@ class WindAdapter(private val itemList: List<Item>, private val actName:String) 
         val item = itemList[position]
         holder.titleTextView.text = item.title
         when(actName){
-            "temp" -> holder.imageView.setImageResource(R.drawable.weather_ic)
-            "rain" -> holder.imageView.setImageResource(R.drawable.rain_ic)
-            "humidity" -> holder.imageView.setImageResource(R.drawable.humidity_ic)
-            "wind" -> holder.imageView.setImageResource(R.drawable.wind_ic)
+            "temp" -> {
+                holder.imageView.setImageResource(R.drawable.weather_ic)
+                holder.valueForWeather.text = "23 °C"
+            }
+            "rain" -> {
+                holder.imageView.setImageResource(R.drawable.rain_ic)
+                holder.valueForWeather.text = "23 mm"
+            }
+            "humidity" -> {
+                holder.imageView.setImageResource(R.drawable.humidity_ic)
+                holder.valueForWeather.text = "23 %"
+            }
+            "wind" -> {
+                holder.imageView.setImageResource(R.drawable.wind_ic)
+                holder.valueForWeather.text = "23 Km/h"
+            }
         }
     }
 
@@ -32,6 +44,7 @@ class WindAdapter(private val itemList: List<Item>, private val actName:String) 
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.item_title)
+        val valueForWeather: TextView = itemView.findViewById(R.id.valueForWeather)
         val imageView: ImageView = itemView.findViewById(R.id.imageView11)
     }
 }

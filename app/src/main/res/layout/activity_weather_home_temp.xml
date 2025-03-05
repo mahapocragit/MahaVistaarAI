@@ -120,13 +120,13 @@
                                 android:text="Rain" />
 
                             <TextView
-                                android:id="@+id/textView8"
+                                android:id="@+id/rainTextView"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_weight="2"
                                 android:gravity="center"
                                 android:text="73%"
-                                android:textSize="@dimen/_22sdp"
+                                android:textSize="@dimen/_18sdp"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
@@ -153,13 +153,13 @@
                                 android:text="Humidity" />
 
                             <TextView
-                                android:id="@+id/textView10"
+                                android:id="@+id/humidityTextView"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_weight="2"
                                 android:gravity="center"
                                 android:text="61%"
-                                android:textSize="@dimen/_22sdp"
+                                android:textSize="@dimen/_18sdp"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
@@ -186,13 +186,13 @@
                                 android:text="Wind" />
 
                             <TextView
-                                android:id="@+id/textView11"
+                                android:id="@+id/windTextView"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_weight="2"
                                 android:gravity="center"
                                 android:text="7 km/h"
-                                android:textSize="@dimen/_22sdp"
+                                android:textSize="@dimen/_18sdp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </LinearLayout>

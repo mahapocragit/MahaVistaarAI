@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.farmerapppks.ui.screens.weather
+package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.weather
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.farmerapppks.R
 
-class FirstFragment : Fragment() {
+
+class FourthFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: WindAdapter
@@ -25,7 +26,7 @@ class FirstFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_first, container, false)
+        val view = inflater.inflate(R.layout.fragment_fourth, container, false)
 
         // Initialize RecyclerView and set LayoutManager
         recyclerView = view.findViewById(R.id.recyclerView)
@@ -45,10 +46,9 @@ class FirstFragment : Fragment() {
         )
 
         // Set adapter
-        adapter = WindAdapter(itemList, "temp")
+        adapter = WindAdapter(itemList, "wind")
         recyclerView.adapter = adapter
 
         return view
     }
-
 }

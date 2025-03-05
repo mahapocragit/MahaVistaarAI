@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.farmerapppks.ui.screens.weather
+package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.weather
 
 import android.graphics.Color
 import android.os.Bundle
@@ -64,9 +64,15 @@ class WeatherTempActivity : AppCompatActivity() {
                 val temperatureObject = jSONObject.optJSONObject("Temperature")
                 val tempMin: Int = temperatureObject.optInt("min")
                 val tempMax: Int = temperatureObject.optInt("max")
+                val rainfall: Int = temperatureObject.optInt("rainfall")
+                val humidity: Int = temperatureObject.optInt("humidity")
+                val wind: Int = temperatureObject.optInt("wind")
+                binding.tvAgroMetAdvisory.text = advisory
                 val temperature = "$tempMin°C / $tempMax°C"
                 binding.temperatureTextView.text = temperature
-                binding.tvAgroMetAdvisory.text = advisory
+                binding.rainTextView.text = "$rainfall mm"
+                binding.humidityTextView.text = "$humidity %"
+                binding.windTextView.text = "$wind Km/h"
             }
         }
 

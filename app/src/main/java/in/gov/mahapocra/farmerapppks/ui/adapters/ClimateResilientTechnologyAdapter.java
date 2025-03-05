@@ -17,13 +17,13 @@ import org.json.JSONObject;
 import in.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener;
 import in.gov.mahapocra.farmerapppks.R;
 
-public class ClimateResilientTechnology extends RecyclerView.Adapter<ClimateResilientTechnology.ViewHolder> {
+public class ClimateResilientTechnologyAdapter extends RecyclerView.Adapter<ClimateResilientTechnologyAdapter.ViewHolder> {
 
     private OnMultiRecyclerItemClickListener listener;
     private Context mContext;
     private JSONArray mJSONArray;
 
-    public ClimateResilientTechnology(Context context, OnMultiRecyclerItemClickListener listener, JSONArray jsonArray) {
+    public ClimateResilientTechnologyAdapter(Context context, OnMultiRecyclerItemClickListener listener, JSONArray jsonArray) {
         this.mContext = context;
         this.mJSONArray = jsonArray;
         this.listener = listener;
@@ -31,13 +31,13 @@ public class ClimateResilientTechnology extends RecyclerView.Adapter<ClimateResi
 
     @NonNull
     @Override
-    public ClimateResilientTechnology.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ClimateResilientTechnologyAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.single_climate_resilient_tech, parent, false);
-        return new ClimateResilientTechnology.ViewHolder(view);
+        return new ClimateResilientTechnologyAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ClimateResilientTechnology.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ClimateResilientTechnologyAdapter.ViewHolder holder, int position) {
         Log.d("mmhkjfhkdsajhf",mJSONArray.toString());
         try {
             holder.setDvata(mJSONArray.getJSONObject(position), listener);

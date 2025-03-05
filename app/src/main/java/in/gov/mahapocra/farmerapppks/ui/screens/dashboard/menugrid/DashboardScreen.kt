@@ -65,7 +65,7 @@ import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.news.
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.training.TrainingLocationSelection
 import `in`.gov.mahapocra.farmerapppks.ui.screens.notification.ComingSoonActivity
 import `in`.gov.mahapocra.farmerapppks.ui.screens.splash.SplashScreenActivity
-import `in`.gov.mahapocra.farmerapppks.ui.screens.weather.WeatherTempActivity
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.weather.WeatherTempActivity
 import `in`.gov.mahapocra.farmerapppks.util.AppPreferenceManager
 import `in`.gov.mahapocra.farmerapppks.util.ForceUpdateChecker
 import `in`.gov.mahapocra.farmerapppks.util.app_util.ApUtil

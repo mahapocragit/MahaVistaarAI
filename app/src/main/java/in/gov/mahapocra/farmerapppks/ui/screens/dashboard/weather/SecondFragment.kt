@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.farmerapppks.ui.screens.weather
+package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.weather
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,9 +9,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.farmerapppks.R
 
+// TODO: Rename parameter arguments, choose names that match
+// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+private const val ARG_PARAM1 = "param1"
+private const val ARG_PARAM2 = "param2"
 
-class ThirdFragment : Fragment() {
-
+/**
+ * A simple [Fragment] subclass.
+ * Use the [SecondFragment.newInstance] factory method to
+ * create an instance of this fragment.
+ */
+class SecondFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: WindAdapter
@@ -27,7 +35,7 @@ class ThirdFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_third, container, false)
+        val view = inflater.inflate(R.layout.fragment_second, container, false)
 
         // Initialize RecyclerView and set LayoutManager
         recyclerView = view.findViewById(R.id.recyclerView)
@@ -47,10 +55,9 @@ class ThirdFragment : Fragment() {
         )
 
         // Set adapter
-        adapter = WindAdapter(itemList, "humidity")
+        adapter = WindAdapter(itemList, "rain")
         recyclerView.adapter = adapter
 
         return view
     }
-
 }

@@ -7,7 +7,6 @@ import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.farmerapppks.R
-import `in`.gov.mahapocra.farmerapppks.ui.adapters.ClimateResilientTechnology
 import `in`.gov.mahapocra.farmerapppks.data.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.data.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.util.app_util.AppString
@@ -21,6 +20,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonObject
+import `in`.gov.mahapocra.farmerapppks.ui.adapters.ClimateResilientTechnologyAdapter
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.DashboardScreen
 import org.json.JSONArray
 import org.json.JSONException
@@ -109,7 +109,7 @@ class ClimateResilientTechnology : AppCompatActivity(), ApiJSONObjCallback, ApiC
                 if (response.getStatus()) {
                     resilientGrpWiseDetailsJSONArray = response.getResilientyGrpArray()
                     val adaptorResilientTechnologyGrp =
-                        ClimateResilientTechnology(
+                        ClimateResilientTechnologyAdapter(
                             this,
                             this,
                             resilientGrpWiseDetailsJSONArray

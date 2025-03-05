@@ -19,7 +19,6 @@ class ClimateDetailsGrid : AppCompatActivity() {
     private var gridView: GridView? = null
     private var textViewHeaderTitle: TextView? = null
     private var imgBackArrow: ImageView? = null
-    private var relClimateDeatils: RelativeLayout? = null
     private val climateModelArrayList: ArrayList<ClimateGridModel> = ArrayList()
 
     private var groupName: ArrayList<String> = ArrayList()
@@ -69,7 +68,6 @@ class ClimateDetailsGrid : AppCompatActivity() {
 
     fun init() {
         gridView = findViewById<View>(R.id.gridViewJobs) as GridView
-        relClimateDeatils = findViewById<View>(R.id.relClimateDeatils) as RelativeLayout
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
         imgBackArrow = findViewById(R.id.imgBackArrow)
     }
