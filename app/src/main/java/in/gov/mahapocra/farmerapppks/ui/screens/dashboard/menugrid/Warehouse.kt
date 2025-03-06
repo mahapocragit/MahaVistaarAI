@@ -15,7 +15,7 @@ import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListene
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.farmerapppks.R
-import `in`.gov.mahapocra.farmerapppks.ui.adapters.WarehouseAvailabilityAdapterreport
+import `in`.gov.mahapocra.farmerapppks.ui.adapters.WarehouseAvailabilityAdapter
 import `in`.gov.mahapocra.farmerapppks.data.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.data.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.util.app_util.AppConstants
@@ -199,7 +199,7 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
                 if (warehouseAvailabilityJSONArray !== null) {
                     if (warehouseAvailabilityJSONArray?.length()!! > 0) {
                         val adaptorWaterBudgetReport =
-                            WarehouseAvailabilityAdapterreport(
+                            WarehouseAvailabilityAdapter(
                                 this,
                                 this,
                                 warehouseAvailabilityJSONArray
