@@ -3,15 +3,10 @@ package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.pest
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
@@ -19,106 +14,74 @@ import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
-import `in`.gov.mahapocra.farmerapppks.util.AppPreferenceManager
 import `in`.gov.mahapocra.farmerapppks.R
-import `in`.gov.mahapocra.farmerapppks.ui.adapters.ParticularStagesDiseasesAdpater
-import `in`.gov.mahapocra.farmerapppks.ui.adapters.PestAndDiseasesAdapter
 import `in`.gov.mahapocra.farmerapppks.data.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.data.api.APIServices
-import `in`.gov.mahapocra.farmerapppks.util.app_util.AppConstants
-import `in`.gov.mahapocra.farmerapppks.util.app_util.AppString
 import `in`.gov.mahapocra.farmerapppks.data.model.DiseaseStages
 import `in`.gov.mahapocra.farmerapppks.data.model.DiseasesDetails
 import `in`.gov.mahapocra.farmerapppks.data.model.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.databinding.ActivityPestsAndDiseasesLibraryBinding
+import `in`.gov.mahapocra.farmerapppks.ui.adapters.ParticularStagesDiseasesAdpater
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.AddCropActivity
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.farmerapppks.util.AppPreferenceManager
+import `in`.gov.mahapocra.farmerapppks.util.app_util.AppConstants
+import `in`.gov.mahapocra.farmerapppks.util.app_util.AppString
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
 
-
 class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
 
-    private var textViewHeaderTitle: TextView? = null
-    private var tvAgroMetAdvisory: TextView? = null
-    private var cropNameTextView: TextView? = null
-    private lateinit var diseaseStageTv: TextView
-    private lateinit var sowingDateTextView: TextView
-    private lateinit var sowingDateLabel: TextView
-    private var imageMenushow: ImageView? = null
-    private lateinit var imageViewHeaderBack: ImageView
-    private lateinit var editSowingDateIcon: ImageView
-    private lateinit var imageHome: ImageView
-    private lateinit var cropInfoCardView: CardView
-
-    private var diseasesByStage: RecyclerView? = null
+    private lateinit var binding: ActivityPestsAndDiseasesLibraryBinding
     private var diseasesDetails: ArrayList<DiseasesDetails>? = null
     private lateinit var diseaseStages: ArrayList<DiseaseStages>
 
-    private var particularStagesDiseases: String = "AllStagesDiseases"
-    private var stagesId: Int = 0
     var cropId: Int? = 0
-    private var wotrCropId: String? = null
-    private var sowingDate: String? = null
+    private var stagesId: Int = 0
     private var mUrl: String? = null
-    var cropName: String? = null
-    private var stagesName: String = ""
-    private lateinit var stageJsonArray: JSONArray
     lateinit var languageToLoad: String
+    private var cropName: String? = null
+    private var wotrCropId: String? = null
+    private lateinit var stageJsonArray: JSONArray
+    private var particularStagesDiseases: String = "AllStagesDiseases"
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         languageToLoad = "mr"
         if (AppSettings.getLanguage(this@PestsAndDiseasesStages).equals("1", ignoreCase = true)) {
-            Log.d("getStrName=", AppSettings.getLanguage(this@PestsAndDiseasesStages))
             languageToLoad = "en"
         }
-        setContentView(R.layout.activity_pests_and_diseases_activitry)
+        binding = ActivityPestsAndDiseasesLibraryBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
-        cropInfoCardView = findViewById(R.id.cropInfoCardView)
-        cropNameTextView = findViewById(R.id.cropNameTextView)
-        tvAgroMetAdvisory = findViewById(R.id.tvAgroMetAdvisory)
-        imageViewHeaderBack = findViewById(R.id.imageViewHeaderBack)
-        diseaseStageTv = findViewById(R.id.disease_stage)
-        sowingDateTextView = findViewById(R.id.sowingDateTextView)
-        sowingDateLabel = findViewById(R.id.textView7)
-        imageMenushow = findViewById(R.id.imgBackArrow)
-        editSowingDateIcon = findViewById(R.id.editSowingDateIcon)
-        imageHome = findViewById(R.id.imageMenushow)
-        diseasesByStage = findViewById(R.id.diseasesByStage)
+        binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.pests_n_diseases)
+        binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
 
-        textViewHeaderTitle?.setText(R.string.pests_n_diseases)
-        imageMenushow?.visibility = View.VISIBLE
-
-        sowingDateTextView.visibility = View.GONE
-        sowingDateLabel.text = "Selected Crop"
-        imageHome.visibility = View.VISIBLE
-        imageHome.setOnClickListener {
+        binding.sowingInfoLayout.textView7.text = "Selected Crop"
+        binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
+        binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {
             startActivity(Intent(this, DashboardScreen::class.java))
         }
 
-        editSowingDateIcon.visibility = View.GONE
-        imageViewHeaderBack.visibility = View.VISIBLE
-        imageViewHeaderBack.setOnClickListener {
+        binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
+        binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
         cropId = intent.getIntExtra("cropId", 0)
         wotrCropId = intent.getStringExtra("wotr_crop_id")
-        sowingDate = intent.getStringExtra("sowingDate")
         mUrl = intent.getStringExtra("mUrl")
         cropName = intent.getStringExtra("mName")
-        stagesName = intent.getStringExtra("name").toString()
         particularStagesDiseases = intent.getStringExtra("ParticularStagesDiseases").toString()
         stagesId = intent.getIntExtra("id", 0)
         AppSettings.getInstance()
             .setValue(this, AppConstants.tmpCROPNAME, cropName)
 
-        cropInfoCardView.setOnClickListener {
+        binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {
             val sharing = Intent(this, AddCropActivity::class.java)
             sharing.putExtra("id", cropId)
             sharing.putExtra("mName", cropName)
@@ -131,59 +94,50 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
             startActivity(sharing)
         }
 
-
         if (cropName.isNullOrBlank()) {
             cropName = AppSettings.getInstance()
                 .getValue(this, AppConstants.tmpCROPNAME, AppConstants.tmpCROPNAME)
         }
 
-        imageMenushow?.setOnClickListener {
+        binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {
             val intent = Intent(this, CropStageAdvisory::class.java)
-            //here id means cropID not stageID
             intent.putExtra("id", cropId)
             intent.putExtra("mUrl", mUrl)
             intent.putExtra("mName", cropName)
             intent.putExtra("wotr_crop_id", wotrCropId)
             intent.putExtra("dataSavedInLocal", "dataSavedInLocal")
-            //  intent.putExtra("name",stagesName)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
 
-
         if (cropId!! > 0) {
-//            diseaseStageTv.visibility = View.VISIBLE
             getCropStages()
         } else {
-//            diseaseStageTv.visibility = View.GONE
             val args = intent.getBundleExtra("BUNDLE")
             diseasesDetails =
                 args?.getSerializable("diseasesDetails") as ArrayList<DiseasesDetails>?
             showParticularStagesByList()
         }
-
-        cropNameTextView?.text = "$cropName"
-
+        binding.sowingInfoLayout.cropNameTextView.text = "$cropName"
     }
 
     private fun showParticularStagesByList() {
-            diseaseStageTv.text = stagesName
-            val particularDiseasesAdpter =
-                ParticularStagesDiseasesAdpater(
-                    this,
-                    diseasesDetails!!
-                )
-            diseasesByStage?.setLayoutManager(
-                LinearLayoutManager(
-                    this,
-                    LinearLayoutManager.VERTICAL,
-                    false
-                )
+        val particularDiseasesAdpter =
+            ParticularStagesDiseasesAdpater(
+                this,
+                diseasesDetails!!
             )
-            diseasesByStage?.setAdapter(particularDiseasesAdpter)
-            particularDiseasesAdpter.notifyDataSetChanged()
+        binding.diseasesByStage.setLayoutManager(
+            LinearLayoutManager(
+                this,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+        )
+        binding.diseasesByStage.setAdapter(particularDiseasesAdpter)
+        particularDiseasesAdpter.notifyDataSetChanged()
     }
 
     private fun getCropStages() {
@@ -252,7 +206,6 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
                         }
                         diseaseStages.add(DiseaseStages(i, stageName, diseasesDetails!!))
                     }
-//                    showStages(diseaseStages)
                     showParticularStagesByList()
                 } else {
                     UIToastMessage.show(this, response.response)
@@ -261,28 +214,7 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         }
     }
 
-    private fun showStages(diseaseStages: ArrayList<DiseaseStages>) {
-
-        val pestAndDiseasesAdapter =
-            PestAndDiseasesAdapter(
-                this,
-                diseaseStages
-            )
-
-        diseasesByStage?.setLayoutManager(
-            LinearLayoutManager(
-                this,
-                LinearLayoutManager.VERTICAL,
-                false
-            )
-        )
-        diseasesByStage?.setAdapter(pestAndDiseasesAdapter)
-        pestAndDiseasesAdapter.notifyDataSetChanged()
-    }
-
     override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
         TODO("Not yet implemented")
     }
-
-
 }

@@ -1,102 +1,74 @@
-package in.gov.mahapocra.farmerapppks.ui.adapters;
+package `in`.gov.mahapocra.farmerapppks.ui.adapters
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
+import `in`.gov.mahapocra.farmerapppks.R
+import `in`.gov.mahapocra.farmerapppks.data.model.WareHouseModel
+import `in`.gov.mahapocra.farmerapppks.databinding.WareHouseAvailabilityBinding
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
+import java.util.Locale
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+class WarehouseAvailabilityAdapter(
+    private val mContext: Context,
+    listener: OnMultiRecyclerItemClickListener, private val mJSONArray: JSONArray?
+) :
+    RecyclerView.Adapter<WarehouseAvailabilityAdapter.ViewHolder>() {
 
-import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+    private val listener: OnMultiRecyclerItemClickListener = listener
+    private var warehouseName: String? = null
 
-import in.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener;
-import in.gov.mahapocra.farmerapppks.R;
-import in.gov.mahapocra.farmerapppks.data.model.WareHouseModel;
-
-public class WarehouseAvailabilityAdapter extends RecyclerView.Adapter<WarehouseAvailabilityAdapter.ViewHolder> {
-
-    private OnMultiRecyclerItemClickListener listener;
-    private Context mContext;
-    private JSONArray mJSONArray;
-    private String warehouse_name;
-
-    public WarehouseAvailabilityAdapter(Context context, OnMultiRecyclerItemClickListener listener, JSONArray jsonArray) {
-        this.mContext = context;
-        this.mJSONArray = jsonArray;
-        this.listener = listener;
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding =
+            WareHouseAvailabilityBinding.inflate(LayoutInflater.from(mContext), parent, false)
+        return ViewHolder(binding)
     }
 
-    @NonNull
-    @NotNull
-    @Override
-    public WarehouseAvailabilityAdapter.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.ware_house_availability, parent, false);
-        return new ViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull @NotNull ViewHolder viewHolder, int position) {
-
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         try {
-                    viewHolder.onBind(mJSONArray.getJSONObject(position), listener);
-                    viewHolder.tvContact_number.setOnClickListener(v -> {
-                        String m= viewHolder.tvContact_number.getText().toString();
-                        Intent intent = new Intent(Intent.ACTION_DIAL);
-                        intent.setData(Uri.parse("tel:"+m));
-                        mContext.startActivity(intent);
-                    });
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @Override
-    public int getItemCount() {
-        if (mJSONArray != null) {
-            return mJSONArray.length();
-        } else {
-            return 0;
+            viewHolder.onBind(mJSONArray!!.getJSONObject(position), listener)
+            viewHolder.binding.tvContactNumber.setOnClickListener {
+                val phoneNumber = viewHolder.binding.tvContactNumber.text.toString()
+                val intent = Intent(Intent.ACTION_DIAL).apply {
+                    data = Uri.parse("tel:$phoneNumber")
+                }
+                mContext.startActivity(intent)
+            }
+        } catch (e: JSONException) {
+            e.printStackTrace()
         }
     }
-    public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView ware_house_name;
-        private TextView record_date;
-        private TextView tvAddress;
-        private TextView tvContact_number;
-        private TextView tvTotal_available_Capacity;
+    override fun getItemCount(): Int {
+        return mJSONArray?.length() ?: 0
+    }
 
-        public ViewHolder(@NonNull @NotNull View v) {
-            super(v);
-            ware_house_name = v.findViewById(R.id.ware_house_name);
-            record_date = v.findViewById(R.id.record_date);
-            tvAddress = v.findViewById(R.id.tvAddress);
-            tvContact_number = v.findViewById(R.id.tvContact_number);
-            tvTotal_available_Capacity = v.findViewById(R.id.tvTotal_available_Capacity);
-
-        }
-        public void onBind(JSONObject jsonObject, OnMultiRecyclerItemClickListener listener) {
-                WareHouseModel wareHouseModel = new WareHouseModel(jsonObject);
-                warehouse_name = wareHouseModel.getWarehouseName();
-                String recorded_date = wareHouseModel.getRecordedDate();
-                String village = wareHouseModel.getVillage();
-                String phone = wareHouseModel.getPhone();
-                String available_capacity =wareHouseModel.getAvailableCapacity();
-                String upperString = warehouse_name.substring(0, 1).toUpperCase() + warehouse_name.substring(1).toLowerCase();
-                ware_house_name.setText(upperString);
-                record_date.setText(recorded_date);
-                tvAddress.setText(village);
-                tvContact_number.setText(phone);
-                tvTotal_available_Capacity.setText(available_capacity+ " MT");
+    inner class ViewHolder(val binding: WareHouseAvailabilityBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun onBind(jsonObject: JSONObject?, listener: OnMultiRecyclerItemClickListener?) {
+            val wareHouseModel = WareHouseModel(jsonObject)
+            warehouseName = wareHouseModel.getWarehouseName()
+            val recordedDate: String = wareHouseModel.getRecordedDate()
+            val village: String = wareHouseModel.getVillage()
+            val phone: String = wareHouseModel.getPhone()
+            val availableCapacity: String = wareHouseModel.getAvailableCapacity()
+            val upperString = warehouseName!!.substring(0, 1)
+                .uppercase(Locale.getDefault()) + warehouseName!!.substring(1).lowercase(
+                Locale.getDefault()
+            )
+            binding.wareHouseName.text = upperString
+            binding.recordDate.text = recordedDate
+            binding.tvAddress.text = village
+            binding.tvContactNumber.text = phone
+            binding.tvTotalAvailableCapacity.text = "$availableCapacity MT"
         }
     }
 }
