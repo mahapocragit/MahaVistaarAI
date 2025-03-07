@@ -3,7 +3,9 @@ package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.pest
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -115,16 +117,13 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         if (cropId!! > 0) {
             getCropStages()
         } else {
-            val args = intent.getBundleExtra("BUNDLE")
-            diseasesDetails =
-                args?.getSerializable("diseasesDetails") as ArrayList<DiseasesDetails>?
-            showParticularStagesByList()
+            Toast.makeText(this, "No Crops Added", Toast.LENGTH_SHORT).show()
         }
         binding.sowingInfoLayout.cropNameTextView.text = "$cropName"
     }
 
     private fun showParticularStagesByList() {
-        val particularDiseasesAdpter =
+        val particularDiseasesAdapter =
             ParticularStagesDiseasesAdpater(
                 this,
                 diseasesDetails!!
@@ -136,8 +135,8 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
                 false
             )
         )
-        binding.diseasesByStage.setAdapter(particularDiseasesAdpter)
-        particularDiseasesAdpter.notifyDataSetChanged()
+        binding.diseasesByStage.setAdapter(particularDiseasesAdapter)
+        particularDiseasesAdapter.notifyDataSetChanged()
     }
 
     private fun getCropStages() {
@@ -163,56 +162,59 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
     }
 
     override fun onResponse(jSONObject: JSONObject?, n: Int) {
-        if (n == 1) {
-            if (jSONObject != null) {
-                DebugLog.getInstance().d("onResponse=$jSONObject")
-                val response =
-                    ResponseModel(
-                        jSONObject
-                    )
-                if (response.getStatus()) {
-                    stageJsonArray = response.getdataArray()
-                    diseaseStages = ArrayList()
-                    for (i in 0 until stageJsonArray.length()) {
-                        val stagesJsonObject: JSONObject = stageJsonArray.get(i) as JSONObject
-                        val stageName: String = stagesJsonObject.getString("stage")
-                        val pestAndDiseasesJsonArray: JSONArray =
-                            stagesJsonObject.getJSONArray("pest_and_diseases")
-                        diseasesDetails = ArrayList()
-                        for (j in 0 until pestAndDiseasesJsonArray.length()) {
-                            val pestAndDiseasesJsonObject: JSONObject =
-                                pestAndDiseasesJsonArray.get(j) as JSONObject
-                            val peastAndDiseaseId: Int = pestAndDiseasesJsonObject.get("id") as Int
-                            val stageTitle: String =
-                                pestAndDiseasesJsonObject.get("title") as String
-                            val stagesubtitle: String =
-                                pestAndDiseasesJsonObject.get("subtitle") as String
-                            val type: String = pestAndDiseasesJsonObject.get("type") as String
-                            var cropsImgUrl: String? = ""
-                            cropsImgUrl = pestAndDiseasesJsonObject.get("image").toString()
-                            if (cropsImgUrl == null) {
-                                cropsImgUrl =
-                                    "https://c1.wallpaperflare.com/preview/1015/28/863/leaf-maple-disease-pest.jpg"
-                            }
-                            diseasesDetails!!.add(
-                                DiseasesDetails(
-                                    peastAndDiseaseId,
-                                    stageTitle,
-                                    stagesubtitle,
-                                    cropsImgUrl,
-                                    type
-                                )
-                            )
+        if (n == 1 && jSONObject != null) {
+            val response = ResponseModel(jSONObject)
+            if (response.getStatus()) {
+                stageJsonArray = response.getdataArray()
+                diseaseStages = ArrayList()
+                try {
+                    val stagesJsonObject = stageJsonArray.getJSONObject(0)
+                    // Handle missing "stage"
+                    val stageName: String = stagesJsonObject.optString("stage", "Unknown Stage")
+                    // Handle missing "pest_and_diseases"
+                    val pestAndDiseasesJsonArray: JSONArray =
+                        stagesJsonObject.optJSONArray("pest_and_diseases") ?: JSONArray()
+
+                    diseasesDetails = ArrayList()
+
+                    for (i in 0 until pestAndDiseasesJsonArray.length()) {
+                        val pestAndDiseasesJsonObject = pestAndDiseasesJsonArray.getJSONObject(i)
+
+                        val pestAndDiseaseId = pestAndDiseasesJsonObject.optInt("id", -1)
+                        val stageTitle =
+                            pestAndDiseasesJsonObject.optString("title", "Unknown Title")
+                        val stageSubtitle =
+                            pestAndDiseasesJsonObject.optString("subtitle", "No Subtitle")
+                        val type = pestAndDiseasesJsonObject.optString("type", "Unknown Type")
+
+                        var cropsImgUrl = pestAndDiseasesJsonObject.optString("image", "")
+                        if (cropsImgUrl.isEmpty()) {
+                            cropsImgUrl =
+                                "https://c1.wallpaperflare.com/preview/1015/28/863/leaf-maple-disease-pest.jpg"
                         }
-                        diseaseStages.add(DiseaseStages(i, stageName, diseasesDetails!!))
+
+                        diseasesDetails!!.add(
+                            DiseasesDetails(
+                                pestAndDiseaseId,
+                                stageTitle,
+                                stageSubtitle,
+                                cropsImgUrl,
+                                type
+                            )
+                        )
                     }
-                    showParticularStagesByList()
-                } else {
-                    UIToastMessage.show(this, response.response)
+                    diseaseStages.add(DiseaseStages(0, stageName, diseasesDetails!!))
+                } catch (e: JSONException) {
+                    Log.e("TAGGER", "JSON parsing error at index $0", e)
                 }
+                Log.d("TAGGER", "Total diseaseStages: ${diseaseStages.size}")
+                showParticularStagesByList()
+            } else {
+                UIToastMessage.show(this, response.response)
             }
         }
     }
+
 
     override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
         TODO("Not yet implemented")

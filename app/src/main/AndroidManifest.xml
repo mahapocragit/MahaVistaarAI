@@ -46,6 +46,13 @@
         android:theme="@style/Theme.FarmerApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.screens.dashboard.menugrid.dbt.DbtSchemesDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.screens.dashboard.menugrid.dbt.DbtSchemesActivity"
+            android:exported="false"
+            android:theme="@style/Theme.FarmerApp" />
+        <activity
             android:name=".ui.screens.PdfWebViewActivity"
             android:exported="false" />
         <activity
@@ -53,8 +60,8 @@
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.weather.WeatherTempActivity"
-            android:theme="@style/WeatherTheme"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/WeatherTheme" />
         <activity
             android:name=".ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity"
             android:exported="false" />

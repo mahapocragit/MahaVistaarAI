@@ -42,7 +42,7 @@ public interface APIServices {
     String kRefreshTokenLogin = "Shareddbtapi/OtherApp/refreshtoken";
 
     String kDbtActivitiesDetails = "Shareddbtapi/PocraWebsite/GetActivityCategory";
-
+    String kRevampedDBTSchemes = "FarmerApp/ActivitiesData";
     String kDbtActivitiesGrpDetails = "Shareddbtapi/PocraWebsite/GetActivityDetailsGroupWise";
     String kGetTokenFromWotr = "Api_GoM/login";
     String kGetFertilizerCalculatedDataWotr = "Api_GoM/getNutrient_calculator";

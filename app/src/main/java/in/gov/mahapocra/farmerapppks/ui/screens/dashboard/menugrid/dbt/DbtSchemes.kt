@@ -19,6 +19,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,9 +34,13 @@ import retrofit2.Retrofit
 class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
     OnMultiRecyclerItemClickListener {
 
-    private var activityGrpWiseDetailsJSONArray: JSONArray? = null
-    private var dbtActivityGrp: RecyclerView? = null
+    private lateinit var farmerRecyclerView: RecyclerView
+    private lateinit var fpoRecyclerView: RecyclerView
+    private lateinit var nrmRecyclerView: RecyclerView
     private var textViewHeaderTitle: TextView? = null
+    private lateinit var farmerCardTV: TextView
+    private lateinit var fpoCardTV: TextView
+    private lateinit var nrmCardTV: TextView
     private var imageMenushow: ImageView? = null
     var languageToLoad: String? = null
 
@@ -58,37 +63,53 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
+
+        farmerCardTV.setOnClickListener {
+            openRecyclerView(farmerRecyclerView)
+        }
+
+        fpoCardTV.setOnClickListener {
+            openRecyclerView(fpoRecyclerView)
+        }
+
+        nrmCardTV.setOnClickListener {
+            openRecyclerView(nrmRecyclerView)
+        }
         dbtSchemesLists()
     }
 
+    private fun openRecyclerView(recyclerView: RecyclerView) {
+        if (recyclerView.visibility==View.VISIBLE) {
+            recyclerView.visibility = View.GONE
+        }else{
+            recyclerView.visibility = View.VISIBLE
+        }
+    }
+
     private fun init() {
-        dbtActivityGrp = findViewById(R.id.dbtActivityGrp)
-        // dbtActivityGrp.setHasFixedSize(false)
+        fpoCardTV = findViewById(R.id.fpoCardTV)
+        farmerCardTV = findViewById(R.id.farmerCardTV)
+        nrmCardTV = findViewById(R.id.nrmCardTV)
+        farmerRecyclerView = findViewById(R.id.farmerRecyclerView)
+        fpoRecyclerView = findViewById(R.id.fpoRecyclerView)
+        nrmRecyclerView = findViewById(R.id.nrmRecyclerView)
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
         imageMenushow = findViewById(R.id.imageMenushow)
-
     }
 
     private fun dbtSchemesLists() {
-        Log.d("languageToLoad12121", languageToLoad.toString())
         try {
-            val secreateKey: String = APIServices.SSO_KEY
-            //   val lang: String = "mr"
-            val data: String = "No"
-
-            //val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
                 AppInventorApi(
                     this,
-                    APIServices.DBT,
+                    "https://uat-dbt.mahapocra.gov.in:8026/",
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true
                 )
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> =
-                apiRequest.getDbtActivitiesDetails(secreateKey, languageToLoad, data)
+            val responseCall: Call<JsonObject> = apiRequest.revampedDBTSchemes
             api.postRequest(responseCall, this, 1)
         } catch (e: JSONException) {
             e.printStackTrace()
@@ -104,46 +125,26 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
     }
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
-        if (i == 1 && jSONObject != null) {
-            val response =
-                ResponseModel(
-                    jSONObject
-                )
-            if (response.status) {
-                activityGrpWiseDetailsJSONArray = response.getActivityGrpArray()
-                val adaptorDbtActivityGrp =
-                    BbtActivityGrpAdapter(
-                        this,
-                        this,
-                        activityGrpWiseDetailsJSONArray,
-                        "dbtSchemes"
-                    )
-                dbtActivityGrp?.setLayoutManager(
-                    LinearLayoutManager(
-                        this,
-                        LinearLayoutManager.VERTICAL,
-                        false
-                    )
-                )
-                dbtActivityGrp?.setAdapter(adaptorDbtActivityGrp)
-                adaptorDbtActivityGrp.notifyDataSetChanged()
-            } else {
-                UIToastMessage.show(this, response.response)
-            }
+        if (i == 1 && jSONObject != null){
+            val farmerDataJSONArray = jSONObject.optJSONArray("farmerData")
+            farmerRecyclerView.layoutManager = LinearLayoutManager(this)
+            farmerRecyclerView.adapter = FarmerDBTRecyclerAdapter(farmerDataJSONArray, this)
+            Log.d("TAGGER", "onResponse: $farmerDataJSONArray")
+            val fpoDataJSONArray = jSONObject.optJSONArray("fpoData")
+            fpoRecyclerView.layoutManager = LinearLayoutManager(this)
+            fpoRecyclerView.adapter = FpoDBTRecyclerAdapter(fpoDataJSONArray, this)
+            Log.d("TAGGER", "onResponse: $fpoDataJSONArray")
+            val nrmDataJSONArray = jSONObject.optJSONArray("nrmData")
+            Log.d("TAGGER", "onResponse: $nrmDataJSONArray")
+            nrmRecyclerView.layoutManager = LinearLayoutManager(this)
+            nrmRecyclerView.adapter = FarmerDBTRecyclerAdapter(nrmDataJSONArray, this)
         }
     }
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
         val jsonObject = obj as JSONObject
-        val dbtGrpID: String = jsonObject.getString("ActivityGroupID")
-        val dbtGrpActivityName: String = jsonObject.getString("ActivityGroupName")
-        DebugLog.getInstance().d("jsonObject=$jsonObject")
-
-        if (i == 2) {
-            val intent = Intent(this, DbtActivityDetails::class.java)
-            intent.putExtra("ActivityGroupID", dbtGrpID)
-            intent.putExtra("mActivityName", dbtGrpActivityName)
-            startActivity(intent)
-        }
+        startActivity(Intent(this@DbtSchemes, DbtSchemesDetailsActivity::class.java).apply {
+            putExtra("FARMERDBTRESPONSE", jsonObject.toString())
+        })
     }
 }
