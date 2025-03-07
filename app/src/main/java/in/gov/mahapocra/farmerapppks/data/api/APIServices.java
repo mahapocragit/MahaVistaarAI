@@ -80,6 +80,7 @@ public interface APIServices {
 
     String kBandhavarPostStory ="masterService/bandhavar-succsess-stories";
     String KSaveFertilizerFormula ="farmerService/save-fertilizer-formula-of-user";
+    String KGetPreviousDates ="webservices/fetch_last_5days_date_list";
     String kGetFertilizerSavedFormula="farmerService/get-fertilizer-formula-of-user";
     String kBandhavarViewStory ="masterService/bandhavar-succsess-storie/";
     String kCropAdvisory ="farmService/get-all-crops";

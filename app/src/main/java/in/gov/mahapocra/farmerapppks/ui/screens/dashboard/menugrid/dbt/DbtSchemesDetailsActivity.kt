@@ -1,7 +1,6 @@
 package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.dbt
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -40,8 +39,8 @@ class DbtSchemesDetailsActivity : AppCompatActivity() {
 
         val data = intent.getStringExtra("FARMERDBTRESPONSE")
         val jsonData = JSONObject(data);
-        val importantDocuments = jsonData.optString("importantDocuments")?:jsonData.optString("documents_required")
-        val eligibilityCriteria = jsonData.optString("eligibilityCriteria")?:jsonData.optString("eligibility_criteria")
+        val importantDocuments = jsonData.optString("importantDocuments")
+        val eligibilityCriteria = jsonData.optString("eligibilityCriteria")
         val importantDocumentsArray = importantDocuments.split(";")
         val eligibilityCriteriaArray = eligibilityCriteria.split(";")
 

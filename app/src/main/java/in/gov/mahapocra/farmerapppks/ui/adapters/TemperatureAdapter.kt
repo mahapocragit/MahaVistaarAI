@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.farmerapppks.R
 import org.json.JSONArray
 import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class TemperatureAdapter(private val jsonArray: JSONArray) :
     RecyclerView.Adapter<TemperatureAdapter.ViewHolder>() {
@@ -36,9 +38,21 @@ class TemperatureAdapter(private val jsonArray: JSONArray) :
         val windSpeed = item.optString("wind_speed")?:""
         val windSpeedTemp = "$windSpeed km/h"
         val temperature = "$minTemp°C / $maxTemp°C"
-        holder.titleTextView.text = item.getString("date")
+        try {
+            holder.titleTextView.text = item.getString("date")
+        }catch (e:Exception){
+            holder.titleTextView.text = formatDate(item.getString("for_date"))
+        }
         holder.windSpeedTV.text = windSpeedTemp
         holder.temperatureTextView.text = temperature
         holder.imageView.setImageResource(R.drawable.weather_ic)
+    }
+
+    private fun formatDate(inputDate: String): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+
+        val date = inputFormat.parse(inputDate) // Parse input string to Date
+        return outputFormat.format(date!!) // Convert Date to output string
     }
 }

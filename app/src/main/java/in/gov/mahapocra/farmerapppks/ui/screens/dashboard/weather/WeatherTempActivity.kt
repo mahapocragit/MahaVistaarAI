@@ -2,26 +2,35 @@ package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.weather
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.gson.JsonObject
+import `in`.co.appinventor.services_api.api.AppInventorApi
+import `in`.co.appinventor.services_api.app_util.AppUtility
+import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.farmerapppks.util.AppPreferenceManager
 import `in`.gov.mahapocra.farmerapppks.R
+import `in`.gov.mahapocra.farmerapppks.data.api.APIRequest
+import `in`.gov.mahapocra.farmerapppks.data.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.ui.adapters.TemperatureAdapter
 import `in`.gov.mahapocra.farmerapppks.ui.adapters.ViewPagerAdapter
 import `in`.gov.mahapocra.farmerapppks.util.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.databinding.ActivityWeatherHomeTempBinding
 import `in`.gov.mahapocra.farmerapppks.data.model.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.util.app_util.AppString
 import org.json.JSONArray
 import org.json.JSONObject
+import retrofit2.Call
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class WeatherTempActivity : AppCompatActivity() {
+class WeatherTempActivity : AppCompatActivity(), ApiCallbackCode {
 
     lateinit var binding: ActivityWeatherHomeTempBinding
     private lateinit var recyclerAdapter: TemperatureAdapter
@@ -92,7 +101,7 @@ class WeatherTempActivity : AppCompatActivity() {
                     ContextCompat.getDrawable(this@WeatherTempActivity, R.drawable.shape_left_white)
                 setTextColor(Color.BLACK)
             }
-            setRecyclerViewUsingArray(jsonArrayPrevious)
+            makeAPICallForPreviousData()
             recyclerAdapter.notifyDataSetChanged()
         }
 
@@ -131,6 +140,23 @@ class WeatherTempActivity : AppCompatActivity() {
         recyclerAdapter.notifyDataSetChanged()
     }
 
+    private fun makeAPICallForPreviousData() {
+        val vinCode = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
+        val jsonObject = JSONObject()
+        jsonObject.put("for_date", getCurrentDate())
+        jsonObject.put("vincode", vinCode)
+        val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+        val api = AppInventorApi(this, APIServices.GIS, "", AppString(this).getkMSG_WAIT(), true)
+        val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
+        val responseCall: Call<JsonObject> = apiRequest.getPreviousDates(requestBody)
+        api.postRequest(responseCall, this, 1)
+    }
+
+    private fun getCurrentDate(): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return dateFormat.format(Date())
+    }
+
     private fun setRecyclerViewUsingArray(jsonArray:JSONArray){
         binding.recyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -139,8 +165,19 @@ class WeatherTempActivity : AppCompatActivity() {
         binding.recyclerView.adapter = recyclerAdapter
     }
 
-    fun getFormattedTimestamp(): String {
+    private fun getFormattedTimestamp(): String {
         val dateFormat = SimpleDateFormat("dd MMMM yyyy | HH:mm", Locale.getDefault())
         return dateFormat.format(Date())
+    }
+
+    override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onResponse(jSONObject: JSONObject?, i: Int) {
+        if (i == 1){
+            val jsonArray = jSONObject?.optJSONArray("data")
+            jsonArray?.let { setRecyclerViewUsingArray(it) }
+        }
     }
 }

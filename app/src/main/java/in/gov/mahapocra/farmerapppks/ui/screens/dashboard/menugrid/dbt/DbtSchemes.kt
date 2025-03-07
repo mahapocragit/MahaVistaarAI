@@ -126,17 +126,17 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 1 && jSONObject != null){
+
             val farmerDataJSONArray = jSONObject.optJSONArray("farmerData")
-            farmerRecyclerView.layoutManager = LinearLayoutManager(this)
-            farmerRecyclerView.adapter = FarmerDBTRecyclerAdapter(farmerDataJSONArray, this)
-            Log.d("TAGGER", "onResponse: $farmerDataJSONArray")
             val fpoDataJSONArray = jSONObject.optJSONArray("fpoData")
-            fpoRecyclerView.layoutManager = LinearLayoutManager(this)
-            fpoRecyclerView.adapter = FpoDBTRecyclerAdapter(fpoDataJSONArray, this)
-            Log.d("TAGGER", "onResponse: $fpoDataJSONArray")
             val nrmDataJSONArray = jSONObject.optJSONArray("nrmData")
-            Log.d("TAGGER", "onResponse: $nrmDataJSONArray")
+
+            farmerRecyclerView.layoutManager = LinearLayoutManager(this)
+            fpoRecyclerView.layoutManager = LinearLayoutManager(this)
             nrmRecyclerView.layoutManager = LinearLayoutManager(this)
+
+            farmerRecyclerView.adapter = FarmerDBTRecyclerAdapter(farmerDataJSONArray, this)
+            fpoRecyclerView.adapter = FarmerDBTRecyclerAdapter(fpoDataJSONArray, this)
             nrmRecyclerView.adapter = FarmerDBTRecyclerAdapter(nrmDataJSONArray, this)
         }
     }

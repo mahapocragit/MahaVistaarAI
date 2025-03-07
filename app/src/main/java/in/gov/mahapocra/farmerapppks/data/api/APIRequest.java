@@ -142,6 +142,9 @@ public interface APIRequest {
     @POST(APIServices.KSaveFertilizerFormula)
     Call<JsonObject> saveFertilizerFormula(@Body RequestBody params);
 
+    @POST(APIServices.KGetPreviousDates)
+    Call<JsonObject> getPreviousDates(@Body RequestBody params);
+
     @POST(APIServices.kGetFertilizerSavedFormula)
     Call<JsonObject> getFertilizerSavedFormula(@Body RequestBody params);
 
