@@ -19,6 +19,9 @@ import `in`.gov.mahapocra.farmerapppks.R
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.pest.CropStageAdvisory
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.pest.SelectSowingDataAndFarmer
 import `in`.gov.mahapocra.farmerapppks.data.model.CropsCategName
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
+import `in`.gov.mahapocra.farmerapppks.util.AppPreferenceManager
+import `in`.gov.mahapocra.farmerapppks.util.app_util.AppConstants
 import org.json.JSONException
 
 
@@ -97,13 +100,23 @@ class VideosImageDetailsAdapter(
                     }
 
                     else -> {
-                        val intent = Intent(context, SelectSowingDataAndFarmer::class.java)
-                        intent.putExtra("id", moviesImageList?.get(position)?.id)
-                        intent.putExtra("wotr_crop_id", moviesImageList?.get(position)?.wotr_id)
-                        intent.putExtra("mUrl", moviesImageList?.get(position)?.getmUrl())
-                        intent.putExtra("mName", moviesImageList?.get(position)?.getmName())
-                        intent.putExtra("editCrop", "NoEditCrop")
-                        context?.startActivity(intent)
+                        val source = context?.let { it1 -> AppPreferenceManager(it1).getString(AppConstants.ACTION_FROM_DASHBOARD) }
+                        if (source.equals(AppConstants.PEST_AND_DISEASES_STAGES)){
+                            val intent = Intent(context, PestsAndDiseasesStages::class.java)
+                            intent.putExtra("cropId", moviesImageList?.get(position)?.id)
+                            intent.putExtra("wotr_crop_id", moviesImageList?.get(position)?.wotr_id)
+                            intent.putExtra("mUrl", moviesImageList?.get(position)?.getmUrl())
+                            intent.putExtra("mName", moviesImageList?.get(position)?.getmName())
+                            context?.startActivity(intent)
+                        }else {
+                            val intent = Intent(context, SelectSowingDataAndFarmer::class.java)
+                            intent.putExtra("id", moviesImageList?.get(position)?.id)
+                            intent.putExtra("wotr_crop_id", moviesImageList?.get(position)?.wotr_id)
+                            intent.putExtra("mUrl", moviesImageList?.get(position)?.getmUrl())
+                            intent.putExtra("mName", moviesImageList?.get(position)?.getmName())
+                            intent.putExtra("editCrop", "NoEditCrop")
+                            context?.startActivity(intent)
+                        }
                     }
                 }
             }

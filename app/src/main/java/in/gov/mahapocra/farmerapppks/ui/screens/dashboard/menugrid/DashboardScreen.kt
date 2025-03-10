@@ -351,7 +351,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
 
                     4 -> if (savedCropName.isEmpty()) {
                         val sharing = Intent(this@DashboardScreen, AddCropActivity::class.java)
-                        appPreferenceManager?.saveString(
+                        appPreferenceManager.saveString(
                             AppConstants.ACTION_FROM_DASHBOARD,
                             AppConstants.PEST_AND_DISEASES_STAGES
                         )

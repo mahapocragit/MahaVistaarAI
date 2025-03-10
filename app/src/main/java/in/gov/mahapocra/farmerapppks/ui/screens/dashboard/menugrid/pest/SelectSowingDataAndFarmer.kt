@@ -82,7 +82,7 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
                 intent.putExtra("editCrop", editCrop)
                 intent.putExtra("sowingDate", sowingDate)
                 startActivity(intent)
-            }else if (source.equals(AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD)) {
+            } else if (source.equals(AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD)) {
                 val intent = Intent(this, FertilizerCalculatorActivity::class.java)
                 intent.putExtra("id", cropId)
                 intent.putExtra("wotr_crop_id", wotrCropId)
@@ -90,14 +90,6 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
                 intent.putExtra("mName", mName)
                 intent.putExtra("sowingDate", sowingDate)
                 intent.putExtra("editCrop", editCrop)
-                startActivity(intent)
-            }else if (source.equals(AppConstants.PEST_AND_DISEASES_STAGES)) {
-                val intent = Intent(this, PestsAndDiseasesStages::class.java)
-                intent.putExtra("cropId", cropId)
-                intent.putExtra("wotr_crop_id", wotrCropId)
-                intent.putExtra("mUrl", mUrl)
-                intent.putExtra("mName", mName)
-                intent.putExtra("sowingDate", sowingDate)
                 startActivity(intent)
             } else {
                 saveFarmerSelectedCrop()

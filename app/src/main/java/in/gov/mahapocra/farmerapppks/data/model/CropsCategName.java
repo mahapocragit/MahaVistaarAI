@@ -1,9 +1,39 @@
 package in.gov.mahapocra.farmerapppks.data.model;
 
 public class CropsCategName {
+    private int id;
+    private String mName;
+    private String mUrl;
+    private String wotr_id;
+    private String sowing_date_general;
+
+    public CropsCategName(int id, String mName, String mUrl, String wotrId, String sowing_date_general) {
+        this.id = id;
+        this.mName = mName;
+        this.mUrl = mUrl;
+        this.wotr_id = wotrId;
+        this.sowing_date_general = sowing_date_general;
+    }
+
+    public CropsCategName(int id, String mName, String mUrl, String wotrId) {
+        this.id = id;
+        this.mName = mName;
+        this.mUrl = mUrl;
+        this.wotr_id = wotrId;
+    }
+
+    public String getSowing_date_general() {
+        return sowing_date_general;
+    }
+
+    public void setSowing_date_general(String sowing_date_general) {
+        this.sowing_date_general = sowing_date_general;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
+
     public int getId() {
         return id;
     }
@@ -31,27 +61,4 @@ public class CropsCategName {
     public void setWotr_id(String wotr_id) {
         this.wotr_id = wotr_id;
     }
-
-    private int id;
-    private String mName;
-    private String mUrl;
-    private String wotr_id;
-
-    public CropsCategName(int id, String mName, String mUrl, String wotrId) {
-        this.id = id;
-        this.mName = mName;
-        this.mUrl = mUrl;
-        this.wotr_id = wotrId;
-
-    }
-
-
-
-
-    // Glide.with(context).load(bannerMoviesList.get(position).getImageUrl()).into(bannerImage)
-
-
-
-
-
 }

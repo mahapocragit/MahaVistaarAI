@@ -69,9 +69,12 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
             startActivity(Intent(this, DashboardScreen::class.java))
         }
 
+        binding.sowingInfoLayout.sowingDateTextView.visibility = View.GONE
+        binding.sowingInfoLayout.editSowingDateIcon.visibility = View.GONE
+
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+            startActivity(Intent(this@PestsAndDiseasesStages, DashboardScreen::class.java))
         }
 
         cropId = intent.getIntExtra("cropId", 0)
@@ -219,4 +222,10 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
     override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
         TODO("Not yet implemented")
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        startActivity(Intent(this@PestsAndDiseasesStages, DashboardScreen::class.java))
+    }
+
 }

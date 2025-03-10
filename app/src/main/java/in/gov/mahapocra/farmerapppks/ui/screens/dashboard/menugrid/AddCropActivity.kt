@@ -1,6 +1,7 @@
 package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid
 
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +9,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonObject
@@ -33,6 +35,13 @@ import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.Year
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 
 class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerItemClickListener {
@@ -143,7 +152,7 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
                 val nCropSize: Int = cropJsonArray.length()
                 for (i in 0 until nCropSize) {
                     val cropJsonObject: JSONObject = cropJsonArray.get(i) as JSONObject
-                    Log.d("TAGGER", "onResponse sat: $cropJsonObject")
+
                     val cropType: String = cropJsonObject.getString("type")
                     val cropCategoriesJsonArray: JSONArray = cropJsonObject.getJSONArray("crops")
                     val nCropsCategory: Int = cropCategoriesJsonArray.length()
@@ -157,6 +166,13 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
                             cropCategoriesJsonObject.get("wotr_crop_id").toString()
                         var cropsImgUrl: String? = ""
                         cropsImgUrl = cropCategoriesJsonObject.get("image").toString()
+                        val sowingDateUnfiltered = cropCategoriesJsonObject.optString("sowing_date")
+                        val filteredSowingDate =
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                getSowingDateWithYear(sowingDateUnfiltered)
+                            } else {
+                                Log.d("TAG", "onResponse: versioncode is lesser")
+                            }
                         if (cropsImgUrl == null) {
                             cropsImgUrl =
                                 "https://cdn.pixabay.com/photo/2016/06/11/15/33/broccoli-1450274_640.png"
@@ -166,7 +182,8 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
                                 cropsId,
                                 cropsName,
                                 cropsImgUrl,
-                                wotrCropId
+                                wotrCropId,
+                                filteredSowingDate.toString()
                             )
                         )
                     }
@@ -185,9 +202,35 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getSowingDateWithYear(sowingDateUnfiltered: String): String {
+        val currentDate = getCurrentDate() // Returns YYYY-MM-DD
+        val currentYear = Year.now().value
+
+        // Parse and format the sowing date
+        val sowingDateParts = sowingDateUnfiltered.split("/")
+        val formattedSowingDate = sowingDateParts.takeIf { it.size == 2 }?.let {
+            "%04d-%02d-%02d".format(currentYear, it[1].toInt(), it[0].toInt())
+        } ?: return currentDate // Return current date if format is invalid
+
+        val sowingDate = LocalDate.parse(formattedSowingDate)
+        val today = LocalDate.parse(currentDate)
+
+        return if (today.isBefore(sowingDate)) {
+            "${currentYear - 1}-${formattedSowingDate.substring(5)}"
+        } else {
+            currentDate
+        }
+    }
+
+
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
         TODO("Not yet implemented")
     }
 
+    private fun getCurrentDate(): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return dateFormat.format(Date())
+    }
 
 }
