@@ -93,11 +93,10 @@
 
                 <TextView
                     android:id="@+id/greetingsTextView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_weight="6"
                     android:text="Good Morning,"
                     android:textSize="@dimen/_16sdp"
                     android:textStyle="bold" />
@@ -107,6 +106,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="4"
+                    android:layout_marginStart="@dimen/_5sdp"
                     android:gravity="center_vertical"
                     android:text="Lorem Ipsum"
                     android:textSize="@dimen/_14sdp" />

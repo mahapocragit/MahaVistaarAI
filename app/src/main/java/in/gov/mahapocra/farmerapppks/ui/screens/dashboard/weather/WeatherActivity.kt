@@ -172,6 +172,7 @@ class WeatherActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
                 AppPreferenceManager(this).saveString( "WEATHER_HOURLY_DATA_24", jSONObject.toString())
                 val viewPagerAdapter = ViewPagerAdapter(this)
                 binding.viewPager.adapter = viewPagerAdapter
+                binding.viewPager.isUserInputEnabled = false
                 // Connect TabLayout and ViewPager2
                 TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
                     when (position) {
