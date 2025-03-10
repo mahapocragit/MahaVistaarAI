@@ -8,17 +8,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.farmerapppks.R
+import `in`.gov.mahapocra.farmerapppks.util.AppPreferenceManager
+import org.json.JSONObject
 
 class FirstFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: WindAdapter
-    private lateinit var itemList: List<Item>
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,21 +27,11 @@ class FirstFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
 
-        // Initialize data list
-        itemList = listOf(
-            Item("Now"),
-            Item("1 pm"),
-            Item("2 pm"),
-            Item("3 pm"),
-            Item("4 pm"),
-            Item("5 pm"),
-            Item("6 pm"),
-            Item("7 pm"),
-            Item("8 pm"),
-        )
-
+        val dataFromWeather = AppPreferenceManager(requireContext()).getString("WEATHER_HOURLY_DATA_24")
+        val jsonObject = JSONObject(dataFromWeather)
+        val jsonArray = jsonObject.optJSONArray("data")
         // Set adapter
-        adapter = WindAdapter(itemList, "temp")
+        adapter = jsonArray?.let { WindAdapter(it, "temp") }!!
         recyclerView.adapter = adapter
 
         return view

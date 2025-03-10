@@ -7,8 +7,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.farmerapppks.R
+import org.json.JSONArray
+import org.json.JSONObject
 
-class WindAdapter(private val itemList: List<Item>, private val actName:String) : RecyclerView.Adapter<WindAdapter.ViewHolder>() {
+class WindAdapter(private val jsonArray: JSONArray, private val actName:String) : RecyclerView.Adapter<WindAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_layout, parent, false)
@@ -16,30 +18,38 @@ class WindAdapter(private val itemList: List<Item>, private val actName:String) 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = itemList[position]
-        holder.titleTextView.text = item.title
+        val item = jsonArray[position] as JSONObject
+        holder.titleTextView.text = item.optString("for_hour")
         when(actName){
             "temp" -> {
                 holder.imageView.setImageResource(R.drawable.weather_ic)
-                holder.valueForWeather.text = "23 °C"
+                val temp = item.optInt("temp")
+                val unit = item.optString("temp_unit")
+                holder.valueForWeather.text = "$temp $unit"
             }
             "rain" -> {
                 holder.imageView.setImageResource(R.drawable.rain_ic)
-                holder.valueForWeather.text = "23 mm"
+                val rainfall = item.optInt("rain")
+                val unit = item.optString("rain_unit")
+                holder.valueForWeather.text = "$rainfall $unit"
             }
             "humidity" -> {
                 holder.imageView.setImageResource(R.drawable.humidity_ic)
-                holder.valueForWeather.text = "23 %"
+                val humidity = item.optDouble("humidity")
+                val unit = item.optString("humidity_unit")
+                holder.valueForWeather.text = "$humidity $unit"
             }
             "wind" -> {
                 holder.imageView.setImageResource(R.drawable.wind_ic)
-                holder.valueForWeather.text = "23 Km/h"
+                val wind = item.optDouble("wind")
+                val unit = item.optString("wind_unit")
+                holder.valueForWeather.text = "$wind $unit"
             }
         }
     }
 
     override fun getItemCount(): Int {
-        return itemList.size
+        return jsonArray.length()
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

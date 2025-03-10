@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.screens.dashboard.weather.WeatherTempActivity">
+    tools:context=".ui.screens.dashboard.weather.WeatherActivity">
 
     <include
         android:id="@+id/relativeLayoutTopBar"

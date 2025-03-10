@@ -5,18 +5,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.gov.mahapocra.farmerapppks.R
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class TemperatureAdapter(private val jsonArray: JSONArray) :
+class TemperatureAdapter(private val jsonArray: JSONArray, private val listener: OnMultiRecyclerItemClickListener) :
     RecyclerView.Adapter<TemperatureAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.item_title)
+        val weatherCardView: CardView = itemView.findViewById(R.id.weatherCardView)
         val temperatureTextView: TextView = itemView.findViewById(R.id.temperatureTextView)
         val windSpeedTV: TextView = itemView.findViewById(R.id.windSpeedTV)
         val imageView: ImageView = itemView.findViewById(R.id.imageView11)
@@ -46,6 +49,9 @@ class TemperatureAdapter(private val jsonArray: JSONArray) :
         holder.windSpeedTV.text = windSpeedTemp
         holder.temperatureTextView.text = temperature
         holder.imageView.setImageResource(R.drawable.weather_ic)
+        holder.weatherCardView.setOnClickListener {
+            listener.onMultiRecyclerViewItemClick(position, item)
+        }
     }
 
     private fun formatDate(inputDate: String): String {

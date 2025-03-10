@@ -65,7 +65,7 @@ import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.news.
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.training.TrainingLocationSelection
 import `in`.gov.mahapocra.farmerapppks.ui.screens.notification.ComingSoonActivity
 import `in`.gov.mahapocra.farmerapppks.ui.screens.splash.SplashScreenActivity
-import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.weather.WeatherTempActivity
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.weather.WeatherActivity
 import `in`.gov.mahapocra.farmerapppks.util.AppPreferenceManager
 import `in`.gov.mahapocra.farmerapppks.util.ForceUpdateChecker
 import `in`.gov.mahapocra.farmerapppks.util.app_util.ApUtil
@@ -138,7 +138,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
         binding.appBarMain.dashboardScreen.temperatureLayout.setOnClickListener {
             val weather = Intent(
                 this@DashboardScreen,
-                WeatherTempActivity::class.java
+                WeatherActivity::class.java
             )
             startActivity(weather)
         }
