@@ -42,7 +42,7 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
     private lateinit var fpoCardTV: TextView
     private lateinit var nrmCardTV: TextView
     private var imageMenushow: ImageView? = null
-    var languageToLoad: String? = null
+    var languageToLoad: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -135,9 +135,9 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
             fpoRecyclerView.layoutManager = LinearLayoutManager(this)
             nrmRecyclerView.layoutManager = LinearLayoutManager(this)
 
-            farmerRecyclerView.adapter = FarmerDBTRecyclerAdapter(farmerDataJSONArray, this)
-            fpoRecyclerView.adapter = FarmerDBTRecyclerAdapter(fpoDataJSONArray, this)
-            nrmRecyclerView.adapter = FarmerDBTRecyclerAdapter(nrmDataJSONArray, this)
+            farmerRecyclerView.adapter = FarmerDBTRecyclerAdapter(farmerDataJSONArray, languageToLoad, this)
+            fpoRecyclerView.adapter = FarmerDBTRecyclerAdapter(fpoDataJSONArray, languageToLoad, this)
+            nrmRecyclerView.adapter = NRMrDBTRecyclerAdapter(nrmDataJSONArray, languageToLoad, this)
         }
     }
 

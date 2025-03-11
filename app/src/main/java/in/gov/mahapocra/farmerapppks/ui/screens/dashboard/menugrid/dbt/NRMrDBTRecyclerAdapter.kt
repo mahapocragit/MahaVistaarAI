@@ -8,11 +8,11 @@ import `in`.gov.mahapocra.farmerapppks.databinding.FarmersDbtItemViewBinding
 import org.json.JSONArray
 import org.json.JSONObject
 
-class FarmerDBTRecyclerAdapter(
+class NRMrDBTRecyclerAdapter(
     private val farmersJSONArray: JSONArray,
     private val languageToLoad: String,
     private val listener: OnMultiRecyclerItemClickListener
-) : RecyclerView.Adapter<FarmerDBTRecyclerAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<NRMrDBTRecyclerAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -42,7 +42,7 @@ class FarmerDBTRecyclerAdapter(
         fun bind(activityName: String, jsonObject: JSONObject) {
             binding.dbtSchemeName.text = activityName
             binding.farmerDbtCardView.setOnClickListener {
-                listener.onMultiRecyclerViewItemClick(1, jsonObject)
+//                listener.onMultiRecyclerViewItemClick(1, jsonObject)
             }
         }
     }
