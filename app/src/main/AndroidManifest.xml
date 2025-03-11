@@ -49,10 +49,6 @@
             android:name=".ui.screens.dashboard.menugrid.dbt.DbtSchemesDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.screens.dashboard.menugrid.dbt.DbtSchemesActivity"
-            android:exported="false"
-            android:theme="@style/Theme.FarmerApp" />
-        <activity
             android:name=".ui.screens.PdfWebViewActivity"
             android:exported="false" />
         <activity
@@ -68,9 +64,6 @@
         <activity android:name=".ui.screens.dashboard.menugrid.FertilizerCalculatorActivity" />
         <activity android:name=".ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages" />
         <activity android:name=".ui.screens.dashboard.menugrid.pest.DiseaseInformation" />
-        <activity
-            android:name=".ui.screens.dashboard.menugrid.pest.CropStageAdvisory"
-            android:exported="false" />
         <activity
             android:name=".ai_disc_tp_imp.identify.Identify.Identify_dashboard"
             android:exported="true" />

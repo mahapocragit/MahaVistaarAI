@@ -18,7 +18,6 @@ import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.farmerapppks.R
-import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.pest.CropStageAdvisory
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.farmerapppks.data.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.data.api.APIServices
@@ -159,9 +158,8 @@ class AdvisoryFeedback : Fragment(), ApiCallbackCode {
     }
 
     fun onBackPressed() {
-        val i = Intent(activity, CropStageAdvisory::class.java)
+        val i = Intent(activity, DashboardScreen::class.java)
         startActivity(i)
-        (activity as Activity?)!!.overridePendingTransition(0, 0)
     }
 }
 

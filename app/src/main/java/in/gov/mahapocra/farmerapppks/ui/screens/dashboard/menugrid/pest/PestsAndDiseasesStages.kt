@@ -105,15 +105,7 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         }
 
         binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {
-            val intent = Intent(this, CropStageAdvisory::class.java)
-            intent.putExtra("id", cropId)
-            intent.putExtra("mUrl", mUrl)
-            intent.putExtra("mName", cropName)
-            intent.putExtra("wotr_crop_id", wotrCropId)
-            intent.putExtra("dataSavedInLocal", "dataSavedInLocal")
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            val intent = Intent(this, DashboardScreen::class.java)
             startActivity(intent)
         }
 

@@ -190,18 +190,11 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
                     }
                     Toast.makeText(this, response.response, Toast.LENGTH_SHORT)
                         .show()
-                    if (editCrop.equals("EditCrop")) {
-                        val intent = Intent(this, CropStageAdvisory::class.java)
-                        intent.putExtra("id", cropId)
-                        intent.putExtra("mUrl", mUrl)
-                        intent.putExtra("mName", mName)
-                        intent.putExtra("wotrCropId", wotrCropId)
-                        startActivity(intent)
-                    } else {
-                        val intent = Intent(this, DashboardScreen::class.java)
-                        intent.putExtra("helloCrop", cropId)
-                        startActivity(intent)
-                    }
+
+                    val intent = Intent(this, DashboardScreen::class.java)
+                    intent.putExtra("helloCrop", cropId)
+                    startActivity(intent)
+
                 } else {
                     UIToastMessage.show(this, response.response)
                 }
