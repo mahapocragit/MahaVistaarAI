@@ -47,7 +47,6 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
     private var wotrCropId: String? = null
     private var mName: String? = null
     private var mUrl: String? = null
-    private var editCrop: String? = null
     private lateinit var selectedCropList: ArrayList<CropsCategName>
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -60,10 +59,6 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
         wotrCropId = intent.getStringExtra("wotr_crop_id")
         mUrl = intent.getStringExtra("mUrl")
         mName = intent.getStringExtra("mName")
-        editCrop = intent.getStringExtra("editCrop")
-        Log.d("TAGGER", "onCreate: $mName")
-
-
         binding.relativeLayoutTopBar.textViewHeaderTitle.text =
             resources.getString(R.string.select_sowing_date)
         AppUtility.getInstance().showDisabledFutureDatePicker(
@@ -72,28 +67,8 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
             1,
             this
         )
-        val source = AppPreferenceManager(this).getString(AppConstants.ACTION_FROM_DASHBOARD)
         binding.saveDateForFarmButton.setOnClickListener {
-            if (source.equals(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD)) {
-                val intent = Intent(this, AdvisoryCropActivity::class.java)
-                intent.putExtra("dataSavedInLocal", "dataSavedInLocal")
-                intent.putExtra("id", cropId)
-                intent.putExtra("mName", mName)
-                intent.putExtra("editCrop", editCrop)
-                intent.putExtra("sowingDate", sowingDate)
-                startActivity(intent)
-            } else if (source.equals(AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD)) {
-                val intent = Intent(this, FertilizerCalculatorActivity::class.java)
-                intent.putExtra("id", cropId)
-                intent.putExtra("wotr_crop_id", wotrCropId)
-                intent.putExtra("mUrl", mUrl)
-                intent.putExtra("mName", mName)
-                intent.putExtra("sowingDate", sowingDate)
-                intent.putExtra("editCrop", editCrop)
-                startActivity(intent)
-            } else {
-                saveFarmerSelectedCrop()
-            }
+            saveFarmerSelectedCrop()
         }
         binding.calenderForSowingDate.setOnClickListener {
             AppUtility.getInstance().showDisabledFutureDatePicker(
@@ -139,9 +114,6 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
 
     override fun onDateSelected(i: Int, day: Int, month: Int, year: Int) {
         if (i == 1) {
-            Log.d("i2", day.toString())
-            Log.d("i3", month.toString())
-            Log.d("i4", year.toString())
             sowingDate = "$day-$month-$year"
             binding.textViewSowingDate.text = sowingDate
         }

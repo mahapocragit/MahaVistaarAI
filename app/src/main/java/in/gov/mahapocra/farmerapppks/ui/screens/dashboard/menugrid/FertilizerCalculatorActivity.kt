@@ -85,7 +85,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
 
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+            startActivity(Intent(this, DashboardScreen::class.java))
         }
 
         cropId = intent.getIntExtra("id", 0)
@@ -240,6 +240,11 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             }
         })
         binding.sowingInfoLayout.cropNameTextView.text = cropName
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        startActivity(Intent(this, DashboardScreen::class.java))
     }
 
     private fun getSelectedSavedOption() {

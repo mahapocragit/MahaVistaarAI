@@ -18,6 +18,8 @@ import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListene
 import `in`.gov.mahapocra.farmerapppks.R
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.pest.SelectSowingDataAndFarmer
 import `in`.gov.mahapocra.farmerapppks.data.model.CropsCategName
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.FertilizerCalculatorActivity
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
 import `in`.gov.mahapocra.farmerapppks.util.AppPreferenceManager
 import `in`.gov.mahapocra.farmerapppks.util.app_util.AppConstants
@@ -86,13 +88,29 @@ class VideosImageDetailsAdapter(
                     intent.putExtra("mUrl", moviesImageList?.get(position)?.getmUrl())
                     intent.putExtra("mName", moviesImageList?.get(position)?.getmName())
                     context?.startActivity(intent)
+                }else if (source.equals(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD)) {
+                    val intent = Intent(context, AdvisoryCropActivity::class.java)
+                    intent.putExtra("dataSavedInLocal", "dataSavedInLocal")
+                    intent.putExtra("id", moviesImageList?.get(position)?.id)
+                    intent.putExtra("mName", moviesImageList?.get(position)?.getmName())
+                    intent.putExtra("editCrop", "NoEditCrop")
+                    intent.putExtra("sowingDate", moviesImageList?.get(position)?.sowing_date_general)
+                    context?.startActivity(intent)
+                }else if (source.equals(AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD)) {
+                    val intent = Intent(context, FertilizerCalculatorActivity::class.java)
+                    intent.putExtra("id", moviesImageList?.get(position)?.id)
+                    intent.putExtra("wotr_crop_id", moviesImageList?.get(position)?.wotr_id)
+                    intent.putExtra("mUrl", moviesImageList?.get(position)?.getmUrl())
+                    intent.putExtra("mName", moviesImageList?.get(position)?.getmName())
+                    intent.putExtra("sowingDate",  moviesImageList?.get(position)?.sowing_date_general)
+                    intent.putExtra("editCrop", "NoEditCrop")
+                    context?.startActivity(intent)
                 } else {
                     val intent = Intent(context, SelectSowingDataAndFarmer::class.java)
                     intent.putExtra("id", moviesImageList?.get(position)?.id)
                     intent.putExtra("wotr_crop_id", moviesImageList?.get(position)?.wotr_id)
                     intent.putExtra("mUrl", moviesImageList?.get(position)?.getmUrl())
                     intent.putExtra("mName", moviesImageList?.get(position)?.getmName())
-                    intent.putExtra("editCrop", "NoEditCrop")
                     context?.startActivity(intent)
                 }
             }

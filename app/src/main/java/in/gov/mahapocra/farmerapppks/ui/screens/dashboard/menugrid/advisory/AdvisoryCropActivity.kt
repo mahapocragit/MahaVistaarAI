@@ -81,8 +81,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         mUrl = intent.getStringExtra("mUrl")
         villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-
-
+        
         binding.sowingInfoLayout.editSowingDateIcon.setOnClickListener {
             val sharing = Intent(this, SelectSowingDataAndFarmer::class.java)
             sharing.putExtra("id", cropId)
@@ -96,55 +95,20 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
             startActivity(sharing)
         }
 
-
-
-        val cropStageResponseString = AppPreferenceManager(this).getString("CROP_STAGE_RESPONSE")
         binding.sowingInfoLayout.cropNameTextView.text = cropName
         binding.sowingInfoLayout.sowingDateTextView.text = sowingDate
         binding.relativeLayoutTopBar.textViewHeaderTitle.text = "Crop Advisory"
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+            startActivity(Intent(this, DashboardScreen::class.java))
         }
 
         getCropStagesAndAdvisory()
-
-        /*if (!cropStageResponseString.equals("default_value")){
-            initializeDataFromJson()
-        }else{
-            getCropStagesAndAdvisory()
-        }*/
     }
 
-    private fun initializeDataFromJson(){
-        try {
-            val cropStageResponseString = AppPreferenceManager(this).getString("CROP_STAGE_RESPONSE")
-            val jSONObject = JSONObject(cropStageResponseString)
-            val response =
-                ResponseModel(
-                    jSONObject
-                )
-            if (response.status) {
-                sowingDate = jSONObject.getString("sowing_date")
-                binding.sowingInfoLayout.sowingDateTextView.text = jSONObject.getString("sowing_date")
-                cropAdvisoryDetailsJSONArray = response.getdataArray()
-                Log.d("RESPONSE_TAG", "onResponse: $cropAdvisoryDetailsJSONArray")
-
-                if (cropAdvisoryDetailsJSONArray?.length()!! > 0) {
-                    val stagesAdvisoryAdapter =
-                        StageAdvisoryAdapter(this, this, cropAdvisoryDetailsJSONArray)
-                    binding.cropStagesRecyclerView.layoutManager =
-                        LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-                    binding.cropStagesRecyclerView.adapter = stagesAdvisoryAdapter
-                    stagesAdvisoryAdapter.notifyDataSetChanged()
-                }
-            } else {
-                UIToastMessage.show(this, response.response)
-            }
-        }catch (_:Exception){
-
-        }
-
+    override fun onBackPressed() {
+        super.onBackPressed()
+        startActivity(Intent(this, DashboardScreen::class.java))
     }
 
     private fun getCropStagesAndAdvisory() {
