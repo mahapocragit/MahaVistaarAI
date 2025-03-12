@@ -278,19 +278,19 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
 
             return when (hour) {
                 in 5..11 -> {
-                    "Good Morning,"
+                    getString(R.string.good_morning)
                 }
 
                 in 12..16 -> {
-                    "Good Afternoon,"
+                    getString(R.string.good_afternoon)
                 }
 
                 in 17..20 -> {
-                    "Good Evening,"
+                    getString(R.string.good_evening)
                 }
 
                 else -> {
-                    "Good Night,"
+                    getString(R.string.good_night)
                 }
             }
         }

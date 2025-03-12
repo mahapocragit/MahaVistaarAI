@@ -63,7 +63,7 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.pests_n_diseases)
         binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
 
-        binding.sowingInfoLayout.textView7.text = "Selected Crop"
+        binding.sowingInfoLayout.textView7.text = getString(R.string.selected_crop)
         binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {
             startActivity(Intent(this, DashboardScreen::class.java))

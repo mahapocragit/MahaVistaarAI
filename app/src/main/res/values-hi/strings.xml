@@ -4,7 +4,7 @@
     <string name="weather">हवामान</string>
     <string name="climateTechnology">हवामान अनुकूल तंत्रज्ञान</string>
     <string name="dbtschema">थेट लाभ हस्तांतरण योजना</string>
-    <string name="soilhealth">मृदा आरोग्य पत्रिका</string>
+    <string name="soil_health_card">मृदा आरोग्य पत्रिका</string>
     <string name="marketprice">बाजारभाव</string>
     <string name="wareHouse">गोदाम उपलब्धता</string>
     <string name="gis">जीआयएस- भौगोलिक माहिती प्रणाली</string>
@@ -22,6 +22,13 @@
     <string name="add_Crop">पीक जोडा</string>
     <string name="change_Crop">पीक बदला</string>">
     <string name="no_crops_added">कोणतीही पिके जोडली नाहीत</string>
+    <string name="see_less">कमी पहा</string>
+    <string name="selected_crop">निवडलेले पीक</string>
+
+    <string name="good_morning">शुभ सकाळ, </string>
+    <string name="good_afternoon">शुभ दुपार, </string>
+    <string name="good_evening">शुभ संध्याकाळ, </string>
+    <string name="good_night">शुभ रात्री, </string>
 
     <!--NAMES FOR DELETE CROP DIALOG-->
     <string name="delete_crop_title">पीक काढून टाका</string>
@@ -241,7 +248,7 @@
     <string name="market_c_price"> वस्तूंच्या किमती </string>
     <string name="grievance"> तुमच्या तक्रारीचे येथे वर्णन करा </string>
     <string name="success_farmer"> शेतकरी यशोगाथा येथे करणे </string>
-    <string name="crop_advisory">पीक सल्ला </string>
+    <string name="crop_advisory">पीक सल्ला</string>
 
     <string name="doc_upload"> प्रतिमा/कागदपत्रे असल्यास अपलोड करा</string>
 
@@ -250,7 +257,7 @@
     <string name="cropSapAdvisoryDummyDta"></string>
     <string name="my_crops">माझी पिके</string>
     <string name="edit_crop">पीक संपादित करा</string>
-    <string name="sowing_date">पेरणीची तारीख -</string>
+    <string name="sowing_date">पेरणीची तारीख</string>
     <string name="fertiliser_calculator">खत कॅल्क्युलेटर</string>
     <string name="crop_management">पीक व्यवस्थापन</string>
     <string name="pets_and_diseases">पाळीव प्राणी आणि रोगपाळीव प्राणी आणि रोग</string>

@@ -21,7 +21,7 @@
     <string name="weather">  Weather</string>
     <string name="climateTechnology">Climate Resilient Technology</string>
     <string name="dbtschema"> DBT Schemes</string>
-    <string name="soilhealth">Soil Health Card</string>
+    <string name="soil_health_card">Soil Health Card</string>
     <string name="marketprice">Market Price</string>
     <string name="wareHouse">Warehouse Availability</string>
     <string name="gis">GIS</string>
@@ -39,6 +39,13 @@
     <string name="add_Crop">Add Crop</string>
     <string name="change_Crop">Change Crop</string>
     <string name="no_crops_added">No Crops Added</string>
+    <string name="see_less">See Less</string>
+    <string name="selected_crop">Selected Crop</string>
+
+    <string name="good_morning">Good Morning, </string>
+    <string name="good_afternoon">Good Afternoon, </string>
+    <string name="good_evening">Good Evening, </string>
+    <string name="good_night">Good Night, </string>
 
     <!--NAMES FOR DELETE CROP DIALOG-->
     <string name="delete_crop_title">Delete Crop</string>
@@ -242,7 +249,7 @@
     <string name="market_c_price">Commodity Prices </string>
     <string name="grievance">Describe Your Grievance </string>
     <string name="success_farmer"> Farmer Success Story </string>
-    <string name="crop_advisory"> Crop Advisory </string>
+    <string name="crop_advisory">Crop Advisory</string>
     <string name="doc_upload"> Upload Image/Doc if any </string>
     <string name="event_details"> Event Details </string>
     <!-- TODO: Remove or change this placeholder text -->
@@ -251,7 +258,7 @@
     <string name="cropSapAdvisoryDummyDta"></string>
     <string name="my_crops">My Crops</string>
     <string name="edit_crop">Edit Crop</string>
-    <string name="sowing_date">Sowing Date -</string>
+    <string name="sowing_date">Sowing Date</string>
 
     <string name="fertiliser_calculator">Fertiliser Calculator</string>
     <string name="crop_management">Crop Management</string>

@@ -11,6 +11,7 @@ import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
+import `in`.gov.mahapocra.farmerapppks.R
 import `in`.gov.mahapocra.farmerapppks.ui.adapters.FarmerAdapter
 import `in`.gov.mahapocra.farmerapppks.data.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.data.api.APIServices
@@ -63,7 +64,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode {
         binding.textViewTaluka.text = talukaName
         binding.textViewVillage.text = villageName
 
-        binding.relativeLayoutToolbar.textViewHeaderTitle.text = "Soil Health Card"
+        binding.relativeLayoutToolbar.textViewHeaderTitle.text = getString(R.string.soil_health_card)
         binding.relativeLayoutToolbar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutToolbar.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()

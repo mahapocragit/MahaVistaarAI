@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
@@ -42,6 +43,7 @@ class StageAdvisoryAdapter(
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
+        val seeMoreTextView: TextView = itemView.findViewById(R.id.seeMoreTextView)
         val stepLine: View = itemView.findViewById(R.id.stepLine)
         val stage: RelativeLayout = itemView.findViewById(R.id.stage)
         val rightTick: ImageView = itemView.findViewById(R.id.right_tick)
@@ -57,9 +59,19 @@ class StageAdvisoryAdapter(
             StageAdvisoryDetailAdaptr(context, listener, cropAdvisoryJSONArray, "mr", "", "")
         holder.cropStagesInfoRecyclerView.layoutManager = LinearLayoutManager(
             context,
-            LinearLayoutManager.HORIZONTAL,
+            LinearLayoutManager.VERTICAL,
             false
         )
+        holder.cropStagesInfoRecyclerView.visibility = View.GONE
+        holder.seeMoreTextView.setOnClickListener {
+            if (holder.cropStagesInfoRecyclerView.visibility == View.VISIBLE) {
+                holder.cropStagesInfoRecyclerView.visibility = View.GONE
+                holder.seeMoreTextView.text = holder.itemView.context.getString(R.string.see_more)
+            }else{
+                holder.cropStagesInfoRecyclerView.visibility = View.VISIBLE
+                holder.seeMoreTextView.text = holder.itemView.context.getString(R.string.see_less)
+            }
+        }
         holder.cropStagesInfoRecyclerView.adapter = sAdapter
         val status = advisoryJsonDetails.getString("status")
         if (status.equals("current")) {
