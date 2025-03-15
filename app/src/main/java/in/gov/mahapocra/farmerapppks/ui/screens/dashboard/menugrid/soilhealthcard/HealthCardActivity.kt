@@ -1,9 +1,8 @@
-package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid
+package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.soilhealthcard
 
 import `in`.co.appinventor.services_api.settings.AppSettings
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager

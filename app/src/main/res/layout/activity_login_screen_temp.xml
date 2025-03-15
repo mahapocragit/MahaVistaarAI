@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/actionbar_color_figma"
+    tools:context=".ui.screens.authentication.LoginScreen">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/_10sdp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView16"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="Welcome"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_22sdp" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="Sign In!"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_22sdp" />
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView2"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_420sdp"
+        android:layout_marginBottom="-14dp"
+        app:cardCornerRadius="@dimen/_15sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_52sdp"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_1sdp"
+                android:elevation="5dp"
+                app:hintTextAppearance="@style/TextLabel">
+
+                <EditText
+                    android:id="@+id/userIdEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/height70"
+                    android:background="@drawable/login_edit_bg"
+                    android:digits="0987654321"
+                    android:gravity="center|start"
+                    android:hint="@string/email"
+                    android:inputType="number"
+                    android:longClickable="false"
+                    android:maxLength="10"
+                    android:maxLines="1"
+                    android:paddingHorizontal="@dimen/padding5"
+                    android:textColor="@color/black"
+                    android:textIsSelectable="false"
+                    android:textSize="14sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_1sdp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radioButtonPwd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/actionbar_color_figma"
+                    android:checked="true"
+                    android:onClick="onRadioButtonClicked"
+                    android:tag="1"
+                    android:text="@string/password"
+                    android:textColor="@color/black" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonOtp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/actionbar_color_figma"
+                    android:checked="false"
+                    android:onClick="onRadioButtonClicked"
+                    android:tag="0"
+                    android:text="@string/otp"
+                    android:textColor="@color/black" />
+
+            </RadioGroup>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/passwordTextInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_1sdp"
+                android:elevation="8dp"
+                android:textColorHint="@color/text_black"
+                app:hintTextAppearance="@style/TextLabel"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleTint="@color/status_green">
+
+                <EditText
+                    android:id="@+id/passwordEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:background="@drawable/login_edit_bg"
+                    android:gravity="center|start"
+                    android:hint="@string/password"
+                    android:inputType="textWebPassword"
+                    android:longClickable="false"
+                    android:maxLength="20"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/padding20"
+                    android:paddingEnd="@dimen/padding20"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textIsSelectable="false" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/forgotPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_1sdp"
+                android:gravity="end"
+                android:text="@string/forgot_password"
+                android:textColor="@color/darkblue"
+                android:textSize="14sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/signInButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/_1sdp"
+                android:backgroundTint="@color/actionbar_color_figma"
+                android:padding="@dimen/padding12"
+                android:text="@string/login"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text16"
+                app:cornerRadius="@dimen/_15sdp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="Don't have an account?" />
+
+            <TextView
+                android:id="@+id/registerTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textColor="@color/actionbar_color_figma"
+                android:textStyle="bold"
+                android:text="@string/create_new" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/imageView16"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="@dimen/_100sdp"
+        android:elevation="10dp"
+        android:src="@drawable/pocra_latest_logo"
+        app:layout_constraintBottom_toTopOf="@+id/cardView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cardView2" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

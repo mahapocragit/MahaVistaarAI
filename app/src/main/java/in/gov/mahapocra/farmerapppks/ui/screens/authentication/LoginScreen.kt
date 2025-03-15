@@ -23,20 +23,19 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.farmerapppks.R
 import `in`.gov.mahapocra.farmerapppks.data.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.data.api.APIServices
+import `in`.gov.mahapocra.farmerapppks.data.model.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.databinding.ActivityLoginScreenTempBinding
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.farmerapppks.util.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.util.app_util.AppString
-import `in`.gov.mahapocra.farmerapppks.databinding.ActivityLoginScreenBinding
-import `in`.gov.mahapocra.farmerapppks.data.model.ResponseModel
-import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.DashboardScreen
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
 
-
 class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
-    private lateinit var binding: ActivityLoginScreenBinding
+    private lateinit var binding: ActivityLoginScreenTempBinding
     private lateinit var refreshToken: String
     private lateinit var mobileNo: String
     private lateinit var dialog: Dialog
@@ -46,14 +45,12 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     private var farmerRegisteredID: Int = 0
     private var loginOption: Int = 0
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (AppSettings.getLanguage(this@LoginScreen).equals("1", ignoreCase = true))
-        {
+        if (AppSettings.getLanguage(this@LoginScreen).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
-        binding= ActivityLoginScreenBinding.inflate(layoutInflater)
+        binding = ActivityLoginScreenTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
         onClick()
     }
@@ -79,19 +76,6 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 ).show()
             }
         }
-        binding.sendOtpButton.setOnClickListener {
-            /*binding.otpTextInput.visibility = View.VISIBLE
-            binding.otpEditText.visibility = View.VISIBLE
-            object : CountDownTimer(30000, 1000) {
-                override fun onTick(millisUntilFinished: Long) {
-                    binding.sendOtpButton.text = "seconds remaining: ${ millisUntilFinished / 1000 }"
-                    //here you can have your logic to set text to edittext
-                }
-                override fun onFinish() {
-                    binding.sendOtpButton.text = "Resend OTP"
-                }
-            }.start()*/
-        }
     }
 
     private fun userValidateAndLogin() {
@@ -110,6 +94,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             }
         }
     }
+
     private fun callRefreshTokenAPI(mobileNo: String, userPass: String) {
         if (mobileNo.isEmpty()) {
             binding.userIdEditText.error = resources.getString(R.string.lgn_register_phone_error)
@@ -139,6 +124,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             }
         }
     }
+
     private fun callLoginAPI(strToken: String) {
         if (mobileNo.isEmpty()) {
             binding.userIdEditText.error = resources.getString(R.string.lgn_register_phone_error)
@@ -170,6 +156,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             }
         }
     }
+
     fun onRadioButtonClicked(view: View) {
         if (view is RadioButton) {
             // Is the button now checked?
@@ -183,21 +170,16 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         binding.passwordEditText.visibility = View.VISIBLE
                         binding.signInButton.visibility = View.VISIBLE
                         binding.signInButton.setText(R.string.login)
-                        binding.sendOtpButton.visibility = View.GONE
-                        binding.otpTextInput.visibility = View.GONE
-                        binding.otpEditText.visibility = View.GONE
                         Toast.makeText(this, "Enter your password ", Toast.LENGTH_LONG).show()
                         loginOption = 0
                     }
+
                 R.id.radioButtonOtp ->
                     if (checked) {
                         binding.passwordTextInput.visibility = View.GONE
                         binding.passwordEditText.visibility = View.GONE
                         binding.signInButton.visibility = View.VISIBLE
                         binding.signInButton.setText(R.string.sendOtp)
-                        binding.sendOtpButton.visibility = View.GONE
-                        binding.otpTextInput.visibility = View.GONE
-                        binding.otpEditText.visibility = View.GONE
                         loginOption = 1
                     }
             }
@@ -207,11 +189,11 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
         th?.printStackTrace()
     }
+
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
 
-        if(i==4) {
+        if (i == 4) {
             if (jSONObject != null) {
-                DebugLog.getInstance().d("onResponse=$jSONObject")
                 val response =
                     ResponseModel(
                         jSONObject
@@ -227,24 +209,24 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         }
         if (i == 2) {
             if (jSONObject != null) {
-                DebugLog.getInstance().d("onResponse=$jSONObject")
                 val response =
                     ResponseModel(
                         jSONObject
                     )
                 if (response.getStatus()) {
-                    if(loginOption == 1) {
+                    if (loginOption == 1) {
                         val message: String = jSONObject.getString("Message")
                         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
                         sentOTP = jSONObject.getString("OTP")
                         farmerRegisteredID = jSONObject.getInt("FAAPRegistrationID")
                         addVerificationDialog(sentOTP)
-                    }else{
+                    } else {
                         val message: String = jSONObject.getString("Message")
                         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
                         sentOTP = jSONObject.getString("OTP")
                         farmerRegisteredID = jSONObject.getInt("FAAPRegistrationID")
-                        AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisteredID)
+                        AppSettings.getInstance()
+                            .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisteredID)
                         val intent = Intent(this, DashboardScreen::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -252,7 +234,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         startActivity(intent)
                         finish()
                     }
-                }else{
+                } else {
                     val message: String = jSONObject.getString("Message")
                     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
                 }
@@ -260,6 +242,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
         }
     }
+
     private fun addVerificationDialog(sentOTP: String) {
         dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -294,22 +277,26 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         }
         dialog.show()
     }
-    private fun otpVerification(resendOTP: Button)
-    {
+
+    private fun otpVerification(resendOTP: Button) {
         object : CountDownTimer(30000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                resendOTP.text = resources.getString(R.string.Time)+":"+ millisUntilFinished / 1000
+                resendOTP.text =
+                    resources.getString(R.string.Time) + ":" + millisUntilFinished / 1000
                 //here you can have your logic to set text to edittext
             }
+
             override fun onFinish() {
                 resendOTP.text = resources.getString(R.string.Resend_OTP)
             }
         }.start()
     }
+
     private fun userVerification(enteredOTP: String) {
         if (enteredOTP == this.sentOTP) {
             Toast.makeText(this, "Login successfully", Toast.LENGTH_LONG).show()
-            AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisteredID)
+            AppSettings.getInstance()
+                .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisteredID)
             val intent = Intent(this, DashboardScreen::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

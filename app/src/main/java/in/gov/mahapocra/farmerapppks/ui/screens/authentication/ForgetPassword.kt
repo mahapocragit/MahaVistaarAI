@@ -22,6 +22,8 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
 import com.google.gson.JsonObject
+import `in`.gov.mahapocra.farmerapppks.databinding.ActivityForgetPasswordBinding
+import `in`.gov.mahapocra.farmerapppks.databinding.ActivityForgetPasswordTempBinding
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.DashboardScreen
 import org.json.JSONException
 import org.json.JSONObject
@@ -29,69 +31,46 @@ import retrofit2.Call
 import retrofit2.Retrofit
 
 class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode {
-    lateinit var textViewHeaderTitle: TextView
-    lateinit var imageBackArrow: ImageView
-    lateinit var mobileEditText: EditText
-    lateinit var sendOTPEditText: EditText
-    lateinit var verification: TextView
-    lateinit var verify_Layout: LinearLayout
-    lateinit var sendOTPButton: Button
-    lateinit var resendOTPButton: Button
-    lateinit var mob: String
+
+    lateinit var binding: ActivityForgetPasswordTempBinding
+    private lateinit var mob: String
     private var userPass: String = ""
-    lateinit var sentOTP: String
-    lateinit var enteredOTP: String
-    lateinit var FarmerRegstredID: String
+    private lateinit var sentOTP: String
     private lateinit var dialog: Dialog
     private var loginOption: Int = 0
-    var farmerRigisterID: Int = 0
-    var languageToLoad: String? = null
+    private var farmerRegistrationId: Int = 0
+    var languageToLoad: String = "hi"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        languageToLoad = "hi"
-        if (AppSettings.getLanguage(this@ForgetPassword).equals("1", ignoreCase = true))
-        {
+        if (AppSettings.getLanguage(this@ForgetPassword).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
-        setContentView(R.layout.activity_forget_password)
-        init()
+        binding = ActivityForgetPasswordTempBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         onClick()
-        imageBackArrow.setVisibility(View.VISIBLE);
-        textViewHeaderTitle.setText(R.string.forgot_password)
     }
-    private fun init()
-    {
-        textViewHeaderTitle=findViewById(R.id.textViewHeaderTitle);
-        imageBackArrow=findViewById(R.id.imgBackArrow);
-        mobileEditText = findViewById(R.id.mobileEditText)
-        sendOTPEditText = findViewById(R.id.sendOTPEditText)
-        resendOTPButton = findViewById(R.id.resendOTPButton)
-        sendOTPButton = findViewById(R.id.sendOTPButton)
-        verification = findViewById(R.id.verifytext)
-        verify_Layout = findViewById(R.id.verify_Layout)
 
-    }
-    private fun onClick()
-    {
-        sendOTPButton.setOnClickListener {
-            mob = mobileEditText.text.toString()
+    private fun onClick() {
+        binding.sendOTPButton.setOnClickListener {
+            mob = binding.mobileEditText.text.toString()
             userPass = ""
-           // userLoginAPI(mob, userPass)
             sendOTP()
         }
-        imageBackArrow.setOnClickListener(View.OnClickListener {
-            finish()
-        })
+
+        binding.backPressIcon.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
     }
+
     private fun sendOTP() {
-        mob = mobileEditText.text.toString()
-        // verification.setTextColor(Color.parseColor("#000000"))
+        mob = binding.mobileEditText.text.toString()
         if (mob.isEmpty()) {
-            mobileEditText.error = resources.getString(R.string.login_mob_err)
-            mobileEditText.requestFocus()
+            binding.mobileEditText.error = resources.getString(R.string.login_mob_err)
+            binding.mobileEditText.requestFocus()
         } else if (!AppUtility.getInstance().isValidPhoneNumber(mob)) {
-            mobileEditText.error = resources.getString(R.string.login_mob_valid_err)
-            mobileEditText.requestFocus()
+            binding.mobileEditText.error = resources.getString(R.string.login_mob_valid_err)
+            binding.mobileEditText.requestFocus()
         } else {
             val jsonObject = JSONObject()
             try {
@@ -110,23 +89,17 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
                 val retrofit: Retrofit = api.getRetrofitInstance()
                 val apiRequest = retrofit.create(APIRequest::class.java)
                 val responseCall: Call<JsonObject> = apiRequest.getOTPRequest(requestBody)
-                DebugLog.getInstance().d("param1=" + responseCall.request().toString())
-                DebugLog.getInstance()
-                    .d("param2=" + AppUtility.getInstance().bodyToString(responseCall.request()))
                 api.postRequest(responseCall, this, 2)
-                DebugLog.getInstance().d("param=" + responseCall.request().toString())
-                DebugLog.getInstance()
-                    .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
             } catch (e: JSONException) {
-                DebugLog.getInstance().d("JSONException=" + e.toString())
                 e.printStackTrace()
             }
         }
     }
+
     private fun userLoginAPI(mobileNo: String, userPass: String) {
         if (mobileNo.isEmpty()) {
-            mobileEditText.error = resources.getString(R.string.lgn_register_phone_error)
-            mobileEditText.requestFocus()
+            binding.mobileEditText.error = resources.getString(R.string.lgn_register_phone_error)
+            binding.mobileEditText.requestFocus()
         } else {
             val jsonObject = JSONObject()
             try {
@@ -147,89 +120,77 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
                 val apiRequest = retrofit.create(APIRequest::class.java)
                 val responseCall: Call<JsonObject> = apiRequest.getUserLogin(requestBody)
                 api.postRequest(responseCall, this, 3)
-                DebugLog.getInstance().d("param=" + responseCall.request().toString())
-                DebugLog.getInstance()
-                    .d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()))
             } catch (e: JSONException) {
-                DebugLog.getInstance().d("JSONException=" + e.toString())
                 e.printStackTrace()
             }
         }
     }
-    private fun addVerificationDialog(sentOTP: String) {
-        Log.d("sentOTP", sentOTP)
+
+    private fun addVerificationDialog() {
         dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
-        Log.d("sentOTP111", sentOTP)
         dialog.setContentView(R.layout.dialog_activity_verification)
         dialog.window!!.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
         val dialogTitle = dialog.findViewById<TextView>(R.id.dialogTitle)
-        dialogTitle.setText("Enter OTP")
-        Log.d("sentOTP22222", sentOTP)
-
-        val revcieveOTPEditText = dialog.findViewById<EditText>(R.id.OptEditText)
+        dialogTitle.text = getString(R.string.enter_otp)
+        val receiveOTPEditText = dialog.findViewById<EditText>(R.id.OptEditText)
         val submitButton = dialog.findViewById<Button>(R.id.submitButton)
         val resendOTP = dialog.findViewById<Button>(R.id.resentOTP)
         val cancelButton = dialog.findViewById<ImageView>(R.id.imageView_close)
 
-        cancelButton.setOnClickListener(View.OnClickListener { dialog.dismiss() })
+        cancelButton.setOnClickListener { dialog.dismiss() }
         submitButton.setOnClickListener {
-            var enteredOTP: String = revcieveOTPEditText.text.toString()
+            val enteredOTP: String = receiveOTPEditText.text.toString()
             if (enteredOTP.isEmpty()) {
-                revcieveOTPEditText.error = resources.getString(R.string.regist_otp_err)
-                revcieveOTPEditText.requestFocus()
+                receiveOTPEditText.error = resources.getString(R.string.regist_otp_err)
+                receiveOTPEditText.requestFocus()
             } else {
                 userVerification(enteredOTP)
             }
         }
         resendOTP.setOnClickListener {
             dialog.dismiss()
-            //sendOTP()
             userValidateAndLogin()
         }
         dialog.show()
     }
-    private fun userVerification(enteredOTP: String) {
 
-        Log.d("shdfhsdf", enteredOTP)
-        Log.d("testshvm1", this.sentOTP)
-        if (enteredOTP.equals(this.sentOTP)) {
-            Toast.makeText(this,"Thank you...", Toast.LENGTH_LONG).show();
+    private fun userVerification(enteredOTP: String) {
+        if (enteredOTP == this.sentOTP) {
+            Toast.makeText(this, "Thank you...", Toast.LENGTH_LONG).show()
             val intent = Intent(this, ConfirmPassword::class.java)
-            intent.putExtra("MobileNo",mob)
+            intent.putExtra("MobileNo", mob)
             startActivity(intent)
-//            textViewVerify.setText("Verified")
-//            textViewVerify.setTextColor(Color.parseColor("#1d6b08"))
             dialog.dismiss()
         } else {
-            Toast.makeText(this, R.string.wrong_OTP, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.wrong_OTP, Toast.LENGTH_LONG).show()
         }
     }
+
     private fun userValidateAndLogin() {
         if (loginOption == 1) {
-            mob = mobileEditText.text.toString()
+            mob = binding.mobileEditText.text.toString()
             userPass = ""
             userLoginAPI(mob, userPass)
         }
     }
+
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 2) {
             if (jSONObject != null) {
-                DebugLog.getInstance().d("onResponse=$jSONObject")
                 val response =
                     ResponseModel(
                         jSONObject
                     )
                 if (response.getStatus()) {
-                    var notifiCountValue: String = jSONObject.getString("Message")
+                    val notifiCountValue: String = jSONObject.getString("Message")
                     Toast.makeText(this, notifiCountValue, Toast.LENGTH_LONG).show()
-                    //UIToastMessage.showShortDuration(this, notifiCountValue)
                     sentOTP = jSONObject.getString("OTP")
-                    addVerificationDialog(sentOTP)
+                    addVerificationDialog()
                 }
             }
         }
@@ -241,40 +202,39 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
                         jSONObject
                     )
                 if (response.getStatus()) {
-                    if(loginOption == 1) {
-                        var message: String = jSONObject.getString("Message")
+                    if (loginOption == 1) {
+                        val message: String = jSONObject.getString("Message")
                         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-                        //UIToastMessage.showShortDuration(this, notifiCountValue)
                         sentOTP = jSONObject.getString("OTP")
-                        farmerRigisterID = jSONObject.getInt("FAAPRegistrationID")
-                        addVerificationDialog(sentOTP)
-                    }else{
-                        var message: String = jSONObject.getString("Message")
+                        farmerRegistrationId = jSONObject.getInt("FAAPRegistrationID")
+                        addVerificationDialog()
+                    } else {
+                        val message: String = jSONObject.getString("Message")
                         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-                        //UIToastMessage.showShortDuration(this, notifiCountValue)
                         sentOTP = jSONObject.getString("OTP")
-                        farmerRigisterID = jSONObject.getInt("FAAPRegistrationID")
-                        AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, farmerRigisterID)
+                        farmerRegistrationId = jSONObject.getInt("FAAPRegistrationID")
+                        AppSettings.getInstance()
+                            .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegistrationId)
                         val intent = Intent(this, DashboardScreen::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         startActivity(intent)
                         finish()
-                        var getfarmerId: Int = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-                        Log.d("getfarmerIdValue123",getfarmerId.toString())
                     }
-                }else{
-                    var message: String = jSONObject.getString("Message")
+                } else {
+                    val message: String = jSONObject.getString("Message")
                     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
                 }
             }
 
         }
     }
+
     override fun onFailure(th: Throwable?, i: Int) {
         DebugLog.getInstance().d("onResponse=$th")
     }
+
     override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
         DebugLog.getInstance().d("onResponse=$obj")
     }

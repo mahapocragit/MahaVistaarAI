@@ -56,6 +56,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
     private lateinit var textViewTaluka: TextView
     private lateinit var textViewVillage: TextView
     private lateinit var textViewVerify: TextView
+    private lateinit var backPressIcon: TextView
     private lateinit var submitButton: Button
     private lateinit var deleteAccountButton: TextView
 
@@ -90,7 +91,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_registration)
+        setContentView(R.layout.activity_registration_temp)
 
         languageToLoad = "mr"
         if (AppSettings.getLanguage(this@Registration).equals("1", ignoreCase = true)) {
@@ -188,6 +189,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
         textViewVillage = findViewById(R.id.textViewVillage)
         deleteAccountButton = findViewById(R.id.deleteAccountButton)
         textViewVerify = findViewById(R.id.textViewVerify)
+        backPressIcon = findViewById(R.id.backPressIcon)
         submitButton = findViewById(R.id.submitButton)
     }
 
@@ -203,6 +205,10 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
                     dialog.dismiss()
                 }
                 .show()
+        }
+
+        backPressIcon.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
         }
 
         mobNoEditText.addTextChangedListener(object : TextWatcher {

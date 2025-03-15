@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.farmerapppks.R
-import `in`.gov.mahapocra.farmerapppks.ui.screens.PdfWebViewActivity
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.soilhealthcard.PdfWebViewActivity
 import org.json.JSONArray
 import org.json.JSONObject
 

@@ -57,6 +57,7 @@ import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.advisory.Ad
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.dbt.DbtSchemes
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.soilhealthcard.HealthCardActivity
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.DbtStatus
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.Grievances
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.MyVillageProfilePdf

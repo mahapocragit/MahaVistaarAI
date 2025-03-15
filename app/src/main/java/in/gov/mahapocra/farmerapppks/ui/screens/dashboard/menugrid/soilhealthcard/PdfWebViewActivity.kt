@@ -1,12 +1,10 @@
-package `in`.gov.mahapocra.farmerapppks.ui.screens
+package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.soilhealthcard
 
 import android.os.Bundle
 import android.view.View
 import android.webkit.WebSettings
 import android.webkit.WebViewClient
-import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import `in`.gov.mahapocra.farmerapppks.R
 import `in`.gov.mahapocra.farmerapppks.databinding.ActivityPdfViewBinding

@@ -46,10 +46,13 @@
         android:theme="@style/Theme.FarmerApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.screens.chc.CHCenterActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.screens.dashboard.menugrid.dbt.DbtSchemesDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.screens.PdfWebViewActivity"
+            android:name=".ui.screens.dashboard.menugrid.soilhealthcard.PdfWebViewActivity"
             android:exported="false" />
         <activity
             android:name=".ui.screens.chatbot.TempDashboardActivity"
@@ -153,7 +156,7 @@
             android:name=".ui.screens.dashboard.menugrid.dbt.DbtActivityDetails"
             android:exported="false" />
         <activity
-            android:name=".ui.screens.dashboard.menugrid.HealthCardActivity"
+            android:name=".ui.screens.dashboard.menugrid.soilhealthcard.HealthCardActivity"
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.menugrid.Warehouse"
@@ -185,10 +188,6 @@
             android:exported="false"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ui.screens.authentication.MobileOTP"
-            android:exported="false"
-            android:label="@string/app_name" />
         <activity
             android:name=".ui.screens.authentication.Registration"
             android:exported="false" />

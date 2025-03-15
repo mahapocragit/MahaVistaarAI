@@ -127,7 +127,9 @@
     <string name="enterOtp">Enter OTP</string>
     <string name="Resend_OTP">Resend OTP</string>
     <string name="otp">OTP</string>
+    <string name="enter_otp">Enter OTP</string>
     <string name="Time">Time</string>
+    <string name="do_not_have_account">Don\'t have an account?</string>
     <string name="create_new">Click here for registration</string>
 
     <string name="not_register">Not Register?</string>
