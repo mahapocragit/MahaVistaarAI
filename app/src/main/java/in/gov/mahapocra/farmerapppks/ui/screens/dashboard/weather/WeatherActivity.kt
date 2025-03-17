@@ -55,6 +55,9 @@ class WeatherActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
             onBackPressedDispatcher.onBackPressed()
         }
 
+        binding.tabLayout.visibility = View.GONE
+        binding.viewPager.visibility = View.GONE
+
         val weatherResponse = AppPreferenceManager(this).getString(AppConstants.WEATHER_RESPONSE)
         val talukaName: String = AppSettings.getInstance().getSavedValue(this, AppConstants.uTALUKA)
         binding.weatherTalukaTV.text = talukaName
@@ -86,6 +89,8 @@ class WeatherActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
         binding.relativeLayoutTopBar.textViewHeaderTitle.text = "Weather"
 
         binding.previousSevenDayTV.setOnClickListener {
+            binding.tabLayout.visibility = View.GONE
+            binding.viewPager.visibility = View.GONE
             binding.previousSevenDayTV.apply {
                 background =
                     ContextCompat.getDrawable(
@@ -106,6 +111,8 @@ class WeatherActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
         binding.timestampTV.text = getFormattedTimestamp()
 
         binding.nextSevenDayTV.setOnClickListener {
+            binding.tabLayout.visibility = View.GONE
+            binding.viewPager.visibility = View.GONE
             binding.nextSevenDayTV.apply {
                 background =
                     ContextCompat.getDrawable(
@@ -169,6 +176,8 @@ class WeatherActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
             Log.d("TAGGER", "onResponse: $jsonArray")
             binding
             if (jsonArray!=null){
+                binding.tabLayout.visibility = View.VISIBLE
+                binding.viewPager.visibility = View.VISIBLE
                 AppPreferenceManager(this).saveString( "WEATHER_HOURLY_DATA_24", jSONObject.toString())
                 val viewPagerAdapter = ViewPagerAdapter(this)
                 binding.viewPager.adapter = viewPagerAdapter
@@ -182,6 +191,9 @@ class WeatherActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
                         3 -> tab.text = "Wind"
                     }
                 }.attach()
+            }else{
+                binding.tabLayout.visibility = View.GONE
+                binding.viewPager.visibility = View.GONE
             }
         }
     }

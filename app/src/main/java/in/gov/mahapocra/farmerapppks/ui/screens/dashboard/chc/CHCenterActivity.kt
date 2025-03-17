@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.farmerapppks.ui.screens.chc
+package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.chc
 
 import android.graphics.Color
 import android.os.Bundle
@@ -12,7 +12,7 @@ import `in`.gov.mahapocra.farmerapppks.databinding.ActivityChcenterBinding
 class CHCenterActivity : AppCompatActivity() {
 
     private lateinit var binding:ActivityChcenterBinding
-    private lateinit var adapter:CHCenterRecyclerAdapter
+    private lateinit var adapter: CHCenterRecyclerAdapter
     private var tempStrArr = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {

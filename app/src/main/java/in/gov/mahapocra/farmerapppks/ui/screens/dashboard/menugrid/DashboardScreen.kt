@@ -20,6 +20,7 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.GridView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
@@ -53,7 +54,7 @@ import `in`.gov.mahapocra.farmerapppks.ui.adapters.VideosImageDetailsAdapter
 import `in`.gov.mahapocra.farmerapppks.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.farmerapppks.ui.screens.authentication.Registration
 import `in`.gov.mahapocra.farmerapppks.ui.screens.chatbot.TempDashboardActivity
-import `in`.gov.mahapocra.farmerapppks.ui.screens.chc.CHCenterActivity
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.chc.CHCenterActivity
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.dbt.DbtSchemes
@@ -138,11 +139,16 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
         binding.appBarMain.dashboardScreen.greetingsTextView.text = greetingMessage
         binding.appBarMain.dashboardScreen.timestampTextView.text = formattedTimestamp
         binding.appBarMain.dashboardScreen.temperatureLayout.setOnClickListener {
-            val weather = Intent(
-                this@DashboardScreen,
-                WeatherActivity::class.java
-            )
-            startActivity(weather)
+            val tempTXT =  binding.appBarMain.dashboardScreen.temperatureTextView.text.split("°")[0]
+            if (tempTXT == "22"){
+                Toast.makeText(this, "Weather isn't updated Currently", Toast.LENGTH_SHORT).show()
+            }else{
+                val weather = Intent(
+                    this@DashboardScreen,
+                    WeatherActivity::class.java
+                )
+                startActivity(weather)
+            }
         }
 
         firebaseTokenFromServer

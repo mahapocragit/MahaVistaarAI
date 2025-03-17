@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.farmerapppks.ui.screens.chc
+package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.chc
 
 import android.view.LayoutInflater
 import android.view.View
