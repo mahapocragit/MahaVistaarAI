@@ -52,7 +52,7 @@
                                 android:layout_marginStart="@dimen/_10sdp"
                                 android:layout_weight="1"
                                 android:gravity="center_vertical"
-                                android:text="Farmer's Data" />
+                                android:text= "@string/individual_benefit_component" />
 
                             <ImageView
                                 android:layout_width="match_parent"
@@ -100,7 +100,7 @@
                                 android:layout_marginStart="@dimen/_10sdp"
                                 android:layout_weight="1"
                                 android:gravity="center_vertical"
-                                android:text="FPO's Data" />
+                                android:text="@string/agribusiness_component" />
 
                             <ImageView
                                 android:layout_width="match_parent"
@@ -148,7 +148,7 @@
                                 android:layout_marginStart="@dimen/_10sdp"
                                 android:layout_weight="1"
                                 android:gravity="center_vertical"
-                                android:text="NRM's Data" />
+                                android:text="@string/soil_and_water_conservation_practices" />
 
                             <ImageView
                                 android:id="@+id/imageView10"

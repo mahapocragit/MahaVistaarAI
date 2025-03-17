@@ -91,6 +91,10 @@
     <string name="image_upload">Upload Image/PDF</string>
     <string name="image_pdf">Upload PDF</string>
     <string name="upcoming_events_location">Upcoming Events Location</string>
+    <string name="individual_benefit_component">Individual Benefit Component</string>
+    <string name="agribusiness_component">Agribusiness Component</string>
+    <string name="soil_and_water_conservation_practices">Soil and Water Conservation Practices</string>
+    <string name="important_documents">Important Documents</string>
 
 
     <string name="regist_mob_verify_err">Please verify mobile number</string>

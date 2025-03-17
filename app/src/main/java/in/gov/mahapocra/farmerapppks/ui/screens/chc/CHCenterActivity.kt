@@ -10,6 +10,7 @@ class CHCenterActivity : AppCompatActivity() {
 
     private lateinit var binding:ActivityChcenterBinding
     private lateinit var adapter:CHCenterRecyclerAdapter
+    private var tempStrArr = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +23,11 @@ class CHCenterActivity : AppCompatActivity() {
         }
         binding.toolbar.textViewHeaderTitle.text = "CHC Center"
 
-        adapter = CHCenterRecyclerAdapter()
+        for(i in 1..10){
+            tempStrArr.add("Hello $i")
+        }
+
+        adapter = CHCenterRecyclerAdapter(tempStrArr)
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
 

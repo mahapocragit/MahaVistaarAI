@@ -57,7 +57,7 @@
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_weight="1"
                             android:gravity="center_vertical"
-                            android:text="Important Documents" />
+                            android:text="@string/important_documents" />
 
                         <ImageView
                             android:layout_width="match_parent"
@@ -105,7 +105,7 @@
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_weight="1"
                             android:gravity="center_vertical"
-                            android:text="Eligibility Criteria" />
+                            android:text="@string/eligibility_Criteria" />
 
                         <ImageView
                             android:layout_width="match_parent"
