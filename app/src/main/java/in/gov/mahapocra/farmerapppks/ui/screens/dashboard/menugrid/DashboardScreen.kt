@@ -55,6 +55,7 @@ import `in`.gov.mahapocra.farmerapppks.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.farmerapppks.ui.screens.authentication.Registration
 import `in`.gov.mahapocra.farmerapppks.ui.screens.chatbot.TempDashboardActivity
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.chc.CHCenterActivity
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.forum.ForumActivity
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.dbt.DbtSchemes
@@ -262,7 +263,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                 R.id.nav_help -> startActivity(
                     Intent(
                         this@DashboardScreen,
-                        TempDashboardActivity::class.java
+                        ForumActivity::class.java
                     )
                 )
 

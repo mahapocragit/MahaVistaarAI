@@ -7,4 +7,35 @@
     android:layout_height="match_parent"
     tools:context=".ui.screens.dashboard.forum.ForumActivity">
 
+    <include
+        android:id="@+id/relativeLayoutTopBar"
+        layout="@layout/layout_toolbar"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout6"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/_37sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/otp"/>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
