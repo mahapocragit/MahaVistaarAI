@@ -8,6 +8,12 @@ public enum AppEnv {
         }
     },
 
+    FARMER {
+        public String instance() {
+            return "https://farmers-app-api.mahapocra.gov.in/";
+        }
+    },
+
     UAT_DBT {
         public String instance() {
             return "https://dbt-api.mahapocra.gov.in/SharedAPI/";

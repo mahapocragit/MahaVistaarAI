@@ -31,6 +31,7 @@
     <string name="good_night">शुभ रात्री, </string>
 
     <!--NAMES FOR DELETE CROP DIALOG-->
+    <string name="delete">हटवा</string>
     <string name="delete_crop_title">पीक काढून टाका</string>
     <string name="delete_crop_message">तुम्हाला खात्री आहे की, तुम्ही हटवू इच्छिता?</string>
     <string name="delete_crop_yes">हो</string>
@@ -330,4 +331,5 @@
 
     <string name="wrong_OTP">तुम्ही चुकीचा OTP टाकला आहे</string>
 
+    <string name="change">बदला</string>
 </resources>

@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
@@ -110,7 +111,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 val api =
                     AppInventorApi(
                         this,
-                        APIServices.DBT,
+                        APIServices.FARMER,
                         "",
                         AppString(this).getkMSG_WAIT(),
                         true
@@ -142,7 +143,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 val api =
                     AppInventorApi(
                         this,
-                        APIServices.DBT,
+                        APIServices.FARMER,
                         "",
                         AppString(this).getkMSG_WAIT(),
                         true
@@ -194,11 +195,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
         if (i == 4) {
             if (jSONObject != null) {
-                val response =
-                    ResponseModel(
-                        jSONObject
-                    )
-                if (response.getStatus()) {
+                if (jSONObject.optInt("status") == 200) {
                     refreshToken = jSONObject.getString("refresh_token")
                     callLoginAPI(refreshToken)
                 } else {
@@ -209,11 +206,8 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         }
         if (i == 2) {
             if (jSONObject != null) {
-                val response =
-                    ResponseModel(
-                        jSONObject
-                    )
-                if (response.getStatus()) {
+                Log.d("TAGGER", "onResponse: $jSONObject")
+                if (jSONObject.optInt("status") == 200) {
                     if (loginOption == 1) {
                         val message: String = jSONObject.getString("Message")
                         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
@@ -221,9 +215,8 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         farmerRegisteredID = jSONObject.getInt("FAAPRegistrationID")
                         addVerificationDialog(sentOTP)
                     } else {
-                        val message: String = jSONObject.getString("Message")
+                        val message: String = jSONObject.getString("response")
                         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-                        sentOTP = jSONObject.getString("OTP")
                         farmerRegisteredID = jSONObject.getInt("FAAPRegistrationID")
                         AppSettings.getInstance()
                             .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisteredID)

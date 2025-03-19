@@ -48,6 +48,7 @@
     <string name="good_night">Good Night, </string>
 
     <!--NAMES FOR DELETE CROP DIALOG-->
+    <string name="delete">Delete</string>
     <string name="delete_crop_title">Delete Crop</string>
     <string name="delete_crop_message">Are you sure you want to delete?</string>
     <string name="delete_crop_yes">Yes</string>
@@ -260,7 +261,7 @@
     <string name="event_details"> Event Details </string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" tools:ignore="MissingTranslation">Hello blank fragment</string>
-
+    <string name="change">Change</string>
     <string name="cropSapAdvisoryDummyDta"></string>
     <string name="my_crops">My Crops</string>
     <string name="edit_crop">Edit Crop</string>

@@ -3,6 +3,7 @@ package in.gov.mahapocra.farmerapppks.data.api;
 public interface APIServices {
 
     String DBT = AppEnv.DBT.instance();           // for production
+    String FARMER = AppEnv.FARMER.instance();           // for production
     String WOTR = AppEnv.WOTR.instance();
     String GIS = AppEnv.GIS.instance();
     String SSO = AppEnv.SSO.instance();
@@ -38,8 +39,10 @@ public interface APIServices {
 
     String kGetVillageData = "Shareddbtapi/OtherApp/GetVillage";
 
-    String kUserLogin = "Shareddbtapi/OtherApp/LoginCheck";
-    String kRefreshTokenLogin = "Shareddbtapi/OtherApp/refreshtoken";
+//    String kUserLogin = "Shareddbtapi/OtherApp/LoginCheck";
+    String kUserLogin = "authService/LoginCheck";
+//    String kRefreshTokenLogin = "Shareddbtapi/OtherApp/refreshtoken";
+    String kRefreshTokenLogin = "authService/refreshtoken";
 
     String kDbtActivitiesDetails = "Shareddbtapi/PocraWebsite/GetActivityCategory";
     String kRevampedDBTSchemes = "FarmerApp/ActivitiesData";
@@ -53,7 +56,8 @@ public interface APIServices {
 
     String kWeatherDetails = "superficialServices/imd-forcast-previous-weather-details";
 
-    String kGetRegistration = "Shareddbtapi/OtherApp/GetRegistration";
+//    String kGetRegistration = "Shareddbtapi/OtherApp/GetRegistration";
+    String kGetRegistration = "authService/getUserdetails";
     String kGeFarmersSelectedCrop = "farmerService/get-farmers-selected-crop";
     String kdeleteFarmerSelectedCrop = "farmerService/delete-farmers-selected-crop";
     String kGetmarketsList = "masterService/get-markets-by-taluka";

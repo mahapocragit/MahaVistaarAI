@@ -196,7 +196,7 @@
                                     android:background="@drawable/background_for_chat_request"
                                     android:gravity="center"
                                     android:paddingVertical="@dimen/_8sdp"
-                                    android:text="Change" />
+                                    android:text="@string/change" />
 
                                 <TextView
                                     android:id="@+id/deleteCropImageView"
@@ -207,7 +207,7 @@
                                     android:background="@drawable/background_for_delete_request"
                                     android:gravity="center"
                                     android:paddingVertical="@dimen/_8sdp"
-                                    android:text="Delete" />
+                                    android:text="@string/delete" />
 
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>

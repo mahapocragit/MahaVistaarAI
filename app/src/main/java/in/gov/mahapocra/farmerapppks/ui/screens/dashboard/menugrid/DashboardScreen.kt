@@ -557,7 +557,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                         AppUtility.getInstance().getRequestBody(jsonObject.toString())
                     val api = AppInventorApi(
                         this,
-                        APIServices.DBT,
+                        APIServices.FARMER,
                         "",
                         AppString(this).getkMSG_WAIT(),
                         true
@@ -707,39 +707,47 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
         if (jSONObject != null) {
             when (i) {
                 1 -> {
-                    val registrationResponse = ResponseModel(jSONObject)
-                    if (registrationResponse.getStatus()) {
+                    if (jSONObject.optInt("status")==200) {
                         try {
-                            val strName = jSONObject.getString("Name")
-                            val strMobNo = jSONObject.getString("MobileNo")
-                            val strEmailId = jSONObject.getString("EmailId")
-                            val strFFAReg = jSONObject.getInt("FAAPRegistrationID")
-                            val strDistName = jSONObject.getString("DistrictName")
-                            val strDistId = jSONObject.getInt("DistrictID")
-                            val strTalukaName = jSONObject.getString("TalukaName")
-                            val strTalukaId = jSONObject.getInt("TalukaID")
-                            val strVillageId = jSONObject.getInt("VillageID")
-                            val strVillageName = jSONObject.getString("VillageName")
+                            val data = jSONObject.optJSONObject("data")
+                            val strName = data?.getString("Name")
+                            val strMobNo = data?.getString("MobileNo")
+                            val strEmailId = data?.getString("EmailId")
+                            val strFFAReg = data?.getInt("FAAPRegistrationID")
+                            val strDistName = data?.getString("DistrictName")
+                            val strDistId = data?.getInt("DistrictID")
+                            val strTalukaName = data?.getString("TalukaName")
+                            val strTalukaId = data?.getInt("TalukaID")
+                            val strVillageId = data?.getInt("VillageID")
+                            val strVillageName = data?.getString("VillageName")
                             AppSettings.getInstance().setValue(this, AppConstants.uName, strName)
                             binding.appBarMain.dashboardScreen.userFullNameTextView.text = strName
                             AppSettings.getInstance()
                                 .setValue(this, AppConstants.uMobileNo, strMobNo)
                             AppSettings.getInstance()
                                 .setValue(this, AppConstants.uEmail, strEmailId)
-                            AppSettings.getInstance()
-                                .setIntValue(this, AppConstants.fREGISTER_ID, strFFAReg)
+                            strFFAReg?.let {
+                                AppSettings.getInstance()
+                                    .setIntValue(this, AppConstants.fREGISTER_ID, it)
+                            }
                             AppSettings.getInstance()
                                 .setValue(this, AppConstants.uDIST, strDistName)
-                            AppSettings.getInstance()
-                                .setIntValue(this, AppConstants.uDISTId, strDistId)
+                            strDistId?.let {
+                                AppSettings.getInstance()
+                                    .setIntValue(this, AppConstants.uDISTId, it)
+                            }
                             AppSettings.getInstance()
                                 .setValue(this, AppConstants.uTALUKA, strTalukaName)
-                            AppSettings.getInstance()
-                                .setIntValue(this, AppConstants.uTALUKAID, strTalukaId)
+                            strTalukaId?.let {
+                                AppSettings.getInstance()
+                                    .setIntValue(this, AppConstants.uTALUKAID, it)
+                            }
                             AppSettings.getInstance()
                                 .setValue(this, AppConstants.uVILLAGE, strVillageName)
-                            AppSettings.getInstance()
-                                .setIntValue(this, AppConstants.uVILLAGEID, strVillageId)
+                            strVillageId?.let {
+                                AppSettings.getInstance()
+                                    .setIntValue(this, AppConstants.uVILLAGEID, it)
+                            }
                             AppSettings.getInstance()
                                 .setBooleanValue(this, AppConstants.userDataSaved, true)
 
@@ -761,7 +769,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                                 }
                             }
 
-                            callForWeatherApi(strTalukaId)
+                            strTalukaId?.let { callForWeatherApi(it) }
                         } catch (e: JSONException) {
                             e.printStackTrace()
                         }

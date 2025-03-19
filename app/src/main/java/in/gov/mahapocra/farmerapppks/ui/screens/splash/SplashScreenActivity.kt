@@ -93,7 +93,7 @@ class SplashScreenActivity : AppCompatActivity(), ApiCallbackCode {
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api = AppInventorApi(
                 this,
-                APIServices.DBT,
+                APIServices.FARMER,
                 "",
                 AppString(this).getkMSG_WAIT(),
                 true
@@ -113,28 +113,33 @@ class SplashScreenActivity : AppCompatActivity(), ApiCallbackCode {
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 1) {
             if (jSONObject != null) {
-                val response =
-                    ResponseModel(
-                        jSONObject
-                    )
-                if (response.getStatus()) {
-                    username = jSONObject.getString("Name")
-                    val strMobNo: String = jSONObject.getString("MobileNo")
-                    val strEmailId: String = jSONObject.getString("EmailId")
-                    userId = jSONObject.getInt("FAAPRegistrationID")
-                    val strDistName: String = jSONObject.getString("DistrictName")
-                    val strDistId: Int = jSONObject.getInt("DistrictID")
-                    val strTalukaName: String = jSONObject.getString("TalukaName")
-                    val strTalukaId: Int = jSONObject.getInt("TalukaID")
+                if (jSONObject.optInt("status")==200) {
+                    val data = jSONObject.optJSONObject("data")
+                    username = data?.optString("Name")
+                    val strMobNo = data?.optString("MobileNo")
+                    val strEmailId = data?.optString("EmailId")
+                    userId = data.optInt("FAAPRegistrationID")
+                    val strDistName = data?.optString("DistrictName")
+                    val strDistId = data?.optInt("DistrictID")
+                    val strTalukaName = data?.optString("TalukaName")
+                    val strTalukaId = data?.optInt("TalukaID")
 
                     AppSettings.getInstance().setValue(this, AppConstants.uName, username)
                     AppSettings.getInstance().setValue(this, AppConstants.uMobileNo, strMobNo)
                     AppSettings.getInstance().setValue(this, AppConstants.uEmail, strEmailId)
                     AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, userId)
                     AppSettings.getInstance().setValue(this, AppConstants.uDIST, strDistName)
-                    AppSettings.getInstance().setIntValue(this, AppConstants.uDISTId, strDistId)
+                    strDistId?.let {
+                        AppSettings.getInstance().setIntValue(this, AppConstants.uDISTId,
+                            it
+                        )
+                    }
                     AppSettings.getInstance().setValue(this, AppConstants.uTALUKA, strTalukaName)
-                    AppSettings.getInstance().setIntValue(this, AppConstants.uTALUKAID, strTalukaId)
+                    strTalukaId?.let {
+                        AppSettings.getInstance().setIntValue(this, AppConstants.uTALUKAID,
+                            it
+                        )
+                    }
 
                     Handler(Looper.getMainLooper()).postDelayed({
                         val intent = Intent(this, DashboardScreen::class.java)
