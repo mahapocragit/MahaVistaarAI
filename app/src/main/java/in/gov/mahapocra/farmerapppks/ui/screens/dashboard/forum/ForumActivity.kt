@@ -3,6 +3,7 @@ package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.forum
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import `in`.gov.mahapocra.farmerapppks.databinding.ActivityForumBinding
 
@@ -31,5 +32,23 @@ class ForumActivity : AppCompatActivity() {
                 else -> "Tab One"
             }
         }.attach()
+
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                when (tab?.position) {
+                    0 -> binding.textLabelForTabs.text = "Trending"
+                    1 -> binding.textLabelForTabs.text = "All"
+                    else -> binding.textLabelForTabs.text = "Tab One"
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                // Optional: Handle if needed
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                // Optional: Handle if needed
+            }
+        })
     }
 }

@@ -13,7 +13,10 @@ class ForumAllAdapter : RecyclerView.Adapter<ForumAllAdapter.ViewHolder>() {
         fun bind(position: Int) {
             binding.textView8.text = "$position Mins Ago" // Example binding
             binding.cardAllView.setOnClickListener {
-                binding.cardAllView.context.startActivity(Intent(binding.cardAllView.context, ForumViewActivity::class.java))
+                binding.cardAllView.context.startActivity(Intent(binding.cardAllView.context, ForumPostDetailsActivity::class.java))
+            }
+            binding.commentLayout.setOnClickListener {
+                binding.commentLayout.context.startActivity(Intent(binding.commentLayout.context, SingleReplyActivity::class.java))
             }
         }
     }

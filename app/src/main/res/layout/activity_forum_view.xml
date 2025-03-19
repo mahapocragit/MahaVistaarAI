@@ -7,4 +7,69 @@
     android:layout_height="match_parent"
     tools:context=".ui.screens.dashboard.forum.ForumViewActivity">
 
+    <include
+        android:id="@+id/relativeLayoutTopBar"
+        layout="@layout/layout_toolbar" />
+
+    <TextView
+        android:id="@+id/textLabelForTabs2"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_80sdp"
+        android:layout_marginTop="@dimen/_34sdp"
+        android:background="@color/actionbar_color_figma"
+        android:gravity="center"
+        android:text="Trending"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_16sdp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout8"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_20sdp"
+        android:background="@color/actionbar_color_figma"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/textLabelForTabs2">
+
+        <ImageView
+            android:id="@+id/imageView25"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:padding="@dimen/_2sdp"
+            app:srcCompat="@drawable/pre"
+            app:tint="@color/white" />
+
+        <TextView
+            android:id="@+id/textView23"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="@dimen/_12sdp"
+            android:text="Farm Pestisides"
+            android:textColor="@color/white" />
+
+        <ImageView
+            android:id="@+id/imageView26"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:padding="@dimen/_1sdp"
+            app:srcCompat="@drawable/next"
+            app:tint="@color/white" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/trendingOpenRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout8" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

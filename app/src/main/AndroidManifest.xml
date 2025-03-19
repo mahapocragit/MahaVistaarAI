@@ -46,6 +46,12 @@
         android:theme="@style/Theme.FarmerApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.screens.dashboard.forum.SingleReplyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.screens.dashboard.forum.ForumPostDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.screens.dashboard.forum.ForumViewActivity"
             android:exported="false" />
         <activity
