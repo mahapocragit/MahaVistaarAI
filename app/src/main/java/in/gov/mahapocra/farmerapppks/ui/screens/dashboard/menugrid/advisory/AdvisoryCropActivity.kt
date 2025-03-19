@@ -83,7 +83,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         mUrl = intent.getStringExtra("mUrl")
         villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-        
+
         binding.sowingInfoLayout.editSowingDateIcon.setOnClickListener {
             val sharing = Intent(this, SelectSowingDataAndFarmer::class.java)
             sharing.putExtra("id", cropId)

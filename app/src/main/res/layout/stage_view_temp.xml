@@ -20,18 +20,18 @@
         android:layout_width="@dimen/_18sdp"
         android:layout_height="@dimen/_18sdp"
         android:layout_marginTop="@dimen/_24sdp"
+        android:background="@drawable/pending_round_backgroud_stages"
         app:layout_constraintEnd_toEndOf="@+id/stepLine"
         app:layout_constraintStart_toStartOf="@+id/stepLine"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@drawable/pending_round_backgroud_stages">
+        app:layout_constraintTop_toTopOf="parent">
+
         <ImageView
             android:id="@+id/right_tick"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible"
             android:layout_centerInParent="true"
-            android:src="@drawable/right_tick">
-        </ImageView>
+            android:src="@drawable/right_tick"
+            android:visibility="visible"></ImageView>
     </RelativeLayout>
 
     <TextView
@@ -39,21 +39,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_14sdp"
+        android:text="TextView"
         android:textSize="@dimen/_10sdp"
         android:textStyle="bold"
-        android:text="TextView"
         app:layout_constraintBottom_toBottomOf="@+id/stage"
         app:layout_constraintStart_toEndOf="@+id/stage"
-        app:layout_constraintTop_toTopOf="@+id/stage"/>
+        app:layout_constraintTop_toTopOf="@+id/stage" />
 
     <TextView
         android:id="@+id/seeMoreTextView"
         android:layout_width="@dimen/_80sdp"
         android:layout_height="@dimen/_20sdp"
         android:layout_marginEnd="20dp"
-        android:background="@drawable/layout_button_background"
+        android:background="@drawable/background_for_chat_request"
         android:gravity="center"
         android:text="@string/see_more"
+        android:textColor="@color/darkblue"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/titleTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/titleTextView" />
@@ -62,9 +64,9 @@
         android:id="@+id/cropStagesInfoRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_48sdp"
         android:layout_marginTop="@dimen/_5sdp"
         android:layout_marginEnd="@dimen/_10sdp"
-        android:layout_marginStart="@dimen/_48sdp"
         app:layout_constraintStart_toStartOf="@+id/titleTextView"
         app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

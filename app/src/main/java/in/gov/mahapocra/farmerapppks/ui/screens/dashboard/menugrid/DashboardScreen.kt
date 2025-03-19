@@ -202,7 +202,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
             )
         }
 
-        appPreferenceManager?.clearAll()
+        appPreferenceManager.clearAll()
         dashboardGridItemsLayoutSetup()
         binding.appBarMain.imgLangChange.setOnClickListener { openChangeLangPopup() }
         binding.appBarMain.imgNotification.setOnClickListener {
@@ -216,6 +216,15 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 callingFun()
             }
+        }
+
+        binding.appBarMain.dashboardScreen.changeCropText.setOnClickListener{
+            val intent = Intent(
+                this@DashboardScreen,
+                AddCropActivity::class.java
+            )
+            appPreferenceManager.clearPreference(AppConstants.ACTION_FROM_DASHBOARD)
+            startActivity(intent)
         }
 
         binding.appBarMain.dashboardScreen.addCropCardView.setOnClickListener {
@@ -788,6 +797,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                                     )
                                     binding.appBarMain.dashboardScreen.yourCropTv.visibility =
                                         View.GONE
+                                    binding.appBarMain.dashboardScreen.addCropCardView.visibility = View.GONE
                                     cropStagesAndAdvisory
                                     selectedCropList!!.add(
                                         CropsCategName(
@@ -812,6 +822,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                             binding.appBarMain.dashboardScreen.yourCropTv.visibility =
                                 View.VISIBLE
                             binding.appBarMain.dashboardScreen.yourCropTv.setText(R.string.no_crops_added)
+                            binding.appBarMain.dashboardScreen.addCropCardView.visibility = View.VISIBLE
                             binding.appBarMain.dashboardScreen.addChangeCropTV.setText(R.string.add_Crop)
                             binding.appBarMain.dashboardScreen.addChangeCropIV.setImageDrawable(
                                 ContextCompat.getDrawable(

@@ -67,7 +67,7 @@ class StageAdvisoryAdapter(
             if (holder.cropStagesInfoRecyclerView.visibility == View.VISIBLE) {
                 holder.cropStagesInfoRecyclerView.visibility = View.GONE
                 holder.seeMoreTextView.text = holder.itemView.context.getString(R.string.see_more)
-            }else{
+            } else {
                 holder.cropStagesInfoRecyclerView.visibility = View.VISIBLE
                 holder.seeMoreTextView.text = holder.itemView.context.getString(R.string.see_less)
             }

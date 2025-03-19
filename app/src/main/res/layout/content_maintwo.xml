@@ -135,20 +135,21 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:paddingStart="@dimen/_10sdp"
                             android:layout_weight="1"
-                            android:visibility="visible"
+                            android:paddingStart="@dimen/_10sdp"
                             android:text="No crop added"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="@dimen/_12sdp"
+                            android:visibility="visible" />
 
                         <androidx.cardview.widget.CardView
                             android:id="@+id/savedCropNameCardView"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_40sdp"
+                            android:layout_height="@dimen/_50sdp"
                             android:layout_gravity="center_vertical"
-                            android:layout_margin="@dimen/_2sdp"
-                            android:visibility="gone"
+                            android:layout_marginHorizontal="@dimen/_4sdp"
+                            android:layout_marginVertical="@dimen/_2sdp"
                             android:layout_weight="1"
+                            android:visibility="gone"
                             app:cardCornerRadius="@dimen/_25sdp">
 
                             <LinearLayout
@@ -167,6 +168,7 @@
                                         android:id="@+id/savedCropNameImageView"
                                         android:layout_width="@dimen/_30sdp"
                                         android:layout_height="@dimen/_30sdp"
+                                        android:padding="@dimen/_6sdp"
                                         android:src="@drawable/trigo"
                                         app:layout_constraintBottom_toBottomOf="parent"
                                         app:layout_constraintEnd_toEndOf="parent"
@@ -177,22 +179,35 @@
 
                                 <TextView
                                     android:id="@+id/savedCropNameTextView"
-                                    android:layout_width="match_parent"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"
                                     android:layout_marginStart="@dimen/_6sdp"
+                                    android:layout_weight="1"
                                     android:text="Crop Name"
                                     android:textColor="@color/font_color_figma"
                                     android:textStyle="bold" />
 
-                                <ImageView
+                                <TextView
+                                    android:id="@+id/changeCropText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="@dimen/_4sdp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/background_for_chat_request"
+                                    android:gravity="center"
+                                    android:paddingVertical="@dimen/_8sdp"
+                                    android:text="Change" />
+
+                                <TextView
                                     android:id="@+id/deleteCropImageView"
-                                    android:layout_width="@dimen/_20sdp"
-                                    android:layout_height="@dimen/_20sdp"
-                                    android:layout_marginEnd="@dimen/_10sdp"
-                                    android:padding="@dimen/_2sdp"
-                                    app:srcCompat="@drawable/delete_icon"
-                                    app:tint="@color/arrow_color_figma" />
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="@dimen/_8sdp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/background_for_delete_request"
+                                    android:gravity="center"
+                                    android:paddingVertical="@dimen/_8sdp"
+                                    android:text="Delete" />
 
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
@@ -201,9 +216,10 @@
                             android:id="@+id/addCropCardView"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_40sdp"
-                            android:layout_margin="@dimen/_2sdp"
                             android:layout_gravity="center_vertical"
+                            android:layout_margin="@dimen/_2sdp"
                             android:layout_weight="1"
+                            android:visibility="visible"
                             app:cardCornerRadius="@dimen/_25sdp">
 
                             <LinearLayout
@@ -234,8 +250,8 @@
                                     android:id="@+id/addChangeCropTV"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"
                                     android:layout_marginStart="@dimen/_6sdp"
+                                    android:layout_weight="1"
                                     android:text="@string/add_Crop"
                                     android:textColor="@color/font_color_figma"
                                     android:textStyle="bold" />
@@ -258,9 +274,9 @@
                         android:id="@+id/divider"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:visibility="gone"
                         android:layout_marginEnd="@dimen/_10sdp"
-                        android:background="?android:attr/listDivider" />
+                        android:background="?android:attr/listDivider"
+                        android:visibility="gone" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/selectedCropRecyclerView"
