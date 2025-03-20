@@ -28,9 +28,11 @@ public interface APIServices {
     String READ_NOTIFICATION_MESSAGE = SDAO_BASE_URL + "fcmService/mark-notification-as-read-overview";
     String USER_News_LIST = "Shareddbtapi/OtherApp/GetNews";
 
-    String kOTPRequest = "Shareddbtapi/OtherApp/SendOTP";
+//    String kOTPRequest = "Shareddbtapi/OtherApp/SendOTP";
+    String kOTPRequest = "authService/SendOTP";
 
-    String kRegistrationRequest = "Shareddbtapi/OtherApp/AddEditRegistration";
+//    String kRegistrationRequest = "Shareddbtapi/OtherApp/AddEditRegistration";
+    String kRegistrationRequest = "authService/AddEditRegistration";
 
     String kGetDistrictData = "Shareddbtapi/OtherApp/GetDistrict";
 

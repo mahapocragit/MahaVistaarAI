@@ -1,5 +1,17 @@
 package `in`.gov.mahapocra.farmerapppks.ui.screens.authentication
 
+import android.app.Dialog
+import android.content.Intent
+import android.os.Bundle
+import android.view.ViewGroup
+import android.view.Window
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.debug.DebugLog
@@ -9,22 +21,11 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.farmerapppks.R
 import `in`.gov.mahapocra.farmerapppks.data.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.data.api.APIServices
-import `in`.gov.mahapocra.farmerapppks.util.app_util.AppConstants
-import `in`.gov.mahapocra.farmerapppks.util.app_util.AppString
 import `in`.gov.mahapocra.farmerapppks.data.model.ResponseModel
-import android.app.Dialog
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.view.ViewGroup
-import android.view.Window
-import android.widget.*
-import com.google.gson.JsonObject
-import `in`.gov.mahapocra.farmerapppks.databinding.ActivityForgetPasswordBinding
 import `in`.gov.mahapocra.farmerapppks.databinding.ActivityForgetPasswordTempBinding
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.farmerapppks.util.app_util.AppConstants
+import `in`.gov.mahapocra.farmerapppks.util.app_util.AppString
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
@@ -81,7 +82,7 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
                 val api =
                     AppInventorApi(
                         this,
-                        APIServices.DBT,
+                        APIServices.FARMER,
                         "",
                         AppString(this).getkMSG_WAIT(),
                         true
@@ -111,7 +112,7 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
                 val api =
                     AppInventorApi(
                         this,
-                        APIServices.DBT,
+                        APIServices.FARMER,
                         "",
                         AppString(this).getkMSG_WAIT(),
                         true
@@ -180,18 +181,12 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
     }
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
-        if (i == 2) {
-            if (jSONObject != null) {
-                val response =
-                    ResponseModel(
-                        jSONObject
-                    )
-                if (response.getStatus()) {
-                    val notifiCountValue: String = jSONObject.getString("Message")
-                    Toast.makeText(this, notifiCountValue, Toast.LENGTH_LONG).show()
-                    sentOTP = jSONObject.getString("OTP")
-                    addVerificationDialog()
-                }
+        if (jSONObject != null) {
+            if (jSONObject.optInt("status") == 200) {
+                val response: String = jSONObject.getString("response")
+                Toast.makeText(this, response, Toast.LENGTH_LONG).show()
+                sentOTP = jSONObject.optInt("otp").toString()
+                addVerificationDialog()
             }
         }
         if (i == 3) {

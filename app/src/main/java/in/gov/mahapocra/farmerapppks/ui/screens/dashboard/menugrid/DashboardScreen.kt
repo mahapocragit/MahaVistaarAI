@@ -715,10 +715,10 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                             val strEmailId = data?.getString("EmailId")
                             val strFFAReg = data?.getInt("FAAPRegistrationID")
                             val strDistName = data?.getString("DistrictName")
-                            val strDistId = data?.getInt("DistrictID")
+                            val strDistId = data?.getInt("DistrictCode")
                             val strTalukaName = data?.getString("TalukaName")
-                            val strTalukaId = data?.getInt("TalukaID")
-                            val strVillageId = data?.getInt("VillageID")
+                            val strTalukaId = data?.getInt("TalukaCode")
+                            val strVillageId = data?.getInt("VillageCode")
                             val strVillageName = data?.getString("VillageName")
                             AppSettings.getInstance().setValue(this, AppConstants.uName, strName)
                             binding.appBarMain.dashboardScreen.userFullNameTextView.text = strName

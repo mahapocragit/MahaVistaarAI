@@ -3,7 +3,6 @@ package `in`.gov.mahapocra.farmerapppks.ui.screens.authentication
 import android.app.AlertDialog
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
-import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.listener.AlertListEventListener
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
@@ -56,7 +55,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
     private lateinit var textViewTaluka: TextView
     private lateinit var textViewVillage: TextView
     private lateinit var textViewVerify: TextView
-    private lateinit var backPressIcon: TextView
+    private lateinit var backPressIcon: ImageView
     private lateinit var submitButton: Button
     private lateinit var deleteAccountButton: TextView
 
@@ -173,7 +172,6 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
                 api.postRequest(responseCall, this@Registration, 1)
             }
         } catch (e: JSONException) {
-            DebugLog.getInstance().d("JSONException=$e")
             e.printStackTrace()
         }
     }
@@ -235,7 +233,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
             if (farmerRegisterID > 0) {
                 userValidationAndUpdateProfile()
             } else {
-                userValidationAndRegistraton()
+                userValidationAndRegistration()
             }
 
         }
@@ -322,7 +320,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
         mob = mobNoEditText.text.toString()
         // verification.setTextColor(Color.parseColor("#000000"))
 
-        if (farmerRegisterID > 0 && !mob.equals(registerMob)) {
+        if (farmerRegisterID > 0 && mob != registerMob) {
             mobileNumberStatus = false
         }
         if (mob.isEmpty()) {
@@ -341,7 +339,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
                 val api =
                     AppInventorApi(
                         this,
-                        APIServices.DBT,
+                        APIServices.FARMER,
                         "",
                         AppString(this).getkMSG_WAIT(),
                         true
@@ -353,7 +351,6 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
                     api.postRequest(responseCall, this@Registration, 2)
                 }
             } catch (e: JSONException) {
-                DebugLog.getInstance().d("JSONException=$e")
                 e.printStackTrace()
             }
         }
@@ -370,7 +367,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
         } else if (mob.isEmpty() && !AppUtility.getInstance().isValidPhoneNumber(mob)) {
             mobNoEditText.error = resources.getString(R.string.login_mob_valid_err)
             mobNoEditText.requestFocus()
-        } else if (mobileNumberStatus == false) {
+        } else if (!mobileNumberStatus) {
             mobNoEditText.error = resources.getString(R.string.regist_mob_verify_err)
             mobNoEditText.requestFocus()
         } else if (districtID == 0) {
@@ -416,13 +413,12 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
                     api.postRequest(responseCall, this@Registration, 3)
                 }
             } catch (e: JSONException) {
-                DebugLog.getInstance().d("JSONException=$e")
                 e.printStackTrace()
             }
         }
     }
 
-    private fun userValidationAndRegistraton() {
+    private fun userValidationAndRegistration() {
         userName = nameEditText.text.toString()
         mob = mobNoEditText.text.toString()
         pass = passwordEditText.text.toString()
@@ -444,7 +440,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
         } else if (confirmPass.isEmpty()) {
             confirmPasswordEditText.error = resources.getString(R.string.conf_password_error)
             confirmPasswordEditText.requestFocus()
-        } else if (!pass.equals(confirmPass)) {
+        } else if (pass != confirmPass) {
             confirmPasswordEditText.error = resources.getString(R.string.pass_equals_confirmpass)
             confirmPasswordEditText.requestFocus()
         } else if (districtID == 0) {
@@ -460,12 +456,11 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
                 jsonObject.put("MobileNo", mob.trim { it <= ' ' })
                 jsonObject.put("EmailId", emailid)
                 jsonObject.put("DistrictName", districtName)
-                jsonObject.put("DistrictID", districtID)
+                jsonObject.put("DistrictCode", districtID)
                 jsonObject.put("TalukaName", talukaName)
-                jsonObject.put("TalukaID", talukaID)
+                jsonObject.put("TalukaCode", talukaID)
                 jsonObject.put("VillageName", villageName)
-                jsonObject.put("VillageCode", "")
-                jsonObject.put("VillageID", villageID)
+                jsonObject.put("VillageCode", villageID)
                 jsonObject.put("Status", "Active")
                 jsonObject.put("version_number", versionName)
                 jsonObject.put("fcm_token", token)
@@ -478,7 +473,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
                 val api =
                     AppInventorApi(
                         this,
-                        APIServices.DBT,
+                        APIServices.FARMER,
                         "",
                         AppString(this).getkMSG_WAIT(),
                         true
@@ -490,7 +485,6 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
                     api.postRequest(responseCall, this@Registration, 3)
                 }
             } catch (e: JSONException) {
-                DebugLog.getInstance().d("JSONException=" + e.toString())
                 e.printStackTrace()
             }
         }
@@ -552,7 +546,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
         if (enteredOTP.equals(this.sentOTP)) {
             textViewVerify.text = resources.getString(R.string.reg_verified)
             textViewVerify.setTextColor(Color.parseColor("#1d6b08"))
-            mobNoEditText.setEnabled(false)
+            mobNoEditText.isEnabled = false
             mobileNumberStatus = true
             sessionManager?.setLoggedIn(true)
             dialog.dismiss()
@@ -562,11 +556,9 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
     }
 
     override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        DebugLog.getInstance().d("onResponse=$obj$i")
     }
 
     override fun onFailure(th: Throwable?, i: Int) {
-        DebugLog.getInstance().d("onResponse=$th$i")
     }
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
@@ -608,34 +600,25 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
 
         if (i == 2) {
             if (jSONObject != null) {
-                DebugLog.getInstance().d("onResponse=$jSONObject")
-                val response =
-                    ResponseModel(
-                        jSONObject
-                    )
-                if (response.getStatus()) {
-                    val notifiCountValue: String = jSONObject.getString("Message")
-                    Toast.makeText(this, notifiCountValue, Toast.LENGTH_LONG).show()
-                    //UIToastMessage.showShortDuration(this, notifiCountValue)
-                    sentOTP = jSONObject.getString("OTP")
+                if (jSONObject.optInt("status") == 200) {
+                    val response: String = jSONObject.getString("response")
+                    Toast.makeText(this, response, Toast.LENGTH_LONG).show()
+                    sentOTP = jSONObject.optInt("otp").toString()
                     addVerificationDialog(sentOTP)
                 }
             }
         }
         if (i == 3) {
             if (jSONObject != null) {
-                val response =
-                    ResponseModel(
-                        jSONObject
-                    )
-                if (response.getStatus()) {
-                    val notifiCountValue: String = jSONObject.getString("Message")
-                    Toast.makeText(this, notifiCountValue, Toast.LENGTH_LONG).show()
-                    if (!(farmerRegisterID > 0)) {
-                        farmerRegisterID = jSONObject.getInt("RegistrationID")
-                        AppSettings.getInstance()
-                            .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisterID)
-                    }
+
+                if (jSONObject.optInt("status")==200) {
+                    val response: String = jSONObject.getString("response")
+                    Toast.makeText(this, response, Toast.LENGTH_LONG).show()
+//                    if (farmerRegisterID <= 0) {
+//                        farmerRegisterID = jSONObject.getInt("RegistrationID")
+//                        AppSettings.getInstance()
+//                            .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisterID)
+//                    }
 
                     val intent = Intent(this, DashboardScreen::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -667,12 +650,12 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
             }
             talukaID = 0
             textViewTaluka.text = ""
-            textViewTaluka.setHint(resources.getString(R.string.farmer_select_taluka))
+            textViewTaluka.hint = resources.getString(R.string.farmer_select_taluka)
             textViewTaluka.setHintTextColor(Color.GRAY)
 
             villageID = 0
             textViewVillage.text = ""
-            textViewVillage.setHint(resources.getString(R.string.farmer_select_village))
+            textViewVillage.hint = resources.getString(R.string.farmer_select_village)
             textViewVillage.setHintTextColor(Color.GRAY)
         }
 
@@ -691,7 +674,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
             }
             villageID = 0
             textViewVillage.text = ""
-            textViewVillage.setHint(resources.getString(R.string.farmer_select_village))
+            textViewVillage.hint = resources.getString(R.string.farmer_select_village)
             textViewVillage.setHintTextColor(Color.GRAY)
 
         }
@@ -730,7 +713,6 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
                 api.postRequest(responseCall, this@Registration, 4)
             }
         } catch (e: JSONException) {
-            DebugLog.getInstance().d("JSONException=$e")
             e.printStackTrace()
         }
 
@@ -760,7 +742,6 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
                 api.postRequest(responseCall, this@Registration, 5)
             }
         } catch (e: JSONException) {
-            DebugLog.getInstance().d("JSONException=$e")
             e.printStackTrace()
         }
     }

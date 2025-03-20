@@ -1,7 +1,5 @@
 package in.gov.mahapocra.farmerapppks.util.app_util;
 
-import java.util.ArrayList;
-
 public interface AppConstants {
 
     String kAPP_BUILD_VERSION = "kAPP_BUILD_VERSION";
