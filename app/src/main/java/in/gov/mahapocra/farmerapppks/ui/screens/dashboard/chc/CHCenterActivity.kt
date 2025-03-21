@@ -102,7 +102,7 @@ class CHCenterActivity : AppCompatActivity() {
 
             // Set Initial Map Position
             val mapController = binding.mapView.controller
-            val startPoint = GeoPoint(37.7749, -122.4194) // Example: San Francisco
+            val startPoint = GeoPoint(19.0760, 72.8777) // Example: San Francisco
             mapController.setZoom(15.0)
             mapController.setCenter(startPoint)
 
@@ -110,7 +110,7 @@ class CHCenterActivity : AppCompatActivity() {
             val marker = Marker(binding.mapView)
             marker.position = startPoint
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-            marker.title = "San Francisco"
+            marker.title = "Mumbai"
             binding.mapView.overlays.add(marker)
 
             checkPermissions()

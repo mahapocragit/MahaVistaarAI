@@ -31,7 +31,7 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import java.util.Locale
 
-class SplashScreenActivity : AppCompatActivity(), ApiCallbackCode {
+class SplashScreenActivity : AppCompatActivity() {
 
     private lateinit var session: AppSession
     var farmerId: Int? = 0
@@ -68,7 +68,14 @@ class SplashScreenActivity : AppCompatActivity(), ApiCallbackCode {
         session = AppSession(this)
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
         if (farmerId!! > 0) {
-            getUserDetails()
+            Handler(Looper.getMainLooper()).postDelayed({
+                val intent = Intent(this, DashboardScreen::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                finish()
+            }, 2000)
         } else {
             Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent(this, LoginScreen::class.java)
@@ -79,77 +86,5 @@ class SplashScreenActivity : AppCompatActivity(), ApiCallbackCode {
                 finish()
             }, 2000)
         }
-    }
-
-    private fun getUserDetails() {
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put("SecurityKey", APIServices.SSO_KEY)
-            jsonObject.put("FAAPRegistrationID", farmerId)
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api = AppInventorApi(
-                this,
-                APIServices.FARMER,
-                "",
-                AppString(this).getkMSG_WAIT(),
-                true
-            )
-            CoroutineScope(Dispatchers.IO).launch {
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getGetRegistration(requestBody)
-                api.postRequest(responseCall, this@SplashScreenActivity, 1)
-            }
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
-    }
-
-    override fun onResponse(jSONObject: JSONObject?, i: Int) {
-        if (i == 1) {
-            if (jSONObject != null) {
-                if (jSONObject.optInt("status")==200) {
-                    val data = jSONObject.optJSONObject("data")
-                    username = data?.optString("Name")
-                    val strMobNo = data?.optString("MobileNo")
-                    val strEmailId = data?.optString("EmailId")
-                    userId = data.optInt("FAAPRegistrationID")
-                    val strDistName = data?.optString("DistrictName")
-                    val strDistId = data?.optInt("DistrictID")
-                    val strTalukaName = data?.optString("TalukaName")
-                    val strTalukaId = data?.optInt("TalukaID")
-
-                    AppSettings.getInstance().setValue(this, AppConstants.uName, username)
-                    AppSettings.getInstance().setValue(this, AppConstants.uMobileNo, strMobNo)
-                    AppSettings.getInstance().setValue(this, AppConstants.uEmail, strEmailId)
-                    AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, userId)
-                    AppSettings.getInstance().setValue(this, AppConstants.uDIST, strDistName)
-                    strDistId?.let {
-                        AppSettings.getInstance().setIntValue(this, AppConstants.uDISTId,
-                            it
-                        )
-                    }
-                    AppSettings.getInstance().setValue(this, AppConstants.uTALUKA, strTalukaName)
-                    strTalukaId?.let {
-                        AppSettings.getInstance().setIntValue(this, AppConstants.uTALUKAID,
-                            it
-                        )
-                    }
-
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        val intent = Intent(this, DashboardScreen::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(intent)
-                        finish()
-                    }, 2000)
-                }
-            }
-        }
-    }
-
-    override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        th?.printStackTrace()
     }
 }
