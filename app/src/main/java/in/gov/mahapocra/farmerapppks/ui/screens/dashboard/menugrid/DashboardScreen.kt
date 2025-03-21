@@ -140,10 +140,10 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
         binding.appBarMain.dashboardScreen.greetingsTextView.text = greetingMessage
         binding.appBarMain.dashboardScreen.timestampTextView.text = formattedTimestamp
         binding.appBarMain.dashboardScreen.temperatureLayout.setOnClickListener {
-            val tempTXT =  binding.appBarMain.dashboardScreen.temperatureTextView.text.split("°")[0]
-            if (tempTXT == "22"){
+            val tempTXT = binding.appBarMain.dashboardScreen.temperatureTextView.text
+            if (tempTXT == "22°C") {
                 Toast.makeText(this, "Weather isn't updated Currently", Toast.LENGTH_SHORT).show()
-            }else{
+            } else {
                 val weather = Intent(
                     this@DashboardScreen,
                     WeatherActivity::class.java
@@ -218,7 +218,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
             }
         }
 
-        binding.appBarMain.dashboardScreen.changeCropText.setOnClickListener{
+        binding.appBarMain.dashboardScreen.changeCropText.setOnClickListener {
             val intent = Intent(
                 this@DashboardScreen,
                 AddCropActivity::class.java
@@ -240,7 +240,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
         requestingPermissions()
         val talukaID: Int = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
         val talukaName: String = AppSettings.getInstance().getSavedValue(this, AppConstants.uTALUKA)
-
+        Log.d("TAGGER", "onCreate: $talukaID")
         if (talukaID != 0) {
             callForWeatherApi(talukaID)
             binding.appBarMain.dashboardScreen.weatherTalukaTV.text = talukaName
@@ -542,40 +542,33 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
 
     private val userDetails: Unit
         get() {
-            val isLogin: Boolean = AppSettings.getInstance().getBooleanValue(
-                this,
-                AppConstants.userDataSaved,
-                false
-            )
-            if (!isLogin) {
-                val jsonObject = JSONObject()
-                try {
-                    jsonObject.put("SecurityKey", APIServices.SSO_KEY)
-                    jsonObject.put("FAAPRegistrationID", farmerId)
+            val jsonObject = JSONObject()
+            try {
+                jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+                jsonObject.put("FAAPRegistrationID", farmerId)
 
-                    val requestBody: RequestBody =
-                        AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                    val api = AppInventorApi(
-                        this,
-                        APIServices.FARMER,
-                        "",
-                        AppString(this).getkMSG_WAIT(),
-                        true
-                    )
+                val requestBody: RequestBody =
+                    AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api = AppInventorApi(
+                    this,
+                    APIServices.FARMER,
+                    "",
+                    AppString(this).getkMSG_WAIT(),
+                    true
+                )
 
-                    val handler = Handler()
-                    val runnable = Runnable {
-                        val retrofit: Retrofit = api.getRetrofitInstance()
-                        val apiRequest: APIRequest =
-                            retrofit.create(APIRequest::class.java)
-                        val responseCall: Call<JsonObject> =
-                            apiRequest.getGetRegistration(requestBody)
-                        api.postRequest(responseCall, this, 1)
-                    }
-                    handler.post(runnable)
-                } catch (e: JSONException) {
-                    e.printStackTrace()
+                val handler = Handler()
+                val runnable = Runnable {
+                    val retrofit: Retrofit = api.getRetrofitInstance()
+                    val apiRequest: APIRequest =
+                        retrofit.create(APIRequest::class.java)
+                    val responseCall: Call<JsonObject> =
+                        apiRequest.getGetRegistration(requestBody)
+                    api.postRequest(responseCall, this, 1)
                 }
+                handler.post(runnable)
+            } catch (e: JSONException) {
+                e.printStackTrace()
             }
         }
 
@@ -707,7 +700,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
         if (jSONObject != null) {
             when (i) {
                 1 -> {
-                    if (jSONObject.optInt("status")==200) {
+                    if (jSONObject.optInt("status") == 200) {
                         try {
                             val data = jSONObject.optJSONObject("data")
                             val strName = data?.getString("Name")
@@ -720,6 +713,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                             val strTalukaId = data?.getInt("TalukaCode")
                             val strVillageId = data?.getInt("VillageCode")
                             val strVillageName = data?.getString("VillageName")
+                            binding.appBarMain.dashboardScreen.weatherTalukaTV.text = strTalukaName
                             AppSettings.getInstance().setValue(this, AppConstants.uName, strName)
                             binding.appBarMain.dashboardScreen.userFullNameTextView.text = strName
                             AppSettings.getInstance()
@@ -738,6 +732,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                             }
                             AppSettings.getInstance()
                                 .setValue(this, AppConstants.uTALUKA, strTalukaName)
+                            Log.d("TAGGER", "onResponse ->: $strTalukaId")
                             strTalukaId?.let {
                                 AppSettings.getInstance()
                                     .setIntValue(this, AppConstants.uTALUKAID, it)
@@ -805,7 +800,8 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                                     )
                                     binding.appBarMain.dashboardScreen.yourCropTv.visibility =
                                         View.GONE
-                                    binding.appBarMain.dashboardScreen.addCropCardView.visibility = View.GONE
+                                    binding.appBarMain.dashboardScreen.addCropCardView.visibility =
+                                        View.GONE
                                     cropStagesAndAdvisory
                                     selectedCropList!!.add(
                                         CropsCategName(
@@ -830,7 +826,8 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                             binding.appBarMain.dashboardScreen.yourCropTv.visibility =
                                 View.VISIBLE
                             binding.appBarMain.dashboardScreen.yourCropTv.setText(R.string.no_crops_added)
-                            binding.appBarMain.dashboardScreen.addCropCardView.visibility = View.VISIBLE
+                            binding.appBarMain.dashboardScreen.addCropCardView.visibility =
+                                View.VISIBLE
                             binding.appBarMain.dashboardScreen.addChangeCropTV.setText(R.string.add_Crop)
                             binding.appBarMain.dashboardScreen.addChangeCropIV.setImageDrawable(
                                 ContextCompat.getDrawable(
@@ -935,14 +932,17 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
         if (selectedCropList != null) {
             if (selectedCropList!!.size > 1) {
                 for (i in selectedCropList!!.indices) {
-                    if (newCropID!=0) {
+                    if (newCropID != 0) {
                         if (selectedCropList!![i].id != newCropID) {
                             cropId = selectedCropList!![i].id
                             showToast = false
                             deleteFarmerSelectedCrop()
                         }
                     }
-                    Log.d("TAGGER", "updateSavedCropDetails: saved ${selectedCropList!![i].id} and received $newCropID")
+                    Log.d(
+                        "TAGGER",
+                        "updateSavedCropDetails: saved ${selectedCropList!![i].id} and received $newCropID"
+                    )
                 }
             }
         }
