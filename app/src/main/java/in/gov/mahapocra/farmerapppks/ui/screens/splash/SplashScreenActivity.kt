@@ -33,58 +33,35 @@ import java.util.Locale
 
 class SplashScreenActivity : AppCompatActivity() {
 
-    private lateinit var session: AppSession
-    var farmerId: Int? = 0
-    var languageToLoad: String? = null
-    private var userId: Int = 0
-    private var username: String? = null
+    private var farmerId: Int = 0
     private var versionName: String? = null
-    private var token: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        languageToLoad = "hi"
-        if (AppSettings.getLanguage(this@SplashScreenActivity).equals("1", ignoreCase = true)) {
-            languageToLoad = "en"
-        }
-        val locale = languageToLoad?.let { Locale(it) }
-        locale?.let { Locale.setDefault(it) }
-        val config = Configuration()
-        config.locale = locale
-        baseContext.resources.updateConfiguration(
-            config,
-            baseContext.resources.displayMetrics
+        // Set Language Configuration
+        val languageToLoad = if (AppSettings.getLanguage(this) == "1") "en" else "hi"
+        Locale.setDefault(Locale(languageToLoad))
+        resources.updateConfiguration(
+            Configuration().apply { locale = Locale(languageToLoad) },
+            resources.displayMetrics
         )
-        var packageInfo: PackageInfo? = null
-        try {
-            packageInfo = packageManager.getPackageInfo(packageName, 0)
-        } catch (e: PackageManager.NameNotFoundException) {
-            e.printStackTrace()
-        }
-        versionName = packageInfo!!.versionName
-        token = FirebaseMessaging.getInstance().token.toString()
-        session = AppSession(this)
+
+        // Get Version Name
+        versionName = packageManager.getPackageInfo(packageName, 0)?.versionName
+
+        // Get Farmer ID
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-        if (farmerId!! > 0) {
-            Handler(Looper.getMainLooper()).postDelayed({
-                val intent = Intent(this, DashboardScreen::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-                finish()
-            }, 2000)
-        } else {
-            Handler(Looper.getMainLooper()).postDelayed({
-                val intent = Intent(this, LoginScreen::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-                finish()
-            }, 2000)
-        }
+
+        // Navigate to the appropriate screen after delay
+        Handler(Looper.getMainLooper()).postDelayed({
+            val targetActivity =
+                if (farmerId > 0) DashboardScreen::class.java else LoginScreen::class.java
+            startActivity(Intent(this, targetActivity).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            })
+            finish()
+        }, 2000)
     }
 }
