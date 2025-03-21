@@ -56,6 +56,8 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
     private lateinit var textViewVillage: TextView
     private lateinit var textViewVerify: TextView
     private lateinit var backPressIcon: ImageView
+    private lateinit var textView5: TextView
+    private lateinit var textView6: TextView
     private lateinit var submitButton: Button
     private lateinit var deleteAccountButton: TextView
 
@@ -115,6 +117,9 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
     private fun setConfiguration() {
         farmerRegisterID = intent.getIntExtra("FAAPRegistrationID", 0)
         if (farmerRegisterID > 0) {
+            submitButton.text = "Update Profile"
+            textView5.text = "User"
+            textView6.text = "Information"
             fAAPRegistrationID = farmerRegisterID.toString()
             mobileNumberStatus = true
             userName =
@@ -142,6 +147,9 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
             textViewTaluka.text = talukaName
             textViewVillage.text = villageName
 
+        }else{
+            textView5.text = "Register"
+            textView6.text = "Your Account!"
         }
         getDistrictData()
     }
@@ -189,6 +197,8 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
         textViewVerify = findViewById(R.id.textViewVerify)
         backPressIcon = findViewById(R.id.backPressIcon)
         submitButton = findViewById(R.id.submitButton)
+        textView5 = findViewById(R.id.textView5)
+        textView6 = findViewById(R.id.textView6)
     }
 
     private fun onclick() {
