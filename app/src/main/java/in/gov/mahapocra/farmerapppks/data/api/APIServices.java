@@ -45,6 +45,7 @@ public interface APIServices {
     String kUserLogin = "authService/LoginCheck";
 //    String kRefreshTokenLogin = "Shareddbtapi/OtherApp/refreshtoken";
     String kRefreshTokenLogin = "authService/refreshtoken";
+    String getNearestCHCenters = "chcService/get-nearest-chc-centers";
 
     String kDbtActivitiesDetails = "Shareddbtapi/PocraWebsite/GetActivityCategory";
     String kRevampedDBTSchemes = "FarmerApp/ActivitiesData";

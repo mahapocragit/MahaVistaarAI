@@ -6,12 +6,15 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.farmerapppks.R
+import org.json.JSONArray
 
-
-class CHCenterRecyclerAdapter(private val tempStrArr: List<String>) : RecyclerView.Adapter<CHCenterRecyclerAdapter.ViewHolder>() {
+class CHCenterRecyclerAdapter(private val tempStrArr: JSONArray) : RecyclerView.Adapter<CHCenterRecyclerAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val chcUserName: TextView = itemView.findViewById(R.id.chcUserName)
+        val chcNameTV: TextView = itemView.findViewById(R.id.chcNameTV)
+        val contactNumberTV: TextView = itemView.findViewById(R.id.contactNumberTV)
+        val chcUserDistance: TextView = itemView.findViewById(R.id.chcUserDistance)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -20,10 +23,14 @@ class CHCenterRecyclerAdapter(private val tempStrArr: List<String>) : RecyclerVi
     }
 
     override fun getItemCount(): Int {
-        return tempStrArr.size
+        return tempStrArr.length()
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.chcUserName.text = tempStrArr[position]
+        val jsonObject = tempStrArr.optJSONObject(position) // Use optJSONObject instead of direct indexing
+        holder.chcUserName.text = jsonObject?.optString("contact_name")
+        holder.contactNumberTV.text = jsonObject?.optString("contact_no")
+        holder.chcNameTV.text = jsonObject?.optString("chcname")
+        holder.chcUserDistance.text = "${jsonObject?.optString("distance")} kms"
     }
 }

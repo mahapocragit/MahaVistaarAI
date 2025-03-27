@@ -4,18 +4,29 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.JsonObject
+import `in`.co.appinventor.services_api.api.AppInventorApi
+import `in`.co.appinventor.services_api.app_util.AppUtility
+import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.gov.mahapocra.farmerapppks.R
+import `in`.gov.mahapocra.farmerapppks.data.api.APIRequest
+import `in`.gov.mahapocra.farmerapppks.data.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.databinding.ActivityChcenterBinding
+import `in`.gov.mahapocra.farmerapppks.util.app_util.AppString
+import org.json.JSONObject
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
+import retrofit2.Call
+import retrofit2.Retrofit
 
-class CHCenterActivity : AppCompatActivity() {
+class CHCenterActivity : AppCompatActivity(), ApiCallbackCode {
 
     private lateinit var binding: ActivityChcenterBinding
     private lateinit var adapter: CHCenterRecyclerAdapter
@@ -35,9 +46,35 @@ class CHCenterActivity : AppCompatActivity() {
         for (i in 1..10) {
             tempStrArr.add("Hello $i")
         }
+        fetchDataForCHC()
         toggleView(true)
         binding.listViewToggleButton.setOnClickListener { toggleView(true) }
         binding.mapViewToggleButton.setOnClickListener { toggleView(false) }
+    }
+
+    private fun fetchDataForCHC() {
+        val jsonObject = JSONObject()
+        try {
+            jsonObject.put("api_key", APIServices.SSO_KEY)
+            jsonObject.put("lat", 18.201176)
+            jsonObject.put("lon", 75.357841)
+
+            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+            val api =
+                AppInventorApi(
+                    this,
+                    APIServices.FARMER,
+                    "",
+                    AppString(this).getkMSG_WAIT(),
+                    true
+                )
+            val retrofit: Retrofit = api.getRetrofitInstance()
+            val apiRequest = retrofit.create(APIRequest::class.java)
+            val responseCall: Call<JsonObject> = apiRequest.getCHCInformation(requestBody)
+            api.postRequest(responseCall, this, 4)
+        }catch (e:Exception){
+            Log.d("TAGGER", "fetchDataForCHC: $e")
+        }
     }
 
     private fun checkPermissions() {
@@ -79,10 +116,6 @@ class CHCenterActivity : AppCompatActivity() {
                     ContextCompat.getDrawable(this@CHCenterActivity, R.drawable.shape_left_white)
                 setTextColor(Color.BLACK)
             }
-
-            adapter = CHCenterRecyclerAdapter(tempStrArr)
-            binding.recyclerView.layoutManager = LinearLayoutManager(this)
-            binding.recyclerView.adapter = adapter
         } else {
             binding.recyclerView.visibility = View.GONE
             binding.mapView.visibility = View.VISIBLE
@@ -114,6 +147,20 @@ class CHCenterActivity : AppCompatActivity() {
             binding.mapView.overlays.add(marker)
 
             checkPermissions()
+        }
+    }
+
+    override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onResponse(jSONObject: JSONObject?, i: Int) {
+        Log.d("TAGGER", "onResponse: $jSONObject")
+        if (jSONObject!=null){
+            val data = jSONObject.optJSONArray("data")
+            adapter = CHCenterRecyclerAdapter(data)
+            binding.recyclerView.layoutManager = LinearLayoutManager(this)
+            binding.recyclerView.adapter = adapter
         }
     }
 }

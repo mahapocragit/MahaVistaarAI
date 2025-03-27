@@ -41,6 +41,9 @@ public interface APIRequest {
     @POST(APIServices.kRefreshTokenLogin)
     Call<JsonObject> getRefreshTokenLogin(@Body RequestBody params);
 
+    @POST(APIServices.getNearestCHCenters)
+    Call<JsonObject> getCHCInformation(@Body RequestBody params);
+
     @POST(APIServices.kWareHouseDetails)
     Call<JsonObject> getWareHouseDetails(@Body RequestBody params);
 
