@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:layout_marginTop="38dp"
+        android:layout_marginTop="@dimen/_20sdp"
         android:fitsSystemWindows="true"
         app:itemIconTint="#000"
         app:headerLayout="@layout/nav_header_main">
@@ -46,7 +46,7 @@
             android:gravity="bottom|center"
             android:layout_gravity="center_horizontal"
             android:textColor="@color/badge_bg"
-            android:textSize="@dimen/text14"
+            android:textSize="12sp"
             android:textStyle="bold"
             android:visibility="visible"
              />
@@ -60,7 +60,7 @@
             android:layout_gravity="end"
             android:text="Version"
             android:textColor="@color/badge_bg"
-            android:textSize="@dimen/text14"
+            android:textSize="12sp"
             android:textStyle="bold"
             android:visibility="visible" />
     </com.google.android.material.navigation.NavigationView>

@@ -232,7 +232,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                 this@DashboardScreen,
                 AddCropActivity::class.java
             )
-            appPreferenceManager?.clearPreference(AppConstants.ACTION_FROM_DASHBOARD)
+            appPreferenceManager.clearPreference(AppConstants.ACTION_FROM_DASHBOARD)
             startActivity(intent)
         }
         setVersion()

@@ -190,12 +190,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             validation()
         }
 
-        binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
-        binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {
-            val intent = Intent(this, DashboardScreen::class.java)
-            startActivity(intent)
-        }
-
         binding.edtAcre.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
             }

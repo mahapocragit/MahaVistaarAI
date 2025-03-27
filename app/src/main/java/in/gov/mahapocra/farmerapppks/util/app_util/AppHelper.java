@@ -26,20 +26,20 @@ public class AppHelper {
             jsonObject1.put("name", "My Profile");
             jsonObject1.put("icon", "myprofile");
 
-            JSONObject jsonObject2 = new JSONObject();
-            jsonObject2.put("id", 1);
-            jsonObject2.put("name", "Yashogatha");
-            jsonObject2.put("icon", "icon9");
+//            JSONObject jsonObject2 = new JSONObject();
+//            jsonObject2.put("id", 1);
+//            jsonObject2.put("name", "Yashogatha");
+//            jsonObject2.put("icon", "icon9");
 
             JSONObject jsonObject4 = new JSONObject();
             jsonObject4.put("id", 3);
             jsonObject4.put("name", "News");
             jsonObject4.put("icon", "news_drawer10");
 
-            JSONObject jsonObject6 = new JSONObject();
-            jsonObject6.put("id", 5);
-            jsonObject6.put("name", "Trainings/Workshops/Events/Exposures");
-            jsonObject6.put("icon", "icon9");
+//            JSONObject jsonObject6 = new JSONObject();
+//            jsonObject6.put("id", 5);
+//            jsonObject6.put("name", "Trainings/Workshops/Events/Exposures");
+//            jsonObject6.put("icon", "icon9");
 
             JSONObject jsonObject7 = new JSONObject();
             jsonObject7.put("id", 6);
@@ -51,15 +51,15 @@ public class AppHelper {
             jsonObject9.put("name", "Logout");
             jsonObject9.put("icon", "logout");
 
-            JSONObject jsonObject11 = new JSONObject();
-            jsonObject11.put("id", 11);
-            jsonObject11.put("name", "My Village Profile");
-            jsonObject11.put("icon", "icon9");
+//            JSONObject jsonObject11 = new JSONObject();
+//            jsonObject11.put("id", 11);
+//            jsonObject11.put("name", "My Village Profile");
+//            jsonObject11.put("icon", "icon9");
 
-            JSONObject jsonObject12 = new JSONObject();
-            jsonObject12.put("id", 12);
-            jsonObject12.put("name", "My Application");
-            jsonObject12.put("icon", "icon9");
+//            JSONObject jsonObject12 = new JSONObject();
+//            jsonObject12.put("id", 12);
+//            jsonObject12.put("name", "My Application");
+//            jsonObject12.put("icon", "icon9");
 
             JSONObject jsonObject13 = new JSONObject();
             jsonObject13.put("id", 13);
@@ -67,12 +67,12 @@ public class AppHelper {
             jsonObject13.put("icon", "icon9");
 
             jsonArray.put(jsonObject1);
-            jsonArray.put(jsonObject2);
+//            jsonArray.put(jsonObject2);
             jsonArray.put(jsonObject4);
-            jsonArray.put(jsonObject6);
+//            jsonArray.put(jsonObject6);
             jsonArray.put(jsonObject7);
-            jsonArray.put(jsonObject11);
-            jsonArray.put(jsonObject12);
+//            jsonArray.put(jsonObject11);
+//            jsonArray.put(jsonObject12);
             jsonArray.put(jsonObject13);
             jsonArray.put(jsonObject9);
 
@@ -118,20 +118,20 @@ public class AppHelper {
             jsonObject1.put("name","माझे प्रोफाईल");
             jsonObject1.put("icon", "myprofile");
 
-            JSONObject jsonObject2 = new JSONObject();
-            jsonObject2.put("id", 1);
-            jsonObject2.put("name", " यशोगाथा");
-            jsonObject2.put("icon", "icon9");
+//            JSONObject jsonObject2 = new JSONObject();
+//            jsonObject2.put("id", 1);
+//            jsonObject2.put("name", " यशोगाथा");
+//            jsonObject2.put("icon", "icon9");
 
             JSONObject jsonObject4 = new JSONObject();
             jsonObject4.put("id", 3);
             jsonObject4.put("name", "कृषी वार्ता");
             jsonObject4.put("icon", "news_drawer10");
 
-            JSONObject jsonObject6 = new JSONObject();
-            jsonObject6.put("id", 5);
-            jsonObject6.put("name", "प्रशिक्षण, कार्यशाळा, कार्यक्रम, भेटी");
-            jsonObject6.put("icon", "icon9");
+//            JSONObject jsonObject6 = new JSONObject();
+//            jsonObject6.put("id", 5);
+//            jsonObject6.put("name", "प्रशिक्षण, कार्यशाळा, कार्यक्रम, भेटी");
+//            jsonObject6.put("icon", "icon9");
 
             JSONObject jsonObject7 = new JSONObject();
             jsonObject7.put("id", 6);
@@ -143,15 +143,15 @@ public class AppHelper {
             jsonObject9.put("name", "बाहेर पडणे");
             jsonObject9.put("icon", "logout");
 
-            JSONObject jsonObject11 = new JSONObject();
-            jsonObject11.put("id", 11);
-            jsonObject11.put("name", "ग्राम कृषी संजीवनी");
-            jsonObject11.put("icon", "icon9");
+//            JSONObject jsonObject11 = new JSONObject();
+//            jsonObject11.put("id", 11);
+//            jsonObject11.put("name", "ग्राम कृषी संजीवनी");
+//            jsonObject11.put("icon", "icon9");
 
-            JSONObject jsonObject12 = new JSONObject();
-            jsonObject12.put("id", 12);
-            jsonObject12.put("name", "माझे अर्ज");
-            jsonObject12.put("icon", "icon9");
+//            JSONObject jsonObject12 = new JSONObject();
+//            jsonObject12.put("id", 12);
+//            jsonObject12.put("name", "माझे अर्ज");
+//            jsonObject12.put("icon", "icon9");
 
             JSONObject jsonObject13 = new JSONObject();
             jsonObject13.put("id", 13);
@@ -159,12 +159,12 @@ public class AppHelper {
             jsonObject13.put("icon", "icon9");
 
             jsonArray.put(jsonObject1);
-            jsonArray.put(jsonObject2);
+//            jsonArray.put(jsonObject2);
             jsonArray.put(jsonObject4);
-            jsonArray.put(jsonObject6);
+//            jsonArray.put(jsonObject6);
             jsonArray.put(jsonObject7);
-            jsonArray.put(jsonObject11);
-            jsonArray.put(jsonObject12);
+//            jsonArray.put(jsonObject11);
+//            jsonArray.put(jsonObject12);
             jsonArray.put(jsonObject13);
             jsonArray.put(jsonObject9);
 
