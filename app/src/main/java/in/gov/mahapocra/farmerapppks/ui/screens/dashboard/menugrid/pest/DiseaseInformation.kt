@@ -24,6 +24,7 @@ import `in`.gov.mahapocra.farmerapppks.data.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.util.app_util.AppConstants
 import `in`.gov.mahapocra.farmerapppks.util.app_util.AppString
 import `in`.gov.mahapocra.farmerapppks.data.model.ResponseModel
+import `in`.gov.mahapocra.farmerapppks.databinding.ActivityDiseaseInformationBinding
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -34,18 +35,12 @@ import java.util.Locale
 
 class DiseaseInformation : AppCompatActivity(), ApiCallbackCode {
 
+    private lateinit var binding: ActivityDiseaseInformationBinding
     var id: Int = 0
-    private var viewPager: ViewPager? = null
-    private var symptomDescriptionListWebView: WebView? = null
-    private var preventControlMeasure: WebView? = null
-    private lateinit var prevention: TextView
-    private lateinit var controlMeasures: TextView
-    private lateinit var txtCropName: TextView
     private lateinit var imgBackArrow: ImageView
     private lateinit var textViewHeaderTitle: TextView
     private lateinit var cropName: String
     private lateinit var mainCropName: String
-    private var indicator: TabLayout? = null
     private var symptomDescriptionList: String = ""
     private var preventiveMeasures: String = ""
     private var curativeMeasures: String = ""
@@ -59,16 +54,10 @@ class DiseaseInformation : AppCompatActivity(), ApiCallbackCode {
         if (AppSettings.getLanguage(this@DiseaseInformation).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
-        setContentView(R.layout.activity_disease_information)
-        viewPager = findViewById<View>(R.id.view_pager) as ViewPager
-        symptomDescriptionListWebView = findViewById<View>(R.id.symptomsList) as WebView
-        preventControlMeasure = findViewById<View>(R.id.prevent_cntrl_measur) as WebView
-        prevention = findViewById(R.id.prevention_msr)
-        controlMeasures = findViewById(R.id.control_msr)
-        txtCropName = findViewById(R.id.tvCropName)
+        binding = ActivityDiseaseInformationBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
         imgBackArrow = findViewById(R.id.imgBackArrow)
-        indicator = findViewById<View>(R.id.indicator) as TabLayout
 
         imgBackArrow.visibility = View.VISIBLE
         imgBackArrow.setOnClickListener {
@@ -82,21 +71,27 @@ class DiseaseInformation : AppCompatActivity(), ApiCallbackCode {
 
         mainCropName = AppSettings.getInstance()
             .getValue(this, AppConstants.tmpCROPNAME, AppConstants.tmpCROPNAME)
-        prevention.setOnClickListener {
-            prevention.background = ContextCompat.getDrawable(this, R.drawable.dashboard_button)
-            controlMeasures.background =
-                ContextCompat.getDrawable(this, R.drawable.layout_button_bg)
+        binding.preventionMsr.setOnClickListener {
+            binding.preventionMsr.background =
+                ContextCompat.getDrawable(this, R.drawable.shape_right_green) //enabled
+            binding.controlMsr.background =
+                ContextCompat.getDrawable(this, R.drawable.shape_left_white)
+            binding.preventionMsr.setTextColor(ContextCompat.getColor(this, R.color.white))
+            binding.controlMsr.setTextColor(ContextCompat.getColor(this, R.color.black))
             setPreventControlMeasureWebView(preventiveMeasures)
         }
-        controlMeasures.setOnClickListener {
-
-            controlMeasures.background =
-                ContextCompat.getDrawable(this, R.drawable.dashboard_button)
-            prevention.background = ContextCompat.getDrawable(this, R.drawable.layout_button_bg)
+        binding.controlMsr.setOnClickListener {
+            binding.preventionMsr.background =
+                ContextCompat.getDrawable(this, R.drawable.shape_right)
+            binding.controlMsr.background = ContextCompat.getDrawable(this, R.drawable.shape_left)
+            binding.preventionMsr.setTextColor(ContextCompat.getColor(this, R.color.black))
+            binding.controlMsr.setTextColor(ContextCompat.getColor(this, R.color.white))
+            binding.preventionMsr
+            binding.controlMsr
             setPreventControlMeasureWebView(curativeMeasures)
         }
 
-        txtCropName.text = mainCropName + " "
+        binding.tvCropName.text = "$mainCropName "
     }
 
     private fun showPestDiseaseDetails() {
@@ -121,7 +116,7 @@ class DiseaseInformation : AppCompatActivity(), ApiCallbackCode {
     }
 
     private fun setPreventControlMeasureWebView(param: String) {
-        preventControlMeasure!!.loadDataWithBaseURL(
+        binding.preventCntrlMeasur.loadDataWithBaseURL(
             "file:///android_asset/",
             param, "text/html", "utf-8", null
         )
@@ -142,13 +137,13 @@ class DiseaseInformation : AppCompatActivity(), ApiCallbackCode {
             )
             AppSettings.setLanguage(this@DiseaseInformation, "2")
 
-            prevention.setText(R.string.preventive_measure)
-            controlMeasures.setText(R.string.control_measures)
+            binding.preventionMsr.setText(R.string.preventive_measure)
+            binding.controlMsr.setText(R.string.control_measures)
         }
     }
 
     private fun setSymptomsWebView(param: String) {
-        symptomDescriptionListWebView!!.loadDataWithBaseURL(
+        binding.symptomsList.loadDataWithBaseURL(
             "file:///android_asset/",
             param, "text/html", "utf-8", null
         )
@@ -163,7 +158,7 @@ class DiseaseInformation : AppCompatActivity(), ApiCallbackCode {
                         jSONObject
                     )
                 if (response.getStatus()) {
-                    symptomDescriptionListWebView?.visibility = View.VISIBLE
+                    binding.symptomsList.visibility = View.VISIBLE
                     pestAndDiseaseDetailsJson = response.getJSONObject()
                     symptomDescriptionList = pestAndDiseaseDetailsJson.getString("symptoms")
                     preventiveMeasures = pestAndDiseaseDetailsJson.getString("preventive_measures")
@@ -174,8 +169,8 @@ class DiseaseInformation : AppCompatActivity(), ApiCallbackCode {
                         val img: String = diseaseImagesJsonObject.get("img") as String
                         diseasesImages.add(img)
                     }
-                    viewPager!!.adapter = DiseasesInformationImgAdapter(this, diseasesImages)
-                    indicator!!.setupWithViewPager(viewPager, true)
+                    binding.viewPager.adapter = DiseasesInformationImgAdapter(this, diseasesImages)
+                    binding.indicator.setupWithViewPager(binding.viewPager, true)
 
                     setPreventControlMeasureWebView(preventiveMeasures)
                     setSymptomsWebView(symptomDescriptionList)

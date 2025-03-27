@@ -24,7 +24,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/height10"
+        android:layout_marginHorizontal="@dimen/_5sdp"
         android:orientation="vertical">
 
         <TextView
@@ -48,6 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/height5"
+            tools:listitem="@layout/particular_stage_diseases"
             android:scrollbarAlwaysDrawHorizontalTrack="true"
             android:scrollbarStyle="insideOverlay"
             android:scrollbars="vertical"/>

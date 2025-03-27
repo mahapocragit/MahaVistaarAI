@@ -61,13 +61,8 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         setContentView(binding.root)
 
         binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.pests_n_diseases)
-        binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
 
         binding.sowingInfoLayout.textView7.text = getString(R.string.selected_crop)
-        binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
-        binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {
-            startActivity(Intent(this, DashboardScreen::class.java))
-        }
 
         binding.sowingInfoLayout.sowingDateTextView.visibility = View.GONE
         binding.sowingInfoLayout.editSowingDateIcon.visibility = View.GONE
@@ -102,11 +97,6 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         if (cropName.isNullOrBlank()) {
             cropName = AppSettings.getInstance()
                 .getValue(this, AppConstants.tmpCROPNAME, AppConstants.tmpCROPNAME)
-        }
-
-        binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {
-            val intent = Intent(this, DashboardScreen::class.java)
-            startActivity(intent)
         }
 
         if (cropId!! > 0) {
