@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import in.gov.mahapocra.farmerapppks.R;
+import in.gov.mahapocra.farmerapppks.application.MyApplication;
 import in.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.DashboardScreen;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.Farmer.RecyclerTouchListener;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.adapter.DashboardAdapter;
@@ -35,6 +36,7 @@ import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.model_identify.Mode
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.model_identify.detect_ins;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.model_identify.identify_model_croplist;
 import in.gov.mahapocra.farmerapppks.ai_disc_tp_imp.identify.vw_model.identify_croplist;
+import in.gov.mahapocra.farmerapppks.util.HttpClientObj;
 
 
 public class Identify_dashboard extends AppCompatActivity {
@@ -142,7 +144,7 @@ public class Identify_dashboard extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
+                AndroidNetworking.initialize(MyApplication.Companion.getInstance(), HttpClientObj.INSTANCE.getOKHttpClient());
                 AndroidNetworking.post("https://nibpp.krishimegh.in/Api/nibpp/get_crop_img")
                         .addJSONObjectBody(object)
                         .build()

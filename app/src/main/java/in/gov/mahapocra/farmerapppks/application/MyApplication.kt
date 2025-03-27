@@ -3,6 +3,7 @@ package `in`.gov.mahapocra.farmerapppks.application
 import android.app.Application
 import android.content.ContentValues
 import android.util.Log
+import com.androidnetworking.AndroidNetworking
 import com.google.android.gms.tasks.Task
 import com.google.firebase.BuildConfig
 import com.google.firebase.FirebaseApp
@@ -19,7 +20,7 @@ class MyApplication : Application() {
 
         AppSettings.getInstance().initAppSettings(AppConstants.kSHARED_PREF)
         DebugLog.getInstance().initLoggingEnabled(true)
-
+        AndroidNetworking.initialize(applicationContext)
         // Initialize Firebase
         FirebaseApp.initializeApp(this)
 

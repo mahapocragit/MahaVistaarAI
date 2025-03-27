@@ -199,7 +199,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     refreshToken = jSONObject.getString("refresh_token")
                     callLoginAPI(refreshToken)
                 } else {
-                    val message: String = jSONObject.getString("Message")
+                    val message: String = jSONObject.getString("response")
                     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
                 }
             }
