@@ -368,7 +368,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
                     jSONObject
                 )
             if (response.status) {
-                binding.calenderLayout.visibility = View.VISIBLE
+//                binding.calenderLayout.visibility = View.VISIBLE
                 val simpleDateFormat = SimpleDateFormat("dd-MM-yyyy")
                 marketPreceDate = simpleDateFormat.format(Date())
                 cDate = SimpleDateFormat("dd-MM-yyyy").parse(marketPreceDate)
