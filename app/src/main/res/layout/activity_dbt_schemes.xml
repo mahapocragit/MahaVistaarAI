@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,14 +7,20 @@
     tools:context=".ui.screens.dashboard.menugrid.dbt.DbtSchemes">
 
 
+    <include
+        android:id="@+id/relativeLayoutTopBar"
+        layout="@layout/layout_toolbar"
+        tools:layout_editor_absoluteY="48dp" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <include
-            android:id="@+id/relativeLayoutTopBar"
-            layout="@layout/layout_toolbar" />
+        android:layout_height="0dp"
+        android:layout_marginTop="48dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -23,21 +29,21 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardCornerRadius="@dimen/_10sdp"
                     android:layout_marginHorizontal="@dimen/_10sdp"
-                    android:layout_marginVertical="@dimen/_5sdp">
+                    android:layout_marginVertical="@dimen/_5sdp"
+                    app:cardCornerRadius="@dimen/_10sdp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingVertical="@dimen/_10sdp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:paddingVertical="@dimen/_10sdp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -52,7 +58,7 @@
                                 android:layout_marginStart="@dimen/_10sdp"
                                 android:layout_weight="1"
                                 android:gravity="center_vertical"
-                                android:text= "@string/individual_benefit_component" />
+                                android:text="@string/individual_benefit_component" />
 
                             <ImageView
                                 android:layout_width="match_parent"
@@ -66,10 +72,10 @@
                             android:id="@+id/farmerRecyclerView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:scrollbarSize="@dimen/_4sdp"
-                            android:scrollbars="vertical"
-                            android:scrollbarStyle="insideInset"
                             android:layout_marginHorizontal="@dimen/_10sdp"
+                            android:scrollbarSize="@dimen/_4sdp"
+                            android:scrollbarStyle="insideInset"
+                            android:scrollbars="vertical"
                             android:visibility="gone" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -77,15 +83,15 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardCornerRadius="@dimen/_10sdp"
                     android:layout_marginHorizontal="@dimen/_10sdp"
-                    android:layout_marginVertical="@dimen/_5sdp">
+                    android:layout_marginVertical="@dimen/_5sdp"
+                    app:cardCornerRadius="@dimen/_10sdp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingVertical="@dimen/_10sdp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:paddingVertical="@dimen/_10sdp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -114,10 +120,10 @@
                             android:id="@+id/fpoRecyclerView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:scrollbarSize="@dimen/_4sdp"
-                            android:scrollbars="vertical"
-                            android:scrollbarStyle="insideInset"
                             android:layout_marginHorizontal="@dimen/_10sdp"
+                            android:scrollbarSize="@dimen/_4sdp"
+                            android:scrollbarStyle="insideInset"
+                            android:scrollbars="vertical"
                             android:visibility="gone" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -125,15 +131,15 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardCornerRadius="@dimen/_10sdp"
                     android:layout_marginHorizontal="@dimen/_10sdp"
-                    android:layout_marginVertical="@dimen/_5sdp">
+                    android:layout_marginVertical="@dimen/_5sdp"
+                    app:cardCornerRadius="@dimen/_10sdp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingVertical="@dimen/_10sdp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:paddingVertical="@dimen/_10sdp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -163,10 +169,10 @@
                             android:id="@+id/nrmRecyclerView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:scrollbarSize="@dimen/_4sdp"
-                            android:scrollbars="vertical"
-                            android:scrollbarStyle="insideInset"
                             android:layout_marginHorizontal="@dimen/_10sdp"
+                            android:scrollbarSize="@dimen/_4sdp"
+                            android:scrollbarStyle="insideInset"
+                            android:scrollbars="vertical"
                             android:visibility="gone" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -175,4 +181,39 @@
 
     </LinearLayout>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/linearLayout10"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_48sdp"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/_2sdp"
+            android:layout_weight="1"
+            android:background="@drawable/background_for_delete_request"
+            android:elevation="@dimen/_2sdp"
+            android:gravity="center"
+            android:text="POCRA DBT"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/_2sdp"
+            android:layout_weight="1"
+            android:background="@drawable/background_for_chat_request"
+            android:elevation="@dimen/_2sdp"
+            android:gravity="center"
+            android:text="MAHA DBT"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
