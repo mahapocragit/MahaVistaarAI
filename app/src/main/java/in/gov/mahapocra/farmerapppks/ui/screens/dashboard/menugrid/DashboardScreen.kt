@@ -61,6 +61,7 @@ import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.climate.Cli
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.dbt.DbtSchemes
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.soilhealthcard.HealthCardActivity
+import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.AboutActivity
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.DbtStatus
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.Grievances
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.sidenavigation.MyVillageProfilePdf
@@ -319,7 +320,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                 when (position) {
                     0 -> if (savedCropName.isEmpty()) {
                         val sharing = Intent(this@DashboardScreen, AddCropActivity::class.java)
-                        appPreferenceManager?.saveString(
+                        appPreferenceManager.saveString(
                             AppConstants.ACTION_FROM_DASHBOARD,
                             AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD
                         )
@@ -992,7 +993,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                 1 -> if (farmerId > 0) {
                     val sharing = Intent(
                         this@DashboardScreen,
-                        BandavarActivity::class.java
+                        AboutActivity::class.java
                     )
                     startActivity(sharing)
                 } else {

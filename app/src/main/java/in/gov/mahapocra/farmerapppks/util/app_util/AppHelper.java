@@ -26,6 +26,11 @@ public class AppHelper {
             jsonObject1.put("name", "My Profile");
             jsonObject1.put("icon", "myprofile");
 
+            JSONObject jsonObject2 = new JSONObject();
+            jsonObject2.put("id", 1);
+            jsonObject2.put("name", "About");
+            jsonObject2.put("icon", "icon9");
+
 //            JSONObject jsonObject2 = new JSONObject();
 //            jsonObject2.put("id", 1);
 //            jsonObject2.put("name", "Yashogatha");
@@ -74,6 +79,7 @@ public class AppHelper {
 //            jsonArray.put(jsonObject11);
 //            jsonArray.put(jsonObject12);
             jsonArray.put(jsonObject13);
+            jsonArray.put(jsonObject2);
             jsonArray.put(jsonObject9);
 
         } catch (JSONException e) {
@@ -117,6 +123,11 @@ public class AppHelper {
             jsonObject1.put("id", 0);
             jsonObject1.put("name","माझे प्रोफाईल");
             jsonObject1.put("icon", "myprofile");
+
+            JSONObject jsonObject2 = new JSONObject();
+            jsonObject2.put("id", 1);
+            jsonObject2.put("name", "विषयक");
+            jsonObject2.put("icon", "icon9");
 
 //            JSONObject jsonObject2 = new JSONObject();
 //            jsonObject2.put("id", 1);
@@ -166,6 +177,7 @@ public class AppHelper {
 //            jsonArray.put(jsonObject11);
 //            jsonArray.put(jsonObject12);
             jsonArray.put(jsonObject13);
+            jsonArray.put(jsonObject2);
             jsonArray.put(jsonObject9);
 
         } catch (JSONException e) {

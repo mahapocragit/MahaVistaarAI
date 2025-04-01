@@ -12,6 +12,8 @@ import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.farmerapppks.util.ForceUpdateChecker
 import `in`.gov.mahapocra.farmerapppks.util.app_util.AppConstants
+import org.osmdroid.config.Configuration
+import java.io.File
 
 class MyApplication : Application() {
     override fun onCreate() {
@@ -23,6 +25,10 @@ class MyApplication : Application() {
         AndroidNetworking.initialize(applicationContext)
         // Initialize Firebase
         FirebaseApp.initializeApp(this)
+
+        // Set osmdroid cache directory
+        Configuration.getInstance().osmdroidBasePath = File(cacheDir, "osmdroid")
+        Configuration.getInstance().osmdroidTileCache = File(cacheDir, "osmdroid/tiles")
 
         val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
         val PACKAGE_NAME = packageName

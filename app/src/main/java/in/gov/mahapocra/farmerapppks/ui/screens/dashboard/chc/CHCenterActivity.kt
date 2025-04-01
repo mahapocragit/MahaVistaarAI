@@ -20,9 +20,12 @@ import `in`.gov.mahapocra.farmerapppks.data.api.APIServices
 import `in`.gov.mahapocra.farmerapppks.databinding.ActivityChcenterBinding
 import `in`.gov.mahapocra.farmerapppks.util.app_util.AppString
 import org.json.JSONObject
+import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.ScaleBarOverlay
+import org.osmdroid.views.overlay.compass.CompassOverlay
 import retrofit2.Call
 import retrofit2.Retrofit
 
@@ -35,6 +38,7 @@ class CHCenterActivity : AppCompatActivity(), ApiCallbackCode {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChcenterBinding.inflate(layoutInflater)
+        Configuration.getInstance().load(this, getSharedPreferences("osmdroid", MODE_PRIVATE))
         setContentView(binding.root)
 
         binding.toolbar.imgBackArrow.visibility = View.VISIBLE
@@ -47,6 +51,7 @@ class CHCenterActivity : AppCompatActivity(), ApiCallbackCode {
             tempStrArr.add("Hello $i")
         }
         fetchDataForCHC()
+        setupMapView()
         toggleView(true)
         binding.listViewToggleButton.setOnClickListener { toggleView(true) }
         binding.mapViewToggleButton.setOnClickListener { toggleView(false) }
@@ -92,16 +97,6 @@ class CHCenterActivity : AppCompatActivity(), ApiCallbackCode {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        binding.mapView.onResume() // Resume map view
-    }
-
-    override fun onPause() {
-        super.onPause()
-        binding.mapView.onPause() // Pause map view
-    }
-
     private fun toggleView(showRecyclerView: Boolean) {
         if (showRecyclerView) {
             binding.recyclerView.visibility = View.VISIBLE
@@ -128,24 +123,6 @@ class CHCenterActivity : AppCompatActivity(), ApiCallbackCode {
                 background = ContextCompat.getDrawable(this@CHCenterActivity, R.drawable.shape_left)
                 setTextColor(Color.WHITE)
             }
-            binding.mapView.setTileSource(TileSourceFactory.OpenTopo)
-
-            // Enable Zoom
-            binding.mapView.setMultiTouchControls(true)
-
-            // Set Initial Map Position
-            val mapController = binding.mapView.controller
-            val startPoint = GeoPoint(19.0760, 72.8777) // Example: San Francisco
-            mapController.setZoom(15.0)
-            mapController.setCenter(startPoint)
-
-            // Add Marker
-            val marker = Marker(binding.mapView)
-            marker.position = startPoint
-            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-            marker.title = "Mumbai"
-            binding.mapView.overlays.add(marker)
-
             checkPermissions()
         }
     }
@@ -162,5 +139,24 @@ class CHCenterActivity : AppCompatActivity(), ApiCallbackCode {
             binding.recyclerView.layoutManager = LinearLayoutManager(this)
             binding.recyclerView.adapter = adapter
         }
+    }
+
+    private fun setupMapView() {
+        // Initialize MapView
+        binding.mapView.setTileSource(TileSourceFactory.MAPNIK)
+        binding.mapView.setMultiTouchControls(true)
+
+        // Set map center and zoom level
+        val mapController = binding.mapView.controller
+        val startPoint = GeoPoint(19.0760, 72.8777) // Mumbai, India
+        mapController.setZoom(10.0)
+        mapController.setCenter(startPoint)
+
+        // Add Marker
+        val marker = Marker(binding.mapView)
+        marker.position = startPoint
+        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+        marker.title = "Mumbai"
+        binding.mapView.overlays.add(marker)
     }
 }
