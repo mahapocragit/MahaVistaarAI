@@ -23,6 +23,7 @@ import org.json.JSONObject
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.ScaleBarOverlay
 import org.osmdroid.views.overlay.compass.CompassOverlay
@@ -34,6 +35,8 @@ class CHCenterActivity : AppCompatActivity(), ApiCallbackCode {
     private lateinit var binding: ActivityChcenterBinding
     private lateinit var adapter: CHCenterRecyclerAdapter
     private var tempStrArr = mutableListOf<String>()
+    private var locationLat = 18.201176
+    private var locationLong = 75.357841
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,8 +64,8 @@ class CHCenterActivity : AppCompatActivity(), ApiCallbackCode {
         val jsonObject = JSONObject()
         try {
             jsonObject.put("api_key", APIServices.SSO_KEY)
-            jsonObject.put("lat", 18.201176)
-            jsonObject.put("lon", 75.357841)
+            jsonObject.put("lat", locationLat)
+            jsonObject.put("lon", locationLong)
 
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
@@ -77,7 +80,7 @@ class CHCenterActivity : AppCompatActivity(), ApiCallbackCode {
             val apiRequest = retrofit.create(APIRequest::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getCHCInformation(requestBody)
             api.postRequest(responseCall, this, 4)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             Log.d("TAGGER", "fetchDataForCHC: $e")
         }
     }
@@ -133,11 +136,50 @@ class CHCenterActivity : AppCompatActivity(), ApiCallbackCode {
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         Log.d("TAGGER", "onResponse: $jSONObject")
-        if (jSONObject!=null){
+        if (jSONObject != null) {
             val data = jSONObject.optJSONArray("data")
             adapter = CHCenterRecyclerAdapter(data)
             binding.recyclerView.layoutManager = LinearLayoutManager(this)
             binding.recyclerView.adapter = adapter
+
+            // Iterate through the data and add markers to the map
+            for (index in 0 until data.length()) {
+                val item = data.getJSONObject(index)
+                val lat = item.optString("lat")
+                val lon = item.optString("lon")
+
+                // Convert lat and lon to Double
+                val latitude = lat.toDoubleOrNull()
+                val longitude = lon.toDoubleOrNull()
+
+                // Check if the latitude and longitude are valid
+                if (latitude != null && longitude != null) {
+                    val geoPoint = GeoPoint(latitude, longitude)
+
+                    // Create a marker
+                    val marker = Marker(binding.mapView)
+                    marker.icon = ContextCompat.getDrawable(this, R.drawable.ic_red_location)
+                    marker.position = geoPoint
+                    marker.title =
+                        "Marker $index" // Optional: You can set a custom title or other attributes
+                    marker.snippet =
+                        "Lat: $latitude, Lon: $longitude" // Optional: Show additional info in the marker's snippet
+
+                    // Set a click listener for the marker
+                    marker.setOnMarkerClickListener { marker, _ ->
+                        val bottomSheet = MarkerBottomSheetFragment.newInstance(
+                            item.optString("contact_name"), item.optString("chcname"), "${
+                                item.optString("distance")
+                            } kms", latitude, longitude
+                        )
+                        bottomSheet.show(supportFragmentManager, bottomSheet.tag)
+                        true
+                    }
+
+                    // Add marker to the map
+                    binding.mapView.overlays.add(marker)
+                }
+            }
         }
     }
 
@@ -148,15 +190,16 @@ class CHCenterActivity : AppCompatActivity(), ApiCallbackCode {
 
         // Set map center and zoom level
         val mapController = binding.mapView.controller
-        val startPoint = GeoPoint(19.0760, 72.8777) // Mumbai, India
-        mapController.setZoom(10.0)
+        val startPoint = GeoPoint(locationLat, locationLong) // Mumbai, India
+        mapController.setZoom(12.0)
         mapController.setCenter(startPoint)
 
         // Add Marker
         val marker = Marker(binding.mapView)
+        marker.icon = ContextCompat.getDrawable(this, R.drawable.ic_location)
         marker.position = startPoint
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-        marker.title = "Mumbai"
+        marker.title = "Current Location"
         binding.mapView.overlays.add(marker)
     }
 }
