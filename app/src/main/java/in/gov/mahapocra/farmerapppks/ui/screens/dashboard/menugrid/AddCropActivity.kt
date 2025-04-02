@@ -216,11 +216,13 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
         val sowingDate = LocalDate.parse(formattedSowingDate)
         val today = LocalDate.parse(currentDate)
 
-        return if (today.isBefore(sowingDate)) {
-            "${currentYear - 1}-${formattedSowingDate.substring(5)}"
+        val finalDate = if (today.isBefore(sowingDate)) {
+            "${formattedSowingDate.substring(8)}-${formattedSowingDate.substring(5, 7)}-${currentYear - 1}"
         } else {
-            currentDate
+            "${today.dayOfMonth.toString().padStart(2, '0')}-${today.monthValue.toString().padStart(2, '0')}-${today.year}"
         }
+
+        return finalDate
     }
 
 
