@@ -36,6 +36,9 @@
     <string name="climate_resilient_technology">Climate Resilient Details</string>
     <string name="climate_resilient_Newupdate">खरीप विशेष</string>
 
+    <string name="apply_for_mahadbt">To apply for mahadbt click here>></string>
+    <string name="apply_for_pocradbt">To apply for pocra dbt click here>></string>
+
     <string name="add_Crop">Add Crop</string>
     <string name="change_Crop">Change Crop</string>
     <string name="no_crops_added">No Crops Added</string>

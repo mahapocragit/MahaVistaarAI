@@ -17,7 +17,6 @@
         android:layout_height="0dp"
         android:layout_marginTop="48dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout10"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -188,7 +187,7 @@
                     android:textStyle="bold"
                     android:layout_marginHorizontal="@dimen/_10sdp"
                     android:layout_marginVertical="@dimen/_5sdp"
-                    android:text="To apply for mahadbt click here>>" />
+                    android:text="@string/apply_for_mahadbt" />
 
 
                 <TextView
@@ -199,11 +198,10 @@
                     android:textStyle="bold"
                     android:layout_marginHorizontal="@dimen/_10sdp"
                     android:layout_marginVertical="@dimen/_5sdp"
-                    android:text="To apply for pocra dbt click here>>" />
+                    android:text="@string/apply_for_pocradbt" />
 
             </LinearLayout>
         </ScrollView>
-
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

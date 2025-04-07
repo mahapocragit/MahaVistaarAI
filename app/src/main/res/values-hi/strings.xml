@@ -19,6 +19,9 @@
     <string name="climate_resilient_technology">हवामान अनुकूल तंत्रज्ञान</string>
     <string name="climate_resilient_Newupdate">खरीप विशेष</string>
 
+    <string name="apply_for_mahadbt">mahadbt साठी अर्ज करण्यासाठी येथे क्लिक करा.>></string>
+    <string name="apply_for_pocradbt">pocra dbt साठी अर्ज करण्यासाठी येथे क्लिक करा.>></string>
+
     <string name="add_Crop">पीक जोडा</string>
     <string name="change_Crop">पीक बदला</string>">
     <string name="no_crops_added">कोणतीही पिके जोडली नाहीत</string>
