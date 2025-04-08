@@ -38,7 +38,7 @@ class ResilientWebUrl : AppCompatActivity() {
 
     private fun openWebView(url: String) {
         progressDialog = ProgressDialog(this).apply {
-            setMessage("Loading...")
+            setMessage(getString(R.string.please_wait))
             setCancelable(true)
             show()
         }

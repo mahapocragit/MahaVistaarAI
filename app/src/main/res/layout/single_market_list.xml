@@ -80,7 +80,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/font_color_figma"
                         android:textStyle="bold"
-                        android:text="Price Per"
+                        android:text="@string/price_per"
                         android:textSize="@dimen/_10sdp" />
 
                     <TextView
@@ -115,7 +115,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="7"
-                            android:text="Min"
+                            android:text="@string/minimum"
                             android:textSize="@dimen/_10sdp" />
 
                         <TextView
@@ -139,7 +139,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="7"
-                            android:text="Max"
+                            android:text="@string/max"
                             android:textSize="@dimen/_10sdp" />
 
                         <TextView
@@ -163,7 +163,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="7"
-                            android:text="Average"
+                            android:text="@string/average"
                             android:textSize="@dimen/_10sdp" />
 
                         <TextView

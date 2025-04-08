@@ -121,12 +121,12 @@ public class AppHelper {
 
             JSONObject jsonObject1 = new JSONObject();
             jsonObject1.put("id", 0);
-            jsonObject1.put("name","माझे प्रोफाईल");
+            jsonObject1.put("name","माझी प्रोफाईल");
             jsonObject1.put("icon", "myprofile");
 
             JSONObject jsonObject2 = new JSONObject();
             jsonObject2.put("id", 1);
-            jsonObject2.put("name", "विषयक");
+            jsonObject2.put("name", "आमच्या विषयी");
             jsonObject2.put("icon", "icon9");
 
 //            JSONObject jsonObject2 = new JSONObject();
@@ -151,7 +151,7 @@ public class AppHelper {
 
             JSONObject jsonObject9 = new JSONObject();
             jsonObject9.put("id", 7);
-            jsonObject9.put("name", "बाहेर पडणे");
+            jsonObject9.put("name", "बाहेर पडा");
             jsonObject9.put("icon", "logout");
 
 //            JSONObject jsonObject11 = new JSONObject();

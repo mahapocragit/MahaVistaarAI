@@ -334,5 +334,48 @@
 
     <string name="wrong_OTP">You have entered wrong OTP</string>
     <string name="request_for_mobile">Request for mobile number</string>
+    <string name="weather_title">Weather</string>
+    <string name="rain">Rain</string>
+    <string name="humidity">Humidity</string>
+    <string name="wind">Wind</string>
+    <string name="advisory_agro_met">Agro-Met Advisory</string>
 
+    <string name="previous_seven_days">Previous 7 days</string>
+    <string name="next_seven_days">Next 7 days</string>
+
+    <string name="stage_wise">Stage-wise</string>
+    <string name="task_wise">Task-wise</string>
+    <string name="enter_survey_number">Enter survey number</string>
+
+    <string name="farmer_name">Farmer Name</string>
+    <string name="soil_health_card_number">Soil Health Card Number</string>
+    <string name="survey_number_card">Survey Number</string>
+    <string name="farm_size">Farm Size</string>
+    <string name="view_pdf">View PDF</string>
+
+    <string name="price_per">Price Per</string>
+    <string name="minimum">Min</string>
+    <string name="max">Max</string>
+    <string name="average">Average</string>
+
+    <string name="home_bottom">Home</string>
+    <string name="chc_bottom">CHC</string>
+    <string name="chat_bottom">Chat</string>
+    <string name="forum_bottom">Forum</string>
+    <string name="profile_bottom">Profile</string>
+    <string name="chc_title">Custom Hiring Center</string>
+    <string name="list_view">List View</string>
+    <string name="map_view">Map View</string>
+    <string name="rules_and_regulations">Rules and Regulations</string>
+    <string name="rules_and_regulations_desc">
+        1. Follow the Rules – Ensure you adhere to all guidelines to maintain a safe and enjoyable environment.\n\n
+        2. Be Respectful – Treat everyone with kindness. Avoid hate speech, harassment, or offensive language.\n\n
+        3. No Spamming – Do not flood the chat with repetitive messages, links, or promotional content.\n\n
+        4. Stay On Topic – Keep discussions relevant to the chat\'s purpose. Off-topic conversations may be redirected or removed.\n\n
+        5. No Personal Attacks – Debate ideas, not people. Disagreements are okay, but personal attacks are not tolerated.\n\n
+        6. No Sharing of Personal Information – For privacy and security, do not share personal details like phone numbers or addresses.\n\n
+        7. Follow Moderator Instructions – Respect the decisions of moderators. They are here to ensure a fair and enjoyable experience for everyone.</string>
+    <string name="i_agree">I agree</string>
+    <string name="credits">Suppoted by WOTR and IASRI ICAR</string>
+    <string name="app_version">Version</string>
 </resources>

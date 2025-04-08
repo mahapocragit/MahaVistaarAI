@@ -66,6 +66,28 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
             startActivity(Intent(this, DashboardScreen::class.java))
         }
 
+        binding.stageWiseTV.setOnClickListener {
+
+            binding.stageWiseTV.apply {
+                background = ContextCompat.getDrawable(this@AdvisoryCropActivity, R.drawable.shape_right_green)
+                setTextColor(ContextCompat.getColor(this@AdvisoryCropActivity, R.color.white))
+            }
+            binding.taskWiseTV.apply {
+                background = ContextCompat.getDrawable(this@AdvisoryCropActivity, R.drawable.shape_left_white)
+                setTextColor(ContextCompat.getColor(this@AdvisoryCropActivity, R.color.black))
+            }
+        }
+        binding.taskWiseTV.setOnClickListener {
+            binding.stageWiseTV.apply {
+                background = ContextCompat.getDrawable(this@AdvisoryCropActivity, R.drawable.shape_right)
+                setTextColor(ContextCompat.getColor(this@AdvisoryCropActivity, R.color.black))
+            }
+            binding.taskWiseTV.apply {
+                background = ContextCompat.getDrawable(this@AdvisoryCropActivity, R.drawable.shape_left)
+                setTextColor(ContextCompat.getColor(this@AdvisoryCropActivity, R.color.white))
+            }
+        }
+
         binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {
             val sharing = Intent(this, AddCropActivity::class.java)
             AppPreferenceManager(this).saveString(

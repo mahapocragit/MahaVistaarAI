@@ -48,7 +48,7 @@ class CHCenterActivity : AppCompatActivity(), ApiCallbackCode {
         binding.toolbar.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
-        binding.toolbar.textViewHeaderTitle.text = "CHC Center"
+        binding.toolbar.textViewHeaderTitle.text = getString(R.string.chc_title)
 
         for (i in 1..10) {
             tempStrArr.add("Hello $i")

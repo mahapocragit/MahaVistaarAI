@@ -31,7 +31,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Farmer Name"
+                    android:text="@string/farmer_name"
                     android:textStyle="bold" />
 
                 <TextView
@@ -42,7 +42,7 @@
                     android:textColor="@color/actionbar_color_figma"
                     android:layout_weight="1"
                     android:textStyle="bold"
-                    android:text="VIEW PDF" />
+                    android:text="@string/view_pdf" />
             </LinearLayout>
 
             <TextView
@@ -56,7 +56,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_2sdp"
-                android:text="Soil Health Card Number"
+                android:text="@string/soil_health_card_number"
                 android:textStyle="bold" />
 
             <TextView
@@ -80,7 +80,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_2sdp"
-                        android:text="Survey Number"
+                        android:text="@string/survey_number_card"
                         android:textStyle="bold" />
 
                     <TextView
@@ -100,7 +100,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_2sdp"
-                        android:text="Farm Size"
+                        android:text="@string/farm_size"
                         android:textStyle="bold" />
 
                     <TextView

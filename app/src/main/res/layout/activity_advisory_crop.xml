@@ -7,13 +7,50 @@
     android:layout_height="match_parent"
     tools:context=".ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity">
 
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginHorizontal="5dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sowingLinearLayout">
+
+        <TextView
+            android:id="@+id/stageWiseTV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_right_green"
+            android:elevation="5dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:text="@string/stage_wise"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/taskWiseTV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_left_white"
+            android:elevation="5dp"
+            android:gravity="center"
+            android:text="@string/task_wise"
+            android:textStyle="bold" />
+    </LinearLayout>
+
     <include
         android:id="@+id/relativeLayoutTopBar"
         layout="@layout/layout_toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <LinearLayout
         android:id="@+id/sowingLinearLayout"
@@ -39,8 +76,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sowingLinearLayout">
-
-    </androidx.recyclerview.widget.RecyclerView>
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

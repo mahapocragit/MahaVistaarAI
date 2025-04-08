@@ -86,7 +86,7 @@ class WeatherActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
             }
         }
 
-        binding.relativeLayoutTopBar.textViewHeaderTitle.text = "Weather"
+        binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.weather_title)
 
         binding.previousSevenDayTV.setOnClickListener {
             binding.tabLayout.visibility = View.GONE

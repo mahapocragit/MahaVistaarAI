@@ -117,7 +117,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="3"
                                 android:gravity="center"
-                                android:text="Rain" />
+                                android:text="@string/rain" />
 
                             <TextView
                                 android:id="@+id/rainTextView"
@@ -150,7 +150,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="3"
                                 android:gravity="center"
-                                android:text="Humidity" />
+                                android:text="@string/humidity" />
 
                             <TextView
                                 android:id="@+id/humidityTextView"
@@ -183,7 +183,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="3"
                                 android:gravity="center"
-                                android:text="Wind" />
+                                android:text="@string/wind" />
 
                             <TextView
                                 android:id="@+id/windTextView"
@@ -243,7 +243,7 @@
                     android:background="@drawable/shape_right"
                     android:elevation="5dp"
                     android:gravity="center"
-                    android:text="Previous 7 days"
+                    android:text="@string/previous_seven_days"
                     android:textStyle="bold" />
 
                 <TextView
@@ -256,7 +256,7 @@
                     android:background="@drawable/shape_left"
                     android:elevation="5dp"
                     android:gravity="center"
-                    android:text="Next 7 days"
+                    android:text="@string/next_seven_days"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
 
@@ -277,7 +277,7 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 android:textSize="@dimen/_12sdp"
                 android:textStyle="bold"
-                android:text="Agro-Met Advisory" />
+                android:text="@string/advisory_agro_met" />
 
             <View
                 android:layout_width="match_parent"

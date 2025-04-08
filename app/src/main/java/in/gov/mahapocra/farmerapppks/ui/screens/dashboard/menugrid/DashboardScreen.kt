@@ -525,9 +525,9 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
         }
         val versionName = pinfo!!.versionName
         if (APIServices.DBT.equals("https://ilab-sso.mahapocra.gov.in/", ignoreCase = true)) {
-            binding.appVerTextView.text = "App Version $versionName S"
+            binding.appVerTextView.text = "${getString(R.string.app_version)} $versionName S"
         } else {
-            binding.appVerTextView.text = "App Version $versionName"
+            binding.appVerTextView.text = "${getString(R.string.app_version)} $versionName"
         }
         AppSettings.getInstance()
             .setValue(this@DashboardScreen, AppConstants.kAPP_BUILD_VERSION, versionName)

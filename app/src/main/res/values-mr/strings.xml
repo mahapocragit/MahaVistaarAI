@@ -20,8 +20,8 @@
     <string name="climate_resilient_technology">हवामान अनुकूल तंत्रज्ञान</string>
     <string name="climate_resilient_Newupdate">खरीप विशेष</string>
 
-    <string name="apply_for_mahadbt">mahadbt साठी अर्ज करण्यासाठी येथे क्लिक करा.>></string>
-    <string name="apply_for_pocradbt">pocra dbt साठी अर्ज करण्यासाठी येथे क्लिक करा.>></string>
+    <string name="apply_for_mahadbt">महाडीबीटीसाठी अर्ज करण्यासाठी येथे क्लिक करा.>></string>
+    <string name="apply_for_pocradbt">पोकरा डीबीटीसाठी अर्ज करण्यासाठी येथे क्लिक करा.>></string>
 
     <string name="add_Crop">पीक जोडा</string>
     <string name="change_Crop">पीक बदला</string>">
@@ -247,7 +247,7 @@
     <string name="reg_pwd">पासवर्ड टाका</string>
     <string name="reg_verify"> सत्यापित करा</string>
     <string name="reg_verified"> सत्यापित </string>
-    <string name="reg_submit"> प्रस्तुत करणे </string>
+    <string name="reg_submit">प्रस्तुत करा</string>
     <string name="reg_email">ईमेल आयडी टाका (ऐच्छिक)</string>
     <string name="market_term"> कालावधी </string>
     <string name="market_percentage"> अर्थसहाय्याची टक्केवारी </string>
@@ -333,8 +333,52 @@
     <string name="Please_Enter_Your_FYMValue">कृपया शेणखत मूल्य प्रविष्ट करा</string>
     <string name="fertilizer_availability_for_crop">खत कॅल्क्युलेटरसाठी दुसरे पीक निवडा</string>
 
+    <string name="change">बदला</string>
+
     <string name="wrong_OTP">तुम्ही चुकीचा OTP टाकला आहे</string>
     <string name="request_for_mobile">मोबाईल नंबरची विनंती करा</string>
+    <string name="weather_title">वातावरण</string>
+    <string name="rain">पर्जन्यमान</string>
+    <string name="humidity">आर्द्रता</string>
+    <string name="wind">वाऱ्याचा वेग</string>
+    <string name="advisory_agro_met">कृषी हवामान सल्ला</string>
 
-    <string name="change">बदला</string>
+    <string name="previous_seven_days">मागील ७ दिवस</string>
+    <string name="next_seven_days">पुढील ७ दिवस</string>
+    <string name="stage_wise">टप्प्यानुसार</string>
+    <string name="task_wise">कार्यानुसार</string>
+    <string name="enter_survey_number">गट नंबर टाका</string>
+
+    <string name="farmer_name">शेतकऱ्याचे नाव</string>
+    <string name="soil_health_card_number">मृदा आरोग्य पत्रिका क्रमांक</string>
+    <string name="survey_number_card">गट नं</string>
+    <string name="farm_size">शेताचा आकार</string>
+    <string name="view_pdf">PDF पाहा</string>
+
+    <string name="price_per">दर</string>
+    <string name="minimum">किमान</string>
+    <string name="max">कमाल</string>
+    <string name="average">सरासरी</string>
+
+    <string name="home_bottom">होम</string>
+    <string name="chc_bottom">अवजारे बँक</string>
+    <string name="chat_bottom">चॅट</string>
+    <string name="forum_bottom">समुदाय</string>
+    <string name="profile_bottom">प्रोफाईल</string>
+    <string name="chc_title">कृषि अवजारे सेवा केंद्र</string>
+    <string name="list_view">यादी पाहा</string>
+    <string name="map_view">नकाशावर पाहा</string>
+    <string name="rules_and_regulations">नियम व अटी</string>
+    <string name="rules_and_regulations_desc">
+        १. नियमांचे पालन करा - सुरक्षित आणि आनंददायी वातावरण राखण्यासाठी तुम्ही सर्व मार्गदर्शक तत्त्वांचे पालन करत आहात याची खात्री करा.\n\n
+        २. आदर बाळगा -  द्वेषयुक्त भाषण, छळ किंवा आक्षेपार्ह भाषा टाळा.\n\n
+        ३. स्पॅमिंग करू नका - चॅटमध्ये वारंवार एकच संदेश, लिंक्स किंवा प्रचारात्मक सामग्री टाकू नका.\n\n
+        ४. विषयावर चर्चा सुरू ठेवा-  विषयाबाहेरील संभाषणे पुनर्निर्देशित किंवा काढून टाकली जाऊ शकतात.\n\n
+        ५. वैयक्तिक दोषारोप करू नका –मतभेद ठीक आहेत, परंतु वैयक्तिक दोषारोप सहन केले जाणार नाहीत.\n\n
+        ६.  वैयक्तिक माहिती शेअर करू नका-गोपनीयता आणि सुरक्षिततेसाठी, फोन नंबर किंवा पत्ते यासारखे वैयक्तिक तपशील शेअर करू नका.\n\n
+        ७. मॉडरेटरच्या सूचनांचे पालन करा - मॉडरेटर्सच्या निर्णयांचा आदर करा, ते प्रत्येकासाठी निष्पक्ष आणि आनंददायी अनुभव सुनिश्चित करण्यासाठी आहेत
+    </string>
+    <string name="i_agree">मी सहमत आहे</string>
+    <string name="credits">WOTR आणि IASRI ICAR यांच्या  सहकार्याने</string>
+    <string name="app_version">ॲप आवृत्ती</string>
 </resources>

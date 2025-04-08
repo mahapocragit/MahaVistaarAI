@@ -15,7 +15,7 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
-        android:text="Choose your Crop"
+        android:text="@string/select_crop"
         android:textStyle="bold"
         android:textSize="@dimen/_12sdp"
         android:layout_marginTop="20dp"
