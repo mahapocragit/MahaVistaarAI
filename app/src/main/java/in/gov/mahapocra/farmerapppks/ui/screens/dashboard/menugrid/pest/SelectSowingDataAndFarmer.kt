@@ -3,7 +3,6 @@ package `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.pest
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -17,23 +16,21 @@ import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.listener.DatePickerRequestListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
-import `in`.gov.mahapocra.farmerapppks.util.AppPreferenceManager
 import `in`.gov.mahapocra.farmerapppks.R
 import `in`.gov.mahapocra.farmerapppks.data.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.data.api.APIServices
-import `in`.gov.mahapocra.farmerapppks.util.app_util.AppConstants
-import `in`.gov.mahapocra.farmerapppks.util.app_util.AppString
-import `in`.gov.mahapocra.farmerapppks.databinding.ActivitySelectSowingDataAndFarmerBinding
 import `in`.gov.mahapocra.farmerapppks.data.model.CropsCategName
 import `in`.gov.mahapocra.farmerapppks.data.model.ResponseModel
-import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
+import `in`.gov.mahapocra.farmerapppks.databinding.ActivitySelectSowingDataAndFarmerBinding
 import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.DashboardScreen
-import `in`.gov.mahapocra.farmerapppks.ui.screens.dashboard.menugrid.FertilizerCalculatorActivity
+import `in`.gov.mahapocra.farmerapppks.util.app_util.AppConstants
+import `in`.gov.mahapocra.farmerapppks.util.app_util.AppString
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
 import java.util.Date
+import java.util.Locale
 import java.util.Objects
 
 
@@ -54,6 +51,9 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
         super.onCreate(savedInstanceState)
         binding = ActivitySelectSowingDataAndFarmerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val locale: Locale = getResources().configuration.locale
+        Locale.setDefault(locale)
 
         cropId = intent.getIntExtra("id", 0)
         wotrCropId = intent.getStringExtra("wotr_crop_id")

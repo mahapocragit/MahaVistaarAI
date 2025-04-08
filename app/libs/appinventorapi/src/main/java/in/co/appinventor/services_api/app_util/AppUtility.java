@@ -539,6 +539,8 @@ public class AppUtility {
     }
 
     public void showDisabledFutureDatePicker(Context context, Date date, final int requestCode, final DatePickerRequestListener callbackListener) {
+        Locale locale = context.getResources().getConfiguration().locale;
+        Locale.setDefault(locale);
         Calendar calender = Calendar.getInstance();
         Context context2 = context;
         DatePickerDialog datePickerDialog1 = new DatePickerDialog(context2, (view, year, monthOfYear, dayOfMonth) -> callbackListener.onDateSelected(requestCode, dayOfMonth, monthOfYear + 1, year), calender.get(1), calender.get(2), calender.get(5));

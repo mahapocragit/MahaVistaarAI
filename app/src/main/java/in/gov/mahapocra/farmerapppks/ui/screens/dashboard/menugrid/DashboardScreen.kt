@@ -113,9 +113,9 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        languageToLoad = "en"
-        if (AppSettings.getLanguage(this@DashboardScreen).equals("2", ignoreCase = true)) {
-            languageToLoad = "hi"
+        languageToLoad = "mr"
+        if (AppSettings.getLanguage(this@DashboardScreen).equals("1", ignoreCase = true)) {
+            languageToLoad = "en"
         }
         showToast = true
         val locale = Locale(languageToLoad)
@@ -197,7 +197,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
             binding.appBarMain.dashboardScreen.gridViewDashboard.adapter = DashboardAdapter(
                 this, arrayCategory, arrayCategoryImg, "single_item_grid"
             )
-        } else if (languageToLoad.equals("hi", ignoreCase = true)) {
+        } else if (languageToLoad.equals("mr", ignoreCase = true)) {
             binding.appBarMain.dashboardScreen.gridViewDashboard.adapter = DashboardAdapter(
                 this, arrayCategoryMarathi, arrayCategoryImg, "single_item_grid"
             )
@@ -473,7 +473,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
         try {
             if (languageToLoad.equals("en", ignoreCase = true)) {
                 jsonArray = AppHelper.getInstance().getMenuOption()
-            } else if (languageToLoad.equals("hi", ignoreCase = true)) {
+            } else if (languageToLoad.equals("mr", ignoreCase = true)) {
                 jsonArray = AppHelper.getInstance().getMenuOptionMarathi()
             }
             val menuAdapter = DrawerMenuAdapter(this, jsonArray, farmerId)
@@ -651,7 +651,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
         }
 
         tvMarathi.setOnClickListener {
-            val languageToLoad = "hi"
+            val languageToLoad = "mr"
             val locale = Locale(languageToLoad)
             Locale.setDefault(locale)
             val config = Configuration()
