@@ -37,7 +37,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode {
         binding = ActivityHealthCardBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        languageToLoad = "hi"
+        languageToLoad = "mr"
         if (AppSettings.getLanguage(this@HealthCardActivity).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }

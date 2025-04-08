@@ -116,7 +116,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textColor="@color/colorPrimaryDark"
-                    android:text="Request for mobile number>>" />
+                    android:text="@string/request_for_mobile" />
             </LinearLayout>
 
         </LinearLayout>

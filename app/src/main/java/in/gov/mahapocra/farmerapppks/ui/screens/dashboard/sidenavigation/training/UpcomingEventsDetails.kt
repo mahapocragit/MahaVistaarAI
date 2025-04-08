@@ -175,7 +175,7 @@ class UpcomingEventsDetails : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCa
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_upcoming_events_details2)
-        languageToLoad = "hi"
+        languageToLoad = "mr"
         if (AppSettings.getLanguage(this@UpcomingEventsDetails).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }

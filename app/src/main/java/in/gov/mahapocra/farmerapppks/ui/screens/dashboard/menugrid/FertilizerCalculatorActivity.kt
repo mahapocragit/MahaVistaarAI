@@ -76,7 +76,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         binding= ActivityFertilizerCalculatorActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        languageToLoad = "hi"
+        languageToLoad = "mr"
         if (AppSettings.getLanguage(this@FertilizerCalculatorActivity)
                 .equals("1", ignoreCase = true)
         ) {

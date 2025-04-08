@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">PoCRA-कृषी संजीवनी</string>
     <string name="app_logo_name"> नानाजी देशमुख कृषि संजीवनी प्रकल्प</string>
@@ -263,7 +264,7 @@
     <string name="doc_upload"> प्रतिमा/कागदपत्रे असल्यास अपलोड करा</string>
 
     <string name="event_details"> कार्यक्रमाचा तपशील</string>
-<!--    <string name="market_details"> महाराष्ट्र राज्य ,</string>-->
+    <!--    <string name="market_details"> महाराष्ट्र राज्य ,</string>-->
     <string name="cropSapAdvisoryDummyDta"></string>
     <string name="my_crops">माझी पिके</string>
     <string name="edit_crop">पीक संपादित करा</string>
@@ -333,6 +334,7 @@
     <string name="fertilizer_availability_for_crop">खत कॅल्क्युलेटरसाठी दुसरे पीक निवडा</string>
 
     <string name="wrong_OTP">तुम्ही चुकीचा OTP टाकला आहे</string>
+    <string name="request_for_mobile">मोबाईल नंबरची विनंती करा</string>
 
     <string name="change">बदला</string>
 </resources>

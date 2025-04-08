@@ -29,12 +29,12 @@ class DbtStatus : AppCompatActivity() {
     private var imageMenushow: ImageView? = null
     private var textViewHeaderTitle: TextView? = null
     private lateinit var phoneNumber: String
-    var languageToLoad: String? = "hi"
+    var languageToLoad: String? = "mr"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dbt_status)
         Log.d("languageToLoad:",languageToLoad +"");
-        languageToLoad = "hi"
+        languageToLoad = "mr"
         if (AppSettings.getLanguage(this@DbtStatus).equals("1", ignoreCase = true))
         {
             languageToLoad = "en"

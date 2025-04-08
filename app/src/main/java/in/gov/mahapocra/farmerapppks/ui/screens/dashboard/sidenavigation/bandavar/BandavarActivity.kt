@@ -42,7 +42,7 @@ class BandavarActivity : AppCompatActivity() , ApiCallbackCode {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        languageToLoad = "hi"
+        languageToLoad = "mr"
         if (AppSettings.getLanguage(this@BandavarActivity).equals("1", ignoreCase = true))
         {
             languageToLoad = "en"

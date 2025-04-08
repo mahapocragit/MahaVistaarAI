@@ -33,7 +33,7 @@ class ViewStoriesBandavar : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCall
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_stories_bandavar)
-        languageToLoad = "hi"
+        languageToLoad = "mr"
         if (AppSettings.getLanguage(this@ViewStoriesBandavar).equals("1", ignoreCase = true))
         {
             languageToLoad = "en"

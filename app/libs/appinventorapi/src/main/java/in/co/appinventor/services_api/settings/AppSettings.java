@@ -46,7 +46,7 @@ public class AppSettings {
 
     public static String CHOOSE_LANGUAGE = "ChooseLanguage";
     public static String LANGUAGE_ENG = "en";
-    public static String LANGUAGE_MAR = "hi";
+    public static String LANGUAGE_MAR = "mr";
     public static String LANGUAGE_ENG_ID = "1"; //--- for english
     public static String LANGUAGE_MAR_ID = "2"; //--- for marathi
     private static String PREFERENCE_NAME = "UserInfo";

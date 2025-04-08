@@ -22,7 +22,7 @@ class ResilientWebUrl : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_resilient_web_url)
 
-        val languageToLoad = if (AppSettings.getLanguage(this) == "1") "en" else "hi"
+        val languageToLoad = if (AppSettings.getLanguage(this) == "1") "en" else "mr"
         Locale.setDefault(Locale(languageToLoad))
 
         val config = Configuration()

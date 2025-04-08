@@ -23,7 +23,7 @@ class SplashScreenActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash_screen)
 
         // Set Language Configuration
-        val languageToLoad = if (AppSettings.getLanguage(this) == "1") "en" else "hi"
+        val languageToLoad = if (AppSettings.getLanguage(this) == "1") "en" else "mr"
         Locale.setDefault(Locale(languageToLoad))
         resources.updateConfiguration(
             Configuration().apply { locale = Locale(languageToLoad) },

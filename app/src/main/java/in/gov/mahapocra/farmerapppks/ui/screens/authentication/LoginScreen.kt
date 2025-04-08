@@ -42,7 +42,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     private lateinit var dialog: Dialog
     private var userPass = ""
     private lateinit var sentOTP: String
-    var languageToLoad = "hi"
+    var languageToLoad = "mr"
     private var farmerRegisteredID: Int = 0
     private var loginOption: Int = 0
 

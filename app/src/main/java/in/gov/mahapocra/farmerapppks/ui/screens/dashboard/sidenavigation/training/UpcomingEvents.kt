@@ -50,7 +50,7 @@ class UpcomingEvents : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
     var languageToLoad: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        languageToLoad = "hi"
+        languageToLoad = "mr"
         if (AppSettings.getLanguage(this@UpcomingEvents).equals("1", ignoreCase = true))
         {
             languageToLoad = "en"

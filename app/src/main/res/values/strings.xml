@@ -333,6 +333,6 @@
     <string name="fertilizer_availability_for_crop">Select Another Crop for Fertilizer Calculator</string>
 
     <string name="wrong_OTP">You have entered wrong OTP</string>
-
+    <string name="request_for_mobile">Request for mobile number</string>
 
 </resources>

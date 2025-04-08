@@ -173,7 +173,7 @@ class StageAdvisoryDetailAdaptr(
 
     private fun changeLocalLang() {
         if (languageToLoad.equals("mr")){
-            val languageToLoad = "hi"
+            val languageToLoad = "mr"
 
             val locale = Locale(languageToLoad)
             Locale.setDefault(locale)

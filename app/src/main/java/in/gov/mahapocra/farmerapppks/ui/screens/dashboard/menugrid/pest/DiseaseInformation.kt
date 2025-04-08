@@ -125,7 +125,7 @@ class DiseaseInformation : AppCompatActivity(), ApiCallbackCode {
 
     private fun changeLocalLang() {
         if (languageToLoad == "mr") {
-            val languageToLoad = "hi"
+            val languageToLoad = "mr"
 
             val locale = Locale(languageToLoad)
             Locale.setDefault(locale)
