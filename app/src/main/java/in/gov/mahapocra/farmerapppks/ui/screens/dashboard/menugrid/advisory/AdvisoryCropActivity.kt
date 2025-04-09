@@ -182,6 +182,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
                             jSONObject.getString("sowing_date")
                     }
                     if (jSONObject.getString("advisory_pdf_url").isNotEmpty()) {
+                        Log.d("TAGGER", "onResponse pdf: ${jSONObject.getString("advisory_pdf_url")}")
                         setupWebView(jSONObject.optString("advisory_pdf_url"))
                     }
                     cropAdvisoryDetailsJSONArray = response.getdataArray()
@@ -207,7 +208,11 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         settings.displayZoomControls = false
 
         binding.webView.webViewClient = WebViewClient()
-        binding.webView.loadUrl(googleDriveView + pdfUrl)
+        if (pdfUrl!=null) {
+            binding.webView.loadUrl(googleDriveView + pdfUrl)
+        }else{
+            Toast.makeText(this@AdvisoryCropActivity, "PDF not available", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
