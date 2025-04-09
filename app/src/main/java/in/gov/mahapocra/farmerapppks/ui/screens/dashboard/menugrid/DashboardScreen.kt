@@ -347,7 +347,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                             this@DashboardScreen,
                             AddCropActivity::class.java
                         )
-                        appPreferenceManager?.saveString(
+                        appPreferenceManager.saveString(
                             AppConstants.ACTION_FROM_DASHBOARD,
                             AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD
                         )
@@ -417,7 +417,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                             ?.printStackTrace()
                     }
                     val token = task.result
-                    appPreferenceManager?.saveString("FCM_TOKEN", token)
+                    appPreferenceManager.saveString("FCM_TOKEN", token)
                 }
         }
 
@@ -881,7 +881,8 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                 }
 
                 5 -> if (jSONObject != null) {
-                    appPreferenceManager?.saveString(
+                    Log.d("TAGGER", "onResponse: $jSONObject")
+                    appPreferenceManager.saveString(
                         AppConstants.WEATHER_RESPONSE,
                         jSONObject.toString()
                     )
@@ -889,8 +890,8 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                     if (response.getStatus()) {
                         val temperatureObject =
                             checkNotNull(jSONObject.optJSONObject("Temperature"))
-                        val tempMin = temperatureObject.optInt("min")
-                        val tempMax = temperatureObject.optInt("max")
+                        val tempMin = temperatureObject.optString("min")
+                        val tempMax = temperatureObject.optString("max")
                         val temperature = "$tempMin°C / $tempMax°C"
                         binding.appBarMain.dashboardScreen.temperatureTextView.text = temperature
                     }

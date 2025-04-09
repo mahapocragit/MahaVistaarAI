@@ -1,5 +1,6 @@
 package in.co.appinventor.services_api.api;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 
@@ -54,16 +55,20 @@ public class AppInventorApi {
         this.authToken = authTokenTest;
         this.mMessage = mMessage2;
         this.mShowProgressDialog = showProgressDialog;
+
         if (Utility.checkConnection(mContext2) && this.mShowProgressDialog) {
-            this.mProgressDialog = new ProgressDialog(mContext2);
-            if (this.mMessage == null || this.mMessage.isEmpty()) {
-                this.mProgressDialog.setMessage("");
-            } else {
-                this.mProgressDialog.setMessage(this.mMessage);
+            // Only show progress dialog if context is a valid Activity and not finishing
+            if (mContext2 instanceof Activity && !((Activity) mContext2).isFinishing()) {
+                this.mProgressDialog = new ProgressDialog(mContext2);
+                if (this.mMessage == null || this.mMessage.isEmpty()) {
+                    this.mProgressDialog.setMessage("");
+                } else {
+                    this.mProgressDialog.setMessage(this.mMessage);
+                }
+                this.mProgressDialog.setCancelable(false);
+                this.mProgressDialog.setCanceledOnTouchOutside(false);
+                this.mProgressDialog.show();
             }
-            this.mProgressDialog.setCancelable(false);
-            this.mProgressDialog.setCanceledOnTouchOutside(false);
-            this.mProgressDialog.show();
         }
     }
 

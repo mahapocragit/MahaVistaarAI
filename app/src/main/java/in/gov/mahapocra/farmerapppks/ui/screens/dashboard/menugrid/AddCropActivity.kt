@@ -20,6 +20,7 @@ import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.farmerapppks.R
+import `in`.gov.mahapocra.farmerapppks.data.api.APIKeys
 import `in`.gov.mahapocra.farmerapppks.ui.adapters.TitleVideosDetailsAdapter
 import `in`.gov.mahapocra.farmerapppks.data.api.APIRequest
 import `in`.gov.mahapocra.farmerapppks.data.api.APIServices
@@ -27,6 +28,7 @@ import `in`.gov.mahapocra.farmerapppks.util.app_util.AppString
 import `in`.gov.mahapocra.farmerapppks.data.model.CropsCategName
 import `in`.gov.mahapocra.farmerapppks.data.model.ResponseModel
 import `in`.gov.mahapocra.farmerapppks.data.model.VideoDetails
+import `in`.gov.mahapocra.farmerapppks.util.AppPreferenceManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -86,12 +88,13 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
     private fun getCropCategoriesAndCropDetails() {
         val jsonObject = JSONObject()
         try {
+            jsonObject.put("api_key", "67840097657891")
             jsonObject.put("lang", languageToLoad)
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
                 AppInventorApi(
                     this,
-                    APIServices.SSO,
+                    APIServices.FARMER,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true
@@ -167,6 +170,8 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
                         var cropsImgUrl: String? = ""
                         cropsImgUrl = cropCategoriesJsonObject.get("image").toString()
                         val sowingDateUnfiltered = cropCategoriesJsonObject.optString("sowing_date")
+                        val advisoryPdfUrl = cropCategoriesJsonObject.optString("advisory_pdf_url")
+                        AppPreferenceManager(this).saveString("advisoryPdfUrl", advisoryPdfUrl)
                         val filteredSowingDate =
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 getSowingDateWithYear(sowingDateUnfiltered)

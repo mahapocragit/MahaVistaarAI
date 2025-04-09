@@ -378,4 +378,6 @@
     <string name="i_agree">I agree</string>
     <string name="credits">Suppoted by WOTR and IASRI ICAR</string>
     <string name="app_version">Version</string>
+
+    <string name="magazine">Farm Magazine</string>
 </resources>

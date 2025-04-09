@@ -7,6 +7,16 @@
     android:layout_height="match_parent"
     tools:context=".ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity">
 
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -27,8 +37,8 @@
             android:background="@drawable/shape_right_green"
             android:elevation="5dp"
             android:gravity="center"
-            android:textColor="@color/white"
             android:text="@string/stage_wise"
+            android:textColor="@color/white"
             android:textStyle="bold" />
 
         <TextView
@@ -57,7 +67,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="47dp"
-        android:layout_marginBottom="330dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -76,6 +85,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"/>
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

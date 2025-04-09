@@ -49,6 +49,12 @@
         android:theme="@style/Theme.FarmerApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.screens.dashboard.sidenavigation.news.FarmNewsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.screens.dashboard.sidenavigation.news.MagazineActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.screens.dashboard.sidenavigation.AboutActivity"
             android:exported="false" />
 
@@ -174,9 +180,6 @@
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.menugrid.dbt.DbtSchemes"
-            android:exported="false" />
-        <activity
-            android:name=".ui.screens.dashboard.menugrid.dbt.DbtActivityDetails"
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.menugrid.soilhealthcard.HealthCardActivity"
