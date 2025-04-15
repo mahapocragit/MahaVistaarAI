@@ -72,11 +72,11 @@ class WeatherActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
                 jsonArrayForecast = jSONObject.optJSONArray("Forcast")
                 jsonArrayPrevious = jSONObject.optJSONArray("Previous")
                 val temperatureObject = jSONObject.optJSONObject("Temperature")
-                val tempMin: Int = temperatureObject.optInt("min")
-                val tempMax: Int = temperatureObject.optInt("max")
-                val rainfall: Int = temperatureObject.optInt("rainfall")
-                val humidity: Int = temperatureObject.optInt("humidity")
-                val wind: Int = temperatureObject.optInt("wind")
+                val tempMin: String = temperatureObject.optString("min")
+                val tempMax: String = temperatureObject.optString("max")
+                val rainfall: String = temperatureObject.optString("rainfall")
+                val humidity: String = temperatureObject.optString("humidity")
+                val wind: String = temperatureObject.optString("wind")
                 binding.tvAgroMetAdvisory.text = advisory
                 val temperature = "$tempMin°C / $tempMax°C"
                 binding.temperatureTextView.text = temperature

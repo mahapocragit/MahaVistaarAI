@@ -340,8 +340,8 @@
     <string name="wind">Wind</string>
     <string name="advisory_agro_met">Agro-Met Advisory</string>
 
-    <string name="previous_seven_days">Previous 7 days</string>
-    <string name="next_seven_days">Next 7 days</string>
+    <string name="previous_seven_days">Previous 5 days</string>
+    <string name="next_seven_days">Next 5 days</string>
 
     <string name="stage_wise">Stage-wise</string>
     <string name="task_wise">Task-wise</string>

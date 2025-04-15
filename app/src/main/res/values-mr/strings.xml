@@ -343,8 +343,8 @@
     <string name="wind">वाऱ्याचा वेग</string>
     <string name="advisory_agro_met">कृषी हवामान सल्ला</string>
 
-    <string name="previous_seven_days">मागील ७ दिवस</string>
-    <string name="next_seven_days">पुढील ७ दिवस</string>
+    <string name="previous_seven_days">मागील ५ दिवस</string>
+    <string name="next_seven_days">पुढील ५ दिवस</string>
     <string name="stage_wise">टप्प्यानुसार</string>
     <string name="task_wise">कार्यानुसार</string>
     <string name="enter_survey_number">गट नंबर टाका</string>
