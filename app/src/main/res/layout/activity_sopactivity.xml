@@ -5,21 +5,19 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity">
+    tools:context=".ui.screens.dashboard.menugrid.SOPActivity">
+
 
     <include
-        android:id="@+id/relativeLayoutTopBar"
-        layout="@layout/layout_toolbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:id="@+id/toolbar"
+        layout="@layout/layout_toolbar"/>
 
     <LinearLayout
         android:id="@+id/sowingLinearLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="47dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginTop="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -27,16 +25,14 @@
         <include
             android:id="@+id/sowingInfoLayout"
             layout="@layout/sowing_date_layout" />
-
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/cropStagesRecyclerView"
-        android:layout_width="match_parent"
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sowingLinearLayout" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

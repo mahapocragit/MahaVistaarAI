@@ -49,6 +49,9 @@
         android:theme="@style/Theme.FarmerApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.screens.dashboard.menugrid.SOPActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.screens.dashboard.sidenavigation.news.FarmNewsActivity"
             android:exported="false" />
         <activity

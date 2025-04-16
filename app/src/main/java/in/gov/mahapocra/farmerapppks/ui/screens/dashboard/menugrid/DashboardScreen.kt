@@ -276,15 +276,6 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                         ForumActivity::class.java
                     )
                 )
-
-                R.id.nav_profile -> {
-                    val intent = Intent(
-                        this@DashboardScreen,
-                        Registration::class.java
-                    )
-                    intent.putExtra("FAAPRegistrationID", farmerId)
-                    startActivity(intent)
-                }
             }
             false
         }
@@ -335,6 +326,15 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                     }
 
                     1 -> {
+                        val intent = Intent(this, SOPActivity::class.java)
+                        intent.putExtra("id", savedCropId)
+                        intent.putExtra("wotr_crop_id", savedCropWoTRId)
+                        intent.putExtra("mUrl", savedCropImageUrl)
+                        intent.putExtra("mName", savedCropName)
+                        startActivity(intent)
+                    }
+
+                    2 -> {
                         val healthIntent = Intent(
                             this@DashboardScreen,
                             HealthCardActivity::class.java
@@ -342,7 +342,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                         startActivity(healthIntent)
                     }
 
-                    2 -> if (savedCropName.isEmpty()) {
+                    3 -> if (savedCropName.isEmpty()) {
                         val comingSoonIntent = Intent(
                             this@DashboardScreen,
                             AddCropActivity::class.java
@@ -362,13 +362,13 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                         startActivity(intent)
                     }
 
-                    3 -> {
+                    4 -> {
                         val addPeople =
                             Intent(this@DashboardScreen, ClimateResilientTechnology::class.java)
                         startActivity(addPeople)
                     }
 
-                    4 -> if (savedCropName.isEmpty()) {
+                    5 -> if (savedCropName.isEmpty()) {
                         val sharing = Intent(this@DashboardScreen, AddCropActivity::class.java)
                         appPreferenceManager.saveString(
                             AppConstants.ACTION_FROM_DASHBOARD,
@@ -383,11 +383,6 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                         intent.putExtra("mUrl", savedCropImageUrl)
                         intent.putExtra("mName", savedCropName)
                         startActivity(intent)
-                    }
-
-                    5 -> {
-                        val identify = Intent(applicationContext, Identify_dashboard::class.java)
-                        startActivity(identify)
                     }
 
                     6 -> {
@@ -855,7 +850,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                             UIToastMessage.show(this, deleteSelectedCropResponse.getResponse())
                         }
                         AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null)
-                        selectedCropList!!.clear()
+                        selectedCropList?.clear()
                         getFarmerSelectedCrop(languageToLoad)
                     } else {
                         UIToastMessage.show(this, deleteSelectedCropResponse.getResponse())
@@ -1119,11 +1114,11 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
         private const val PERMISSION_REQUEST_CODE = 100
         private val arrayCategory = arrayOf(
             "Crop Advisory",
+            "SOP",
             "Soil Health Card",
             "Fertilizer Calculator",
             "Climate Resilent Technology",
             "Pest and Diseases",
-            "Identify Pest/Disease",
             "Market Price",
             "Warehouse Availabilities",
             "DBT Schemes"
@@ -1131,24 +1126,23 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
 
         private val arrayCategoryMarathi = arrayOf(
             "पीक सल्ला",
+            "SOP",
             "मृदा आरोग्य पत्रिका",
             "खत मात्रा गणक (कॅलक्यूलेटर)",
-            "हवामान अनुकूल तंत्रज्ञान",
+            "बदलत्या हवामानास अनुकूल शेती पद्धती",
             "कीड व रोग",
-            "किटक/रोग ओळखा",
             "बाजारभाव",
-            " गोदाम उपलब्धता",
+            "गोदाम उपलब्धता",
             "थेट लाभ हस्तांतरण योजना"
-
         )
 
         var arrayCategoryImg: IntArray = intArrayOf(
             R.drawable.ecology,
+            R.drawable.ic_sop,
             R.drawable.soil,
             R.drawable.fertilizer,
             R.drawable.climate_change,
             R.drawable.ladybug,
-            R.drawable.pest,
             R.drawable.commodity,
             R.drawable.warehouse,
             R.drawable.ic_dbt

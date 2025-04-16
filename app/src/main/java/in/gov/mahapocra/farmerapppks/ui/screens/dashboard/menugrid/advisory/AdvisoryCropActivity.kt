@@ -43,7 +43,6 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
     private lateinit var binding: ActivityAdvisoryCropBinding
     private var cropAdvisoryDetailsJSONArray: JSONArray? = null
     private var cropAdvisoryJSONArray: JSONArray? = null
-    private val googleDriveView: String = "https://mozilla.github.io/pdf.js/web/viewer.html?file="
     var cropId: Int? = 0
     private var cropName: String? = null
     private var farmerId: Int = 0
@@ -67,31 +66,6 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {
             startActivity(Intent(this, DashboardScreen::class.java))
-        }
-
-        binding.stageWiseTV.setOnClickListener {
-            binding.stageWiseTV.apply {
-                background = ContextCompat.getDrawable(this@AdvisoryCropActivity, R.drawable.shape_right_green)
-                setTextColor(ContextCompat.getColor(this@AdvisoryCropActivity, R.color.white))
-            }
-            binding.taskWiseTV.apply {
-                background = ContextCompat.getDrawable(this@AdvisoryCropActivity, R.drawable.shape_left_white)
-                setTextColor(ContextCompat.getColor(this@AdvisoryCropActivity, R.color.black))
-            }
-            binding.webView.visibility = View.GONE
-            binding.cropStagesRecyclerView.visibility = View.VISIBLE
-        }
-        binding.taskWiseTV.setOnClickListener {
-            binding.stageWiseTV.apply {
-                background = ContextCompat.getDrawable(this@AdvisoryCropActivity, R.drawable.shape_right)
-                setTextColor(ContextCompat.getColor(this@AdvisoryCropActivity, R.color.black))
-            }
-            binding.taskWiseTV.apply {
-                background = ContextCompat.getDrawable(this@AdvisoryCropActivity, R.drawable.shape_left)
-                setTextColor(ContextCompat.getColor(this@AdvisoryCropActivity, R.color.white))
-            }
-            binding.webView.visibility = View.VISIBLE
-            binding.cropStagesRecyclerView.visibility = View.GONE
         }
 
         binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {
@@ -181,10 +155,6 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
                         binding.sowingInfoLayout.sowingDateTextView.text =
                             jSONObject.getString("sowing_date")
                     }
-                    if (jSONObject.getString("advisory_pdf_url").isNotEmpty()) {
-                        Log.d("TAGGER", "onResponse pdf: ${jSONObject.getString("advisory_pdf_url")}")
-                        setupWebView(jSONObject.optString("advisory_pdf_url"))
-                    }
                     cropAdvisoryDetailsJSONArray = response.getdataArray()
                     if (cropAdvisoryDetailsJSONArray?.length()!! > 0) {
                         val stagesAdvisoryAdapter =
@@ -198,20 +168,6 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
                     UIToastMessage.show(this, response.response)
                 }
             }
-        }
-    }
-
-    private fun setupWebView(pdfUrl:String) {
-        val settings: WebSettings = binding.webView.settings
-        settings.javaScriptEnabled = true
-        settings.builtInZoomControls = true
-        settings.displayZoomControls = false
-
-        binding.webView.webViewClient = WebViewClient()
-        if (pdfUrl!=null) {
-            binding.webView.loadUrl(googleDriveView + pdfUrl)
-        }else{
-            Toast.makeText(this@AdvisoryCropActivity, "PDF not available", Toast.LENGTH_SHORT).show()
         }
     }
 

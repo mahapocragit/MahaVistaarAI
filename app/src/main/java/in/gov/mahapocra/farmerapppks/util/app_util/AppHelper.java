@@ -66,10 +66,10 @@ public class AppHelper {
 //            jsonObject12.put("name", "My Application");
 //            jsonObject12.put("icon", "icon9");
 
-            JSONObject jsonObject13 = new JSONObject();
-            jsonObject13.put("id", 13);
-            jsonObject13.put("name", "Suggestion & Grievances");
-            jsonObject13.put("icon", "icon9");
+//            JSONObject jsonObject13 = new JSONObject();
+//            jsonObject13.put("id", 13);
+//            jsonObject13.put("name", "Suggestion & Grievances");
+//            jsonObject13.put("icon", "icon9");
 
             jsonArray.put(jsonObject1);
 //            jsonArray.put(jsonObject2);
@@ -78,7 +78,7 @@ public class AppHelper {
             jsonArray.put(jsonObject7);
 //            jsonArray.put(jsonObject11);
 //            jsonArray.put(jsonObject12);
-            jsonArray.put(jsonObject13);
+//            jsonArray.put(jsonObject13);
             jsonArray.put(jsonObject2);
             jsonArray.put(jsonObject9);
 
@@ -164,10 +164,10 @@ public class AppHelper {
 //            jsonObject12.put("name", "माझे अर्ज");
 //            jsonObject12.put("icon", "icon9");
 
-            JSONObject jsonObject13 = new JSONObject();
-            jsonObject13.put("id", 13);
-            jsonObject13.put("name", "सूचना व तक्रार निवारण");
-            jsonObject13.put("icon", "icon9");
+//            JSONObject jsonObject13 = new JSONObject();
+//            jsonObject13.put("id", 13);
+//            jsonObject13.put("name", "सूचना व तक्रार निवारण");
+//            jsonObject13.put("icon", "icon9");
 
             jsonArray.put(jsonObject1);
 //            jsonArray.put(jsonObject2);
@@ -176,7 +176,7 @@ public class AppHelper {
             jsonArray.put(jsonObject7);
 //            jsonArray.put(jsonObject11);
 //            jsonArray.put(jsonObject12);
-            jsonArray.put(jsonObject13);
+//            jsonArray.put(jsonObject13);
             jsonArray.put(jsonObject2);
             jsonArray.put(jsonObject9);
 
