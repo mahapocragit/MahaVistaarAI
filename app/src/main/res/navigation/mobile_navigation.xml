@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="in.gov.mahapocra.farmerapppks.ui.home.HomeFragment"
+        android:name="farmerapp.ui.home.HomeFragment"
         android:label="@string/my_profile"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="in.gov.mahapocra.farmerapppks.ui.gallery.GalleryFragment"
+        android:name="farmerapp.ui.gallery.GalleryFragment"
         android:label="@string/my_Notification"
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
         android:id="@+id/nav_slideshow"
-        android:name="in.gov.mahapocra.farmerapppks.ui.slideshow.SlideshowFragment"
+        android:name="farmerapp.ui.slideshow.SlideshowFragment"
         android:label="@string/my_dbt_status"
         tools:layout="@layout/fragment_slideshow" />
 </navigation>

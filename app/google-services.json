@@ -1,36 +1,65 @@
 {
   "project_info": {
-    "project_number": "734220385400",
-    "project_id": "krishi-sanjeevani-farmers",
-    "storage_bucket": "krishi-sanjeevani-farmers.appspot.com"
+    "project_number": "573300977247",
+    "firebase_url": "https://pocra-eef95.firebaseio.com",
+    "project_id": "pocra-eef95",
+    "storage_bucket": "pocra-eef95.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:734220385400:android:937c66b1310d32e87b418d",
+        "mobilesdk_app_id": "1:573300977247:android:dbf469fdbf847620",
         "android_client_info": {
-          "package_name": "in.gov.mahapocra.farmerapppks"
+          "package_name": "in.gov.krishi.maharashtra.pocra.ffs"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "734220385400-3ihr4sbkb0vjvkcumt8jlju775vrnfd8.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBFiaEJksx-aIBhSn9hrGyyLY3txTE_9KY"
+          "current_key": "AIzaSyC5PZW5j6Lk6V7DLvAfg5pjxFKPf_rc170"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "734220385400-3ihr4sbkb0vjvkcumt8jlju775vrnfd8.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:573300977247:android:8a575de605f060a65bb5ea",
+        "android_client_info": {
+          "package_name": "in.gov.mahapocra.farmerapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5PZW5j6Lk6V7DLvAfg5pjxFKPf_rc170"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:573300977247:android:1f8c79a03f3ad9fe",
+        "android_client_info": {
+          "package_name": "in.gov.mahapocra.sma"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5PZW5j6Lk6V7DLvAfg5pjxFKPf_rc170"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
         }
       }
     }

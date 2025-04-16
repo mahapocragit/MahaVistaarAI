@@ -7,7 +7,7 @@ plugins {
 android {
 
     compileSdk 33
-    namespace 'in.gov.mahapocra.farmerapppks'
+    namespace 'in.gov.mahapocra.farmerapp'
 
     signingConfigs {
         release {
@@ -22,7 +22,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "in.gov.mahapocra.farmerapppks"
+        applicationId "in.gov.mahapocra.farmerapp"
         minSdkVersion 21
         targetSdkVersion 33
         versionCode 1

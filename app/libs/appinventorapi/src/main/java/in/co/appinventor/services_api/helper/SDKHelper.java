@@ -39,7 +39,7 @@ public class SDKHelper {
             JSONObject jsonObject8 = new JSONObject();
             jsonObject8.put("package_id", "com.krishi_maharashtra_sma");
             JSONObject jsonObject9 = new JSONObject();
-            jsonObject9.put("package_id", "in.gov.mahapocra.farmerapppks");
+            jsonObject9.put("package_id", "in.gov.mahapocra.farmerapp");
             dataArray.add(jsonObject1);
             dataArray.add(jsonObject2);
             dataArray.add(jsonObject3);
