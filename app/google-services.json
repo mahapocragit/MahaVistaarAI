@@ -27,9 +27,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:573300977247:android:8a575de605f060a65bb5ea",
+        "mobilesdk_app_id": "1:573300977247:android:b704a50e1a1558555bb5ea",
         "android_client_info": {
-          "package_name": "in.gov.mahapocra.farmerapp"
+          "package_name": "in.gov.mahapocra.mahavistaarai"
         }
       },
       "oauth_client": [],
