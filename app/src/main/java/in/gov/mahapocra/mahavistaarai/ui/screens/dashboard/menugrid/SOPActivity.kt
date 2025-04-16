@@ -36,7 +36,7 @@ class SOPActivity : AppCompatActivity(), ApiCallbackCode {
     private var wotrCropId: String? = null
     private var mUrl: String? = null
     private var sowingDate: String = ""
-    private val googleDriveView: String = "https://mozilla.github.io/pdf.js/web/viewer.html?file="
+    private val googleDriveView: String = "https://docs.google.com/viewer?url="
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,7 +96,7 @@ class SOPActivity : AppCompatActivity(), ApiCallbackCode {
 
         binding.webView.webViewClient = WebViewClient()
         if (pdfUrl!=null) {
-            val viewOnlyUrl = "$googleDriveView$pdfUrl#toolbar=0&navpanes=0&scrollbar=0"
+            val viewOnlyUrl = "$googleDriveView$pdfUrl"
             binding.webView.loadUrl(viewOnlyUrl)
         }else{
             Toast.makeText(this@SOPActivity, "PDF not available", Toast.LENGTH_SHORT).show()

@@ -44,7 +44,8 @@ import retrofit2.Call
 import retrofit2.Retrofit
 
 
-class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, AlertListEventListener {
+class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
+    AlertListEventListener {
 
     private lateinit var nameEditText: EditText
     private lateinit var mobNoEditText: EditText
@@ -92,7 +93,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_registration_temp)
+        setContentView(R.layout.activity_registration)
 
         languageToLoad = "mr"
         if (AppSettings.getLanguage(this@Registration).equals("1", ignoreCase = true)) {
@@ -147,7 +148,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
             textViewTaluka.text = talukaName
             textViewVillage.text = villageName
 
-        }else{
+        } else {
             textView5.text = "Register"
             textView6.text = "Your Account!"
         }
@@ -419,7 +420,8 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
                 CoroutineScope(Dispatchers.IO).launch {
                     val retrofit: Retrofit = api.getRetrofitInstance()
                     val apiRequest = retrofit.create(APIRequest::class.java)
-                    val responseCall: Call<JsonObject> = apiRequest.getRegistrationRequest(requestBody)
+                    val responseCall: Call<JsonObject> =
+                        apiRequest.getRegistrationRequest(requestBody)
                     api.postRequest(responseCall, this@Registration, 3)
                 }
             } catch (e: JSONException) {
@@ -491,7 +493,8 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
                 CoroutineScope(Dispatchers.IO).launch {
                     val retrofit: Retrofit = api.getRetrofitInstance()
                     val apiRequest = retrofit.create(APIRequest::class.java)
-                    val responseCall: Call<JsonObject> = apiRequest.getRegistrationRequest(requestBody)
+                    val responseCall: Call<JsonObject> =
+                        apiRequest.getRegistrationRequest(requestBody)
                     api.postRequest(responseCall, this@Registration, 3)
                 }
             } catch (e: JSONException) {
@@ -514,7 +517,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
         )
 
         val countdownTextview = dialog.findViewById<TextView>(R.id.countdownTextview)
-        countDownTimer = object : CountDownTimer(90000 , 1000) {
+        countDownTimer = object : CountDownTimer(90000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val minutes = (millisUntilFinished / 1000) / 60
                 val seconds = (millisUntilFinished / 1000) % 60
@@ -584,6 +587,36 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
             }
         }
 
+        if (i == 2) {
+            if (jSONObject != null) {
+                if (jSONObject.optInt("status") == 200) {
+                    val response: String = jSONObject.getString("response")
+                    Toast.makeText(this, response, Toast.LENGTH_LONG).show()
+                    sentOTP = jSONObject.optInt("otp").toString()
+                    addVerificationDialog(sentOTP)
+                }
+            }
+        }
+
+        if (i == 3) {
+            if (jSONObject != null) {
+
+                if (jSONObject.optInt("status") == 200) {
+                    val response: String = jSONObject.getString("response")
+                    Toast.makeText(this, response, Toast.LENGTH_LONG).show()
+                    val intent = Intent(this, DashboardScreen::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    val notifiCountValue: String = jSONObject.getString("Message")
+                    Toast.makeText(this, notifiCountValue, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
         if (i == 4 && jSONObject != null) {
             val response =
                 ResponseModel(
@@ -605,41 +638,6 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode, A
                 villageJSONArray = response.getdataArray()
             } else {
                 UIToastMessage.show(this, response.response)
-            }
-        }
-
-        if (i == 2) {
-            if (jSONObject != null) {
-                if (jSONObject.optInt("status") == 200) {
-                    val response: String = jSONObject.getString("response")
-                    Toast.makeText(this, response, Toast.LENGTH_LONG).show()
-                    sentOTP = jSONObject.optInt("otp").toString()
-                    addVerificationDialog(sentOTP)
-                }
-            }
-        }
-        if (i == 3) {
-            if (jSONObject != null) {
-
-                if (jSONObject.optInt("status")==200) {
-                    val response: String = jSONObject.getString("response")
-                    Toast.makeText(this, response, Toast.LENGTH_LONG).show()
-//                    if (farmerRegisterID <= 0) {
-//                        farmerRegisterID = jSONObject.getInt("RegistrationID")
-//                        AppSettings.getInstance()
-//                            .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisterID)
-//                    }
-
-                    val intent = Intent(this, DashboardScreen::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                    finish()
-                } else {
-                    val notifiCountValue: String = jSONObject.getString("Message")
-                    Toast.makeText(this, notifiCountValue, Toast.LENGTH_LONG).show()
-                }
             }
         }
     }

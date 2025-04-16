@@ -68,7 +68,8 @@ public interface APIServices {
     String CHECK_USER_ACTIVE_DEACTIVE = "authService/checkAppVersionLoggedDetails";
 
     String kGetmarketsPriceDetails ="masterService/msamb-data";
-    String kResetPassword = "Shareddbtapi/OtherApp/ResetPassword";
+    String kResetPassword = "authService/resetPassword";
+//    String kResetPassword = "Shareddbtapi/OtherApp/ResetPassword"; //This api was getting used for dbt related auth
     String fetchFarmerListForSHC = "webservices//fetch_farmer_shc_list";
     String kGetDistrictList = "masterService/get-all-district";
     String kGetCropCategorywise = "masterService/get-crop-categorywise";

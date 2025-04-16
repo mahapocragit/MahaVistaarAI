@@ -23,7 +23,7 @@
               <option name="connection">
                 <ConnectionSetting>
                   <option name="appId" value="in.gov.mahapocra.mahavistaarai" />
-                  <option name="mobileSdkAppId" value="1:573300977247:android:8a575de605f060a65bb5ea" />
+                  <option name="mobileSdkAppId" value="1:573300977247:android:b704a50e1a1558555bb5ea" />
                   <option name="projectId" value="pocra-eef95" />
                   <option name="projectNumber" value="573300977247" />
                 </ConnectionSetting>

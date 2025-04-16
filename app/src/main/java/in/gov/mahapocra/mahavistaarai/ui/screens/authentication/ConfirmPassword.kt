@@ -2,6 +2,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.JsonObject
@@ -38,6 +39,8 @@ class ConfirmPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode
         }
         binding = ActivityChangePwdTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        userMobileNo = intent.getStringExtra("MobileNo").toString()
         onClick()
     }
 
@@ -74,7 +77,7 @@ class ConfirmPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api = AppInventorApi(
                     this,
-                    APIServices.DBT,
+                    APIServices.FARMER,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true
@@ -106,12 +109,12 @@ class ConfirmPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode
                         jSONObject
                     )
                 if (response.getStatus()) {
-                    val notificationCountValue: String = jSONObject.getString("Message")
+                    val notificationCountValue: String = jSONObject.getString("response")
                     Toast.makeText(this, notificationCountValue, Toast.LENGTH_LONG).show();
                     val intent = Intent(this, LoginScreen::class.java)
                     startActivity(intent)
                 } else {
-                    val notificationCountValue: String = jSONObject.getString("Message")
+                    val notificationCountValue: String = jSONObject.getString("response")
                     Toast.makeText(this, notificationCountValue, Toast.LENGTH_LONG).show();
                 }
             }
