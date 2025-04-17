@@ -453,25 +453,42 @@ public class AppUtility {
     }
 
     public void showListDialogIndex(JSONArray ja, int requestCode, String title, String type, String typeId, Activity act, AlertListEventListener callBackListener) {
-        final CharSequence[] items = new CharSequence[ja.length()];
-        final List<String> selectedIndexArray = new ArrayList<>();
+        List<String> itemList = new ArrayList<>();
+        List<String> selectedIndexArray = new ArrayList<>();
+
         for (int i = 0; i < ja.length(); i++) {
             try {
-                items[i] = ja.getJSONObject(i).getString(type);
-                selectedIndexArray.add(ja.getJSONObject(i).getString(typeId));
+                JSONObject obj = ja.getJSONObject(i);
+                String item = obj.optString(type, null);
+                String id = obj.optString(typeId, null);
+
+                if (item != null && id != null) {
+                    itemList.add(item);
+                    selectedIndexArray.add(id);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+
+        // Convert to CharSequence array
+        final CharSequence[] items = itemList.toArray(new CharSequence[0]);
+
         AlertDialog.Builder listPicker = new AlertDialog.Builder(act);
         listPicker.setTitle(title);
         final AlertListEventListener alertListEventListener = callBackListener;
         final int i2 = requestCode;
-        listPicker.setItems(items, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                alertListEventListener.didSelectListItem(i2, items[which].toString(), (String) selectedIndexArray.get(which));
+
+        listPicker.setItems(items, (dialog, which) -> {
+            if (which >= 0 && which < selectedIndexArray.size()) {
+                String selectedText = items[which].toString();
+                String selectedId = selectedIndexArray.get(which);
+                alertListEventListener.didSelectListItem(i2, selectedText, selectedId);
+            } else {
+                Log.e("AppUtility", "Invalid selection index: " + which + " | Array size: " + selectedIndexArray.size());
             }
         });
+
         listPicker.show();
     }
 

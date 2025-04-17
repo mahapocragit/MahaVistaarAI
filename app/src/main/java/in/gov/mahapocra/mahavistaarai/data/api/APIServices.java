@@ -77,7 +77,7 @@ public interface APIServices {
     String kGetTalukaList = "masterService/get-taluka-on-district";
     String kGetVillageList ="masterService/get-village-on-taluka";
     String kSaveFarmerSelectedCrop ="farmerService/save-farmers-selected-crop";
-    String kGetMarketAndMarketName ="masterService/get-markets-by-districts";
+    String kGetMarketAndMarketName ="msambService/get-markets-by-districts";//masterService/get-markets-by-districts
 
     String kGetCropList = "farmerService/get-crop-details";
 

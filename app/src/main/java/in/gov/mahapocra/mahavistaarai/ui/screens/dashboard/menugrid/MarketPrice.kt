@@ -20,6 +20,7 @@ import `in`.co.appinventor.services_api.listener.DatePickerRequestListener
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.MarketPriceAdapter
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
@@ -165,7 +166,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
                 1,
                 getString(R.string.farmer_select_district),
                 "name",
-                "id",
+                "code",
                 this,
                 this
             )
@@ -182,7 +183,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
             val api =
                 AppInventorApi(
                     this,
-                    APIServices.SSO,
+                    APIServices.FARMER,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true
@@ -199,12 +200,13 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
     private fun fetchMarketPriceAndName() {
         val jsonObject = JSONObject()
         try {
-            jsonObject.put("dist_id", districtID)
+            jsonObject.put("api_key", APIKeys.SSO_PROD.key())
+            jsonObject.put("district_code", districtID)
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
                 AppInventorApi(
                     this,
-                    APIServices.SSO,
+                    APIServices.FARMER,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true
@@ -222,7 +224,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
     override fun didSelectListItem(i: Int, s: String?, s1: String?) {
 
         if (i == 1) {
-
+            Log.d("TAGGER", "didSelectListItem: $s1")
             districtID = s1!!.toInt()
             if (s != null) {
                 districtName = s
@@ -318,7 +320,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
                 districtJSONArray?.let {
                     for (j in 0 until it.length()) {
                         val districtObject = it.getJSONObject(j)
-                        val id = districtObject.getInt("id")
+                        val id = districtObject.getInt("code")
                         val name = districtObject.getString("name")
 
                         // Check if the current id matches districtID
