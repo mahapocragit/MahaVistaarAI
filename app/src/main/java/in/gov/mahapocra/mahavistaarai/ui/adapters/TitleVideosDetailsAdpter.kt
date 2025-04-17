@@ -79,7 +79,6 @@ class TitleVideosDetailsAdapter(private var context: Context? = null, private va
     }
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
-        TODO("Not yet implemented")
     }
 
 }

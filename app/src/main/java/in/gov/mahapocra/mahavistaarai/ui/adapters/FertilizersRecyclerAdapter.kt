@@ -99,11 +99,9 @@ class FertilizersRecyclerAdapter (
     }
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
-        TODO("Not yet implemented")
     }
 
     override fun deleteData(id: Int, farmerId: Int, cropId: Int) {
-        TODO("Not yet implemented")
     }
 
 

@@ -394,12 +394,11 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 jsonObject.put("MobileNo", mob.trim { it <= ' ' })
                 jsonObject.put("EmailId", emailid)
                 jsonObject.put("DistrictName", districtName)
-                jsonObject.put("DistrictID", districtID)
+                jsonObject.put("DistrictCode", districtID)
                 jsonObject.put("TalukaName", talukaName)
-                jsonObject.put("TalukaID", talukaID)
+                jsonObject.put("TalukaCode", talukaID)
                 jsonObject.put("VillageName", villageName)
-                jsonObject.put("VillageCode", "")
-                jsonObject.put("VillageID", villageID)
+                jsonObject.put("VillageCode", villageID)
                 jsonObject.put("Status", "Active")
                 jsonObject.put("version_number", versionName)
                 jsonObject.put("fcm_token", token)
@@ -408,11 +407,12 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 jsonObject.put("Password", "")
                 jsonObject.put("SecurityKey", APIServices.SSO_KEY)
 
+                Log.d("TAGGER", "userValidationAndRegistration: $jsonObject")
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api =
                     AppInventorApi(
                         this,
-                        APIServices.DBT,
+                        APIServices.FARMER,
                         "",
                         AppString(this).getkMSG_WAIT(),
                         true
@@ -481,6 +481,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 jsonObject.put("Password", pass)
                 jsonObject.put("SecurityKey", APIServices.SSO_KEY)
 
+                Log.d("TAGGER", "userValidationAndRegistration: $jsonObject")
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api =
                     AppInventorApi(
@@ -599,6 +600,8 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         }
 
         if (i == 3) {
+
+            Log.d("TAGGER", "userValidationAndRegistration: $jSONObject")
             if (jSONObject != null) {
 
                 if (jSONObject.optInt("status") == 200) {

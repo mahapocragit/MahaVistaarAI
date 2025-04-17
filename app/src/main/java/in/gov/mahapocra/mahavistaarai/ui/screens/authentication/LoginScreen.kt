@@ -39,7 +39,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     private lateinit var mobileNo: String
     private lateinit var dialog: Dialog
     private var userPass = ""
-    private lateinit var sentOTP: String
+    private var sentOTP: String = ""
     var languageToLoad = "mr"
     private var farmerRegisteredID: Int = 0
     private var loginOption: Int = 0
@@ -120,10 +120,10 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     }
 
     private fun userValidateAndLogin() {
-        if (loginOption == 1) {
+        if (loginOption == OTP_VERIFY) {
             mobileNo = binding.userIdEditText.text.toString()
             userPass = ""
-            callRefreshTokenAPI(mobileNo, userPass)
+            callRefreshTokenAPI(mobileNo, sentOTP)
         } else {
             mobileNo = binding.userIdEditText.text.toString()
             userPass = binding.passwordEditText.text.toString()
@@ -136,7 +136,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         }
     }
 
-    private fun callRefreshTokenAPI(mobileNo: String, userPass: String) {
+    private fun callRefreshTokenAPI(mobileNo: String, userPass: String = "", otp: String = "") {
         if (mobileNo.isEmpty()) {
             binding.userIdEditText.error = resources.getString(R.string.lgn_register_phone_error)
             binding.userIdEditText.requestFocus()
@@ -145,7 +145,11 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             try {
                 jsonObject.put("SecurityKey", APIServices.SSO_KEY)
                 jsonObject.put("MobileNo", mobileNo.trim { it <= ' ' })
-                jsonObject.put("Password", userPass)
+                if (otp.isNotEmpty()) {
+                    jsonObject.put("otp", otp)
+                } else {
+                    jsonObject.put("Password", userPass)
+                }
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api =
@@ -166,7 +170,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         }
     }
 
-    private fun callLoginAPI(strToken: String) {
+    private fun callLoginAPI(strToken: String, otp: String = "") {
         if (mobileNo.isEmpty()) {
             binding.userIdEditText.error = resources.getString(R.string.lgn_register_phone_error)
             binding.userIdEditText.requestFocus()
@@ -176,7 +180,11 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             try {
                 jsonObject.put("SecurityKey", APIServices.SSO_KEY)
                 jsonObject.put("MobileNo", mobileNo.trim { it <= ' ' })
-                jsonObject.put("Password", userPass)
+                if (otp.isNotEmpty()) {
+                    jsonObject.put("otp", otp)
+                } else {
+                    jsonObject.put("Password", userPass)
+                }
                 jsonObject.put("refresh_token", strToken)
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
@@ -238,7 +246,8 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     val response: String = jSONObject.getString("response")
                     Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                     sentOTP = jSONObject.optInt("otp").toString()
-//                    addVerificationDialog()
+                    Log.d("TAGGER", "onResponse: $sentOTP")
+                    addVerificationDialog()
                 }
             }
         }
@@ -246,7 +255,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             if (jSONObject != null) {
                 if (jSONObject.optInt("status") == 200) {
                     refreshToken = jSONObject.getString("refresh_token")
-                    callLoginAPI(refreshToken)
+                    callLoginAPI(refreshToken, sentOTP)
                 } else {
                     val message: String = jSONObject.getString("response")
                     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
@@ -257,12 +266,17 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             if (jSONObject != null) {
                 Log.d("TAGGER", "onResponse: $jSONObject")
                 if (jSONObject.optInt("status") == 200) {
-                    if (loginOption == 1) {
-                        val message: String = jSONObject.getString("Message")
+                    if (loginOption == OTP_VERIFY) {
+                        val message: String = jSONObject.getString("response")
                         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-                        sentOTP = jSONObject.getString("OTP")
                         farmerRegisteredID = jSONObject.getInt("FAAPRegistrationID")
-                        addVerificationDialog(sentOTP)
+                        AppSettings.getInstance()
+                            .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisteredID)
+                        val intent = Intent(this, DashboardScreen::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
                     } else {
                         val message: String = jSONObject.getString("response")
                         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
@@ -285,7 +299,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         }
     }
 
-    private fun addVerificationDialog(sentOTP: String) {
+    private fun addVerificationDialog() {
         dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -335,16 +349,19 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     }
 
     private fun userVerification(enteredOTP: String) {
+        mobileNo = binding.userIdEditText.text.toString()
         if (enteredOTP == this.sentOTP) {
-            Toast.makeText(this, "Login successfully", Toast.LENGTH_LONG).show()
-            AppSettings.getInstance()
-                .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisteredID)
-            val intent = Intent(this, DashboardScreen::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-            finish()
+            //TODO: Write the code for refresh token using otp and login using otp
+            callRefreshTokenAPI(mobileNo, userPass, sentOTP)
+//            Toast.makeText(this, "Login successfully", Toast.LENGTH_LONG).show()
+//            AppSettings.getInstance()
+//                .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisteredID)
+//            val intent = Intent(this, DashboardScreen::class.java)
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//            startActivity(intent)
+//            finish()
             dialog.dismiss()
         } else {
             Toast.makeText(this, R.string.wrong_OTP, Toast.LENGTH_LONG).show()

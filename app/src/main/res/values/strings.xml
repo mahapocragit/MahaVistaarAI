@@ -262,7 +262,6 @@
     <string name="crop_advisory">Crop Advisory</string>
     <string name="doc_upload"> Upload Image/Doc if any </string>
     <string name="event_details"> Event Details </string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" tools:ignore="MissingTranslation">Hello blank fragment</string>
     <string name="change">Change</string>
     <string name="cropSapAdvisoryDummyDta"></string>
