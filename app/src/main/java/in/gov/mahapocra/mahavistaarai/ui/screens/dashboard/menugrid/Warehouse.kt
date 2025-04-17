@@ -15,6 +15,7 @@ import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListene
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.WarehouseAvailabilityAdapter
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
@@ -94,7 +95,7 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
                 1,
                 getString(R.string.farmer_select_district),
                 "name",
-                "id",
+                "code",
                 this,
                 this
             )
@@ -109,7 +110,7 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
             val api =
                 AppInventorApi(
                     this,
-                    APIServices.SSO,
+                    APIServices.FARMER,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true
@@ -126,14 +127,15 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
     private fun wareHouseDetails() {
         val jsonObject = JSONObject()
         try {
-            jsonObject.put("district_id", districtID)
+            jsonObject.put("api_key", APIKeys.SSO_PROD.key())
+            jsonObject.put("district_code", districtID)
             jsonObject.put("lang", languageToLoad)
 
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
                 AppInventorApi(
                     this,
-                    APIServices.SSO,
+                    APIServices.FARMER,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true
@@ -164,7 +166,7 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
                 districtJSONArray?.let {
                     for (j in 0 until it.length()) {
                         val districtObject = it.getJSONObject(j)
-                        val id = districtObject.getInt("id")
+                        val id = districtObject.getInt("code")
                         val name = districtObject.getString("name")
 
                         // Check if the current id matches districtID
