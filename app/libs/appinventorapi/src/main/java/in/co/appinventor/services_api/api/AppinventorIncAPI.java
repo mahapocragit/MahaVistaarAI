@@ -112,17 +112,17 @@ public class AppinventorIncAPI {
     public void getRequestWithRetrofitData(String url, final ApiCallback apiCallback) {
         isInternetConnected();
         isRegisterWithSDK();
-        ((Api) getRetrofitInstance().create(Api.class)).getCommonRequestDataApi(url).enqueue(new Callback<JsonObject>() {
+        getRetrofitInstance().create(Api.class).getCommonRequestDataApi(url).enqueue(new Callback<JsonObject>() {
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull retrofit2.Response<JsonObject> response) {
                 if (AppinventorIncAPI.this.mProgressDialog != null && AppinventorIncAPI.this.mProgressDialog.isShowing()) {
                     AppinventorIncAPI.this.mProgressDialog.dismiss();
                 }
                 if (response.isSuccessful()) {
-                    DebugLog.getInstance().d("onResponse=====" + ((JsonObject) response.body()));
+                    DebugLog.getInstance().d("onResponse=====" + response.body());
                     apiCallback.onResponse(call, response, 0);
                     return;
                 }
-                DebugLog.getInstance().d("onResponse=====" + response.toString());
+                DebugLog.getInstance().d("onResponse=====" + response);
             }
 
             public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
@@ -130,7 +130,7 @@ public class AppinventorIncAPI {
                     AppinventorIncAPI.this.mProgressDialog.dismiss();
                 }
                 apiCallback.onFailure(call, t, 0);
-                DebugLog.getInstance().d("onFailure=====" + t.toString());
+                DebugLog.getInstance().d("onFailure=====" + t);
             }
         });
     }
@@ -138,23 +138,19 @@ public class AppinventorIncAPI {
     public void getRequestData(String url, final ApiJSONObjCallback apiCallback, final int requestCode) {
 
         isInternetConnected();
-        //isRegisterWithSDK();
-        ((Api) getRetrofitInstance().create(Api.class)).getCommonRequestDataApi(url).enqueue(new Callback<JsonObject>() {
+        getRetrofitInstance().create(Api.class).getCommonRequestDataApi(url).enqueue(new Callback<JsonObject>() {
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull retrofit2.Response<JsonObject> response) {
                 if (AppinventorIncAPI.this.mProgressDialog != null && AppinventorIncAPI.this.mProgressDialog.isShowing()) {
                     AppinventorIncAPI.this.mProgressDialog.dismiss();
                 }
                 if (response.isSuccessful()) {
-                    JsonObject loginResponse = (JsonObject) response.body();
+                    JsonObject loginResponse = response.body();
                     try {
                         JSONObject jsonObject = new JSONObject(loginResponse.toString());
-                        DebugLog.getInstance().d("onResponse=====" + loginResponse);
                         apiCallback.onResponse(jsonObject, requestCode);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                } else {
-                    DebugLog.getInstance().d("onResponse=====" + response.toString());
                 }
             }
 
@@ -163,7 +159,7 @@ public class AppinventorIncAPI {
                     AppinventorIncAPI.this.mProgressDialog.dismiss();
                 }
                 apiCallback.onFailure(t, requestCode);
-                DebugLog.getInstance().d("onFailure=====" + t.toString());
+                DebugLog.getInstance().d("onFailure=====" + t);
             }
         });
     }
@@ -171,21 +167,21 @@ public class AppinventorIncAPI {
     public void getRequestStringData(String url, final ApiStringCallback apiCallback, final int requestCode) {
         isInternetConnected();
         isRegisterWithSDK();
-        ((Api) getRetrofitInstance().create(Api.class)).getCommonRequestStringDataApi(url).enqueue(new Callback<ResponseBody>() {
+        getRetrofitInstance().create(Api.class).getCommonRequestStringDataApi(url).enqueue(new Callback<ResponseBody>() {
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull retrofit2.Response<ResponseBody> response) {
                 if (AppinventorIncAPI.this.mProgressDialog != null && AppinventorIncAPI.this.mProgressDialog.isShowing()) {
                     AppinventorIncAPI.this.mProgressDialog.dismiss();
                 }
                 if (response.isSuccessful()) {
                     try {
-                        String res = ((ResponseBody) response.body()).string();
+                        String res = response.body().string();
                         DebugLog.getInstance().d("onResponse=====" + res);
                         apiCallback.onResponse(res, requestCode);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 } else {
-                    DebugLog.getInstance().d("onResponse=====" + response.toString());
+                    DebugLog.getInstance().d("onResponse=====" + response);
                 }
             }
 
@@ -194,7 +190,7 @@ public class AppinventorIncAPI {
                     AppinventorIncAPI.this.mProgressDialog.dismiss();
                 }
                 apiCallback.onFailure(t, requestCode);
-                DebugLog.getInstance().d("onFailure=====" + t.toString());
+                DebugLog.getInstance().d("onFailure=====" + t);
             }
         });
     }
@@ -202,17 +198,17 @@ public class AppinventorIncAPI {
     public void getJSONArrayRequestData(String url, final ApiArrayCallback apiCallback) {
         isInternetConnected();
         isRegisterWithSDK();
-        ((Api) getRetrofitInstance().create(Api.class)).getCommonRequestJSONArrayDataApi(url).enqueue(new Callback<JsonArray>() {
+        getRetrofitInstance().create(Api.class).getCommonRequestJSONArrayDataApi(url).enqueue(new Callback<JsonArray>() {
             public void onResponse(@NonNull Call<JsonArray> call, @NonNull retrofit2.Response<JsonArray> response) {
                 if (AppinventorIncAPI.this.mProgressDialog != null && AppinventorIncAPI.this.mProgressDialog.isShowing()) {
                     AppinventorIncAPI.this.mProgressDialog.dismiss();
                 }
                 if (response.isSuccessful()) {
-                    DebugLog.getInstance().d("onResponse=====" + ((JsonArray) response.body()));
+                    DebugLog.getInstance().d("onResponse=====" + response.body());
                     apiCallback.onResponse(call, response, 0);
                     return;
                 }
-                DebugLog.getInstance().d("onResponse=====" + response.toString());
+                DebugLog.getInstance().d("onResponse=====" + response);
             }
 
             public void onFailure(@NonNull Call<JsonArray> call, @NonNull Throwable t) {
@@ -220,7 +216,7 @@ public class AppinventorIncAPI {
                     AppinventorIncAPI.this.mProgressDialog.dismiss();
                 }
                 apiCallback.onFailure(call, t, 0);
-                DebugLog.getInstance().d("onFailure=====" + t.toString());
+                DebugLog.getInstance().d("onFailure=====" + t);
             }
         });
     }
@@ -228,13 +224,13 @@ public class AppinventorIncAPI {
     public void getRequestDataWithCallback(String url, final ApiCallbackResponse apiCallback) {
         isInternetConnected();
         isRegisterWithSDK();
-        ((Api) getRetrofitInstance().create(Api.class)).getCommonRequestDataApi(url).enqueue(new Callback<JsonObject>() {
+        getRetrofitInstance().create(Api.class).getCommonRequestDataApi(url).enqueue(new Callback<JsonObject>() {
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull retrofit2.Response<JsonObject> response) {
                 if (AppinventorIncAPI.this.mProgressDialog != null && AppinventorIncAPI.this.mProgressDialog.isShowing()) {
                     AppinventorIncAPI.this.mProgressDialog.dismiss();
                 }
                 if (response.isSuccessful()) {
-                    JsonObject serverResponse = (JsonObject) response.body();
+                    JsonObject serverResponse = response.body();
                     try {
                         JSONObject jsonObject = new JSONObject(String.valueOf(serverResponse));
                         DebugLog.getInstance().d("onResponse=====" + serverResponse);
@@ -245,8 +241,8 @@ public class AppinventorIncAPI {
                         e2.printStackTrace();
                     }
                 } else {
-                    apiCallback.onResponse((JSONObject) null);
-                    DebugLog.getInstance().d("onResponse=====" + response.toString());
+                    apiCallback.onResponse(null);
+                    DebugLog.getInstance().d("onResponse=====" + response);
                 }
             }
 
@@ -256,7 +252,7 @@ public class AppinventorIncAPI {
                 }
                 try {
                     apiCallback.onFailure(new JSONObject(String.valueOf(call)), t);
-                    DebugLog.getInstance().d("onFailure=====" + t.toString());
+                    DebugLog.getInstance().d("onFailure=====" + t);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -273,7 +269,7 @@ public class AppinventorIncAPI {
                     AppinventorIncAPI.this.mProgressDialog.dismiss();
                 }
                 if (response.isSuccessful()) {
-                    JsonObject serverResponse = (JsonObject) response.body();
+                    JsonObject serverResponse = response.body();
                     DebugLog.getInstance().d("onResponse=====" + serverResponse);
                     try {
                         callbackResponse.onResponse(new JSONObject(String.valueOf(serverResponse)));
@@ -281,7 +277,7 @@ public class AppinventorIncAPI {
                         e.printStackTrace();
                     }
                 } else {
-                    callbackResponse.onResponse((JSONObject) null);
+                    callbackResponse.onResponse(null);
                 }
             }
 
@@ -291,7 +287,7 @@ public class AppinventorIncAPI {
                 }
                 try {
                     callbackResponse.onFailure(new JSONObject(String.valueOf(call)), t);
-                    DebugLog.getInstance().d("onFailure=====" + t.toString());
+                    DebugLog.getInstance().d("onFailure=====" + t);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -308,7 +304,7 @@ public class AppinventorIncAPI {
                     AppinventorIncAPI.this.mProgressDialog.dismiss();
                 }
                 if (response.isSuccessful()) {
-                    JsonObject serverResponse = (JsonObject) response.body();
+                    JsonObject serverResponse = response.body();
                     DebugLog.getInstance().d("onResponse=====" + serverResponse);
                     try {
                         apiCallback.onResponse(new JSONObject(String.valueOf(serverResponse)), requestCode);
@@ -316,7 +312,7 @@ public class AppinventorIncAPI {
                         e.printStackTrace();
                     }
                 } else {
-                    apiCallback.onResponse((JSONObject) null, requestCode);
+                    apiCallback.onResponse(null, requestCode);
                 }
             }
 
@@ -326,7 +322,7 @@ public class AppinventorIncAPI {
                 }
                 try {
                     apiCallback.onFailure(call, t, requestCode);
-                    DebugLog.getInstance().d("onFailure=====" + t.toString());
+                    DebugLog.getInstance().d("onFailure=====" + t);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -343,7 +339,7 @@ public class AppinventorIncAPI {
                     AppinventorIncAPI.this.mProgressDialog.dismiss();
                 }
                 if (response.isSuccessful()) {
-                    JsonObject serverResponse = (JsonObject) response.body();
+                    JsonObject serverResponse = response.body();
                     DebugLog.getInstance().d("onResponse=====" + serverResponse);
                     try {
                         apiCallback.onResponse(new JSONObject(String.valueOf(serverResponse)), requestCode);
@@ -351,7 +347,7 @@ public class AppinventorIncAPI {
                         e.printStackTrace();
                     }
                 } else {
-                    apiCallback.onResponse((JSONObject) null, requestCode);
+                    apiCallback.onResponse(null, requestCode);
                 }
             }
 
@@ -361,7 +357,7 @@ public class AppinventorIncAPI {
                 }
                 try {
                     apiCallback.onFailure(call, t, requestCode);
-                    DebugLog.getInstance().d("onFailure=====" + t.toString());
+                    DebugLog.getInstance().d("onFailure=====" + t);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -387,7 +383,7 @@ public class AppinventorIncAPI {
                     AppinventorIncAPI.this.mProgressDialog.dismiss();
                 }
                 if (response.isSuccessful()) {
-                    JsonObject serverResponse = (JsonObject) response.body();
+                    JsonObject serverResponse = response.body();
                     DebugLog.getInstance().d("onResponse=====" + serverResponse);
                     try {
                         apiCallback.onResponse(new JSONObject(String.valueOf(serverResponse)), requestCode);
@@ -395,7 +391,7 @@ public class AppinventorIncAPI {
                         e.printStackTrace();
                     }
                 } else {
-                    apiCallback.onResponse((JSONObject) null, requestCode);
+                    apiCallback.onResponse(null, requestCode);
                 }
             }
 
@@ -405,7 +401,7 @@ public class AppinventorIncAPI {
                 }
                 try {
                     apiCallback.onFailure(call, t, requestCode);
-                    DebugLog.getInstance().d("onFailure=====" + t.toString());
+                    DebugLog.getInstance().d("onFailure=====" + t);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

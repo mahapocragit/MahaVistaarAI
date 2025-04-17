@@ -507,11 +507,7 @@ public class AppUtility {
         listPicker.setTitle(title);
         final AlertListEventListener alertListEventListener = callBackListener;
         final int i2 = requestCode;
-        listPicker.setItems(items, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                alertListEventListener.didSelectListItem(i2, items[which].toString(), (String) selectedIndexArray.get(which));
-            }
-        });
+        listPicker.setItems(items, (dialog, which) -> alertListEventListener.didSelectListItem(i2, items[which].toString(), (String) selectedIndexArray.get(which)));
         listPicker.show();
     }
 

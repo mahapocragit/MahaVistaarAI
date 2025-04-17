@@ -169,7 +169,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             val api =
                 AppInventorApi(
                     this,
-                    APIServices.SSO,
+                    APIServices.FARMER,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true
@@ -282,7 +282,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                     2,
                     getString(R.string.farmer_select_taluka),
                     "name",
-                    "id",
+                    "code",
                     this,
                     this
                 )
@@ -319,7 +319,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 1,
                 getString(R.string.farmer_select_district),
                 "name",
-                "id",
+                "code",
                 this,
                 this
             )
@@ -392,6 +392,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             try {
                 jsonObject.put("Name", userName)
                 jsonObject.put("MobileNo", mob.trim { it <= ' ' })
+                jsonObject.put("NewMobileNo", mob.trim { it <= ' ' })
                 jsonObject.put("EmailId", emailid)
                 jsonObject.put("DistrictName", districtName)
                 jsonObject.put("DistrictCode", districtID)
@@ -466,6 +467,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             try {
                 jsonObject.put("Name", userName)
                 jsonObject.put("MobileNo", mob.trim { it <= ' ' })
+                jsonObject.put("NewMobileNo", mob.trim { it <= ' ' })
                 jsonObject.put("EmailId", emailid)
                 jsonObject.put("DistrictName", districtName)
                 jsonObject.put("DistrictCode", districtID)
@@ -706,13 +708,13 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         val jsonObject = JSONObject()
         try {
             jsonObject.put("lang", languageToLoad)
-            jsonObject.put("district_id", districtID)
+            jsonObject.put("district_code", districtID)
 
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
                 AppInventorApi(
                     this,
-                    APIServices.SSO,
+                    APIServices.FARMER,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true
@@ -734,13 +736,13 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         val jsonObject = JSONObject()
         try {
             jsonObject.put("lang", languageToLoad)
-            jsonObject.put("taluka_id", talukaID)
+            jsonObject.put("taluka_code", talukaID)
 
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
                 AppInventorApi(
                     this,
-                    APIServices.SSO,
+                    APIServices.FARMER,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true
