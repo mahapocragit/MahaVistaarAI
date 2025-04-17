@@ -56,6 +56,9 @@ public interface APIRequest {
     @POST(APIServices.kGeFarmersSelectedCrop)
     Call<JsonObject> getFarmersSelectedCrop(@Body RequestBody params);
 
+    @GET(APIServices.kGetVideosCategories)
+    Call<JsonObject> getFarmersVideosJson();
+
     @POST(APIServices.kdeleteFarmerSelectedCrop)
     Call<JsonObject> deleteSelectedCrop(@Body RequestBody params);
 

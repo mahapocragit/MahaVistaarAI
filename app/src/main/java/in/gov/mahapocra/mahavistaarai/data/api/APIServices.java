@@ -62,6 +62,7 @@ public interface APIServices {
 //    String kGetRegistration = "Shareddbtapi/OtherApp/GetRegistration";
     String kGetRegistration = "authService/getUserdetails";
     String kGeFarmersSelectedCrop = "farmerService/get-farmers-selected-crop";
+    String kGetVideosCategories = "videoService/get-video-category-details";
     String kdeleteFarmerSelectedCrop = "farmerService/delete-farmers-selected-crop";
     String kGetmarketsList = "masterService/get-markets-by-taluka";
 

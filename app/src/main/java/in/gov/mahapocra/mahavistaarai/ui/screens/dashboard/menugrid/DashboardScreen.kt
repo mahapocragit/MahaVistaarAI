@@ -66,6 +66,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.Grie
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.MyVillageProfilePdf
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.news.NewsListActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.training.TrainingLocationSelection
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.ComingSoonActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
@@ -272,6 +273,13 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                     Intent(
                         this@DashboardScreen,
                         ForumActivity::class.java
+                    )
+                )
+
+                R.id.nav_videos -> startActivity(
+                    Intent(
+                        this@DashboardScreen,
+                        VideosActivity::class.java
                     )
                 )
             }

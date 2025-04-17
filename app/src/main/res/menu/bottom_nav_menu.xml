@@ -19,4 +19,9 @@
         android:id="@+id/nav_help"
         android:icon="@drawable/ic_help"
         android:title="@string/forum_bottom"/>
+
+    <item
+        android:id="@+id/nav_videos"
+        android:icon="@drawable/ic_video"
+        android:title="@string/videos_bottom"/>
 </menu>

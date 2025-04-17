@@ -49,6 +49,12 @@
         android:theme="@style/Theme.FarmerApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.screens.dashboard.video.VideosDetailedActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.screens.dashboard.video.VideosActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.screens.dashboard.menugrid.SOPActivity"
             android:exported="false" />
         <activity
