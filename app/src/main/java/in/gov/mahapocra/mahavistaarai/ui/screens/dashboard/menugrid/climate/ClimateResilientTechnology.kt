@@ -14,6 +14,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -72,12 +73,12 @@ class ClimateResilientTechnology : AppCompatActivity(), ApiJSONObjCallback, ApiC
     private fun climateResilientGroupList() {
         val jsonObject = JSONObject()
         try {
-            jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+            jsonObject.put("api_key", APIServices.SSO_KEY)
             jsonObject.put("lang", languageToLoad)
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api = AppInventorApi(
                 this,
-                APIServices.DBT,
+                APIServices.FARMER,
                 "",
                 AppString(this).getkMSG_WAIT(),
                 true
@@ -102,6 +103,7 @@ class ClimateResilientTechnology : AppCompatActivity(), ApiJSONObjCallback, ApiC
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 2) {
             if (jSONObject != null) {
+                Log.d("TAGGER", "onResponse: $jSONObject")
                 val response =
                     ResponseModel(
                         jSONObject
@@ -135,8 +137,8 @@ class ClimateResilientTechnology : AppCompatActivity(), ApiJSONObjCallback, ApiC
         for (i in 0 until craGroppLength) {
             val userDetail = resilientCRAGroupJSONArray.getJSONObject(i)
             groupName.add(userDetail.getString("GroupName"))
-            groupImagePath.add(userDetail.getString("GroupImagePath"))
-            webUrl.add(userDetail.getString("WebURL"))
+            groupImagePath.add(userDetail.getString("groupimagepath"))
+            webUrl.add(userDetail.getString("WbUrl"))
         }
         val intent = Intent(this, ClimateDetailsGrid::class.java)
         val b = Bundle()

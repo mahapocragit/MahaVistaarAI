@@ -95,7 +95,7 @@ public interface APIServices {
     String kCropAdvisory ="farmService/get-all-crops";
     String kCropAdvisoryNew ="farmService/get-all-crops-by-taluka-advisory/";
 
-    String kClimateResilientTechnology ="Shareddbtapi/PocraWebsite/GetCRAGroups";
+    String kClimateResilientTechnology ="craService/get_cra_groups";
     String kClimateResilientTechnologyNewUpdates ="Shareddbtapi/PocraWebsite/GetCRAGroupKharif";
 
     String kSubdivisionUpcommingEvent ="buildup/subdivision-wise-upcomming-event-list";

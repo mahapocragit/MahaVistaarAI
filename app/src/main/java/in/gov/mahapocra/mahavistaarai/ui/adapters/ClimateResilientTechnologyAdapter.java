@@ -19,9 +19,9 @@ import in.gov.mahapocra.mahavistaarai.R;
 
 public class ClimateResilientTechnologyAdapter extends RecyclerView.Adapter<ClimateResilientTechnologyAdapter.ViewHolder> {
 
-    private OnMultiRecyclerItemClickListener listener;
-    private Context mContext;
-    private JSONArray mJSONArray;
+    private final OnMultiRecyclerItemClickListener listener;
+    private final Context mContext;
+    private final JSONArray mJSONArray;
 
     public ClimateResilientTechnologyAdapter(Context context, OnMultiRecyclerItemClickListener listener, JSONArray jsonArray) {
         this.mContext = context;
@@ -38,7 +38,6 @@ public class ClimateResilientTechnologyAdapter extends RecyclerView.Adapter<Clim
 
     @Override
     public void onBindViewHolder(@NonNull ClimateResilientTechnologyAdapter.ViewHolder holder, int position) {
-        Log.d("mmhkjfhkdsajhf",mJSONArray.toString());
         try {
             holder.setDvata(mJSONArray.getJSONObject(position), listener);
         } catch (JSONException e) {
@@ -55,31 +54,23 @@ public class ClimateResilientTechnologyAdapter extends RecyclerView.Adapter<Clim
         }
     }
     public class ViewHolder extends RecyclerView.ViewHolder {
-
-        private TextView nameTextView2;
-        private TextView nameTextView;
+        private final TextView nameTextView2;
+        private final TextView nameTextView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            nameTextView2 =(TextView)  itemView.findViewById(R.id.nameTextView2);
-            nameTextView =(TextView)  itemView.findViewById(R.id.nameTextView);
+            nameTextView2 = itemView.findViewById(R.id.nameTextView2);
+            nameTextView = itemView.findViewById(R.id.nameTextView);
         }
-
         public void setDvata(JSONObject jsonObject, OnMultiRecyclerItemClickListener listener) {
             try {
-                //nameTextView.setText(jsonObject.getString("MainGroupSRNo")+" - " + jsonObject.getString("MainGroupName"));
                 nameTextView2.setText(jsonObject.getString("MainGroupSRNo")+" - " );
                 nameTextView.setText( jsonObject.getString("MainGroupName"));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onMultiRecyclerViewItemClick(2, jsonObject);
-                }
-            });
+            itemView.setOnClickListener(v -> listener.onMultiRecyclerViewItemClick(2, jsonObject));
         }
     }
 }
