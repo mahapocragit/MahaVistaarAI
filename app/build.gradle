@@ -6,7 +6,7 @@ plugins {
 
 android {
 
-    compileSdk 33
+    compileSdk 34
     namespace 'in.gov.mahapocra.mahavistaarai'
 
     signingConfigs {
@@ -24,8 +24,8 @@ android {
     defaultConfig {
         applicationId "in.gov.mahapocra.mahavistaarai"
         minSdkVersion 21
-        targetSdkVersion 33
-        versionCode 1
+        targetSdkVersion 34
+        versionCode 2
         versionName "1.0"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

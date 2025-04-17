@@ -43,6 +43,10 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     var languageToLoad = "mr"
     private var farmerRegisteredID: Int = 0
     private var loginOption: Int = 0
+    private var mobile = ""
+    private val PASSWORD_VERIFY = 0
+    private val OTP_VERIFY = 1
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +60,12 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
     private fun onClick() {
         binding.signInButton.setOnClickListener {
-            userValidateAndLogin()
+            //0-Password 1-OTP
+            if (loginOption == PASSWORD_VERIFY) {
+                userValidateAndLogin()
+            } else {
+                sendOTP()
+            }
         }
         binding.forgotPassword.setOnClickListener {
             val intent2 = Intent(applicationContext, ForgetPassword::class.java)
@@ -73,6 +82,39 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     "Please enter at least 6 character in password",
                     Toast.LENGTH_LONG
                 ).show()
+            }
+        }
+    }
+
+    private fun sendOTP() {
+        mobile = binding.userIdEditText.text.toString()
+        if (mobile.isEmpty()) {
+            binding.userIdEditText.error = resources.getString(R.string.login_mob_err)
+            binding.userIdEditText.requestFocus()
+        } else if (!AppUtility.getInstance().isValidPhoneNumber(mobile)) {
+            binding.userIdEditText.error = resources.getString(R.string.login_mob_valid_err)
+            binding.userIdEditText.requestFocus()
+        } else {
+            val jsonObject = JSONObject()
+            try {
+                jsonObject.put("MobileNo", mobile.trim { it <= ' ' })
+                jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api =
+                    AppInventorApi(
+                        this,
+                        APIServices.FARMER,
+                        "",
+                        AppString(this).getkMSG_WAIT(),
+                        true
+                    )
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(APIRequest::class.java)
+                val responseCall: Call<JsonObject> = apiRequest.getOTPRequest(requestBody)
+                api.postRequest(responseCall, this, 1)
+            } catch (e: JSONException) {
+                e.printStackTrace()
             }
         }
     }
@@ -170,7 +212,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         binding.signInButton.visibility = View.VISIBLE
                         binding.signInButton.setText(R.string.login)
                         Toast.makeText(this, "Enter your password ", Toast.LENGTH_LONG).show()
-                        loginOption = 0
+                        loginOption = PASSWORD_VERIFY
                     }
 
                 R.id.radioButtonOtp ->
@@ -179,7 +221,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         binding.passwordEditText.visibility = View.GONE
                         binding.signInButton.visibility = View.VISIBLE
                         binding.signInButton.setText(R.string.sendOtp)
-                        loginOption = 1
+                        loginOption = OTP_VERIFY
                     }
             }
         }
@@ -190,7 +232,16 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     }
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
-
+        if (i == 1) {
+            if (jSONObject != null) {
+                if (jSONObject.optInt("status") == 200) {
+                    val response: String = jSONObject.getString("response")
+                    Toast.makeText(this, response, Toast.LENGTH_LONG).show()
+                    sentOTP = jSONObject.optInt("otp").toString()
+//                    addVerificationDialog()
+                }
+            }
+        }
         if (i == 4) {
             if (jSONObject != null) {
                 if (jSONObject.optInt("status") == 200) {
