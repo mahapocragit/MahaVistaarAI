@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.co.appinventor.services_api.helper.JsonObject
 import `in`.gov.mahapocra.mahavistaarai.R
@@ -29,7 +30,7 @@ class VideosDetailedActivity : AppCompatActivity() {
         val jsonObject = JSONObject(videosJsonObject)
         val videosJsonArray = jsonObject.optJSONArray("links")
 
-        binding.videosRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.videosRecyclerView.layoutManager = GridLayoutManager(this, 2)
         binding.videosRecyclerView.hasFixedSize()
         binding.videosRecyclerView.adapter = videosJsonArray?.let {
             VideosAdapter(

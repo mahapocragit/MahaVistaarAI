@@ -1,22 +1,23 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video
 
 import android.content.ActivityNotFoundException
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.content.Intent
 import android.net.Uri
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import `in`.gov.mahapocra.mahavistaarai.databinding.FarmersDbtItemViewBinding
+import com.bumptech.glide.Glide
+import `in`.gov.mahapocra.mahavistaarai.databinding.ItemVideosBinding
 import org.json.JSONArray
 import org.json.JSONObject
 
 class VideosAdapter(private val categoryArray:JSONArray) : RecyclerView.Adapter<VideosAdapter.ViewHolder>() {
-    class ViewHolder(val binding: FarmersDbtItemViewBinding) :
+    class ViewHolder(val binding: ItemVideosBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(jsonObject: JSONObject) {
             val activityName = jsonObject.optString("name")
-            binding.dbtSchemeName.text = activityName
-            binding.farmerDbtCardView.setOnClickListener {
+            binding.textView21.text = activityName
+            binding.cardTrendingView.setOnClickListener {
                 val videoUrl = jsonObject.optString("link")
                 val context = binding.root.context
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl))
@@ -28,12 +29,12 @@ class VideosAdapter(private val categoryArray:JSONArray) : RecyclerView.Adapter<
                     context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl)))
                 }
             }
+            Glide.with(binding.imageView23).load(jsonObject.optString("thumnail")).into(binding.imageView23)
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding =
-            FarmersDbtItemViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemVideosBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 

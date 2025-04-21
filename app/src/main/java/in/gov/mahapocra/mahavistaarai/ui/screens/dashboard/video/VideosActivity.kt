@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
@@ -62,7 +63,7 @@ class VideosActivity : AppCompatActivity(), ApiCallbackCode {
             if (jSONObject != null) {
                 if (jSONObject.optInt("status") == 200) {
                     val videosCategoryJson = jSONObject.optJSONArray("data")
-                    binding.videosCategoriesRecyclerView.layoutManager = LinearLayoutManager(this)
+                    binding.videosCategoriesRecyclerView.layoutManager = GridLayoutManager(this, 2)
                     binding.videosCategoriesRecyclerView.hasFixedSize()
                     binding.videosCategoriesRecyclerView.adapter = videosCategoryJson?.let {
                         VideosCategoryAdapter(

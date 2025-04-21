@@ -3,19 +3,20 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import `in`.gov.mahapocra.mahavistaarai.databinding.FarmersDbtItemViewBinding
+import com.bumptech.glide.Glide
+import `in`.gov.mahapocra.mahavistaarai.databinding.ItemVideosBinding
+import `in`.gov.mahapocra.mahavistaarai.databinding.ItemVideosCategoryBinding
 import org.json.JSONArray
 import org.json.JSONObject
 
 class VideosCategoryAdapter(private val categoryArray:JSONArray) : RecyclerView.Adapter<VideosCategoryAdapter.ViewHolder>() {
-    class ViewHolder(val binding: FarmersDbtItemViewBinding) :
+    class ViewHolder(val binding: ItemVideosCategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(jsonObject: JSONObject) {
             val activityName = jsonObject.optString("name")
-            binding.dbtSchemeName.text = activityName
-            binding.farmerDbtCardView.setOnClickListener {
+            binding.textView21.text = activityName
+            binding.cardTrendingView.setOnClickListener {
                 binding.root.context.startActivity(Intent(binding.root.context, VideosDetailedActivity::class.java).apply {
                     putExtra("videosJsonObject", jsonObject.toString())
                 })
@@ -25,7 +26,7 @@ class VideosCategoryAdapter(private val categoryArray:JSONArray) : RecyclerView.
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            FarmersDbtItemViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemVideosCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
