@@ -379,4 +379,5 @@
     <string name="app_version">Version</string>
 
     <string name="magazine">Farm Magazine</string>
+    <string name="enter_your_otp">Please enter your OTP</string>
 </resources>
