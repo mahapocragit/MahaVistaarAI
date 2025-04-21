@@ -57,7 +57,7 @@ public interface APIServices {
 
     String kWareHouseDetails = "warehouseService/warehouse-details";
 
-    String kWeatherDetails = "superficialServices/imd-forcast-previous-weather-details";
+    String kWeatherDetails = "imdService/imd-forcast-previous-weather-details";
 
 //    String kGetRegistration = "Shareddbtapi/OtherApp/GetRegistration";
     String kGetRegistration = "authService/getUserdetails";

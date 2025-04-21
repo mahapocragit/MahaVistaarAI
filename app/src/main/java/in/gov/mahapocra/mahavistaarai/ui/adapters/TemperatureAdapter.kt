@@ -22,6 +22,8 @@ class TemperatureAdapter(private val jsonArray: JSONArray, private val listener:
         val weatherCardView: CardView = itemView.findViewById(R.id.weatherCardView)
         val temperatureTextView: TextView = itemView.findViewById(R.id.temperatureTextView)
         val windSpeedTV: TextView = itemView.findViewById(R.id.windSpeedTV)
+        val humidityTV: TextView = itemView.findViewById(R.id.humidityTV)
+        val rainTV: TextView = itemView.findViewById(R.id.rainTV)
         val imageView: ImageView = itemView.findViewById(R.id.imageView11)
     }
 
@@ -39,7 +41,11 @@ class TemperatureAdapter(private val jsonArray: JSONArray, private val listener:
         val minTemp = item.optString("temp_min")?:""
         val maxTemp = item.optString("temp_max")?:""
         val windSpeed = item.optString("wind_speed")?:""
-        val windSpeedTemp = "$windSpeed km/h"
+        val humidity = item.optString("humidity_1")?:""
+        val rain = item.optString("rain")?:""
+        val windSpeedTemp = "wind: $windSpeed km/h"
+        val humidityTemp = "humid: $humidity %"
+        val rainTemp = "rain: $rain %"
         val temperature = "$minTemp°C / $maxTemp°C"
         try {
             holder.titleTextView.text = item.getString("date")
@@ -47,6 +53,8 @@ class TemperatureAdapter(private val jsonArray: JSONArray, private val listener:
             holder.titleTextView.text = formatDate(item.getString("for_date"))
         }
         holder.windSpeedTV.text = windSpeedTemp
+        holder.humidityTV.text = humidityTemp
+        holder.rainTV.text = rainTemp
         holder.temperatureTextView.text = temperature
         holder.imageView.setImageResource(R.drawable.weather_ic)
         holder.weatherCardView.setOnClickListener {

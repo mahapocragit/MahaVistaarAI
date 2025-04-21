@@ -905,14 +905,14 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
         val jsonObject = JSONObject()
         Executors.newSingleThreadExecutor().execute {
             try {
-                jsonObject.put("taluka", talukaID)
+                jsonObject.put("taluka_code", talukaID)
                 jsonObject.put("lang", languageToLoad)
 
                 val requestBody: RequestBody =
                     AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api = AppInventorApi(
                     this,
-                    APIServices.SSO,
+                    APIServices.FARMER,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     false
