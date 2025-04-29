@@ -380,4 +380,21 @@
 
     <string name="magazine">Farm Magazine</string>
     <string name="enter_your_otp">Please enter your OTP</string>
+
+    <string name="crop_stage_completed">Completed</string>
+    <string name="crop_stage_current">Current</string>
+    <string name="crop_stage_pending">Pending</string>
+    <string name="sop_title">S.O.P.</string>
+
+    <string name="get_otp">Get OTP</string>
+    <string name="forgot_password_1">Forgot</string>
+    <string name="forgot_password_2">Password ?</string>
+    <string name="dont_have_an_account">Don\'t have an account?</string>
+    <string name="welcome_text">Welcome</string>
+    <string name="sign_in_text">Sign In!</string>
+    <string name="register_text_1">Register</string>
+    <string name="register_text_2">Your Account!</string>
+    <string name="user_info_text_1">User</string>
+    <string name="user_info_text_2">Information</string>
+    <string name="update_profile_text">Update Profile</string>
 </resources>

@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textStyle="bold"
-            android:text="Welcome"
+            android:text="@string/welcome_text"
             android:textColor="@color/white"
             android:textSize="@dimen/_22sdp" />
 
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textStyle="bold"
-            android:text="Sign In!"
+            android:text="@string/sign_in_text"
             android:textColor="@color/white"
             android:textSize="@dimen/_22sdp" />
     </LinearLayout>
@@ -171,7 +171,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:text="Don't have an account?" />
+                android:text="@string/dont_have_an_account" />
 
             <TextView
                 android:id="@+id/registerTextView"
@@ -191,7 +191,8 @@
         android:layout_width="@dimen/_100sdp"
         android:layout_height="@dimen/_100sdp"
         android:elevation="10dp"
-        android:src="@drawable/pocra_latest_logo"
+        android:src="@drawable/app_logo"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toTopOf="@+id/cardView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

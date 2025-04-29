@@ -1,5 +1,7 @@
 package in.gov.mahapocra.mahavistaarai.util.app_util;
 
+import org.jetbrains.annotations.Nullable;
+
 public interface AppConstants {
 
     String kAPP_BUILD_VERSION = "kAPP_BUILD_VERSION";
@@ -13,6 +15,7 @@ public interface AppConstants {
     String PEST_AND_DISEASES_FROM_DASHBOARD = "PEST_AND_DISEASES_FROM_DASHBOARD";
     String PEST_AND_DISEASES_STAGES = "PEST_AND_DISEASES_STAGES";
     String FERTILIZER_CALCULATOR_FROM_DASHBOARD = "FERTILIZER_CALCULATOR_FROM_DASHBOARD";
+    String SOP_FROM_DASHBOARD = "SOP_FROM_DASHBOARD";
     String uMobileNo = "USER_MOBILE";
     String uEmail = "USER_EMAIL";
     String uDIST = "USER_DIST";

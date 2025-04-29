@@ -327,17 +327,27 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                         intent.putExtra("id", savedCropId)
                         intent.putExtra("wotr_crop_id", savedCropWoTRId)
                         intent.putExtra("mUrl", savedCropImageUrl)
+                        intent.putExtra("sowingDate", savedCropSowingDate)
                         intent.putExtra("mName", savedCropName)
                         startActivity(intent)
                     }
 
                     1 -> {
-                        val intent = Intent(this, SOPActivity::class.java)
-                        intent.putExtra("id", savedCropId)
-                        intent.putExtra("wotr_crop_id", savedCropWoTRId)
-                        intent.putExtra("mUrl", savedCropImageUrl)
-                        intent.putExtra("mName", savedCropName)
-                        startActivity(intent)
+                        if (savedCropName.isEmpty()) {
+                            val sharing = Intent(this@DashboardScreen, AddCropActivity::class.java)
+                            appPreferenceManager.saveString(
+                                AppConstants.ACTION_FROM_DASHBOARD,
+                                AppConstants.SOP_FROM_DASHBOARD
+                            )
+                            startActivity(sharing)
+                        } else {
+                            val intent = Intent(this, SOPActivity::class.java)
+                            intent.putExtra("id", savedCropId)
+                            intent.putExtra("wotr_crop_id", savedCropWoTRId)
+                            intent.putExtra("mUrl", savedCropImageUrl)
+                            intent.putExtra("mName", savedCropName)
+                            startActivity(intent)
+                        }
                     }
 
                     2 -> {
@@ -485,37 +495,6 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
         }
     }
 
-    private val cropStagesAndAdvisory: Unit
-        //API FOR GETTING SOWING DATE INFORMATION
-        get() {
-            val jsonObject = JSONObject()
-            try {
-                jsonObject.put("crop_id", savedCropId)
-                jsonObject.put("farmer_id", farmerId)
-                jsonObject.put("lang", languageToLoad)
-
-                val requestBody: RequestBody =
-                    AppUtility.getInstance().getRequestBody(jsonObject.toString())
-
-                val api = AppInventorApi(
-                    this,
-                    APIServices.SSO,
-                    "",
-                    AppString(this).getkMSG_WAIT(),
-                    true
-                )
-
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest: APIRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> =
-                    apiRequest.getCropStagesAndAdvisory(requestBody)
-
-                api.postRequest(responseCall, this, 4)
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
-        }
-
 
     private fun setVersion() {
         var pinfo: PackageInfo? = null
@@ -577,13 +556,14 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
     private fun getFarmerSelectedCrop(language: String?) {
         val jsonObject = JSONObject()
         try {
+            jsonObject.put("api_key", "67840097657891")
             jsonObject.put("lang", language)
             jsonObject.put("farmer_id", farmerId)
 
             val requestBody: RequestBody =
                 AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
-                AppInventorApi(this, APIServices.SSO, "", AppString(this).getkMSG_WAIT(), true)
+                AppInventorApi(this, APIServices.FARMER, "", AppString(this).getkMSG_WAIT(), true)
 
             val handler = Handler()
             val runnable = Runnable {
@@ -601,13 +581,14 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
     private fun deleteFarmerSelectedCrop() {
         val jsonObject = JSONObject()
         try {
+            jsonObject.put("api_key", "67840097657891")
             jsonObject.put("crop_id", cropId)
             jsonObject.put("farmer_id", farmerId)
 
             val requestBody: RequestBody =
                 AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api: AppInventorApi =
-                AppInventorApi(this, APIServices.SSO, "", AppString(this).getkMSG_WAIT(), true)
+            val api =
+                AppInventorApi(this, APIServices.FARMER, "", AppString(this).getkMSG_WAIT(), true)
 
             val handler = Handler()
             val runnable = Runnable {
@@ -786,6 +767,8 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                                     savedCropId = selectedCrop.getInt("crop_id")
                                     savedCropName = selectedCrop.getString("name")
                                     savedCropImageUrl = selectedCrop.getString("image")
+                                    savedCropSowingDate = selectedCrop.getString("sowing_date")
+                                    Log.d("TAGGER", "onResponse: $savedCropSowingDate")
                                     savedCropWoTRId = selectedCrop.getString("wotr_crop_id")
                                     binding.appBarMain.dashboardScreen.addChangeCropTV.setText(R.string.change_Crop)
                                     binding.appBarMain.dashboardScreen.addChangeCropIV.setImageDrawable(
@@ -804,7 +787,6 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                                         View.GONE
                                     binding.appBarMain.dashboardScreen.addCropCardView.visibility =
                                         View.GONE
-                                    cropStagesAndAdvisory
                                     selectedCropList!!.add(
                                         CropsCategName(
                                             selectedCrop.getInt("crop_id"),
@@ -860,24 +842,6 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                         getFarmerSelectedCrop(languageToLoad)
                     } else {
                         UIToastMessage.show(this, deleteSelectedCropResponse.getResponse())
-                    }
-                }
-
-                4 -> if (jSONObject != null) {
-                    AppPreferenceManager(this).saveString(
-                        "CROP_STAGE_RESPONSE",
-                        jSONObject.toString()
-                    )
-
-                    val response = ResponseModel(jSONObject)
-                    if (response.getStatus()) {
-                        try {
-                            savedCropSowingDate = jSONObject.getString("sowing_date")
-                        } catch (e: JSONException) {
-                            e.printStackTrace()
-                        }
-                    } else {
-                        UIToastMessage.show(this, response.getResponse())
                     }
                 }
 
@@ -1120,7 +1084,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
         private const val PERMISSION_REQUEST_CODE = 100
         private val arrayCategory = arrayOf(
             "Crop Advisory",
-            "SOP",
+            "S.O.P.",
             "Soil Health Card",
             "Fertilizer Calculator",
             "Climate Resilent Technology",
@@ -1132,7 +1096,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
 
         private val arrayCategoryMarathi = arrayOf(
             "पीक सल्ला",
-            "SOP",
+            "एस.ओ.पी.(SOP)",
             "मृदा आरोग्य पत्रिका",
             "खत मात्रा गणक (कॅलक्यूलेटर)",
             "बदलत्या हवामानास अनुकूल शेती पद्धती",

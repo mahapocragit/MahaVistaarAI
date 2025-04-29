@@ -111,7 +111,6 @@ class StageAdvisoryDetailAdaptr(
             }
 
             alert.setView(wv)
-            changeLocalLang()
             alert.setTitle(context!!.getString(R.string.Crop_details))
             alert.setNegativeButton(
                 context!!.getString(R.string.cancel)
@@ -169,23 +168,6 @@ class StageAdvisoryDetailAdaptr(
 
         })
 
-    }
-
-    private fun changeLocalLang() {
-        if (languageToLoad.equals("mr")){
-            val languageToLoad = "mr"
-
-            val locale = Locale(languageToLoad)
-            Locale.setDefault(locale)
-            val config = Configuration()
-            config.locale = locale
-            context!!.resources.updateConfiguration(
-                config,
-                context!!.resources.displayMetrics
-            )
-            AppSettings.setLanguage(context, "2")
-
-        }
     }
 
     private fun removeHtml( original:String): String? {

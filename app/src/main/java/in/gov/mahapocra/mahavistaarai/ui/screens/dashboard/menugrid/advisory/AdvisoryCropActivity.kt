@@ -116,12 +116,13 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         try {
             jsonObject.put("crop_id", cropId)
             jsonObject.put("farmer_id", farmerId)
+            jsonObject.put("sowing_date", sowingDate)
             jsonObject.put("lang", languageToLoad)
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
                 AppInventorApi(
                     this,
-                    APIServices.SSO,
+                    APIServices.FARMER,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true
@@ -159,6 +160,13 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
                         binding.cropStagesRecyclerView.layoutManager =
                             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
                         binding.cropStagesRecyclerView.adapter = stagesAdvisoryAdapter
+                        val currentStagePos = stagesAdvisoryAdapter.getCurrentStagePosition()
+                        if (currentStagePos != -1) {
+                            binding.cropStagesRecyclerView.post {
+                                binding.cropStagesRecyclerView.scrollToPosition(currentStagePos)
+                                // or use smoothScrollToPosition(currentStagePos) for animated scroll
+                            }
+                        }
                         stagesAdvisoryAdapter.notifyDataSetChanged()
                     }
                 } else {

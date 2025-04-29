@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import org.json.JSONObject
 
@@ -18,11 +19,17 @@ class DbtSchemesDetailsActivity : AppCompatActivity() {
     private lateinit var eligibilityCriteriaRecyclerView: RecyclerView
     private lateinit var importantDocumentsCardTV: TextView
     private lateinit var eligibilityCriteriaCardTV: TextView
+    var languageToLoad: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dbt_schemes_details)
 
+        if (AppSettings.getLanguage(this@DbtSchemesDetailsActivity).equals("2", ignoreCase = true)) {
+            languageToLoad = "mr"
+        } else {
+            languageToLoad = "en"
+        }
 
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
         imageMenushow = findViewById(R.id.imageMenushow)
@@ -39,8 +46,14 @@ class DbtSchemesDetailsActivity : AppCompatActivity() {
 
         val data = intent.getStringExtra("FARMERDBTRESPONSE")
         val jsonData = JSONObject(data);
-        val importantDocuments = jsonData.optString("importantDocuments")
-        val eligibilityCriteria = jsonData.optString("eligibilityCriteria")
+        var importantDocuments = jsonData.optString("importantDocuments")
+        var eligibilityCriteria = jsonData.optString("eligibilityCriteria")
+
+        if (languageToLoad=="mr"){
+            importantDocuments = jsonData.optString("importantDocumentsMr")
+            eligibilityCriteria = jsonData.optString("eligibilityCriteriaMr")
+        }
+
         val importantDocumentsArray = importantDocuments.split(";")
         val eligibilityCriteriaArray = eligibilityCriteria.split(";")
 

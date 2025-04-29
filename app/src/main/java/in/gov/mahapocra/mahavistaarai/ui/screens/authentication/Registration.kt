@@ -61,6 +61,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     private lateinit var textView6: TextView
     private lateinit var submitButton: Button
     private lateinit var deleteAccountButton: TextView
+    private var isUserLoggedIn: Boolean = false
 
     private lateinit var sentOTP: String
     private lateinit var userName: String
@@ -118,9 +119,9 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     private fun setConfiguration() {
         farmerRegisterID = intent.getIntExtra("FAAPRegistrationID", 0)
         if (farmerRegisterID > 0) {
-            submitButton.text = "Update Profile"
-            textView5.text = "User"
-            textView6.text = "Information"
+            submitButton.text = getString(R.string.update_profile_text)
+            textView5.text = getString(R.string.user_info_text_1)
+            textView6.text = getString(R.string.user_info_text_2)
             fAAPRegistrationID = farmerRegisterID.toString()
             mobileNumberStatus = true
             userName =
@@ -149,8 +150,8 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             textViewVillage.text = villageName
 
         } else {
-            textView5.text = "Register"
-            textView6.text = "Your Account!"
+            textView5.text = getString(R.string.register_text_1)
+            textView6.text = getString(R.string.register_text_2)
         }
         getDistrictData()
     }
@@ -242,8 +243,10 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         submitButton.setOnClickListener {
             machineId = getMachineId()
             if (farmerRegisterID > 0) {
+                isUserLoggedIn = true
                 userValidationAndUpdateProfile()
             } else {
+                isUserLoggedIn = false
                 userValidationAndRegistration()
             }
 
@@ -609,7 +612,10 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 if (jSONObject.optInt("status") == 200) {
                     val response: String = jSONObject.getString("response")
                     Toast.makeText(this, response, Toast.LENGTH_LONG).show()
-                    val intent = Intent(this, DashboardScreen::class.java)
+                    var intent = Intent(this, LoginScreen::class.java)
+                    if (isUserLoggedIn){
+                        intent = Intent(this, DashboardScreen::class.java)
+                    }
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

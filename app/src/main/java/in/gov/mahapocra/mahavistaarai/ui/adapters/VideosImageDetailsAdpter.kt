@@ -19,6 +19,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.SelectSowingDataAndFarmer
 import `in`.gov.mahapocra.mahavistaarai.data.model.CropsCategName
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.FertilizerCalculatorActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.SOPActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
@@ -98,6 +99,15 @@ class VideosImageDetailsAdapter(
                     context?.startActivity(intent)
                 }else if (source.equals(AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD)) {
                     val intent = Intent(context, FertilizerCalculatorActivity::class.java)
+                    intent.putExtra("id", moviesImageList?.get(position)?.id)
+                    intent.putExtra("wotr_crop_id", moviesImageList?.get(position)?.wotr_id)
+                    intent.putExtra("mUrl", moviesImageList?.get(position)?.getmUrl())
+                    intent.putExtra("mName", moviesImageList?.get(position)?.getmName())
+                    intent.putExtra("sowingDate",  moviesImageList?.get(position)?.sowing_date_general)
+                    intent.putExtra("editCrop", "NoEditCrop")
+                    context?.startActivity(intent)
+                }else if (source.equals(AppConstants.SOP_FROM_DASHBOARD)) {
+                    val intent = Intent(context, SOPActivity::class.java)
                     intent.putExtra("id", moviesImageList?.get(position)?.id)
                     intent.putExtra("wotr_crop_id", moviesImageList?.get(position)?.wotr_id)
                     intent.putExtra("mUrl", moviesImageList?.get(position)?.getmUrl())

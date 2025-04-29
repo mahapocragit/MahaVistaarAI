@@ -11,7 +11,7 @@
     <string name="gis">जीआयएस- भौगोलिक माहिती प्रणाली</string>
     <string name="pest_management"> कीड व्यवस्थापन</string>
     <string name="bandhavan"> आवाज शेतकऱ्यांचा</string>
-    <string name="about">विषयक</string>
+    <string name="about">आमच्या विषयी</string>
     <string name="post_story"> कथा पोस्ट करा </string>
     <string name="view_story"> तुमची कथा पहा </string>
     <string name="village_profile">ग्राम कृषी संजीवनी</string>
@@ -383,4 +383,21 @@
     <string name="app_version">ॲप आवृत्ती</string>
     <string name="magazine">कृषी मासिक</string>
     <string name="enter_your_otp">कृपया तुमचा OTP टाका</string>
+
+    <string name="crop_stage_completed">पूर्ण झालेला टप्पा</string>
+    <string name="crop_stage_current">सध्याचा टप्पा</string>
+    <string name="crop_stage_pending">प्रलंबित टप्पा</string>
+    <string name="sop_title">एस.ओ.पी.(SOP)</string>
+
+    <string name="get_otp">ओटीपी मिळवा</string>
+    <string name="forgot_password_1">पासवर्ड</string>
+    <string name="forgot_password_2">विसरलात?</string>
+    <string name="dont_have_an_account">खाते नाही का?</string>
+    <string name="welcome_text">सुस्वागतम</string>
+    <string name="sign_in_text">साईन इन !</string>
+    <string name="register_text_1">खाते</string>
+    <string name="register_text_2">नोंदणी करा</string>
+    <string name="user_info_text_1">वापरकर्त्याची</string>
+    <string name="user_info_text_2">माहिती</string>
+    <string name="update_profile_text">प्रोफाइल अद्यावत करा</string>
 </resources>

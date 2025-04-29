@@ -87,6 +87,7 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
             UIToastMessage.show(this, resources.getString(R.string.farmer_select_date))
         } else {
             try {
+                jsonObject.put("api_key", "67840097657891")
                 jsonObject.put("farmer_id", farmerId)
                 jsonObject.put("sowing_date", sowingDate)
                 jsonObject.put("crop_id", cropId)
@@ -95,7 +96,7 @@ class SelectSowingDataAndFarmer : AppCompatActivity(), DatePickerRequestListener
                 val api =
                     AppInventorApi(
                         this,
-                        APIServices.SSO,
+                        APIServices.FARMER,
                         "",
                         AppString(this).getkMSG_WAIT(),
                         true

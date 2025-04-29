@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import com.google.gson.JsonObject
 import `in`.gov.mahapocra.mahavistaarai.R
@@ -14,6 +15,7 @@ import retrofit2.Response
 
 
 class ChatbotFragment : Fragment() {
+    private lateinit var webView: WebView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -23,7 +25,10 @@ class ChatbotFragment : Fragment() {
 
         // Call the API when the fragment view is created
         fetchChatbotResponse()
+        webView = view.findViewById(R.id.webView)
 
+        webView.settings.javaScriptEnabled = true
+        webView.loadUrl("https://vistaar.kenpath.ai/")
         return view
     }
 

@@ -68,6 +68,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     private var phosphorusValue: String = ""
     private var availableOption: String = ""
     private var totalAcrArea: Float = 0.0F
+    private var plotUnitCode = 3
     private var fertilizerOptionValue: JSONArray? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,11 +112,13 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             when (checkedId) {
                 R.id.acreRadioButton -> {
                     // Acre selected
+                    plotUnitCode = 3
                     binding.areaTextView.text = getString(R.string.acre)
                     Toast.makeText(this, R.string.acre_selected, Toast.LENGTH_SHORT).show()
                 }
                 R.id.radioButton2 -> {
-                    // Guntha selected
+                    // Hectar selected
+                    plotUnitCode = 1
                     binding.areaTextView.text = getString(R.string.hectare)
                     Toast.makeText(this, R.string.hectare_selected, Toast.LENGTH_SHORT).show()
                 }
@@ -370,7 +373,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     wotrCropId, finalSowingDate, soilTestOption.toString(),
                     nitrogenValue, phosphorusValue, potassiumValue,
                     villageID.toString(), edtFYMValue, "0",
-                    totalAcrArea.toString(), "1", token
+                    totalAcrArea.toString(), plotUnitCode.toString(), token
                 )
                 api.postRequest(responseCall, this@FertilizerCalculatorActivity, 1)
             }

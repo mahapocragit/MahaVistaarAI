@@ -74,13 +74,19 @@ class StageAdvisoryAdapter(
         holder.cropStagesInfoRecyclerView.adapter = sAdapter
         val status = advisoryJsonDetails.getString("status")
         if (status.equals("current")) {
+            holder.cropStagesInfoRecyclerView.visibility = View.VISIBLE
+            holder.seeMoreTextView.text = holder.itemView.context.getString(R.string.see_less)
             holder.stage.setBackgroundResource(R.drawable.current_round_background_status)
             holder.rightTick.visibility = View.GONE
 
         } else if (status.equals("completed")) {
+            holder.cropStagesInfoRecyclerView.visibility = View.GONE
             holder.stage.setBackgroundResource(R.drawable.completed_background_stages)
             holder.stepLine.setBackgroundResource(R.color.bg_green)
             holder.rightTick.visibility = View.VISIBLE
+        }else{
+            holder.cropStagesInfoRecyclerView.visibility = View.GONE
+            holder.stage.setBackgroundResource(R.drawable.pending_round_backgroud_stages)
         }
         holder.titleTextView.text = advisoryJsonDetails.getString("stage")
 
@@ -99,7 +105,15 @@ class StageAdvisoryAdapter(
         }
     }
 
-    fun Int.dpToPx(context: Context): Int {
-        return (this * context.resources.displayMetrics.density).toInt()
+    fun getCurrentStagePosition(): Int {
+        cropAdvisoryDetailsJSONArray?.let {
+            for (i in 0 until it.length()) {
+                val item = it.getJSONObject(i)
+                if (item.getString("status") == "current") {
+                    return i
+                }
+            }
+        }
+        return -1 // No current stage
     }
 }

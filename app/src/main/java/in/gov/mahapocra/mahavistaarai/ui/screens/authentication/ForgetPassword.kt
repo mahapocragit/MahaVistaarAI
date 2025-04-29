@@ -31,6 +31,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
+import java.util.Locale
 
 class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode {
 
@@ -48,6 +49,8 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
         if (AppSettings.getLanguage(this@ForgetPassword).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
+        val locale = Locale(languageToLoad)
+        Locale.setDefault(locale)
         binding = ActivityForgetPasswordTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
         onClick()

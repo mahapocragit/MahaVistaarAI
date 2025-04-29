@@ -11,7 +11,6 @@ import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.ui.adapters.FarmerAdapter
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
@@ -29,7 +28,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode {
     private lateinit var talukaName: String
     private var talukaID: Int = 0
     private lateinit var villageName: String
-    private lateinit var farmerAdapter: FarmerAdapter
+    private lateinit var farmerAdapter: SoilHealthCardAdapter
     private var villageID: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,7 +109,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode {
                 binding.farmerRecyclerView.visibility = View.VISIBLE
                 binding.noDataFoundText.visibility = View.GONE
                 binding.noDataFoundImageView.visibility = View.GONE
-                farmerAdapter = FarmerAdapter(farmerJsonArray)
+                farmerAdapter = SoilHealthCardAdapter(farmerJsonArray)
                 binding.farmerRecyclerView.layoutManager = LinearLayoutManager(this)
                 binding.farmerRecyclerView.adapter = farmerAdapter
             }else{
