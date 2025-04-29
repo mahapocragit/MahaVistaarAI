@@ -130,9 +130,6 @@
             android:exported="true"
             android:parentActivityName=".ai_disc_tp_imp.identify.Identify.Identify_img_upload" />
         <activity
-            android:name=".ui.screens.dashboard.menugrid.pest.SelectSowingDataAndFarmer"
-            android:exported="false" />
-        <activity
             android:name=".ui.screens.dashboard.menugrid.AddCropActivity"
             android:exported="false" />
         <activity

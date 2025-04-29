@@ -16,7 +16,6 @@ import com.makeramen.roundedimageview.RoundedTransformationBuilder
 import com.squareup.picasso.Picasso
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.SelectSowingDataAndFarmer
 import `in`.gov.mahapocra.mahavistaarai.data.model.CropsCategName
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.FertilizerCalculatorActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.SOPActivity
@@ -25,6 +24,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.Pests
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import org.json.JSONException
+import org.json.JSONObject
 
 
 class VideosImageDetailsAdapter(
@@ -116,12 +116,12 @@ class VideosImageDetailsAdapter(
                     intent.putExtra("editCrop", "NoEditCrop")
                     context?.startActivity(intent)
                 } else {
-                    val intent = Intent(context, SelectSowingDataAndFarmer::class.java)
-                    intent.putExtra("id", moviesImageList?.get(position)?.id)
-                    intent.putExtra("wotr_crop_id", moviesImageList?.get(position)?.wotr_id)
-                    intent.putExtra("mUrl", moviesImageList?.get(position)?.getmUrl())
-                    intent.putExtra("mName", moviesImageList?.get(position)?.getmName())
-                    context?.startActivity(intent)
+                    listener.onMultiRecyclerViewItemClick(1, JSONObject().apply {
+                        put("id", moviesImageList?.get(position)?.id)
+                        put("wotr_crop_id", moviesImageList?.get(position)?.wotr_id)
+                        put("mUrl", moviesImageList?.get(position)?.getmUrl())
+                        put("mName", moviesImageList?.get(position)?.getmName())
+                    })
                 }
             }
             if (callerActivity == "dashboardScreen") {

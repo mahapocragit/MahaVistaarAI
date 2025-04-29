@@ -20,12 +20,12 @@ import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
+import `in`.co.appinventor.services_api.listener.DatePickerRequestListener
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.SelectSowingDataAndFarmer
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.FertilizersRecyclerAdapter
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
@@ -41,12 +41,13 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
+import retrofit2.Retrofit
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 
 class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
-    OnMultiRecyclerItemClickListener, ApiCallbackCode {
+    OnMultiRecyclerItemClickListener, ApiCallbackCode, DatePickerRequestListener {
 
     private lateinit var binding: ActivityFertilizerCalculatorActivityBinding
 
@@ -70,10 +71,11 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     private var totalAcrArea: Float = 0.0F
     private var plotUnitCode = 3
     private var fertilizerOptionValue: JSONArray? = null
+    private val date = Date()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding= ActivityFertilizerCalculatorActivityBinding.inflate(layoutInflater)
+        binding = ActivityFertilizerCalculatorActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         languageToLoad = "mr"
@@ -116,6 +118,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     binding.areaTextView.text = getString(R.string.acre)
                     Toast.makeText(this, R.string.acre_selected, Toast.LENGTH_SHORT).show()
                 }
+
                 R.id.radioButton2 -> {
                     // Hectar selected
                     plotUnitCode = 1
@@ -126,22 +129,15 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         }
 
         binding.sowingInfoLayout.editSowingDateIcon.setOnClickListener {
-            val sharing = Intent(this, SelectSowingDataAndFarmer::class.java)
-            sharing.putExtra("id", cropId)
-            sharing.putExtra("mName", cropName)
-            sharing.putExtra("wotr_crop_id", wotrCropId)
-            sharing.putExtra("mUrl", mUrl)
-            AppPreferenceManager(this).saveString(
-                AppConstants.ACTION_FROM_DASHBOARD,
-                AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD
+            AppUtility.getInstance().showDisabledFutureDatePicker(
+                this,
+                date,
+                1,
+                this
             )
-            startActivity(sharing)
         }
 
-
-
         villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
-
         binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.fertilizer_calculator)
         binding.lnrSoilTestNo.visibility = View.GONE
         binding.lnrNpkFetch.visibility = View.GONE
@@ -172,14 +168,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             getSelectedSavedOption()
         }
         binding.sowingInfoLayout.sowingDateTextView.text = sowingDate
-        binding.sowingInfoLayout.sowingDateTextView.setOnClickListener {
-            startActivity(
-                Intent(
-                    this@FertilizerCalculatorActivity,
-                    SelectSowingDataAndFarmer::class.java
-                )
-            )
-        }
         binding.availableOptionTv.setOnClickListener {
             binding.availableOptionTv.background = ContextCompat.getDrawable(
                 this,
@@ -430,6 +418,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             if (jSONObject != null) {
                 when (code) {
                     1 -> {
+                        Log.d("TAGGER", "onResponse1: $jSONObject")
                         binding.availableOptionTv.visibility = View.INVISIBLE
                         val simpleFertilizersArray: JSONArray =
                             jSONObject.getJSONArray("SimpleFertilizers")
@@ -506,6 +495,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     }
 
                     2 -> {
+                        Log.d("TAGGER", "onResponse2: $jSONObject")
                         val response =
                             ResponseModel(
                                 jSONObject
@@ -520,6 +510,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     }
 
                     3 -> {
+                        Log.d("TAGGER", "onResponse3: $jSONObject")
                         val response =
                             ResponseModel(
                                 jSONObject
@@ -534,6 +525,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     }
 
                     4 -> {
+                        Log.d("TAGGER", "onResponse4: $jSONObject")
                         val response =
                             ResponseModel(
                                 jSONObject
@@ -546,6 +538,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     }
 
                     5 -> {
+                        Log.d("TAGGER", "onResponse5: $jSONObject")
                         val message = jSONObject.getString("response")
                         getSelectedSavedOption()
                         Toast.makeText(
@@ -553,6 +546,18 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                             message,
                             Toast.LENGTH_SHORT
                         ).show()
+                    }
+
+                    6 -> {
+                        Log.d("TAGGER", "onResponse6: $jSONObject")
+                        if (jSONObject != null) {
+                            val response = ResponseModel(jSONObject)
+                            if (response.status) {
+                                if (response.response.equals("crop saved")) {
+                                    binding.sowingInfoLayout.sowingDateTextView.text = sowingDate
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -619,7 +624,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             optionRclAdapter.setItemClickListener(deleteApi = itemClickListener)
             binding.fertlizerOptRcl.adapter = optionRclAdapter
             optionRclAdapter.notifyDataSetChanged()
-        }else{
+        } else {
             binding.fertlizerOptRcl.visibility = View.GONE
             Toast.makeText(this, "NO DATA FOUND", Toast.LENGTH_SHORT).show()
         }
@@ -655,6 +660,46 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             }
         } catch (e: JSONException) {
             e.printStackTrace()
+        }
+    }
+
+    override fun onDateSelected(i: Int, day: Int, month: Int, year: Int) {
+        if (i == 1) {
+            val formattedDay = String.format("%02d", day)
+            val formattedMonth = String.format("%02d", month)
+            sowingDate = "$formattedDay-$formattedMonth-$year"
+            saveFarmerSelectedCrop()
+        }
+    }
+
+    private fun saveFarmerSelectedCrop() {
+        val jsonObject = JSONObject()
+        val farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
+        if (sowingDate?.isEmpty() == true) {
+            UIToastMessage.show(this, resources.getString(R.string.farmer_select_date))
+        } else {
+            try {
+                jsonObject.put("api_key", "67840097657891")
+                jsonObject.put("farmer_id", farmerId)
+                jsonObject.put("sowing_date", sowingDate)
+                jsonObject.put("crop_id", cropId)
+
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api =
+                    AppInventorApi(
+                        this,
+                        APIServices.FARMER,
+                        "",
+                        AppString(this).getkMSG_WAIT(),
+                        true
+                    )
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(APIRequest::class.java)
+                val responseCall: Call<JsonObject> = apiRequest.kSaveFarmerSelectedCrop(requestBody)
+                api.postRequest(responseCall, this, 6)
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
         }
     }
 }

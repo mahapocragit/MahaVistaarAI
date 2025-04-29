@@ -12,11 +12,11 @@ import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
+import `in`.co.appinventor.services_api.listener.DatePickerRequestListener
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.SelectSowingDataAndFarmer
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.StageAdvisoryAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.StageAdvisoryDetailAdaptr
@@ -33,9 +33,10 @@ import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
+import java.util.Date
 
 class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
-    ApiCallbackCode {
+    ApiCallbackCode, DatePickerRequestListener {
 
     private lateinit var binding: ActivityAdvisoryCropBinding
     private var cropAdvisoryDetailsJSONArray: JSONArray? = null
@@ -48,6 +49,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
     private var mUrl: String? = null
     lateinit var languageToLoad: String
     private var sowingDate: String = ""
+    private val date = Date()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,16 +86,12 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
 
         binding.sowingInfoLayout.editSowingDateIcon.setOnClickListener {
-            val sharing = Intent(this, SelectSowingDataAndFarmer::class.java)
-            sharing.putExtra("id", cropId)
-            sharing.putExtra("mName", cropName)
-            sharing.putExtra("wotr_crop_id", wotrCropId)
-            sharing.putExtra("mUrl", wotrCropId)
-            AppPreferenceManager(this).saveString(
-                AppConstants.ACTION_FROM_DASHBOARD,
-                AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD
+            AppUtility.getInstance().showDisabledFutureDatePicker(
+                this,
+                date,
+                1,
+                this
             )
-            startActivity(sharing)
         }
 
         binding.sowingInfoLayout.cropNameTextView.text = cropName
@@ -174,6 +172,14 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
                 }
             }
         }
+        if (i == 2 && jSONObject != null) {
+            val response = ResponseModel(jSONObject)
+            if(response.status) {
+                if (response.response.equals("crop saved")) {
+                    getCropStagesAndAdvisory()
+                }
+            }
+        }
     }
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
@@ -199,6 +205,44 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         }
         if (i == 2) {
             binding.relativeLayoutTopBar.relativeLayoutToolbar.visibility = View.GONE
+        }
+    }
+
+    override fun onDateSelected(i: Int, day: Int, month: Int, year: Int) {
+        if (i == 1) {
+            sowingDate = "$day-$month-$year"
+            saveFarmerSelectedCrop()
+        }
+    }
+
+    private fun saveFarmerSelectedCrop() {
+        val jsonObject = JSONObject()
+        farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
+        if (sowingDate.isEmpty()) {
+            UIToastMessage.show(this, resources.getString(R.string.farmer_select_date))
+        } else {
+            try {
+                jsonObject.put("api_key", "67840097657891")
+                jsonObject.put("farmer_id", farmerId)
+                jsonObject.put("sowing_date", sowingDate)
+                jsonObject.put("crop_id", cropId)
+
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api =
+                    AppInventorApi(
+                        this,
+                        APIServices.FARMER,
+                        "",
+                        AppString(this).getkMSG_WAIT(),
+                        true
+                    )
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(APIRequest::class.java)
+                val responseCall: Call<JsonObject> = apiRequest.kSaveFarmerSelectedCrop(requestBody)
+                api.postRequest(responseCall, this, 2)
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
         }
     }
 }

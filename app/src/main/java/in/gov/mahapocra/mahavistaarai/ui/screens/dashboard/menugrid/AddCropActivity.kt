@@ -17,8 +17,10 @@ import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
+import `in`.co.appinventor.services_api.listener.DatePickerRequestListener
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.TitleVideosDetailsAdapter
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
@@ -28,6 +30,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.CropsCategName
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.data.model.VideoDetails
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -43,7 +46,8 @@ import java.util.Date
 import java.util.Locale
 
 
-class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerItemClickListener {
+class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerItemClickListener,
+    DatePickerRequestListener {
 
     private var mainCropCategoryRecycle: RecyclerView? = null
     private lateinit var moviesImagesList: ArrayList<CropsCategName>
@@ -53,6 +57,10 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
     private lateinit var textViewHeaderTitle: TextView
     private lateinit var imageMenuShow: ImageView
     private lateinit var imgBackArrow: ImageView
+    private var sowingDate: String = ""
+    private lateinit var receivedJson: JSONObject
+    private var cropId: Int = 0
+    private var date = Date()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,7 +121,8 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
             TitleVideosDetailsAdapter(
                 this,
                 videoDetailsList,
-                "TitleVideosDetailsAdpter"
+                "TitleVideosDetailsAdpter",
+                this
             )
         val str = intent.getStringExtra("NO_NEED_TO_ADD_SOWING_DATE")
         if (str != null) {
@@ -121,7 +130,8 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
                 TitleVideosDetailsAdapter(
                     this,
                     videoDetailsList,
-                    "NO_NEED_TO_ADD_SOWING_DATE"
+                    "NO_NEED_TO_ADD_SOWING_DATE",
+                    this
                 )
         }
         mainCropCategoryRecycle?.setLayoutManager(
@@ -202,6 +212,16 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
                 Toast.makeText(this, "Data Not Found", Toast.LENGTH_LONG).show()
             }
         }
+        if (k == 2 && jSONObject != null) {
+            val response = ResponseModel(jSONObject)
+            if(response.status) {
+                if (response.response.equals("crop saved")) {
+                    startActivity(Intent(this, DashboardScreen::class.java).apply {
+                        putExtra("helloCrop", cropId)
+                    })
+                }
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -219,9 +239,16 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
         val today = LocalDate.parse(currentDate)
 
         val finalDate = if (today.isBefore(sowingDate)) {
-            "${formattedSowingDate.substring(8)}-${formattedSowingDate.substring(5, 7)}-${currentYear - 1}"
+            "${formattedSowingDate.substring(8)}-${
+                formattedSowingDate.substring(
+                    5,
+                    7
+                )
+            }-${currentYear - 1}"
         } else {
-            "${today.dayOfMonth.toString().padStart(2, '0')}-${today.monthValue.toString().padStart(2, '0')}-${today.year}"
+            "${today.dayOfMonth.toString().padStart(2, '0')}-${
+                today.monthValue.toString().padStart(2, '0')
+            }-${today.year}"
         }
 
         return finalDate
@@ -229,12 +256,60 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
 
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
-        TODO("Not yet implemented")
+        if (i == 1) {
+            receivedJson = obj as JSONObject
+            AppUtility.getInstance().showDisabledFutureDatePicker(
+                this,
+                date,
+                1,
+                this
+            )
+            Log.d("TAGGER", "onMultiRecyclerViewItemClick: $receivedJson")
+        }
     }
 
     private fun getCurrentDate(): String {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         return dateFormat.format(Date())
+    }
+
+    override fun onDateSelected(i: Int, day: Int, month: Int, year: Int) {
+        if (i == 1) {
+            sowingDate = "$day-$month-$year"
+            cropId = receivedJson.optInt("id")
+            saveFarmerSelectedCrop()
+        }
+    }
+
+    private fun saveFarmerSelectedCrop() {
+        val jsonObject = JSONObject()
+        val farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
+        if (sowingDate.isEmpty()) {
+            UIToastMessage.show(this, resources.getString(R.string.farmer_select_date))
+        } else {
+            try {
+                jsonObject.put("api_key", "67840097657891")
+                jsonObject.put("farmer_id", farmerId)
+                jsonObject.put("sowing_date", sowingDate)
+                jsonObject.put("crop_id", cropId)
+
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api =
+                    AppInventorApi(
+                        this,
+                        APIServices.FARMER,
+                        "",
+                        AppString(this).getkMSG_WAIT(),
+                        true
+                    )
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(APIRequest::class.java)
+                val responseCall: Call<JsonObject> = apiRequest.kSaveFarmerSelectedCrop(requestBody)
+                api.postRequest(responseCall, this, 2)
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+        }
     }
 
 }
