@@ -2,7 +2,6 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid
 
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -10,6 +9,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonObject
@@ -20,17 +21,16 @@ import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.listener.DatePickerRequestListener
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
-import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.ui.adapters.TitleVideosDetailsAdapter
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.data.model.CropsCategName
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.data.model.VideoDetails
+import `in`.gov.mahapocra.mahavistaarai.ui.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.adapters.TitleVideosDetailsAdapter
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,6 +53,7 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
     private lateinit var moviesImagesList: ArrayList<CropsCategName>
     private lateinit var videoDetailsList: ArrayList<VideoDetails>
     private lateinit var languageToLoad: String
+    private lateinit var viewModel: FarmerViewModel
     private lateinit var cropJsonArray: JSONArray
     private lateinit var textViewHeaderTitle: TextView
     private lateinit var imageMenuShow: ImageView
@@ -71,7 +72,7 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
             languageToLoad = "en"
         }
         setContentView(R.layout.activity_add_crop)
-
+        viewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         mainCropCategoryRecycle = findViewById(R.id.mainRecyclerView)
         imgBackArrow = findViewById(R.id.imgBackArrow)
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
@@ -212,16 +213,6 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
                 Toast.makeText(this, "Data Not Found", Toast.LENGTH_LONG).show()
             }
         }
-        if (k == 2 && jSONObject != null) {
-            val response = ResponseModel(jSONObject)
-            if(response.status) {
-                if (response.response.equals("crop saved")) {
-                    startActivity(Intent(this, DashboardScreen::class.java).apply {
-                        putExtra("helloCrop", cropId)
-                    })
-                }
-            }
-        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -264,7 +255,6 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
                 1,
                 this
             )
-            Log.d("TAGGER", "onMultiRecyclerViewItemClick: $receivedJson")
         }
     }
 
@@ -277,37 +267,15 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
         if (i == 1) {
             sowingDate = "$day-$month-$year"
             cropId = receivedJson.optInt("id")
-            saveFarmerSelectedCrop()
-        }
-    }
-
-    private fun saveFarmerSelectedCrop() {
-        val jsonObject = JSONObject()
-        val farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-        if (sowingDate.isEmpty()) {
-            UIToastMessage.show(this, resources.getString(R.string.farmer_select_date))
-        } else {
-            try {
-                jsonObject.put("api_key", "67840097657891")
-                jsonObject.put("farmer_id", farmerId)
-                jsonObject.put("sowing_date", sowingDate)
-                jsonObject.put("crop_id", cropId)
-
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api =
-                    AppInventorApi(
-                        this,
-                        APIServices.FARMER,
-                        "",
-                        AppString(this).getkMSG_WAIT(),
-                        true
-                    )
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.kSaveFarmerSelectedCrop(requestBody)
-                api.postRequest(responseCall, this, 2)
-            } catch (e: JSONException) {
-                e.printStackTrace()
+            viewModel.saveFarmerSelectedCrop(this, sowingDate, cropId)
+            viewModel.saveFarmerSelectedCrop.observe(this) {
+                if (it != null) {
+                    if (it.get("status").toString() == "200") {
+                        startActivity(Intent(this, DashboardScreen::class.java).apply {
+                            putExtra("helloCrop", cropId)
+                        })
+                    }
+                }
             }
         }
     }

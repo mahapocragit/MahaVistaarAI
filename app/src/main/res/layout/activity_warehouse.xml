@@ -36,18 +36,10 @@
                 android:visibility="visible" />
         </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text14"
-            android:layout_marginTop="@dimen/_6sdp"
-            android:layout_marginStart="@dimen/_10sdp"
-            android:text="District" />
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/height45"
+            android:layout_marginTop="@dimen/_5sdp"
             android:orientation="horizontal">
 
             <TextView

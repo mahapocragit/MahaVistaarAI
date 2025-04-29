@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
@@ -26,6 +27,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityAdvisoryCropBinding
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
+import `in`.gov.mahapocra.mahavistaarai.ui.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import org.json.JSONArray
@@ -39,6 +41,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
     ApiCallbackCode, DatePickerRequestListener {
 
     private lateinit var binding: ActivityAdvisoryCropBinding
+    private lateinit var viewModel: FarmerViewModel
     private var cropAdvisoryDetailsJSONArray: JSONArray? = null
     private var cropAdvisoryJSONArray: JSONArray? = null
     var cropId: Int? = 0
@@ -55,6 +58,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         super.onCreate(savedInstanceState)
         binding = ActivityAdvisoryCropBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        viewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
 
         //setting up values for language
         languageToLoad = "mr"
@@ -172,14 +176,6 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
                 }
             }
         }
-        if (i == 2 && jSONObject != null) {
-            val response = ResponseModel(jSONObject)
-            if(response.status) {
-                if (response.response.equals("crop saved")) {
-                    getCropStagesAndAdvisory()
-                }
-            }
-        }
     }
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
@@ -211,37 +207,13 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
     override fun onDateSelected(i: Int, day: Int, month: Int, year: Int) {
         if (i == 1) {
             sowingDate = "$day-$month-$year"
-            saveFarmerSelectedCrop()
-        }
-    }
-
-    private fun saveFarmerSelectedCrop() {
-        val jsonObject = JSONObject()
-        farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-        if (sowingDate.isEmpty()) {
-            UIToastMessage.show(this, resources.getString(R.string.farmer_select_date))
-        } else {
-            try {
-                jsonObject.put("api_key", "67840097657891")
-                jsonObject.put("farmer_id", farmerId)
-                jsonObject.put("sowing_date", sowingDate)
-                jsonObject.put("crop_id", cropId)
-
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api =
-                    AppInventorApi(
-                        this,
-                        APIServices.FARMER,
-                        "",
-                        AppString(this).getkMSG_WAIT(),
-                        true
-                    )
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.kSaveFarmerSelectedCrop(requestBody)
-                api.postRequest(responseCall, this, 2)
-            } catch (e: JSONException) {
-                e.printStackTrace()
+            cropId?.let { viewModel.saveFarmerSelectedCrop(this, sowingDate, it) }
+            viewModel.saveFarmerSelectedCrop.observe(this) {
+                if (it != null) {
+                    if (it.get("status").toString() == "200") {
+                        getCropStagesAndAdvisory()
+                    }
+                }
             }
         }
     }

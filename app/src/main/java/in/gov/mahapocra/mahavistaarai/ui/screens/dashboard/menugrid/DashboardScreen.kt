@@ -245,7 +245,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
             callForWeatherApi(talukaID)
             binding.appBarMain.dashboardScreen.weatherTalukaTV.text = talukaName
         }
-
+        binding.appBarMain.dashboardScreen.bottomNavigation.itemIconTintList = null
         binding.appBarMain.dashboardScreen.bottomNavigation.setOnItemSelectedListener { item: MenuItem ->
             when (item.itemId) {
                 R.id.nav_home -> startActivity(

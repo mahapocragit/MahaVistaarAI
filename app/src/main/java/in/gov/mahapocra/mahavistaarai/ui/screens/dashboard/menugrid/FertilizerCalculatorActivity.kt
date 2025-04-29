@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
@@ -34,6 +35,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.DeleteApi
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityFertilizerCalculatorActivityBinding
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
+import `in`.gov.mahapocra.mahavistaarai.ui.FarmerViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -50,6 +52,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     OnMultiRecyclerItemClickListener, ApiCallbackCode, DatePickerRequestListener {
 
     private lateinit var binding: ActivityFertilizerCalculatorActivityBinding
+    private lateinit var viewModel: FarmerViewModel
 
     private var soilTestOption: Int = 1
     var languageToLoad: String? = null
@@ -77,6 +80,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         super.onCreate(savedInstanceState)
         binding = ActivityFertilizerCalculatorActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        viewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
 
         languageToLoad = "mr"
         if (AppSettings.getLanguage(this@FertilizerCalculatorActivity)
@@ -547,18 +551,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-
-                    6 -> {
-                        Log.d("TAGGER", "onResponse6: $jSONObject")
-                        if (jSONObject != null) {
-                            val response = ResponseModel(jSONObject)
-                            if (response.status) {
-                                if (response.response.equals("crop saved")) {
-                                    binding.sowingInfoLayout.sowingDateTextView.text = sowingDate
-                                }
-                            }
-                        }
-                    }
                 }
             }
         } catch (e: JSONException) {
@@ -668,37 +660,13 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             val formattedDay = String.format("%02d", day)
             val formattedMonth = String.format("%02d", month)
             sowingDate = "$formattedDay-$formattedMonth-$year"
-            saveFarmerSelectedCrop()
-        }
-    }
-
-    private fun saveFarmerSelectedCrop() {
-        val jsonObject = JSONObject()
-        val farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-        if (sowingDate?.isEmpty() == true) {
-            UIToastMessage.show(this, resources.getString(R.string.farmer_select_date))
-        } else {
-            try {
-                jsonObject.put("api_key", "67840097657891")
-                jsonObject.put("farmer_id", farmerId)
-                jsonObject.put("sowing_date", sowingDate)
-                jsonObject.put("crop_id", cropId)
-
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api =
-                    AppInventorApi(
-                        this,
-                        APIServices.FARMER,
-                        "",
-                        AppString(this).getkMSG_WAIT(),
-                        true
-                    )
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.kSaveFarmerSelectedCrop(requestBody)
-                api.postRequest(responseCall, this, 6)
-            } catch (e: JSONException) {
-                e.printStackTrace()
+            cropId?.let { viewModel.saveFarmerSelectedCrop(this, sowingDate!!, it) }
+            viewModel.saveFarmerSelectedCrop.observe(this) {
+                if (it != null) {
+                    if (it.get("status").toString() == "200") {
+                        binding.sowingInfoLayout.sowingDateTextView.text = sowingDate
+                    }
+                }
             }
         }
     }

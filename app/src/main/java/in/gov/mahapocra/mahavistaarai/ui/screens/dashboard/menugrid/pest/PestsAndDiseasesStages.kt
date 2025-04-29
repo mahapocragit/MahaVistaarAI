@@ -131,7 +131,7 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api = AppInventorApi(
                 this,
-                APIServices.SSO,
+                APIServices.FARMER,
                 "",
                 AppString(this).getkMSG_WAIT(),
                 true
@@ -152,47 +152,49 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
                 stageJsonArray = response.getdataArray()
                 diseaseStages = ArrayList()
                 try {
-                    val stagesJsonObject = stageJsonArray.getJSONObject(0)
-                    // Handle missing "stage"
-                    val stageName: String = stagesJsonObject.optString("stage", "Unknown Stage")
-                    // Handle missing "pest_and_diseases"
-                    val pestAndDiseasesJsonArray: JSONArray =
-                        stagesJsonObject.optJSONArray("pest_and_diseases") ?: JSONArray()
+                    if (stageJsonArray != null && stageJsonArray.length() != 0) {
+                        val stagesJsonObject = stageJsonArray.getJSONObject(0)
+                        // Handle missing "stage"
+                        val stageName: String = stagesJsonObject.optString("stage", "Unknown Stage")
+                        // Handle missing "pest_and_diseases"
+                        val pestAndDiseasesJsonArray: JSONArray =
+                            stagesJsonObject.optJSONArray("pest_and_diseases") ?: JSONArray()
 
-                    diseasesDetails = ArrayList()
+                        diseasesDetails = ArrayList()
 
-                    for (i in 0 until pestAndDiseasesJsonArray.length()) {
-                        val pestAndDiseasesJsonObject = pestAndDiseasesJsonArray.getJSONObject(i)
+                        for (i in 0 until pestAndDiseasesJsonArray.length()) {
+                            val pestAndDiseasesJsonObject =
+                                pestAndDiseasesJsonArray.getJSONObject(i)
 
-                        val pestAndDiseaseId = pestAndDiseasesJsonObject.optInt("id", -1)
-                        val stageTitle =
-                            pestAndDiseasesJsonObject.optString("title", "Unknown Title")
-                        val stageSubtitle =
-                            pestAndDiseasesJsonObject.optString("subtitle", "No Subtitle")
-                        val type = pestAndDiseasesJsonObject.optString("type", "Unknown Type")
+                            val pestAndDiseaseId = pestAndDiseasesJsonObject.optInt("id", -1)
+                            val stageTitle =
+                                pestAndDiseasesJsonObject.optString("title", "Unknown Title")
+                            val stageSubtitle =
+                                pestAndDiseasesJsonObject.optString("subtitle", "No Subtitle")
+                            val type = pestAndDiseasesJsonObject.optString("type", "Unknown Type")
 
-                        var cropsImgUrl = pestAndDiseasesJsonObject.optString("image", "")
-                        if (cropsImgUrl.isEmpty()) {
-                            cropsImgUrl =
-                                "https://c1.wallpaperflare.com/preview/1015/28/863/leaf-maple-disease-pest.jpg"
-                        }
+                            var cropsImgUrl = pestAndDiseasesJsonObject.optString("image", "")
+                            if (cropsImgUrl.isEmpty()) {
+                                cropsImgUrl =
+                                    "https://c1.wallpaperflare.com/preview/1015/28/863/leaf-maple-disease-pest.jpg"
+                            }
 
-                        diseasesDetails!!.add(
-                            DiseasesDetails(
-                                pestAndDiseaseId,
-                                stageTitle,
-                                stageSubtitle,
-                                cropsImgUrl,
-                                type
+                            diseasesDetails!!.add(
+                                DiseasesDetails(
+                                    pestAndDiseaseId,
+                                    stageTitle,
+                                    stageSubtitle,
+                                    cropsImgUrl,
+                                    type
+                                )
                             )
-                        )
+                        }
+                        diseaseStages.add(DiseaseStages(0, stageName, diseasesDetails!!))
+                        showParticularStagesByList()
                     }
-                    diseaseStages.add(DiseaseStages(0, stageName, diseasesDetails!!))
                 } catch (e: JSONException) {
                     Log.e("TAGGER", "JSON parsing error at index $0", e)
                 }
-                Log.d("TAGGER", "Total diseaseStages: ${diseaseStages.size}")
-                showParticularStagesByList()
             } else {
                 UIToastMessage.show(this, response.response)
             }
