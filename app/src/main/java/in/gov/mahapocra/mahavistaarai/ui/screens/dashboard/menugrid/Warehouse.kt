@@ -23,6 +23,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityWarehouseBinding
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -46,12 +47,13 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityWarehouseBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         languageToLoad = "mr"
         if (AppSettings.getLanguage(this@Warehouse).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
-        binding = ActivityWarehouseBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        LocalCustom.configureLocale(baseContext, languageToLoad)
         districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
         init()
         onClick()

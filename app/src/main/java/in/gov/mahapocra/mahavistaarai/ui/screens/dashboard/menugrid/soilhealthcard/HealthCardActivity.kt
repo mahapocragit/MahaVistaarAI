@@ -16,12 +16,13 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityHealthCardBinding
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import org.json.JSONObject
 import retrofit2.Call
 
 class HealthCardActivity : AppCompatActivity(), ApiCallbackCode {
 
-    var languageToLoad: String? = null
+    private lateinit var languageToLoad: String
     private lateinit var binding: ActivityHealthCardBinding
     private lateinit var districtName: String
     private var districtID: Int = 0
@@ -40,6 +41,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode {
         if (AppSettings.getLanguage(this@HealthCardActivity).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
+        LocalCustom.configureLocale(baseContext, languageToLoad)
 
         //Loading URL in webView
         if (supportActionBar != null) {

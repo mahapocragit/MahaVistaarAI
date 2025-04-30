@@ -21,6 +21,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivitySopactivityBinding
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONException
@@ -39,7 +40,7 @@ class SOPActivity : AppCompatActivity(), ApiCallbackCode {
     private var wotrCropId: String? = null
     private var mUrl: String? = null
     private var sowingDate: String = ""
-    var languageToLoad: String? = null
+    private lateinit var languageToLoad: String
     private val googleDriveView: String = "https://mozilla.github.io/pdf.js/web/viewer.html?file="
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,8 +52,7 @@ class SOPActivity : AppCompatActivity(), ApiCallbackCode {
         if (AppSettings.getLanguage(this@SOPActivity).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
-        val locale = Locale(languageToLoad)
-        Locale.setDefault(locale)
+        LocalCustom.configureLocale(baseContext, languageToLoad)
 
         binding.toolbar.imgBackArrow.visibility = View.VISIBLE
         binding.toolbar.imgBackArrow.setOnClickListener { onBackPressedDispatcher.onBackPressed() }

@@ -199,4 +199,48 @@
         app:layout_constraintTop_toTopOf="@+id/cardView2" />
 
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_40sdp"
+        app:layout_constraintBottom_toBottomOf="@+id/cardView2"
+        app:layout_constraintStart_toStartOf="@+id/cardView2"
+        android:layout_marginBottom="@dimen/_20sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:elevation="@dimen/_10sdp"
+        android:backgroundTint="@color/actionbar_color_figma2"
+        app:cardCornerRadius="@dimen/_25sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/imageView32"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:civ_border="true"
+                app:civ_border_width="@dimen/_1sdp"
+                android:backgroundTint="@color/white"
+                android:scaleType="centerInside"
+                android:layout_margin="@dimen/_5sdp"
+                app:srcCompat="@drawable/ic_profile" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingEnd="@dimen/_10sdp"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-light"
+                android:text="Guest mode" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

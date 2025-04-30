@@ -1,11 +1,18 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.chatbot
 
+import android.net.http.SslError
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.CookieManager
+import android.webkit.GeolocationPermissions
+import android.webkit.SslErrorHandler
+import android.webkit.WebChromeClient
+import android.webkit.WebSettings
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import com.google.gson.JsonObject
 import `in`.gov.mahapocra.mahavistaarai.R
@@ -22,14 +29,39 @@ class ChatbotFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_chatbot, container, false)
-
-        // Call the API when the fragment view is created
-        fetchChatbotResponse()
         webView = view.findViewById(R.id.webView)
-
-        webView.settings.javaScriptEnabled = true
-        webView.loadUrl("https://vistaar.kenpath.ai/")
+        loadWebView()
         return view
+    }
+
+    private fun loadWebView() {
+        val webSettings = webView.settings
+        webSettings.javaScriptEnabled = true
+        webSettings.domStorageEnabled = true
+        webSettings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+        webSettings.userAgentString =
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36"
+
+        CookieManager.getInstance().setAcceptCookie(true)
+        CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true)
+
+        webView.webChromeClient = object : WebChromeClient() {
+            override fun onGeolocationPermissionsShowPrompt(origin: String?, callback: GeolocationPermissions.Callback?) {
+                callback?.invoke(origin, true, false)
+            }
+        }
+
+        webView.webViewClient = object : WebViewClient() {
+            override fun onReceivedSslError(
+                view: WebView?,
+                handler: SslErrorHandler?,
+                error: SslError?
+            ) {
+                handler?.proceed() // ⚠️ Use with caution - for dev only
+            }
+        }
+
+        webView.loadUrl("https://vistaar.kenpath.ai/")
     }
 
     private fun fetchChatbotResponse() {

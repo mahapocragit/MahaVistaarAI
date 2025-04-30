@@ -25,24 +25,19 @@
         app:layout_constraintStart_toStartOf="@+id/stepLine"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/right_tick"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:src="@drawable/right_tick"
-            android:visibility="visible"></ImageView>
     </RelativeLayout>
 
     <TextView
         android:id="@+id/titleTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_14sdp"
         android:text="TextView"
+        android:layout_marginEnd="@dimen/_2sdp"
         android:textSize="@dimen/_10sdp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/stage"
+        app:layout_constraintEnd_toStartOf="@+id/seeMoreTextView"
         app:layout_constraintStart_toEndOf="@+id/stage"
         app:layout_constraintTop_toTopOf="@+id/stage" />
 

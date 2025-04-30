@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonObject
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
@@ -38,12 +39,14 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (AppSettings.getLanguage(this@DbtSchemes).equals("2", ignoreCase = true)) {
-            languageToLoad = "mr"
-        } else {
-            languageToLoad = "en"
-        }
         setContentView(R.layout.activity_dbt_schemes)
+        languageToLoad =
+            if (AppSettings.getLanguage(this@DbtSchemes).equals("2", ignoreCase = true)) {
+                "mr"
+            } else {
+                "en"
+            }
+        LocalCustom.configureLocale(baseContext, languageToLoad)
         init()
 
         imageMenushow?.visibility = View.VISIBLE
@@ -71,9 +74,9 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
     }
 
     private fun openRecyclerView(recyclerView: RecyclerView) {
-        if (recyclerView.visibility==View.VISIBLE) {
+        if (recyclerView.visibility == View.VISIBLE) {
             recyclerView.visibility = View.GONE
-        }else{
+        } else {
             recyclerView.visibility = View.VISIBLE
         }
     }
@@ -117,7 +120,7 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
     }
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
-        if (i == 1 && jSONObject != null){
+        if (i == 1 && jSONObject != null) {
 
             val farmerDataJSONArray = jSONObject.optJSONArray("farmerData")
             val fpoDataJSONArray = jSONObject.optJSONArray("fpoData")
@@ -127,8 +130,10 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
             fpoRecyclerView.layoutManager = LinearLayoutManager(this)
             nrmRecyclerView.layoutManager = LinearLayoutManager(this)
 
-            farmerRecyclerView.adapter = FarmerDBTRecyclerAdapter(farmerDataJSONArray, languageToLoad, this)
-            fpoRecyclerView.adapter = FarmerDBTRecyclerAdapter(fpoDataJSONArray, languageToLoad, this)
+            farmerRecyclerView.adapter =
+                FarmerDBTRecyclerAdapter(farmerDataJSONArray, languageToLoad, this)
+            fpoRecyclerView.adapter =
+                FarmerDBTRecyclerAdapter(fpoDataJSONArray, languageToLoad, this)
             nrmRecyclerView.adapter = NRMrDBTRecyclerAdapter(nrmDataJSONArray, languageToLoad, this)
         }
     }

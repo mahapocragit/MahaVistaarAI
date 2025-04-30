@@ -68,16 +68,23 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
 
         languageToLoad = "mr"
         if (AppSettings.getLanguage(this@AddCropActivity).equals("1", ignoreCase = true)) {
-            Log.d("getStrName=", AppSettings.getLanguage(this@AddCropActivity))
             languageToLoad = "en"
         }
         setContentView(R.layout.activity_add_crop)
+
+
         viewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         mainCropCategoryRecycle = findViewById(R.id.mainRecyclerView)
         imgBackArrow = findViewById(R.id.imgBackArrow)
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
         imageMenuShow = findViewById(R.id.imageMenushow)
         textViewHeaderTitle.setText(R.string.select_crop)
+
+        if (languageToLoad != "mr") {
+            textViewHeaderTitle.text = "Select Crop"
+        } else {
+            textViewHeaderTitle.text = "पीक निवडा"
+        }
 
         imageMenuShow.setOnClickListener {
             val intent = Intent(this, DashboardScreen::class.java)

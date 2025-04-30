@@ -36,6 +36,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.app_util.DeleteApi
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityFertilizerCalculatorActivityBinding
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.ui.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -55,7 +56,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     private lateinit var viewModel: FarmerViewModel
 
     private var soilTestOption: Int = 1
-    var languageToLoad: String? = null
+    private lateinit var languageToLoad: String
 
     private var villageID: Int = 0
     private var cropId: Int? = 0
@@ -88,6 +89,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         ) {
             languageToLoad = "en"
         }
+        LocalCustom.configureLocale(baseContext, languageToLoad)
 
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
@@ -113,7 +115,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             )
             startActivity(sharing)
         }
-
+        settingUpTheViewsAsPerLanguage()
         binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.acreRadioButton -> {
@@ -228,6 +230,13 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             }
         })
         binding.sowingInfoLayout.cropNameTextView.text = cropName
+    }
+
+    private fun settingUpTheViewsAsPerLanguage() {
+        binding.sowingInfoLayout.textView7.text = getString(R.string.sowing_date)
+        binding.plotSizeTitleTextView.text = getString(R.string.plot_size)
+        binding.acreRadioButton.text = getString(R.string.acre)
+        binding.radioButton2.text = getString(R.string.hectare)
     }
 
     override fun onBackPressed() {

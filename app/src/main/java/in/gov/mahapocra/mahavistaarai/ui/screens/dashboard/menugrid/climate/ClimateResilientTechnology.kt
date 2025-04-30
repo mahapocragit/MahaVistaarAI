@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonObject
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ClimateResilientTechnologyAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -35,7 +36,7 @@ class ClimateResilientTechnology : AppCompatActivity(), ApiJSONObjCallback, ApiC
     private var climateResilientGroup: RecyclerView? = null
     private var textViewHeaderTitle: TextView? = null
     private var imageMenushow: ImageView? = null
-    var languageToLoad: String? = null
+    private lateinit var languageToLoad: String
     private var resilientGrpWiseDetailsJSONArray: JSONArray? = null
     private lateinit var resilientCRAGroupJSONArray: JSONArray
 
@@ -51,6 +52,7 @@ class ClimateResilientTechnology : AppCompatActivity(), ApiJSONObjCallback, ApiC
         } else {
             languageToLoad = "en"
         }
+        LocalCustom.configureLocale(baseContext, languageToLoad)
         init()
         textViewHeaderTitle?.setText(R.string.climateTechnology)
         imageMenushow?.visibility = View.VISIBLE

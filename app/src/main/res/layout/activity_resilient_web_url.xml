@@ -6,8 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".ui.screens.dashboard.menugrid.climate.ResilientWebUrl">
 
+    <include
+        android:id="@+id/layout_toolbar"
+        layout="@layout/layout_toolbar"/>
+
     <WebView
         android:id="@+id/climateWebView"
+        android:layout_marginTop="48dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

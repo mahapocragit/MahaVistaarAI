@@ -9,13 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityPdfViewBinding
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import java.util.Locale
 
 class PdfWebViewActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPdfViewBinding
     private lateinit var progressBar: ProgressBar
-    var languageToLoad: String? = null
+    private lateinit var languageToLoad: String
     private val googleDriveView: String = "https://mozilla.github.io/pdf.js/web/viewer.html?file="
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,8 +28,7 @@ class PdfWebViewActivity : AppCompatActivity() {
         if (AppSettings.getLanguage(this@PdfWebViewActivity).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
-        val locale = Locale(languageToLoad)
-        Locale.setDefault(locale)
+        LocalCustom.configureLocale(baseContext, languageToLoad)
 
         binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.soil_health_card)
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE

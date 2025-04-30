@@ -28,6 +28,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityMarketPriceBinding
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -56,14 +57,15 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityMarketPriceBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         languageToLoad = "mr"
         if (AppSettings.getLanguage(this@MarketPrice).equals("1", ignoreCase = true)) {
             Log.d("getStrName=", AppSettings.getLanguage(this@MarketPrice))
             languageToLoad = "en"
         }
-        binding = ActivityMarketPriceBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
+        LocalCustom.configureLocale(baseContext, languageToLoad)
         binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.marketprice)
         setConfiguration()

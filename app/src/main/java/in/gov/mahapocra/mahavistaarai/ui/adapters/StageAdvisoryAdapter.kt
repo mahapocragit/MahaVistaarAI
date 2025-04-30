@@ -45,7 +45,6 @@ class StageAdvisoryAdapter(
         val seeMoreTextView: TextView = itemView.findViewById(R.id.seeMoreTextView)
         val stepLine: View = itemView.findViewById(R.id.stepLine)
         val stage: RelativeLayout = itemView.findViewById(R.id.stage)
-        val rightTick: ImageView = itemView.findViewById(R.id.right_tick)
         val cropStagesInfoRecyclerView: RecyclerView =
             itemView.findViewById(R.id.cropStagesInfoRecyclerView)
     }
@@ -77,13 +76,11 @@ class StageAdvisoryAdapter(
             holder.cropStagesInfoRecyclerView.visibility = View.VISIBLE
             holder.seeMoreTextView.text = holder.itemView.context.getString(R.string.see_less)
             holder.stage.setBackgroundResource(R.drawable.current_round_background_status)
-            holder.rightTick.visibility = View.GONE
 
         } else if (status.equals("completed")) {
             holder.cropStagesInfoRecyclerView.visibility = View.GONE
             holder.stage.setBackgroundResource(R.drawable.completed_background_stages)
             holder.stepLine.setBackgroundResource(R.color.bg_green)
-            holder.rightTick.visibility = View.VISIBLE
         }else{
             holder.cropStagesInfoRecyclerView.visibility = View.GONE
             holder.stage.setBackgroundResource(R.drawable.pending_round_backgroud_stages)

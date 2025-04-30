@@ -4,54 +4,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
+    android:layout_marginTop="@dimen/_1sdp"
+    android:layout_marginBottom="@dimen/_5sdp"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView"
-        android:textSize="18sp"
-        android:layout_marginLeft="10dp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        />
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:textSize="@dimen/_12sdp"
+        android:textColor="@color/black" />
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_2sdp"
+        android:layout_marginTop="@dimen/_1sdp"
+        app:cardCornerRadius="@dimen/_5sdp"
+        android:background="@drawable/crop_category_card_background"
+        android:layout_marginHorizontal="@dimen/_10sdp">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/videosDetailsImages"
+            android:id="@+id/videosRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingHorizontal="@dimen/_5sdp"
             android:scrollbarAlwaysDrawHorizontalTrack="true"
             android:scrollbarStyle="insideOverlay"
-            android:scrollbars="horizontal"></androidx.recyclerview.widget.RecyclerView>
+            android:scrollbars="horizontal" />
+    </LinearLayout>
 
-        <ImageView
-            android:id="@+id/nimg"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/next"
-            app:tint="@color/white" />
-
-        <ImageView
-            android:id="@+id/pimg"
-            android:layout_width="50dp"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerInParent="true"
-            android:layout_alignParentLeft="true"
-            android:src="@drawable/pre"
-            android:visibility="gone"
-            app:tint="@color/white" />
-
-    </RelativeLayout>
 </LinearLayout>

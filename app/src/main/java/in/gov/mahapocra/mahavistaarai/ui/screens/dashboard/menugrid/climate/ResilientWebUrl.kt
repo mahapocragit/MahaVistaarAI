@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import java.util.*
 
 class ResilientWebUrl : AppCompatActivity() {
@@ -22,14 +23,7 @@ class ResilientWebUrl : AppCompatActivity() {
         setContentView(R.layout.activity_resilient_web_url)
 
         val languageToLoad = if (AppSettings.getLanguage(this) == "1") "en" else "mr"
-        Locale.setDefault(Locale(languageToLoad))
-
-        val config = Configuration()
-        Configuration().setLocale(Locale(languageToLoad))
-        baseContext.resources.updateConfiguration(
-            config,
-            baseContext.resources.displayMetrics
-        )
+        LocalCustom.configureLocale(baseContext, languageToLoad)
 
         climateWebView = findViewById(R.id.climateWebView)
         intent.getStringExtra("webUrl")?.let { openWebView(it) }

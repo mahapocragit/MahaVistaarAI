@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import org.json.JSONObject
 
 class DbtSchemesDetailsActivity : AppCompatActivity() {
@@ -30,6 +31,7 @@ class DbtSchemesDetailsActivity : AppCompatActivity() {
         } else {
             languageToLoad = "en"
         }
+        LocalCustom.configureLocale(baseContext, languageToLoad)
 
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
         imageMenushow = findViewById(R.id.imageMenushow)

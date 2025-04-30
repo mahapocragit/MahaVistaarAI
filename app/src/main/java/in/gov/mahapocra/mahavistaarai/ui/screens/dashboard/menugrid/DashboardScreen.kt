@@ -2,6 +2,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid
 
 import android.Manifest
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageInfo
@@ -72,6 +73,8 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.ForceUpdateChecker
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.ApUtil
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppHelper
@@ -96,7 +99,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
     private lateinit var binding: ActivityDashboardScreenBinding
     private lateinit var navUserName: TextView
     private lateinit var navUserPhone: TextView
-    var languageToLoad: String? = null
+    private lateinit var languageToLoad: String
     private var farmerId = 0
     private var cropId = 0
     private var savedCropName = ""
@@ -116,15 +119,8 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
         if (AppSettings.getLanguage(this@DashboardScreen).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
+        LocalCustom.configureLocale(baseContext, languageToLoad)
         showToast = true
-        val locale = Locale(languageToLoad)
-        Locale.setDefault(locale)
-        val config = Configuration()
-        config.locale = locale
-        baseContext.resources.updateConfiguration(
-            config,
-            baseContext.resources.displayMetrics
-        )
         binding = ActivityDashboardScreenBinding.inflate(
             layoutInflater
         )
@@ -200,6 +196,10 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
             binding.appBarMain.dashboardScreen.gridViewDashboard.adapter = DashboardAdapter(
                 this, arrayCategoryMarathi, arrayCategoryImg, "single_item_grid"
             )
+        }
+
+        binding.appBarMain.dashboardScreen.chatFab.setOnClickListener {
+            startActivity(Intent(this, TempDashboardActivity::class.java))
         }
 
         appPreferenceManager.clearAll()

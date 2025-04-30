@@ -30,12 +30,14 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.ui.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
 import java.util.Date
+import java.util.Locale
 
 class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
     ApiCallbackCode, DatePickerRequestListener {
@@ -50,7 +52,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
     private var villageID: Int = 0
     private var wotrCropId: String? = null
     private var mUrl: String? = null
-    lateinit var languageToLoad: String
+    private lateinit var languageToLoad: String
     private var sowingDate: String = ""
     private val date = Date()
 
@@ -65,11 +67,16 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         if (AppSettings.getLanguage(this@AdvisoryCropActivity).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
+        LocalCustom.configureLocale(baseContext, languageToLoad)
 
         binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {
             startActivity(Intent(this, DashboardScreen::class.java))
         }
+
+        binding.completedLabelTextView.text = getString(R.string.crop_stage_completed)
+        binding.currentLabelTextView.text = getString(R.string.crop_stage_current)
+        binding.pendingLabelTextView.text = getString(R.string.crop_stage_pending)
 
         binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {
             val sharing = Intent(this, AddCropActivity::class.java)
@@ -79,6 +86,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
             )
             startActivity(sharing)
         }
+        binding.sowingInfoLayout.textView7.text = getString(R.string.sowing_date)
 
         //fetching values
         cropId = intent.getIntExtra("id", 0)

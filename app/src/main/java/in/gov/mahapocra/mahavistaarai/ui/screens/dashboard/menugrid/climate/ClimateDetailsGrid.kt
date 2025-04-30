@@ -13,6 +13,7 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ClimateGridAdapter
 import `in`.gov.mahapocra.mahavistaarai.data.model.ClimateGridModel
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 
 class ClimateDetailsGrid : AppCompatActivity() {
     private var gridView: GridView? = null
@@ -23,7 +24,7 @@ class ClimateDetailsGrid : AppCompatActivity() {
     private var groupName: ArrayList<String> = ArrayList()
     private var groupImagePath: ArrayList<String> = ArrayList()
     private var webUrl: ArrayList<String> = ArrayList()
-    var languageToLoad: String? = null
+    private lateinit var languageToLoad: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +34,7 @@ class ClimateDetailsGrid : AppCompatActivity() {
             Log.d("getStrName=", AppSettings.getLanguage(this@ClimateDetailsGrid))
             languageToLoad = "en"
         }
+        LocalCustom.configureLocale(baseContext, languageToLoad)
         init()
         textViewHeaderTitle?.setText(R.string.climate_resilient_technology)
         val b = intent.extras
