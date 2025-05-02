@@ -1,6 +1,8 @@
 package `in`.gov.mahapocra.mahavistaarai.data
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import com.google.firebase.database.DataSnapshot
@@ -48,10 +50,28 @@ class FirebaseHelper(private val context: Context) {
             .setTitle("Update Available")
             .setMessage("A new version of the app is available. Please update to continue.")
             .setPositiveButton("Update") { dialog, _ ->
-                // TODO: Redirect to Play Store
+                openPlayStore()
                 dialog.dismiss()
             }
             .setCancelable(false)
             .show()
+    }
+
+    private fun openPlayStore() {
+        val packageName = context.packageName
+        try {
+            context.startActivity(
+                Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+            )
+        } catch (e: android.content.ActivityNotFoundException) {
+            // Fallback to browser if Play Store app not found
+            context.startActivity(
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+            )
+        }
     }
 }
