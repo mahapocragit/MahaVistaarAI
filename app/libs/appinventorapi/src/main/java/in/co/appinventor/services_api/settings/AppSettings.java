@@ -119,6 +119,16 @@ public class AppSettings {
         }
     }
 
+    public void clearIntValue(Context context, String key) {
+        isAppSettingInit();
+        if (context != null) {
+            prefs = context.getSharedPreferences(this.APP_SHARED_PREFERENCE_NAME, 0);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt(key, 0);  // Set to default "cleared" value
+            editor.apply();
+        }
+    }
+
     public long getLongValue(Context context, String key, long defaultValue) {
         isAppSettingInit();
         prefs = context.getSharedPreferences(this.APP_SHARED_PREFERENCE_NAME, 0);

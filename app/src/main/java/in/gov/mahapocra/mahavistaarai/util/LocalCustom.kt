@@ -15,4 +15,8 @@ object LocalCustom {
             baseContext.resources.displayMetrics
         )
     }
+
+    fun generateRandom10DigitNumber(): Int {
+        return (100000000..999999999).random()
+    }
 }

@@ -61,12 +61,16 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         LocalCustom.configureLocale(baseContext, languageToLoad)
         binding = ActivityLoginScreenTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        AppSettings.getInstance().clearIntValue(this, AppConstants.fREGISTER_ID)
+        AppSettings.getInstance().setBooleanValue(this, AppConstants.IS_USER_GUEST, false)
         onClick()
     }
 
     private fun onClick() {
         binding.signInButton.setOnClickListener {
             //0-Password 1-OTP
+            AppSettings.getInstance().setBooleanValue(this, AppConstants.IS_USER_GUEST, false)
             if (loginOption == PASSWORD_VERIFY) {
                 userValidateAndLogin()
             } else {
@@ -91,6 +95,9 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             }
         }
         binding.guestModeCardView.setOnClickListener {
+            val userId = LocalCustom.generateRandom10DigitNumber()
+            AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, userId)
+            AppSettings.getInstance().setBooleanValue(this, AppConstants.IS_USER_GUEST, true)
             startActivity(Intent(this, DashboardScreen::class.java))
         }
     }

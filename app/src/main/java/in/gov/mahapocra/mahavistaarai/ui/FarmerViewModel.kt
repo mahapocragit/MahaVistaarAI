@@ -1,6 +1,7 @@
 package `in`.gov.mahapocra.mahavistaarai.ui
 
 import android.content.Context
+import android.os.Handler
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,6 +15,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
+import okhttp3.RequestBody
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
@@ -32,12 +34,14 @@ class FarmerViewModel : ViewModel() {
     fun saveFarmerSelectedCrop(context: Context, sowingDate: String, cropId: Int) {
         val jsonObject = JSONObject()
         val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
-
+        val isGuest = AppSettings.getInstance().getBooleanValue(context, AppConstants.IS_USER_GUEST, false)
+        val userValue = if (isGuest) 1 else 0
         try {
             jsonObject.put("api_key", APIKeys.SSO_PROD.key())
             jsonObject.put("farmer_id", farmerId)
             jsonObject.put("sowing_date", sowingDate)
             jsonObject.put("crop_id", cropId)
+            jsonObject.put("is_guest", userValue)
 
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api = AppInventorApi(context, APIServices.FARMER, "", AppString(context).getkMSG_WAIT(), false)
@@ -50,7 +54,6 @@ class FarmerViewModel : ViewModel() {
                         call: Call<JsonObject>,
                         response: Response<JsonObject>
                     ) {
-                        Log.d("TAGGER", "onResponse: ${response.body()}")
                         if (response.isSuccessful) {
                             _saveFarmerSelectedCrop.value = response.body()
                         } else {
