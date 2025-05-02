@@ -44,6 +44,7 @@ import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListene
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.data.model.CropsCategName
@@ -129,7 +130,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
         setContentView(binding.root)
         appPreferenceManager = AppPreferenceManager(this)
         init()
-
+        FirebaseHelper(this)
         binding.appBarMain.dashboardScreen.deleteCropImageView.setOnClickListener {
             cropId = savedCropId
             deleteDialog()
