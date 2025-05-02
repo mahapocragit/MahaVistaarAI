@@ -48,6 +48,7 @@ import retrofit2.Retrofit
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     OnMultiRecyclerItemClickListener, ApiCallbackCode, DatePickerRequestListener {
@@ -252,7 +253,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             jsonObject.put("crop_id", cropId)
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
-                AppInventorApi(this, APIServices.SSO, "", AppString(this).getkMSG_WAIT(), true)
+                AppInventorApi(this, APIServices.FARMER, "", AppString(this).getkMSG_WAIT(), true)
             CoroutineScope(Dispatchers.IO).launch {
                 val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
                 val responseCall: Call<JsonObject> =
@@ -361,10 +362,12 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getCalculatedFertilizerData() {
-        val formatter: DateFormat = SimpleDateFormat("dd-mm-yyyy")
-        val date = sowingDate?.let { formatter.parse(it) } as Date
-        val newFormat = SimpleDateFormat("yyyy-mm-dd")
-        val finalSowingDate = newFormat.format(date)
+
+        val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+        val date = formatter.parse(sowingDate ?: "")
+        val newFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        val finalSowingDate = newFormat.format(date!!)
+        Log.d("TAGGER", "getCalculatedFertilizerData: $finalSowingDate and $sowingDate")
         try {
             val api =
                 AppInventorApi(this, APIServices.WOTR, "", AppString(this).getkMSG_WAIT(), true)
@@ -610,7 +613,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                     val api = AppInventorApi(
                         this@FertilizerCalculatorActivity,
-                        APIServices.SSO,
+                        APIServices.FARMER,
                         "",
                         AppString(this@FertilizerCalculatorActivity).getkMSG_WAIT(),
                         true
@@ -654,7 +657,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
 
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
-                AppInventorApi(this, APIServices.SSO, "", AppString(this).getkMSG_WAIT(), true)
+                AppInventorApi(this, APIServices.FARMER, "", AppString(this).getkMSG_WAIT(), true)
             CoroutineScope(Dispatchers.IO).launch {
                 val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
                 val responseCall: Call<JsonObject> = apiRequest.saveFertilizerFormula(requestBody)

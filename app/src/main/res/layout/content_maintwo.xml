@@ -137,7 +137,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_weight="1"
                             android:paddingStart="@dimen/_10sdp"
-                            android:text="No crop added"
+                            android:text="@string/no_crops_added"
                             android:textSize="@dimen/_12sdp"
                             android:visibility="visible" />
 

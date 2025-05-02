@@ -72,27 +72,27 @@ class SoilHealthCardAdapter(private val farmerJsonArray: JSONArray?) :
 
 
         if (nitroDouble < 280) {
-            holder.nitrogenImageView.setImageResource(R.drawable.ic_soil_health_card_low)
-        } else if (nitroDouble > 280 && nitroDouble < 560){
-            holder.nitrogenImageView.setImageResource(R.drawable.ic_soil_health_card_mid)
-        }else{
             holder.nitrogenImageView.setImageResource(R.drawable.ic_soil_health_card_high)
+        } else if (nitroDouble > 280 && nitroDouble < 560){
+            holder.nitrogenImageView.setImageResource(R.drawable.ic_soil_health_card_low)
+        }else{
+            holder.nitrogenImageView.setImageResource(R.drawable.ic_soil_health_card_mid)
         }
 
         if (phosDouble < 14) {
-            holder.phosphorusImageView.setImageResource(R.drawable.ic_soil_health_card_low)
-        } else if (phosDouble > 15 && phosDouble < 28){
-            holder.phosphorusImageView.setImageResource(R.drawable.ic_soil_health_card_mid)
-        }else{
             holder.phosphorusImageView.setImageResource(R.drawable.ic_soil_health_card_high)
+        } else if (phosDouble > 15 && phosDouble < 28){
+            holder.phosphorusImageView.setImageResource(R.drawable.ic_soil_health_card_low)
+        }else{
+            holder.phosphorusImageView.setImageResource(R.drawable.ic_soil_health_card_mid)
         }
 
         if (potasDouble < 150) {
-            holder.potassiumImageView.setImageResource(R.drawable.ic_soil_health_card_low)
-        } else if (potasDouble > 150 && potasDouble < 250){
-            holder.potassiumImageView.setImageResource(R.drawable.ic_soil_health_card_mid)
-        }else{
             holder.potassiumImageView.setImageResource(R.drawable.ic_soil_health_card_high)
+        } else if (potasDouble > 150 && potasDouble < 250){
+            holder.potassiumImageView.setImageResource(R.drawable.ic_soil_health_card_low)
+        }else{
+            holder.potassiumImageView.setImageResource(R.drawable.ic_soil_health_card_mid)
         }
     }
 
