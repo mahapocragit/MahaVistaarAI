@@ -119,7 +119,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
         if (AppSettings.getLanguage(this@DashboardScreen).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
-        LocalCustom.configureLocale(baseContext, languageToLoad)
+        configureLocale(baseContext, languageToLoad)
         showToast = true
         binding = ActivityDashboardScreenBinding.inflate(
             layoutInflater

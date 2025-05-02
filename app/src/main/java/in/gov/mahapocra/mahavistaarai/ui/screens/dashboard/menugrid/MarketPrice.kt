@@ -57,17 +57,20 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMarketPriceBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         languageToLoad = "mr"
         if (AppSettings.getLanguage(this@MarketPrice).equals("1", ignoreCase = true)) {
             Log.d("getStrName=", AppSettings.getLanguage(this@MarketPrice))
             languageToLoad = "en"
         }
         LocalCustom.configureLocale(baseContext, languageToLoad)
+        binding = ActivityMarketPriceBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+
         binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.marketprice)
+        binding.tvSourceInformation.text = getString(R.string.source_info_market)
+        binding.textViewMarket.text = getString(R.string.farmer_select_market)
         setConfiguration()
         binding.recyclerViewMarketPriceList.setHasFixedSize(true)
         val myLayoutManager = LinearLayoutManager(this)

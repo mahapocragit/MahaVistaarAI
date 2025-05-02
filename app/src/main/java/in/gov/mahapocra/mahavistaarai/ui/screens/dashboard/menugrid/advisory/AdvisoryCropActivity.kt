@@ -58,16 +58,16 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityAdvisoryCropBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        viewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
-
         //setting up values for language
         languageToLoad = "mr"
         if (AppSettings.getLanguage(this@AdvisoryCropActivity).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
         LocalCustom.configureLocale(baseContext, languageToLoad)
+        binding = ActivityAdvisoryCropBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        viewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
+
 
         binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {

@@ -156,48 +156,27 @@
 
         </LinearLayout>
 
-        <androidx.core.widget.NestedScrollView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/wareHousereport"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10sdp"
             android:layout_marginHorizontal="@dimen/_10sdp"
-            android:fillViewport="true"
-            android:fitsSystemWindows="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rl_toolbar">
+            android:scrollbarAlwaysDrawHorizontalTrack="true"
+            android:scrollbarStyle="insideOverlay"
+            android:scrollbars="horizontal">
 
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fitsSystemWindows="true">
+        </androidx.recyclerview.widget.RecyclerView>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/wareHouseEmptyTextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Data Not Available"
-                        android:textColor="@color/text_black_light"
-                        android:textStyle="normal"
-                        android:visibility="gone" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/wareHousereport"
-                        android:layout_width="@dimen/_282sdp"
-                        android:layout_height="wrap_content"
-                        android:scrollbarAlwaysDrawHorizontalTrack="true"
-                        android:scrollbarStyle="insideOverlay"
-                        android:scrollbars="horizontal" />
-
-                </LinearLayout>
-
-            </HorizontalScrollView>
-        </androidx.core.widget.NestedScrollView>
+        <TextView
+            android:id="@+id/wareHouseEmptyTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Data Not Available"
+            android:textColor="@color/text_black_light"
+            android:textStyle="normal"
+            android:visibility="gone" />
 
 
     </LinearLayout>

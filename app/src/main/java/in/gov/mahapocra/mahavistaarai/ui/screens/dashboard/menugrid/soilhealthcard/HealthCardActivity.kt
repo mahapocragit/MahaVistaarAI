@@ -34,14 +34,14 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityHealthCardBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         languageToLoad = "mr"
         if (AppSettings.getLanguage(this@HealthCardActivity).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
         LocalCustom.configureLocale(baseContext, languageToLoad)
+        binding = ActivityHealthCardBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
 
         //Loading URL in webView
         if (supportActionBar != null) {

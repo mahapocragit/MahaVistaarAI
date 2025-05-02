@@ -189,7 +189,7 @@
     <string name="aboutPocra_text1">PoCRA Project Area and its Villages</string>
     <string name="aboutPocra_text2">PoCRA Achivements and Success Stories</string>
     <string name="total_warehouse">Total Warehouse : </string>
-    <string name="total_available_capacity">Total Availabale Capacity : </string>
+    <string name="total_available_capacity">Total Availabale Capacity</string>
     <string name="record_date">Record Date </string>
     <string name="warehouse_details">Details </string>
     <string name="weatherTextf">Forecast Next 5 days Advisory-(IMD)</string>

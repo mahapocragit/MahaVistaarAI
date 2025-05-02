@@ -28,13 +28,13 @@ class ClimateDetailsGrid : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_climate_details_grid)
         languageToLoad = "mr"
         if (AppSettings.getLanguage(this@ClimateDetailsGrid).equals("1", ignoreCase = true)) {
             Log.d("getStrName=", AppSettings.getLanguage(this@ClimateDetailsGrid))
             languageToLoad = "en"
         }
         LocalCustom.configureLocale(baseContext, languageToLoad)
+        setContentView(R.layout.activity_climate_details_grid)
         init()
         textViewHeaderTitle?.setText(R.string.climate_resilient_technology)
         val b = intent.extras

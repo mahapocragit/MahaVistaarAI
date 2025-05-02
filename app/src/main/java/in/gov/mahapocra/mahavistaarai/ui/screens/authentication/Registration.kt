@@ -34,6 +34,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.JsonObject
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -94,12 +95,15 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_registration)
 
         languageToLoad = "mr"
-        if (AppSettings.getLanguage(this@Registration).equals("1", ignoreCase = true)) {
+        if (AppSettings.getLanguage(this@Registration)
+                .equals("1", ignoreCase = true)
+        ) {
             languageToLoad = "en"
         }
+        LocalCustom.configureLocale(baseContext, languageToLoad)
+        setContentView(R.layout.activity_registration)
         var pinfo: PackageInfo? = null
         try {
             pinfo = packageManager.getPackageInfo(packageName, 0)

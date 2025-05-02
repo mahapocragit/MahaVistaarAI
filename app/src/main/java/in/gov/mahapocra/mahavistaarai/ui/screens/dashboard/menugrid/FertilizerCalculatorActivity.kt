@@ -79,10 +79,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityFertilizerCalculatorActivityBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        viewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
-
         languageToLoad = "mr"
         if (AppSettings.getLanguage(this@FertilizerCalculatorActivity)
                 .equals("1", ignoreCase = true)
@@ -90,6 +86,11 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             languageToLoad = "en"
         }
         LocalCustom.configureLocale(baseContext, languageToLoad)
+        binding = ActivityFertilizerCalculatorActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        viewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
+
+
 
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {

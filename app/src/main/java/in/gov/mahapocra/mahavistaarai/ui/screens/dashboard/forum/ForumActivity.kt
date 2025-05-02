@@ -6,15 +6,25 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityForumBinding
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 
 class ForumActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityForumBinding
+    private lateinit var languageToLoad: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        languageToLoad = "mr"
+        if (AppSettings.getLanguage(this@ForumActivity)
+                .equals("1", ignoreCase = true)
+        ) {
+            languageToLoad = "en"
+        }
+        LocalCustom.configureLocale(baseContext, languageToLoad)
         binding = ActivityForumBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

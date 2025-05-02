@@ -23,6 +23,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ViewPagerAdapter
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityWeatherHomeTempBinding
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONArray
 import org.json.JSONObject
@@ -38,9 +39,15 @@ class WeatherActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
     private var vinCode : Int = 0
     private lateinit var jsonArrayForecast: JSONArray
     private lateinit var jsonArrayPrevious: JSONArray
+    private lateinit var languageToLoad: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        languageToLoad = "mr"
+        if (AppSettings.getLanguage(this@WeatherActivity).equals("1", ignoreCase = true)) {
+            languageToLoad = "en"
+        }
+        configureLocale(baseContext, languageToLoad)
         binding = ActivityWeatherHomeTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

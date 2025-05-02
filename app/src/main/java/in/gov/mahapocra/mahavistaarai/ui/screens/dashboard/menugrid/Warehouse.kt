@@ -47,18 +47,24 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityWarehouseBinding.inflate(layoutInflater)
-        setContentView(binding.root)
         languageToLoad = "mr"
         if (AppSettings.getLanguage(this@Warehouse).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
         LocalCustom.configureLocale(baseContext, languageToLoad)
+        binding = ActivityWarehouseBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
         init()
         onClick()
         binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
-        binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.wareHouse)
+        binding.tvSourceInformation.text = getString(R.string.source_info_market)
+        binding.relativeLayoutTopBar.textViewHeaderTitle.text =getString(R.string.wareHouse)
+        binding.textViewDistrict.text =getString(R.string.farmer_select_district)
+
+        binding.tvWareHouseName.text =getString(R.string.warehouse_details)
+        binding.tvTotalAvailableCapacity.text =getString(R.string.total_available_capacity)
+        binding.tvRecordDate.text =getString(R.string.record_date)
     }
 
     private fun init() {
@@ -66,7 +72,6 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
         if (AppSettings.getLanguage(this@Warehouse).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
-
         binding.wareHousereport.setHasFixedSize(false)
         binding.wareHousereport.isNestedScrollingEnabled = true
         getDistrictData()

@@ -26,6 +26,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ParticularStagesDiseasesAdpa
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONArray
@@ -56,12 +57,13 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         if (AppSettings.getLanguage(this@PestsAndDiseasesStages).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
+        configureLocale(baseContext, languageToLoad)
         binding = ActivityPestsAndDiseasesLibraryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.pests_n_diseases)
-
+        binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.pests_n_diseases)
         binding.sowingInfoLayout.textView7.text = getString(R.string.selected_crop)
+        binding.tvAgroMetAdvisory.text = getString(R.string.different_stages_text)
 
         binding.sowingInfoLayout.sowingDateTextView.visibility = View.GONE
         binding.sowingInfoLayout.editSowingDateIcon.visibility = View.GONE

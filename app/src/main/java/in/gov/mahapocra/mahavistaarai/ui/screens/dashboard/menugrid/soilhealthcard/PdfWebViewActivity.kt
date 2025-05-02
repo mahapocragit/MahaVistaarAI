@@ -21,14 +21,14 @@ class PdfWebViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding= ActivityPdfViewBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         languageToLoad = "mr"
         if (AppSettings.getLanguage(this@PdfWebViewActivity).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
         LocalCustom.configureLocale(baseContext, languageToLoad)
+        binding= ActivityPdfViewBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
 
         binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.soil_health_card)
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE

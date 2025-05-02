@@ -46,13 +46,13 @@ class ClimateResilientTechnology : AppCompatActivity(), ApiJSONObjCallback, ApiC
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_climate_resilint_technology)
         if (AppSettings.getLanguage(this).equals("2", ignoreCase = true)) {
             languageToLoad = "mr"
         } else {
             languageToLoad = "en"
         }
         LocalCustom.configureLocale(baseContext, languageToLoad)
+        setContentView(R.layout.activity_climate_resilint_technology)
         init()
         textViewHeaderTitle?.setText(R.string.climateTechnology)
         imageMenushow?.visibility = View.VISIBLE

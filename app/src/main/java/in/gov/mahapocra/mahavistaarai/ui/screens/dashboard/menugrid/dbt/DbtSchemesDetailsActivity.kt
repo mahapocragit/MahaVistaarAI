@@ -24,14 +24,14 @@ class DbtSchemesDetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_dbt_schemes_details)
-
         if (AppSettings.getLanguage(this@DbtSchemesDetailsActivity).equals("2", ignoreCase = true)) {
             languageToLoad = "mr"
         } else {
             languageToLoad = "en"
         }
         LocalCustom.configureLocale(baseContext, languageToLoad)
+        setContentView(R.layout.activity_dbt_schemes_details)
+
 
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
         imageMenushow = findViewById(R.id.imageMenushow)

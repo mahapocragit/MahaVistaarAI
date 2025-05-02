@@ -45,14 +45,13 @@ class SOPActivity : AppCompatActivity(), ApiCallbackCode {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySopactivityBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         languageToLoad = "mr"
         if (AppSettings.getLanguage(this@SOPActivity).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
         LocalCustom.configureLocale(baseContext, languageToLoad)
+        binding = ActivitySopactivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         binding.toolbar.imgBackArrow.visibility = View.VISIBLE
         binding.toolbar.imgBackArrow.setOnClickListener { onBackPressedDispatcher.onBackPressed() }

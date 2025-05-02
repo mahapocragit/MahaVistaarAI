@@ -25,6 +25,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityForgetPasswordTempBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONException
@@ -46,11 +47,14 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (AppSettings.getLanguage(this@ForgetPassword).equals("1", ignoreCase = true)) {
+
+        languageToLoad = "mr"
+        if (AppSettings.getLanguage(this@ForgetPassword)
+                .equals("1", ignoreCase = true)
+        ) {
             languageToLoad = "en"
         }
-        val locale = Locale(languageToLoad)
-        Locale.setDefault(locale)
+        LocalCustom.configureLocale(baseContext, languageToLoad)
         binding = ActivityForgetPasswordTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
         onClick()

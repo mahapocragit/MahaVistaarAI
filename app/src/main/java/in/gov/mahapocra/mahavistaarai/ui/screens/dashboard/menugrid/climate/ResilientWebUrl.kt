@@ -20,10 +20,10 @@ class ResilientWebUrl : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_resilient_web_url)
-
         val languageToLoad = if (AppSettings.getLanguage(this) == "1") "en" else "mr"
         LocalCustom.configureLocale(baseContext, languageToLoad)
+        setContentView(R.layout.activity_resilient_web_url)
+
 
         climateWebView = findViewById(R.id.climateWebView)
         intent.getStringExtra("webUrl")?.let { openWebView(it) }

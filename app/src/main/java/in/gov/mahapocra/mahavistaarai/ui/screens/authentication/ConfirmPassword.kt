@@ -16,6 +16,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityChangePwdTempBinding
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONException
 import org.json.JSONObject
@@ -25,18 +26,21 @@ import retrofit2.Retrofit
 class ConfirmPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode {
 
     private lateinit var binding: ActivityChangePwdTempBinding
-
     private lateinit var newPwd: String
     private lateinit var confirmPwd: String
     private lateinit var userMobileNo: String
-    var languageToLoad: String? = null
+    private lateinit var languageToLoad: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         languageToLoad = "mr"
-        if (AppSettings.getLanguage(this@ConfirmPassword).equals("1", ignoreCase = true)) {
+        if (AppSettings.getLanguage(this@ConfirmPassword)
+                .equals("1", ignoreCase = true)
+        ) {
             languageToLoad = "en"
         }
+        LocalCustom.configureLocale(baseContext, languageToLoad)
         binding = ActivityChangePwdTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

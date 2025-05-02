@@ -53,12 +53,12 @@ class AdvisoryFeedback : Fragment(), ApiCallbackCode {
         savedInstanceState: Bundle?
     ): View {
 
-        val view: View = inflater.inflate(R.layout.fragment_advisory_feedback, container, false)
-
         languageToLoad = "mr"
         if (AppSettings.getLanguage(activity).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
+        val view: View = inflater.inflate(R.layout.fragment_advisory_feedback, container, false)
+
         initial(view)
         onClick()
         return view

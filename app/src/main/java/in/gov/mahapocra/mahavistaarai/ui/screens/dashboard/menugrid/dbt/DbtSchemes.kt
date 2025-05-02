@@ -39,7 +39,6 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_dbt_schemes)
         languageToLoad =
             if (AppSettings.getLanguage(this@DbtSchemes).equals("2", ignoreCase = true)) {
                 "mr"
@@ -47,6 +46,7 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
                 "en"
             }
         LocalCustom.configureLocale(baseContext, languageToLoad)
+        setContentView(R.layout.activity_dbt_schemes)
         init()
 
         imageMenushow?.visibility = View.VISIBLE

@@ -25,6 +25,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLoginScreenTempBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONException
@@ -50,9 +51,14 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (AppSettings.getLanguage(this@LoginScreen).equals("1", ignoreCase = true)) {
+
+        languageToLoad = "mr"
+        if (AppSettings.getLanguage(this@LoginScreen)
+                .equals("1", ignoreCase = true)
+        ) {
             languageToLoad = "en"
         }
+        LocalCustom.configureLocale(baseContext, languageToLoad)
         binding = ActivityLoginScreenTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
         onClick()
@@ -83,6 +89,9 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     Toast.LENGTH_LONG
                 ).show()
             }
+        }
+        binding.guestModeCardView.setOnClickListener {
+            startActivity(Intent(this, DashboardScreen::class.java))
         }
     }
 
