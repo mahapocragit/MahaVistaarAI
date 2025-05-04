@@ -28,7 +28,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
-import java.util.Locale
 
 class SOPActivity : AppCompatActivity(), ApiCallbackCode {
 
@@ -71,6 +70,9 @@ class SOPActivity : AppCompatActivity(), ApiCallbackCode {
         binding.sowingInfoLayout.editSowingDateIcon.visibility = View.GONE
         binding.sowingInfoLayout.textView7.text = getString(R.string.selected_crop)
         binding.sowingInfoLayout.cropNameTextView.text = cropName
+        binding.floatingActionButton.setOnClickListener {
+            mUrl?.let { it1 -> LocalCustom.downloadPdf(this, it1) }
+        }
 
         binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {
             val sharing = Intent(this, AddCropActivity::class.java)

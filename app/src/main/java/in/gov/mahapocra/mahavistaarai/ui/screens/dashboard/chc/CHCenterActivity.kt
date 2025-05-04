@@ -164,12 +164,14 @@ class CHCenterActivity : AppCompatActivity(), ApiCallbackCode {
 
                     // Set a click listener for the marker
                     marker.setOnMarkerClickListener { marker, _ ->
-                        val bottomSheet = MarkerBottomSheetFragment.newInstance(
-                            item.optString("contact_name"), item.optString("chcname"), "${
-                                item.optString("distance")
-                            } kms", latitude, longitude
-                        )
-                        bottomSheet.show(supportFragmentManager, bottomSheet.tag)
+                        val bottomSheet = item.optJSONArray("equipment")?.let {
+                            MarkerBottomSheetFragment.newInstance(
+                                item.optString("contact_name"), item.optString("chcname"), "${
+                                    item.optString("distance")
+                                } kms", latitude, longitude, it
+                            )
+                        }
+                        bottomSheet?.show(supportFragmentManager, bottomSheet.tag)
                         true
                     }
 

@@ -43,7 +43,13 @@ class PdfWebViewActivity : AppCompatActivity() {
         settings.builtInZoomControls = true
         settings.displayZoomControls = false
 
+        binding.floatingActionButton.setOnClickListener {
+            url?.let { it1 -> LocalCustom.downloadPdf(this, it1) }
+        }
+
         binding.webView.webViewClient = WebViewClient()
         binding.webView.loadUrl(googleDriveView + url)
     }
+
+
 }

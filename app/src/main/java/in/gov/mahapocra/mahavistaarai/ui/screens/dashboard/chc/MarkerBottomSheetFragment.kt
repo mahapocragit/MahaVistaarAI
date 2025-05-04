@@ -10,18 +10,28 @@ import android.widget.Button
 import android.widget.TextView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import `in`.gov.mahapocra.mahavistaarai.R
+import org.json.JSONArray
+import org.json.JSONObject
 
 
 class MarkerBottomSheetFragment : BottomSheetDialogFragment() {
 
     private var title: String? = null
     private var snippet: String? = null
+    private var equipments: String? = null
     private var distance: String? = null
     private var lat: Double? = null
     private var long: Double? = null
 
     companion object {
-        fun newInstance(title: String?, snippet: String?, distance: String?, lat:Double, long:Double): MarkerBottomSheetFragment {
+        fun newInstance(
+            title: String?,
+            snippet: String?,
+            distance: String?,
+            lat: Double,
+            long: Double,
+            equipmentArray: JSONArray
+        ): MarkerBottomSheetFragment {
             val fragment = MarkerBottomSheetFragment()
             val args = Bundle()
             args.putString("title", title)
@@ -29,6 +39,7 @@ class MarkerBottomSheetFragment : BottomSheetDialogFragment() {
             args.putString("distance", distance)
             args.putDouble("lat", lat)
             args.putDouble("long", long)
+            args.putString("equipments", equipmentArray.toString())
             fragment.arguments = args
             return fragment
         }
@@ -47,12 +58,19 @@ class MarkerBottomSheetFragment : BottomSheetDialogFragment() {
         title = arguments?.getString("title")
         snippet = arguments?.getString("snippet")
         distance = arguments?.getString("distance")
+        equipments = arguments?.getString("")
         lat = arguments?.getDouble("lat")
         long = arguments?.getDouble("long")
+        equipments = arguments?.getString("equipments")
 
         // Set the title and snippet to your bottom sheet's views, for example:
-        view.findViewById<TextView>(R.id.titleText).text = title
-        view.findViewById<TextView>(R.id.snippetText).text = snippet
+        view.findViewById<TextView>(R.id.titleText).text = snippet
+        view.findViewById<TextView>(R.id.snippetText).text = title
+        view.findViewById<TextView>(R.id.equipmentText).text = equipments?.let {
+            formattedEquipmentText(
+                it
+            )
+        }
         view.findViewById<TextView>(R.id.distanceText).text = distance
         view.findViewById<Button>(R.id.redirectButton).setOnClickListener {
 
@@ -70,5 +88,19 @@ class MarkerBottomSheetFragment : BottomSheetDialogFragment() {
                 startActivity(Intent(Intent.ACTION_VIEW, webUri))
             }
         }
+    }
+
+    private fun formattedEquipmentText(jsonArray: String): String {
+        val equipmentArray = JSONArray(jsonArray)
+        if (equipmentArray.length() == 0) return "Unable to fetch equipment list"
+
+        val equipmentList = StringBuilder()
+        for (i in 0 until equipmentArray.length()) {
+            val equipmentObject = equipmentArray.getJSONObject(i)
+            val equipmentName = equipmentObject.getString("equipment")
+            equipmentList.append("• ").append(equipmentName).append("\n")
+        }
+
+        return equipmentList.toString().trim()
     }
 }

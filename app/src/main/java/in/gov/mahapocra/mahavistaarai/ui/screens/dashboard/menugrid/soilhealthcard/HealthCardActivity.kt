@@ -3,6 +3,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealt
 import `in`.co.appinventor.services_api.settings.AppSettings
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
