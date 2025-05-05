@@ -11,9 +11,9 @@ android {
 
     signingConfigs {
         release {
-            //storeFile file('E:\\Pocra-JKS\\pocra_pks.jks')
-            //storePassword 'farmer@20022022'
-            //keyPassword 'farmer@20022022'
+            //storeFile file('C:\Users\Admin\AndroidStudioProjects\Keys\key_store_credentials.jks')
+            //storePassword 'NDKSP@2025'
+            //keyPassword 'NDKSP@2025'
             //keyAlias 'pks_prod_alias'
         }
         debug {
@@ -25,7 +25,7 @@ android {
         applicationId "in.gov.mahapocra.mahavistaarai"
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 2
+        versionCode 4
         versionName "1.0"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -33,9 +33,13 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            crunchPngs false // or true
+            minifyEnabled true // Enable shrinking & obfuscation
+            shrinkResources true // Remove unused resources
+            crunchPngs false // Optional: disable PNG crunching to save build time
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            ndk {
+                debugSymbolLevel 'FULL' // Include native debug symbols (if using NDK)
+            }
         }
         debug {
             minifyEnabled false
