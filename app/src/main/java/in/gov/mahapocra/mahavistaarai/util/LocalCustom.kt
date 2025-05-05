@@ -6,18 +6,7 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Environment
 import android.webkit.URLUtil
-import com.github.barteksc.pdfviewer.PDFView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.BufferedInputStream
-import java.io.IOException
-import java.io.InputStream
-import java.net.HttpURLConnection
-import java.net.URL
 import java.util.Locale
-import javax.net.ssl.HttpsURLConnection
 
 object LocalCustom {
     fun configureLocale(baseContext: Context, languageToLoad:String){
@@ -50,40 +39,5 @@ object LocalCustom {
 
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         downloadManager.enqueue(request)
-    }
-
-     fun loadPdfFromUrl(url: String, webView: PDFView) {
-        CoroutineScope(Dispatchers.IO).launch {
-            // Fetch the InputStream of the PDF file.
-            val inputStream = fetchPdfStream(url)
-
-            // Switch back to the main thread to update UI.
-            withContext(Dispatchers.Main) {
-                inputStream?.let {
-                    // Load the PDF into the PDFView.
-                    webView.fromStream(it).load()
-                }
-            }
-        }
-    }
-
-    // Fetches the PDF InputStream from the given URL.
-    // Uses HTTPS connection to securely download the PDF file.
-    private fun fetchPdfStream(urlString: String): InputStream? {
-        return try {
-            val url = URL(urlString)
-            val urlConnection = url.openConnection() as HttpsURLConnection
-
-            // Check if the connection response is successful (HTTP 200 OK).
-            if (urlConnection.responseCode == HttpURLConnection.HTTP_OK) {
-                BufferedInputStream(urlConnection.inputStream)
-            } else {
-                null
-            }
-        } catch (e: IOException) {
-            // Print the error in case of a network failure.
-            e.printStackTrace()
-            null
-        }
     }
 }
