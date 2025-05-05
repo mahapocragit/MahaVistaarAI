@@ -82,6 +82,9 @@ import `in`.gov.mahapocra.mahavistaarai.util.app_util.ApUtil
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONException
@@ -246,7 +249,6 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
         Log.d("TAGGER", "onCreate: $talukaID")
         if (talukaID != 0) {
             callForWeatherApi(talukaID)
-            binding.appBarMain.dashboardScreen.weatherTalukaTV.text = talukaName
         }
         binding.appBarMain.dashboardScreen.bottomNavigation.itemIconTintList = null
         binding.appBarMain.dashboardScreen.bottomNavigation.setOnItemSelectedListener { item: MenuItem ->
@@ -287,6 +289,34 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                 )
             }
             false
+        }
+        fetchTalukaMasterData()
+    }
+
+    private fun fetchTalukaMasterData() {
+        val districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
+        val jsonObject = JSONObject()
+        try {
+            jsonObject.put("lang", languageToLoad)
+            jsonObject.put("district_code", districtID)
+
+            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+            val api =
+                AppInventorApi(
+                    this,
+                    APIServices.FARMER,
+                    "",
+                    AppString(this).getkMSG_WAIT(),
+                    true
+                )
+            CoroutineScope(Dispatchers.IO).launch {
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(APIRequest::class.java)
+                val responseCall: Call<JsonObject> = apiRequest.getTalukaList(requestBody)
+                api.postRequest(responseCall, this@DashboardScreen, 4)
+            }
+        } catch (e: JSONException) {
+            e.printStackTrace()
         }
     }
 
@@ -699,7 +729,6 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                             val strTalukaId = data?.getInt("TalukaCode")
                             val strVillageId = data?.getInt("VillageCode")
                             val strVillageName = data?.getString("VillageName")
-                            binding.appBarMain.dashboardScreen.weatherTalukaTV.text = strTalukaName
                             AppSettings.getInstance().setValue(this, AppConstants.uName, strName)
                             binding.appBarMain.dashboardScreen.userFullNameTextView.text = strName
                             AppSettings.getInstance()
@@ -845,6 +874,21 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                         getFarmerSelectedCrop(languageToLoad)
                     } else {
                         UIToastMessage.show(this, deleteSelectedCropResponse.getResponse())
+                    }
+                }
+
+                4 -> {
+                    if (jSONObject!=null){
+                        val talukaID: Int = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
+                        val talukaArray  = jSONObject.optJSONArray("data")
+                        Log.d("TAGGER", "onResponse: ${jSONObject.optJSONArray("data")}")
+                        for ( i in 0 until talukaArray!!.length()){
+                            val talukaIDJson = talukaArray.getJSONObject(i)
+                            if (talukaID == talukaIDJson.optInt("code")){
+                                binding.appBarMain.dashboardScreen.weatherTalukaTV.text = talukaIDJson.optString("name")
+                            }
+                        }
+                        Log.d("TAGGER", "onResponse: $talukaID")
                     }
                 }
 

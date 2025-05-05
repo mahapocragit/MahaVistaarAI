@@ -25,9 +25,14 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityWeatherHomeTempBindi
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
+import retrofit2.Retrofit
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -67,7 +72,6 @@ class WeatherActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
 
         val weatherResponse = AppPreferenceManager(this).getString(AppConstants.WEATHER_RESPONSE)
         val talukaName: String = AppSettings.getInstance().getSavedValue(this, AppConstants.uTALUKA)
-        binding.weatherTalukaTV.text = talukaName
         if (!weatherResponse.equals(AppConstants.WEATHER_RESPONSE)) {
             val jSONObject = JSONObject(weatherResponse)
             val response =
@@ -139,6 +143,7 @@ class WeatherActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
 
         setRecyclerViewUsingArray(jsonArrayForecast)
         recyclerAdapter.notifyDataSetChanged()
+        fetchTalukaMasterData()
     }
 
     private fun makeAPICallForPreviousData() {
@@ -203,6 +208,21 @@ class WeatherActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
                 binding.viewPager.visibility = View.GONE
             }
         }
+
+        if (i ==4) {
+            if (jSONObject!=null){
+                val talukaID: Int = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
+                val talukaArray  = jSONObject.optJSONArray("data")
+                Log.d("TAGGER", "onResponse: ${jSONObject.optJSONArray("data")}")
+                for ( i in 0 until talukaArray!!.length()){
+                    val talukaIDJson = talukaArray.getJSONObject(i)
+                    if (talukaID == talukaIDJson.optInt("code")){
+                        binding.weatherTalukaTV.text = talukaIDJson.optString("name")
+                    }
+                }
+                Log.d("TAGGER", "onResponse: $talukaID")
+            }
+        }
     }
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
@@ -218,6 +238,33 @@ class WeatherActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
             val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getHourlyData(requestBody)
             api.postRequest(responseCall, this, 2)
+        }
+    }
+
+    private fun fetchTalukaMasterData() {
+        val districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
+        val jsonObject = JSONObject()
+        try {
+            jsonObject.put("lang", languageToLoad)
+            jsonObject.put("district_code", districtID)
+
+            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+            val api =
+                AppInventorApi(
+                    this,
+                    APIServices.FARMER,
+                    "",
+                    AppString(this).getkMSG_WAIT(),
+                    true
+                )
+            CoroutineScope(Dispatchers.IO).launch {
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(APIRequest::class.java)
+                val responseCall: Call<JsonObject> = apiRequest.getTalukaList(requestBody)
+                api.postRequest(responseCall, this@WeatherActivity, 4)
+            }
+        } catch (e: JSONException) {
+            e.printStackTrace()
         }
     }
 }
