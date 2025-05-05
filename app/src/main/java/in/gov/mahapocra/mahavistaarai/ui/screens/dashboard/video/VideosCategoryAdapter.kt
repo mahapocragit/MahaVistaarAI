@@ -4,38 +4,34 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ItemVideosCategoryBinding
 import org.json.JSONArray
 import org.json.JSONObject
 
-class VideosCategoryAdapter(private val categoryArray:JSONArray) : RecyclerView.Adapter<VideosCategoryAdapter.ViewHolder>() {
-    class ViewHolder(val binding: ItemVideosCategoryBinding) :
+class VideosCategoryAdapter(
+    private val categoryArray: JSONArray,
+    private val languageToLoad: String
+) : RecyclerView.Adapter<VideosCategoryAdapter.ViewHolder>() {
+    class ViewHolder(val binding: ItemVideosCategoryBinding, val languageToLoad: String) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(jsonObject: JSONObject) {
-            val activityName = jsonObject.optString("name")
-            binding.textView21.text = activityName
-            setImageByActivityName(activityName, binding)
-            binding.cardTrendingView.setOnClickListener {
-                binding.root.context.startActivity(Intent(binding.root.context, VideosDetailedActivity::class.java).apply {
-                    putExtra("videosJsonObject", jsonObject.toString())
-                })
+        fun bind(jsonObject: JSONObject, languageToLoad: String) {
+            var activityName = jsonObject.optString("name")
+            if (languageToLoad == "mr") {
+                activityName = jsonObject.optString("name_mr")
             }
-        }
-
-        private fun setImageByActivityName(activityName: String, binding: ItemVideosCategoryBinding) {
-            when(activityName){
-                "NRM"->binding.imageView23.setImageResource(R.drawable.nrm)
-                "CRT"->binding.imageView23.setImageResource(R.drawable.crt)
-                "Crop Cultivation"->binding.imageView23.setImageResource(R.drawable.cropcultivation)
-                "Crop Care"->binding.imageView23.setImageResource(R.drawable.cropcare)
-                "Agroforestry"->binding.imageView23.setImageResource(R.drawable.agroforestry)
-                "Farmer Group"->binding.imageView23.setImageResource(R.drawable.farmergroup)
-                "Agri Business"->binding.imageView23.setImageResource(R.drawable.agribusiness)
-                "Success Story"->binding.imageView23.setImageResource(R.drawable.successstory)
-                "Animal Husbandry"->binding.imageView23.setImageResource(R.drawable.animalhubandary)
-                "FFS"->binding.imageView23.setImageResource(R.drawable.ffs)
-                "Other"->binding.imageView23.setImageResource(R.drawable.other)
+            binding.textView21.text = activityName
+            Glide.with(binding.imageView23).load(jsonObject.optString("thumbnail"))
+                .into(binding.imageView23)
+            binding.cardTrendingView.setOnClickListener {
+                binding.root.context.startActivity(
+                    Intent(
+                        binding.root.context,
+                        VideosDetailedActivity::class.java
+                    ).apply {
+                        putExtra("videosJsonObject", jsonObject.toString())
+                    })
             }
         }
     }
@@ -43,7 +39,7 @@ class VideosCategoryAdapter(private val categoryArray:JSONArray) : RecyclerView.
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
             ItemVideosCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+        return ViewHolder(binding, languageToLoad)
     }
 
     override fun getItemCount(): Int {
@@ -52,6 +48,6 @@ class VideosCategoryAdapter(private val categoryArray:JSONArray) : RecyclerView.
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val farmerObject = categoryArray.getJSONObject(position)
-        holder.bind(farmerObject)
+        holder.bind(farmerObject, languageToLoad)
     }
 }

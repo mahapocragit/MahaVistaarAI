@@ -5,7 +5,6 @@ import android.os.Handler
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
@@ -77,7 +76,7 @@ class VideosActivity : AppCompatActivity(), ApiCallbackCode {
                     binding.videosCategoriesRecyclerView.hasFixedSize()
                     binding.videosCategoriesRecyclerView.adapter = videosCategoryJson?.let {
                         VideosCategoryAdapter(
-                            it
+                            it, languageToLoad
                         )
                     }
                 }

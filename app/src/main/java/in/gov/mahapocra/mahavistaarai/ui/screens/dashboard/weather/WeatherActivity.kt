@@ -71,7 +71,6 @@ class WeatherActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
         binding.viewPager.visibility = View.GONE
 
         val weatherResponse = AppPreferenceManager(this).getString(AppConstants.WEATHER_RESPONSE)
-        val talukaName: String = AppSettings.getInstance().getSavedValue(this, AppConstants.uTALUKA)
         if (!weatherResponse.equals(AppConstants.WEATHER_RESPONSE)) {
             val jSONObject = JSONObject(weatherResponse)
             val response =
@@ -115,7 +114,7 @@ class WeatherActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
                     ContextCompat.getDrawable(this@WeatherActivity, R.drawable.shape_left_white)
                 setTextColor(Color.BLACK)
             }
-            makeAPICallForPreviousData()
+            setRecyclerViewUsingArray(jsonArrayPrevious)
             recyclerAdapter.notifyDataSetChanged()
         }
 
@@ -226,19 +225,19 @@ class WeatherActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
     }
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
-        if (obj != null) {
-            val jSONObject = obj as JSONObject
-            val date = jSONObject.optString("for_date")
-            val jsonObject = JSONObject()
-            jsonObject.put("for_date", date) //  "2024-10-18"
-            jsonObject.put("vincode", vinCode) //525878
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api = AppInventorApi(this, APIServices.GIS, "",
-                AppString(this).getkMSG_WAIT(), true)
-            val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getHourlyData(requestBody)
-            api.postRequest(responseCall, this, 2)
-        }
+//        if (obj != null) {
+//            val jSONObject = obj as JSONObject
+//            val date = jSONObject.optString("for_date")
+//            val jsonObject = JSONObject()
+//            jsonObject.put("for_date", date) //  "2024-10-18"
+//            jsonObject.put("vincode", vinCode) //525878
+//            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+//            val api = AppInventorApi(this, APIServices.GIS, "",
+//                AppString(this).getkMSG_WAIT(), true)
+//            val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
+//            val responseCall: Call<JsonObject> = apiRequest.getHourlyData(requestBody)
+//            api.postRequest(responseCall, this, 2)
+//        }
     }
 
     private fun fetchTalukaMasterData() {

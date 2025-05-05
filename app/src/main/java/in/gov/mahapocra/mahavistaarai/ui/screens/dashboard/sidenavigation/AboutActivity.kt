@@ -22,14 +22,10 @@ class AboutActivity : AppCompatActivity() {
         configureLocale(baseContext, languageToLoad)
         binding = ActivityAboutBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         binding.toolbarLayout.imgBackArrow.visibility = View.VISIBLE
         binding.toolbarLayout.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
         binding.toolbarLayout.textViewHeaderTitle.text = getString(R.string.about)
-
-        binding.textView13.text = getString(R.string.aboutText)
-
     }
 }
