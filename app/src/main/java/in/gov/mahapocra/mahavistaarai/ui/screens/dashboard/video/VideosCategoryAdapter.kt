@@ -33,6 +33,9 @@ class VideosCategoryAdapter(
                         putExtra("videosJsonObject", jsonObject.toString())
                     })
             }
+            val videosCount = jsonObject.optJSONArray("links")
+            binding.videosCount.text = "${videosCount.length()} ${binding.root.context.getString(R.string.videos)}"
+
         }
     }
 

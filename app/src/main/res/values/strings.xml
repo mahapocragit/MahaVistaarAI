@@ -404,4 +404,5 @@
     <string name="low_soil_value">Low</string>
     <string name="medium_soil_value">Medium</string>
     <string name="high_soil_value">High</string>
+    <string name="videos">Videos</string>
 </resources>
