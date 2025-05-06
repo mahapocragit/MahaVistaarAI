@@ -5,18 +5,20 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import java.util.Locale
 
 class SplashScreenActivity : AppCompatActivity() {
 
     private var farmerId: Int = 0
-    private var versionName: String? = null
+    private lateinit var appVersionText:TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,9 +32,8 @@ class SplashScreenActivity : AppCompatActivity() {
             resources.displayMetrics
         )
 
-        // Get Version Name
-        versionName = packageManager.getPackageInfo(packageName, 0)?.versionName
-
+        appVersionText = findViewById(R.id.appVersionText)
+        appVersionText.text = "${getString(R.string.app_version)} ${LocalCustom.getVersionName(this)}"
         // Get Farmer ID
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
 

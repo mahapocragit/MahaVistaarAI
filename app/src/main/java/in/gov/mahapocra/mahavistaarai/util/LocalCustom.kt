@@ -2,6 +2,8 @@ package `in`.gov.mahapocra.mahavistaarai.util
 
 import android.app.DownloadManager
 import android.content.Context
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Environment
@@ -9,7 +11,7 @@ import android.webkit.URLUtil
 import java.util.Locale
 
 object LocalCustom {
-    fun configureLocale(baseContext: Context, languageToLoad:String){
+    fun configureLocale(baseContext: Context, languageToLoad: String) {
         val locale = Locale(languageToLoad)
         Locale.setDefault(locale)
         val config = Configuration()
@@ -39,5 +41,17 @@ object LocalCustom {
 
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         downloadManager.enqueue(request)
+    }
+
+    fun getVersionName(context: Context): String {
+        var versionName = ""
+        var packageInfo: PackageInfo? = null
+        try {
+            packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
+        versionName = packageInfo!!.versionName
+        return versionName;
     }
 }

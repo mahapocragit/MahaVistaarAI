@@ -525,13 +525,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
 
 
     private fun setVersion() {
-        var pinfo: PackageInfo? = null
-        try {
-            pinfo = packageManager.getPackageInfo(packageName, 0)
-        } catch (e: PackageManager.NameNotFoundException) {
-            e.printStackTrace()
-        }
-        val versionName = pinfo!!.versionName
+        val versionName = LocalCustom.getVersionName(this)
         if (APIServices.DBT.equals("https://ilab-sso.mahapocra.gov.in/", ignoreCase = true)) {
             binding.appVerTextView.text = "${getString(R.string.app_version)} $versionName S"
         } else {
