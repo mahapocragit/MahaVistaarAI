@@ -336,10 +336,8 @@ class Grievances : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
                                     .load(imgFile!!)
                                     .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                                     .networkPolicy(NetworkPolicy.NO_CACHE, NetworkPolicy.NO_STORE)
-                                    .placeholder(R.drawable.ic_thumbnail)
                                     .resize(100, 100)
                                     .centerCrop()
-                                    .error(R.drawable.ic_thumbnail)
                                     .into(grievancesImage)
                             } catch (ex: java.lang.Exception) {
                                 ex.toString()

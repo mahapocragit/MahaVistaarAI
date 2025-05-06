@@ -165,35 +165,6 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/plus_button_img" />
-
-                    <TextView
-                        android:id="@+id/plut_count_area"
-                        android:layout_width="100dp"
-                        android:layout_height="40dp"
-                        android:layout_marginLeft="@dimen/height5"
-                        android:layout_marginRight="@dimen/height5"
-                        android:background="@drawable/layout_button_bg"
-                        android:gravity="center"
-                        android:text="3"
-                        android:textColor="@color/text_black_light"
-                        android:textSize="@dimen/text14"
-                        android:textStyle="bold" />
-
-
-                </LinearLayout>
-
                 <RadioGroup
                     android:id="@+id/radioGroup1"
                     android:layout_width="match_parent"

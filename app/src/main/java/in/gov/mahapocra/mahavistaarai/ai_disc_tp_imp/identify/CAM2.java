@@ -53,6 +53,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import in.gov.mahapocra.mahavistaarai.R;
 
 import java.io.File;
@@ -71,13 +72,15 @@ public class CAM2 extends AppCompatActivity {
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final String TAG = "CAM2";
     TextView tips;
-    int rt=1;
+    int rt = 1;
+
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
         ORIENTATIONS.append(Surface.ROTATION_90, 0);
         ORIENTATIONS.append(Surface.ROTATION_180, 270);
         ORIENTATIONS.append(Surface.ROTATION_270, 180);
     }
+
     private Size imageDimension;
     FrameLayout dfg;
     public static final String CAMERA_FRONT = "1";
@@ -87,16 +90,16 @@ public class CAM2 extends AppCompatActivity {
     Camera camera;
     View viewToIncreaseHeight;
     protected CaptureRequest.Builder capturebuilder;
-    ImageView torch, zoomin,zoomout;
+    ImageView torch, zoomin, zoomout;
     CameraManager cameraManager;
     Button getpicture;
     private Size previewsize;
     private Size jpegSizes[] = null;
     private TextureView textureView;
     private CameraDevice cameraDevice;
-    static int tr=0;
+    static int tr = 0;
     CameraCharacteristics characteristics;
-//    private android.graphics.Rect zoom = null;
+    //    private android.graphics.Rect zoom = null;
     private CaptureRequest.Builder previewBuilder;
     private CameraCaptureSession previewSession;
     Camera.Parameters params;
@@ -140,8 +143,9 @@ public class CAM2 extends AppCompatActivity {
         }
     };
 
-    int currentZoomLevel ;
-    int maxZoomLevel ;
+    int currentZoomLevel;
+    int maxZoomLevel;
+
     private static File getOutputMediaFile() {
         File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), "NIBPPApp");
 
@@ -175,9 +179,9 @@ public class CAM2 extends AppCompatActivity {
         textureView.setSurfaceTextureListener(surfaceTextureListener);
         ZoomControls zoomControls = (ZoomControls) findViewById(R.id.CAMERA_ZOOM_CONTROLS);
         zoomControls.setVisibility(View.GONE);
-        camera=Camera.open();
-        params=camera.getParameters();
-        if(params.isZoomSupported()){
+        camera = Camera.open();
+        params = camera.getParameters();
+        if (params.isZoomSupported()) {
             maxZoomLevel = params.getMaxZoom();
 
             zoomControls.setIsZoomInEnabled(true);
@@ -186,7 +190,7 @@ public class CAM2 extends AppCompatActivity {
             zoomControls.setOnZoomInClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(currentZoomLevel > 0){
+                    if (currentZoomLevel > 0) {
                         currentZoomLevel--;
                         camera.startSmoothZoom(currentZoomLevel);
                     }
@@ -195,7 +199,7 @@ public class CAM2 extends AppCompatActivity {
             zoomControls.setOnZoomOutClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(currentZoomLevel > 0){
+                    if (currentZoomLevel > 0) {
                         currentZoomLevel--;
                         camera.startSmoothZoom(currentZoomLevel);
                     }
@@ -204,27 +208,27 @@ public class CAM2 extends AppCompatActivity {
 
 
         }
-        torch=findViewById(R.id.torch);
-        cameraManager= (CameraManager) getSystemService(CAMERA_SERVICE);
-        camera=Camera.open();
-         params= camera.getParameters();
+        torch = findViewById(R.id.torch);
+        cameraManager = (CameraManager) getSystemService(CAMERA_SERVICE);
+        camera = Camera.open();
+        params = camera.getParameters();
 
         getpicture = (Button) findViewById(R.id.getpicture);
         tips = (TextView) findViewById(R.id.blinktips);
-        dfg=findViewById(R.id.frame_layout);
-        viewToIncreaseHeight=findViewById(R.id.vi);
-         Animation anim = AnimationUtils.loadAnimation(this, R.anim.cam_view_anim);
+        dfg = findViewById(R.id.frame_layout);
+        viewToIncreaseHeight = findViewById(R.id.vi);
+        Animation anim = AnimationUtils.loadAnimation(this, R.anim.cam_view_anim);
         viewToIncreaseHeight.startAnimation(anim);
 
-        if(getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)){
-            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)){
-                    int f=0;
+        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
+                int f = 0;
 
-            }else{
+            } else {
                 Toast.makeText(CAM2.this, "NO FLASH", Toast.LENGTH_SHORT).show();
                 torch.setEnabled(false);
             }
-        }else{
+        } else {
             Toast.makeText(CAM2.this, "NO CAMERA", Toast.LENGTH_SHORT).show();
             torch.setEnabled(false);
         }
@@ -232,16 +236,15 @@ public class CAM2 extends AppCompatActivity {
         torch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (tr==0){
+                if (tr == 0) {
                     Toast.makeText(CAM2.this, "Flash On", Toast.LENGTH_SHORT).show();
                     torch.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_flash_on_24, getApplicationContext().getTheme()));
-                        tr=1;
+                    tr = 1;
 
-                }
-                else{
+                } else {
                     Toast.makeText(CAM2.this, "Flash Off", Toast.LENGTH_SHORT).show();
                     torch.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_flash_off_24, getApplicationContext().getTheme()));
-                        tr=0;
+                    tr = 0;
 
                 }
             }
@@ -250,17 +253,17 @@ public class CAM2 extends AppCompatActivity {
         dfg.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                rt=3;
+                rt = 3;
                 return false;
             }
         });
-       blink();
+        blink();
 
         getpicture.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
-                rt=2;
+                rt = 2;
                 tips.setVisibility(View.INVISIBLE);
                 viewToIncreaseHeight.setVisibility(View.INVISIBLE);
 
@@ -270,31 +273,34 @@ public class CAM2 extends AppCompatActivity {
         });
     }
 
-    private void blink(){
+    private void blink() {
         final Handler handler = new Handler();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 int timeToBlink = 500;    //in milissegunds
-                try{Thread.sleep(timeToBlink);}catch (Exception e) {}
+                try {
+                    Thread.sleep(timeToBlink);
+                } catch (Exception e) {
+                }
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (rt==1){
+                        if (rt == 1) {
 
-                        if(viewToIncreaseHeight.getVisibility() == View.VISIBLE){
-                            //tips.setVisibility(View.INVISIBLE);
-                            viewToIncreaseHeight.setVisibility(View.INVISIBLE);
-                        }else{
-                            //tips.setVisibility(View.VISIBLE);
-                            viewToIncreaseHeight.setVisibility(View.VISIBLE);
-                        }
-                        blink();
-                    }
-                    else{
+                            if (viewToIncreaseHeight.getVisibility() == View.VISIBLE) {
+                                //tips.setVisibility(View.INVISIBLE);
+                                viewToIncreaseHeight.setVisibility(View.INVISIBLE);
+                            } else {
+                                //tips.setVisibility(View.VISIBLE);
+                                viewToIncreaseHeight.setVisibility(View.VISIBLE);
+                            }
+                            blink();
+                        } else {
                             tips.setVisibility(View.INVISIBLE);
                             viewToIncreaseHeight.setVisibility(View.VISIBLE);
-                        }}
+                        }
+                    }
                 });
             }
         }).start();
@@ -314,7 +320,7 @@ public class CAM2 extends AppCompatActivity {
         //Log.d(TAG, "saveImage q: " + Build.VERSION_CODES.Q);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-           // Log.d(TAG, "saveImage: inside if  q ");
+            // Log.d(TAG, "saveImage: inside if  q ");
             ContentResolver resolver = getContentResolver();
             ContentValues contentValues = new ContentValues();
             contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
@@ -326,7 +332,7 @@ public class CAM2 extends AppCompatActivity {
 
         } else {
 
-           // Log.d(TAG, "saveImage: inside else ");
+            // Log.d(TAG, "saveImage: inside else ");
             String imagesDir = Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_PICTURES).toString() + File.separator + folderName;
             imageFile = new File(imagesDir);
@@ -386,14 +392,14 @@ public class CAM2 extends AppCompatActivity {
             List<Surface> outputSurfaces = new ArrayList<Surface>(2);
             outputSurfaces.add(reader.getSurface());
             outputSurfaces.add(new Surface(textureView.getSurfaceTexture()));
-             capturebuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+            capturebuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             capturebuilder.addTarget(reader.getSurface());
             capturebuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
 
-            if (tr==1){
+            if (tr == 1) {
                 capturebuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
             }
-            if (tr==0){
+            if (tr == 0) {
                 capturebuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
             }
 
@@ -443,12 +449,11 @@ public class CAM2 extends AppCompatActivity {
 
                  */
 
-                void save1(byte[] bytes, int angle)
-                {
+                void save1(byte[] bytes, int angle) {
 
                     //Log.d(TAG, "save1: ");
                     try {
-                       // Log.d(TAG, "save2: ");
+                        // Log.d(TAG, "save2: ");
                         Uri image = saveImage(bytes, 0);
                         Intent intent = new Intent();
                         intent.putExtra("url", String.valueOf(image));
@@ -457,7 +462,7 @@ public class CAM2 extends AppCompatActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                     } finally {
-                       // Log.d(TAG, "save3: ");
+                        // Log.d(TAG, "save3: ");
                     }
                 }
             };
@@ -498,15 +503,14 @@ public class CAM2 extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public void openCamera()
-    {
+    public void openCamera() {
         CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         try {
             String camerId = manager.getCameraIdList()[0];
-             characteristics= manager.getCameraCharacteristics(camerId);
+            characteristics = manager.getCameraCharacteristics(camerId);
 
 
-                    StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+            StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             imageDimension = map.getOutputSizes(SurfaceTexture.class)[0];
             previewsize = map.getOutputSizes(SurfaceTexture.class)[0];
 

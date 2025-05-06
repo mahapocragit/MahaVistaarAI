@@ -64,10 +64,8 @@ class ParticularStagesDiseasesAdpater (private var context: Context? = null,
                 .load(image_url)
                 .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                 .networkPolicy(NetworkPolicy.NO_CACHE, NetworkPolicy.NO_STORE)
-                .placeholder(R.drawable.ic_thumbnail)
                 .resize(400, 400)
                 .centerCrop()
-                .error(R.drawable.ic_thumbnail)
                 .into(climateImage)
         } catch (ex: Exception) {
             ex.toString()

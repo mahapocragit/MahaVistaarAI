@@ -32,7 +32,6 @@ class DashboardAdapter(
                 "https://nibpp.krishimegh.in/Content/reportingbase/crop_file/" + model_dashboardContents[i].gridImage
             Glide.with(context)
                 .load(imagePath)
-                .placeholder(R.drawable.facilities)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .error(R.drawable.gray)

@@ -76,10 +76,8 @@ public class ClimateGridAdapter extends ArrayAdapter<ClimateGridModel> {
                     .load(image_url)
                     .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                     .networkPolicy(NetworkPolicy.NO_CACHE, NetworkPolicy.NO_STORE)
-                    .placeholder(R.drawable.ic_thumbnail)
                     .resize(500, 400)
                     .centerCrop()
-                    .error(R.drawable.ic_thumbnail)
                     .into(climateImage);
         } catch (Exception ex) {
             ex.toString();

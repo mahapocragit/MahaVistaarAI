@@ -127,10 +127,8 @@ class StageAdvisoryDetailAdaptr(
                 .load(img)
                 .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                 .networkPolicy(NetworkPolicy.NO_CACHE, NetworkPolicy.NO_STORE)
-                .placeholder(R.drawable.ic_thumbnail)
                 .resize(450, 450)
                 .centerCrop()
-                .error(R.drawable.ic_thumbnail)
                 .into(holder.crop_image)
         } catch (ex: Exception) {
             ex.toString()
