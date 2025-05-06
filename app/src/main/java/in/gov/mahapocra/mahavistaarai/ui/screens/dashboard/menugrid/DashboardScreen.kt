@@ -274,10 +274,10 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                     )
                 )
 
-                R.id.nav_help -> startActivity(
+                R.id.nav_about2 -> startActivity(
                     Intent(
                         this@DashboardScreen,
-                        ForumActivity::class.java
+                        AboutActivity::class.java
                     )
                 )
 

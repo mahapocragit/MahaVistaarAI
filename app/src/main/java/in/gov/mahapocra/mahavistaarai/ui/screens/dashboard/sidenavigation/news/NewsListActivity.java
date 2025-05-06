@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
+import in.gov.mahapocra.mahavistaarai.R;
 import in.gov.mahapocra.mahavistaarai.databinding.ActivityNotificationListBinding;
 
 public class NewsListActivity extends AppCompatActivity {
@@ -17,6 +19,10 @@ public class NewsListActivity extends AppCompatActivity {
 
         binding = ActivityNotificationListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        binding.relativeLayoutTopBar.textViewHeaderTitle.setText(getString(R.string.news));
+        binding.relativeLayoutTopBar.imgBackArrow.setVisibility(View.VISIBLE);
+        binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener(view-> getOnBackPressedDispatcher().onBackPressed());
 
         binding.farmNewsCardView.setOnClickListener(view -> {
             startActivity(new Intent(this, FarmNewsActivity.class));

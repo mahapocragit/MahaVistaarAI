@@ -7,8 +7,10 @@ import android.content.res.Configuration
 import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityResilientWebUrlBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import java.util.*
 
@@ -17,13 +19,20 @@ class ResilientWebUrl : AppCompatActivity() {
     private lateinit var climateWebView: WebView
     private lateinit var progressDialog: ProgressDialog
     lateinit var languageToLoad: String
+    private lateinit var binding:ActivityResilientWebUrlBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val languageToLoad = if (AppSettings.getLanguage(this) == "1") "en" else "mr"
         LocalCustom.configureLocale(baseContext, languageToLoad)
-        setContentView(R.layout.activity_resilient_web_url)
+        binding = ActivityResilientWebUrlBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
+        binding.layoutToolbar.textViewHeaderTitle.text = getString(R.string.climate_resilient_technology)
+        binding.layoutToolbar.imgBackArrow.visibility = View.VISIBLE
+        binding.layoutToolbar.imgBackArrow.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
 
         climateWebView = findViewById(R.id.climateWebView)
         intent.getStringExtra("webUrl")?.let { openWebView(it) }

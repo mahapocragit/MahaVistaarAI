@@ -43,7 +43,7 @@ public class TempDashboardActivity extends AppCompatActivity {
                     Toast.makeText(TempDashboardActivity.this, "nav_about", Toast.LENGTH_SHORT).show();
                     return true;
 
-                case R.id.nav_help:
+                case R.id.nav_about2:
                     Toast.makeText(TempDashboardActivity.this, "nav_help", Toast.LENGTH_SHORT).show();
                     return true;
 

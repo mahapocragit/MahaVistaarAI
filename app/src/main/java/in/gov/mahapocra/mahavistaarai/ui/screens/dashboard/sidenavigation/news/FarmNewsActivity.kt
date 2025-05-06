@@ -49,6 +49,11 @@ class FarmNewsActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIt
         binding.recyclerView.setLayoutManager(layoutManager)
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.setItemAnimator(DefaultItemAnimator())
+        binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.news)
+        binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
+        binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
     }
 
     @Throws(JSONException::class)
