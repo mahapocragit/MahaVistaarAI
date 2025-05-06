@@ -104,6 +104,8 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
 
     private lateinit var binding: ActivityDashboardScreenBinding
     private lateinit var navUserName: TextView
+    private var districtCode: Int = 0
+    private var villageCode: Int = 0
     private lateinit var navUserPhone: TextView
     private lateinit var languageToLoad: String
     private var farmerId = 0
@@ -244,12 +246,6 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
         setVersion()
         getFarmerSelectedCrop(languageToLoad)
         requestingPermissions()
-        val talukaID: Int = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
-        val talukaName: String = AppSettings.getInstance().getSavedValue(this, AppConstants.uTALUKA)
-        Log.d("TAGGER", "onCreate: $talukaID")
-        if (talukaID != 0) {
-            callForWeatherApi(talukaID)
-        }
         binding.appBarMain.dashboardScreen.bottomNavigation.itemIconTintList = null
         binding.appBarMain.dashboardScreen.bottomNavigation.setOnItemSelectedListener { item: MenuItem ->
             when (item.itemId) {
@@ -290,7 +286,6 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
             }
             false
         }
-        fetchTalukaMasterData()
     }
 
     private fun fetchTalukaMasterData() {
@@ -730,6 +725,12 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                                 val strTalukaId = data?.getInt("TalukaCode")
                                 val strVillageId = data?.getInt("VillageCode")
                                 val strVillageName = data?.getString("VillageName")
+                                if (strDistId != null) {
+                                    districtCode = strDistId
+                                }
+                                if (strTalukaId != null) {
+                                    villageCode = strTalukaId
+                                }
                                 AppSettings.getInstance()
                                     .setValue(this, AppConstants.uName, strName)
                                 binding.appBarMain.dashboardScreen.userFullNameTextView.text =
@@ -781,12 +782,11 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                                         e.printStackTrace()
                                     }
                                 }
-
-                                strTalukaId?.let { callForWeatherApi(it) }
                             } catch (e: JSONException) {
                                 e.printStackTrace()
                             }
                         }
+                        fetchTalukaMasterData()
                     } catch (e: Exception) {
                         Log.d("TAGGER", "onResponse: $e")
                     }
@@ -895,10 +895,9 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
 
                 4 -> {
                     if (jSONObject != null) {
-                        val talukaID: Int = AppSettings.getInstance()
-                            .getIntValue(this, AppConstants.uTALUKAID, 0)
-                        Log.d("TAGGER", "onResponse: $talukaID and $jSONObject")
                         try {
+                            val talukaID: Int = AppSettings.getInstance()
+                                .getIntValue(this, AppConstants.uTALUKAID, 0)
                             val talukaArray = jSONObject.optJSONArray("data")
                             for (i in 0 until talukaArray!!.length()) {
                                 val talukaIDJson = talukaArray.getJSONObject(i)
@@ -907,11 +906,10 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                                         talukaIDJson.optString("name")
                                 }
                             }
-                            Log.d("TAGGER", "onResponse: $talukaID")
+                            callForWeatherApi(villageCode)
                         } catch (e: Exception) {
                             Log.d("TAGGER", "onResponse: $e")
                         }
-
                     }
                 }
 
