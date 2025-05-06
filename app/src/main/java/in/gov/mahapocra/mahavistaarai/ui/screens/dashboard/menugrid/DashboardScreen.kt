@@ -295,6 +295,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
     private fun fetchReceivingData() {
         farmerViewModel.getFarmerSelectedCrop.observe(this) {
             if (it != null) {
+                Log.d("TAGGER", "fetchReceivingData: $it")
                 try {
                     val jSONObject = JSONObject(it.toString())
                     val farmersSelectedCropResponse = ResponseModel(jSONObject)

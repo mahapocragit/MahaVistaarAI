@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
+import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.data.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
@@ -17,6 +18,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -38,6 +40,9 @@ class FarmerViewModel : ViewModel() {
 
     private val _deleteFarmerSelectedCrop = MutableLiveData<JsonObject>()
     val deleteFarmerSelectedCrop: LiveData<JsonObject> = _deleteFarmerSelectedCrop
+
+    private val _cropCategoryResponse = MutableLiveData<JsonObject>()
+    val cropCategoryResponse: LiveData<JsonObject> = _cropCategoryResponse
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -142,4 +147,37 @@ class FarmerViewModel : ViewModel() {
             }
         }
     }
+
+    fun getCropCategoriesAndCropDetails(context: Context, languageToLoad: String) {
+        viewModelScope.launch {
+            try {
+                val jsonObject = JSONObject().apply {
+                    put("api_key", APIKeys.SSO_PROD.key())
+                    put("lang", languageToLoad)
+                }
+
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api = AppInventorApi(
+                    context,
+                    APIServices.FARMER,
+                    "",
+                    AppString(context).getkMSG_WAIT(),
+                    false
+                )
+                val retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+
+                // Suspend call
+                val response = apiRequest.getCropCategoryWise(requestBody)
+
+                // Handle the response (success case)
+                _cropCategoryResponse.value = response // ← use appropriate LiveData
+
+            } catch (e: Exception) {
+                // Handle error case
+                _error.value = e.localizedMessage ?: "Unknown error occurred"
+            }
+        }
+    }
+
 }

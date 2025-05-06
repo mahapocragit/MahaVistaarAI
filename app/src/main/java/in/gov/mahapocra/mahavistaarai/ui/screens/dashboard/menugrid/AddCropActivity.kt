@@ -46,7 +46,7 @@ import java.util.Date
 import java.util.Locale
 
 
-class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerItemClickListener,
+class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
     DatePickerRequestListener {
 
     private var mainCropCategoryRecycle: RecyclerView? = null
@@ -80,6 +80,8 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
         imageMenuShow = findViewById(R.id.imageMenushow)
         textViewHeaderTitle.setText(R.string.select_crop)
 
+        fetchCropInfo()
+
         if (languageToLoad != "mr") {
             textViewHeaderTitle.text = "Select Crop"
         } else {
@@ -95,70 +97,13 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
         imgBackArrow.setOnClickListener {
             onBackPressed()
         }
-        getCropCategoriesAndCropDetails()
+        viewModel.getCropCategoriesAndCropDetails(this, languageToLoad)
     }
 
-    private fun getCropCategoriesAndCropDetails() {
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put("api_key", "67840097657891")
-            jsonObject.put("lang", languageToLoad)
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api =
-                AppInventorApi(
-                    this,
-                    APIServices.FARMER,
-                    "",
-                    AppString(this).getkMSG_WAIT(),
-                    true
-                )
-            CoroutineScope(Dispatchers.IO).launch {
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getCropCategorywise(requestBody)
-                api.postRequest(responseCall, this@AddCropActivity, 1)
-            }
-        } catch (e: JSONException) {
-            DebugLog.getInstance().d("JSONException=$e")
-            e.printStackTrace()
-        }
-    }
+    private fun fetchCropInfo() {
+        viewModel.cropCategoryResponse.observe(this){
+            val jSONObject = JSONObject(it.toString())
 
-    private fun showCropData(videoDetailsList: ArrayList<VideoDetails>) {
-        var titleVideosAdapter =
-            TitleVideosDetailsAdapter(
-                this,
-                videoDetailsList,
-                "TitleVideosDetailsAdpter",
-                this
-            )
-        val str = intent.getStringExtra("NO_NEED_TO_ADD_SOWING_DATE")
-        if (str != null) {
-            titleVideosAdapter =
-                TitleVideosDetailsAdapter(
-                    this,
-                    videoDetailsList,
-                    "NO_NEED_TO_ADD_SOWING_DATE",
-                    this
-                )
-        }
-        mainCropCategoryRecycle?.setLayoutManager(
-            LinearLayoutManager(
-                this,
-                LinearLayoutManager.VERTICAL,
-                false
-            )
-        )
-        mainCropCategoryRecycle?.setAdapter(titleVideosAdapter)
-        titleVideosAdapter.notifyDataSetChanged()
-    }
-
-    override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onResponse(jSONObject: JSONObject?, k: Int) {
-        if (k == 1 && jSONObject != null) {
             val response =
                 ResponseModel(
                     jSONObject
@@ -222,6 +167,35 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
         }
     }
 
+    private fun showCropData(videoDetailsList: ArrayList<VideoDetails>) {
+        var titleVideosAdapter =
+            TitleVideosDetailsAdapter(
+                this,
+                videoDetailsList,
+                "TitleVideosDetailsAdpter",
+                this
+            )
+        val str = intent.getStringExtra("NO_NEED_TO_ADD_SOWING_DATE")
+        if (str != null) {
+            titleVideosAdapter =
+                TitleVideosDetailsAdapter(
+                    this,
+                    videoDetailsList,
+                    "NO_NEED_TO_ADD_SOWING_DATE",
+                    this
+                )
+        }
+        mainCropCategoryRecycle?.setLayoutManager(
+            LinearLayoutManager(
+                this,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+        )
+        mainCropCategoryRecycle?.setAdapter(titleVideosAdapter)
+        titleVideosAdapter.notifyDataSetChanged()
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getSowingDateWithYear(sowingDateUnfiltered: String): String {
         val currentDate = getCurrentDate() // Returns YYYY-MM-DD
@@ -251,7 +225,6 @@ class AddCropActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
 
         return finalDate
     }
-
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
         if (i == 1) {
