@@ -55,7 +55,7 @@ class FBaseMessagingService : FirebaseMessagingService() {
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setContentTitle(title)
             .setContentText(body)
-            .setSmallIcon(R.drawable.farmer_appfinal_logo) // Replace with your app's icon
+            .setSmallIcon(R.drawable.app_icon_store) // Replace with your app's icon
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
 

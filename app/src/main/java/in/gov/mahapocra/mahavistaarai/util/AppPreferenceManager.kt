@@ -19,6 +19,16 @@ class AppPreferenceManager(val context: Context) {
         return sharedPreferences.getString(key, "default_value")
     }
 
+    fun saveInt(key:String, value: Int) {
+        val editor = sharedPreferences.edit()
+        editor.putInt(key, value)
+        editor.apply() // or editor.commit();
+    }
+
+    fun getInt(key:String): Int {
+        return sharedPreferences.getInt(key, 0)
+    }
+
     fun clearPreference(key: String) {
         val editor = sharedPreferences.edit()
         editor.remove(key)

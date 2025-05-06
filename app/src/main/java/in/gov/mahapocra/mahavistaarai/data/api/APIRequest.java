@@ -53,14 +53,8 @@ public interface APIRequest {
     @POST(APIServices.kGetRegistration)
     Call<JsonObject> getGetRegistration(@Body RequestBody params);
 
-    @POST(APIServices.kGeFarmersSelectedCrop)
-    Call<JsonObject> getFarmersSelectedCrop(@Body RequestBody params);
-
     @GET(APIServices.kGetVideosCategories)
     Call<JsonObject> getFarmersVideosJson();
-
-    @POST(APIServices.kdeleteFarmerSelectedCrop)
-    Call<JsonObject> deleteSelectedCrop(@Body RequestBody params);
 
     @POST(APIServices.CHECK_USER_ACTIVE_DEACTIVE)
     Call<JsonObject> checkActivateDeactivateUser(@Body RequestBody params);
@@ -85,9 +79,6 @@ public interface APIRequest {
 
     @POST(APIServices.kGetVillageList)
     Call<JsonObject> kGetVillageList(@Body RequestBody params);
-
-    @POST(APIServices.kSaveFarmerSelectedCrop)
-    Call<JsonObject> kSaveFarmerSelectedCrop(@Body RequestBody params);
 
     // Get Firebase Notification List
     @POST(APIServices.USER_NOTIFICATION_LIST)

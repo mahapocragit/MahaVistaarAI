@@ -48,6 +48,7 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
         LocalCustom.configureLocale(baseContext, languageToLoad)
         setContentView(R.layout.activity_dbt_schemes)
         init()
+        dbtSchemesLists()
 
         imageMenushow?.visibility = View.VISIBLE
         textViewHeaderTitle?.setText(R.string.dbtschema)
@@ -70,7 +71,6 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
         nrmCardTV.setOnClickListener {
             openRecyclerView(nrmRecyclerView)
         }
-        dbtSchemesLists()
     }
 
     private fun openRecyclerView(recyclerView: RecyclerView) {
@@ -100,7 +100,7 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
                     "https://uat-dbt.mahapocra.gov.in:8026/",
                     "",
                     AppString(this).getkMSG_WAIT(),
-                    true
+                    false
                 )
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(APIRequest::class.java)

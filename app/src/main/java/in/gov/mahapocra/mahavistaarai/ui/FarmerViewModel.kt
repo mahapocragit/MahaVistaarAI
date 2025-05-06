@@ -6,15 +6,20 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.gov.mahapocra.mahavistaarai.data.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.RequestBody
 import org.json.JSONException
 import org.json.JSONObject
@@ -28,46 +33,113 @@ class FarmerViewModel : ViewModel() {
     private val _saveFarmerSelectedCrop = MutableLiveData<JsonObject>()
     val saveFarmerSelectedCrop: LiveData<JsonObject> = _saveFarmerSelectedCrop
 
+    private val _getFarmerSelectedCrop = MutableLiveData<JsonObject>()
+    val getFarmerSelectedCrop: LiveData<JsonObject> = _getFarmerSelectedCrop
+
+    private val _deleteFarmerSelectedCrop = MutableLiveData<JsonObject>()
+    val deleteFarmerSelectedCrop: LiveData<JsonObject> = _deleteFarmerSelectedCrop
+
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
     fun saveFarmerSelectedCrop(context: Context, sowingDate: String, cropId: Int) {
-        val jsonObject = JSONObject()
-        val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
-        val isGuest = AppSettings.getInstance().getBooleanValue(context, AppConstants.IS_USER_GUEST, false)
-        val userValue = if (isGuest) 1 else 0
-        try {
-            jsonObject.put("api_key", APIKeys.SSO_PROD.key())
-            jsonObject.put("farmer_id", farmerId)
-            jsonObject.put("sowing_date", sowingDate)
-            jsonObject.put("crop_id", cropId)
-            jsonObject.put("is_guest", userValue)
+        viewModelScope.launch {
+            try {
+                val jsonObject = JSONObject().apply {
+                    put("api_key", APIKeys.SSO_PROD.key())
+                    put("farmer_id", AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0))
+                    put("sowing_date", sowingDate)
+                    put("crop_id", cropId)
+                    put("is_guest", if (AppSettings.getInstance().getBooleanValue(context, AppConstants.IS_USER_GUEST, false)) 1 else 0)
+                }
 
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api = AppInventorApi(context, APIServices.FARMER, "", AppString(context).getkMSG_WAIT(), false)
-            val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api = AppInventorApi(
+                    context,
+                    APIServices.FARMER,
+                    "",
+                    AppString(context).getkMSG_WAIT(),
+                    false
+                )
+                val retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
 
-            apiRequest.kSaveFarmerSelectedCrop(requestBody)
-                .enqueue(object : Callback<JsonObject> {
-                    override fun onResponse(
-                        call: Call<JsonObject>,
-                        response: Response<JsonObject>
-                    ) {
-                        if (response.isSuccessful) {
-                            _saveFarmerSelectedCrop.value = response.body()
-                        } else {
-                            _error.value = "API Error: ${response.code()}"
-                        }
+                // Retrofit suspend call
+                val response = apiRequest.kSaveFarmerSelectedCrop(requestBody)
+                _saveFarmerSelectedCrop.value = response
+
+            } catch (e: Exception) {
+                _error.value = e.localizedMessage ?: "Unknown error"
+            }
+        }
+    }
+
+
+    fun getFarmerSelectedCrop(context: Context, language: String?) {
+        viewModelScope.launch {
+            val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+            val jsonObject = JSONObject()
+            try {
+                jsonObject.put("api_key", APIKeys.SSO_PROD.key())
+                jsonObject.put("lang", language)
+                jsonObject.put("farmer_id", farmerId)
+
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api = AppInventorApi(
+                    context,
+                    APIServices.FARMER,
+                    "",
+                    AppString(context).getkMSG_WAIT(),
+                    false
+                )
+                val retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+
+                try {
+                    val response = withContext(Dispatchers.IO) {
+                        apiRequest.getFarmersSelectedCrop(requestBody)
                     }
+                    _getFarmerSelectedCrop.value = response
+                } catch (e: Exception) {
+                    _error.value = "Error: ${e.localizedMessage}"
+                }
 
-                    override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                        _error.value = t.localizedMessage
-                    }
-                })
+            } catch (e: JSONException) {
+                e.printStackTrace()
+                _error.value = "JSON Error: ${e.localizedMessage}"
+            }
+        }
+    }
 
-        } catch (e: JSONException) {
-            _error.value = "JSON Error: ${e.message}"
+    fun deleteFarmerSelectedCrop(context: Context, cropId: Int) {
+        viewModelScope.launch {
+            try {
+                val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+                val jsonObject = JSONObject().apply {
+                    put("api_key", APIKeys.SSO_PROD.key())
+                    put("crop_id", cropId)
+                    put("farmer_id", farmerId)
+                }
+
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api = AppInventorApi(
+                    context,
+                    APIServices.FARMER,
+                    "",
+                    AppString(context).getkMSG_WAIT(),
+                    false
+                )
+                val retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+
+                val response = apiRequest.deleteSelectedCrop(requestBody)
+
+                // You can handle the result however you want, for example:
+                _deleteFarmerSelectedCrop.value = response // or create a separate LiveData if needed
+
+            } catch (e: Exception) {
+                _error.value = e.localizedMessage ?: "Unknown error occurred"
+            }
         }
     }
 }

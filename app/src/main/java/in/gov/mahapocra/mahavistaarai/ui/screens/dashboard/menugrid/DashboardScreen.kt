@@ -44,6 +44,7 @@ import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListene
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
@@ -116,6 +117,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
     private var savedCropWoTRId: String? = null
     private var savedCropImageUrl: String? = null
     private lateinit var appPreferenceManager: AppPreferenceManager
+    private lateinit var farmerViewModel: FarmerViewModel
     private var jsonArray: JSONArray? = null
     private var showToast = true
     private var selectedCropList: ArrayList<CropsCategName>? = null
@@ -133,6 +135,8 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
             layoutInflater
         )
         setContentView(binding.root)
+        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
+        fetchReceivingData()
         appPreferenceManager = AppPreferenceManager(this)
         init()
         FirebaseHelper(this)
@@ -244,7 +248,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
             startActivity(intent)
         }
         setVersion()
-        getFarmerSelectedCrop(languageToLoad)
+        farmerViewModel.getFarmerSelectedCrop(this, languageToLoad)
         requestingPermissions()
         binding.appBarMain.dashboardScreen.bottomNavigation.itemIconTintList = null
         binding.appBarMain.dashboardScreen.bottomNavigation.setOnItemSelectedListener { item: MenuItem ->
@@ -285,6 +289,113 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                 )
             }
             false
+        }
+    }
+
+    private fun fetchReceivingData() {
+        farmerViewModel.getFarmerSelectedCrop.observe(this) {
+            if (it != null) {
+                try {
+                    val jSONObject = JSONObject(it.toString())
+                    val farmersSelectedCropResponse = ResponseModel(jSONObject)
+                    if (farmersSelectedCropResponse.getStatus()) {
+                        val selectedCrops: JSONArray =
+                            farmersSelectedCropResponse.getDataArrays()
+                        if (selectedCrops.length() > 0) {
+                            selectedCropList = ArrayList()
+                            var j = 0
+                            while (j < selectedCrops.length()) {
+                                try {
+                                    val selectedCrop = selectedCrops.getJSONObject(j)
+                                    savedCropId = selectedCrop.getInt("crop_id")
+                                    savedCropName = selectedCrop.getString("name")
+                                    savedCropImageUrl = selectedCrop.getString("image")
+                                    savedCropSowingDate = selectedCrop.getString("sowing_date")
+                                    Log.d("TAGGER", "onResponse:) $savedCropSowingDate")
+                                    savedCropWoTRId = selectedCrop.getString("wotr_crop_id")
+                                    binding.appBarMain.dashboardScreen.addChangeCropTV.setText(R.string.change_Crop)
+                                    binding.appBarMain.dashboardScreen.addChangeCropIV.setImageDrawable(
+                                        ContextCompat.getDrawable(
+                                            this, R.drawable.ic_swap
+                                        )
+                                    )
+                                    appPreferenceManager.saveInt("saved_crop_id", savedCropId)
+                                    binding.appBarMain.dashboardScreen.savedCropNameCardView.visibility =
+                                        View.VISIBLE
+                                    binding.appBarMain.dashboardScreen.savedCropNameTextView.text =
+                                        savedCropName
+                                    Picasso.get().load(savedCropImageUrl).fit().centerCrop()
+                                        .into(
+                                            binding.appBarMain.dashboardScreen.savedCropNameImageView
+                                        )
+                                    binding.appBarMain.dashboardScreen.yourCropTv.visibility =
+                                        View.GONE
+                                    binding.appBarMain.dashboardScreen.addCropCardView.visibility =
+                                        View.GONE
+                                    selectedCropList!!.add(
+                                        CropsCategName(
+                                            selectedCrop.getInt("crop_id"),
+                                            selectedCrop.getString("name"),
+                                            selectedCrop.getString("image"),
+                                            selectedCrop.getString("wotr_crop_id")
+                                        )
+                                    )
+                                } catch (e: JSONException) {
+                                    throw RuntimeException(e)
+                                }
+                                j++
+                            }
+                            AppSettings.getInstance().setList(
+                                this, AppConstants.kFarmerCrop,
+                                mutableListOf<Any>(*selectedCropList!!.toTypedArray())
+                            )
+                        } else {
+                            binding.appBarMain.dashboardScreen.savedCropNameCardView.visibility =
+                                View.GONE
+                            binding.appBarMain.dashboardScreen.yourCropTv.visibility =
+                                View.VISIBLE
+                            binding.appBarMain.dashboardScreen.yourCropTv.setText(R.string.no_crops_added)
+                            binding.appBarMain.dashboardScreen.addCropCardView.visibility =
+                                View.VISIBLE
+                            binding.appBarMain.dashboardScreen.addChangeCropTV.setText(R.string.add_Crop)
+                            binding.appBarMain.dashboardScreen.addChangeCropIV.setImageDrawable(
+                                ContextCompat.getDrawable(
+                                    this, R.drawable.baseline_add_24
+                                )
+                            )
+                        }
+                        if (selectedCropList != null) {
+                            showCropList(selectedCropList!!)
+                        } else {
+                            binding.appBarMain.dashboardScreen.selectedCropRecyclerView.visibility =
+                                View.GONE
+                        }
+                    } else {
+                        UIToastMessage.show(this, farmersSelectedCropResponse.getResponse())
+                    }
+                } catch (e: Exception) {
+                    Log.d("TAGGER", "onResponse: $e")
+                }
+            }
+        }
+
+        farmerViewModel.deleteFarmerSelectedCrop.observe(this) {
+            try {
+                val jSONObject = JSONObject(it.toString())
+                val deleteSelectedCropResponse = ResponseModel(jSONObject)
+                if (deleteSelectedCropResponse.getStatus()) {
+                    if (showToast) {
+                        UIToastMessage.show(this, deleteSelectedCropResponse.getResponse())
+                    }
+                    AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null)
+                    selectedCropList?.clear()
+                    farmerViewModel.getFarmerSelectedCrop(this, languageToLoad)
+                } else {
+                    UIToastMessage.show(this, deleteSelectedCropResponse.getResponse())
+                }
+            } catch (e: Exception) {
+                Log.d("TAGGER", "onResponse: $e")
+            }
         }
     }
 
@@ -575,56 +686,6 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
             }
         }
 
-    private fun getFarmerSelectedCrop(language: String?) {
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put("api_key", "67840097657891")
-            jsonObject.put("lang", language)
-            jsonObject.put("farmer_id", farmerId)
-
-            val requestBody: RequestBody =
-                AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api =
-                AppInventorApi(this, APIServices.FARMER, "", AppString(this).getkMSG_WAIT(), true)
-
-            val handler = Handler()
-            val runnable = Runnable {
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest: APIRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getFarmersSelectedCrop(requestBody)
-                api.postRequest(responseCall, this, 2)
-            }
-            handler.post(runnable)
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun deleteFarmerSelectedCrop() {
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put("api_key", "67840097657891")
-            jsonObject.put("crop_id", cropId)
-            jsonObject.put("farmer_id", farmerId)
-
-            val requestBody: RequestBody =
-                AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api =
-                AppInventorApi(this, APIServices.FARMER, "", AppString(this).getkMSG_WAIT(), true)
-
-            val handler = Handler()
-            val runnable = Runnable {
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest: APIRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.deleteSelectedCrop(requestBody)
-                api.postRequest(responseCall, this, 3)
-            }
-            handler.post(runnable)
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
-    }
-
     private fun openChangeLangPopup() {
         val dialog = Dialog(this@DashboardScreen)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -651,7 +712,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
             startActivity(intent)
 
             dialog.dismiss()
-            getFarmerSelectedCrop(languageToLoad)
+            farmerViewModel.getFarmerSelectedCrop(this, languageToLoad)
         }
 
         tvMarathi.setOnClickListener {
@@ -671,7 +732,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
             startActivity(intent)
 
             dialog.dismiss()
-            getFarmerSelectedCrop(languageToLoad)
+            farmerViewModel.getFarmerSelectedCrop(this, languageToLoad)
         }
 
         dialog.show()
@@ -786,107 +847,6 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                     }
                 }
 
-                2 -> {
-                    try {
-                        val farmersSelectedCropResponse = ResponseModel(jSONObject)
-                        if (farmersSelectedCropResponse.getStatus()) {
-                            val selectedCrops: JSONArray =
-                                farmersSelectedCropResponse.getDataArrays()
-                            if (selectedCrops.length() > 0) {
-                                selectedCropList = ArrayList()
-                                var j = 0
-                                while (j < selectedCrops.length()) {
-                                    try {
-                                        val selectedCrop = selectedCrops.getJSONObject(j)
-                                        savedCropId = selectedCrop.getInt("crop_id")
-                                        savedCropName = selectedCrop.getString("name")
-                                        savedCropImageUrl = selectedCrop.getString("image")
-                                        savedCropSowingDate = selectedCrop.getString("sowing_date")
-                                        Log.d("TAGGER", "onResponse: $savedCropSowingDate")
-                                        savedCropWoTRId = selectedCrop.getString("wotr_crop_id")
-                                        binding.appBarMain.dashboardScreen.addChangeCropTV.setText(R.string.change_Crop)
-                                        binding.appBarMain.dashboardScreen.addChangeCropIV.setImageDrawable(
-                                            ContextCompat.getDrawable(
-                                                this, R.drawable.ic_swap
-                                            )
-                                        )
-                                        binding.appBarMain.dashboardScreen.savedCropNameCardView.visibility =
-                                            View.VISIBLE
-                                        binding.appBarMain.dashboardScreen.savedCropNameTextView.text =
-                                            savedCropName
-                                        Picasso.get().load(savedCropImageUrl).fit().centerCrop()
-                                            .into(
-                                                binding.appBarMain.dashboardScreen.savedCropNameImageView
-                                            )
-                                        binding.appBarMain.dashboardScreen.yourCropTv.visibility =
-                                            View.GONE
-                                        binding.appBarMain.dashboardScreen.addCropCardView.visibility =
-                                            View.GONE
-                                        selectedCropList!!.add(
-                                            CropsCategName(
-                                                selectedCrop.getInt("crop_id"),
-                                                selectedCrop.getString("name"),
-                                                selectedCrop.getString("image"),
-                                                selectedCrop.getString("wotr_crop_id")
-                                            )
-                                        )
-                                    } catch (e: JSONException) {
-                                        throw RuntimeException(e)
-                                    }
-                                    j++
-                                }
-                                AppSettings.getInstance().setList(
-                                    this, AppConstants.kFarmerCrop,
-                                    mutableListOf<Any>(*selectedCropList!!.toTypedArray())
-                                )
-                            } else {
-                                binding.appBarMain.dashboardScreen.savedCropNameCardView.visibility =
-                                    View.GONE
-                                binding.appBarMain.dashboardScreen.yourCropTv.visibility =
-                                    View.VISIBLE
-                                binding.appBarMain.dashboardScreen.yourCropTv.setText(R.string.no_crops_added)
-                                binding.appBarMain.dashboardScreen.addCropCardView.visibility =
-                                    View.VISIBLE
-                                binding.appBarMain.dashboardScreen.addChangeCropTV.setText(R.string.add_Crop)
-                                binding.appBarMain.dashboardScreen.addChangeCropIV.setImageDrawable(
-                                    ContextCompat.getDrawable(
-                                        this, R.drawable.baseline_add_24
-                                    )
-                                )
-                            }
-                            if (selectedCropList != null) {
-                                showCropList(selectedCropList!!)
-                            } else {
-                                binding.appBarMain.dashboardScreen.selectedCropRecyclerView.visibility =
-                                    View.GONE
-                            }
-                        } else {
-                            UIToastMessage.show(this, farmersSelectedCropResponse.getResponse())
-                        }
-                        updateSavedCropDetails()
-                    } catch (e: Exception) {
-                        Log.d("TAGGER", "onResponse: $e")
-                    }
-                }
-
-                3 -> {
-                    try {
-                        val deleteSelectedCropResponse = ResponseModel(jSONObject)
-                        if (deleteSelectedCropResponse.getStatus()) {
-                            if (showToast) {
-                                UIToastMessage.show(this, deleteSelectedCropResponse.getResponse())
-                            }
-                            AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null)
-                            selectedCropList?.clear()
-                            getFarmerSelectedCrop(languageToLoad)
-                        } else {
-                            UIToastMessage.show(this, deleteSelectedCropResponse.getResponse())
-                        }
-                    } catch (e: Exception) {
-                        Log.d("TAGGER", "onResponse: $e")
-                    }
-                }
-
                 4 -> {
                     if (jSONObject != null) {
                         try {
@@ -960,27 +920,6 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
         }
     }
 
-    private fun updateSavedCropDetails() {
-        val newCropID = intent.getIntExtra("helloCrop", 0)
-        if (selectedCropList != null) {
-            if (selectedCropList!!.size > 1) {
-                for (i in selectedCropList!!.indices) {
-                    if (newCropID != 0) {
-                        if (selectedCropList!![i].id != newCropID) {
-                            cropId = selectedCropList!![i].id
-                            showToast = false
-                            deleteFarmerSelectedCrop()
-                        }
-                    }
-                    Log.d(
-                        "TAGGER",
-                        "updateSavedCropDetails: saved ${selectedCropList!![i].id} and received $newCropID"
-                    )
-                }
-            }
-        }
-    }
-
     private fun showCropList(selectedCropList: ArrayList<CropsCategName>) {
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.appBarMain.dashboardScreen.selectedCropRecyclerView.layoutManager = layoutManager
@@ -1002,7 +941,9 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
             .setMessage(R.string.delete_crop_message)
             .setPositiveButton(
                 R.string.delete_crop_yes
-            ) { _: DialogInterface?, _: Int -> deleteFarmerSelectedCrop() }
+            ) { _: DialogInterface?, _: Int ->
+                farmerViewModel.deleteFarmerSelectedCrop(this, cropId)
+            }
             .setNegativeButton(
                 R.string.delete_crop_no
             ) { dialogInterface: DialogInterface, _: Int -> dialogInterface.dismiss() }
@@ -1137,7 +1078,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
     override fun onMultiRecyclerViewItemClick(i: Int, id: Any) {
         if (i == 2) {
             cropId = (id as Int)
-            deleteFarmerSelectedCrop()
+            farmerViewModel.deleteFarmerSelectedCrop(this, cropId)
         }
     }
 
