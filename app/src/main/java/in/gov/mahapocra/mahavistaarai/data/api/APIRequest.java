@@ -47,12 +47,6 @@ public interface APIRequest {
     @POST(APIServices.kWareHouseDetails)
     Call<JsonObject> getWareHouseDetails(@Body RequestBody params);
 
-    @POST(APIServices.kWeatherDetails)
-    Call<JsonObject> getWeatherDetails(@Body RequestBody params);
-
-    @POST(APIServices.kGetRegistration)
-    Call<JsonObject> getGetRegistration(@Body RequestBody params);
-
     @GET(APIServices.kGetVideosCategories)
     Call<JsonObject> getFarmersVideosJson();
 
@@ -64,15 +58,6 @@ public interface APIRequest {
 
     @POST(APIServices.kGetDistrictList)
     Call<JsonObject> getDistrictList(@Body RequestBody params);
-
-    @POST(APIServices.kGetCropCategorywise)
-    Call<JsonObject> getCropCategorywise(@Body RequestBody params);
-
-    @POST(APIServices.kGetTalukaList)
-    Call<JsonObject> getTalukaList(@Body RequestBody params);
-
-    @POST(APIServices.kGetCropList)
-    Call<JsonObject> getCropList();
 
     @POST(APIServices.kGetMarketAndMarketName)
     Call<JsonObject> getMarketAndMarketName(@Body RequestBody params);

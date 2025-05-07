@@ -29,6 +29,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import java.util.concurrent.Executors
 
 class FarmerViewModel : ViewModel() {
 
@@ -46,6 +47,12 @@ class FarmerViewModel : ViewModel() {
 
     private val _talukaList = MutableLiveData<JsonObject>()
     val talukaList: LiveData<JsonObject> = _talukaList
+
+    private val _weatherResponse = MutableLiveData<JsonObject>()
+    val weatherResponse: LiveData<JsonObject> = _weatherResponse
+
+    private val _userDetailsResponse = MutableLiveData<JsonObject>()
+    val userDetailsResponse: LiveData<JsonObject> = _userDetailsResponse
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -216,5 +223,69 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
+    fun fetchWeatherDetails(context: Context, talukaID: Int, languageToLoad: String) {
+        viewModelScope.launch {
+            try {
+                val jsonObject = JSONObject().apply {
+                    put("taluka_code", talukaID)
+                    put("lang", languageToLoad)
+                }
+
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api = AppInventorApi(
+                    context,
+                    APIServices.FARMER,
+                    "",
+                    AppString(context).getkMSG_WAIT(),
+                    false
+                )
+
+                val retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+
+                // Suspend API call
+                val response = apiRequest.getWeatherDetails(requestBody)
+
+                // Post the response to LiveData
+                _weatherResponse.value = response
+
+            } catch (e: Exception) {
+                _error.value = e.localizedMessage ?: "Weather fetch failed"
+            }
+        }
+    }
+
+    fun fetchUserInformation(context: Context) {
+        viewModelScope.launch {
+            try {
+                val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+
+                val jsonObject = JSONObject().apply {
+                    put("SecurityKey", APIServices.SSO_KEY)
+                    put("FAAPRegistrationID", farmerId)
+                }
+
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api = AppInventorApi(
+                    context,
+                    APIServices.FARMER,
+                    "",
+                    AppString(context).getkMSG_WAIT(),
+                    false
+                )
+
+                val retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+
+                val response = apiRequest.getGetRegistration(requestBody)
+
+                // Handle success
+                _userDetailsResponse.value = response
+
+            } catch (e: Exception) {
+                _error.value = e.localizedMessage ?: "Failed to fetch user details"
+            }
+        }
+    }
 
 }

@@ -149,13 +149,7 @@
             android:name=".ui.screens.dashboard.menugrid.climate.ClimateDetailsGrid"
             android:exported="false" />
         <activity
-            android:name=".ui.screens.dashboard.sidenavigation.DbtStatus"
-            android:exported="false" />
-        <activity
             android:name=".ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology"
-            android:exported="false" />
-        <activity
-            android:name=".ui.screens.dashboard.sidenavigation.Grievances"
             android:exported="false" />
         <activity
             android:name=".ui.screens.authentication.ConfirmPassword"

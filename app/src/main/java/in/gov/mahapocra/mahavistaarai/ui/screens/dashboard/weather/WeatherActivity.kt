@@ -20,7 +20,6 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.TemperatureAdapter
-import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ViewPagerAdapter
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityWeatherHomeTempBinding
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel

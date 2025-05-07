@@ -62,8 +62,6 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.DbtSch
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard.HealthCardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.AboutActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.DbtStatus
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.Grievances
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.news.NewsListActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
@@ -93,9 +91,7 @@ import java.util.Locale
 import java.util.Objects
 import java.util.concurrent.Executors
 
-class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
-    OnItemClickListener, ForceUpdateChecker.OnUpdateNeededListener,
-    OnMultiRecyclerItemClickListener {
+class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecyclerItemClickListener {
 
     private lateinit var binding: ActivityDashboardScreenBinding
     private lateinit var navUserName: TextView
@@ -155,7 +151,6 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
         }
 
         firebaseTokenFromServer
-        ForceUpdateChecker.with(this).onUpdateNeeded(this).check()
         setConfiguration()
         this.window.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
@@ -289,7 +284,6 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
     private fun fetchReceivingData() {
         farmerViewModel.getFarmerSelectedCrop.observe(this) {
             if (it != null) {
-                Log.d("TAGGER", "fetchReceivingData: $it")
                 try {
                     val jSONObject = JSONObject(it.toString())
                     val farmersSelectedCropResponse = ResponseModel(jSONObject)
@@ -306,7 +300,6 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                                     savedCropName = selectedCrop.getString("name")
                                     savedCropImageUrl = selectedCrop.getString("image")
                                     savedCropSowingDate = selectedCrop.getString("sowing_date")
-                                    Log.d("TAGGER", "onResponse:) $savedCropSowingDate")
                                     savedCropWoTRId = selectedCrop.getString("wotr_crop_id")
                                     binding.appBarMain.dashboardScreen.addChangeCropTV.setText(R.string.change_Crop)
                                     binding.appBarMain.dashboardScreen.addChangeCropIV.setImageDrawable(
@@ -407,7 +400,114 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                                 talukaIDJson.optString("name")
                         }
                     }
-                    callForWeatherApi(villageCode)
+                    farmerViewModel.fetchWeatherDetails(this, talukaID, languageToLoad)
+                } catch (e: Exception) {
+                    Log.d("TAGGER", "onResponse: $e")
+                }
+            }
+        }
+
+        farmerViewModel.weatherResponse.observe(this) {
+            if (it != null) {
+                val jSONObject = JSONObject(it.toString())
+                try {
+                    appPreferenceManager.saveString(
+                        AppConstants.WEATHER_RESPONSE,
+                        jSONObject.toString()
+                    )
+                    val response = ResponseModel(jSONObject)
+                    if (response.getStatus()) {
+                        val temperatureObject =
+                            checkNotNull(jSONObject.optJSONObject("Temperature"))
+                        val tempMin = temperatureObject.optString("min")
+                        val tempMax = temperatureObject.optString("max")
+                        val temperature = "$tempMin°C / $tempMax°C"
+                        binding.appBarMain.dashboardScreen.temperatureTextView.text =
+                            temperature
+                    }
+                } catch (e: Exception) {
+                    Log.d("TAGGER", "onResponse: $e")
+                }
+            }
+        }
+
+        farmerViewModel.userDetailsResponse.observe(this) {
+            if (it != null) {
+                val jSONObject = JSONObject(it.toString())
+                try {
+                    if (jSONObject.optInt("status") == 200) {
+                        try {
+                            val data = jSONObject.optJSONObject("data")
+                            val strName = data?.getString("Name")
+                            val strMobNo = data?.getString("MobileNo")
+                            val strEmailId = data?.getString("EmailId")
+                            val strFFAReg = data?.getInt("FAAPRegistrationID")
+                            val strDistName = data?.getString("DistrictName")
+                            val strDistId = data?.getInt("DistrictCode")
+                            val strTalukaName = data?.getString("TalukaName")
+                            val strTalukaId = data?.getInt("TalukaCode")
+                            val strVillageId = data?.getInt("VillageCode")
+                            val strVillageName = data?.getString("VillageName")
+                            if (strDistId != null) {
+                                districtCode = strDistId
+                            }
+                            if (strTalukaId != null) {
+                                villageCode = strTalukaId
+                            }
+                            AppSettings.getInstance()
+                                .setValue(this, AppConstants.uName, strName)
+                            binding.appBarMain.dashboardScreen.userFullNameTextView.text =
+                                strName
+                            AppSettings.getInstance()
+                                .setValue(this, AppConstants.uMobileNo, strMobNo)
+                            AppSettings.getInstance()
+                                .setValue(this, AppConstants.uEmail, strEmailId)
+                            strFFAReg?.let {
+                                AppSettings.getInstance()
+                                    .setIntValue(this, AppConstants.fREGISTER_ID, it)
+                            }
+                            AppSettings.getInstance()
+                                .setValue(this, AppConstants.uDIST, strDistName)
+                            strDistId?.let {
+                                AppSettings.getInstance()
+                                    .setIntValue(this, AppConstants.uDISTId, it)
+                            }
+                            AppSettings.getInstance()
+                                .setValue(this, AppConstants.uTALUKA, strTalukaName)
+                            strTalukaId?.let {
+                                AppSettings.getInstance()
+                                    .setIntValue(this, AppConstants.uTALUKAID, it)
+                            }
+                            AppSettings.getInstance()
+                                .setValue(this, AppConstants.uVILLAGE, strVillageName)
+                            strVillageId?.let {
+                                AppSettings.getInstance()
+                                    .setIntValue(this, AppConstants.uVILLAGEID, it)
+                            }
+                            AppSettings.getInstance()
+                                .setBooleanValue(this, AppConstants.userDataSaved, true)
+
+                            val userName: String = AppSettings.getInstance()
+                                .getValue(this, AppConstants.uName, AppConstants.uName)
+                            val userNumber: String = AppSettings.getInstance()
+                                .getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
+                            val hView = binding.navView.getHeaderView(0)
+                            navUserName = hView.findViewById(R.id.tv_farmerName)
+                            navUserPhone = hView.findViewById(R.id.tv_famerPhoneNumber)
+                            if (userName != "USER_NAME") {
+                                try {
+                                    val capitalizeStrName: String =
+                                        ApUtil.getCamelCaseStreing(userName)
+                                    navUserName.text = capitalizeStrName.ifEmpty { userName }
+                                    navUserPhone.text = userNumber
+                                } catch (e: StringIndexOutOfBoundsException) {
+                                    e.printStackTrace()
+                                }
+                            }
+                        } catch (e: JSONException) {
+                            e.printStackTrace()
+                        }
+                    }
                 } catch (e: Exception) {
                     Log.d("TAGGER", "onResponse: $e")
                 }
@@ -601,10 +701,10 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
     }
 
 
-    fun init() {
+    private fun init() {
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
         if (farmerId > 0) {
-            userDetails
+            farmerViewModel.fetchUserInformation(this)
         }
     }
 
@@ -642,39 +742,6 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
         startActivity(intent)
     }
 
-
-    private val userDetails: Unit
-        get() {
-            val jsonObject = JSONObject()
-            try {
-                jsonObject.put("SecurityKey", APIServices.SSO_KEY)
-                jsonObject.put("FAAPRegistrationID", farmerId)
-
-                val requestBody: RequestBody =
-                    AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api = AppInventorApi(
-                    this,
-                    APIServices.FARMER,
-                    "",
-                    AppString(this).getkMSG_WAIT(),
-                    true
-                )
-
-                val handler = Handler()
-                val runnable = Runnable {
-                    val retrofit: Retrofit = api.getRetrofitInstance()
-                    val apiRequest: APIRequest =
-                        retrofit.create(APIRequest::class.java)
-                    val responseCall: Call<JsonObject> =
-                        apiRequest.getGetRegistration(requestBody)
-                    api.postRequest(responseCall, this, 1)
-                }
-                handler.post(runnable)
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
-        }
-
     private fun openChangeLangPopup() {
         val dialog = Dialog(this@DashboardScreen)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -686,15 +753,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
 
         tvEnglish.setOnClickListener {
             val languageToLoad = "en"
-            val locale = Locale(languageToLoad)
-            Locale.setDefault(locale)
-            val config = Configuration()
-            config.locale = locale
-            baseContext.resources.updateConfiguration(
-                config,
-                baseContext.resources.displayMetrics
-            )
-
+            configureLocale(baseContext, languageToLoad)
             AppSettings.setLanguage(this@DashboardScreen, "1")
 
             finish()
@@ -706,15 +765,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
 
         tvMarathi.setOnClickListener {
             val languageToLoad = "mr"
-            val locale = Locale(languageToLoad)
-            Locale.setDefault(locale)
-            val config = Configuration()
-            config.locale = locale
-            baseContext.resources.updateConfiguration(
-                config,
-                baseContext.resources.displayMetrics
-            )
-
+            configureLocale(baseContext, languageToLoad)
             AppSettings.setLanguage(this@DashboardScreen, "2")
 
             finish()
@@ -744,146 +795,6 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                     // Notify the user and handle the situation gracefully
                     UIToastMessage.show(this@DashboardScreen, "Access Permission denied")
                 }
-            }
-        }
-    }
-
-    override fun onFailure(obj: Any, th: Throwable, i: Int) {
-    }
-
-    override fun onResponse(jSONObject: JSONObject?, i: Int) {
-        if (jSONObject != null) {
-            when (i) {
-                1 -> {
-                    try {
-                        if (jSONObject.optInt("status") == 200) {
-                            try {
-                                val data = jSONObject.optJSONObject("data")
-                                val strName = data?.getString("Name")
-                                val strMobNo = data?.getString("MobileNo")
-                                val strEmailId = data?.getString("EmailId")
-                                val strFFAReg = data?.getInt("FAAPRegistrationID")
-                                val strDistName = data?.getString("DistrictName")
-                                val strDistId = data?.getInt("DistrictCode")
-                                val strTalukaName = data?.getString("TalukaName")
-                                val strTalukaId = data?.getInt("TalukaCode")
-                                val strVillageId = data?.getInt("VillageCode")
-                                val strVillageName = data?.getString("VillageName")
-                                if (strDistId != null) {
-                                    districtCode = strDistId
-                                }
-                                if (strTalukaId != null) {
-                                    villageCode = strTalukaId
-                                }
-                                AppSettings.getInstance()
-                                    .setValue(this, AppConstants.uName, strName)
-                                binding.appBarMain.dashboardScreen.userFullNameTextView.text =
-                                    strName
-                                AppSettings.getInstance()
-                                    .setValue(this, AppConstants.uMobileNo, strMobNo)
-                                AppSettings.getInstance()
-                                    .setValue(this, AppConstants.uEmail, strEmailId)
-                                strFFAReg?.let {
-                                    AppSettings.getInstance()
-                                        .setIntValue(this, AppConstants.fREGISTER_ID, it)
-                                }
-                                AppSettings.getInstance()
-                                    .setValue(this, AppConstants.uDIST, strDistName)
-                                strDistId?.let {
-                                    AppSettings.getInstance()
-                                        .setIntValue(this, AppConstants.uDISTId, it)
-                                }
-                                AppSettings.getInstance()
-                                    .setValue(this, AppConstants.uTALUKA, strTalukaName)
-                                Log.d("TAGGER", "onResponse ->: $strTalukaId")
-                                strTalukaId?.let {
-                                    AppSettings.getInstance()
-                                        .setIntValue(this, AppConstants.uTALUKAID, it)
-                                }
-                                AppSettings.getInstance()
-                                    .setValue(this, AppConstants.uVILLAGE, strVillageName)
-                                strVillageId?.let {
-                                    AppSettings.getInstance()
-                                        .setIntValue(this, AppConstants.uVILLAGEID, it)
-                                }
-                                AppSettings.getInstance()
-                                    .setBooleanValue(this, AppConstants.userDataSaved, true)
-
-                                val userName: String = AppSettings.getInstance()
-                                    .getValue(this, AppConstants.uName, AppConstants.uName)
-                                val userNumber: String = AppSettings.getInstance()
-                                    .getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
-                                val hView = binding.navView.getHeaderView(0)
-                                navUserName = hView.findViewById(R.id.tv_farmerName)
-                                navUserPhone = hView.findViewById(R.id.tv_famerPhoneNumber)
-                                if (userName != "USER_NAME") {
-                                    try {
-                                        val capitalizeStrName: String =
-                                            ApUtil.getCamelCaseStreing(userName)
-                                        navUserName.text = capitalizeStrName.ifEmpty { userName }
-                                        navUserPhone.text = userNumber
-                                    } catch (e: StringIndexOutOfBoundsException) {
-                                        e.printStackTrace()
-                                    }
-                                }
-                            } catch (e: JSONException) {
-                                e.printStackTrace()
-                            }
-                        }
-                    } catch (e: Exception) {
-                        Log.d("TAGGER", "onResponse: $e")
-                    }
-                }
-
-                5 -> if (jSONObject != null) {
-                    try {
-                        appPreferenceManager.saveString(
-                            AppConstants.WEATHER_RESPONSE,
-                            jSONObject.toString()
-                        )
-                        val response = ResponseModel(jSONObject)
-                        if (response.getStatus()) {
-                            val temperatureObject =
-                                checkNotNull(jSONObject.optJSONObject("Temperature"))
-                            val tempMin = temperatureObject.optString("min")
-                            val tempMax = temperatureObject.optString("max")
-                            val temperature = "$tempMin°C / $tempMax°C"
-                            binding.appBarMain.dashboardScreen.temperatureTextView.text =
-                                temperature
-                        }
-                    } catch (e: Exception) {
-                        Log.d("TAGGER", "onResponse: $e")
-                    }
-                }
-            }
-        }
-    }
-
-    private fun callForWeatherApi(talukaID: Int) {
-        val jsonObject = JSONObject()
-        Executors.newSingleThreadExecutor().execute {
-            try {
-                jsonObject.put("taluka_code", talukaID)
-                jsonObject.put("lang", languageToLoad)
-
-                val requestBody: RequestBody =
-                    AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api = AppInventorApi(
-                    this,
-                    APIServices.FARMER,
-                    "",
-                    AppString(this).getkMSG_WAIT(),
-                    false
-                )
-
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest: APIRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> =
-                    apiRequest.getWeatherDetails(requestBody)
-
-                api.postRequest(responseCall, this, 5)
-            } catch (e: JSONException) {
-                e.printStackTrace()
             }
         }
     }
@@ -932,22 +843,14 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                 }
 
                 1 -> if (farmerId > 0) {
-                    val sharing = Intent(
-                        this@DashboardScreen,
-                        AboutActivity::class.java
+                    startActivity(
+                        Intent(
+                            this@DashboardScreen,
+                            AboutActivity::class.java
+                        )
                     )
-                    startActivity(sharing)
                 } else {
                     UIToastMessage.show(this@DashboardScreen, "Please Login First...")
-                }
-
-                2 -> {
-                    val dbtStatusIntent = Intent(
-                        this@DashboardScreen,
-                        DbtStatus::class.java
-                    )
-                    dbtStatusIntent.putExtra("userPhoneNumber", navUserPhone.toString())
-                    startActivity(dbtStatusIntent)
                 }
 
                 3 -> {
@@ -959,24 +862,15 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                 }
 
                 6 -> {
-                    val loginIntent = Intent(
-                        this@DashboardScreen,
-                        LoginScreen::class.java
+                    startActivity(
+                        Intent(
+                            this@DashboardScreen,
+                            LoginScreen::class.java
+                        )
                     )
-                    startActivity(loginIntent)
                 }
 
                 7 -> logoutFromApp()
-                13 -> if (farmerId > 0) {
-                    val grievanceIntent = Intent(
-                        this@DashboardScreen,
-                        Grievances::class.java
-                    )
-                    grievanceIntent.putExtra("FAAPRegistrationID", farmerId)
-                    startActivity(grievanceIntent)
-                } else {
-                    UIToastMessage.show(this@DashboardScreen, "Please Login First...")
-                }
             }
             val drawer = findViewById<DrawerLayout>(R.id.drawer_layout1)
             if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -1008,24 +902,6 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
         finish()
-    }
-
-    override fun onUpdateNeeded(updateUrl: String) {
-        val dialog = AlertDialog.Builder(this)
-            .setCancelable(false)
-            .setTitle("New version available")
-            .setMessage("Please, update app to new version to continue reposting.")
-            .setPositiveButton(
-                "Update"
-            ) { _: DialogInterface?, _: Int -> redirectStore(updateUrl) }
-            .setNegativeButton(
-                "No, thanks"
-            ) { dialog: DialogInterface?, _: Int ->
-                dialog?.dismiss()
-                finish()
-            }.create()
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.show()
     }
 
     private fun redirectStore(updateUrl: String) {
