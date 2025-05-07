@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.JsonObject
@@ -23,6 +24,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ViewPagerAdapter
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityWeatherHomeTempBinding
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
+import `in`.gov.mahapocra.mahavistaarai.ui.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import kotlinx.coroutines.CoroutineScope
@@ -37,11 +39,11 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class WeatherActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerItemClickListener {
+class WeatherActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityWeatherHomeTempBinding
+    private lateinit var binding: ActivityWeatherHomeTempBinding
+    private lateinit var farmerViewModel: FarmerViewModel
     private lateinit var recyclerAdapter: TemperatureAdapter
-    private var vinCode : Int = 0
     private lateinit var jsonArrayForecast: JSONArray
     private lateinit var jsonArrayPrevious: JSONArray
     private lateinit var languageToLoad: String
@@ -55,7 +57,7 @@ class WeatherActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
         configureLocale(baseContext, languageToLoad)
         binding = ActivityWeatherHomeTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         binding.relativeLayoutTopBar.relativeLayoutToolbar.setBackgroundColor(
             ContextCompat.getColor(
                 this,
@@ -66,7 +68,7 @@ class WeatherActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
-
+        farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
         binding.tabLayout.visibility = View.GONE
         binding.viewPager.visibility = View.GONE
 
@@ -145,27 +147,11 @@ class WeatherActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
         fetchTalukaMasterData()
     }
 
-    private fun makeAPICallForPreviousData() {
-        vinCode = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
-        val jsonObject = JSONObject()
-        jsonObject.put("for_date", getCurrentDate()) // "2024-10-18"
-        val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-        val api = AppInventorApi(this, APIServices.GIS, "", AppString(this).getkMSG_WAIT(), true)
-        val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
-        val responseCall: Call<JsonObject> = apiRequest.getPreviousDates(requestBody)
-        api.postRequest(responseCall, this, 1)
-    }
-
-    private fun getCurrentDate(): String {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        return dateFormat.format(Date())
-    }
-
-    private fun setRecyclerViewUsingArray(jsonArray:JSONArray){
+    private fun setRecyclerViewUsingArray(jsonArray: JSONArray) {
         binding.recyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         // Set adapter
-        recyclerAdapter = TemperatureAdapter(jsonArray, this)
+        recyclerAdapter = TemperatureAdapter(jsonArray)
         binding.recyclerView.adapter = recyclerAdapter
     }
 
@@ -174,96 +160,20 @@ class WeatherActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerIte
         return dateFormat.format(Date())
     }
 
-    override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onResponse(jSONObject: JSONObject?, i: Int) {
-        if (i == 1){
-            val jsonArray = jSONObject?.optJSONArray("data")
-            jsonArray?.let { setRecyclerViewUsingArray(it) }
-        }else if (i == 2){
-            val jsonArray = jSONObject?.optJSONArray("data")
-            Log.d("TAGGER", "onResponse: $jsonArray")
-            binding
-            if (jsonArray!=null){
-                binding.tabLayout.visibility = View.VISIBLE
-                binding.viewPager.visibility = View.VISIBLE
-                AppPreferenceManager(this).saveString( "WEATHER_HOURLY_DATA_24", jSONObject.toString())
-                val viewPagerAdapter = ViewPagerAdapter(this)
-                binding.viewPager.adapter = viewPagerAdapter
-                binding.viewPager.isUserInputEnabled = false
-                // Connect TabLayout and ViewPager2
-                TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-                    when (position) {
-                        0 -> tab.text = "Temp"
-                        1 -> tab.text = "Rain"
-                        2 -> tab.text = "Humidity"
-                        3 -> tab.text = "Wind"
-                    }
-                }.attach()
-            }else{
-                binding.tabLayout.visibility = View.GONE
-                binding.viewPager.visibility = View.GONE
-            }
-        }
-
-        if (i ==4) {
-            if (jSONObject!=null){
-                val talukaID: Int = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
-                val talukaArray  = jSONObject.optJSONArray("data")
-                Log.d("TAGGER", "onResponse: ${jSONObject.optJSONArray("data")}")
-                for ( i in 0 until talukaArray!!.length()){
+    private fun fetchTalukaMasterData() {
+        farmerViewModel.talukaList.observe(this) {
+            if (it != null) {
+                val jSONObject = JSONObject(it.toString())
+                val talukaID: Int =
+                    AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
+                val talukaArray = jSONObject.optJSONArray("data")
+                for (i in 0 until talukaArray!!.length()) {
                     val talukaIDJson = talukaArray.getJSONObject(i)
-                    if (talukaID == talukaIDJson.optInt("code")){
+                    if (talukaID == talukaIDJson.optInt("code")) {
                         binding.weatherTalukaTV.text = talukaIDJson.optString("name")
                     }
                 }
-                Log.d("TAGGER", "onResponse: $talukaID")
             }
-        }
-    }
-
-    override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
-//        if (obj != null) {
-//            val jSONObject = obj as JSONObject
-//            val date = jSONObject.optString("for_date")
-//            val jsonObject = JSONObject()
-//            jsonObject.put("for_date", date) //  "2024-10-18"
-//            jsonObject.put("vincode", vinCode) //525878
-//            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-//            val api = AppInventorApi(this, APIServices.GIS, "",
-//                AppString(this).getkMSG_WAIT(), true)
-//            val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
-//            val responseCall: Call<JsonObject> = apiRequest.getHourlyData(requestBody)
-//            api.postRequest(responseCall, this, 2)
-//        }
-    }
-
-    private fun fetchTalukaMasterData() {
-        val districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put("lang", languageToLoad)
-            jsonObject.put("district_code", districtID)
-
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api =
-                AppInventorApi(
-                    this,
-                    APIServices.FARMER,
-                    "",
-                    AppString(this).getkMSG_WAIT(),
-                    true
-                )
-            CoroutineScope(Dispatchers.IO).launch {
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getTalukaList(requestBody)
-                api.postRequest(responseCall, this@WeatherActivity, 4)
-            }
-        } catch (e: JSONException) {
-            e.printStackTrace()
         }
     }
 }

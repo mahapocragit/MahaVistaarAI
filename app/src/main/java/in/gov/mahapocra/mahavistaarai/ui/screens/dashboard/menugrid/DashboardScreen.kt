@@ -64,9 +64,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealth
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.AboutActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.DbtStatus
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.Grievances
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.MyVillageProfilePdf
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.news.NewsListActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.training.TrainingLocationSelection
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.ComingSoonActivity
@@ -140,7 +138,7 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
             cropId = savedCropId
             deleteDialog()
         }
-
+        farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
         binding.appBarMain.dashboardScreen.greetingsTextView.text = greetingMessage
         binding.appBarMain.dashboardScreen.timestampTextView.text = formattedTimestamp
         binding.appBarMain.dashboardScreen.temperatureLayout.setOnClickListener {
@@ -394,32 +392,26 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                 Log.d("TAGGER", "onResponse: $e")
             }
         }
-    }
 
-    private fun fetchTalukaMasterData() {
-        val districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put("lang", languageToLoad)
-            jsonObject.put("district_code", districtID)
-
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api =
-                AppInventorApi(
-                    this,
-                    APIServices.FARMER,
-                    "",
-                    AppString(this).getkMSG_WAIT(),
-                    true
-                )
-            CoroutineScope(Dispatchers.IO).launch {
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getTalukaList(requestBody)
-                api.postRequest(responseCall, this@DashboardScreen, 4)
+        farmerViewModel.talukaList.observe(this) {
+            if (it != null) {
+                val jSONObject = JSONObject(it.toString())
+                try {
+                    val talukaID: Int = AppSettings.getInstance()
+                        .getIntValue(this, AppConstants.uTALUKAID, 0)
+                    val talukaArray = jSONObject.optJSONArray("data")
+                    for (i in 0 until talukaArray!!.length()) {
+                        val talukaIDJson = talukaArray.getJSONObject(i)
+                        if (talukaID == talukaIDJson.optInt("code")) {
+                            binding.appBarMain.dashboardScreen.weatherTalukaTV.text =
+                                talukaIDJson.optString("name")
+                        }
+                    }
+                    callForWeatherApi(villageCode)
+                } catch (e: Exception) {
+                    Log.d("TAGGER", "onResponse: $e")
+                }
             }
-        } catch (e: JSONException) {
-            e.printStackTrace()
         }
     }
 
@@ -838,29 +830,8 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                                 e.printStackTrace()
                             }
                         }
-                        fetchTalukaMasterData()
                     } catch (e: Exception) {
                         Log.d("TAGGER", "onResponse: $e")
-                    }
-                }
-
-                4 -> {
-                    if (jSONObject != null) {
-                        try {
-                            val talukaID: Int = AppSettings.getInstance()
-                                .getIntValue(this, AppConstants.uTALUKAID, 0)
-                            val talukaArray = jSONObject.optJSONArray("data")
-                            for (i in 0 until talukaArray!!.length()) {
-                                val talukaIDJson = talukaArray.getJSONObject(i)
-                                if (talukaID == talukaIDJson.optInt("code")) {
-                                    binding.appBarMain.dashboardScreen.weatherTalukaTV.text =
-                                        talukaIDJson.optString("name")
-                                }
-                            }
-                            callForWeatherApi(villageCode)
-                        } catch (e: Exception) {
-                            Log.d("TAGGER", "onResponse: $e")
-                        }
                     }
                 }
 
@@ -987,14 +958,6 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                     startActivity(notificationIntent)
                 }
 
-                5 -> {
-                    val trainingLocationIntent = Intent(
-                        this@DashboardScreen,
-                        TrainingLocationSelection::class.java
-                    )
-                    startActivity(trainingLocationIntent)
-                }
-
                 6 -> {
                     val loginIntent = Intent(
                         this@DashboardScreen,
@@ -1004,7 +967,6 @@ class DashboardScreen : AppCompatActivity(), ApiCallbackCode,
                 }
 
                 7 -> logoutFromApp()
-                11 -> startActivity(Intent(this@DashboardScreen, MyVillageProfilePdf::class.java))
                 13 -> if (farmerId > 0) {
                     val grievanceIntent = Intent(
                         this@DashboardScreen,

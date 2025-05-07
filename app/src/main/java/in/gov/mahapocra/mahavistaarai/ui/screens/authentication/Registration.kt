@@ -31,8 +31,10 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.JsonObject
+import `in`.gov.mahapocra.mahavistaarai.ui.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import kotlinx.coroutines.CoroutineScope
@@ -61,7 +63,6 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     private lateinit var textView5: TextView
     private lateinit var textView6: TextView
     private lateinit var submitButton: Button
-    private lateinit var deleteAccountButton: TextView
     private var isUserLoggedIn: Boolean = false
 
     private lateinit var sentOTP: String
@@ -92,6 +93,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     private var versionName: String? = null
     private var token: String? = null
     private var machineId: String? = null
+    private lateinit var farmerViewModel : FarmerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,20 +106,28 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         }
         LocalCustom.configureLocale(baseContext, languageToLoad)
         setContentView(R.layout.activity_registration)
-        var pinfo: PackageInfo? = null
-        try {
-            pinfo = packageManager.getPackageInfo(packageName, 0)
-        } catch (e: PackageManager.NameNotFoundException) {
-            e.printStackTrace()
-        }
-        versionName = pinfo?.versionName
+        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
+        versionName = LocalCustom.getVersionName(this)
         token = FirebaseMessaging.getInstance().token.toString()
-        Log.d("token12345", "" + token)
         sessionManager = SessionManager(this)
         init()
-        deleteAccountButton.visibility = View.GONE
         setConfiguration()
         onclick()
+        observeResponse()
+    }
+
+    private fun observeResponse() {
+        farmerViewModel.talukaList.observe(this){
+            if (it!=null){
+                val jSONObject = JSONObject(it.toString())
+                val response = ResponseModel(jSONObject)
+                if (response.status) {
+                    talukaJSONArray = response.getdataArray()
+                } else {
+                    UIToastMessage.show(this, response.response)
+                }
+            }
+        }
     }
 
     private fun setConfiguration() {
@@ -145,7 +155,6 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
             passwordEditText.visibility = View.GONE
             confirmPasswordEditText.visibility = View.GONE
-            deleteAccountButton.visibility = View.GONE
             nameEditText.setText(userName)
             mobNoEditText.setText(registerMob)
             emailId.setText(emailid)
@@ -199,7 +208,6 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         textViewDist = findViewById(R.id.textViewDist)
         textViewTaluka = findViewById(R.id.textViewTaluka)
         textViewVillage = findViewById(R.id.textViewVillage)
-        deleteAccountButton = findViewById(R.id.deleteAccountButton)
         textViewVerify = findViewById(R.id.textViewVerify)
         backPressIcon = findViewById(R.id.backPressIcon)
         submitButton = findViewById(R.id.submitButton)
@@ -208,19 +216,6 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     }
 
     private fun onclick() {
-
-        deleteAccountButton.setOnClickListener {
-            AlertDialog.Builder(this)
-                .setTitle("Delete Account")
-                .setMessage("Are you sure you want to delete your account?")
-                .setPositiveButton("Yes") { _, _ ->
-                    Toast.makeText(this, "Your account has been deleted", Toast.LENGTH_SHORT).show()
-                }.setNegativeButton("Cancel") { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .show()
-        }
-
         backPressIcon.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
@@ -275,7 +270,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     private fun showTaluka() {
         if (talukaJSONArray == null) {
             if (districtID > 0) {
-                fetchTalukaMasterData()
+                farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
             } else {
                 UIToastMessage.show(
                     this,
@@ -566,7 +561,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     }
 
     private fun userVerification(enteredOTP: String) {
-        if (enteredOTP.equals(this.sentOTP)) {
+        if (enteredOTP == this.sentOTP) {
             textViewVerify.text = resources.getString(R.string.reg_verified)
             textViewVerify.setTextColor(Color.parseColor("#1d6b08"))
             mobNoEditText.isEnabled = false
@@ -632,18 +627,6 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             }
         }
 
-        if (i == 4 && jSONObject != null) {
-            val response =
-                ResponseModel(
-                    jSONObject
-                )
-            if (response.status) {
-                talukaJSONArray = response.getdataArray()
-            } else {
-                UIToastMessage.show(this, response.response)
-            }
-        }
-
         if (i == 5 && jSONObject != null) {
             val response =
                 ResponseModel(
@@ -669,7 +652,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             }
             textViewDist.text = s
             if (districtID > 0) {
-                fetchTalukaMasterData()
+                farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
             }
             talukaID = 0
             textViewTaluka.text = ""
@@ -712,35 +695,6 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         }
 
     }
-
-    private fun fetchTalukaMasterData() {
-
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put("lang", languageToLoad)
-            jsonObject.put("district_code", districtID)
-
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api =
-                AppInventorApi(
-                    this,
-                    APIServices.FARMER,
-                    "",
-                    AppString(this).getkMSG_WAIT(),
-                    true
-                )
-            CoroutineScope(Dispatchers.IO).launch {
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getTalukaList(requestBody)
-                api.postRequest(responseCall, this@Registration, 4)
-            }
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
-
-    }
-
 
     private fun getVillageAgainstTaluka() {
         val jsonObject = JSONObject()

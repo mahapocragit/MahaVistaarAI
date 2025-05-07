@@ -44,6 +44,9 @@ class FarmerViewModel : ViewModel() {
     private val _cropCategoryResponse = MutableLiveData<JsonObject>()
     val cropCategoryResponse: LiveData<JsonObject> = _cropCategoryResponse
 
+    private val _talukaList = MutableLiveData<JsonObject>()
+    val talukaList: LiveData<JsonObject> = _talukaList
+
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
@@ -179,5 +182,39 @@ class FarmerViewModel : ViewModel() {
             }
         }
     }
+
+    fun fetchTalukaMasterData(context: Context, languageToLoad: String) {
+        viewModelScope.launch {
+            try {
+                val districtID = AppSettings.getInstance().getIntValue(context, AppConstants.uDISTId, 0)
+
+                val jsonObject = JSONObject().apply {
+                    put("lang", languageToLoad)
+                    put("district_code", districtID)
+                }
+
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api = AppInventorApi(
+                    context,
+                    APIServices.FARMER,
+                    "",
+                    AppString(context).getkMSG_WAIT(),
+                    false
+                )
+                val retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+
+                // This is the suspend function call
+                val response = apiRequest.getTalukaList(requestBody)
+
+                // Handle success
+                _talukaList.value = response // <- your LiveData for the UI
+
+            } catch (e: Exception) {
+                _error.value = e.localizedMessage ?: "Something went wrong"
+            }
+        }
+    }
+
 
 }

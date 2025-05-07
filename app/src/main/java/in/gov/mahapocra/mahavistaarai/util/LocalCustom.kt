@@ -44,14 +44,13 @@ object LocalCustom {
     }
 
     fun getVersionName(context: Context): String {
-        var versionName = ""
         var packageInfo: PackageInfo? = null
         try {
             packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
         }
-        versionName = packageInfo!!.versionName
-        return versionName;
+        val versionName = packageInfo!!.versionName
+        return versionName
     }
 }

@@ -14,7 +14,7 @@ import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class TemperatureAdapter(private val jsonArray: JSONArray, private val listener: OnMultiRecyclerItemClickListener) :
+class TemperatureAdapter(private val jsonArray: JSONArray) :
     RecyclerView.Adapter<TemperatureAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -57,9 +57,6 @@ class TemperatureAdapter(private val jsonArray: JSONArray, private val listener:
         holder.rainTV.text = rainTemp
         holder.temperatureTextView.text = temperature
         holder.imageView.setImageResource(R.drawable.weather_ic)
-        holder.weatherCardView.setOnClickListener {
-            listener.onMultiRecyclerViewItemClick(position, item)
-        }
     }
 
     private fun formatDate(inputDate: String): String {

@@ -143,22 +143,7 @@
         </activity>
         <activity android:name=".ui.screens.dashboard.sidenavigation.news.NewsListActivity" />
         <activity
-            android:name=".ui.screens.dashboard.sidenavigation.bandavar.ViewStoriesBandavar"
-            android:exported="false" />
-        <activity
-            android:name=".ui.screens.dashboard.sidenavigation.bandavar.BandavarActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.screens.dashboard.menugrid.climate.ResilientWebUrl"
-            android:exported="false" />
-        <activity
-            android:name=".ui.screens.dashboard.sidenavigation.training.UpcomingEventsDetails"
-            android:exported="false" />
-        <activity
-            android:name=".ui.screens.dashboard.sidenavigation.training.UpcomingEvents"
-            android:exported="false" />
-        <activity
-            android:name=".ui.screens.dashboard.sidenavigation.training.TrainingLocationSelection"
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.menugrid.climate.ClimateDetailsGrid"
@@ -180,9 +165,6 @@
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.menugrid.MarketPrice"
-            android:exported="false" />
-        <activity
-            android:name=".ui.screens.dashboard.sidenavigation.MyVillageProfilePdf"
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.menugrid.dbt.DbtSchemes"
