@@ -23,18 +23,6 @@ public interface APIRequest {
     @POST(APIServices.kRegistrationRequest)
     Call<JsonObject> getRegistrationRequest(@Body RequestBody params);
 
-    @POST(APIServices.kGetDistrictData)
-    Call<JsonObject> getDistrictData(@Body RequestBody params);
-
-    @POST(APIServices.kGetTalukaData)
-    Call<JsonObject> getTalukaData(@Body RequestBody params);
-
-    @POST(APIServices.kMyProfileVillageDetails)
-    Call<JsonObject> getMyVillageProfileDetails(@Body RequestBody params);
-
-    @POST(APIServices.kGetVillageData)
-    Call<JsonObject> getVillageData(@Body RequestBody params);
-
     @POST(APIServices.kUserLogin)
     Call<JsonObject> getUserLogin(@Body RequestBody params);
 
@@ -50,9 +38,6 @@ public interface APIRequest {
     @GET(APIServices.kGetVideosCategories)
     Call<JsonObject> getFarmersVideosJson();
 
-    @POST(APIServices.CHECK_USER_ACTIVE_DEACTIVE)
-    Call<JsonObject> checkActivateDeactivateUser(@Body RequestBody params);
-
     @POST(APIServices.kGetmarketsList)
     Call<JsonObject> getmarketList(@Body RequestBody params);
 
@@ -65,29 +50,14 @@ public interface APIRequest {
     @POST(APIServices.kGetVillageList)
     Call<JsonObject> kGetVillageList(@Body RequestBody params);
 
-    // Get Firebase Notification List
-    @POST(APIServices.USER_NOTIFICATION_LIST)
-    Call<JsonObject> getfirebaseNotificationList(@Body RequestBody params);
-
-    // Get News List
     @POST(APIServices.USER_News_LIST)
     Call<JsonObject> getNewsList(@Body RequestBody params);
-
-    //READ NOTIFICATION MESSAGE
-    @POST(APIServices.READ_NOTIFICATION_MESSAGE)
-    Call<JsonObject> readfirebaseNotification(@Body RequestBody params);
 
     @POST(APIServices.kGetmarketsPriceDetails)
     Call<JsonObject> getmarketPriceDetails(@Body RequestBody params);
 
     @POST(APIServices.kClimateResilientTechnology)
     Call<JsonObject> getClimateResilientList(@Body RequestBody params);
-
-    @POST(APIServices.kClimateResilientTechnologyNewUpdates)
-    Call<JsonObject> getClimateResilientListNewUpdate(@Body RequestBody params);
-
-    @POST(APIServices.kAutoCropAdvisory)
-    Call<JsonObject> getAutoCropAdvisory(@Body RequestBody params);
 
     @POST(APIServices.kGetPestDiseaseDetails)
     Call<JsonObject> getPestDiseaseDetails(@Body RequestBody params);
@@ -101,66 +71,20 @@ public interface APIRequest {
     @POST(APIServices.DELETE_FERTILIZER_FROM_SAVED)
     Call<JsonObject> deleteFertilizerFromSavedList(@Body RequestBody params);
 
-    @POST(APIServices.kAutoAdvisory)
-    Call<JsonObject> getAutoAdvisory(@Body RequestBody params);
-
     @POST(APIServices.advisory_feedback)
     Call<JsonObject> submitAdvisoryFeedback(@Body RequestBody params);
-
-    @POST(APIServices.kSubdivisionUpcommingEvent)
-    Call<JsonObject> getSubdivisionUpcomingList(@Body RequestBody params);
-
-    @POST(APIServices.GET_PS_SCHEDULE_DETAIL_URL)
-    Call<JsonObject> psGetEventDetailRequest(@Body RequestBody params);
-
-    @Multipart
-    @POST(APIServices.kSubmitGrievance)
-    Call<JsonObject> submitGrievance(@Part MultipartBody.Part image,
-                                     @PartMap Map<String, RequestBody> params);
-
-    @POST(APIServices.kBandhavarPostStory)
-    Call<JsonObject> postStoryBandhavar(@Body RequestBody params);
 
     @POST(APIServices.KSaveFertilizerFormula)
     Call<JsonObject> saveFertilizerFormula(@Body RequestBody params);
 
-    @POST(APIServices.KGetPreviousDates)
-    Call<JsonObject> getPreviousDates(@Body RequestBody params);
-
-    @POST(APIServices.KGetHourlyData)
-    Call<JsonObject> getHourlyData(@Body RequestBody params);
     @POST(APIServices.kGetFertilizerSavedFormula)
     Call<JsonObject> getFertilizerSavedFormula(@Body RequestBody params);
 
-    @Multipart
-    @POST(APIServices.kSubmitSuggetion)
-    Call<JsonObject> submitSuggestion(@Part MultipartBody.Part image,
-                                      @PartMap Map<String, RequestBody> params);
-
-    @POST(APIServices.kDbtActivitiesDetails)
-    Call<JsonObject> getDbtActivitiesDetails(@Query("SecurityKey") String securityKey,
-                                             @Query("Lang") String dataRequired,
-                                             @Query("DataRequired") String DataRequired);
     @POST(APIServices.kResetPassword)
     Call<JsonObject> getNewPassword(@Body RequestBody params);
 
     @GET(APIServices.kRevampedDBTSchemes)
     Call<JsonObject> getRevampedDBTSchemes();
-
-
-    @POST(APIServices.kDbtActivitiesGrpDetails)
-    Call<JsonObject> getDbtActivitiesGrpDetails(@Query("SecurityKey") String securityKey,
-                                                @Query("Lang") String dataRequired,
-                                                @Query("DataRequired") String DataRequired,
-                                                @Query("ActivityGroupID") String farmerID
-                                                );
-
-    @POST(APIServices.kDbtActivitiesGrpDocDetails)
-    Call<JsonObject> getDbtActivitiesGrpDocDetails(@Query("SecurityKey") String securityKey,
-                                                   @Query("Lang") String dataRequired,
-                                                   @Query("DataRequired") String DataRequired,
-                                                   @Query("ActivityGroupID") String farmerID
-    );
 
     @POST(APIServices.kGetTokenFromWotr)
     Call<JsonObject> getTokenFromWotr(@Query("MobileNo") String securityKey,
@@ -180,7 +104,6 @@ public interface APIRequest {
                                       @Query("PlotSize") String plotSize,
                                       @Query("PlotUnit") String plotUnit,
                                       @Query("Token") String token
-
     );
 
     @POST(APIServices.fetchFarmerListForSHC)
