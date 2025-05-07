@@ -1,6 +1,5 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication
 
-import android.app.AlertDialog
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.listener.AlertListEventListener
@@ -17,8 +16,6 @@ import `in`.gov.mahapocra.mahavistaarai.util.app_util.SessionManager
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import android.app.Dialog
 import android.content.Intent
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -34,7 +31,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.JsonObject
-import `in`.gov.mahapocra.mahavistaarai.ui.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import kotlinx.coroutines.CoroutineScope

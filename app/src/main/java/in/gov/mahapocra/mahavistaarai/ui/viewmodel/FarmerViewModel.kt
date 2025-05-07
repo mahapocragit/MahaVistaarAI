@@ -1,8 +1,6 @@
-package `in`.gov.mahapocra.mahavistaarai.ui
+package `in`.gov.mahapocra.mahavistaarai.ui.viewmodel
 
 import android.content.Context
-import android.os.Handler
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,26 +8,17 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
-import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.data.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.RequestBody
 import org.json.JSONException
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import java.util.concurrent.Executors
 
 class FarmerViewModel : ViewModel() {
 
@@ -61,7 +50,7 @@ class FarmerViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val jsonObject = JSONObject().apply {
-                    put("api_key", APIKeys.SSO_PROD.key())
+                    put("api_key", APIKeys.SSO_PROD)
                     put("farmer_id", AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0))
                     put("sowing_date", sowingDate)
                     put("crop_id", cropId)
@@ -95,7 +84,7 @@ class FarmerViewModel : ViewModel() {
             val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
             val jsonObject = JSONObject()
             try {
-                jsonObject.put("api_key", APIKeys.SSO_PROD.key())
+                jsonObject.put("api_key", APIKeys.SSO_PROD)
                 jsonObject.put("lang", language)
                 jsonObject.put("farmer_id", farmerId)
 
@@ -131,7 +120,7 @@ class FarmerViewModel : ViewModel() {
             try {
                 val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
                 val jsonObject = JSONObject().apply {
-                    put("api_key", APIKeys.SSO_PROD.key())
+                    put("api_key", APIKeys.SSO_PROD)
                     put("crop_id", cropId)
                     put("farmer_id", farmerId)
                 }
@@ -162,7 +151,7 @@ class FarmerViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val jsonObject = JSONObject().apply {
-                    put("api_key", APIKeys.SSO_PROD.key())
+                    put("api_key", APIKeys.SSO_PROD)
                     put("lang", languageToLoad)
                 }
 

@@ -35,7 +35,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.DeleteApi
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityFertilizerCalculatorActivityBinding
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
-import `in`.gov.mahapocra.mahavistaarai.ui.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -44,8 +44,6 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
-import retrofit2.Retrofit
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

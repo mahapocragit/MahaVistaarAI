@@ -27,7 +27,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityAdvisoryCropBinding
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
-import `in`.gov.mahapocra.mahavistaarai.ui.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
@@ -37,7 +37,6 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
 import java.util.Date
-import java.util.Locale
 
 class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
     ApiCallbackCode, DatePickerRequestListener {

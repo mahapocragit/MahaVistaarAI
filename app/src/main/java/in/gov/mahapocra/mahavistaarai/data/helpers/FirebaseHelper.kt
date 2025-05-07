@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.mahavistaarai.data
+package `in`.gov.mahapocra.mahavistaarai.data.helpers
 
 import android.content.Context
 import android.content.Intent

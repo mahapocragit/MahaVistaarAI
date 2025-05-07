@@ -134,7 +134,7 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
     private fun wareHouseDetails() {
         val jsonObject = JSONObject()
         try {
-            jsonObject.put("api_key", APIKeys.SSO_PROD.key())
+            jsonObject.put("api_key", APIKeys.SSO_PROD)
             jsonObject.put("district_code", districtID)
             jsonObject.put("lang", languageToLoad)
 

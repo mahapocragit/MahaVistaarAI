@@ -205,7 +205,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
     private fun fetchMarketPriceAndName() {
         val jsonObject = JSONObject()
         try {
-            jsonObject.put("api_key", APIKeys.SSO_PROD.key())
+            jsonObject.put("api_key", APIKeys.SSO_PROD)
             jsonObject.put("district_code", districtID)
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
