@@ -649,6 +649,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             }
             textViewDist.text = s
             if (districtID > 0) {
+                AppSettings.getInstance().setIntValue(this, AppConstants.uDISTId, districtID)
                 farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
             }
             talukaID = 0

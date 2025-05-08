@@ -82,6 +82,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     private lateinit var navUserName: TextView
     private var districtCode: Int = 0
     private var villageCode: Int = 0
+    private var isGuest: Boolean = false
     private lateinit var navUserPhone: TextView
     private lateinit var languageToLoad: String
     private var farmerId = 0
@@ -110,6 +111,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             layoutInflater
         )
         setContentView(binding.root)
+
+        binding.appBarMain.dashboardScreen.progressBar.visibility = View.VISIBLE
+        binding.appBarMain.dashboardScreen.temperatureTextView.visibility = View.GONE
+        isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
         farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         fetchReceivingData()
         appPreferenceManager = AppPreferenceManager(this)
@@ -161,7 +166,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName)
         val userNumber: String =
             AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
-        binding.appBarMain.dashboardScreen.userFullNameTextView.text = userName
+        binding.appBarMain.dashboardScreen.userFullNameTextView.text =
+            if (isGuest) "Guest" else userName
         val hView = binding.navView.getHeaderView(0)
         navUserName = hView.findViewById(R.id.tv_farmerName)
         navUserPhone = hView.findViewById(R.id.tv_famerPhoneNumber)
@@ -395,6 +401,9 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
         farmerViewModel.weatherResponse.observe(this) {
             if (it != null) {
+                binding.appBarMain.dashboardScreen.progressBar.visibility = View.GONE
+                binding.appBarMain.dashboardScreen.temperatureTextView.visibility = View.VISIBLE
+                binding.appBarMain.dashboardScreen.progressBar.progress = 0
                 val jSONObject = JSONObject(it.toString())
                 try {
                     appPreferenceManager.saveString(
@@ -443,7 +452,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                             AppSettings.getInstance()
                                 .setValue(this, AppConstants.uName, strName)
                             binding.appBarMain.dashboardScreen.userFullNameTextView.text =
-                                strName
+                                if (isGuest) "Guest" else strName
                             AppSettings.getInstance()
                                 .setValue(this, AppConstants.uMobileNo, strMobNo)
                             AppSettings.getInstance()
@@ -489,6 +498,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                                 } catch (e: StringIndexOutOfBoundsException) {
                                     e.printStackTrace()
                                 }
+                            }
+                            strTalukaId?.let { it1 ->
+                                farmerViewModel.fetchWeatherDetails(this,
+                                    it1, languageToLoad)
                             }
                         } catch (e: JSONException) {
                             e.printStackTrace()

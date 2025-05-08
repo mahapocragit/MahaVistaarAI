@@ -52,10 +52,6 @@ class SOPActivity : AppCompatActivity(), ApiCallbackCode {
         binding = ActivitySopactivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.toolbar.imgBackArrow.visibility = View.VISIBLE
-        binding.toolbar.imgBackArrow.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
-        binding.toolbar.textViewHeaderTitle.text = getString(R.string.sop_title)
-
         //fetching values
         cropId = intent.getIntExtra("id", 0)
         cropName = intent.getStringExtra("mName")
@@ -76,7 +72,6 @@ class SOPActivity : AppCompatActivity(), ApiCallbackCode {
 
         binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {
             val sharing = Intent(this, AddCropActivity::class.java)
-            Log.d("TAGGER", "onCreate: $cropName")
             sharing.putExtra("id", cropId)
             sharing.putExtra("mName", cropName)
             sharing.putExtra("wotr_crop_id", wotrCropId)
@@ -87,6 +82,11 @@ class SOPActivity : AppCompatActivity(), ApiCallbackCode {
             )
             startActivity(sharing)
         }
+
+        binding.toolbar.imgBackArrow.visibility = View.VISIBLE
+        binding.toolbar.imgBackArrow.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
+        binding.toolbar.textViewHeaderTitle.text = if (languageToLoad == "mr") "एस.ओ.पी.(SOP)" else "S.O.P."
+        binding.sowingInfoLayout.textView7.text = if (languageToLoad == "mr") "निवडलेले पीक" else "Selected Crop"
     }
 
 

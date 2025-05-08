@@ -1,6 +1,7 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.viewmodel
 
 import android.content.Context
+import android.os.Handler
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,6 +12,7 @@ import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.data.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
+import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
@@ -19,6 +21,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONException
 import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 
 class FarmerViewModel : ViewModel() {
 
@@ -42,6 +48,9 @@ class FarmerViewModel : ViewModel() {
 
     private val _userDetailsResponse = MutableLiveData<JsonObject>()
     val userDetailsResponse: LiveData<JsonObject> = _userDetailsResponse
+
+    private val _videosResponse = MutableLiveData<JsonObject>()
+    val videosResponse: LiveData<JsonObject> = _videosResponse
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -277,4 +286,24 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
+    fun getVideosForFarmer(context: Context) {
+        viewModelScope.launch {
+            try {
+                val api = AppInventorApi(
+                    context,
+                    APIServices.FARMER,
+                    "",
+                    AppString(context).getkMSG_WAIT(),
+                    false
+                )
+
+                val retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.getFarmersVideosJson()
+                _videosResponse.value = response
+            } catch (e: Exception) {
+                _error.value = e.localizedMessage ?: "Failed to fetch videos"
+            }
+        }
+    }
 }

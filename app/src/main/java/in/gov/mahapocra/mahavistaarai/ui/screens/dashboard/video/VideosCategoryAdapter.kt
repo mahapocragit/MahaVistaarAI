@@ -14,43 +14,50 @@ class VideosCategoryAdapter(
     private val categoryArray: JSONArray,
     private val languageToLoad: String
 ) : RecyclerView.Adapter<VideosCategoryAdapter.ViewHolder>() {
-    class ViewHolder(val binding: ItemVideosCategoryBinding, val languageToLoad: String) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(jsonObject: JSONObject, languageToLoad: String) {
-            var activityName = jsonObject.optString("name")
-            if (languageToLoad == "mr") {
-                activityName = jsonObject.optString("name_mr")
-            }
-            binding.textView21.text = activityName
-            Glide.with(binding.imageView23).load(jsonObject.optString("thumbnail"))
-                .into(binding.imageView23)
-            binding.cardTrendingView.setOnClickListener {
-                binding.root.context.startActivity(
-                    Intent(
-                        binding.root.context,
-                        VideosDetailedActivity::class.java
-                    ).apply {
-                        putExtra("videosJsonObject", jsonObject.toString())
-                    })
-            }
-            val videosCount = jsonObject.optJSONArray("links")
-            binding.videosCount.text = "${videosCount.length()} ${binding.root.context.getString(R.string.videos)}"
 
+    inner class ViewHolder(private val binding: ItemVideosCategoryBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(videoCategory: JSONObject) {
+            val context = binding.root.context
+            val title = if (languageToLoad == "mr") {
+                videoCategory.optString("name_mr")
+            } else {
+                videoCategory.optString("name")
+            }
+
+            binding.textView21.text = title
+
+            Glide.with(binding.imageView23)
+                .load(videoCategory.optString("thumbnail"))
+                .into(binding.imageView23)
+
+            val videosCount = videoCategory.optJSONArray("links")?.length() ?: 0
+            binding.videosCount.text = buildString {
+                append(videosCount)
+                append(" ")
+                append(binding.root.context.getString(R.string.videos))
+            }
+
+            binding.cardTrendingView.setOnClickListener {
+                val intent = Intent(context, VideosDetailedActivity::class.java).apply {
+                    putExtra("videosJsonObject", videoCategory.toString())
+                }
+                context.startActivity(intent)
+            }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
             ItemVideosCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding, languageToLoad)
+        return ViewHolder(binding)
     }
 
-    override fun getItemCount(): Int {
-        return categoryArray.length()
-    }
+    override fun getItemCount(): Int = categoryArray.length()
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val farmerObject = categoryArray.getJSONObject(position)
-        holder.bind(farmerObject, languageToLoad)
+        val item = categoryArray.optJSONObject(position) ?: return
+        holder.bind(item)
     }
 }

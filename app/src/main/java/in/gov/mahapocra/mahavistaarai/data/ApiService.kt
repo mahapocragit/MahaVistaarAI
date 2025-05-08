@@ -3,7 +3,9 @@ package `in`.gov.mahapocra.mahavistaarai.data
 import com.google.gson.JsonObject
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import okhttp3.RequestBody
+import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface ApiService {
@@ -28,4 +30,7 @@ interface ApiService {
 
     @POST(APIServices.kGetRegistration)
     suspend fun getGetRegistration(@Body params: RequestBody): JsonObject
+
+    @GET(APIServices.kGetVideosCategories)
+    suspend fun getFarmersVideosJson(): JsonObject
 }

@@ -29,16 +29,8 @@ class CHCenterRecyclerAdapter(private val tempStrArr: JSONArray) : RecyclerView.
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val jsonObject = tempStrArr.optJSONObject(position) // Use optJSONObject instead of direct indexing
         holder.chcUserName.text = jsonObject?.optString("contact_name")
-        holder.contactNumberTV.text = jsonObject?.optString("contact_no")?.let { maskNumber(it) }
+        holder.contactNumberTV.text = jsonObject?.optString("contact_no")
         holder.chcNameTV.text = jsonObject?.optString("chcname")
         holder.chcUserDistance.text = "${jsonObject?.optString("distance")} kms"
-    }
-
-    private fun maskNumber(number: String): String {
-        return if (number.length >= 10) {
-            "*******" + number.takeLast(3)
-        } else {
-            "Invalid number"
-        }
     }
 }

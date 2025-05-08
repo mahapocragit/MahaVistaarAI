@@ -1,23 +1,29 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
+import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityChcenterBinding
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONObject
 import org.osmdroid.config.Configuration
@@ -31,16 +37,25 @@ class CHCenterActivity : AppCompatActivity(), ApiCallbackCode {
 
     private lateinit var binding: ActivityChcenterBinding
     private lateinit var adapter: CHCenterRecyclerAdapter
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val LOCATION_PERMISSION_REQUEST = 1001
+    private lateinit var languageToLoad: String
     private var tempStrArr = mutableListOf<String>()
-    private var locationLat = 18.201176
-    private var locationLong = 75.357841
+    private var locationLat = 18.914708311426686
+    private var locationLong = 72.81793873488796
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        languageToLoad = "mr"
+        if (AppSettings.getLanguage(this@CHCenterActivity).equals("1", ignoreCase = true)) {
+            languageToLoad = "en"
+        }
+        configureLocale(baseContext, languageToLoad)
         binding = ActivityChcenterBinding.inflate(layoutInflater)
         Configuration.getInstance().load(this, getSharedPreferences("osmdroid", MODE_PRIVATE))
         setContentView(binding.root)
-
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        checkLocationPermissions()
         binding.toolbar.imgBackArrow.visibility = View.VISIBLE
         binding.toolbar.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
@@ -55,6 +70,26 @@ class CHCenterActivity : AppCompatActivity(), ApiCallbackCode {
         toggleView(true)
         binding.listViewToggleButton.setOnClickListener { toggleView(true) }
         binding.mapViewToggleButton.setOnClickListener { toggleView(false) }
+    }
+
+    private fun checkLocationPermissions() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_PERMISSION_REQUEST
+            )
+            return
+        }else{
+            fetchLocation()
+        }
     }
 
     private fun fetchDataForCHC() {
@@ -200,5 +235,30 @@ class CHCenterActivity : AppCompatActivity(), ApiCallbackCode {
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
         marker.title = "Current Location"
         binding.mapView.overlays.add(marker)
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun fetchLocation() {
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            if (location != null) {
+                locationLat = location.latitude
+                locationLong = location.longitude
+                Toast.makeText(this, "Location Updated!!\nLatitude: $locationLat, Longitude: $locationLong", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this, "Unable to get location", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<String>, grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LOCATION_PERMISSION_REQUEST && grantResults.isNotEmpty() &&
+            grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            fetchLocation()
+        } else {
+            Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show()
+        }
     }
 }
