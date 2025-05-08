@@ -31,6 +31,9 @@ interface ApiService {
     @POST(APIServices.kGetRegistration)
     suspend fun getGetRegistration(@Body params: RequestBody): JsonObject
 
+    @POST(APIServices.kSoilHealthCardDetailsFromSHCNumber)
+    suspend fun getSoilHealthCardDetailsFromSHCNumber(@Body params: RequestBody): JsonObject
+
     @GET(APIServices.kGetVideosCategories)
     suspend fun getFarmersVideosJson(): JsonObject
 }

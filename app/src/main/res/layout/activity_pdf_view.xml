@@ -12,7 +12,15 @@
         android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         android:layout_marginTop="@dimen/_36sdp" />
+
+    <include
+        android:id="@+id/soilHealthCardLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/soil_health_card_layout"
+        android:layout_marginTop="@dimen/_40sdp" />
 
     <ProgressBar
         android:id="@+id/progressBar"

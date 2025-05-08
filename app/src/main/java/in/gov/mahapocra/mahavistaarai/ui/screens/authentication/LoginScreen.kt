@@ -26,6 +26,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLoginScreenTempBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONException
@@ -62,9 +63,43 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         binding = ActivityLoginScreenTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.changeLanguageImageView.setOnClickListener {
+            openChangeLangPopup()
+        }
+
         AppSettings.getInstance().clearIntValue(this, AppConstants.fREGISTER_ID)
         AppSettings.getInstance().setBooleanValue(this, AppConstants.IS_USER_GUEST, false)
         onClick()
+    }
+
+    private fun openChangeLangPopup() {
+        val dialog = Dialog(this@LoginScreen)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(true)
+        dialog.setContentView(R.layout.popup_language_selector)
+
+        val tvEnglish = dialog.findViewById<TextView>(R.id.tv_eng)
+        val tvMarathi = dialog.findViewById<TextView>(R.id.tv_mar)
+
+        tvEnglish.setOnClickListener {
+            val languageToLoad = "en"
+            configureLocale(baseContext, languageToLoad)
+            AppSettings.setLanguage(this@LoginScreen, "1")
+            finish()
+            startActivity(intent)
+            dialog.dismiss()
+        }
+
+        tvMarathi.setOnClickListener {
+            val languageToLoad = "mr"
+            configureLocale(baseContext, languageToLoad)
+            AppSettings.setLanguage(this@LoginScreen, "2")
+            finish()
+            startActivity(intent)
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun onClick() {

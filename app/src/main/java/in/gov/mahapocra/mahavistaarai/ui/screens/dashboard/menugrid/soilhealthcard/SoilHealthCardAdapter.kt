@@ -61,6 +61,7 @@ class SoilHealthCardAdapter(private val farmerJsonArray: JSONArray?) :
                         "https://s3.object.webwerksvmx.com/ffsauditlogs/gis-data/gis-data/SHC/531379.pdf"
                     )
                 )
+                intent.putExtra("shcNumber", farmerObject.optString("shc_no", "N/A"))
                 holder.soilHealthReportLinearLayout.context.startActivity(intent)
             }
         }

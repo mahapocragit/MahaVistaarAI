@@ -79,8 +79,7 @@ class StageAdvisoryAdapter(
 
         } else if (status.equals("completed")) {
             holder.cropStagesInfoRecyclerView.visibility = View.GONE
-            holder.stage.setBackgroundResource(R.drawable.completed_background_stages)
-            holder.stepLine.setBackgroundResource(R.color.bg_green)
+            holder.stage.setBackgroundResource(R.drawable.baseline_check_circle_24)
         }else{
             holder.cropStagesInfoRecyclerView.visibility = View.GONE
             holder.stage.setBackgroundResource(R.drawable.pending_round_backgroud_stages)

@@ -115,7 +115,7 @@
                             android:text="Village" />
 
                         <TextView
-                            android:id="@+id/surveyNumber"
+                            android:id="@+id/villageTextView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="3"
@@ -141,7 +141,7 @@
                             android:text="Taluka" />
 
                         <TextView
-                            android:id="@+id/farmSize"
+                            android:id="@+id/talukaTextView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="3"
@@ -167,7 +167,7 @@
                             android:text="District" />
 
                         <TextView
-                            android:id="@+id/farmSize1"
+                            android:id="@+id/districtTextView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="3"
@@ -197,67 +197,56 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <TableLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:stretchColumns="*">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                    <TableRow
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:background="@color/card_background_color_figma"
-                        android:padding="@dimen/_6sdp">
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="@dimen/_5sdp"
+                        android:paddingVertical="@dimen/_10sdp">
 
                         <TextView
-                            android:text="Test parameter"
-                            android:textStyle="bold" />
+                            android:id="@+id/textView13"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="Test parameter" />
 
                         <TextView
-                            android:text="Value"
-                            android:textStyle="bold" />
+                            android:id="@+id/textView15"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="Value" />
 
                         <TextView
-                            android:text="Unit"
-                            android:textStyle="bold" />
+                            android:id="@+id/textView18"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="Unit" />
 
                         <TextView
-                            android:text="Rating"
-                            android:textStyle="bold" />
-                    </TableRow>
+                            android:id="@+id/textView24"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="Rating" />
+                    </LinearLayout>
 
-                    <TableRow android:padding="@dimen/_6sdp">
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/soilTestResultRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:listitem="@layout/item_view_soil_health_result"
+                        android:background="@color/white"/>
 
-                        <TextView android:text="Nitrogen (N)" />
-
-                        <TextView android:text="32.13" />
-
-                        <TextView android:text="Kg/Ha" />
-
-                        <TextView android:text="✅" />
-                    </TableRow>
-
-                    <TableRow android:padding="@dimen/_6sdp">
-
-                        <TextView android:text="Phosphorus (P)" />
-
-                        <TextView android:text="368.48" />
-
-                        <TextView android:text="ppm" />
-
-                        <TextView android:text="✅" />
-                    </TableRow>
-
-                    <TableRow android:padding="@dimen/_6sdp">
-
-                        <TextView android:text="Organic carbon (OC)" />
-
-                        <TextView android:text="368.48" />
-
-                        <TextView android:text="ppm" />
-
-                        <TextView
-                            android:gravity=""
-                            android:text="⚠️" />
-                    </TableRow>
-                </TableLayout>
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <TextView

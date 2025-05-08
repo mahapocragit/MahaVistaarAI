@@ -20,6 +20,7 @@ public interface APIServices {
     String kWareHouseDetails = "warehouseService/warehouse-details";
     String kWeatherDetails = "imdService/imd-forcast-previous-weather-details";
     String kGetRegistration = "authService/getUserdetails";
+    String kSoilHealthCardDetailsFromSHCNumber = "webservices/fetch_soil_health_card_json";
     String kGeFarmersSelectedCrop = "farmerService/get-farmers-selected-crop";
     String kGetVideosCategories = "videoService/get-video-category-details";
     String kdeleteFarmerSelectedCrop = "farmerService/delete-farmers-selected-crop";

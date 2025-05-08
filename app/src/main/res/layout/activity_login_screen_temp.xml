@@ -7,6 +7,15 @@
     android:background="@color/actionbar_color_figma"
     tools:context=".ui.screens.authentication.LoginScreen">
 
+    <ImageView
+        android:id="@+id/changeLanguageImageView"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
+        android:layout_margin="@dimen/_20sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/language" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
