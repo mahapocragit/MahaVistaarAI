@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -9,6 +10,7 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDbtactivityBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 
 class DBTActivity : AppCompatActivity() {
 
@@ -21,7 +23,7 @@ class DBTActivity : AppCompatActivity() {
         if (AppSettings.getLanguage(this@DBTActivity).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
-        configureLocale(baseContext, languageToLoad)
+        switchLanguage(this, languageToLoad)
         binding = ActivityDbtactivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -43,5 +45,15 @@ class DBTActivity : AppCompatActivity() {
 //                putExtra("dbtFromDashboard", "mahaDBTCardView")
 //            })
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 }

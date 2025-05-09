@@ -133,39 +133,6 @@ class StageAdvisoryDetailAdaptr(
         } catch (ex: Exception) {
             ex.toString()
         }
-        holder.onFeedback.setOnClickListener({
-
-//            val advisoryFeedback = AdvisoryFeedback()
-//           val fragmentManager = (context as CropStageAdvisory).supportFragmentManager
-//            val fragmentTransaction = fragmentManager.beginTransaction()
-//            fragmentTransaction.add(R.id.frameLayout, AdvisoryFeedback())
-//            fragmentTransaction.addToBackStack(null)
-//            fragmentTransaction.commit()
-
-            if ((context as AdvisoryCropActivity).supportFragmentManager
-                    .findFragmentById(R.id.frameLayout) == null
-            ) {
-
-                val advisoryFeedback = AdvisoryFeedback()
-                val bundle = Bundle()
-                bundle.putString("cropId", cropId)
-                bundle.putString("villageId", villageID)
-                bundle.putString("cropsapadvisoryCropId", "")
-                bundle.putString("advisoryCropId", id)
-                advisoryFeedback.arguments = bundle
-                val fragmentTransaction =
-                    (context as AdvisoryCropActivity).supportFragmentManager.beginTransaction()
-                fragmentTransaction.add(R.id.frameLayout, advisoryFeedback)
-                fragmentTransaction.commit()
-
-                listener.onMultiRecyclerViewItemClick(
-                    2,
-                    cropAdvisoryDetailsJSONArray.get(position) as JSONObject
-                )
-            }
-
-        })
-
     }
 
     private fun removeHtml( original:String): String? {

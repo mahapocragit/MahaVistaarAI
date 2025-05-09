@@ -48,7 +48,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DrawerMenuAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.VideosImageDetailsAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.Registration
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.chatbot.TempDashboardActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.TempDashboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology

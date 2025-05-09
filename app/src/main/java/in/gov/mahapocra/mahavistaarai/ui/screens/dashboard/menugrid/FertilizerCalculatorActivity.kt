@@ -1,6 +1,7 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -37,6 +38,8 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityFertilizerCalculator
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -84,7 +87,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         ) {
             languageToLoad = "en"
         }
-        LocalCustom.configureLocale(baseContext, languageToLoad)
+        switchLanguage(this, languageToLoad)
         binding = ActivityFertilizerCalculatorActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
@@ -680,5 +683,15 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                 }
             }
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 }

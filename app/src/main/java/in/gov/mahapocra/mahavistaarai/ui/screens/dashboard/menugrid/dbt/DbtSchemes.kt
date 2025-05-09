@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt
 
+import android.content.Context
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
@@ -20,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonObject
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
@@ -46,7 +49,7 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
             } else {
                 "en"
             }
-        LocalCustom.configureLocale(baseContext, languageToLoad)
+        switchLanguage(this, languageToLoad)
         setContentView(R.layout.activity_dbt_schemes)
         init()
         val dbtFromDashboard = intent.getStringExtra("dbtFromDashboard")
@@ -149,5 +152,15 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
         startActivity(Intent(this@DbtSchemes, DbtSchemesDetailsActivity::class.java).apply {
             putExtra("FARMERDBTRESPONSE", jsonObject.toString())
         })
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 }

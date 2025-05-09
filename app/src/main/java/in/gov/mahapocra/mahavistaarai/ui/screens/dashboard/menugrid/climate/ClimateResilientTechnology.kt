@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate
 
+import android.content.Context
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
@@ -24,6 +25,8 @@ import com.google.gson.JsonObject
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ClimateResilientTechnologyAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -51,7 +54,7 @@ class ClimateResilientTechnology : AppCompatActivity(), ApiJSONObjCallback, ApiC
         } else {
             languageToLoad = "en"
         }
-        LocalCustom.configureLocale(baseContext, languageToLoad)
+        switchLanguage(this, languageToLoad)
         setContentView(R.layout.activity_climate_resilint_technology)
         init()
         textViewHeaderTitle?.setText(R.string.climateTechnology)
@@ -158,5 +161,16 @@ class ClimateResilientTechnology : AppCompatActivity(), ApiJSONObjCallback, ApiC
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
+    }
+
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 }

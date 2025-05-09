@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +8,7 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityAboutBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 
 class AboutActivity : AppCompatActivity() {
 
@@ -19,7 +21,7 @@ class AboutActivity : AppCompatActivity() {
         if (AppSettings.getLanguage(this@AboutActivity).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
-        configureLocale(baseContext, languageToLoad)
+        switchLanguage(this, languageToLoad)
         binding = ActivityAboutBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.toolbarLayout.imgBackArrow.visibility = View.VISIBLE
@@ -27,5 +29,17 @@ class AboutActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
         binding.toolbarLayout.textViewHeaderTitle.text = getString(R.string.about)
+    }
+
+
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 }

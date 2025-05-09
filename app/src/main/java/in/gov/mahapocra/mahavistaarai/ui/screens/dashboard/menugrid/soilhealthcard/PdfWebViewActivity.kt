@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,6 +15,8 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityPdfViewBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.GisViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import org.json.JSONObject
 import java.util.Locale
 
@@ -33,7 +36,7 @@ class PdfWebViewActivity : AppCompatActivity() {
         if (AppSettings.getLanguage(this@PdfWebViewActivity).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
-        LocalCustom.configureLocale(baseContext, languageToLoad)
+        switchLanguage(this, languageToLoad)
         binding= ActivityPdfViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -89,5 +92,13 @@ class PdfWebViewActivity : AppCompatActivity() {
         }
     }
 
-
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
+    }
 }

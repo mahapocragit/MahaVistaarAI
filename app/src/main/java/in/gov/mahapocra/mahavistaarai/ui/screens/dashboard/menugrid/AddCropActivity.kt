@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid
 
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -24,6 +25,8 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.VideoDetails
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.TitleVideosDetailsAdapter
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -57,6 +60,7 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
         if (AppSettings.getLanguage(this@AddCropActivity).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
+        switchLanguage(this, languageToLoad)
         setContentView(R.layout.activity_add_crop)
 
 
@@ -245,6 +249,16 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
                 }
             }
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 
 }

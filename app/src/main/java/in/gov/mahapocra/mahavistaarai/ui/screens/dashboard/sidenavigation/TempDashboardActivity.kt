@@ -1,65 +1,81 @@
-package in.gov.mahapocra.mahavistaarai.ui.screens.chatbot;
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.content.Context
+import android.net.http.SslError
+import android.os.Bundle
+import android.view.View
+import android.webkit.CookieManager
+import android.webkit.GeolocationPermissions
+import android.webkit.SslErrorHandler
+import android.webkit.WebChromeClient
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import androidx.appcompat.app.AppCompatActivity
+import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityTempDashboardBinding
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+class TempDashboardActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityTempDashboardBinding
+    private lateinit var languageToLoad: String
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        languageToLoad = "mr"
+        if (AppSettings.getLanguage(this@TempDashboardActivity).equals("1", ignoreCase = true)) {
+            languageToLoad = "en"
+        }
+        switchLanguage(this, languageToLoad)
+        binding = ActivityTempDashboardBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-import in.gov.mahapocra.mahavistaarai.R;
-
-public class TempDashboardActivity extends AppCompatActivity {
-
-    private BottomNavigationView bottomNavigationView;
-    private ImageView imageViewHeaderBack;
-    private TextView headerTextView;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_temp_dashboard);
-
-        headerTextView = findViewById(R.id.textViewHeaderTitle);
-        imageViewHeaderBack = findViewById(R.id.imageViewHeaderBack);
-        imageViewHeaderBack.setVisibility(View.VISIBLE);
-        imageViewHeaderBack.setOnClickListener(view -> getOnBackPressedDispatcher().onBackPressed());
-        headerTextView.setText("Agro Assistant");
-        loadFragment(new ChatbotFragment());
-
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.nav_home:
-                    Toast.makeText(TempDashboardActivity.this, "nav_home", Toast.LENGTH_SHORT).show();
-                    return true;
-
-                case R.id.nav_about:
-                    Toast.makeText(TempDashboardActivity.this, "nav_about", Toast.LENGTH_SHORT).show();
-                    return true;
-
-                case R.id.nav_about2:
-                    Toast.makeText(TempDashboardActivity.this, "nav_help", Toast.LENGTH_SHORT).show();
-                    return true;
-
-                case R.id.nav_chat:
-                    loadFragment(new ChatbotFragment());
-                    return true;
-
-                default:
-                    return false;
-            }
-        });
+        binding.toolbar.imageViewHeaderBack.setVisibility(View.VISIBLE)
+        binding.toolbar.imageViewHeaderBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
+        binding.toolbar.textViewHeaderTitle.text = "Agro Assistant"
+        loadWebView()
     }
 
-    private void loadFragment(Fragment fragment) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.frameLayout, fragment);
-        fragmentTransaction.commit();
+    private fun loadWebView() {
+        val webSettings = binding.webView.settings
+        webSettings.javaScriptEnabled = true
+        webSettings.domStorageEnabled = true
+        webSettings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+        webSettings.userAgentString =
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36"
+
+        CookieManager.getInstance().setAcceptCookie(true)
+        CookieManager.getInstance().setAcceptThirdPartyCookies(binding.webView, true)
+
+        binding.webView.webChromeClient = object : WebChromeClient() {
+            override fun onGeolocationPermissionsShowPrompt(origin: String?, callback: GeolocationPermissions.Callback?) {
+                callback?.invoke(origin, true, false)
+            }
+        }
+
+        binding.webView.webViewClient = object : WebViewClient() {
+            override fun onReceivedSslError(
+                view: WebView?,
+                handler: SslErrorHandler?,
+                error: SslError?
+            ) {
+                handler?.proceed() // ⚠️ Use with caution - for dev only
+            }
+        }
+
+        binding.webView.loadUrl("https://vistaar.kenpath.ai/")
+    }
+
+
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 }

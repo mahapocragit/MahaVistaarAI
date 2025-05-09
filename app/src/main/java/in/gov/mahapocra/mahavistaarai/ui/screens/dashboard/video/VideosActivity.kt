@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
@@ -16,6 +17,8 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityVideosBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONException
 import org.json.JSONObject
@@ -36,7 +39,7 @@ class VideosActivity : AppCompatActivity() {
         ) {
             languageToLoad = "en"
         }
-        LocalCustom.configureLocale(baseContext, languageToLoad)
+        switchLanguage(this, languageToLoad)
         binding = ActivityVideosBinding.inflate(layoutInflater)
         setContentView(binding.root)
         farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
@@ -65,5 +68,15 @@ class VideosActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 }

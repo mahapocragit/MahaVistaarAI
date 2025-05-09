@@ -2,6 +2,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
@@ -24,6 +25,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityChcenterBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONObject
 import org.osmdroid.config.Configuration
@@ -50,7 +52,7 @@ class CHCenterActivity : AppCompatActivity(), ApiCallbackCode {
         if (AppSettings.getLanguage(this@CHCenterActivity).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
-        configureLocale(baseContext, languageToLoad)
+        switchLanguage(this, languageToLoad)
         binding = ActivityChcenterBinding.inflate(layoutInflater)
         Configuration.getInstance().load(this, getSharedPreferences("osmdroid", MODE_PRIVATE))
         setContentView(binding.root)
@@ -260,5 +262,15 @@ class CHCenterActivity : AppCompatActivity(), ApiCallbackCode {
         } else {
             Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 }

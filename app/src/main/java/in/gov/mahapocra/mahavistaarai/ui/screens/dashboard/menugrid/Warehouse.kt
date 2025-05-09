@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -24,6 +25,8 @@ import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityWarehouseBinding
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -51,7 +54,7 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
         if (AppSettings.getLanguage(this@Warehouse).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
-        LocalCustom.configureLocale(baseContext, languageToLoad)
+        switchLanguage(this, languageToLoad)
         binding = ActivityWarehouseBinding.inflate(layoutInflater)
         setContentView(binding.root)
         districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
@@ -247,5 +250,15 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
     }
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 }

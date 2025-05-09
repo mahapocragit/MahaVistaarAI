@@ -96,7 +96,7 @@
             android:name=".ui.screens.dashboard.menugrid.soilhealthcard.PdfWebViewActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.screens.chatbot.TempDashboardActivity"
+            android:name=".ui.screens.dashboard.sidenavigation.TempDashboardActivity"
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.weather.WeatherActivity"

@@ -1,6 +1,7 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication
 
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -27,6 +28,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLoginScreenTempBindi
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONException
@@ -59,7 +61,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         ) {
             languageToLoad = "en"
         }
-        LocalCustom.configureLocale(baseContext, languageToLoad)
+        switchLanguage(this, languageToLoad)
         binding = ActivityLoginScreenTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -402,20 +404,20 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     private fun userVerification(enteredOTP: String) {
         mobileNo = binding.userIdEditText.text.toString()
         if (enteredOTP == this.sentOTP) {
-            //TODO: Write the code for refresh token using otp and login using otp
             callRefreshTokenAPI(mobileNo, userPass, sentOTP)
-//            Toast.makeText(this, "Login successfully", Toast.LENGTH_LONG).show()
-//            AppSettings.getInstance()
-//                .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisteredID)
-//            val intent = Intent(this, DashboardScreen::class.java)
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//            startActivity(intent)
-//            finish()
             dialog.dismiss()
         } else {
             Toast.makeText(this, R.string.wrong_OTP, Toast.LENGTH_LONG).show()
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 }

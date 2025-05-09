@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest
 
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -27,6 +28,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropAct
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONArray
@@ -57,7 +59,7 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         if (AppSettings.getLanguage(this@PestsAndDiseasesStages).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
-        configureLocale(baseContext, languageToLoad)
+        switchLanguage(this, languageToLoad)
         binding = ActivityPestsAndDiseasesLibraryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -211,6 +213,16 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
     override fun onBackPressed() {
         super.onBackPressed()
         startActivity(Intent(this@PestsAndDiseasesStages, DashboardScreen::class.java))
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 
 }

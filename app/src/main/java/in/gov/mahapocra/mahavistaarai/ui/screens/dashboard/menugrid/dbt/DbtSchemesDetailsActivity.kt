@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -10,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import org.json.JSONObject
 
 class DbtSchemesDetailsActivity : AppCompatActivity() {
@@ -29,7 +32,7 @@ class DbtSchemesDetailsActivity : AppCompatActivity() {
         } else {
             languageToLoad = "en"
         }
-        LocalCustom.configureLocale(baseContext, languageToLoad)
+        switchLanguage(this, languageToLoad)
         setContentView(R.layout.activity_dbt_schemes_details)
 
 
@@ -80,5 +83,15 @@ class DbtSchemesDetailsActivity : AppCompatActivity() {
         }else{
             recyclerView.visibility = View.VISIBLE
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 }

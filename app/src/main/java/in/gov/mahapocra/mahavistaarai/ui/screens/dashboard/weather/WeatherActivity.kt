@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -16,6 +17,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityWeatherHomeTempBindi
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -37,7 +39,7 @@ class WeatherActivity : AppCompatActivity() {
         if (AppSettings.getLanguage(this@WeatherActivity).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
-        configureLocale(baseContext, languageToLoad)
+        switchLanguage(this, languageToLoad)
         binding = ActivityWeatherHomeTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
         farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
@@ -158,5 +160,15 @@ class WeatherActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 }

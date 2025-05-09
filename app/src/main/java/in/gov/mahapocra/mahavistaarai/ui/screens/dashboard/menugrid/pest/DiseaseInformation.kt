@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest
 
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
@@ -22,6 +23,8 @@ import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDiseaseInformationBinding
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -51,6 +54,7 @@ class DiseaseInformation : AppCompatActivity(), ApiCallbackCode {
         if (AppSettings.getLanguage(this@DiseaseInformation).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
+        switchLanguage(this, languageToLoad)
         binding = ActivityDiseaseInformationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
@@ -183,4 +187,13 @@ class DiseaseInformation : AppCompatActivity(), ApiCallbackCode {
         th?.printStackTrace()
     }
 
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
+    }
 }
