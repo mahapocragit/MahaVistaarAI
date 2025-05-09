@@ -206,11 +206,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             )
             startActivity(intent)
         }
-        binding.appBarMain.imgCallIcon.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                callingFun()
-            }
-        }
 
         binding.appBarMain.dashboardScreen.changeCropText.setOnClickListener {
             val intent = Intent(
@@ -734,13 +729,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
         AppSettings.getInstance()
             .setValue(this@DashboardScreen, AppConstants.kAPP_BUILD_VERSION, versionName)
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private fun callingFun() {
-        val intent = Intent(Intent.ACTION_DIAL)
-        intent.setData(Uri.parse("tel:02222163352"))
-        startActivity(intent)
     }
 
     private fun openChangeLangPopup() {

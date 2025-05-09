@@ -49,17 +49,17 @@ public class AppInventorApi {
     private AppInventorApi() {
     }
 
-    public AppInventorApi(Context mContext2, String baseURL, String authTokenTest, String mMessage2, boolean showProgressDialog) {
-        this.mContext = mContext2;
+    public AppInventorApi(Context context, String baseURL, String authTokenTest, String mMessage2, boolean showProgressDialog) {
+        this.mContext = context;
         this.baserURL = baseURL;
         this.authToken = authTokenTest;
         this.mMessage = mMessage2;
         this.mShowProgressDialog = showProgressDialog;
 
-        if (Utility.checkConnection(mContext2) && this.mShowProgressDialog) {
+        if (Utility.checkConnection(context) && this.mShowProgressDialog) {
             // Only show progress dialog if context is a valid Activity and not finishing
-            if (mContext2 instanceof Activity && !((Activity) mContext2).isFinishing()) {
-                this.mProgressDialog = new ProgressDialog(mContext2);
+            if (context instanceof Activity && !((Activity) context).isFinishing()) {
+                this.mProgressDialog = new ProgressDialog(context);
                 if (this.mMessage == null || this.mMessage.isEmpty()) {
                     this.mProgressDialog.setMessage("");
                 } else {
