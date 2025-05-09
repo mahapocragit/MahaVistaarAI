@@ -425,4 +425,6 @@
     <string name="medium_soil_value">मध्यम </string>
     <string name="high_soil_value">उच्च </string>
     <string name="videos">व्हिडिओ</string>
+    <string name="pocra_dbt_name">ना.दे.कृ.सं.प्र. (PoCRA)</string>
+    <string name="maha_dbt_name">महाडीबीटी (MahaDBT)</string>
 </resources>

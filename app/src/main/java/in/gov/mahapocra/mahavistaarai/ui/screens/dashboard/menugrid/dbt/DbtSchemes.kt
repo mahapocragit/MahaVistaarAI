@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -48,7 +49,12 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
         LocalCustom.configureLocale(baseContext, languageToLoad)
         setContentView(R.layout.activity_dbt_schemes)
         init()
-        dbtSchemesLists()
+        val dbtFromDashboard = intent.getStringExtra("dbtFromDashboard")
+        if (dbtFromDashboard=="pocraDBTCardView") {
+            dbtSchemesLists()
+        }else{
+            Toast.makeText(this, "Data not available", Toast.LENGTH_SHORT).show()
+        }
 
         imageMenushow?.visibility = View.VISIBLE
         textViewHeaderTitle?.setText(R.string.dbtschema)

@@ -22,6 +22,7 @@ class PdfWebViewActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPdfViewBinding
     private lateinit var gisViewModel: GisViewModel
     private lateinit var soilTestResultAdapter: SoilTestResultAdapter
+    private lateinit var fertilizerRecommendationAdapter: FertilizerRecommendationAdapter
     private lateinit var progressBar: ProgressBar
     private lateinit var languageToLoad: String
     private val googleDriveView: String = "https://mozilla.github.io/pdf.js/web/viewer.html?file="
@@ -67,16 +68,23 @@ class PdfWebViewActivity : AppCompatActivity() {
             if (it!=null){
                 val jsonObject = JSONObject(it.toString())
                 val basicInfo = jsonObject.getJSONArray("basic_info")[0] as JSONObject
-                val soilTestResultJson = jsonObject.getJSONArray("soil_test_result")
-                val soilTestResultAdapter = SoilTestResultAdapter(soilTestResultJson)
                 binding.soilHealthCardLayout.farmerName.text = basicInfo.optString("farmer_name")
                 binding.soilHealthCardLayout.shcNo.text = basicInfo.optString("shc_no")
                 binding.soilHealthCardLayout.villageTextView.text = basicInfo.optString("village")
                 binding.soilHealthCardLayout.talukaTextView.text = basicInfo.optString("taluka")
                 binding.soilHealthCardLayout.districtTextView.text = basicInfo.optString("district")
+
+                val soilTestResultJson = jsonObject.getJSONArray("soil_test_result")
+                soilTestResultAdapter = SoilTestResultAdapter(soilTestResultJson)
                 binding.soilHealthCardLayout.soilTestResultRecyclerView.layoutManager = LinearLayoutManager(this)
                 binding.soilHealthCardLayout.soilTestResultRecyclerView.adapter = soilTestResultAdapter
                 soilTestResultAdapter.notifyDataSetChanged()
+
+                val fertilizerRecommendationJson = jsonObject.getJSONArray("fertilizer_recommendation")
+                fertilizerRecommendationAdapter = FertilizerRecommendationAdapter(fertilizerRecommendationJson)
+                binding.soilHealthCardLayout.fertilizerRecommendationRecyclerView.layoutManager = LinearLayoutManager(this)
+                binding.soilHealthCardLayout.fertilizerRecommendationRecyclerView.adapter = fertilizerRecommendationAdapter
+                fertilizerRecommendationAdapter.notifyDataSetChanged()
             }
         }
     }

@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.ui.adapters.TemperatureAdapter.ViewHolder
 import org.json.JSONArray
 import org.json.JSONObject
 

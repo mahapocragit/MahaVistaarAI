@@ -2,6 +2,7 @@ package `in`.gov.mahapocra.mahavistaarai.application
 
 import android.app.Application
 import android.content.ContentValues
+import android.content.Context
 import android.util.Log
 import com.androidnetworking.AndroidNetworking
 import com.google.android.gms.tasks.Task
@@ -14,6 +15,9 @@ import `in`.gov.mahapocra.mahavistaarai.util.ForceUpdateChecker
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import org.osmdroid.config.Configuration
 import java.io.File
+import android.os.Build
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import java.util.Locale
 
 class MyApplication : Application() {
     override fun onCreate() {
@@ -55,4 +59,8 @@ class MyApplication : Application() {
         var instance: MyApplication? = null
             private set
     }
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(configureLocale(base, "fr"))
+    }
+
 }

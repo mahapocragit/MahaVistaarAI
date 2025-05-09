@@ -49,6 +49,9 @@
         android:theme="@style/Theme.FarmerApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.screens.dashboard.menugrid.dbt.DBTActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.screens.dashboard.video.VideosDetailedActivity"
             android:exported="false" />
         <activity

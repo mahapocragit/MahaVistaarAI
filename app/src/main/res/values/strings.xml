@@ -405,4 +405,6 @@
     <string name="medium_soil_value">Medium</string>
     <string name="high_soil_value">High</string>
     <string name="videos">Videos</string>
+    <string name="pocra_dbt_name">NDKSP (PoCRA)</string>
+    <string name="maha_dbt_name">MahaDBT</string>
 </resources>
