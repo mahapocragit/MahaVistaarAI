@@ -24,6 +24,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.DiseasesDetails
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityPestsAndDiseasesLibraryBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ParticularStagesDiseasesAdpater
+import `in`.gov.mahapocra.mahavistaarai.ui.adapters.PestAndDiseasesAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
@@ -110,23 +111,6 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         binding.sowingInfoLayout.cropNameTextView.text = "$cropName"
     }
 
-    private fun showParticularStagesByList() {
-        val particularDiseasesAdapter =
-            ParticularStagesDiseasesAdpater(
-                this,
-                diseasesDetails!!
-            )
-        binding.diseasesByStage.setLayoutManager(
-            LinearLayoutManager(
-                this,
-                LinearLayoutManager.VERTICAL,
-                false
-            )
-        )
-        binding.diseasesByStage.setAdapter(particularDiseasesAdapter)
-        particularDiseasesAdapter.notifyDataSetChanged()
-    }
-
     private fun getCropStages() {
         val jsonObject = JSONObject()
         try {
@@ -154,51 +138,9 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
             val response = ResponseModel(jSONObject)
             if (response.getStatus()) {
                 stageJsonArray = response.getdataArray()
-                diseaseStages = ArrayList()
-                try {
-                    if (stageJsonArray != null && stageJsonArray.length() != 0) {
-                        val stagesJsonObject = stageJsonArray.getJSONObject(0)
-                        // Handle missing "stage"
-                        val stageName: String = stagesJsonObject.optString("stage", "Unknown Stage")
-                        // Handle missing "pest_and_diseases"
-                        val pestAndDiseasesJsonArray: JSONArray =
-                            stagesJsonObject.optJSONArray("pest_and_diseases") ?: JSONArray()
-
-                        diseasesDetails = ArrayList()
-
-                        for (i in 0 until pestAndDiseasesJsonArray.length()) {
-                            val pestAndDiseasesJsonObject =
-                                pestAndDiseasesJsonArray.getJSONObject(i)
-
-                            val pestAndDiseaseId = pestAndDiseasesJsonObject.optInt("id", -1)
-                            val stageTitle =
-                                pestAndDiseasesJsonObject.optString("title", "Unknown Title")
-                            val stageSubtitle =
-                                pestAndDiseasesJsonObject.optString("subtitle", "No Subtitle")
-                            val type = pestAndDiseasesJsonObject.optString("type", "Unknown Type")
-
-                            var cropsImgUrl = pestAndDiseasesJsonObject.optString("image", "")
-                            if (cropsImgUrl.isEmpty()) {
-                                cropsImgUrl =
-                                    "https://c1.wallpaperflare.com/preview/1015/28/863/leaf-maple-disease-pest.jpg"
-                            }
-
-                            diseasesDetails!!.add(
-                                DiseasesDetails(
-                                    pestAndDiseaseId,
-                                    stageTitle,
-                                    stageSubtitle,
-                                    cropsImgUrl,
-                                    type
-                                )
-                            )
-                        }
-                        diseaseStages.add(DiseaseStages(0, stageName, diseasesDetails!!))
-                        showParticularStagesByList()
-                    }
-                } catch (e: JSONException) {
-                    Log.e("TAGGER", "JSON parsing error at index $0", e)
-                }
+                val adapter = PestAndDiseasesAdapter(this, stageJsonArray)
+                binding.diseasesByStage.layoutManager = LinearLayoutManager(this)
+                binding.diseasesByStage.adapter = adapter
             } else {
                 UIToastMessage.show(this, response.response)
             }
