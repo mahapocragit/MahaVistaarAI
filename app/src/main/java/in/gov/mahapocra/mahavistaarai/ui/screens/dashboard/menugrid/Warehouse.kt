@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.JsonObject
@@ -40,9 +41,8 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
     private var warehouseAvailabilityJSONArray: JSONArray? = null
     private var districtJSONArray: JSONArray? = null
 
-    lateinit var districtName: String
+    private lateinit var districtName: String
     private var districtID: Int = 0
-    lateinit var talukaName: String
     private var talukaID: Int = 0
     private lateinit var totalWareHouse: String
     private lateinit var totalAvailableWareHouse: String
@@ -199,34 +199,54 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
                     jSONObject
                 )
             if (response.status) {
+                Log.d("TAGGER", "onResponse: $jSONObject")
                 warehouseAvailabilityJSONArray = response.dataArrays
-                totalWareHouse = response.total_available_capacity()
-                totalAvailableWareHouse = response.getTotalAvailableWareHouse()
-                binding.textTotalWarehouse.text =
-                    resources.getString(R.string.total_warehouse) + " " + totalWareHouse
-                binding.textAvailableCapacity.text =
-                    resources.getString(R.string.total_available_capacity) + " " + totalAvailableWareHouse + " " + resources.getString(
-                        R.string.tonnes
-                    )
-                if (warehouseAvailabilityJSONArray !== null) {
-                    if (warehouseAvailabilityJSONArray?.length()!! > 0) {
-                        val adaptorWaterBudgetReport =
-                            WarehouseAvailabilityAdapter(
-                                this,
-                                this,
-                                warehouseAvailabilityJSONArray
+                if (warehouseAvailabilityJSONArray?.length()!=0) {
+                    binding.wareHousereport.visibility = View.VISIBLE
+                    binding.wareHouseEmptyTextView.visibility = View.GONE
+                    totalWareHouse = response.total_available_capacity()
+                    totalAvailableWareHouse = response.getTotalAvailableWareHouse()
+                    binding.textTotalWarehouse.text =
+                        buildString {
+                            append(resources.getString(R.string.total_warehouse))
+                            append(" ")
+                            append(totalWareHouse)
+                        }
+                    binding.textAvailableCapacity.text =
+                        buildString {
+                            append(resources.getString(R.string.total_available_capacity))
+                            append(" ")
+                            append(totalAvailableWareHouse)
+                            append(" ")
+                            append(
+                                resources.getString(
+                                    R.string.tonnes
+                                )
                             )
-                        binding.wareHousereport.setLayoutManager(
-                            LinearLayoutManager(
-                                this,
-                                LinearLayoutManager.VERTICAL,
-                                false
+                        }
+                    if (warehouseAvailabilityJSONArray !== null) {
+                        if (warehouseAvailabilityJSONArray?.length()!! > 0) {
+                            val adaptorWaterBudgetReport =
+                                WarehouseAvailabilityAdapter(
+                                    this,
+                                    this,
+                                    warehouseAvailabilityJSONArray
+                                )
+                            binding.wareHousereport.setLayoutManager(
+                                LinearLayoutManager(
+                                    this,
+                                    LinearLayoutManager.VERTICAL,
+                                    false
+                                )
                             )
-                        )
-                        binding.wareHousereport.adapter = adaptorWaterBudgetReport
-                        adaptorWaterBudgetReport.notifyDataSetChanged()
+                            binding.wareHousereport.adapter = adaptorWaterBudgetReport
+                            adaptorWaterBudgetReport.notifyDataSetChanged()
+                        }
+                    } else {
+                        binding.wareHousereport.visibility = View.GONE
+                        binding.wareHouseEmptyTextView.visibility = View.VISIBLE
                     }
-                } else {
+                }else{
                     binding.wareHousereport.visibility = View.GONE
                     binding.wareHouseEmptyTextView.visibility = View.VISIBLE
                 }

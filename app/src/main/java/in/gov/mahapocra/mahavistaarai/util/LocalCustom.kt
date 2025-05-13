@@ -9,8 +9,15 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.util.Log
 import android.webkit.URLUtil
+import androidx.annotation.RequiresApi
 import `in`.co.appinventor.services_api.settings.AppSettings
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.Year
+import java.time.format.DateTimeParseException
+import java.util.Date
 import java.util.Locale
 
 object LocalCustom {
@@ -82,4 +89,76 @@ object LocalCustom {
         val versionName = packageInfo!!.versionName
         return versionName
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getSowingDateWithYear(sowingDateUnfiltered: String): String {
+        Log.d("TAGGER", "getSowingDateWithYear: $sowingDateUnfiltered")
+
+        val currentDate = getCurrentDate() // e.g., "2025-05-13"
+        val currentYear = Year.now().value
+
+        // Step 1: Convert Marathi/Devanagari numerals to English
+        val normalizedDateInput = convertToEnglishDigits(sowingDateUnfiltered)
+
+        // Step 2: Format date into yyyy-MM-dd
+        val formattedSowingDate = when {
+            normalizedDateInput.contains("/") -> {
+                val parts = normalizedDateInput.split("/")
+                if (parts.size == 2) {
+                    "%04d-%02d-%02d".format(currentYear, parts[1].toInt(), parts[0].toInt())
+                } else {
+                    Log.e("TAGGER", "Invalid slash-format sowing date: $normalizedDateInput")
+                    return currentDate
+                }
+            }
+
+            normalizedDateInput.matches(Regex("\\d{4}-\\d{2}-\\d{2}")) -> {
+                // Already in yyyy-MM-dd
+                normalizedDateInput
+            }
+
+            else -> {
+                Log.e("TAGGER", "Unknown sowing date format: $normalizedDateInput")
+                return currentDate
+            }
+        }
+
+        // Step 3: Safely parse the date
+        val sowingDate = try {
+            LocalDate.parse(formattedSowingDate)
+        } catch (e: DateTimeParseException) {
+            Log.e("TAGGER", "Date parsing failed for: $formattedSowingDate", e)
+            return currentDate
+        }
+
+        val today = LocalDate.parse(currentDate)
+
+        // Step 4: Decide final return date format
+        val finalDate = if (today.isBefore(sowingDate)) {
+            "${formattedSowingDate.substring(8)}-${formattedSowingDate.substring(5, 7)}-${currentYear - 1}"
+        } else {
+            "${today.dayOfMonth.toString().padStart(2, '0')}-${
+                today.monthValue.toString().padStart(2, '0')
+            }-${today.year}"
+        }
+
+        return finalDate
+    }
+
+    // Converts Marathi numerals (०-९) to English (0-9)
+    private fun convertToEnglishDigits(input: String): String {
+        return input.map {
+            when (it) {
+                in '०'..'९' -> (it.code - '०'.code + '0'.code).toChar()
+                else -> it
+            }
+        }.joinToString("")
+    }
+
+    // Returns the current date in yyyy-MM-dd format
+    private fun getCurrentDate(): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return dateFormat.format(Date())
+    }
+
 }

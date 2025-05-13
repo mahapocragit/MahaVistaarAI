@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid
 
 import android.content.Context
 import android.net.http.SslError
@@ -20,6 +20,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 class TempDashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTempDashboardBinding
     private lateinit var languageToLoad: String
+    private val jwtToken = "eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VySWQiOiAxMjMsICJuYW1lIjogIlNpZGRoZXNoIEJoYXRrYXIiLCAicm9sZSI6ICJwdWJsaWMifQ.onGiZi-CkkZVszyF9jYG_2sB1ecEB_pQd_8MK76OXS8"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,11 +61,11 @@ class TempDashboardActivity : AppCompatActivity() {
                 handler: SslErrorHandler?,
                 error: SslError?
             ) {
-                handler?.proceed() // ⚠️ Use with caution - for dev only
+                handler?.cancel() // ⚠️ Use with caution - for dev only
             }
         }
 
-        binding.webView.loadUrl("https://vistaar.kenpath.ai/")
+        binding.webView.loadUrl("https://vistaar-dev.kenpath.ai/?token=$jwtToken")
     }
 
 

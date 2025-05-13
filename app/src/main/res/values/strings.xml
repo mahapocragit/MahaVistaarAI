@@ -407,4 +407,8 @@
     <string name="videos">Videos</string>
     <string name="pocra_dbt_name">NDKSP (PoCRA)</string>
     <string name="maha_dbt_name">MahaDBT</string>
+    <string name="farmerdetails">Farmer Details</string>
+    <string name="soiltestresult">Soil test results</string>
+    <string name="fertiliserrecomendation">Fertilizer recommendation</string>
+    <string name="viewsoilhealthreport">View Soil Report</string>
 </resources>

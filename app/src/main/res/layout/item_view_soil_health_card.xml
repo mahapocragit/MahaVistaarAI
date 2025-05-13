@@ -259,7 +259,7 @@
             android:layout_weight="1"
             android:textSize="@dimen/_12sdp"
             android:gravity="end|center"
-            android:text="View Soil Report"
+            android:text="@string/viewsoilhealthreport"
             android:textStyle="bold" />
 
         <ImageView

@@ -102,7 +102,7 @@ class DiseaseInformation : AppCompatActivity(), ApiCallbackCode {
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api = AppInventorApi(
                 this,
-                APIServices.SSO,
+                APIServices.FARMER,
                 "",
                 AppString(this).getkMSG_WAIT(),
                 true

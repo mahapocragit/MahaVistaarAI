@@ -3,6 +3,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealt
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.mahavistaarai.R
@@ -23,7 +24,7 @@ class SoilTestResultAdapter(private val jsonArray: JSONArray) : RecyclerView.Ada
         val testParameterTextView: TextView = itemView.findViewById(R.id.testParameterTextView)
         val valueTextView: TextView = itemView.findViewById(R.id.valueTextView)
         val unitTextView: TextView = itemView.findViewById(R.id.unitTextView)
-        val ratingTextView: TextView = itemView.findViewById(R.id.ratingTextView)
+        val ratingImageView: ImageView = itemView.findViewById(R.id.ratingImageView)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -35,6 +36,21 @@ class SoilTestResultAdapter(private val jsonArray: JSONArray) : RecyclerView.Ada
         holder.testParameterTextView.text = testparamname
         holder.valueTextView.text = testvalue
         holder.unitTextView.text = unit
-        holder.ratingTextView.text = rating
+        holder.ratingImageView.setImageResource(getRatingImageResource(rating))
+    }
+
+    private fun getRatingImageResource(rating: String): Int {
+        when (rating){
+            "Low"->return R.drawable.ic_soil_health_card_high
+            "Very Low"->return R.drawable.ic_soil_health_card_high
+            "Deficient"->return R.drawable.ic_soil_health_card_high
+            "Normal"->return R.drawable.ic_soil_health_card_low
+            "Moderately alkaline"->return R.drawable.ic_soil_health_card_low
+            "High"->return R.drawable.ic_soil_health_card_mid
+            "Sufficient"->return R.drawable.ic_soil_health_card_mid
+            "Very High"->return R.drawable.ic_soil_health_card_mid
+            "Medium"->return R.drawable.ic_soil_health_card_low
+        }
+        return R.drawable.ic_soil_health_card_mid
     }
 }

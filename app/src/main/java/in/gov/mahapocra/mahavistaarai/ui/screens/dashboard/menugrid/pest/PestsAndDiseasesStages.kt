@@ -207,7 +207,7 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
 
 
     override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        TODO("Not yet implemented")
+        Log.d("TAGGER", "onFailure: ${th?.message}")
     }
 
     override fun onBackPressed() {

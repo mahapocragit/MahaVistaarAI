@@ -25,6 +25,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.CropsCategName
 import `in`.gov.mahapocra.mahavistaarai.data.model.VideoDetails
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
@@ -32,12 +33,12 @@ import retrofit2.Retrofit
 import java.util.ArrayList
 import java.util.Date
 
-class TitleVideosDetailsAdapter(
-    private var context: Context? = null,
-    private var videoDetailsList: List<VideoDetails>,
+class CropCategoriesAdapter(
+    private var context: Context,
+    private var dataJSONArray: JSONArray,
     private var callerActivity: String,
     private var multiRecyclerItemClickListener: OnMultiRecyclerItemClickListener
-) : RecyclerView.Adapter<TitleVideosDetailsAdapter.ViewHolder>(),
+) : RecyclerView.Adapter<CropCategoriesAdapter.ViewHolder>(),
     OnMultiRecyclerItemClickListener {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -48,30 +49,21 @@ class TitleVideosDetailsAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         try {
-
-            holder.textView.text = videoDetailsList[position].titles
-            val imagesList: ArrayList<CropsCategName>? = videoDetailsList[position].moviesImagesList
-
-            val videosImageAdapter =
-                VideosImageDetailsAdapter(
-                    context,
-                    imagesList,
-                    this,
-                    callerActivity
-                )
-
+            val jsonObject = dataJSONArray[position] as JSONObject
+            val advisoryArray = jsonObject.optJSONArray("crops")
+            holder.textView.text = jsonObject.optString("type").toString()
+            val cropStageDetailsAdapter = CropStageDetailsAdapter( context, advisoryArray, this, callerActivity)
             holder.videosRecyclerView.setLayoutManager(
                 GridLayoutManager(context, 4)
             )
-            holder.videosRecyclerView.setAdapter(videosImageAdapter)
-            videosImageAdapter.notifyDataSetChanged()
+            holder.videosRecyclerView.setAdapter(cropStageDetailsAdapter)
         } catch (e: JSONException) {
             e.printStackTrace()
         }
     }
 
     override fun getItemCount(): Int {
-        return videoDetailsList.size
+        return dataJSONArray.length()
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

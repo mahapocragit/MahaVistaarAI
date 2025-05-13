@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,17 +23,19 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.SOPActivit
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
 
-class VideosImageDetailsAdapter(
+class CropStageDetailsAdapter(
     private var context: Context? = null,
-    private var moviesImageList: ArrayList<CropsCategName>?,
+    private var cropStageDetailsJsonArray: JSONArray,
     private var listener: OnMultiRecyclerItemClickListener,
     private var callerActivity: String
-) : RecyclerView.Adapter<VideosImageDetailsAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<CropStageDetailsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -47,7 +50,7 @@ class VideosImageDetailsAdapter(
     }
 
     override fun getItemCount(): Int {
-        return moviesImageList?.size!!
+        return cropStageDetailsJsonArray.length()
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -60,12 +63,8 @@ class VideosImageDetailsAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         try {
-            holder.titleTextView.text = moviesImageList?.get(position)?.getmName()
-//            context?.let {
-//                Glide.with(it)
-//                    .load(moviesImageList?.get(position)?.getmUrl())
-//                    .into(holder.videosImage)
-//            }
+            val jsonObject = cropStageDetailsJsonArray.getJSONObject(position) as JSONObject
+            holder.titleTextView.text = jsonObject.optString("name")
             val transformation = RoundedTransformationBuilder()
                 .borderColor(Color.WHITE)
                 .borderWidthDp(2f)
@@ -74,7 +73,7 @@ class VideosImageDetailsAdapter(
                 .build()
 
             Picasso.get()
-                .load(moviesImageList?.get(position)?.getmUrl())
+                .load(jsonObject.optString("image"))
                 .transform(transformation)
                 .resize(180, 180)
                 .centerCrop()
@@ -84,43 +83,49 @@ class VideosImageDetailsAdapter(
                     context?.let { it1 -> AppPreferenceManager(it1).getString(AppConstants.ACTION_FROM_DASHBOARD) }
                 if (source.equals(AppConstants.PEST_AND_DISEASES_STAGES)) {
                     val intent = Intent(context, PestsAndDiseasesStages::class.java)
-                    intent.putExtra("cropId", moviesImageList?.get(position)?.id)
-                    intent.putExtra("wotr_crop_id", moviesImageList?.get(position)?.wotr_id)
-                    intent.putExtra("mUrl", moviesImageList?.get(position)?.getmUrl())
-                    intent.putExtra("mName", moviesImageList?.get(position)?.getmName())
+                    intent.putExtra("cropId", jsonObject.optInt("id"))
+                    intent.putExtra("wotr_crop_id", jsonObject.optInt("wotr_crop_id"))
+                    intent.putExtra("mUrl", jsonObject.optString("image"))
+                    intent.putExtra("mName", jsonObject.optString("name"))
                     context?.startActivity(intent)
                 }else if (source.equals(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD)) {
                     val intent = Intent(context, AdvisoryCropActivity::class.java)
                     intent.putExtra("dataSavedInLocal", "dataSavedInLocal")
-                    intent.putExtra("id", moviesImageList?.get(position)?.id)
-                    intent.putExtra("mName", moviesImageList?.get(position)?.getmName())
+                    intent.putExtra("id", jsonObject.optInt("id"))
+                    intent.putExtra("mName", jsonObject.optString("name"))
                     intent.putExtra("editCrop", "NoEditCrop")
-                    intent.putExtra("sowingDate", moviesImageList?.get(position)?.sowing_date_general)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        intent.putExtra("sowingDate", LocalCustom.getSowingDateWithYear(jsonObject.optString("sowing_date")))
+                    }
                     context?.startActivity(intent)
                 }else if (source.equals(AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD)) {
                     val intent = Intent(context, FertilizerCalculatorActivity::class.java)
-                    intent.putExtra("id", moviesImageList?.get(position)?.id)
-                    intent.putExtra("wotr_crop_id", moviesImageList?.get(position)?.wotr_id)
-                    intent.putExtra("mUrl", moviesImageList?.get(position)?.getmUrl())
-                    intent.putExtra("mName", moviesImageList?.get(position)?.getmName())
-                    intent.putExtra("sowingDate",  moviesImageList?.get(position)?.sowing_date_general)
+                    intent.putExtra("id", jsonObject.optInt("id"))
+                    intent.putExtra("wotr_crop_id", jsonObject.optInt("wotr_crop_id"))
+                    intent.putExtra("mUrl", jsonObject.optString("image"))
+                    intent.putExtra("mName", jsonObject.optString("name"))
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        intent.putExtra("sowingDate", LocalCustom.getSowingDateWithYear(jsonObject.optString("sowing_date")))
+                    }
                     intent.putExtra("editCrop", "NoEditCrop")
                     context?.startActivity(intent)
                 }else if (source.equals(AppConstants.SOP_FROM_DASHBOARD)) {
                     val intent = Intent(context, SOPActivity::class.java)
-                    intent.putExtra("id", moviesImageList?.get(position)?.id)
-                    intent.putExtra("wotr_crop_id", moviesImageList?.get(position)?.wotr_id)
-                    intent.putExtra("mUrl", moviesImageList?.get(position)?.getmUrl())
-                    intent.putExtra("mName", moviesImageList?.get(position)?.getmName())
-                    intent.putExtra("sowingDate",  moviesImageList?.get(position)?.sowing_date_general)
+                    intent.putExtra("id", jsonObject.optInt("id"))
+                    intent.putExtra("wotr_crop_id", jsonObject.optInt("wotr_crop_id"))
+                    intent.putExtra("mUrl", jsonObject.optString("image"))
+                    intent.putExtra("mName", jsonObject.optString("name"))
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        intent.putExtra("sowingDate", LocalCustom.getSowingDateWithYear(jsonObject.optString("sowing_date")))
+                    }
                     intent.putExtra("editCrop", "NoEditCrop")
                     context?.startActivity(intent)
                 } else {
                     listener.onMultiRecyclerViewItemClick(1, JSONObject().apply {
-                        put("id", moviesImageList?.get(position)?.id)
-                        put("wotr_crop_id", moviesImageList?.get(position)?.wotr_id)
-                        put("mUrl", moviesImageList?.get(position)?.getmUrl())
-                        put("mName", moviesImageList?.get(position)?.getmName())
+                        put("id", jsonObject.optInt("id"))
+                        put("wotr_crop_id", jsonObject.optInt("wotr_crop_id"))
+                        put("mUrl", jsonObject.optString("image"))
+                        put("mName", jsonObject.optString("name"))
                     })
                 }
             }
@@ -136,7 +141,7 @@ class VideosImageDetailsAdapter(
                         ) { _, _ ->
                             listener.onMultiRecyclerViewItemClick(
                                 2,
-                                moviesImageList?.get(position)!!.id
+                                jsonObject.optInt("id")
                             )
                         }.setNegativeButton(
                             "No, thanks"

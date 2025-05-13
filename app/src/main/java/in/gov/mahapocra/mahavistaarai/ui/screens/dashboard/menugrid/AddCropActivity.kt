@@ -22,8 +22,8 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.model.CropsCategName
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.data.model.VideoDetails
+import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropCategoriesAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
-import `in`.gov.mahapocra.mahavistaarai.ui.adapters.TitleVideosDetailsAdapter
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
@@ -94,127 +94,22 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
     private fun fetchCropInfo() {
         viewModel.cropCategoryResponse.observe(this){
             val jSONObject = JSONObject(it.toString())
-
-            val response =
-                ResponseModel(
-                    jSONObject
-                )
-
-            if (response.status) {
-                cropJsonArray = response.getdataArray()
-                videoDetailsList = ArrayList()
-                val nCropSize: Int = cropJsonArray.length()
-                for (i in 0 until nCropSize) {
-                    val cropJsonObject: JSONObject = cropJsonArray.get(i) as JSONObject
-
-                    val cropType: String = cropJsonObject.getString("type")
-                    val cropCategoriesJsonArray: JSONArray = cropJsonObject.getJSONArray("crops")
-                    val nCropsCategory: Int = cropCategoriesJsonArray.length()
-                    moviesImagesList = ArrayList()
-                    for (j in 0 until nCropsCategory) {
-                        val cropCategoriesJsonObject: JSONObject =
-                            cropCategoriesJsonArray.get(j) as JSONObject
-                        val cropsId: Int = cropCategoriesJsonObject.get("id") as Int
-                        val cropsName: String = cropCategoriesJsonObject.get("name") as String
-                        val wotrCropId: String =
-                            cropCategoriesJsonObject.get("wotr_crop_id").toString()
-                        var cropsImgUrl: String? = ""
-                        cropsImgUrl = cropCategoriesJsonObject.get("image").toString()
-                        val sowingDateUnfiltered = cropCategoriesJsonObject.optString("sowing_date")
-                        val advisoryPdfUrl = cropCategoriesJsonObject.optString("advisory_pdf_url")
-                        AppPreferenceManager(this).saveString("advisoryPdfUrl", advisoryPdfUrl)
-                        val filteredSowingDate =
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                getSowingDateWithYear(sowingDateUnfiltered)
-                            } else {
-                                Log.d("TAG", "onResponse: versioncode is lesser")
-                            }
-                        if (cropsImgUrl == null) {
-                            cropsImgUrl =
-                                "https://cdn.pixabay.com/photo/2016/06/11/15/33/broccoli-1450274_640.png"
-                        }
-                        moviesImagesList.add(
-                            CropsCategName(
-                                cropsId,
-                                cropsName,
-                                cropsImgUrl,
-                                wotrCropId,
-                                filteredSowingDate.toString()
-                            )
-                        )
-                    }
-                    videoDetailsList.add(
-                        VideoDetails(
-                            i,
-                            cropType,
-                            moviesImagesList
-                        )
+            val jsonDataArray = jSONObject.getJSONArray("data")
+            var adapter = CropCategoriesAdapter(this, jsonDataArray, "TitleVideosDetailsAdpter", this)
+            val str = intent.getStringExtra("NO_NEED_TO_ADD_SOWING_DATE")
+            if (str != null) {
+                adapter =
+                    CropCategoriesAdapter(
+                        this,
+                        jsonDataArray,
+                        "NO_NEED_TO_ADD_SOWING_DATE",
+                        this
                     )
-                }
-                showCropData(videoDetailsList)
-            } else {
-                Toast.makeText(this, "Data Not Found", Toast.LENGTH_LONG).show()
             }
+            mainCropCategoryRecycle?.layoutManager = LinearLayoutManager(this)
+            mainCropCategoryRecycle?.hasFixedSize()
+            mainCropCategoryRecycle?.setAdapter(adapter)
         }
-    }
-
-    private fun showCropData(videoDetailsList: ArrayList<VideoDetails>) {
-        var titleVideosAdapter =
-            TitleVideosDetailsAdapter(
-                this,
-                videoDetailsList,
-                "TitleVideosDetailsAdpter",
-                this
-            )
-        val str = intent.getStringExtra("NO_NEED_TO_ADD_SOWING_DATE")
-        if (str != null) {
-            titleVideosAdapter =
-                TitleVideosDetailsAdapter(
-                    this,
-                    videoDetailsList,
-                    "NO_NEED_TO_ADD_SOWING_DATE",
-                    this
-                )
-        }
-        mainCropCategoryRecycle?.setLayoutManager(
-            LinearLayoutManager(
-                this,
-                LinearLayoutManager.VERTICAL,
-                false
-            )
-        )
-        mainCropCategoryRecycle?.setAdapter(titleVideosAdapter)
-        titleVideosAdapter.notifyDataSetChanged()
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun getSowingDateWithYear(sowingDateUnfiltered: String): String {
-        val currentDate = getCurrentDate() // Returns YYYY-MM-DD
-        val currentYear = Year.now().value
-
-        // Parse and format the sowing date
-        val sowingDateParts = sowingDateUnfiltered.split("/")
-        val formattedSowingDate = sowingDateParts.takeIf { it.size == 2 }?.let {
-            "%04d-%02d-%02d".format(currentYear, it[1].toInt(), it[0].toInt())
-        } ?: return currentDate // Return current date if format is invalid
-
-        val sowingDate = LocalDate.parse(formattedSowingDate)
-        val today = LocalDate.parse(currentDate)
-
-        val finalDate = if (today.isBefore(sowingDate)) {
-            "${formattedSowingDate.substring(8)}-${
-                formattedSowingDate.substring(
-                    5,
-                    7
-                )
-            }-${currentYear - 1}"
-        } else {
-            "${today.dayOfMonth.toString().padStart(2, '0')}-${
-                today.monthValue.toString().padStart(2, '0')
-            }-${today.year}"
-        }
-
-        return finalDate
     }
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
@@ -227,11 +122,6 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
                 this
             )
         }
-    }
-
-    private fun getCurrentDate(): String {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        return dateFormat.format(Date())
     }
 
     override fun onDateSelected(i: Int, day: Int, month: Int, year: Int) {

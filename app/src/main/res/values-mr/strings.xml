@@ -427,4 +427,8 @@
     <string name="videos">व्हिडिओ</string>
     <string name="pocra_dbt_name">ना.दे.कृ.सं.प्र. (PoCRA)</string>
     <string name="maha_dbt_name">महाडीबीटी (MahaDBT)</string>
+    <string name="farmerdetails">शेतकरी तपशील</string>
+    <string name="soiltestresult">माती चाचणी परिणाम</string>
+    <string name="fertiliserrecomendation">खताची शिफारस</string>
+    <string name="viewsoilhealthreport">मातीचा अहवाल पहा</string>
 </resources>

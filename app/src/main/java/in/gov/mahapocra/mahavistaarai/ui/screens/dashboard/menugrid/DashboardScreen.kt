@@ -19,7 +19,6 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.GridView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -45,10 +44,8 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDashboardScreenBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DashboardAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DrawerMenuAdapter
-import `in`.gov.mahapocra.mahavistaarai.ui.adapters.VideosImageDetailsAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.Registration
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.TempDashboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology
@@ -339,12 +336,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                                     this, R.drawable.baseline_add_24
                                 )
                             )
-                        }
-                        if (selectedCropList != null) {
-                            showCropList(selectedCropList!!)
-                        } else {
-                            binding.appBarMain.dashboardScreen.selectedCropRecyclerView.visibility =
-                                View.GONE
                         }
                     } else {
                         UIToastMessage.show(this, farmersSelectedCropResponse.getResponse())
@@ -786,20 +777,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 }
             }
         }
-    }
-
-    private fun showCropList(selectedCropList: ArrayList<CropsCategName>) {
-        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        binding.appBarMain.dashboardScreen.selectedCropRecyclerView.layoutManager = layoutManager
-        binding.appBarMain.dashboardScreen.selectedCropRecyclerView.setHasFixedSize(true)
-        binding.appBarMain.dashboardScreen.selectedCropRecyclerView.itemAnimator =
-            DefaultItemAnimator()
-        val adapter = VideosImageDetailsAdapter(
-            this, selectedCropList,
-            this, "dashboardScreen"
-        )
-        binding.appBarMain.dashboardScreen.selectedCropRecyclerView.adapter = adapter
-        adapter.notifyDataSetChanged()
     }
 
     private fun deleteDialog() {
