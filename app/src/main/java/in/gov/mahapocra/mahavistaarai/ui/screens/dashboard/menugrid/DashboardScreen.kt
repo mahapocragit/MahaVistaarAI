@@ -870,12 +870,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         finish()
     }
 
-    private fun redirectStore(updateUrl: String) {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(updateUrl))
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
-    }
-
     override fun onMultiRecyclerViewItemClick(i: Int, id: Any) {
         if (i == 2) {
             cropId = (id as Int)

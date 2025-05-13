@@ -87,7 +87,6 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-
     fun getFarmerSelectedCrop(context: Context, language: String?) {
         viewModelScope.launch {
             val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)

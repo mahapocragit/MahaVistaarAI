@@ -23,7 +23,6 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.DiseaseStages
 import `in`.gov.mahapocra.mahavistaarai.data.model.DiseasesDetails
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityPestsAndDiseasesLibraryBinding
-import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ParticularStagesDiseasesAdpater
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.PestAndDiseasesAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
