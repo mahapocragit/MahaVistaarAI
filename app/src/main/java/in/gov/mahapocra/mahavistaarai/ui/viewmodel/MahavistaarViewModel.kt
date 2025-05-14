@@ -9,7 +9,9 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
+import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.data.ApiService
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -23,11 +25,15 @@ class MahavistaarViewModel : ViewModel(){
     val error: LiveData<String> = _error
 
     fun requestUrlForChatBot(context: Context) {
+
+        val username = AppSettings.getInstance().getValue( context, AppConstants.uName, AppConstants.uName)
+        val mobileNumber = AppSettings.getInstance().getValue( context, AppConstants.uMobileNo, AppConstants.uMobileNo)
+
         viewModelScope.launch {
             try {
                 val jsonObject = JSONObject().apply {
-                    put("mobile", "8104131734")
-                    put("name", "Siddhesh Bhatkar")
+                    put("mobile", mobileNumber)
+                    put("name", username)
                     put("role", "public")
                 }
 

@@ -20,6 +20,7 @@ public interface APIServices {
     String kWareHouseDetails = "warehouseService/warehouse-details";
     String kWeatherDetails = "imdService/imd-forcast-previous-weather-details";
     String kGetRegistration = "authService/getUserdetails";
+    String kGetSOPByList = "sopServices/get_sop_by_crop";
     String kSoilHealthCardDetailsFromSHCNumber = "webservices/fetch_soil_health_card_json";
     String kRequestForChatBot = "jwt-token-url.php";
     String kGeFarmersSelectedCrop = "farmerService/get-farmers-selected-crop";

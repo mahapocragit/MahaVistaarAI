@@ -52,6 +52,9 @@ class FarmerViewModel : ViewModel() {
     private val _videosResponse = MutableLiveData<JsonObject>()
     val videosResponse: LiveData<JsonObject> = _videosResponse
 
+    private val _sopResponse = MutableLiveData<JsonObject>()
+    val sopResponse: LiveData<JsonObject> = _sopResponse
+
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
@@ -302,6 +305,37 @@ class FarmerViewModel : ViewModel() {
                 _videosResponse.value = response
             } catch (e: Exception) {
                 _error.value = e.localizedMessage ?: "Failed to fetch videos"
+            }
+        }
+    }
+
+    fun fetchSOPDate(context: Context, cropId: Int) {
+        viewModelScope.launch {
+            try {
+                val jsonObject = JSONObject().apply {
+                    put("api_key", APIServices.SSO_KEY)
+                    put("crop_id", cropId)
+                }
+
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api = AppInventorApi(
+                    context,
+                    APIServices.FARMER,
+                    "",
+                    AppString(context).getkMSG_WAIT(),
+                    false
+                )
+
+                val retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+
+                val response = apiRequest.getSOPByList(requestBody)
+
+                // Handle success
+                _sopResponse.value = response
+
+            } catch (e: Exception) {
+                _error.value = e.localizedMessage ?: "Failed to fetch user details"
             }
         }
     }

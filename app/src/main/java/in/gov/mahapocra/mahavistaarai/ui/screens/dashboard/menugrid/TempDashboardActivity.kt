@@ -14,6 +14,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityTempDashboardBinding
@@ -41,10 +42,10 @@ class TempDashboardActivity : AppCompatActivity() {
         binding.toolbar.imageViewHeaderBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
         binding.toolbar.textViewHeaderTitle.text = "Agro Assistant"
         mahavistaarViewModel.requestUrlForChatBot(this)
-        mahavistaarViewModel.responseUrlForChatBot.observe(this){
-            if (it!=null){
-                val jsonObject = JSONObject(it.toString())
-                loadWebView(jsonObject.optString("url"))
+        mahavistaarViewModel.responseUrlForChatBot.observe(this) {
+            if (it != null && this@TempDashboardActivity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+                val url = it.get("url")?.asString.orEmpty()
+                loadWebView(url)
             }
         }
         mahavistaarViewModel.error.observe(this){

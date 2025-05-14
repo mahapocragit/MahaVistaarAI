@@ -9,11 +9,14 @@ import android.webkit.WebSettings
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
+import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
@@ -21,6 +24,8 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivitySopactivityBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.adapters.SOPAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -32,9 +37,10 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
 
-class SOPActivity : AppCompatActivity(), ApiCallbackCode {
+class SOPActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerItemClickListener {
 
     private lateinit var binding: ActivitySopactivityBinding
+    private lateinit var farmerViewModel: FarmerViewModel
     var cropId: Int? = 0
     private var cropName: String? = null
     private var farmerId: Int = 0
@@ -54,6 +60,7 @@ class SOPActivity : AppCompatActivity(), ApiCallbackCode {
         switchLanguage(this, languageToLoad)
         binding = ActivitySopactivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        farmerViewModel= ViewModelProvider(this)[FarmerViewModel::class.java]
 
         //fetching values
         cropId = intent.getIntExtra("id", 0)
@@ -72,6 +79,8 @@ class SOPActivity : AppCompatActivity(), ApiCallbackCode {
         binding.floatingActionButton.setOnClickListener {
             mUrl?.let { it1 -> LocalCustom.downloadPdf(this, it1) }
         }
+
+        cropId?.let { farmerViewModel.fetchSOPDate(this, it) }
 
         binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {
             val sharing = Intent(this, AddCropActivity::class.java)
@@ -121,6 +130,16 @@ class SOPActivity : AppCompatActivity(), ApiCallbackCode {
             DebugLog.getInstance().d("JSONException=$e")
             e.printStackTrace()
         }
+
+        farmerViewModel.sopResponse.observe(this){
+            Log.d("TAGGER", "getCropStagesAndAdvisory: $it")
+            if (it!=null){
+                val jsonObject = JSONObject(it.toString())
+                val dataArray = jsonObject.getJSONArray("data")
+                binding.sopRecyclerView.layoutManager = LinearLayoutManager(this)
+                binding.sopRecyclerView.adapter = SOPAdapter(this, this, dataArray)
+            }
+        }
     }
 
     private fun setupWebView(pdfUrl: String) {
@@ -156,7 +175,7 @@ class SOPActivity : AppCompatActivity(), ApiCallbackCode {
                         val pdfUrl = jSONObject.getString("advisory_pdf_url")
                         if (pdfUrl != "null") {
                             binding.noDataFoundImageView.visibility = View.GONE
-                            binding.webView.visibility = View.VISIBLE
+                            binding.webView.visibility = View.GONE
                             setupWebView(pdfUrl)
                         } else {
                             binding.noDataFoundImageView.visibility = View.VISIBLE
@@ -179,5 +198,17 @@ class SOPActivity : AppCompatActivity(), ApiCallbackCode {
         }
         val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
         super.attachBaseContext(updatedContext)
+    }
+
+    override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
+        if (i==2){
+            val jsonObject = obj as JSONObject
+            val webViewUrl = jsonObject.optString("url")
+            val intent = Intent(this, SOPWebViewActivity::class.java)
+            val b = Bundle()
+            b.putSerializable("webUrl", webViewUrl)
+            intent.putExtras(b)
+            startActivity(intent)
+        }
     }
 }
