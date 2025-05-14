@@ -8,6 +8,8 @@ import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.webkit.WebChromeClient
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityResilientWebUrlBinding
@@ -44,7 +46,21 @@ class ResilientWebUrl : AppCompatActivity() {
             setCancelable(true)
             show()
         }
-        // Configure WebView
+
+        climateWebView.settings.javaScriptEnabled = true
+        climateWebView.settings.domStorageEnabled = true
+        climateWebView.settings.mediaPlaybackRequiresUserGesture = false // auto-play support
+        climateWebView.settings.useWideViewPort = true
+        climateWebView.settings.loadWithOverviewMode = true
+        climateWebView.settings.allowFileAccess = true
+
+        // Enable hardware acceleration (usually default, but ensure it's on)
+        climateWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+
+        climateWebView.webChromeClient = object : WebChromeClient() {
+            // Optional: handle fullscreen video playback here if needed
+        }
+
         climateWebView.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 progressDialog.show()
@@ -53,9 +69,13 @@ class ResilientWebUrl : AppCompatActivity() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 progressDialog.dismiss()
             }
+
+            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                return false // Let WebView load URLs itself
+            }
         }
 
-        intent.getStringExtra("webUrl")?.let { climateWebView.loadUrl(url) }
+        climateWebView.loadUrl(url)
     }
 
     override fun onBackPressed() {
