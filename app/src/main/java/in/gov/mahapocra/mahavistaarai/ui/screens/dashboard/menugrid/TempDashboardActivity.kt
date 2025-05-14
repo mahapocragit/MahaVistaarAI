@@ -3,6 +3,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid
 import android.content.Context
 import android.net.http.SslError
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.webkit.CookieManager
 import android.webkit.GeolocationPermissions
@@ -11,16 +12,20 @@ import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityTempDashboardBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MahavistaarViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import org.json.JSONObject
 
 class TempDashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTempDashboardBinding
+    private lateinit var mahavistaarViewModel: MahavistaarViewModel
     private lateinit var languageToLoad: String
-    private val jwtToken = "eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VySWQiOiAxMjMsICJuYW1lIjogIlNpZGRoZXNoIEJoYXRrYXIiLCAicm9sZSI6ICJwdWJsaWMifQ.onGiZi-CkkZVszyF9jYG_2sB1ecEB_pQd_8MK76OXS8"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,14 +36,24 @@ class TempDashboardActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityTempDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        mahavistaarViewModel=  ViewModelProvider(this)[MahavistaarViewModel::class.java]
         binding.toolbar.imageViewHeaderBack.setVisibility(View.VISIBLE)
         binding.toolbar.imageViewHeaderBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
         binding.toolbar.textViewHeaderTitle.text = "Agro Assistant"
-        loadWebView()
+        mahavistaarViewModel.requestUrlForChatBot(this)
+        mahavistaarViewModel.responseUrlForChatBot.observe(this){
+            if (it!=null){
+                val jsonObject = JSONObject(it.toString())
+                loadWebView(jsonObject.optString("url"))
+            }
+        }
+        mahavistaarViewModel.error.observe(this){
+            Log.e("mahavistaarViewModel",it)
+            Toast.makeText(this, "Token generation failed!!", Toast.LENGTH_SHORT).show()
+        }
     }
 
-    private fun loadWebView() {
+    private fun loadWebView(chatBotUrl:String) {
         val webSettings = binding.webView.settings
         webSettings.javaScriptEnabled = true
         webSettings.domStorageEnabled = true
@@ -65,7 +80,7 @@ class TempDashboardActivity : AppCompatActivity() {
             }
         }
 
-        binding.webView.loadUrl("https://vistaar-dev.kenpath.ai/?token=$jwtToken")
+        binding.webView.loadUrl(chatBotUrl)
     }
 
 

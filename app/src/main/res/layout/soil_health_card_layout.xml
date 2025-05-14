@@ -23,7 +23,9 @@
                 android:id="@+id/textView29"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_5sdp"
+                android:textSize="@dimen/_14sdp"
+                android:textStyle="bold"
+                android:layout_marginHorizontal="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:text="@string/farmerdetails" />
 
@@ -31,7 +33,7 @@
                 android:id="@+id/farmerSoilHealthCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_5sdp"
+                android:layout_margin="@dimen/_8sdp"
                 app:cardCornerRadius="@dimen/_10sdp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -188,10 +190,11 @@
 
                 <TextView
                     android:id="@+id/textView28"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="6"
-                    android:layout_marginHorizontal="@dimen/_5sdp"
+                    android:textSize="@dimen/_14sdp"
+                    android:textStyle="bold"
+                    android:layout_marginHorizontal="@dimen/_8sdp"
                     android:text="@string/soiltestresult" />
 
                 <LinearLayout
@@ -266,7 +269,7 @@
                 android:id="@+id/farmerSoilHealthCard12"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_5sdp"
+                android:layout_margin="@dimen/_8sdp"
                 app:cardCornerRadius="@dimen/_10sdp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -366,13 +369,15 @@
                 android:id="@+id/textView30"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_5sdp"
+                android:textSize="@dimen/_14sdp"
+                android:textStyle="bold"
+                android:layout_marginHorizontal="@dimen/_8sdp"
                 android:text="@string/fertiliserrecomendation" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="@dimen/_5sdp"
+                android:layout_margin="@dimen/_8sdp"
                 app:cardCornerRadius="@dimen/_10sdp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

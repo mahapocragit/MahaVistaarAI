@@ -21,6 +21,7 @@ public interface APIServices {
     String kWeatherDetails = "imdService/imd-forcast-previous-weather-details";
     String kGetRegistration = "authService/getUserdetails";
     String kSoilHealthCardDetailsFromSHCNumber = "webservices/fetch_soil_health_card_json";
+    String kRequestForChatBot = "jwt-token-url.php";
     String kGeFarmersSelectedCrop = "farmerService/get-farmers-selected-crop";
     String kGetVideosCategories = "videoService/get-video-category-details";
     String kdeleteFarmerSelectedCrop = "farmerService/delete-farmers-selected-crop";

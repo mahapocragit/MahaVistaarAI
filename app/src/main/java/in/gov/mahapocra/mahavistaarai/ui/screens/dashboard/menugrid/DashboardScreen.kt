@@ -400,13 +400,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     )
                     val response = ResponseModel(jSONObject)
                     if (response.getStatus()) {
-                        val temperatureObject =
-                            checkNotNull(jSONObject.optJSONObject("Temperature"))
-                        val tempMin = temperatureObject.optString("min")
-                        val tempMax = temperatureObject.optString("max")
-                        val temperature = "$tempMin°C / $tempMax°C"
                         binding.appBarMain.dashboardScreen.temperatureTextView.text =
-                            temperature
+                            getTemperatureFromJSON(jSONObject)
                     }
                 } catch (e: Exception) {
                     Log.d("TAGGER", "onResponse: $e")
@@ -938,5 +933,13 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
         val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
         super.attachBaseContext(updatedContext)
+    }
+
+    private fun getTemperatureFromJSON(jsonObject: JSONObject): String {
+        val temperatureObject = checkNotNull(jsonObject.optJSONObject("Temperature"))
+        val tempMin = temperatureObject.optString("min")
+        val tempMax = temperatureObject.optString("max")
+        val temperature = "$tempMin°C / $tempMax°C"
+        return temperature
     }
 }
