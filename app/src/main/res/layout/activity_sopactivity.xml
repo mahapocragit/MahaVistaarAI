@@ -36,6 +36,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sowingLinearLayout" />
 
+    <ImageView
+        android:id="@+id/noDataFoundImageView"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_100sdp"
+        android:src="@drawable/ic_no_data_found"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sowingLinearLayout" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"

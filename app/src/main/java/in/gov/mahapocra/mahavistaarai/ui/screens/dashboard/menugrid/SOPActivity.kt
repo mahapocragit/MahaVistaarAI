@@ -87,9 +87,8 @@ class SOPActivity : AppCompatActivity(), ApiCallbackCode {
         }
 
         binding.toolbar.imgBackArrow.visibility = View.VISIBLE
-        binding.toolbar.imgBackArrow.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
-        binding.toolbar.textViewHeaderTitle.text = if (languageToLoad == "mr") "एस.ओ.पी.(SOP)" else "S.O.P."
-        binding.sowingInfoLayout.textView7.text = if (languageToLoad == "mr") "निवडलेले पीक" else "Selected Crop"
+        binding.toolbar.imgBackArrow.setOnClickListener { startActivity(Intent(this, DashboardScreen::class.java)) }
+        binding.toolbar.textViewHeaderTitle.text = getString(R.string.sop_title)
     }
 
 
@@ -103,12 +102,13 @@ class SOPActivity : AppCompatActivity(), ApiCallbackCode {
         try {
             jsonObject.put("crop_id", cropId)
             jsonObject.put("farmer_id", farmerId)
-            jsonObject.put("lang", "en")
+            jsonObject.put("lang", languageToLoad)
+            jsonObject.put("sowing_date", "23-03-2025")
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
                 AppInventorApi(
                     this,
-                    APIServices.SSO,
+                    APIServices.FARMER,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true
@@ -144,6 +144,7 @@ class SOPActivity : AppCompatActivity(), ApiCallbackCode {
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 1) {
+            Log.d("TAGGER", "onResponse: $jSONObject")
             if (jSONObject != null) {
                 val response = ResponseModel(jSONObject)
                 if (response.status) {
@@ -152,7 +153,16 @@ class SOPActivity : AppCompatActivity(), ApiCallbackCode {
                             "TAGGER",
                             "onResponse pdf: ${jSONObject.getString("advisory_pdf_url")}"
                         )
-                        setupWebView(jSONObject.optString("advisory_pdf_url"))
+                        val pdfUrl = jSONObject.getString("advisory_pdf_url")
+                        if (pdfUrl != "null") {
+                            binding.noDataFoundImageView.visibility = View.GONE
+                            binding.webView.visibility = View.VISIBLE
+                            setupWebView(pdfUrl)
+                        } else {
+                            binding.noDataFoundImageView.visibility = View.VISIBLE
+                            binding.webView.visibility = View.GONE
+                            UIToastMessage.show(this, "PDF not available")
+                        }
                     }
                 } else {
                     UIToastMessage.show(this, response.response)

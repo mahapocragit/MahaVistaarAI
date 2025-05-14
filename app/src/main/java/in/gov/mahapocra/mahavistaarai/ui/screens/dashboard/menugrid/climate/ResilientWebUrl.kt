@@ -1,6 +1,7 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate
 
 import android.app.ProgressDialog
+import android.content.Context
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import android.content.res.Configuration
@@ -14,6 +15,8 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityResilientWebUrlBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import java.util.*
 
 class ResilientWebUrl : AppCompatActivity() {
@@ -25,8 +28,12 @@ class ResilientWebUrl : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val languageToLoad = if (AppSettings.getLanguage(this) == "1") "en" else "mr"
-        LocalCustom.configureLocale(baseContext, languageToLoad)
+        languageToLoad = if (AppSettings.getLanguage(this).equals("2", ignoreCase = true)) {
+            "mr"
+        } else {
+            "en"
+        }
+        switchLanguage(this, languageToLoad)
         binding = ActivityResilientWebUrlBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -80,5 +87,15 @@ class ResilientWebUrl : AppCompatActivity() {
 
     override fun onBackPressed() {
         finish()
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 }
