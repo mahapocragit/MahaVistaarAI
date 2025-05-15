@@ -183,9 +183,5 @@ public class AppInventorApi {
             }
         });
     }
-
-    public static RequestBody toRequestBody(String value) {
-        return RequestBody.create(MediaType.parse("text/plain"), value);
-    }
 }
 

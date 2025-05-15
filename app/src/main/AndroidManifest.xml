@@ -49,6 +49,9 @@
         android:theme="@style/Theme.FarmerApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.screens.dashboard.sidenavigation.news.NewsWebViewActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.screens.dashboard.menugrid.dbt.DBTActivity"
             android:exported="false" />
         <activity
@@ -63,7 +66,6 @@
         <activity
             android:name=".ui.screens.dashboard.menugrid.SOPWebViewActivity"
             android:exported="false" />
-
         <activity
             android:name=".ui.screens.dashboard.sidenavigation.AboutActivity"
             android:exported="false" />
@@ -133,7 +135,7 @@
         <activity
             android:name=".ui.screens.dashboard.menugrid.AddCropActivity"
             android:exported="false" />
-        <activity android:name=".ui.screens.dashboard.sidenavigation.NewsListActivity" />
+        <activity android:name=".ui.screens.dashboard.sidenavigation.news.NewsListActivity" />
         <activity
             android:name=".ui.screens.dashboard.menugrid.climate.ResilientWebUrl"
             android:exported="false" />

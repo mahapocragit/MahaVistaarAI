@@ -16,29 +16,27 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonObject
+import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDbtSchemesBinding
+import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityNewsWebViewBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.DbtSchemesViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
 
-class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
-    OnMultiRecyclerItemClickListener {
+class DbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
 
-    private lateinit var farmerRecyclerView: RecyclerView
-    private lateinit var fpoRecyclerView: RecyclerView
-    private lateinit var nrmRecyclerView: RecyclerView
-    private var textViewHeaderTitle: TextView? = null
-    private lateinit var farmerCardTV: TextView
-    private lateinit var fpoCardTV: TextView
-    private lateinit var nrmCardTV: TextView
-    private var imageMenushow: ImageView? = null
+    private lateinit var dbtSchemesViewModel: DbtSchemesViewModel
+    private lateinit var binding: ActivityDbtSchemesBinding
     var languageToLoad: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,18 +48,16 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
                 "en"
             }
         switchLanguage(this, languageToLoad)
-        setContentView(R.layout.activity_dbt_schemes)
-        init()
-        val dbtFromDashboard = intent.getStringExtra("dbtFromDashboard")
-        if (dbtFromDashboard=="pocraDBTCardView") {
-            dbtSchemesLists()
-        }else{
-            Toast.makeText(this, "Data not available", Toast.LENGTH_SHORT).show()
-        }
+        binding = ActivityDbtSchemesBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        imageMenushow?.visibility = View.VISIBLE
-        textViewHeaderTitle?.setText(R.string.dbtschema)
-        imageMenushow?.setOnClickListener {
+        dbtSchemesViewModel = ViewModelProvider(this)[DbtSchemesViewModel::class.java]
+        dbtSchemesLists()
+        ProgressHelper.showProgressDialog(this)
+        dbtSchemesViewModel.getDBTSchemes(this)
+        binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
+        binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.dbtschema)
+        binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {
             val intent = Intent(this, DashboardScreen::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -69,16 +65,16 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
             startActivity(intent)
         }
 
-        farmerCardTV.setOnClickListener {
-            openRecyclerView(farmerRecyclerView)
+        binding.farmerCardTV.setOnClickListener {
+            openRecyclerView(binding.farmerRecyclerView)
         }
 
-        fpoCardTV.setOnClickListener {
-            openRecyclerView(fpoRecyclerView)
+        binding.fpoCardTV.setOnClickListener {
+            openRecyclerView(binding.fpoRecyclerView)
         }
 
-        nrmCardTV.setOnClickListener {
-            openRecyclerView(nrmRecyclerView)
+        binding.nrmCardTV.setOnClickListener {
+            openRecyclerView(binding.nrmRecyclerView)
         }
     }
 
@@ -90,60 +86,30 @@ class DbtSchemes : AppCompatActivity(), ApiCallbackCode, ApiJSONObjCallback,
         }
     }
 
-    private fun init() {
-        fpoCardTV = findViewById(R.id.fpoCardTV)
-        farmerCardTV = findViewById(R.id.farmerCardTV)
-        nrmCardTV = findViewById(R.id.nrmCardTV)
-        farmerRecyclerView = findViewById(R.id.farmerRecyclerView)
-        fpoRecyclerView = findViewById(R.id.fpoRecyclerView)
-        nrmRecyclerView = findViewById(R.id.nrmRecyclerView)
-        textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
-        imageMenushow = findViewById(R.id.imageMenushow)
-    }
-
     private fun dbtSchemesLists() {
-        try {
-            val api =
-                AppInventorApi(
-                    this,
-                    "https://uat-dbt.mahapocra.gov.in:8026/",
-                    "",
-                    AppString(this).getkMSG_WAIT(),
-                    false
-                )
-            val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.revampedDBTSchemes
-            api.postRequest(responseCall, this, 1)
-        } catch (e: JSONException) {
-            e.printStackTrace()
+        dbtSchemesViewModel.responseUrlDbtSchemes.observe(this) {
+            ProgressHelper.disableProgressDialog()
+            if (it != null) {
+                val jSONObject = JSONObject(it.toString())
+                val farmerDataJSONArray = jSONObject.optJSONArray("farmerData")
+                val fpoDataJSONArray = jSONObject.optJSONArray("fpoData")
+                val nrmDataJSONArray = jSONObject.optJSONArray("nrmData")
+
+                binding.farmerRecyclerView.layoutManager = LinearLayoutManager(this)
+                binding.fpoRecyclerView.layoutManager = LinearLayoutManager(this)
+                binding.nrmRecyclerView.layoutManager = LinearLayoutManager(this)
+
+                binding.farmerRecyclerView.adapter =
+                    FarmerDBTRecyclerAdapter(farmerDataJSONArray, languageToLoad, this)
+                binding.fpoRecyclerView.adapter =
+                    FarmerDBTRecyclerAdapter(fpoDataJSONArray, languageToLoad, this)
+                binding.nrmRecyclerView.adapter =
+                    NRMrDBTRecyclerAdapter(nrmDataJSONArray, languageToLoad, this)
+            }
         }
-    }
 
-    override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onFailure(th: Throwable?, i: Int) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onResponse(jSONObject: JSONObject?, i: Int) {
-        if (i == 1 && jSONObject != null) {
-
-            val farmerDataJSONArray = jSONObject.optJSONArray("farmerData")
-            val fpoDataJSONArray = jSONObject.optJSONArray("fpoData")
-            val nrmDataJSONArray = jSONObject.optJSONArray("nrmData")
-
-            farmerRecyclerView.layoutManager = LinearLayoutManager(this)
-            fpoRecyclerView.layoutManager = LinearLayoutManager(this)
-            nrmRecyclerView.layoutManager = LinearLayoutManager(this)
-
-            farmerRecyclerView.adapter =
-                FarmerDBTRecyclerAdapter(farmerDataJSONArray, languageToLoad, this)
-            fpoRecyclerView.adapter =
-                FarmerDBTRecyclerAdapter(fpoDataJSONArray, languageToLoad, this)
-            nrmRecyclerView.adapter = NRMrDBTRecyclerAdapter(nrmDataJSONArray, languageToLoad, this)
+        dbtSchemesViewModel.error.observe(this) {
+            ProgressHelper.disableProgressDialog()
         }
     }
 

@@ -2,6 +2,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.viewmodel
 
 import android.content.Context
 import android.os.Handler
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -55,6 +56,9 @@ class FarmerViewModel : ViewModel() {
     private val _sopResponse = MutableLiveData<JsonObject>()
     val sopResponse: LiveData<JsonObject> = _sopResponse
 
+    private val _chcCentersResponse = MutableLiveData<JsonObject>()
+    val chcCentersResponse: LiveData<JsonObject> = _chcCentersResponse
+
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
@@ -63,10 +67,18 @@ class FarmerViewModel : ViewModel() {
             try {
                 val jsonObject = JSONObject().apply {
                     put("api_key", APIKeys.SSO_PROD)
-                    put("farmer_id", AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0))
+                    put(
+                        "farmer_id",
+                        AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+                    )
                     put("sowing_date", sowingDate)
                     put("crop_id", cropId)
-                    put("is_guest", if (AppSettings.getInstance().getBooleanValue(context, AppConstants.IS_USER_GUEST, false)) 1 else 0)
+                    put(
+                        "is_guest",
+                        if (AppSettings.getInstance()
+                                .getBooleanValue(context, AppConstants.IS_USER_GUEST, false)
+                        ) 1 else 0
+                    )
                 }
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
@@ -92,7 +104,8 @@ class FarmerViewModel : ViewModel() {
 
     fun getFarmerSelectedCrop(context: Context, language: String?) {
         viewModelScope.launch {
-            val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+            val farmerId =
+                AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
             val jsonObject = JSONObject()
             try {
                 jsonObject.put("api_key", APIKeys.SSO_PROD)
@@ -129,7 +142,8 @@ class FarmerViewModel : ViewModel() {
     fun deleteFarmerSelectedCrop(context: Context, cropId: Int) {
         viewModelScope.launch {
             try {
-                val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+                val farmerId =
+                    AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
                 val jsonObject = JSONObject().apply {
                     put("api_key", APIKeys.SSO_PROD)
                     put("crop_id", cropId)
@@ -150,7 +164,8 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.deleteSelectedCrop(requestBody)
 
                 // You can handle the result however you want, for example:
-                _deleteFarmerSelectedCrop.value = response // or create a separate LiveData if needed
+                _deleteFarmerSelectedCrop.value =
+                    response // or create a separate LiveData if needed
 
             } catch (e: Exception) {
                 _error.value = e.localizedMessage ?: "Unknown error occurred"
@@ -193,7 +208,8 @@ class FarmerViewModel : ViewModel() {
     fun fetchTalukaMasterData(context: Context, languageToLoad: String) {
         viewModelScope.launch {
             try {
-                val districtID = AppSettings.getInstance().getIntValue(context, AppConstants.uDISTId, 0)
+                val districtID =
+                    AppSettings.getInstance().getIntValue(context, AppConstants.uDISTId, 0)
 
                 val jsonObject = JSONObject().apply {
                     put("lang", languageToLoad)
@@ -258,7 +274,8 @@ class FarmerViewModel : ViewModel() {
     fun fetchUserInformation(context: Context) {
         viewModelScope.launch {
             try {
-                val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+                val farmerId =
+                    AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
 
                 val jsonObject = JSONObject().apply {
                     put("SecurityKey", APIServices.SSO_KEY)
@@ -334,6 +351,33 @@ class FarmerViewModel : ViewModel() {
                 // Handle success
                 _sopResponse.value = response
 
+            } catch (e: Exception) {
+                _error.value = e.localizedMessage ?: "Failed to fetch user details"
+            }
+        }
+    }
+
+    fun fetchDataForCHC(context: Context, latitude: Double, longitude: Double) {
+        viewModelScope.launch {
+            try {
+                val jsonObject = JSONObject()
+                jsonObject.put("api_key", APIServices.SSO_KEY)
+                jsonObject.put("lat", latitude)
+                jsonObject.put("lon", longitude)
+
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api =
+                    AppInventorApi(
+                        context,
+                        APIServices.FARMER,
+                        "",
+                        AppString(context).getkMSG_WAIT(),
+                        false
+                    )
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.getCHCInformation(requestBody)
+                _chcCentersResponse.value = response
             } catch (e: Exception) {
                 _error.value = e.localizedMessage ?: "Failed to fetch user details"
             }

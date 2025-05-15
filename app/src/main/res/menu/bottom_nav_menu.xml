@@ -22,6 +22,6 @@
 
     <item
         android:id="@+id/nav_about2"
-        android:icon="@drawable/ic_about"
+        android:icon="@drawable/info_ic"
         android:title="@string/about"/>
 </menu>

@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -24,8 +25,10 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityChcenterBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONObject
 import org.osmdroid.config.Configuration
@@ -35,10 +38,11 @@ import org.osmdroid.views.overlay.Marker
 import retrofit2.Call
 import retrofit2.Retrofit
 
-class CHCenterActivity : AppCompatActivity(), ApiCallbackCode {
+class CHCenterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChcenterBinding
     private lateinit var adapter: CHCenterRecyclerAdapter
+    private lateinit var farmerViewModel: FarmerViewModel
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val LOCATION_PERMISSION_REQUEST = 1001
     private lateinit var languageToLoad: String
@@ -56,8 +60,11 @@ class CHCenterActivity : AppCompatActivity(), ApiCallbackCode {
         binding = ActivityChcenterBinding.inflate(layoutInflater)
         Configuration.getInstance().load(this, getSharedPreferences("osmdroid", MODE_PRIVATE))
         setContentView(binding.root)
+        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         checkLocationPermissions()
+        ProgressHelper.showProgressDialog(this)
         binding.toolbar.imgBackArrow.visibility = View.VISIBLE
         binding.toolbar.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
@@ -91,31 +98,57 @@ class CHCenterActivity : AppCompatActivity(), ApiCallbackCode {
             return
         }else{
             fetchLocation()
+            farmerViewModel.fetchDataForCHC(this, locationLat, locationLong)
         }
     }
 
     private fun fetchDataForCHC() {
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put("api_key", APIServices.SSO_KEY)
-            jsonObject.put("lat", locationLat)
-            jsonObject.put("lon", locationLong)
+        farmerViewModel.chcCentersResponse.observe(this){
+            ProgressHelper.disableProgressDialog()
+            if (it!=null){
+                val jSONObject = JSONObject(it.toString())
+                jSONObject.optJSONArray("data")?.let { data ->
+                    adapter = CHCenterRecyclerAdapter(data)
+                    binding.recyclerView.apply {
+                        layoutManager = LinearLayoutManager(this@CHCenterActivity)
+                        adapter = this@CHCenterActivity.adapter
+                    }
 
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api =
-                AppInventorApi(
-                    this,
-                    APIServices.FARMER,
-                    "",
-                    AppString(this).getkMSG_WAIT(),
-                    true
-                )
-            val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getCHCInformation(requestBody)
-            api.postRequest(responseCall, this, 4)
-        } catch (e: Exception) {
-            Log.d("TAGGER", "fetchDataForCHC: $e")
+                    repeat(data.length()) { index ->
+                        data.optJSONObject(index)?.let { item ->
+                            val latitude = item.optString("lat").toDoubleOrNull()
+                            val longitude = item.optString("lon").toDoubleOrNull()
+
+                            if (latitude != null && longitude != null) {
+                                Marker(binding.mapView).apply {
+                                    position = GeoPoint(latitude, longitude)
+                                    icon = ContextCompat.getDrawable(this@CHCenterActivity, R.drawable.ic_red_location)
+                                    title = "Marker $index"
+                                    snippet = "Lat: $latitude, Lon: $longitude"
+                                    setOnMarkerClickListener { _, _ ->
+                                        item.optJSONArray("equipment")?.let { equipment ->
+                                            MarkerBottomSheetFragment.newInstance(
+                                                item.optString("contact_name"),
+                                                item.optString("chcname"),
+                                                "${item.optString("distance")} kms",
+                                                latitude,
+                                                longitude,
+                                                equipment
+                                            ).show(supportFragmentManager, "MarkerBottomSheet")
+                                        }
+                                        true
+                                    }
+                                    binding.mapView.overlays.add(this)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        farmerViewModel.error.observe(this){
+            ProgressHelper.disableProgressDialog()
         }
     }
 
@@ -164,61 +197,6 @@ class CHCenterActivity : AppCompatActivity(), ApiCallbackCode {
         }
     }
 
-    override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onResponse(jSONObject: JSONObject?, i: Int) {
-        Log.d("TAGGER", "onResponse: $jSONObject")
-        if (jSONObject != null) {
-            val data = jSONObject.optJSONArray("data")
-            adapter = CHCenterRecyclerAdapter(data)
-            binding.recyclerView.layoutManager = LinearLayoutManager(this)
-            binding.recyclerView.adapter = adapter
-
-            // Iterate through the data and add markers to the map
-            for (index in 0 until data.length()) {
-                val item = data.getJSONObject(index)
-                val lat = item.optString("lat")
-                val lon = item.optString("lon")
-
-                // Convert lat and lon to Double
-                val latitude = lat.toDoubleOrNull()
-                val longitude = lon.toDoubleOrNull()
-
-                // Check if the latitude and longitude are valid
-                if (latitude != null && longitude != null) {
-                    val geoPoint = GeoPoint(latitude, longitude)
-
-                    // Create a marker
-                    val marker = Marker(binding.mapView)
-                    marker.icon = ContextCompat.getDrawable(this, R.drawable.ic_red_location)
-                    marker.position = geoPoint
-                    marker.title =
-                        "Marker $index" // Optional: You can set a custom title or other attributes
-                    marker.snippet =
-                        "Lat: $latitude, Lon: $longitude" // Optional: Show additional info in the marker's snippet
-
-                    // Set a click listener for the marker
-                    marker.setOnMarkerClickListener { marker, _ ->
-                        val bottomSheet = item.optJSONArray("equipment")?.let {
-                            MarkerBottomSheetFragment.newInstance(
-                                item.optString("contact_name"), item.optString("chcname"), "${
-                                    item.optString("distance")
-                                } kms", latitude, longitude, it
-                            )
-                        }
-                        bottomSheet?.show(supportFragmentManager, bottomSheet.tag)
-                        true
-                    }
-
-                    // Add marker to the map
-                    binding.mapView.overlays.add(marker)
-                }
-            }
-        }
-    }
-
     private fun setupMapView() {
         // Initialize MapView
         binding.mapView.setTileSource(TileSourceFactory.MAPNIK)
@@ -259,6 +237,7 @@ class CHCenterActivity : AppCompatActivity(), ApiCallbackCode {
         if (requestCode == LOCATION_PERMISSION_REQUEST && grantResults.isNotEmpty() &&
             grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             fetchLocation()
+            farmerViewModel.fetchDataForCHC(this, locationLat, locationLong)
         } else {
             Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show()
         }

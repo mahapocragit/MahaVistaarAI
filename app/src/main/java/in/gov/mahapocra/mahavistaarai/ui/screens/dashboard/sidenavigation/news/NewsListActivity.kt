@@ -1,21 +1,32 @@
-package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.news
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityNotificationListBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.NewsWadhwaniViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import org.json.JSONObject
 
 class NewsListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNotificationListBinding
     private lateinit var newsWadhwaniViewModel: NewsWadhwaniViewModel
+    private lateinit var languageToLoad: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        languageToLoad = "mr"
+        if (AppSettings.getLanguage(this@NewsListActivity).equals("1", ignoreCase = true)) {
+            languageToLoad = "en"
+        }
+        switchLanguage(this, languageToLoad)
         binding = ActivityNotificationListBinding.inflate(
             layoutInflater
         )
@@ -25,8 +36,8 @@ class NewsListActivity : AppCompatActivity() {
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
+        ProgressHelper.showProgressDialog(this)
         observeResponseArrivingFromAPI()
-
         newsWadhwaniViewModel.getAuthenticationForNews(this)
     }
 
@@ -40,11 +51,25 @@ class NewsListActivity : AppCompatActivity() {
             }
         }
         newsWadhwaniViewModel.responseNewsWadhwani.observe(this) {
+            ProgressHelper.disableProgressDialog()
             if (it != null) {
                 val jsonObject = JSONObject(it.toString())
-                val dataJsonArray = jsonObject.optJSONArray("data")
+                val dataJsonObject = jsonObject.optJSONObject("data")
+                val eventJsonArray = dataJsonObject?.optJSONArray("events")
+                binding.newsRecyclerView.layoutManager = LinearLayoutManager(this)
+                binding.newsRecyclerView.adapter = eventJsonArray?.let { it1 -> NewsAdapter(it1, languageToLoad) }
             }
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 }
 

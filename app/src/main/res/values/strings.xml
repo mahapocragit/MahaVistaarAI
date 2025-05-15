@@ -283,7 +283,8 @@
     <string name="symptoms">Symptoms</string>
     <string name="preventive_measure">Preventive Measures</string>
     <string name="control_measures">Control Measures</string>
-    <string name="read_more">...Read More</string>
+    <string name="read_more">...Read more</string>
+    <string name="read_less">...Read less</string>
     <string name="fruiting_stage">Fruiting Stage</string>
 
     <string name="fertilizer_calculator">Fertilizer Calculator</string>

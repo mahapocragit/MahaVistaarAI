@@ -3,6 +3,7 @@ package `in`.gov.mahapocra.mahavistaarai.data
 import com.google.gson.JsonObject
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import okhttp3.RequestBody
+import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -44,10 +45,17 @@ interface ApiService {
     @POST(APIServices.kAuthenticationForNews)
     suspend fun authenticationForNews(@Body params: RequestBody): JsonObject
 
+    @POST(APIServices.getNearestCHCenters)
+    suspend fun getCHCInformation(@Body params: RequestBody): JsonObject
+
+    @GET(APIServices.kRevampedDBTSchemes)
+    suspend fun getDBTSchemes(): JsonObject
+
     @GET(APIServices.kEventsForNews)
     suspend fun eventsForNews(
         @Header("Authorization") authHeader: String,
-        @Query("state") state: String
+        @Query("state") state: String,
+        @Query("is_rejected") isRejected: Boolean
     ): JsonObject
 
     @GET(APIServices.kGetVideosCategories)

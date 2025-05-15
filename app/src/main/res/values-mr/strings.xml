@@ -286,6 +286,7 @@
     <string name="preventive_measure">प्रतिबंधात्मक उपाय</string>
     <string name="control_measures">नियंत्रण उपाय</string>
     <string name="read_more">...अधिक वाचा</string>
+    <string name="read_less">...कमी वाचा</string>
     <string name="fruiting_stage">फळधारणेचा टप्पा</string>
 
     <string name="fertilizer_calculator">खताच्या मात्रेची गणना</string>

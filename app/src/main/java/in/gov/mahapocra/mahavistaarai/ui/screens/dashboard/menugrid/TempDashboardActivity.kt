@@ -21,6 +21,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityTempDashboardBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MahavistaarViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import org.json.JSONObject
 
 class TempDashboardActivity : AppCompatActivity() {
@@ -37,24 +38,27 @@ class TempDashboardActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityTempDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        mahavistaarViewModel=  ViewModelProvider(this)[MahavistaarViewModel::class.java]
+        mahavistaarViewModel = ViewModelProvider(this)[MahavistaarViewModel::class.java]
         binding.toolbar.imageViewHeaderBack.setVisibility(View.VISIBLE)
         binding.toolbar.imageViewHeaderBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
         binding.toolbar.textViewHeaderTitle.text = "Agro Assistant"
+
+        ProgressHelper.showProgressDialog(this)
         mahavistaarViewModel.requestUrlForChatBot(this)
         mahavistaarViewModel.responseUrlForChatBot.observe(this) {
+            ProgressHelper.disableProgressDialog()
             if (it != null && this@TempDashboardActivity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
                 val url = it.get("url")?.asString.orEmpty()
                 loadWebView(url)
             }
         }
-        mahavistaarViewModel.error.observe(this){
-            Log.e("mahavistaarViewModel",it)
+        mahavistaarViewModel.error.observe(this) {
+            ProgressHelper.disableProgressDialog()
             Toast.makeText(this, "Token generation failed!!", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun loadWebView(chatBotUrl:String) {
+    private fun loadWebView(chatBotUrl: String) {
         val webSettings = binding.webView.settings
         webSettings.javaScriptEnabled = true
         webSettings.domStorageEnabled = true
@@ -66,7 +70,10 @@ class TempDashboardActivity : AppCompatActivity() {
         CookieManager.getInstance().setAcceptThirdPartyCookies(binding.webView, true)
 
         binding.webView.webChromeClient = object : WebChromeClient() {
-            override fun onGeolocationPermissionsShowPrompt(origin: String?, callback: GeolocationPermissions.Callback?) {
+            override fun onGeolocationPermissionsShowPrompt(
+                origin: String?,
+                callback: GeolocationPermissions.Callback?
+            ) {
                 callback?.invoke(origin, true, false)
             }
         }
@@ -83,7 +90,6 @@ class TempDashboardActivity : AppCompatActivity() {
 
         binding.webView.loadUrl(chatBotUrl)
     }
-
 
 
     override fun attachBaseContext(newBase: Context) {

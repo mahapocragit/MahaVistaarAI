@@ -19,6 +19,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONException
 import org.json.JSONObject
@@ -48,12 +49,14 @@ class VideosActivity : AppCompatActivity() {
         binding.toolbar.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+        ProgressHelper.showProgressDialog(this)
         farmerViewModel.getVideosForFarmer(this)
         getFarmerSelectedCrop()
     }
 
     private fun getFarmerSelectedCrop() {
         farmerViewModel.videosResponse.observe(this){
+            ProgressHelper.disableProgressDialog()
             if (it!=null){
                 val jSONObject = JSONObject(it.toString())
                 if (jSONObject.optInt("status") == 200) {
@@ -67,6 +70,9 @@ class VideosActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+        farmerViewModel.error.observe(this){
+            ProgressHelper.disableProgressDialog()
         }
     }
 
