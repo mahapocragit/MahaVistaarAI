@@ -198,6 +198,7 @@
     <string name="my_vill_Profi_Pdf">PoCRA Village Profile</string>
 
     <string name="date_text">Select Date</string>
+    <string name="date">Date: </string>
     <string name="rainfall">Rainfall</string>
     <string name="max_temp">Max Temp</string>
     <string name="min_temp">Min Temp</string>

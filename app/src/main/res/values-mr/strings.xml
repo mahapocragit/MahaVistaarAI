@@ -203,6 +203,7 @@
     <string name="pocra_village">प्रकल्प क्षेत्र आणि गावे</string>
 
     <string name="date_text">दिनांक निवडा</string>
+    <string name="date">दिनांक: </string>
     <string name="rainfall">पाऊस (मिमी)</string>
     <string name="max_temp">कमाल तापमान (अं.से.)</string>
     <string name="min_temp">किमान तापमान (अं.से.)</string>

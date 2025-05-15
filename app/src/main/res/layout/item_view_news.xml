@@ -48,6 +48,14 @@
                 android:layout_marginHorizontal="@dimen/_5sdp"
                 android:text="newsEventDescriptionTextView" />
 
+            <TextView
+                android:id="@+id/dateTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:text="TextView" />
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
