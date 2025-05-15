@@ -31,7 +31,7 @@ public class SOPAdapter extends RecyclerView.Adapter<SOPAdapter.ViewHolder> {
     @NonNull
     @Override
     public SOPAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.single_climate_resilient_tech, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.sop_category_item_view, parent, false);
         return new SOPAdapter.ViewHolder(view);
     }
 
@@ -63,7 +63,7 @@ public class SOPAdapter extends RecyclerView.Adapter<SOPAdapter.ViewHolder> {
         }
         public void setData(JSONObject jsonObject, OnMultiRecyclerItemClickListener listener, int position) {
             try {
-                nameTextView2.setText(position+". ");
+                nameTextView2.setText(String.format("%d ", position + 1));
                 nameTextView.setText( jsonObject.getString("title"));
             } catch (JSONException e) {
                 e.printStackTrace();

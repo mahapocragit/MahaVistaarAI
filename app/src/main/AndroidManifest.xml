@@ -63,12 +63,7 @@
         <activity
             android:name=".ui.screens.dashboard.menugrid.SOPWebViewActivity"
             android:exported="false" />
-        <activity
-            android:name=".ui.screens.dashboard.sidenavigation.news.FarmNewsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.screens.dashboard.sidenavigation.news.MagazineActivity"
-            android:exported="false" />
+
         <activity
             android:name=".ui.screens.dashboard.sidenavigation.AboutActivity"
             android:exported="false" />
@@ -138,16 +133,7 @@
         <activity
             android:name=".ui.screens.dashboard.menugrid.AddCropActivity"
             android:exported="false" />
-        <activity
-            android:name=".ui.screens.dashboard.sidenavigation.news.NewsReadActivity"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="ReadNotificationActivity" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".ui.screens.dashboard.sidenavigation.news.NewsListActivity" />
+        <activity android:name=".ui.screens.dashboard.sidenavigation.NewsListActivity" />
         <activity
             android:name=".ui.screens.dashboard.menugrid.climate.ResilientWebUrl"
             android:exported="false" />

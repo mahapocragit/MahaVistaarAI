@@ -37,7 +37,7 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
 
-class SOPActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerItemClickListener {
+class SOPActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener {
 
     private lateinit var binding: ActivitySopactivityBinding
     private lateinit var farmerViewModel: FarmerViewModel
@@ -49,7 +49,6 @@ class SOPActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerItemCli
     private var mUrl: String? = null
     private var sowingDate: String = ""
     private lateinit var languageToLoad: String
-    private val googleDriveView: String = "https://mozilla.github.io/pdf.js/web/viewer.html?file="
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,15 +69,11 @@ class SOPActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerItemCli
         mUrl = intent.getStringExtra("mUrl")
         villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-        getCropStagesAndAdvisory()
 
         binding.sowingInfoLayout.sowingDateTextView.visibility = View.GONE
         binding.sowingInfoLayout.editSowingDateIcon.visibility = View.GONE
         binding.sowingInfoLayout.textView7.text = getString(R.string.selected_crop)
         binding.sowingInfoLayout.cropNameTextView.text = cropName
-        binding.floatingActionButton.setOnClickListener {
-            mUrl?.let { it1 -> LocalCustom.downloadPdf(this, it1) }
-        }
 
         cropId?.let { farmerViewModel.fetchSOPDate(this, it) }
 
@@ -98,41 +93,8 @@ class SOPActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerItemCli
         binding.toolbar.imgBackArrow.visibility = View.VISIBLE
         binding.toolbar.imgBackArrow.setOnClickListener { startActivity(Intent(this, DashboardScreen::class.java)) }
         binding.toolbar.textViewHeaderTitle.text = getString(R.string.sop_title)
-    }
-
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        startActivity(Intent(this, DashboardScreen::class.java))
-    }
-
-    private fun getCropStagesAndAdvisory() {
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put("crop_id", cropId)
-            jsonObject.put("farmer_id", farmerId)
-            jsonObject.put("lang", languageToLoad)
-            jsonObject.put("sowing_date", "23-03-2025")
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api =
-                AppInventorApi(
-                    this,
-                    APIServices.FARMER,
-                    "",
-                    AppString(this).getkMSG_WAIT(),
-                    true
-                )
-            val retrofit: Retrofit = api.retrofitInstance
-            val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getCropStagesAndAdvisory(requestBody)
-            api.postRequest(responseCall, this, 1)
-        } catch (e: JSONException) {
-            DebugLog.getInstance().d("JSONException=$e")
-            e.printStackTrace()
-        }
 
         farmerViewModel.sopResponse.observe(this){
-            Log.d("TAGGER", "getCropStagesAndAdvisory: $it")
             if (it!=null){
                 val jsonObject = JSONObject(it.toString())
                 val dataArray = jsonObject.getJSONArray("data")
@@ -142,52 +104,10 @@ class SOPActivity : AppCompatActivity(), ApiCallbackCode, OnMultiRecyclerItemCli
         }
     }
 
-    private fun setupWebView(pdfUrl: String) {
-        val settings: WebSettings = binding.webView.settings
-        settings.javaScriptEnabled = true
-        settings.builtInZoomControls = true
-        settings.displayZoomControls = false
 
-        binding.webView.webViewClient = WebViewClient()
-        if (pdfUrl != null) {
-            val viewOnlyUrl = "$googleDriveView$pdfUrl"
-            binding.webView.loadUrl(viewOnlyUrl)
-        } else {
-            Toast.makeText(this@SOPActivity, "PDF not available", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onResponse(jSONObject: JSONObject?, i: Int) {
-        if (i == 1) {
-            Log.d("TAGGER", "onResponse: $jSONObject")
-            if (jSONObject != null) {
-                val response = ResponseModel(jSONObject)
-                if (response.status) {
-                    if (jSONObject.getString("advisory_pdf_url").isNotEmpty()) {
-                        Log.d(
-                            "TAGGER",
-                            "onResponse pdf: ${jSONObject.getString("advisory_pdf_url")}"
-                        )
-                        val pdfUrl = jSONObject.getString("advisory_pdf_url")
-                        if (pdfUrl != "null") {
-                            binding.noDataFoundImageView.visibility = View.GONE
-                            binding.webView.visibility = View.GONE
-                            setupWebView(pdfUrl)
-                        } else {
-                            binding.noDataFoundImageView.visibility = View.VISIBLE
-                            binding.webView.visibility = View.GONE
-                            UIToastMessage.show(this, "PDF not available")
-                        }
-                    }
-                } else {
-                    UIToastMessage.show(this, response.response)
-                }
-            }
-        }
+    override fun onBackPressed() {
+        super.onBackPressed()
+        startActivity(Intent(this, DashboardScreen::class.java))
     }
 
     override fun attachBaseContext(newBase: Context) {

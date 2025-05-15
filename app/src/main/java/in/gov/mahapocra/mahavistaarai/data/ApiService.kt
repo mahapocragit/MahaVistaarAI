@@ -3,10 +3,11 @@ package `in`.gov.mahapocra.mahavistaarai.data
 import com.google.gson.JsonObject
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import okhttp3.RequestBody
-import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface ApiService {
 
@@ -39,6 +40,15 @@ interface ApiService {
 
     @POST(APIServices.kRequestForChatBot)
     suspend fun requestForChatBotURL(@Body params: RequestBody): JsonObject
+
+    @POST(APIServices.kAuthenticationForNews)
+    suspend fun authenticationForNews(@Body params: RequestBody): JsonObject
+
+    @GET(APIServices.kEventsForNews)
+    suspend fun eventsForNews(
+        @Header("Authorization") authHeader: String,
+        @Query("state") state: String
+    ): JsonObject
 
     @GET(APIServices.kGetVideosCategories)
     suspend fun getFarmersVideosJson(): JsonObject

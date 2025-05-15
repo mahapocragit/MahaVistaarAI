@@ -50,7 +50,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.DBTAct
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard.HealthCardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.AboutActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.news.NewsListActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.NewsListActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.ComingSoonActivity
@@ -480,8 +480,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                                 }
                             }
                             strTalukaId?.let { it1 ->
-                                farmerViewModel.fetchWeatherDetails(this,
-                                    it1, languageToLoad)
+                                farmerViewModel.fetchWeatherDetails(
+                                    this,
+                                    it1, languageToLoad
+                                )
                             }
                         } catch (e: JSONException) {
                             e.printStackTrace()
@@ -705,10 +707,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
     private fun setVersion() {
         val versionName = LocalCustom.getVersionName(this)
-        if (APIServices.DBT.equals("https://ilab-sso.mahapocra.gov.in/", ignoreCase = true)) {
-            binding.appVerTextView.text = "${getString(R.string.app_version)} $versionName S"
-        } else {
-            binding.appVerTextView.text = "${getString(R.string.app_version)} $versionName"
+        binding.appVerTextView.text = buildString {
+            append(getString(R.string.app_version))
+            append(" ")
+            append(versionName)
         }
         AppSettings.getInstance()
             .setValue(this@DashboardScreen, AppConstants.kAPP_BUILD_VERSION, versionName)
