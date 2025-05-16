@@ -24,6 +24,11 @@ class AboutActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityAboutBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        if (languageToLoad == "en"){
+            binding.aboutAppIcon.setImageResource(R.drawable.about_logo_en)
+        }
         binding.toolbarLayout.imgBackArrow.visibility = View.VISIBLE
         binding.toolbarLayout.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
