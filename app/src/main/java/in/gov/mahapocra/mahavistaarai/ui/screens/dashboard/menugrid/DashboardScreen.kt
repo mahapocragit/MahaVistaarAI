@@ -100,12 +100,12 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         if (AppSettings.getLanguage(this@DashboardScreen).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
+        switchLanguage(this, languageToLoad)
         showToast = true
         binding = ActivityDashboardScreenBinding.inflate(
             layoutInflater
         )
         setContentView(binding.root)
-        switchLanguage(this, languageToLoad)
 
         binding.appBarMain.dashboardScreen.progressBar.visibility = View.VISIBLE
         binding.appBarMain.dashboardScreen.temperatureTextView.visibility = View.GONE
@@ -906,9 +906,9 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             R.drawable.ic_sop,
             R.drawable.soil,
             R.drawable.fertilizer,
-            R.drawable.climate_change,
+            R.drawable.climate_ic,
             R.drawable.ladybug,
-            R.drawable.commodity,
+            R.drawable.market_ic,
             R.drawable.warehouse,
             R.drawable.ic_dbt
         )

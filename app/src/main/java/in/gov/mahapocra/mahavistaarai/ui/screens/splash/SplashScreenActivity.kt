@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.splash
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
@@ -12,16 +13,24 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import java.util.Locale
 
 class SplashScreenActivity : AppCompatActivity() {
 
     private var farmerId: Int = 0
+    private lateinit var languageToLoad: String
     private lateinit var appVersionText:TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        languageToLoad = "mr"
+        if (AppSettings.getLanguage(this@SplashScreenActivity).equals("1", ignoreCase = true)) {
+            languageToLoad = "en"
+        }
+        switchLanguage(this, languageToLoad)
         setContentView(R.layout.activity_splash_screen)
 
         // Set Language Configuration
@@ -46,5 +55,15 @@ class SplashScreenActivity : AppCompatActivity() {
             })
             finish()
         }, 2000)
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 }

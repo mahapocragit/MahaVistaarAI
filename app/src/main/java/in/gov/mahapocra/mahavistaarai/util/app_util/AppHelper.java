@@ -33,8 +33,8 @@ public class AppHelper {
 
             JSONObject jsonObject4 = new JSONObject();
             jsonObject4.put("id", 3);
-            jsonObject4.put("name", "News");
-            jsonObject4.put("icon", "news_drawer10");
+            jsonObject4.put("name", "Credits");
+            jsonObject4.put("icon", "credits");
 
             JSONObject jsonObject7 = new JSONObject();
             jsonObject7.put("id", 6);
@@ -47,9 +47,9 @@ public class AppHelper {
             jsonObject9.put("icon", "logout");
 
             jsonArray.put(jsonObject1);
-            jsonArray.put(jsonObject4);
             jsonArray.put(jsonObject7);
             jsonArray.put(jsonObject2);
+            jsonArray.put(jsonObject4);
             jsonArray.put(jsonObject9);
 
         } catch (JSONException e) {
@@ -73,8 +73,8 @@ public class AppHelper {
 
             JSONObject jsonObject4 = new JSONObject();
             jsonObject4.put("id", 3);
-            jsonObject4.put("name", "कृषी वार्ता");
-            jsonObject4.put("icon", "news_drawer10");
+            jsonObject4.put("name", "भागीदार");
+            jsonObject4.put("icon", "credits");
 
             JSONObject jsonObject7 = new JSONObject();
             jsonObject7.put("id", 6);
@@ -87,9 +87,9 @@ public class AppHelper {
             jsonObject9.put("icon", "logout");
 
             jsonArray.put(jsonObject1);
-            jsonArray.put(jsonObject4);
             jsonArray.put(jsonObject7);
             jsonArray.put(jsonObject2);
+            jsonArray.put(jsonObject4);
             jsonArray.put(jsonObject9);
 
         } catch (JSONException e) {

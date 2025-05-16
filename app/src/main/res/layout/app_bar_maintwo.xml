@@ -25,14 +25,15 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/pocra_farmer_logo" />
 
-            <com.mikhaellopez.circularimageview.CircularImageView
-                android:layout_width="@dimen/height40"
-                android:layout_height="@dimen/height40"
-                android:layout_gravity="start"
-                android:scaleType="centerInside"
-                android:layout_marginStart="@dimen/_16sdp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/pocra_latest_logo" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/app_name_label"
+                android:textStyle="bold"
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/white"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/_12sdp"/>
 
             <ImageView
                 android:id="@+id/imgLangChange"

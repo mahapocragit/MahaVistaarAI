@@ -3,11 +3,9 @@ package `in`.gov.mahapocra.mahavistaarai.ui.adapters
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Typeface
 import android.net.Uri
-import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
@@ -26,13 +24,9 @@ import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
-import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.AdvisoryFeedback
 import org.json.JSONArray
 import org.json.JSONObject
-import java.util.Locale
 
 
 class StageAdvisoryDetailAdaptr(
