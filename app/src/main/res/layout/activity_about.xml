@@ -90,27 +90,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_80sdp"
                         android:layout_margin="@dimen/_5sdp"
-                        app:srcCompat="@drawable/wotr_icon" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="WOTR" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <com.mikhaellopez.circularimageview.CircularImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_80sdp"
-                        android:layout_margin="@dimen/_5sdp"
                         app:srcCompat="@drawable/pocra_latest_logo" />
 
                     <TextView
@@ -132,7 +111,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_80sdp"
                         android:layout_margin="@dimen/_5sdp"
-                        app:srcCompat="@drawable/dbt_schemes" />
+                        app:srcCompat="@drawable/wotr_icon" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -140,7 +119,28 @@
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="MahaDBT" />
+                        android:text="WOTR" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.mikhaellopez.circularimageview.CircularImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_80sdp"
+                        android:layout_margin="@dimen/_5sdp"
+                        app:srcCompat="@drawable/pani_foundation_logo" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Pani Foundation" />
                 </LinearLayout>
 
             </LinearLayout>
