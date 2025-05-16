@@ -30,6 +30,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONException
@@ -59,7 +60,7 @@ class SOPActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener {
         switchLanguage(this, languageToLoad)
         binding = ActivitySopactivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        farmerViewModel= ViewModelProvider(this)[FarmerViewModel::class.java]
+        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
 
         //fetching values
         cropId = intent.getIntExtra("id", 0)
@@ -76,6 +77,7 @@ class SOPActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener {
         binding.sowingInfoLayout.cropNameTextView.text = cropName
 
         cropId?.let { farmerViewModel.fetchSOPDate(this, it) }
+        ProgressHelper.showProgressDialog(this)
 
         binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {
             val sharing = Intent(this, AddCropActivity::class.java)
@@ -91,16 +93,40 @@ class SOPActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener {
         }
 
         binding.toolbar.imgBackArrow.visibility = View.VISIBLE
-        binding.toolbar.imgBackArrow.setOnClickListener { startActivity(Intent(this, DashboardScreen::class.java)) }
+        binding.toolbar.imgBackArrow.setOnClickListener {
+            startActivity(
+                Intent(
+                    this,
+                    DashboardScreen::class.java
+                )
+            )
+        }
         binding.toolbar.textViewHeaderTitle.text = getString(R.string.sop_title)
 
-        farmerViewModel.sopResponse.observe(this){
-            if (it!=null){
+        farmerViewModel.sopResponse.observe(this) {
+            ProgressHelper.disableProgressDialog()
+            if (it != null) {
                 val jsonObject = JSONObject(it.toString())
                 val dataArray = jsonObject.getJSONArray("data")
-                binding.sopRecyclerView.layoutManager = LinearLayoutManager(this)
-                binding.sopRecyclerView.adapter = SOPAdapter(this, this, dataArray)
+                if (dataArray.length() != 0) {
+                    binding.sopRecyclerView.visibility = View.VISIBLE
+                    binding.noDataFoundImageView.visibility = View.GONE
+                    binding.sopTextView.visibility = View.GONE
+                    binding.sopRecyclerView.layoutManager = LinearLayoutManager(this)
+                    binding.sopRecyclerView.adapter = SOPAdapter(this, this, dataArray)
+                } else {
+                    binding.sopRecyclerView.visibility = View.GONE
+                    binding.noDataFoundImageView.visibility = View.VISIBLE
+                    binding.sopTextView.visibility = View.VISIBLE
+                }
             }
+        }
+
+        farmerViewModel.error.observe(this) {
+            ProgressHelper.disableProgressDialog()
+            binding.sopRecyclerView.visibility = View.GONE
+            binding.noDataFoundImageView.visibility = View.VISIBLE
+            binding.sopTextView.visibility = View.VISIBLE
         }
     }
 
@@ -121,7 +147,7 @@ class SOPActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener {
     }
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
-        if (i==2){
+        if (i == 2) {
             val jsonObject = obj as JSONObject
             val webViewUrl = jsonObject.optString("url")
             val intent = Intent(this, SOPWebViewActivity::class.java)

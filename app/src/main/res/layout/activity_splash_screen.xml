@@ -42,16 +42,6 @@
             android:textSize="@dimen/_22sdp"
             android:text="@string/welcome_text" />
 
-        <TextView
-            android:id="@+id/textView25"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_22sdp"
-            android:text="@string/app_name_label" />
     </LinearLayout>
 
     <TextView

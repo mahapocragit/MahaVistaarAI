@@ -48,6 +48,12 @@ interface ApiService {
     @POST(APIServices.getNearestCHCenters)
     suspend fun getCHCInformation(@Body params: RequestBody): JsonObject
 
+    @POST(APIServices.getCodeFromCoordinates)
+    suspend fun getCodeFromCoordinates(@Body params: RequestBody): JsonObject
+
+    @POST(APIServices.kGetMarketData)
+    suspend fun getMarketList(@Body params: RequestBody): JsonObject
+
     @GET(APIServices.kRevampedDBTSchemes)
     suspend fun getDBTSchemes(): JsonObject
 

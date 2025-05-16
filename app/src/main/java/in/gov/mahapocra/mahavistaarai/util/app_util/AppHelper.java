@@ -26,15 +26,10 @@ public class AppHelper {
             jsonObject1.put("name", "My Profile");
             jsonObject1.put("icon", "myprofile");
 
-            JSONObject jsonObject2 = new JSONObject();
-            jsonObject2.put("id", 1);
-            jsonObject2.put("name", "About");
-            jsonObject2.put("icon", "icon9");
-
             JSONObject jsonObject4 = new JSONObject();
             jsonObject4.put("id", 3);
             jsonObject4.put("name", "Credits");
-            jsonObject4.put("icon", "credits");
+            jsonObject4.put("icon", "partners_ic");
 
             JSONObject jsonObject7 = new JSONObject();
             jsonObject7.put("id", 6);
@@ -48,7 +43,6 @@ public class AppHelper {
 
             jsonArray.put(jsonObject1);
             jsonArray.put(jsonObject7);
-            jsonArray.put(jsonObject2);
             jsonArray.put(jsonObject4);
             jsonArray.put(jsonObject9);
 
@@ -66,15 +60,10 @@ public class AppHelper {
             jsonObject1.put("name","माझी प्रोफाईल");
             jsonObject1.put("icon", "myprofile");
 
-            JSONObject jsonObject2 = new JSONObject();
-            jsonObject2.put("id", 1);
-            jsonObject2.put("name", "आमच्या विषयी");
-            jsonObject2.put("icon", "icon9");
-
             JSONObject jsonObject4 = new JSONObject();
             jsonObject4.put("id", 3);
             jsonObject4.put("name", "भागीदार");
-            jsonObject4.put("icon", "credits");
+            jsonObject4.put("icon", "partners_ic");
 
             JSONObject jsonObject7 = new JSONObject();
             jsonObject7.put("id", 6);
@@ -88,7 +77,6 @@ public class AppHelper {
 
             jsonArray.put(jsonObject1);
             jsonArray.put(jsonObject7);
-            jsonArray.put(jsonObject2);
             jsonArray.put(jsonObject4);
             jsonArray.put(jsonObject9);
 

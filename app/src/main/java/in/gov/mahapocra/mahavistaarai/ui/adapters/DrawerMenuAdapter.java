@@ -100,6 +100,10 @@ public class DrawerMenuAdapter extends BaseAdapter  {
                     viewHolder.iconImageView.setColorFilter(null);
                 }
 
+                if (jsonObject.getString("icon").equals("partners_ic")){
+                    viewHolder.iconImageView.setImageResource(R.drawable.partners_ic);
+                }
+
             }
             if(farmerId ==0 && (logoutString.equalsIgnoreCase("Logout")|| logoutString.equalsIgnoreCase("बाहेर पडणे"))){
                 viewHolder.nameTextView.setVisibility(View.GONE);

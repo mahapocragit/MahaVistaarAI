@@ -41,7 +41,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCallbackCode,
-    AlertListEventListener, ApiJSONObjCallback, DatePickerRequestListener {
+    AlertListEventListener, ApiJSONObjCallback {
 
     lateinit var binding: ActivityMarketPriceBinding
     private var districtJSONArray: JSONArray? = null
@@ -116,42 +116,23 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
             marketPreceDate = ""
             getMarkets()
         }
-        binding.tvMarketDate.setOnClickListener {
-            AppUtility.getInstance().showDisabledFutureDatePicker(
-                this@MarketPrice,
-                cDate,
-                1,
-                this@MarketPrice
-            )
-        }
     }
 
     private fun getMarkets() {
-        if (marketJSONArray == null) {
-            getMarketName()
-        } else {
-            AppUtility.getInstance().showListDialogMarketIndex(
-                marketJSONArray,
-                3,
-                getString(R.string.farmer_select_market),
-                "apmc_name",
-                this,
-                this
-            )
-        }
+        getMarketName(languageToLoad, districtID)
     }
 
-    private fun getMarketPriceDetails() {
+    private fun getMarketPriceDetails(apmcId: Int) {
         val jsonObject = JSONObject()
         try {
-            jsonObject.put("date", marketPreceDate)
-            jsonObject.put("market", marketName)
+            jsonObject.put("api_key", APIKeys.SSO_PROD)
+            jsonObject.put("apmc_id", apmcId)
 
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
                 AppInventorApi(
                     this,
-                    APIServices.SSO,
+                    APIServices.FARMER,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true
@@ -244,7 +225,8 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
             marketPriceDetailsJSONArray = null
             talukaID = 0
             binding.tvMarketDetails.visibility = View.VISIBLE
-            binding.tvMarketDetails.text = ("$districtName, ${resources.getString(R.string.market_c_price)}" )
+            binding.tvMarketDetails.text =
+                ("$districtName, ${resources.getString(R.string.market_c_price)}")
             binding.tvMarketDate.text = ""
             binding.tvMarketDate.hint = resources.getString(R.string.farmer_select_date)
             binding.tvMarketDate.setHintTextColor(Color.GRAY)
@@ -256,7 +238,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
             talukaID = s1!!.toInt()
             if (s != null) {
                 talukaName = s
-                getMarketAgainstTaluka()
+                getMarkets()
             }
 
             binding.textViewMarket.text = ""
@@ -269,38 +251,33 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
             if (s != null) {
                 marketName = s.toString()
                 marketPreceDate = binding.tvMarketDate.text.toString()
-                getMarketPriceDetails()
+                val apmcID = JSONObject(s1).optInt("apmc_id")
+                Log.d("TAGGER", "didSelectListItem: $apmcID")
+                getMarketPriceDetails(apmcID)
             }
             binding.textViewMarket.text = s
         }
     }
 
-    private fun getMarketName() {
+    private fun getMarketName(languageToLoad: String, districtCode:Int) {
         try {
-            val url: String = APIServices.kGetMarketData
-            val api = AppinventorIncAPI(this, APIServices.SSO, APIServices.SSO_KEY, "", true)
-            api.getRequestData(url, this, 3)
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
-    }
+            val jsonObject = JSONObject()
+            jsonObject.put("lang", languageToLoad)
+            jsonObject.put("api_key", APIKeys.SSO_PROD)
+            jsonObject.put("district_code", districtCode)
 
-    private fun getMarketAgainstTaluka() {
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put("taluka", talukaID)
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
                 AppInventorApi(
                     this,
-                    APIServices.SSO,
+                    APIServices.FARMER,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true
                 )
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getmarketList(requestBody)
+            val responseCall: Call<JsonObject> = apiRequest.getMarketList(requestBody)
             api.postRequest(responseCall, this, 3)
         } catch (e: JSONException) {
             e.printStackTrace()
@@ -360,6 +337,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
         }
 
         if (i == 3 && jSONObject != null) {
+            Log.d("TAGGER", "onResponse: $jSONObject")
             val response =
                 ResponseModel(
                     jSONObject
@@ -367,6 +345,14 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
 
             if (response.status) {
                 marketJSONArray = response.getdataArray()
+                AppUtility.getInstance().showListDialogMarketIndex(
+                    marketJSONArray,
+                    3,
+                    getString(R.string.farmer_select_market),
+                    "apmc_name",
+                    this,
+                    this
+                )
             } else {
                 Toast.makeText(this, "Data Not Found", Toast.LENGTH_LONG).show()
             }
@@ -392,7 +378,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
                                 + ", " + resources.getString(R.string.market_c_price))
                     } else {
                         binding.tvMarketDetails.text = (districtName + ", "
-                                + marketName+" "+ resources.getString(R.string.market_c_price))
+                                + marketName + " " + resources.getString(R.string.market_c_price))
                     }
                     val marketPriceAdapter =
                         MarketPriceAdapter(
@@ -416,7 +402,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
 
                     } else {
                         binding.tvMarketDetails.text = (districtName + ", "
-                                + marketName +" "+ resources.getString(R.string.market_c_price))
+                                + marketName + " " + resources.getString(R.string.market_c_price))
                     }
                     Toast.makeText(
                         this,
@@ -468,7 +454,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
                 } else {
                     binding.tvMarketDetails.visibility = View.VISIBLE
                     binding.tvMarketDetails.text =
-                        districtName + ", " + marketName +" "+ resources.getString(R.string.market_c_price)
+                        districtName + ", " + marketName + " " + resources.getString(R.string.market_c_price)
                     Toast.makeText(
                         this,
                         "Data Not Available on $marketPreceDate for $marketName",
@@ -483,18 +469,6 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
         TODO("Not yet implemented")
-    }
-
-    override fun onDateSelected(i: Int, day: Int, month: Int, year: Int) {
-        if (i == 1) {
-            marketPreceDate = "" + year + "-" + month + "-" + day
-            binding.tvMarketDate.text = marketPreceDate
-            if (!marketName.isNullOrEmpty()) {
-                getMarketPriceDetails()
-            } else {
-                Toast.makeText(this, "Please Select Your Desire Market", Toast.LENGTH_LONG).show()
-            }
-        }
     }
 
     override fun attachBaseContext(newBase: Context) {

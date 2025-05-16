@@ -46,9 +46,22 @@
         android:id="@+id/sopRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sowingLinearLayout" />
+
+    <TextView
+        android:id="@+id/sopTextView"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_height="wrap_content"
+        android:text="@string/sop_not_available"
+        android:visibility="gone"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="@+id/noDataFoundImageView"
+        app:layout_constraintStart_toStartOf="@+id/noDataFoundImageView"
+        app:layout_constraintTop_toBottomOf="@+id/noDataFoundImageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

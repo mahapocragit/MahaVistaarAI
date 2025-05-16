@@ -14,6 +14,7 @@ public interface APIServices {
     String kUserLogin = "authService/LoginCheck";
     String kRefreshTokenLogin = "authService/refreshtoken";
     String getNearestCHCenters = "chcService/get-nearest-chc-centers";
+    String getCodeFromCoordinates = "webservices/fetch_admin_info_for_location";
     String kRevampedDBTSchemes = "FarmerApp/ActivitiesData";
     String kGetTokenFromWotr = "Api_GoM/login";
     String kGetFertilizerCalculatedDataWotr = "Api_GoM/getNutrient_calculator";
@@ -29,7 +30,7 @@ public interface APIServices {
     String kGetVideosCategories = "videoService/get-video-category-details";
     String kdeleteFarmerSelectedCrop = "farmerService/delete-farmers-selected-crop";
     String kGetmarketsList = "masterService/get-markets-by-taluka";
-    String kGetmarketsPriceDetails = "masterService/msamb-data";
+    String kGetmarketsPriceDetails = "msambService/msamb-data";
     String kResetPassword = "authService/resetPassword";
     String fetchFarmerListForSHC = "webservices//fetch_farmer_shc_list";
     String kGetDistrictList = "masterService/get-all-district";
@@ -38,7 +39,7 @@ public interface APIServices {
     String kGetVillageList = "masterService/get-village-on-taluka";
     String kSaveFarmerSelectedCrop = "farmerService/save-farmers-selected-crop";
     String kGetMarketAndMarketName = "msambService/get-markets-by-districts";
-    String kGetMarketData = "masterService/get-markets";
+    String kGetMarketData = "msambService/get-markets";
     String KSaveFertilizerFormula = "farmerService/save-fertilizer-formula-of-user";
     String kGetFertilizerSavedFormula = "farmerService/get-fertilizer-formula-of-user";
     String kClimateResilientTechnology = "craService/get_cra_groups";

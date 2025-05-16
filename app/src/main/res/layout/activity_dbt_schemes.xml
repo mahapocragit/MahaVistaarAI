@@ -197,6 +197,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/darkblue"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     android:layout_marginHorizontal="@dimen/_10sdp"
                     android:layout_marginVertical="@dimen/_5sdp"
                     android:text="@string/apply_for_pocradbt" />

@@ -61,13 +61,14 @@ class PdfWebViewActivity : AppCompatActivity() {
         binding.webView.webViewClient = WebViewClient()
         binding.webView.loadUrl(googleDriveView + url)
         val shcNumber = intent.getStringExtra("shcNumber")
-        Log.d("TAGGER", "onCreate: $shcNumber")
-        shcNumber?.let { gisViewModel.fetchSoilHealthCardDetailsFromSHCNumber(this, it) }
+        Log.d("TAGGER", "onCreate: $languageToLoad")
+        shcNumber?.let { gisViewModel.fetchSoilHealthCardDetailsFromSHCNumber(this, it, languageToLoad) }
         observeResponse()
     }
 
     private fun observeResponse() {
         gisViewModel.shcInformationResponse.observe(this){
+            Log.d("TAGGER", "observeResponse: $it")
             if (it!=null){
                 val jsonObject = JSONObject(it.toString())
                 val basicInfo = jsonObject.getJSONArray("basic_info")[0] as JSONObject
@@ -89,6 +90,10 @@ class PdfWebViewActivity : AppCompatActivity() {
                 binding.soilHealthCardLayout.fertilizerRecommendationRecyclerView.adapter = fertilizerRecommendationAdapter
                 fertilizerRecommendationAdapter.notifyDataSetChanged()
             }
+        }
+
+        gisViewModel.error.observe(this){
+            Log.d("TAGGER", "observeResponse: $it")
         }
     }
 

@@ -351,10 +351,9 @@
             android:layout_gravity="center|bottom"
             android:layout_marginBottom="5dp"
             android:elevation="@dimen/_10sdp"
-            android:background="@drawable/chatbot_icon"
+            android:background="@drawable/vistaar_logo_mr"
             android:contentDescription="chat"
-            android:scaleType="centerInside"
-            android:src="@drawable/chatbot_icon" />
+            android:scaleType="centerInside" />
     </FrameLayout>
 
 </RelativeLayout>

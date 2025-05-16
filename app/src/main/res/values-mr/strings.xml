@@ -435,4 +435,8 @@
     <string name="soiltestresult">माती चाचणी परिणाम</string>
     <string name="fertiliserrecomendation">खताची शिफारस</string>
     <string name="viewsoilhealthreport">मातीचा अहवाल पहा</string>
+    <string name="select_language">भाषा निवडा</string>
+    <string name="sop_not_available">सध्या, निवडलेल्या पिकासाठी S.O.P उपलब्ध नाही. आम्ही ते लवकरच उपलब्ध करू.</string>
+    <string name="sowing_date_alert_title">पेरणीच्या डीफॉल्ट तारखेचा सल्ला</string>
+    <string name="sowing_date_alert">आपण निवडलेल्या पिकासाठी विद्यापीठाने शिफारस केलेली पेरणीची तारीख दिसत आहे. या तारखेनुसार व पिकाच्या  अवस्थेनुसार येथे सल्ला दिला आहे. जर आपल्या पिकाची पेरणी यापेक्षा वेगळ्या तारखेला झाली असेल, तर कृपया आपली प्रत्यक्ष पेरणीची तारीख येथे भरावी. तसे केल्यास आपल्याला अधिक अचूक सल्ला मिळेल. अन्यथा तारीख बदलणे आवश्यक नाही.</string>
 </resources>

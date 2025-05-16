@@ -22,7 +22,7 @@ class SplashScreenActivity : AppCompatActivity() {
 
     private var farmerId: Int = 0
     private lateinit var languageToLoad: String
-    private lateinit var appVersionText:TextView
+    private lateinit var appVersionText: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +32,8 @@ class SplashScreenActivity : AppCompatActivity() {
         }
         switchLanguage(this, languageToLoad)
         setContentView(R.layout.activity_splash_screen)
-
+        val isGuest =
+            AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
         // Set Language Configuration
         val languageToLoad = if (AppSettings.getLanguage(this) == "1") "en" else "mr"
         Locale.setDefault(Locale(languageToLoad))
@@ -42,14 +43,23 @@ class SplashScreenActivity : AppCompatActivity() {
         )
 
         appVersionText = findViewById(R.id.appVersionText)
-        appVersionText.text = "${getString(R.string.app_version)} ${LocalCustom.getVersionName(this)}"
+        appVersionText.text =
+            "${getString(R.string.app_version)} ${LocalCustom.getVersionName(this)}"
         // Get Farmer ID
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
 
         // Navigate to the appropriate screen after delay
         Handler(Looper.getMainLooper()).postDelayed({
-            val targetActivity =
-                if (farmerId > 0) DashboardScreen::class.java else LoginScreen::class.java
+            val targetActivity = if (farmerId > 0) {
+                if (isGuest) {
+                    LoginScreen::class.java
+                } else {
+                    DashboardScreen::class.java
+                }
+            } else {
+                LoginScreen::class.java
+            }
+
             startActivity(Intent(this, targetActivity).apply {
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
             })

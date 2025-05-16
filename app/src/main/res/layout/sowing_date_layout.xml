@@ -54,6 +54,16 @@
                         app:tint="@color/arrow_color_figma"
                         android:padding="@dimen/_2sdp"
                         app:srcCompat="@drawable/edit_sowing_date_figma"/>
+
+                    <ImageView
+                        android:id="@+id/infoIconTextView"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_gravity="start"
+                        android:padding="@dimen/_2sdp"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/info_ic"
+                        app:tint="@color/arrow_color_figma" />
                 </LinearLayout>
             </LinearLayout>
 

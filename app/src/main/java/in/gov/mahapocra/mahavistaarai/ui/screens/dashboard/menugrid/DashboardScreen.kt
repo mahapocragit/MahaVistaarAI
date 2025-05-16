@@ -49,6 +49,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.DBTAct
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard.HealthCardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.AboutActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.CreditsActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.news.NewsListActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
@@ -186,7 +187,11 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
 
         binding.appBarMain.dashboardScreen.chatFab.setOnClickListener {
-            startActivity(Intent(this, TempDashboardActivity::class.java))
+            if (!isGuest) {
+                startActivity(Intent(this, TempDashboardActivity::class.java))
+            }else{
+                Toast.makeText(this, "Please login to continue", Toast.LENGTH_SHORT).show()
+            }
         }
 
         appPreferenceManager.clearAll()
@@ -815,7 +820,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 3 -> {
                     val notificationIntent = Intent(
                         this@DashboardScreen,
-                        NewsListActivity::class.java
+                        CreditsActivity::class.java
                     )
                     startActivity(notificationIntent)
                 }

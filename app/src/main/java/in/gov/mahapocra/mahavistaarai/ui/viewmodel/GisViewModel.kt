@@ -24,11 +24,12 @@ class GisViewModel : ViewModel() {
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
-    fun fetchSoilHealthCardDetailsFromSHCNumber(context: Context, shcID: String) {
+    fun fetchSoilHealthCardDetailsFromSHCNumber(context: Context, shcID: String, language:String) {
         viewModelScope.launch {
             try {
                 val jsonObject = JSONObject().apply {
                     put("shc_no", shcID)
+//                    put("language", language)
                 }
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api = AppInventorApi(

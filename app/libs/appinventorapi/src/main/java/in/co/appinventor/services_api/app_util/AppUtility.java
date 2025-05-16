@@ -69,6 +69,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
@@ -107,7 +108,7 @@ import okio.Buffer;
 
 /* renamed from: in.co.appinventor.services_api.app_util.AppUtility */
 public class AppUtility {
-    private static AppUtility appUtility = new AppUtility();
+    private static final AppUtility appUtility = new AppUtility();
 
     private AppUtility() {
     }
@@ -174,10 +175,7 @@ public class AppUtility {
     }
 
     public boolean isValidPersonName(String value) {
-        if (checkSpecialCharsAndNumbers(value, "names") && value.length() >= 2) {
-            return true;
-        }
-        return false;
+        return checkSpecialCharsAndNumbers(value, "names") && value.length() >= 2;
     }
 
     public boolean checkSpecialChars(String value) {
@@ -204,10 +202,7 @@ public class AppUtility {
                 return false;
             }
         }
-        if (value.length() >= 6) {
-            return true;
-        }
-        return false;
+        return value.length() >= 6;
     }
 
     public boolean checkNumbers(String value) {
@@ -220,7 +215,7 @@ public class AppUtility {
     }
 
     public boolean isValidCallingNumber(String value) {
-        String alphas = "abcdefghijklmnopqrstuvwxyz".toUpperCase() + "" + "abcdefghijklmnopqrstuvwxyz";
+        String alphas = "abcdefghijklmnopqrstuvwxyz".toUpperCase() + "abcdefghijklmnopqrstuvwxyz";
         int counter0 = 0;
         for (int j = 0; j < value.length(); j++) {
             if ((value.charAt(j) + "").equals("0")) {
@@ -235,10 +230,7 @@ public class AppUtility {
                 return false;
             }
         }
-        if (value.length() < 10 || value.contains("1234567890") || value.contains("0000000000") || value.contains("1111111111") || value.contains("2222222222") || value.contains("3333333333") || value.contains("4444444444") || value.contains("5555555555") || value.contains("6666666666") || value.contains("7777777777") || value.contains("8888888888")) {
-            return false;
-        }
-        return true;
+        return value.length() >= 10 && !value.contains("1234567890") && !value.contains("0000000000") && !value.contains("1111111111") && !value.contains("2222222222") && !value.contains("3333333333") && !value.contains("4444444444") && !value.contains("5555555555") && !value.contains("6666666666") && !value.contains("7777777777") && !value.contains("8888888888");
     }
 
     public String isValidMobileNumber(String paramString) {
@@ -356,7 +348,7 @@ public class AppUtility {
     public String getRealPathFromURIs(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
-            cursor = context.getContentResolver().query(contentUri, new String[]{"_data"}, (String) null, (String[]) null, (String) null);
+            cursor = context.getContentResolver().query(contentUri, new String[]{"_data"}, null, null, null);
             int column_index = 0;
             if (cursor != null) {
                 column_index = cursor.getColumnIndexOrThrow("_data");
@@ -425,7 +417,7 @@ public class AppUtility {
         listPicker.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 tv.setText(items[which].toString());
-                alertListCallbackEventListener.didSelectAlertViewListItem(tv, (String) selectedIndexArray.get(which));
+                alertListCallbackEventListener.didSelectAlertViewListItem(tv, selectedIndexArray.get(which));
             }
         });
         listPicker.show();
@@ -446,7 +438,7 @@ public class AppUtility {
         listPicker.setTitle(title);
         listPicker.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                callBackListener.didSelectAlertViewListItem(null, (String) selectedIndexArray.get(which));
+                callBackListener.didSelectAlertViewListItem(null, selectedIndexArray.get(which));
             }
         });
         listPicker.show();
@@ -507,7 +499,9 @@ public class AppUtility {
         listPicker.setTitle(title);
         final AlertListEventListener alertListEventListener = callBackListener;
         final int i2 = requestCode;
-        listPicker.setItems(items, (dialog, which) -> alertListEventListener.didSelectListItem(i2, items[which].toString(), (String) selectedIndexArray.get(which)));
+        listPicker.setItems(items, (dialog, which) -> {
+            alertListEventListener.didSelectListItem(i2, items[which].toString(), ja.optJSONObject(which).toString());
+        });
         listPicker.show();
     }
 
@@ -670,7 +664,7 @@ public class AppUtility {
     }
 
     public String getDate(Calendar cal) {
-        return "" + cal.get(5) + "/" + (cal.get(2) + 1) + "/" + cal.get(1);
+        return cal.get(5) + "/" + (cal.get(2) + 1) + "/" + cal.get(1);
     }
 
     public long getDateDiff(Date sDate, Date eDate) {
@@ -945,11 +939,7 @@ public class AppUtility {
 
     public String getEmojiFilterText(String text) {
         String utf8tweet = "";
-        try {
-            utf8tweet = new String(text.getBytes("UTF-8"), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        utf8tweet = new String(text.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
         try {
             Matcher unicodeOutlierMatcher = Pattern.compile("[^\\x00-\\x7F]", 66).matcher(utf8tweet);
             System.out.println("Before: " + utf8tweet);
@@ -983,7 +973,7 @@ public class AppUtility {
 
     public void sendSMS(String phoneNo, String msg) {
         try {
-            SmsManager.getDefault().sendTextMessage(phoneNo, (String) null, msg, (PendingIntent) null, (PendingIntent) null);
+            SmsManager.getDefault().sendTextMessage(phoneNo, null, msg, null, null);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -992,7 +982,7 @@ public class AppUtility {
     public void sendLongSMS(String phoneNo, String msg) {
         try {
             SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendMultipartTextMessage(msg, (String) null, smsManager.divideMessage(phoneNo), (ArrayList) null, (ArrayList) null);
+            smsManager.sendMultipartTextMessage(msg, null, smsManager.divideMessage(phoneNo), null, null);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -1210,7 +1200,7 @@ public class AppUtility {
     }
 
     public String getFileExt(String fileName) {
-        return fileName.substring(fileName.lastIndexOf(FileUtils.HIDDEN_PREFIX) + 1, fileName.length());
+        return fileName.substring(fileName.lastIndexOf(FileUtils.HIDDEN_PREFIX) + 1);
     }
 
     public String getFileExtension(File fileName) {
@@ -1221,7 +1211,7 @@ public class AppUtility {
     public String getFileName(Context mContext, Uri uri) throws Throwable {
         String result = null;
         if (uri.getScheme().equals("content")) {
-            Cursor cursor = mContext.getContentResolver().query(uri, (String[]) null, (String) null, (String[]) null, (String) null);
+            Cursor cursor = mContext.getContentResolver().query(uri, null, null, null, null);
             if (cursor != null) {
                 try {
                     if (cursor.moveToFirst()) {
@@ -1346,7 +1336,7 @@ public class AppUtility {
         if (amount == null || amount.length() <= 0) {
             return "";
         }
-        return String.format(Locale.getDefault(), "%,.2f", new Object[]{Double.valueOf(Double.parseDouble(amount))});
+        return String.format(Locale.getDefault(), "%,.2f", Double.valueOf(Double.parseDouble(amount)));
     }
 
     public long setSyncFrequencyOnInternetConnection(Context mContext) {
@@ -1363,13 +1353,9 @@ public class AppUtility {
 
     public String decodeString(String encoded) {
         try {
-            String decodedString = new String(Base64.decode(encoded, 2), "UTF-8");
+            String decodedString = new String(Base64.decode(encoded, 2), StandardCharsets.UTF_8);
             String str = decodedString;
             return decodedString;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            Object obj = "";
-            return "";
         } catch (Throwable th) {
             Object obj2 = "";
             return "";
@@ -1454,11 +1440,7 @@ public class AppUtility {
             return file.delete();
         }
         for (String child : file.list()) {
-            if (!deleteFile(new File(file, child)) || !deletedAll) {
-                deletedAll = false;
-            } else {
-                deletedAll = true;
-            }
+            deletedAll = deleteFile(new File(file, child)) && deletedAll;
         }
         return deletedAll;
     }
@@ -1568,7 +1550,7 @@ public class AppUtility {
 
     public Uri getBitmapToUri(Context inContext, Bitmap inImage) {
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, new ByteArrayOutputStream());
-        return Uri.parse(MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", (String) null));
+        return Uri.parse(MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null));
     }
 
     @SuppressLint("WrongConstant")
@@ -1727,7 +1709,7 @@ public class AppUtility {
     }
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
-        Cursor cursor = new CursorLoader(context, contentUri, new String[]{"_data"}, (String) null, (String[]) null, (String) null).loadInBackground();
+        Cursor cursor = new CursorLoader(context, contentUri, new String[]{"_data"}, null, null, null).loadInBackground();
         int column_index = cursor.getColumnIndexOrThrow("_data");
         cursor.moveToFirst();
         String result = cursor.getString(column_index);
@@ -1768,7 +1750,7 @@ public class AppUtility {
                     StringBuilder res1 = new StringBuilder();
                     int length = macBytes.length;
                     for (int i = 0; i < length; i++) {
-                        res1.append(String.format("%02X:", new Object[]{Byte.valueOf(macBytes[i])}));
+                        res1.append(String.format("%02X:", Byte.valueOf(macBytes[i])));
                     }
                     if (res1.length() > 0) {
                         res1.deleteCharAt(res1.length() - 1);
@@ -1797,10 +1779,7 @@ public class AppUtility {
             }
         } catch (Exception e) {
         }
-        if (canExecuteCommand("/system/xbin/which su") || canExecuteCommand("/system/bin/which su") || canExecuteCommand("which su")) {
-            return true;
-        }
-        return false;
+        return canExecuteCommand("/system/xbin/which su") || canExecuteCommand("/system/bin/which su") || canExecuteCommand("which su");
     }
 
     private static boolean canExecuteCommand(String command) {
@@ -1813,11 +1792,11 @@ public class AppUtility {
     }
 
     public String encodeBase64Param(String param) {
-        return Base64.encodeToString(param.getBytes(Charset.forName("UTF-8")), 0);
+        return Base64.encodeToString(param.getBytes(StandardCharsets.UTF_8), 0);
     }
 
     public String decodeBase64Param(String param) {
-        return new String(Base64.decode(param.getBytes(), 0), Charset.forName("UTF-8"));
+        return new String(Base64.decode(param.getBytes(), 0), StandardCharsets.UTF_8);
     }
 
     public String readJSONFromAsset(Context mContext, String fileName) {
@@ -1826,7 +1805,7 @@ public class AppUtility {
             byte[] buffer = new byte[is.available()];
             is.read(buffer);
             is.close();
-            String json = new String(buffer, "UTF-8");
+            String json = new String(buffer, StandardCharsets.UTF_8);
             return json;
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -1965,10 +1944,7 @@ public class AppUtility {
     public boolean validateFromToDate(String fromDate, String toDate) {
         SimpleDateFormat dfDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         try {
-            if (!dfDate.parse(fromDate).before(dfDate.parse(toDate)) && !dfDate.parse(fromDate).equals(dfDate.parse(toDate))) {
-                return false;
-            }
-            return true;
+            return dfDate.parse(fromDate).before(dfDate.parse(toDate)) || dfDate.parse(fromDate).equals(dfDate.parse(toDate));
         } catch (ParseException e) {
             e.printStackTrace();
             return false;

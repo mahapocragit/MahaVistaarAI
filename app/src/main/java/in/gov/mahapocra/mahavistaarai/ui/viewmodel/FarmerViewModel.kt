@@ -59,6 +59,12 @@ class FarmerViewModel : ViewModel() {
     private val _chcCentersResponse = MutableLiveData<JsonObject>()
     val chcCentersResponse: LiveData<JsonObject> = _chcCentersResponse
 
+    private val _fetchLocationDataFromCoordinates = MutableLiveData<JsonObject>()
+    val fetchLocationDataFromCoordinates: LiveData<JsonObject> = _fetchLocationDataFromCoordinates
+
+    private val _responseMarkerList = MutableLiveData<JsonObject>()
+    val responseMarkerList: LiveData<JsonObject> = _responseMarkerList
+
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
@@ -378,6 +384,59 @@ class FarmerViewModel : ViewModel() {
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getCHCInformation(requestBody)
                 _chcCentersResponse.value = response
+            } catch (e: Exception) {
+                _error.value = e.localizedMessage ?: "Failed to fetch user details"
+            }
+        }
+    }
+
+    fun fetchLocationDataFromCoordinates(context: Context, latitude: Double, longitude: Double){
+        viewModelScope.launch {
+            try {
+                val jsonObject = JSONObject()
+                jsonObject.put("lat", latitude)
+                jsonObject.put("lon", longitude)
+
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api =
+                    AppInventorApi(
+                        context,
+                        APIServices.FARMER,
+                        "",
+                        AppString(context).getkMSG_WAIT(),
+                        false
+                    )
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.getCodeFromCoordinates(requestBody)
+                _fetchLocationDataFromCoordinates.value = response
+            } catch (e: Exception) {
+                _error.value = e.localizedMessage ?: "Failed to fetch user details"
+            }
+        }
+    }
+
+    fun fetchMarketList(context: Context, languageToLoad: String, districtCode:Int){
+        viewModelScope.launch {
+            try {
+                val jsonObject = JSONObject()
+                jsonObject.put("lang", languageToLoad)
+                jsonObject.put("api_key", APIKeys.SSO_PROD)
+                jsonObject.put("district_code", districtCode)
+
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api =
+                    AppInventorApi(
+                        context,
+                        APIServices.FARMER,
+                        "",
+                        AppString(context).getkMSG_WAIT(),
+                        false
+                    )
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.getMarketList(requestBody)
+                _responseMarkerList.value = response
             } catch (e: Exception) {
                 _error.value = e.localizedMessage ?: "Failed to fetch user details"
             }

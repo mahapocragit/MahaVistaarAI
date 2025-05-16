@@ -43,6 +43,8 @@ public interface APIRequest {
 
     @POST(APIServices.kGetDistrictList)
     Call<JsonObject> getDistrictList(@Body RequestBody params);
+    @POST(APIServices.kGetMarketData)
+    Call<JsonObject> getMarketList(@Body RequestBody params);
 
     @POST(APIServices.kGetMarketAndMarketName)
     Call<JsonObject> getMarketAndMarketName(@Body RequestBody params);

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -90,6 +91,19 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         }
         binding.sowingInfoLayout.textView7.text = getString(R.string.sowing_date)
 
+
+//        binding.sowingInfoLayout.infoIconTextView.visibility = View.VISIBLE
+//        binding.sowingInfoLayout.infoIconTextView.setOnClickListener {
+//            val dialog = AlertDialog.Builder(this)
+//                .setTitle(R.string.sowing_date_alert_title)
+//                .setMessage(R.string.sowing_date_alert)
+//                .setPositiveButton("OK") { dialogInterface, _ ->
+//                    dialogInterface.dismiss()
+//                }
+//                .create()
+//            dialog.show()
+//        }
+
         //fetching values
         cropId = intent.getIntExtra("id", 0)
         cropName = intent.getStringExtra("mName")
@@ -122,6 +136,8 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         super.onBackPressed()
         startActivity(Intent(this, DashboardScreen::class.java))
     }
+
+
 
     private fun getCropStagesAndAdvisory() {
         val jsonObject = JSONObject()
