@@ -39,6 +39,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.logThis
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -101,7 +102,8 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
 
         cropId = intent.getIntExtra("id", 0)
         cropName = intent.getStringExtra("mName")
-        wotrCropId = intent.getStringExtra("wotr_crop_id")
+        wotrCropId = intent.getIntExtra("wotr_crop_id", 0).toString()
+        Log.d("TAGGER", "onCreate: $wotrCropId & $cropName")
         mUrl = intent.getStringExtra("mUrl")
         sowingDate = intent.getStringExtra("sowingDate")
 
@@ -381,10 +383,12 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     villageID.toString(), edtFYMValue, "0",
                     totalAcrArea.toString(), plotUnitCode.toString(), token
                 )
+
+                logThis(responseCall.request().toString())
                 api.postRequest(responseCall, this@FertilizerCalculatorActivity, 1)
             }
         } catch (e: JSONException) {
-            DebugLog.getInstance().d("JSONException=$e")
+            logThis(e.toString())
             e.printStackTrace()
         }
     }
