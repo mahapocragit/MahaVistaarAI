@@ -804,33 +804,26 @@
                         android:fastScrollEnabled="true"
                         android:scrollbarAlwaysDrawHorizontalTrack="true"
                         android:scrollbarStyle="insideOverlay"
-                        android:scrollbars="vertical"
-                        android:visibility="gone" />
-
-                    <LinearLayout
-                        android:id="@+id/ly_bar_bottom"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:gravity="right"
-                        android:orientation="horizontal">
-
-                        <!--                    <android.support.design.widget.FloatingActionButton-->
-                        <!--                        xmlns:app="http://schemas.android.com/apk/res-auto"-->
-                        <!--                        android:id="@+id/fab"-->
-                        <!--                        android:layout_width="wrap_content"-->
-                        <!--                        android:layout_height="wrap_content"-->
-                        <!--                        android:layout_gravity="bottom|right"-->
-                        <!--                        android:src="@drawable/layout_button_bg"-->
-
-                        <!--                        app:elevation="6dp"-->
-                        <!--                        app:borderWidth="0dp"-->
-                        <!--                        app:fabSize="normal" />-->
-
-                    </LinearLayout>
-
+                        android:scrollbars="vertical" />
 
                 </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/noDataFoundImageView"
+                    android:layout_width="@dimen/_100sdp"
+                    android:layout_height="@dimen/_100sdp"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:src="@drawable/ic_no_data_found"/>
+
+                <TextView
+                    android:id="@+id/noDataFoundTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:text="Currently, Fertilizers Combinations for the selected crop are not available. We will update it very soon."/>
+
             </LinearLayout>
 
 

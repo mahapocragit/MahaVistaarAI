@@ -440,12 +440,21 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             if (jSONObject != null) {
                 when (code) {
                     1 -> {
-                        Log.d("TAGGER", "onResponse1: $jSONObject")
+
+                        val error = jSONObject.optString("error")
+                        if (error.equals("Please Enter a Valid CropID !!")){
+                            binding.noDataFoundImageView.visibility = View.VISIBLE
+                            binding.noDataFoundTextView.visibility = View.VISIBLE
+                        }
+                        Log.d("TAGGER", "onResponse1: $jSONObject & $error")
                         binding.availableOptionTv.visibility = View.INVISIBLE
                         val simpleFertilizersArray: JSONArray =
                             jSONObject.getJSONArray("SimpleFertilizers")
+                        Log.d("TAGGER", "onResponse1: $simpleFertilizersArray")
                         val complexFertilizersArray: JSONArray =
                             jSONObject.getJSONArray("ComplexFertilizers")
+
+
 
                         //Main JSONObject
                         var mainIndex = 0
@@ -455,6 +464,8 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                         var optionJsonObject1 = JSONObject()
                         var optionArray1 = JSONArray()
                         if (complexFertilizersArray.length() > 0) {
+                            binding.noDataFoundImageView.visibility = View.GONE
+                            binding.noDataFoundTextView.visibility = View.GONE
                             for (j in 0 until complexFertilizersArray.length()) {
                                 // for simple
                                 if (j == 0) {
@@ -496,7 +507,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                             }
                             optionJsonObject1.put("Option", optionArray1)
                             optionFertilizerDataArray.put(mainIndex, optionJsonObject1)
-                        } else {
+                        }else {
                             val optionJsonObject = JSONObject()
                             val optionArray = JSONArray()
                             for (k in 0 until simpleFertilizersArray.length()) {
@@ -510,6 +521,8 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                             optionFertilizerDataArray.put(mainIndex, optionJsonObject)
                             mainIndex++
                         }
+
+                        Log.d("TAGGER", "onResponse: $error")
                         fertilizerOptionValue = optionFertilizerDataArray
                         DebugLog.getInstance().d("fertilizerCalculatedValue=$fertilizerOptionValue")
                         availableOption = "fertilizerCalculatedValue"
