@@ -584,7 +584,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     } else {
                         val intent = Intent(this, FertilizerCalculatorActivity::class.java)
                         intent.putExtra("id", savedCropId)
-                        intent.putExtra("wotr_crop_id", savedCropWoTRId)
+                        intent.putExtra("wotr_crop_id", savedCropWoTRId?.toInt())
                         intent.putExtra("mUrl", savedCropImageUrl)
                         intent.putExtra("mName", savedCropName)
                         intent.putExtra("sowingDate", savedCropSowingDate)
