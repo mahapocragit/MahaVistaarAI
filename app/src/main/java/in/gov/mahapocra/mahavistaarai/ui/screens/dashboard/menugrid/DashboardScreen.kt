@@ -696,9 +696,17 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     private fun setConfiguration() {
         try {
             if (languageToLoad.equals("en", ignoreCase = true)) {
-                jsonArray = AppHelper.getInstance().getMenuOption()
+                jsonArray = if (isGuest) {
+                    AppHelper.getInstance().getForGuestOption()
+                }else{
+                    AppHelper.getInstance().getMenuOption()
+                }
             } else if (languageToLoad.equals("mr", ignoreCase = true)) {
-                jsonArray = AppHelper.getInstance().getMenuOptionMarathi()
+                jsonArray = if (isGuest){
+                    AppHelper.getInstance().getMenuOptionForGuestMarathi()
+                }else {
+                    AppHelper.getInstance().getMenuOptionMarathi()
+                }
             }
             val menuAdapter = DrawerMenuAdapter(this, jsonArray, farmerId)
             binding.menuListView.adapter = menuAdapter
