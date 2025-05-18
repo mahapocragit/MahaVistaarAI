@@ -40,10 +40,9 @@ class DBTActivity : AppCompatActivity() {
         }
 
         binding.mahaDBTCardView.setOnClickListener {
-            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
-//            startActivity(Intent(this, DbtSchemes::class.java).apply {
-//                putExtra("dbtFromDashboard", "mahaDBTCardView")
-//            })
+            startActivity(Intent(this, MahaDbtSchemesActivity::class.java).apply {
+                putExtra("dbtFromDashboard", "mahaDBTCardView")
+            })
         }
     }
 

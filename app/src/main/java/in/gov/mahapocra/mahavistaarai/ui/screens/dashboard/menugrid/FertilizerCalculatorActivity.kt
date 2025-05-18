@@ -440,6 +440,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             if (jSONObject != null) {
                 when (code) {
                     1 -> {
+                        Log.d("TAGGER", "onResponse: $jSONObject")
                         binding.availableOptionTv.visibility = View.INVISIBLE
                         val simpleFertilizersArray: JSONArray =
                             jSONObject.getJSONArray("SimpleFertilizers")

@@ -16,6 +16,7 @@ public interface APIServices {
     String getNearestCHCenters = "chcService/get-nearest-chc-centers";
     String getCodeFromCoordinates = "webservices/fetch_admin_info_for_location";
     String kRevampedDBTSchemes = "FarmerApp/ActivitiesData";
+    String kRevampedMahaDBTSchemes = "FarmerApp/MahaDBTSchemesData";
     String kGetTokenFromWotr = "Api_GoM/login";
     String kGetFertilizerCalculatedDataWotr = "Api_GoM/getNutrient_calculator";
     String kWareHouseDetails = "warehouseService/warehouse-details";
