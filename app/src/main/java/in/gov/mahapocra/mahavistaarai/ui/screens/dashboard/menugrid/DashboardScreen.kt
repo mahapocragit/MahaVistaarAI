@@ -224,7 +224,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
         setVersion()
         farmerViewModel.getFarmerSelectedCrop(this, languageToLoad)
-        requestingPermissions()
+
         binding.appBarMain.dashboardScreen.bottomNavigation.itemIconTintList = null
         binding.appBarMain.dashboardScreen.bottomNavigation.setOnItemSelectedListener { item: MenuItem ->
             when (item.itemId) {
@@ -645,45 +645,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 }
         }
 
-    private fun requestingPermissions() {
-        var permissions = arrayOf(
-            Manifest.permission.CAMERA,
-            Manifest.permission.READ_PHONE_STATE,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        )
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            permissions = arrayOf(
-                Manifest.permission.CAMERA,
-                Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.POST_NOTIFICATIONS
-            )
-        }
-
-        // Check which permissions are not granted
-        val permissionsToRequest: MutableList<String> = ArrayList()
-        for (permission in permissions) {
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    permission
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                permissionsToRequest.add(permission)
-            }
-        }
-
-        // Request the permissions that are not granted
-        if (permissionsToRequest.isNotEmpty()) {
-            ActivityCompat.requestPermissions(
-                this,
-                permissionsToRequest.toTypedArray<String>(),
-                PERMISSION_REQUEST_CODE
-            )
-        }
-    }
 
 
     private fun init() {

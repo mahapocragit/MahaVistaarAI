@@ -8,7 +8,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_48sdp"
+        android:layout_height="wrap_content"
         android:layout_margin="2dp"
         app:cardCornerRadius="@dimen/_10sdp">
 
@@ -37,7 +37,7 @@
             <TextView
                 android:id="@+id/nameTextView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:paddingStart="@dimen/_8sdp"

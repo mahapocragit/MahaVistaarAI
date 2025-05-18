@@ -440,21 +440,11 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             if (jSONObject != null) {
                 when (code) {
                     1 -> {
-
-                        val error = jSONObject.optString("error")
-                        if (error.equals("Please Enter a Valid CropID !!")){
-                            binding.noDataFoundImageView.visibility = View.VISIBLE
-                            binding.noDataFoundTextView.visibility = View.VISIBLE
-                        }
-                        Log.d("TAGGER", "onResponse1: $jSONObject & $error")
                         binding.availableOptionTv.visibility = View.INVISIBLE
                         val simpleFertilizersArray: JSONArray =
                             jSONObject.getJSONArray("SimpleFertilizers")
-                        Log.d("TAGGER", "onResponse1: $simpleFertilizersArray")
                         val complexFertilizersArray: JSONArray =
                             jSONObject.getJSONArray("ComplexFertilizers")
-
-
 
                         //Main JSONObject
                         var mainIndex = 0
@@ -522,7 +512,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                             mainIndex++
                         }
 
-                        Log.d("TAGGER", "onResponse: $error")
                         fertilizerOptionValue = optionFertilizerDataArray
                         DebugLog.getInstance().d("fertilizerCalculatedValue=$fertilizerOptionValue")
                         availableOption = "fertilizerCalculatedValue"
