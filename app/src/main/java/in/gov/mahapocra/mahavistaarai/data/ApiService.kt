@@ -62,7 +62,7 @@ interface ApiService {
     suspend fun getDBTSchemes(): JsonObject
 
     @GET(APIServices.kRevampedMahaDBTSchemes)
-    suspend fun getMahaDBTSchemes(): List<SchemeDataModel>
+    suspend fun getMahaDBTSchemes(): JsonObject
 
     @GET(APIServices.kEventsForNews)
     suspend fun eventsForNews(

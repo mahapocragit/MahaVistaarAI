@@ -85,6 +85,8 @@
     <string name="agribusiness_component">कृषि व्यवसाय घटक</string>
     <string name="soil_and_water_conservation_practices">मृद व जलसंधारण कामे</string>
     <string name="important_documents">महत्वाची कागदपत्रे</string>
+    <string name="required_documents">आवश्यक कागदपत्रे</string>
+    <string name="main_component">मुख्य घटक</string>
 
     <string name="name_validation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ.</string>
     <string name="char_validation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ.</string>

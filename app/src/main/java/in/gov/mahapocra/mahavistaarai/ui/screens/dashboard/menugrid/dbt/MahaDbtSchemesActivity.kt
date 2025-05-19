@@ -1,35 +1,71 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityMahaDbtSchemesBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.DbtSchemesViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
+import org.json.JSONObject
 
 class MahaDbtSchemesActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMahaDbtSchemesBinding
+    private lateinit var languageToLoad: String
     private lateinit var dbtSchemesViewModel: DbtSchemesViewModel
+    private lateinit var mahadbtSchemesAdapter: MahadbtSchemesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        languageToLoad = "mr"
+        if (AppSettings.getLanguage(this@MahaDbtSchemesActivity).equals("1", ignoreCase = true)) {
+            languageToLoad = "en"
+        }
+        switchLanguage(this, languageToLoad)
         binding = ActivityMahaDbtSchemesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.layoutToolbar.textViewHeaderTitle.text = getString(R.string.maha_dbt_name)
+        binding.layoutToolbar.imgBackArrow.visibility = View.VISIBLE
+        binding.layoutToolbar.imgBackArrow.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
         dbtSchemesViewModel = ViewModelProvider(this)[DbtSchemesViewModel::class.java]
         dbtSchemesViewModel.getMahaDBTSchemes(this)
-        dbtSchemesViewModel.responseUrlMahaDbtSchemes.observe(this) { schemeList ->
-            if (schemeList == null) {
-                Log.d("TAGGER", "onCreate: schemeList is null")
-            } else {
+        ProgressHelper.showProgressDialog(this)
+        dbtSchemesViewModel.responseUrlMahaDbtSchemes.observe(this) {
+            ProgressHelper.disableProgressDialog()
+            if (it!=null){
+                val jsonObject = JSONObject(it.toString())
+                val schemesJSONArray = jsonObject.optJSONArray("data")
+                Log.d("TAGGER", "onCreate: $schemesJSONArray")
+                mahadbtSchemesAdapter = MahadbtSchemesAdapter(schemesJSONArray, languageToLoad)
                 binding.recyclerView.layoutManager = LinearLayoutManager(this)
-                binding.recyclerView.adapter = MahadbtSchemesAdapter(schemeList)
+                binding.recyclerView.adapter = mahadbtSchemesAdapter
             }
         }
         dbtSchemesViewModel.error.observe(this){
+            ProgressHelper.disableProgressDialog()
             Log.d("TAGGER", "error: $it")
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 }

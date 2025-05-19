@@ -41,7 +41,7 @@ class TempDashboardActivity : AppCompatActivity() {
         mahavistaarViewModel = ViewModelProvider(this)[MahavistaarViewModel::class.java]
         binding.toolbar.imageViewHeaderBack.setVisibility(View.VISIBLE)
         binding.toolbar.imageViewHeaderBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
-        binding.toolbar.textViewHeaderTitle.text = "Agro Assistant"
+        binding.toolbar.textViewHeaderTitle.text = ""
 
         ProgressHelper.showProgressDialog(this)
         mahavistaarViewModel.requestUrlForChatBot(this)

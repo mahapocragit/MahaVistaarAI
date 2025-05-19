@@ -26,8 +26,8 @@ class DbtSchemesViewModel : ViewModel(){
     private val _responseUrlDbtSchemes = MutableLiveData<JsonObject>()
     val responseUrlDbtSchemes: LiveData<JsonObject> = _responseUrlDbtSchemes
 
-    private val _responseUrlMahaDbtSchemes = MutableLiveData<List<SchemeDataModel>>()
-    val responseUrlMahaDbtSchemes: LiveData<List<SchemeDataModel>> = _responseUrlMahaDbtSchemes
+    private val _responseUrlMahaDbtSchemes = MutableLiveData<JsonObject>()
+    val responseUrlMahaDbtSchemes: LiveData<JsonObject> = _responseUrlMahaDbtSchemes
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error

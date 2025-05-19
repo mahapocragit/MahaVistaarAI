@@ -50,6 +50,9 @@
         android:theme="@style/Theme.FarmerApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.screens.dashboard.menugrid.dbt.MahaDbtSchemesDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.screens.dashboard.menugrid.dbt.MahaDbtSchemesActivity"
             android:exported="false" />
         <activity
