@@ -52,6 +52,30 @@ public class AppHelper {
         return jsonArray;
     }
 
+    public JSONArray getForGuestOption() {
+
+        JSONArray jsonArray = new JSONArray();
+
+        try {
+            JSONObject jsonObject4 = new JSONObject();
+            jsonObject4.put("id", 3);
+            jsonObject4.put("name", "Credits");
+            jsonObject4.put("icon", "partners_ic");
+
+            JSONObject jsonObject7 = new JSONObject();
+            jsonObject7.put("id", 6);
+            jsonObject7.put("name", "Login/Registration");
+            jsonObject7.put("icon", "myprofile");
+
+            jsonArray.put(jsonObject7);
+            jsonArray.put(jsonObject4);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonArray;
+    }
+
     public JSONArray getMenuOptionMarathi() {
         JSONArray jsonArray = new JSONArray();
         try {
@@ -79,6 +103,29 @@ public class AppHelper {
             jsonArray.put(jsonObject7);
             jsonArray.put(jsonObject4);
             jsonArray.put(jsonObject9);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonArray;
+    }
+
+    public JSONArray getMenuOptionForGuestMarathi() {
+        JSONArray jsonArray = new JSONArray();
+        try {
+
+            JSONObject jsonObject4 = new JSONObject();
+            jsonObject4.put("id", 3);
+            jsonObject4.put("name", "भागीदार");
+            jsonObject4.put("icon", "partners_ic");
+
+            JSONObject jsonObject7 = new JSONObject();
+            jsonObject7.put("id", 6);
+            jsonObject7.put("name", "लॉगइन/नोंदणी");
+            jsonObject7.put("icon", "myprofile");
+
+            jsonArray.put(jsonObject7);
+            jsonArray.put(jsonObject4);
 
         } catch (JSONException e) {
             e.printStackTrace();

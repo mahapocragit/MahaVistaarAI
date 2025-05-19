@@ -316,7 +316,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/AddCrop"
-        android:layout_marginBottom="5dp">
+        android:layout_marginBottom="@dimen/_25sdp">
 
         <GridView
             android:id="@+id/gridViewDashboard"
@@ -346,8 +346,8 @@
         <!-- Floating or enlarged chat icon -->
         <ImageButton
             android:id="@+id/chat_fab"
-            android:layout_width="@dimen/_80sdp"
-            android:layout_height="@dimen/_80sdp"
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_70sdp"
             android:layout_gravity="center|bottom"
             android:layout_marginBottom="5dp"
             android:elevation="@dimen/_10sdp"

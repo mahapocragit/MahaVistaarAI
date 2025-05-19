@@ -11,6 +11,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -88,6 +89,7 @@ class DbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
 
     private fun dbtSchemesLists() {
         dbtSchemesViewModel.responseUrlDbtSchemes.observe(this) {
+            Log.d("TAGGER", "dbtSchemesLists: $it")
             ProgressHelper.disableProgressDialog()
             if (it != null) {
                 val jSONObject = JSONObject(it.toString())

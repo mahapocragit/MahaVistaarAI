@@ -224,7 +224,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
         setVersion()
         farmerViewModel.getFarmerSelectedCrop(this, languageToLoad)
-        requestingPermissions()
+
         binding.appBarMain.dashboardScreen.bottomNavigation.itemIconTintList = null
         binding.appBarMain.dashboardScreen.bottomNavigation.setOnItemSelectedListener { item: MenuItem ->
             when (item.itemId) {
@@ -584,7 +584,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     } else {
                         val intent = Intent(this, FertilizerCalculatorActivity::class.java)
                         intent.putExtra("id", savedCropId)
-                        intent.putExtra("wotr_crop_id", savedCropWoTRId)
+                        intent.putExtra("wotr_crop_id", savedCropWoTRId?.toInt())
                         intent.putExtra("mUrl", savedCropImageUrl)
                         intent.putExtra("mName", savedCropName)
                         intent.putExtra("sowingDate", savedCropSowingDate)
@@ -645,45 +645,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 }
         }
 
-    private fun requestingPermissions() {
-        var permissions = arrayOf(
-            Manifest.permission.CAMERA,
-            Manifest.permission.READ_PHONE_STATE,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        )
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            permissions = arrayOf(
-                Manifest.permission.CAMERA,
-                Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.POST_NOTIFICATIONS
-            )
-        }
-
-        // Check which permissions are not granted
-        val permissionsToRequest: MutableList<String> = ArrayList()
-        for (permission in permissions) {
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    permission
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                permissionsToRequest.add(permission)
-            }
-        }
-
-        // Request the permissions that are not granted
-        if (permissionsToRequest.isNotEmpty()) {
-            ActivityCompat.requestPermissions(
-                this,
-                permissionsToRequest.toTypedArray<String>(),
-                PERMISSION_REQUEST_CODE
-            )
-        }
-    }
 
 
     private fun init() {
@@ -696,9 +658,17 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     private fun setConfiguration() {
         try {
             if (languageToLoad.equals("en", ignoreCase = true)) {
-                jsonArray = AppHelper.getInstance().getMenuOption()
+                jsonArray = if (isGuest) {
+                    AppHelper.getInstance().getForGuestOption()
+                }else{
+                    AppHelper.getInstance().getMenuOption()
+                }
             } else if (languageToLoad.equals("mr", ignoreCase = true)) {
-                jsonArray = AppHelper.getInstance().getMenuOptionMarathi()
+                jsonArray = if (isGuest){
+                    AppHelper.getInstance().getMenuOptionForGuestMarathi()
+                }else {
+                    AppHelper.getInstance().getMenuOptionMarathi()
+                }
             }
             val menuAdapter = DrawerMenuAdapter(this, jsonArray, farmerId)
             binding.menuListView.adapter = menuAdapter

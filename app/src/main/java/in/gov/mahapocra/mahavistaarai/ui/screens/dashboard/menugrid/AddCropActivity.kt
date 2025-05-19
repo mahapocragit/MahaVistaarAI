@@ -26,6 +26,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropCategoriesAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.logThis
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import org.json.JSONArray
 import org.json.JSONObject
@@ -40,11 +41,8 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
     DatePickerRequestListener {
 
     private var mainCropCategoryRecycle: RecyclerView? = null
-    private lateinit var moviesImagesList: ArrayList<CropsCategName>
-    private lateinit var videoDetailsList: ArrayList<VideoDetails>
     private lateinit var languageToLoad: String
     private lateinit var viewModel: FarmerViewModel
-    private lateinit var cropJsonArray: JSONArray
     private lateinit var textViewHeaderTitle: TextView
     private lateinit var imageMenuShow: ImageView
     private lateinit var imgBackArrow: ImageView
@@ -115,6 +113,7 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
         if (i == 1) {
             receivedJson = obj as JSONObject
+            logThis(receivedJson.toString())
             AppUtility.getInstance().showDisabledFutureDatePicker(
                 this,
                 date,
@@ -127,6 +126,7 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
     override fun onDateSelected(i: Int, day: Int, month: Int, year: Int) {
         if (i == 1) {
             sowingDate = "$day-$month-$year"
+            logThis(sowingDate)
             cropId = receivedJson.optInt("id")
             viewModel.saveFarmerSelectedCrop(this, sowingDate, cropId)
             viewModel.saveFarmerSelectedCrop.observe(this) {
