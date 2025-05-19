@@ -202,11 +202,20 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                 if (!(s.contentEquals(""))) {
                     val acreNo: Int = s.toString().toInt()
                     if (acreNo > 99) {
-                        Toast.makeText(
-                            this@FertilizerCalculatorActivity,
-                            "Please Enter Acre Area Should Be Less Than 99",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        if (plotUnitCode == 3){
+                            Toast.makeText(
+                                this@FertilizerCalculatorActivity,
+                                R.string.area_acre_exceed_warning,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }else{
+                            Toast.makeText(
+                                this@FertilizerCalculatorActivity,
+                                R.string.area_hectare_exceed_warning,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
                         binding.edtAcre.setText("0")
                     }
                 }
@@ -226,7 +235,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     if (acreNo > 39) {
                         Toast.makeText(
                             this@FertilizerCalculatorActivity,
-                            "Please Enter Guntha Area Should Be Less Than or equal to 39",
+                            R.string.guntha_exceed_warning,
                             Toast.LENGTH_SHORT
                         ).show()
                         binding.edtGuntha.setText("0")

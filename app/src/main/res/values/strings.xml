@@ -419,4 +419,7 @@
     <string name="sop_not_available">Currently, S.O.P for the selected crop is not available. We will update it very soon.</string>
     <string name="sowing_date_alert_title">Default Sowing Date Advisory</string>
     <string name="sowing_date_alert">The sowing date mentioned here is default sowing date recommended by the university for the crop you have selected. Advisory provided here is based on this date and the stage of the crop. If your crop was sown on a different date, please enter your actual sowing date for more accurate advice.</string>
+    <string name="area_acre_exceed_warning">Please Enter Acre Area Should Be Less Than 99</string>
+    <string name="area_hectare_exceed_warning">Please Enter Hectare Area Should Be Less Than 99</string>
+    <string name="guntha_exceed_warning">Please Enter Guntha Area Should Be Less Than or equal to 39</string>
 </resources>
