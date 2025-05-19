@@ -245,15 +245,32 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
                     } else {
                         binding.wareHousereport.visibility = View.GONE
                         binding.wareHouseEmptyTextView.visibility = View.VISIBLE
+                        resetValuesForWareHouse()
                     }
                 }else{
                     binding.wareHousereport.visibility = View.GONE
                     binding.wareHouseEmptyTextView.visibility = View.VISIBLE
+                    resetValuesForWareHouse()
                 }
             } else {
                 UIToastMessage.show(this, response.response)
             }
         }
+    }
+
+    private fun resetValuesForWareHouse() {
+        binding.textTotalWarehouse.text =
+            buildString {
+                append(resources.getString(R.string.total_warehouse))
+                append(" ")
+                append(0)
+            }
+        binding.textAvailableCapacity.text =
+            buildString {
+                append(resources.getString(R.string.total_available_capacity))
+                append(" ")
+                append(0)
+            }
     }
 
     override fun didSelectListItem(i: Int, s: String?, s1: String?) {

@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.pocra
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,17 +8,16 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.FarmersDbtItemViewBinding
 import org.json.JSONArray
 import org.json.JSONObject
 
-class FarmerDBTRecyclerAdapter(
+class NRMrDBTRecyclerAdapter(
     private val farmersJSONArray: JSONArray,
-    private val languageToLoad: String,
-    private val listener: OnMultiRecyclerItemClickListener
-) : RecyclerView.Adapter<FarmerDBTRecyclerAdapter.ViewHolder>() {
+    private val languageToLoad: String
+) : RecyclerView.Adapter<NRMrDBTRecyclerAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
             FarmersDbtItemViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding, listener)
+        return ViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
@@ -32,18 +31,14 @@ class FarmerDBTRecyclerAdapter(
         }else{
             farmerObject.getString("activityName")
         }
-        holder.bind(activityName, farmerObject)
+        holder.bind(activityName)
     }
 
     class ViewHolder(
-        private val binding: FarmersDbtItemViewBinding,
-        private val listener: OnMultiRecyclerItemClickListener
+        private val binding: FarmersDbtItemViewBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(activityName: String, jsonObject: JSONObject) {
+        fun bind(activityName: String) {
             binding.dbtSchemeName.text = activityName
-            binding.farmerDbtCardView.setOnClickListener {
-                listener.onMultiRecyclerViewItemClick(1, jsonObject)
-            }
         }
     }
 }

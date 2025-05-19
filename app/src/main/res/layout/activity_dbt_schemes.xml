@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.screens.dashboard.menugrid.dbt.DbtSchemes">
+    tools:context=".ui.screens.dashboard.menugrid.dbt.pocra.PocraDbtSchemes">
 
 
     <include
@@ -61,6 +61,7 @@
                                 android:text="@string/individual_benefit_component" />
 
                             <ImageView
+                                android:id="@+id/ibcImageView"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="@dimen/_10sdp"
@@ -110,6 +111,7 @@
                                 android:text="@string/agribusiness_component" />
 
                             <ImageView
+                                android:id="@+id/acImageView"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="@dimen/_10sdp"
@@ -159,7 +161,7 @@
                                 android:text="@string/soil_and_water_conservation_practices" />
 
                             <ImageView
-                                android:id="@+id/imageView10"
+                                android:id="@+id/sawcpImageView"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="@dimen/_10sdp"
@@ -202,7 +204,35 @@
                     android:layout_marginVertical="@dimen/_5sdp"
                     android:text="@string/apply_for_pocradbt" />
 
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:text="@string/apply_for_pocradbt"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <TextView
+                        android:id="@+id/applyForPocraTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:textSize="@dimen/_12sdp"
+                        android:textColor="@color/colorPrimary"
+                        android:text="@string/click_here" />
+                </LinearLayout>
+
+
             </LinearLayout>
+
         </ScrollView>
     </LinearLayout>
 

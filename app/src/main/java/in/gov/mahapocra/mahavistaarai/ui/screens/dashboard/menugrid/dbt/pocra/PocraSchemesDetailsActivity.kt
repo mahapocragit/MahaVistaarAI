@@ -1,0 +1,109 @@
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.pocra
+
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import org.json.JSONObject
+
+class PocraSchemesDetailsActivity : AppCompatActivity() {
+
+    private lateinit var textViewHeaderTitle: TextView
+    private lateinit var imageMenushow: ImageView
+    private lateinit var importantDocumentsRecyclerView: RecyclerView
+    private lateinit var eligibilityCriteriaRecyclerView: RecyclerView
+    private lateinit var importantDocumentsCardTV: TextView
+    private lateinit var eligibilityCriteriaCardTV: TextView
+    private lateinit var importantDocImageView: ImageView
+    private lateinit var eligibilityCriteriaCardIV: ImageView
+    var languageToLoad: String = ""
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        languageToLoad = if (AppSettings.getLanguage(this@PocraSchemesDetailsActivity)
+                .equals("2", ignoreCase = true)) { "mr" } else { "en" }
+        switchLanguage(this, languageToLoad)
+        setContentView(R.layout.activity_dbt_schemes_details)
+
+        textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
+        imageMenushow = findViewById(R.id.imageMenushow)
+        importantDocumentsRecyclerView = findViewById(R.id.importantDocumentsRecyclerView)
+        eligibilityCriteriaRecyclerView = findViewById(R.id.eligibilityCriteriaRecyclerView)
+        importantDocumentsCardTV = findViewById(R.id.importantDocumentsCardTV)
+        eligibilityCriteriaCardTV = findViewById(R.id.eligibilityCriteriaCardTV)
+        importantDocImageView = findViewById(R.id.importantDocImageView)
+        eligibilityCriteriaCardIV = findViewById(R.id.eligibilityCriteriaCardIV)
+
+        imageMenushow.visibility = View.VISIBLE
+        textViewHeaderTitle.setText(R.string.dbtschema)
+        imageMenushow.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
+        val data = intent.getStringExtra("FARMERDBTRESPONSE")
+        val jsonData = JSONObject(data);
+        var importantDocuments = jsonData.optString("importantDocuments")
+        var eligibilityCriteria = jsonData.optString("eligibilityCriteria")
+
+        if (languageToLoad == "mr") {
+            importantDocuments = jsonData.optString("importantDocumentsMr")
+            eligibilityCriteria = jsonData.optString("eligibilityCriteriaMr")
+        }
+
+        val importantDocumentsArray = importantDocuments.split(";")
+        val eligibilityCriteriaArray = eligibilityCriteria.split(";")
+
+        importantDocumentsCardTV.setOnClickListener {
+            openRecyclerView(importantDocumentsRecyclerView)
+        }
+
+        importantDocImageView.setOnClickListener {
+            openRecyclerView(importantDocumentsRecyclerView)
+        }
+
+        eligibilityCriteriaCardTV.setOnClickListener {
+            openRecyclerView(eligibilityCriteriaRecyclerView)
+        }
+
+        eligibilityCriteriaCardIV.setOnClickListener {
+            openRecyclerView(eligibilityCriteriaRecyclerView)
+        }
+
+        importantDocumentsRecyclerView.layoutManager = LinearLayoutManager(this)
+        importantDocumentsRecyclerView.adapter =
+            PocraSchemeDetailsRecyclerAdapter(importantDocumentsArray)
+
+        eligibilityCriteriaRecyclerView.layoutManager = LinearLayoutManager(this)
+        eligibilityCriteriaRecyclerView.adapter =
+            PocraSchemeDetailsRecyclerAdapter(eligibilityCriteriaArray)
+    }
+
+    private fun openRecyclerView(recyclerView: RecyclerView) {
+        if (recyclerView.visibility == View.VISIBLE) {
+            recyclerView.visibility = View.GONE
+        } else {
+            recyclerView.visibility = View.VISIBLE
+        }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
+    }
+}

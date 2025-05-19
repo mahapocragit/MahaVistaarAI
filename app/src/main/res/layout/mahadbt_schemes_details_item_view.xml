@@ -43,6 +43,7 @@
                     android:text="@string/individual_benefit_component" />
 
                 <ImageView
+                    android:id="@+id/toggleImageView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="@dimen/_10sdp"

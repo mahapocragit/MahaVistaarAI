@@ -28,6 +28,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.logThis
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -87,10 +88,12 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
             onBackPressed()
         }
         viewModel.getCropCategoriesAndCropDetails(this, languageToLoad)
+        ProgressHelper.showProgressDialog(this)
     }
 
     private fun fetchCropInfo() {
         viewModel.cropCategoryResponse.observe(this){
+            ProgressHelper.disableProgressDialog()
             val jSONObject = JSONObject(it.toString())
             val jsonDataArray = jSONObject.getJSONArray("data")
             var adapter = CropCategoriesAdapter(this, jsonDataArray, "TitleVideosDetailsAdpter", this)
@@ -108,6 +111,9 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
             mainCropCategoryRecycle?.hasFixedSize()
             mainCropCategoryRecycle?.setAdapter(adapter)
         }
+        viewModel.error.observe(this){
+            ProgressHelper.disableProgressDialog()
+        }
     }
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
@@ -123,6 +129,7 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
         }
     }
 
+
     override fun onDateSelected(i: Int, day: Int, month: Int, year: Int) {
         if (i == 1) {
             sowingDate = "$day-$month-$year"
@@ -131,9 +138,11 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
             viewModel.saveFarmerSelectedCrop(this, sowingDate, cropId)
             viewModel.saveFarmerSelectedCrop.observe(this) {
                 if (it != null) {
+                    Log.d("TAGGER", "onDateSelected: $it")
                     if (it.get("status").toString() == "200") {
+                        Toast.makeText(this, R.string.selected_crop_saved, Toast.LENGTH_SHORT).show()
                         startActivity(Intent(this, DashboardScreen::class.java).apply {
-                            putExtra("helloCrop", cropId)
+                            putExtra("savedCropResponse", it.get("status").toString())
                         })
                     }
                 }

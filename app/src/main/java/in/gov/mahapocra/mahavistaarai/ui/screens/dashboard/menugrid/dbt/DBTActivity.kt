@@ -4,11 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDbtactivityBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.mahadbt.MahaDbtSchemesActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.pocra.PocraDbtSchemes
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 
@@ -34,7 +35,7 @@ class DBTActivity : AppCompatActivity() {
         }
 
         binding.pocraDBTCardView.setOnClickListener {
-            startActivity(Intent(this, DbtSchemes::class.java).apply {
+            startActivity(Intent(this, PocraDbtSchemes::class.java).apply {
                 putExtra("dbtFromDashboard", "pocraDBTCardView")
             })
         }

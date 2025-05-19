@@ -21,8 +21,9 @@
     <string name="climate_resilient_technology">हवामान अनुकूल तंत्रज्ञान</string>
     <string name="climate_resilient_Newupdate">खरीप विशेष</string>
 
-    <string name="apply_for_mahadbt">महाडीबीटीसाठी अर्ज करण्यासाठी येथे क्लिक करा.>></string>
-    <string name="apply_for_pocradbt">पोकरा डीबीटीसाठी अर्ज करण्यासाठी येथे क्लिक करा.>></string>
+    <string name="apply_for_mahadbt">महाडीबीटीसाठी अर्ज करण्यासाठी</string>
+    <string name="apply_for_pocradbt">ना.दे.कृ.सं.प्र. (PoCRA) डीबीटी प्रणालीवर अर्ज करण्यासाठी</string>
+    <string name="click_here">येथे क्लिक करा</string>
 
     <string name="add_Crop">पीक जोडा</string>
     <string name="change_Crop">पीक बदला</string>">
@@ -177,6 +178,7 @@
     <string name="farmer_select_market">बाजार निवडा</string>
     <string name="tonnes">मे.टन</string>
     <string name="comming_Soon">लवकरच येत आहे ........</string>
+    <string name="no_notifications_error">लवकरच येत आहे ........</string>
     <string name="NotificationMsg">सूचना सापडली नाही...!!!</string>
 
     <string name="advisory_feedback_scale_text">5 च्या प्रमाणात (1-सवाात कमी, 5-सवाापिक), कृपया खालील बाबींवर तुमचा अपिप्राय द्या.</string>
@@ -260,7 +262,7 @@
     <string name="market_state"> महाराष्ट्र राज्य ,</string>
     <string name="market_district">जिल्हा , </string>
     <string name="market_taluka">तालुका , </string>
-    <string name="market_c_price"> वस्तूंच्या किमती </string>
+    <string name="market_c_price"> बाजारभाव </string>
     <string name="grievance"> तुमच्या तक्रारीचे येथे वर्णन करा </string>
     <string name="success_farmer"> शेतकरी यशोगाथा येथे करणे </string>
     <string name="crop_advisory">पीक सल्ला</string>
@@ -338,6 +340,9 @@
     <string name="Please_Enter_Your_FYMValue">कृपया शेणखत मूल्य प्रविष्ट करा</string>
     <string name="fertilizer_availability_for_crop">खत कॅल्क्युलेटरसाठी दुसरे पीक निवडा</string>
 
+    <string name="selected_crop_deleted">आपण निवडलेले पीक हटवलेले आहे</string>
+    <string name="selected_crop_saved">आपले पीक जोडले गेले आहे</string>
+
     <string name="change">बदला</string>
 
     <string name="wrong_OTP">तुम्ही चुकीचा OTP टाकला आहे</string>
@@ -357,7 +362,7 @@
     <string name="farmer_name">शेतकऱ्याचे नाव</string>
     <string name="soil_health_card_number">मृदा आरोग्य पत्रिका क्रमांक</string>
     <string name="survey_number_card">गट नं</string>
-    <string name="farm_size">शेताचा आकार</string>
+    <string name="farm_size">क्षेत्र</string>
     <string name="view_pdf">PDF पाहा</string>
 
     <string name="price_per">दर</string>
@@ -410,23 +415,9 @@
     <string name="credit">भागीदार</string>
     <string name="app_name_text">महाविस्तार-एआय</string>
     <string name="aboutText">महाविस्तार-एआय अ‍ॅपमध्ये आपले मनःपूर्वक स्वागत! महाराष्ट्र शासनाच्या कृषी विभागातर्फे सादर केलेला आधुनिक तंत्रज्ञानावर आधारित हा अ‍ॅप शेतकऱ्यांचा एक विश्वासार्ह साथीदार आहे.हे अ‍ॅप शेतीसंदर्भातील अत्यावश्यक माहिती एकाच ठिकाणी उपलब्ध करून देण्याबरोबरच शेतकरी बांधवांना तांत्रिकदृष्ट्या सक्षम बनवण्यावर केंद्रित आहे.\n
-
 \nअ‍ॅपमध्ये खालील सुविधा उपलब्ध आहेत:
-
-\nपीक सल्ला
-एस.ओ.पी (S.O.P)
-मृदा आरोग्य पत्रिका
-खत मात्रा गणक
-बाजार भावांची माहिती
-गोदाम उपलब्धता
-अवजारे बँक माहिती
-थेट लाभ हस्तांतरण योजना
-सुचना व तक्रार निवारण
-व्हीडियो कॉर्नर
-
-आधुनिक तंत्रज्ञान व बदलत्या हवामानानुसार शाश्वत व किफायतशीर शेती करण्यासाठी हे अ‍ॅप सहाय्य करेल. आपल्या पिकांची निगा राखण्यापासून ते आपल्या सहकारी शेतकऱ्यांशी चर्चा करण्यापर्यंत, शेतीप्रवासात आपली नेहमी साथ दिली जाईल.
-
-चला, एकत्र पुढे जाऊया आणि यशस्वी शेती घडवूया!</string>
+\nपीक सल्ला,एस.ओ.पी (S.O.P),मृदा आरोग्य पत्रिका,खत मात्रा गणक,बाजार भावांची माहिती,गोदाम उपलब्धता,अवजारे बँक माहिती,थेट लाभ हस्तांतरण योजना,सुचना व तक्रार निवारण आणि व्हीडियो कॉर्नर. कृत्रिम बुद्धिमत्तेच्या वापर करून मराठी तसेच इंग्रजी भाषेमध्ये चॅटबॉटमार्फत शेतकऱ्यांना स्थानिक आणि त्यांच्या गरजेनुसार सल्ला अत्यंत सहज मिळू शकतो. क्लिष्ट माहिती आणि शेतीतील व्यवहार्य निर्णय यातील दरी दूर करण्याचे काम महाविस्तार करते.
+आधुनिक तंत्रज्ञान व बदलत्या हवामानानुसार शाश्वत व किफायतशीर शेती करण्यासाठी हे अ‍ॅप सहाय्य करेल. आपल्या पिकांची निगा राखण्यापासून ते आपल्या सहकारी शेतकऱ्यांशी चर्चा करण्यापर्यंत, शेतीप्रवासात आपली नेहमी साथ दिली जाईल.चला, एकत्र पुढे जाऊया आणि यशस्वी शेती घडवूया!</string>
     <string name="low_soil_value">कमी</string>
     <string name="medium_soil_value">मध्यम </string>
     <string name="high_soil_value">उच्च </string>
@@ -436,12 +427,14 @@
     <string name="farmerdetails">शेतकरी तपशील</string>
     <string name="soiltestresult">माती चाचणी परिणाम</string>
     <string name="fertiliserrecomendation">खताची शिफारस</string>
-    <string name="viewsoilhealthreport">मातीचा अहवाल पहा</string>
+    <string name="viewsoilhealthreport">मृदा आरोग्य पत्रिका पहा</string>
     <string name="select_language">भाषा निवडा</string>
-    <string name="sop_not_available">सध्या, निवडलेल्या पिकासाठी S.O.P उपलब्ध नाही. आम्ही ते लवकरच उपलब्ध करू.</string>
+    <string name="sop_not_available">लवकरच येत आहे.</string>
     <string name="sowing_date_alert_title">पेरणीच्या डीफॉल्ट तारखेचा सल्ला</string>
     <string name="sowing_date_alert">आपण निवडलेल्या पिकासाठी विद्यापीठाने शिफारस केलेली पेरणीची तारीख दिसत आहे. या तारखेनुसार व पिकाच्या  अवस्थेनुसार येथे सल्ला दिला आहे. जर आपल्या पिकाची पेरणी यापेक्षा वेगळ्या तारखेला झाली असेल, तर कृपया आपली प्रत्यक्ष पेरणीची तारीख येथे भरावी. तसे केल्यास आपल्याला अधिक अचूक सल्ला मिळेल. अन्यथा तारीख बदलणे आवश्यक नाही.</string>
     <string name="area_hectare_exceed_warning">कृपया क्षेत्र 99 हेक्टर पेक्षा कमी टाका</string>
     <string name="area_acre_exceed_warning">कृपया क्षेत्र 99 एकर पेक्षा कमी टाका</string>
     <string name="guntha_exceed_warning">कृपया क्षेत्र 39 गुंठ्यापेक्षा कमी टाका</string>
+    <string name="coming_soon">लवकरच येत आहे......!</string>
+    <string name="data_not_available">डेटा उपलब्ध नाही</string>
 </resources>

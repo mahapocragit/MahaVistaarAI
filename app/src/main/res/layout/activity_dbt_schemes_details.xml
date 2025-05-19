@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.screens.dashboard.menugrid.dbt.DbtSchemesDetailsActivity">
+    tools:context=".ui.screens.dashboard.menugrid.dbt.pocra.PocraSchemesDetailsActivity">
 
     <include
         android:id="@+id/relativeLayoutTopBar"
@@ -30,55 +30,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="@dimen/_10sdp"
-                android:layout_marginVertical="@dimen/_5sdp"
-                android:backgroundTint="@color/actionbar_color_figma2"
-                app:cardCornerRadius="@dimen/_10sdp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:paddingVertical="@dimen/_10sdp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_32sdp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/mainComponentCardTV"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="@dimen/_10sdp"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:text="@string/main_component" />
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginEnd="@dimen/_10sdp"
-                            android:layout_weight="9"
-                            app:srcCompat="@drawable/ic_baseline_arrow_drop_down_24" />
-                    </LinearLayout>
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/mainComponentRecyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_10sdp"
-                        android:scrollbarSize="@dimen/_4sdp"
-                        android:scrollbarStyle="insideInset"
-                        android:scrollbars="vertical"
-                        android:visibility="gone" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -107,9 +58,10 @@
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_weight="1"
                             android:gravity="center_vertical"
-                            android:text="@string/required_documents" />
+                            android:text="@string/important_documents" />
 
                         <ImageView
+                            android:id="@+id/importantDocImageView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginEnd="@dimen/_10sdp"
@@ -159,6 +111,7 @@
                             android:text="@string/eligibility_Criteria" />
 
                         <ImageView
+                            android:id="@+id/eligibilityCriteriaCardIV"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginEnd="@dimen/_10sdp"
@@ -177,7 +130,6 @@
                         android:visibility="gone" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-
         </LinearLayout>
     </ScrollView>
 

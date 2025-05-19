@@ -1,6 +1,8 @@
-package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.mahadbt
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,13 +13,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import org.json.JSONArray
 import org.json.JSONObject
 
-class DbtSchemesDetailsActivity : AppCompatActivity() {
+class MahaDbtSchemesDetailsActivity : AppCompatActivity() {
 
     private lateinit var textViewHeaderTitle: TextView
     private lateinit var imageMenushow: ImageView
@@ -35,8 +36,7 @@ class DbtSchemesDetailsActivity : AppCompatActivity() {
         // Language setup
         languageToLoad = if (AppSettings.getLanguage(this) == "2") "mr" else "en"
         switchLanguage(this, languageToLoad)
-        setContentView(R.layout.activity_dbt_schemes_details)
-
+        setContentView(R.layout.activity_maha_dbt_schemes_details)
         // Bind views
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
         imageMenushow = findViewById(R.id.imageMenushow)

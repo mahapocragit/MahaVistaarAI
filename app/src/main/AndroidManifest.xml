@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.AD_ID" />
@@ -32,7 +32,8 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
-
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -48,12 +49,12 @@
         android:roundIcon="@mipmap/ic_launcher_store_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FarmerApp"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true" >
         <activity
-            android:name=".ui.screens.dashboard.menugrid.dbt.MahaDbtSchemesDetailsActivity"
+            android:name=".ui.screens.dashboard.menugrid.dbt.mahadbt.MahaDbtSchemesDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.screens.dashboard.menugrid.dbt.MahaDbtSchemesActivity"
+            android:name=".ui.screens.dashboard.menugrid.dbt.mahadbt.MahaDbtSchemesActivity"
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.sidenavigation.CreditsActivity"
@@ -100,7 +101,7 @@
             android:name=".ui.screens.dashboard.chc.CHCenterActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.screens.dashboard.menugrid.dbt.DbtSchemesDetailsActivity"
+            android:name=".ui.screens.dashboard.menugrid.dbt.pocra.PocraSchemesDetailsActivity"
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.menugrid.soilhealthcard.PdfWebViewActivity"
@@ -165,7 +166,7 @@
             android:name=".ui.screens.dashboard.menugrid.MarketPrice"
             android:exported="false" />
         <activity
-            android:name=".ui.screens.dashboard.menugrid.dbt.DbtSchemes"
+            android:name=".ui.screens.dashboard.menugrid.dbt.pocra.PocraDbtSchemes"
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.menugrid.soilhealthcard.HealthCardActivity"
@@ -180,7 +181,7 @@
 
         <service
             android:name=".data.services.FBaseMessagingService"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -188,7 +189,7 @@
 
         <activity
             android:name=".ui.screens.splash.SplashScreenActivity"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -208,7 +209,7 @@
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.android.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true" >
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />

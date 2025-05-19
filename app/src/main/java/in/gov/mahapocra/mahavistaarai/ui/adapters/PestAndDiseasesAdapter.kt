@@ -31,7 +31,7 @@ class PestAndDiseasesAdapter (private var context: Context? = null,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val jsonObject = diseasesDetails.getJSONObject(position)
         try {
-            holder.diseaseName.text = jsonObject.optString("title")
+            holder.diseaseName.text = jsonObject.optString("type")
             holder.diseaseScrpt.text = jsonObject.optString("subtitle")
             loadImage(holder.climateImage, jsonObject.optString("image"))
 

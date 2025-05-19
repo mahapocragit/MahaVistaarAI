@@ -8,17 +8,21 @@ import android.graphics.Typeface
 import android.net.Uri
 import android.text.Spannable
 import android.text.SpannableStringBuilder
+import android.text.method.LinkMovementMethod
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
+import android.text.util.Linkify
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.NetworkPolicy
@@ -30,7 +34,7 @@ import org.json.JSONObject
 
 
 class StageAdvisoryDetailAdaptr(
-    private var context: Context? = null,
+    private var context: Context,
     private var listener: OnMultiRecyclerItemClickListener,
     private var cropAdvisoryDetailsJSONArray: JSONArray,
     private var languageToLoad: String,
@@ -83,36 +87,18 @@ class StageAdvisoryDetailAdaptr(
             holder.cropSapadvisoryTv.text = data
         }
         holder.cropSapadvisoryTv.setOnClickListener {
-            val alert = AlertDialog.Builder(context!!)
-            val wv = WebView(context!!)
-            wv.loadDataWithBaseURL(
-                "file:///android_asset/",
-                datas, "text/html", "utf-8", null
-            )
-            wv.webViewClient = object : WebViewClient() {
-                override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                    Log.d("TAGGER", "onBindViewHolder: $url")
+            val textView = TextView(context)
+            textView.text = HtmlCompat.fromHtml(datas, HtmlCompat.FROM_HTML_MODE_LEGACY)
+            textView.textSize = 16f
+            textView.setPadding(16, 16, 16, 16)
+            textView.autoLinkMask = Linkify.WEB_URLS
+            textView.movementMethod = LinkMovementMethod.getInstance()
 
-                    if (url.contains("youtube.com") || url.contains("youtu.be")) {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                        view.context.startActivity(intent)
-                        return true  // Prevents WebView from loading it
-                    }
-
-                    view.loadUrl(url)
-                    return true
-                }
-            }
-
-            alert.setView(wv)
-            alert.setTitle(context!!.getString(R.string.Crop_details))
-            alert.setNegativeButton(
-                context!!.getString(R.string.cancel)
-            ) { dialog, _ ->
-                dialog.dismiss()
-            }
-
-            alert.show()
+            AlertDialog.Builder(context)
+                .setTitle(context.getString(R.string.Crop_details))
+                .setView(textView)
+                .setNegativeButton(context.getString(R.string.cancel)) { dialog, _ -> dialog.dismiss() }
+                .show()
         }
 
         try {

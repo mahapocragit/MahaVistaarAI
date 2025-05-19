@@ -35,7 +35,7 @@
                 android:id="@+id/textView9"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="App Owner"
+                android:text="An Intiative By"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp"
                 android:textStyle="bold" />
@@ -50,11 +50,13 @@
                     android:layout_width="@dimen/_80sdp"
                     android:layout_height="@dimen/_80sdp"
                     android:layout_margin="@dimen/_5sdp"
+                    android:layout_gravity="center"
                     android:src="@drawable/pocra_farmer_logo" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:text="Department of Agriculture, Govt. of Maharashtra"
                     android:textColor="@color/black" />
 
@@ -65,7 +67,7 @@
                 android:id="@+id/textView10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="App Developer"
+                android:text="Developed By"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp"
                 android:textStyle="bold" />
@@ -81,11 +83,13 @@
                     android:layout_width="@dimen/_80sdp"
                     android:layout_height="@dimen/_80sdp"
                     android:layout_margin="@dimen/_5sdp"
+                    android:layout_gravity="center"
                     android:src="@drawable/pocra_latest_logo" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:text="Nanaji Deshmukh Krishi Sanjivani Prakalp"
                     android:textColor="@color/black" />
 
@@ -95,7 +99,7 @@
                 android:id="@+id/textView11"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Information Support Partners"
+                android:text="Knowledge Partners"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp"
                 android:textStyle="bold" />
@@ -210,15 +214,47 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:visibility="invisible"
-                    tools:ignore="UselessLeaf" />
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_80sdp"
+                        android:layout_margin="@dimen/_5sdp"
+                        app:srcCompat="@drawable/wotr_icon" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="WOTR"
+                        android:textColor="@color/black" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:visibility="invisible"
-                    tools:ignore="UselessLeaf" />
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_80sdp"
+                        android:layout_margin="@dimen/_5sdp"
+                        app:srcCompat="@drawable/pani_foundation_logo" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Pani Foundation"
+                        android:textColor="@color/black" />
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -312,7 +348,7 @@
                 android:id="@+id/textVie14"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Data Support Partners"
+                android:text="Data Collaboration Partners"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp"
                 android:textStyle="bold" />
@@ -427,46 +463,14 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_80sdp"
-                        android:layout_margin="@dimen/_5sdp"
-                        app:srcCompat="@drawable/wotr_icon" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="WOTR"
-                        android:textColor="@color/black" />
-                </LinearLayout>
+                    android:orientation="vertical"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_80sdp"
-                        android:layout_margin="@dimen/_5sdp"
-                        app:srcCompat="@drawable/pani_foundation_logo" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="Pani Foundation"
-                        android:textColor="@color/black" />
-                </LinearLayout>
+                    android:orientation="vertical"/>
 
             </LinearLayout>
         </LinearLayout>

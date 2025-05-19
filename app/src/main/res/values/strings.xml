@@ -37,8 +37,9 @@
     <string name="climate_resilient_technology">Climate Resilient Details</string>
     <string name="climate_resilient_Newupdate">खरीप विशेष</string>
 
-    <string name="apply_for_mahadbt">To apply for mahadbt click here>></string>
-    <string name="apply_for_pocradbt">To apply for pocra dbt click here>></string>
+    <string name="apply_for_mahadbt">To apply for MahaDBT</string>
+    <string name="apply_for_pocradbt">To apply on NDKSP (PoCRA) DBT portal</string>
+    <string name="click_here">Click Here</string>
 
     <string name="add_Crop">Add Crop</string>
     <string name="change_Crop">Change Crop</string>
@@ -171,6 +172,7 @@
     <string name="farmer_select_market">Select Market</string>
     <string name="tonnes">MT</string>
     <string name="comming_Soon">Coming Soon ........</string>
+    <string name="no_notifications_error">कोणत्याही नवीन सूचना आढळल्या नाहीत</string>
     <string name="NotificationMsg">Notification not found...!!! </string>
 
     <string name="advisory_feedback_scale_text">On a scale of 5(1-lowest,5-highest), please provide your feedback on the following.</string>
@@ -336,6 +338,9 @@
     <string name="Please_Enter_Your_FYMValue">Please Enter FYM Value</string>
     <string name="fertilizer_availability_for_crop">Select Another Crop for Fertilizer Calculator</string>
 
+    <string name="selected_crop_deleted">Your crop has been deleted successfully</string>
+    <string name="selected_crop_saved">Your crop has been saved.</string>
+
     <string name="wrong_OTP">You have entered wrong OTP</string>
     <string name="request_for_mobile">Request for mobile number</string>
     <string name="weather_title">Weather</string>
@@ -406,7 +411,7 @@
     <string name="our_partner_text">Our Partners:</string>
     <string name="credit">Credits</string>
     <string name="app_name_text">MahaVISTAAR-AI</string>
-    <string name="aboutText">Welcome to the MahaVISTAAR-AI App, your trusted companion in modern farming at your fingertips, from the Department of Agriculture, Government of Maharashtra.\n\nThis App is the one-stop solution for farmers which is focused on empowering farmers by providing essential agricultural information, real-time weather updates, market prices, pest identification and control tips, agromet advisories, warehouse and CHC information, expert advice to help farmers make informed decisions and many more.  By integrating technology with climate-resilient farming practices, we aim to promote sustainable and profitable agriculture. From monitoring your crops to connecting with fellow farmers, we ensure you’re never alone on your farming journey. Let’s grow together!</string>
+    <string name="aboutText">Welcome to the MahaVISTAAR-AI App, your trusted companion in modern farming at your fingertips, from the Department of Agriculture, Government of Maharashtra.\n\nThis App is the one-stop solution for farmers which is focused on empowering farmers by providing essential agricultural information, real-time weather updates, market prices, pest identification and control tips, agromet advisories, warehouse and CHC information, expert advice to help farmers make informed decisions and many more. With AI-Powered Chatbot, farmers can easily get local and need-based advice in Marathi and English. MahaVISTAAR-AI works to bridge the gap between complex information and actionable decisions in agriculture. By integrating technology with climate-resilient farming practices, we aim to promote sustainable and profitable agriculture. From monitoring your crops to connecting with fellow farmers, we ensure you’re never alone on your farming journey. Let’s grow together!</string>
     <string name="low_soil_value">Low</string>
     <string name="medium_soil_value">Medium</string>
     <string name="high_soil_value">High</string>
@@ -416,12 +421,14 @@
     <string name="farmerdetails">Farmer Details</string>
     <string name="soiltestresult">Soil test results</string>
     <string name="fertiliserrecomendation">Fertilizer recommendation</string>
-    <string name="viewsoilhealthreport">View Soil Report</string>
+    <string name="viewsoilhealthreport">View Soil Health Card</string>
     <string name="select_language">Select Language</string>
-    <string name="sop_not_available">Currently, S.O.P for the selected crop is not available. We will update it very soon.</string>
+    <string name="sop_not_available">Coming Soon</string>
     <string name="sowing_date_alert_title">Default Sowing Date Advisory</string>
     <string name="sowing_date_alert">The sowing date mentioned here is default sowing date recommended by the university for the crop you have selected. Advisory provided here is based on this date and the stage of the crop. If your crop was sown on a different date, please enter your actual sowing date for more accurate advice.</string>
     <string name="area_acre_exceed_warning">Please Enter Acre Area Should Be Less Than 99</string>
     <string name="area_hectare_exceed_warning">Please Enter Hectare Area Should Be Less Than 99</string>
     <string name="guntha_exceed_warning">Please Enter Guntha Area Should Be Less Than or equal to 39</string>
+    <string name="coming_soon">Coming Soon.....!</string>
+    <string name="data_not_available">Data Not Available</string>
 </resources>

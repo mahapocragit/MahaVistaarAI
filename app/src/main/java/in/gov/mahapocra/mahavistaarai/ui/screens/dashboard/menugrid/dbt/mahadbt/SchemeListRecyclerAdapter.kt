@@ -1,10 +1,9 @@
-package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.mahadbt
 
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.gov.mahapocra.mahavistaarai.databinding.FarmersDbtItemViewBinding
 import org.json.JSONArray
 import org.json.JSONObject
@@ -41,7 +40,7 @@ class SchemeListRecyclerAdapter(
         fun bind(activityName: String, jsonObject: JSONObject) {
             binding.dbtSchemeName.text = activityName
             binding.farmerDbtCardView.setOnClickListener {
-                val intent = Intent(binding.farmerDbtCardView.context, DbtSchemesDetailsActivity::class.java)
+                val intent = Intent(binding.farmerDbtCardView.context, MahaDbtSchemesDetailsActivity::class.java)
                 intent.putExtra("FARMERDBTRESPONSE", jsonObject.toString())
                 binding.farmerDbtCardView.context.startActivity(intent)
             }

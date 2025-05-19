@@ -55,6 +55,7 @@ class WarehouseAvailabilityAdapter(
             warehouseName = wareHouseModel.getWarehouseName()
             val recordedDate: String = wareHouseModel.getRecordedDate()
             val village: String = wareHouseModel.getVillage()
+            val address: String = wareHouseModel.getAddress()
             val phone: String = wareHouseModel.getPhone()
             val availableCapacity: String = wareHouseModel.getAvailableCapacity()
             val upperString = warehouseName!!.substring(0, 1)
@@ -63,7 +64,7 @@ class WarehouseAvailabilityAdapter(
             )
             binding.wareHouseName.text = upperString
             binding.recordDate.text = recordedDate
-            binding.tvAddress.text = village
+            binding.tvAddress.text = address
             binding.tvContactNumber.text = phone
             binding.tvTotalAvailableCapacity.text = "$availableCapacity MT"
         }

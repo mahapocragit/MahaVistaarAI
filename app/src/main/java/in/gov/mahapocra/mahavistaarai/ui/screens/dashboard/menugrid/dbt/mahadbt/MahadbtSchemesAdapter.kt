@@ -1,8 +1,9 @@
-package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.mahadbt
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +21,8 @@ class MahadbtSchemesAdapter(val schemesJSONArray: JSONArray, val languageToLoad:
             itemView.findViewById<CardView>(R.id.pocraMahaDBTCardView)
         internal val schemesRecyclerView =
             itemView.findViewById<RecyclerView>(R.id.schemesRecyclerView)
+        internal val toggleImageView =
+            itemView.findViewById<ImageView>(R.id.toggleImageView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -54,6 +57,16 @@ class MahadbtSchemesAdapter(val schemesJSONArray: JSONArray, val languageToLoad:
         holder.pocraMahaDBTCardView.setOnClickListener {
             holder.schemesRecyclerView.visibility =
                 if (holder.schemesRecyclerView.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+            holder.toggleImageView.setImageResource(
+                if (holder.schemesRecyclerView.visibility == View.VISIBLE) R.drawable.ic_baseline_arrow_drop_up_24 else R.drawable.ic_baseline_arrow_drop_down_24
+            )
+        }
+        holder.toggleImageView.setOnClickListener {
+            holder.schemesRecyclerView.visibility =
+                if (holder.schemesRecyclerView.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+            holder.toggleImageView.setImageResource(
+                if (holder.schemesRecyclerView.visibility == View.VISIBLE) R.drawable.ic_baseline_arrow_drop_up_24 else R.drawable.ic_baseline_arrow_drop_down_24
+            )
         }
     }
 

@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.mahadbt
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -27,7 +27,7 @@ class FarmerMahaDbtSchemeDetailsRecyclerAdapter(
     class ViewHolder(private val binding: FarmersDbtItemViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(documentName: String) {
-            binding.dbtSchemeName.text = "• $documentName"
+            binding.dbtSchemeName.text = "$documentName"
         }
     }
 }

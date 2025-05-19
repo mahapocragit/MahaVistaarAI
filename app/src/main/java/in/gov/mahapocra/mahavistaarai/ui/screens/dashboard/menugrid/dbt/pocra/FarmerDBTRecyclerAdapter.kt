@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.pocra
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,11 +8,11 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.FarmersDbtItemViewBinding
 import org.json.JSONArray
 import org.json.JSONObject
 
-class NRMrDBTRecyclerAdapter(
+class FarmerDBTRecyclerAdapter(
     private val farmersJSONArray: JSONArray,
     private val languageToLoad: String,
     private val listener: OnMultiRecyclerItemClickListener
-) : RecyclerView.Adapter<NRMrDBTRecyclerAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<FarmerDBTRecyclerAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -42,7 +42,7 @@ class NRMrDBTRecyclerAdapter(
         fun bind(activityName: String, jsonObject: JSONObject) {
             binding.dbtSchemeName.text = activityName
             binding.farmerDbtCardView.setOnClickListener {
-//                listener.onMultiRecyclerViewItemClick(1, jsonObject)
+                listener.onMultiRecyclerViewItemClick(1, jsonObject)
             }
         }
     }

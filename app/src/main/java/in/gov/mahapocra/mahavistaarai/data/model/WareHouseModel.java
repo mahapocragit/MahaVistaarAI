@@ -9,6 +9,7 @@ public class WareHouseModel {
     private String recorded_date;
     private String village;
     private String phone;
+    private String warehouse_address;
     private String total_capacity;
     private String available_capacity;
     private String warehouse_code;
@@ -29,6 +30,11 @@ public class WareHouseModel {
     }
     public String getVillage() {
         village = AppUtility.getInstance().sanitizeJSONObj(this.jsonObject, "village");
+        return village;
+    }
+
+    public String getAddress() {
+        village = AppUtility.getInstance().sanitizeJSONObj(this.jsonObject, "warehouse_address");
         return village;
     }
 

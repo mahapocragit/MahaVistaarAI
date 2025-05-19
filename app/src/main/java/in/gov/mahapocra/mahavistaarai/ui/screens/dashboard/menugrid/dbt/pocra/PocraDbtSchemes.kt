@@ -1,40 +1,27 @@
-package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.pocra
 
 import android.content.Context
-import `in`.co.appinventor.services_api.api.AppInventorApi
-import `in`.co.appinventor.services_api.listener.ApiCallbackCode
-import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.JsonObject
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDbtSchemesBinding
-import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityNewsWebViewBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.DbtSchemesViewModel
-import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
-import org.json.JSONException
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Retrofit
 
-class DbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
+class PocraDbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
 
     private lateinit var dbtSchemesViewModel: DbtSchemesViewModel
     private lateinit var binding: ActivityDbtSchemesBinding
@@ -43,7 +30,7 @@ class DbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         languageToLoad =
-            if (AppSettings.getLanguage(this@DbtSchemes).equals("2", ignoreCase = true)) {
+            if (AppSettings.getLanguage(this@PocraDbtSchemes).equals("2", ignoreCase = true)) {
                 "mr"
             } else {
                 "en"
@@ -66,7 +53,15 @@ class DbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
             startActivity(intent)
         }
 
+        binding.applyForPocraTextView.setOnClickListener {
+            Toast.makeText(this, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
+        }
+
         binding.farmerCardTV.setOnClickListener {
+            openRecyclerView(binding.farmerRecyclerView)
+        }
+
+        binding.ibcImageView.setOnClickListener {
             openRecyclerView(binding.farmerRecyclerView)
         }
 
@@ -74,7 +69,15 @@ class DbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
             openRecyclerView(binding.fpoRecyclerView)
         }
 
+        binding.acImageView.setOnClickListener {
+            openRecyclerView(binding.fpoRecyclerView)
+        }
+
         binding.nrmCardTV.setOnClickListener {
+            openRecyclerView(binding.nrmRecyclerView)
+        }
+
+        binding.sawcpImageView.setOnClickListener {
             openRecyclerView(binding.nrmRecyclerView)
         }
     }
@@ -106,7 +109,7 @@ class DbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
                 binding.fpoRecyclerView.adapter =
                     FarmerDBTRecyclerAdapter(fpoDataJSONArray, languageToLoad, this)
                 binding.nrmRecyclerView.adapter =
-                    NRMrDBTRecyclerAdapter(nrmDataJSONArray, languageToLoad, this)
+                    NRMrDBTRecyclerAdapter(nrmDataJSONArray, languageToLoad)
             }
         }
 
@@ -117,7 +120,7 @@ class DbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
         val jsonObject = obj as JSONObject
-        startActivity(Intent(this@DbtSchemes, DbtSchemesDetailsActivity::class.java).apply {
+        startActivity(Intent(this@PocraDbtSchemes, PocraSchemesDetailsActivity::class.java).apply {
             putExtra("FARMERDBTRESPONSE", jsonObject.toString())
         })
     }

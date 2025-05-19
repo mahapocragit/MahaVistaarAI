@@ -1,6 +1,8 @@
-package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.mahadbt
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -37,6 +39,12 @@ class MahaDbtSchemesActivity : AppCompatActivity() {
         binding.layoutToolbar.imgBackArrow.visibility = View.VISIBLE
         binding.layoutToolbar.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
+        }
+
+        binding.applyForMahaDBTTextView.setOnClickListener {
+            val url = "https://mahadbt.maharashtra.gov.in/farmer/login/login"
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(intent)
         }
 
         dbtSchemesViewModel = ViewModelProvider(this)[DbtSchemesViewModel::class.java]

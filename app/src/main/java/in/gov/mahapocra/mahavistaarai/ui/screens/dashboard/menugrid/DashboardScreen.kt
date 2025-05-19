@@ -108,6 +108,9 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         )
         setContentView(binding.root)
 
+        val status = intent.getStringExtra("helloCrop")
+        Log.d("TAG", "onCreate: $status")
+
         binding.appBarMain.dashboardScreen.progressBar.visibility = View.VISIBLE
         binding.appBarMain.dashboardScreen.temperatureTextView.visibility = View.GONE
         isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
@@ -354,7 +357,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 val deleteSelectedCropResponse = ResponseModel(jSONObject)
                 if (deleteSelectedCropResponse.getStatus()) {
                     if (showToast) {
-                        UIToastMessage.show(this, deleteSelectedCropResponse.getResponse())
+                        UIToastMessage.show(this, getString(R.string.selected_crop_deleted))
                     }
                     AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null)
                     selectedCropList?.clear()
@@ -498,6 +501,12 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val status = intent.getStringExtra("savedCropResponse")
+        Log.d("TAG", "onResume: $status")
     }
 
     private val greetingMessage: String

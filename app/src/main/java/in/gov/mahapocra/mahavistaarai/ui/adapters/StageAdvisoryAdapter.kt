@@ -54,7 +54,7 @@ class StageAdvisoryAdapter(
             cropAdvisoryDetailsJSONArray?.get(position) as JSONObject
         val cropAdvisoryJSONArray = advisoryJsonDetails.getJSONArray("advisory")
         val sAdapter =
-            StageAdvisoryDetailAdaptr(context, listener, cropAdvisoryJSONArray, "mr", "", "")
+            StageAdvisoryDetailAdaptr(holder.stage.context, listener, cropAdvisoryJSONArray, "mr", "", "")
         holder.cropStagesInfoRecyclerView.layoutManager = LinearLayoutManager(
             context,
             LinearLayoutManager.VERTICAL,

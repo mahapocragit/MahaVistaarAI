@@ -72,19 +72,19 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
         }
 
         districtName =
-            AppSettings.getInstance().getValue(this, AppConstants.uDIST, AppConstants.uDIST)
+            AppSettings.getInstance().getValue(this, AppConstants.uDIST, getString(R.string.farmer_select_district))
         talukaName =
-            AppSettings.getInstance().getValue(this, AppConstants.uTALUKA, AppConstants.uTALUKA)
+            AppSettings.getInstance().getValue(this, AppConstants.uTALUKA, getString(R.string.farmer_select_taluka))
         villageName = AppSettings.getInstance()
-            .getValue(this, AppConstants.uVILLAGE, AppConstants.uVILLAGE)
+            .getValue(this, AppConstants.uVILLAGE, getString(R.string.farmer_select_village))
 
         districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
         talukaID = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
         villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
 
-        binding.textViewDist.text = districtName
-        binding.textViewTaluka.text = talukaName
-        binding.textViewVillage.text = villageName
+        binding.textViewDist.text = if (districtName == "USER_DIST") getString(R.string.farmer_select_district) else districtName
+        binding.textViewTaluka.text = if (talukaName == "USER_TALUKA") getString(R.string.farmer_select_taluka) else talukaName
+        binding.textViewVillage.text = if (villageName == "uVILLAGE") getString(R.string.farmer_select_village) else villageName
 
         binding.relativeLayoutToolbar.textViewHeaderTitle.text =
             getString(R.string.soil_health_card)

@@ -20,7 +20,6 @@ class ComingSoonActivity : AppCompatActivity() {
         }
         setContentView(R.layout.activity_comming_soon)
         init()
-        nameTextView?.setText(R.string.NotificationMsg)
         onClick()
     }
 

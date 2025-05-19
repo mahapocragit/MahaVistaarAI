@@ -31,7 +31,8 @@
             <TextView
                 android:id="@+id/tvAddress"
                 android:layout_width="match_parent"
-                android:layout_height="26dp"
+                android:layout_height="wrap_content"
+                android:minHeight="26dp"
                 android:layout_margin="@dimen/padding1"
                 android:gravity="center_vertical"
                 android:padding="1dp"
@@ -54,7 +55,7 @@
         <TextView
             android:id="@+id/tvTotal_available_Capacity"
             android:layout_width="match_parent"
-            android:layout_height="93dp"
+            android:layout_height="match_parent"
             android:layout_margin="0.5dp"
             android:layout_weight="1"
             android:background="@drawable/et_sqr_border"
@@ -66,7 +67,7 @@
         <TextView
             android:id="@+id/record_date"
             android:layout_width="match_parent"
-            android:layout_height="93dp"
+            android:layout_height="match_parent"
             android:layout_margin="0.5dp"
             android:layout_weight="1"
             android:background="@drawable/et_sqr_border"
