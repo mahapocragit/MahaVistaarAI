@@ -321,7 +321,19 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                 resources.getString(R.string.fertilizer_availability_for_crop)
             )
         } else if (acrArea.isBlank()) {
-            UIToastMessage.show(this, resources.getString(R.string.Please_Enter_Your_Acre_Area))
+            if (plotUnitCode == 3){
+                Toast.makeText(
+                    this@FertilizerCalculatorActivity,
+                    R.string.Please_Enter_Your_Acre_Area,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }else{
+                Toast.makeText(
+                    this@FertilizerCalculatorActivity,
+                    R.string.Please_Enter_Your_Hectare_Area,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         } else if (nitrogenValue.isBlank()) {
             UIToastMessage.show(this, resources.getString(R.string.Please_Enter_Your_nitrogenValue))
         } else if (phosphorusValue.isBlank()) {

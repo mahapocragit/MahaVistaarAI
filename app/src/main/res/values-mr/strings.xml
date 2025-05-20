@@ -333,7 +333,8 @@
     <string name="nav_open">Open</string>
     <string name="nav_close">Close</string>
 
-    <string name="Please_Enter_Your_Acre_Area">कृपया आपले एकर क्षेत्र प्रविष्ट करा</string>
+    <string name="Please_Enter_Your_Acre_Area">आपले क्षेत्र एकर मध्ये टाका</string>
+    <string name="Please_Enter_Your_Hectare_Area">आपले क्षेत्र हेक्टर मध्ये टाका</string>
     <string name="Please_Enter_Your_nitrogenValue">कृपया नायट्रोजन मूल्य प्रविष्ट करा</string>
     <string name="Please_Enter_Your_phosphorusValue">कृपया फॉस्फरस मूल्य प्रविष्ट करा</string>
     <string name="Please_Enter_Your_potassiumValue">कृपया पोटॅशियम मूल्य प्रविष्ट करा</string>

@@ -332,6 +332,7 @@
     <string name="nav_close">Close</string>
 
     <string name="Please_Enter_Your_Acre_Area">Please Enter Your Acre Area</string>
+    <string name="Please_Enter_Your_Hectare_Area">Please Enter Your Hectare Area</string>
     <string name="Please_Enter_Your_nitrogenValue">Please Enter Nitrogen Value</string>
     <string name="Please_Enter_Your_phosphorusValue">Please Enter Phosphorus Value</string>
     <string name="Please_Enter_Your_potassiumValue">Please Enter Potassium Value</string>
