@@ -301,6 +301,8 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     sentOTP = jSONObject.optInt("otp").toString()
                     Log.d("TAGGER", "onResponse: $sentOTP")
                     addVerificationDialog()
+                }else if (jSONObject.optInt("status") == 201){
+                    Toast.makeText(this, R.string.mobile_otp_error_text, Toast.LENGTH_LONG).show()
                 }
             }
         }

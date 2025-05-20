@@ -438,4 +438,5 @@
     <string name="guntha_exceed_warning">कृपया क्षेत्र 39 गुंठ्यापेक्षा कमी टाका</string>
     <string name="coming_soon">लवकरच येत आहे......!</string>
     <string name="data_not_available">डेटा उपलब्ध नाही</string>
+    <string name="mobile_otp_error_text">तुम्ही नोंदणीकृत नाही आहात, कृपया नोंदणी करा.</string>
 </resources>
