@@ -360,7 +360,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 CoroutineScope(Dispatchers.IO).launch {
                     val retrofit: Retrofit = api.getRetrofitInstance()
                     val apiRequest = retrofit.create(APIRequest::class.java)
-                    val responseCall: Call<JsonObject> = apiRequest.getOTPRequest(requestBody)
+                    val responseCall: Call<JsonObject> = apiRequest.getOTPRegisterRequest(requestBody)
                     api.postRequest(responseCall, this@Registration, 2)
                 }
             } catch (e: JSONException) {
@@ -599,6 +599,8 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                     Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                     sentOTP = jSONObject.optInt("otp").toString()
                     addVerificationDialog(sentOTP)
+                }else if (jSONObject.optInt("status") == 201) {
+                    Toast.makeText(this, R.string.otp_error, Toast.LENGTH_LONG).show()
                 }
             }
         }

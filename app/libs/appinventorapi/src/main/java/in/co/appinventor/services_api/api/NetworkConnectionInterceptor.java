@@ -26,10 +26,10 @@ public class NetworkConnectionInterceptor implements Interceptor {
 
     @Override
     public Response intercept(Chain chain) throws IOException {
-//        if (!NetworkUtils.isConnected()) {
-//            throw new NoInternetConnectException();
-//        }
-        isInternetConnected();
+        if (!Utility.checkConnection(mContext)) {
+            // Log it or throw a custom exception (no UI here!)
+            throw new IOException("No internet connection");
+        }
 
         Request.Builder builder = chain.request().newBuilder();
         return chain.proceed(builder.build());

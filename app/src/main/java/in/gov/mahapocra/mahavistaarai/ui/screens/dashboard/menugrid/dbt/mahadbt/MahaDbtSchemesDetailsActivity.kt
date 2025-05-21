@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityMahaDbtSchemesDetailsBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import org.json.JSONArray
@@ -20,14 +21,7 @@ import org.json.JSONObject
 
 class MahaDbtSchemesDetailsActivity : AppCompatActivity() {
 
-    private lateinit var textViewHeaderTitle: TextView
-    private lateinit var imageMenushow: ImageView
-    private lateinit var mainComponentRecyclerView: RecyclerView
-    private lateinit var importantDocumentsRecyclerView: RecyclerView
-    private lateinit var eligibilityCriteriaRecyclerView: RecyclerView
-    private lateinit var mainComponentCardTV: TextView
-    private lateinit var importantDocumentsCardTV: TextView
-    private lateinit var eligibilityCriteriaCardTV: TextView
+    private lateinit var binding: ActivityMahaDbtSchemesDetailsBinding
     private var languageToLoad: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,21 +30,13 @@ class MahaDbtSchemesDetailsActivity : AppCompatActivity() {
         // Language setup
         languageToLoad = if (AppSettings.getLanguage(this) == "2") "mr" else "en"
         switchLanguage(this, languageToLoad)
-        setContentView(R.layout.activity_maha_dbt_schemes_details)
-        // Bind views
-        textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
-        imageMenushow = findViewById(R.id.imageMenushow)
-        mainComponentRecyclerView = findViewById(R.id.mainComponentRecyclerView)
-        importantDocumentsRecyclerView = findViewById(R.id.importantDocumentsRecyclerView)
-        eligibilityCriteriaRecyclerView = findViewById(R.id.eligibilityCriteriaRecyclerView)
-        mainComponentCardTV = findViewById(R.id.mainComponentCardTV)
-        importantDocumentsCardTV = findViewById(R.id.importantDocumentsCardTV)
-        eligibilityCriteriaCardTV = findViewById(R.id.eligibilityCriteriaCardTV)
+        binding = ActivityMahaDbtSchemesDetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Header setup
-        textViewHeaderTitle.setText(R.string.dbtschema)
-        imageMenushow.visibility = View.VISIBLE
-        imageMenushow.setOnClickListener {
+        binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.dbtschema)
+        binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
+        binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
@@ -72,34 +58,70 @@ class MahaDbtSchemesDetailsActivity : AppCompatActivity() {
         }
 
         // Setup RecyclerViews
-        mainComponentRecyclerView.layoutManager = LinearLayoutManager(this)
-        mainComponentRecyclerView.adapter = FarmerMahaDbtSchemeDetailsRecyclerAdapter(mainComponent)
-        mainComponentRecyclerView.visibility = View.GONE
+        binding.mainComponentRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.mainComponentRecyclerView.adapter =
+            FarmerMahaDbtSchemeDetailsRecyclerAdapter(mainComponent)
+        binding.mainComponentRecyclerView.visibility = View.GONE
 
-        importantDocumentsRecyclerView.layoutManager = LinearLayoutManager(this)
-        importantDocumentsRecyclerView.adapter = FarmerMahaDbtSchemeDetailsRecyclerAdapter(importantDocuments)
-        importantDocumentsRecyclerView.visibility = View.GONE
+        binding.importantDocumentsRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.importantDocumentsRecyclerView.adapter =
+            FarmerMahaDbtSchemeDetailsRecyclerAdapter(importantDocuments)
+        binding.importantDocumentsRecyclerView.visibility = View.GONE
 
-        eligibilityCriteriaRecyclerView.layoutManager = LinearLayoutManager(this)
-        eligibilityCriteriaRecyclerView.adapter = FarmerMahaDbtSchemeDetailsRecyclerAdapter(eligibilityCriteria)
-        eligibilityCriteriaRecyclerView.visibility = View.GONE
+        binding.eligibilityCriteriaRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.eligibilityCriteriaRecyclerView.adapter =
+            FarmerMahaDbtSchemeDetailsRecyclerAdapter(eligibilityCriteria)
+        binding.eligibilityCriteriaRecyclerView.visibility = View.GONE
 
         // Toggle on header click
-        mainComponentCardTV.setOnClickListener {
-            toggleVisibility(mainComponentRecyclerView)
+        binding.mainComponentCardTV.setOnClickListener {
+            toggleVisibility(
+                binding.mainComponentRecyclerView,
+                binding.mainComponentToggleImageView
+            )
+        }
+        binding.mainComponentToggleImageView.setOnClickListener {
+            toggleVisibility(
+                binding.mainComponentRecyclerView,
+                binding.mainComponentToggleImageView
+            )
         }
 
-        importantDocumentsCardTV.setOnClickListener {
-            toggleVisibility(importantDocumentsRecyclerView)
+        binding.importantDocumentsCardTV.setOnClickListener {
+            toggleVisibility(
+                binding.importantDocumentsRecyclerView,
+                binding.requiredDocumentToggleImageView
+            )
+        }
+        binding.requiredDocumentToggleImageView.setOnClickListener {
+            toggleVisibility(
+                binding.importantDocumentsRecyclerView,
+                binding.requiredDocumentToggleImageView
+            )
         }
 
-        eligibilityCriteriaCardTV.setOnClickListener {
-            toggleVisibility(eligibilityCriteriaRecyclerView)
+        binding.eligibilityCriteriaCardTV.setOnClickListener {
+            toggleVisibility(
+                binding.eligibilityCriteriaRecyclerView,
+                binding.eligibilityCriteriaToggleImageView
+            )
+        }
+        binding.eligibilityCriteriaToggleImageView.setOnClickListener {
+            toggleVisibility(
+                binding.eligibilityCriteriaRecyclerView,
+                binding.eligibilityCriteriaToggleImageView
+            )
         }
     }
 
-    private fun toggleVisibility(view: View) {
+    private fun toggleVisibility(view: View, imageView: ImageView) {
         view.visibility = if (view.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+        imageView.setImageResource(
+            if (view.visibility == View.VISIBLE)
+                R.drawable.ic_baseline_arrow_drop_up_24
+            else
+                R.drawable.ic_baseline_arrow_drop_down_24
+        )
     }
 
     override fun attachBaseContext(newBase: Context) {

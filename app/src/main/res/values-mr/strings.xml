@@ -439,4 +439,5 @@
     <string name="coming_soon">लवकरच येत आहे......!</string>
     <string name="data_not_available">डेटा उपलब्ध नाही</string>
     <string name="mobile_otp_error_text">तुम्ही नोंदणीकृत नाही आहात, कृपया नोंदणी करा.</string>
+    <string name="otp_error">तुम्ही आधीच नोंदणीकृत आहात</string>
 </resources>

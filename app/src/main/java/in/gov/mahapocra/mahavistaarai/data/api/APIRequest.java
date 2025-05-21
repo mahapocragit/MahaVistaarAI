@@ -19,6 +19,8 @@ public interface APIRequest {
 
     @POST(APIServices.kOTPRequest)
     Call<JsonObject> getOTPRequest(@Body RequestBody params);
+    @POST(APIServices.kOTPRegisterRequest)
+    Call<JsonObject> getOTPRegisterRequest(@Body RequestBody params);
 
     @POST(APIServices.kRegistrationRequest)
     Call<JsonObject> getRegistrationRequest(@Body RequestBody params);

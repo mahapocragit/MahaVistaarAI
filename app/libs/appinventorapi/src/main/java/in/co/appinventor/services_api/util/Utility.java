@@ -56,26 +56,6 @@ public class Utility {
         }
     }
 
-    public static String uniqueDeviceID(Context context) {
-        @SuppressLint("WrongConstant") TelephonyManager tm = (TelephonyManager) context.getSystemService("phone");
-        if (ActivityCompat.checkSelfPermission(context, "android.permission.READ_PHONE_STATE") != 0) {
-            try {
-                throw new Exception("Implement runtime permission before using this method");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        String tmDevice = "" + tm.getDeviceId();
-        if (ActivityCompat.checkSelfPermission(context, "android.permission.READ_PHONE_STATE") != 0) {
-            try {
-                throw new Exception("Implement runtime permission before using this method");
-            } catch (Exception e2) {
-                e2.printStackTrace();
-            }
-        }
-        return new UUID((long) ("" + Settings.Secure.getString(context.getContentResolver(), "android_id")).hashCode(), (((long) tmDevice.hashCode()) << 32) | ((long) ("" + tm.getSimSerialNumber()).hashCode())).toString();
-    }
-
     public static boolean checkConnection(Context c) {
         @SuppressLint("WrongConstant") NetworkInfo networkInfo = ((ConnectivityManager) c.getSystemService("connectivity")).getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected() && networkInfo.getType() == 1) {

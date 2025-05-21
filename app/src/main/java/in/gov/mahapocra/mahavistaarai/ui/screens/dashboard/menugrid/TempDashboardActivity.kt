@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityTempDashboardBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MahavistaarViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper

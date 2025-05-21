@@ -433,4 +433,5 @@
     <string name="coming_soon">Coming Soon.....!</string>
     <string name="data_not_available">Data Not Available</string>
     <string name="mobile_otp_error_text">You are not registered, Please register.</string>
+    <string name="otp_error">You are registered already</string>
 </resources>

@@ -7,7 +7,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/farmerDbtCardView"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_44sdp"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/_5sdp"
         app:cardCornerRadius="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -16,9 +16,11 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:layout_marginVertical="@dimen/_2sdp"
             android:id="@+id/dbtSchemeName"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/_44sdp"
             android:layout_marginHorizontal="@dimen/_10sdp"
             android:gravity="center_vertical"
             android:text="TextView"

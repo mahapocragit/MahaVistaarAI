@@ -10,6 +10,7 @@ public interface APIServices {
     String SSO_KEY = in.gov.mahapocra.mahavistaarai.data.api.APIKeys.SSO_PROD;
     String USER_News_LIST = "Shareddbtapi/OtherApp/GetNews";
     String kOTPRequest = "authService/SendOTP";
+    String kOTPRegisterRequest = "authService/SendOTPRegistration";
     String kRegistrationRequest = "authService/AddEditRegistration";
     String kUserLogin = "authService/LoginCheck";
     String kRefreshTokenLogin = "authService/refreshtoken";

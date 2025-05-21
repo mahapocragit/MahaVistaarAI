@@ -1,12 +1,12 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid
 
 import android.Manifest
+import android.animation.AnimatorSet
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -25,6 +25,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.tasks.Task
 import com.google.firebase.messaging.FirebaseMessaging
@@ -50,16 +51,17 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.Pests
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard.HealthCardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.AboutActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.CreditsActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.news.NewsListActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.ComingSoonActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MahavistaarViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.ApUtil
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppHelper
@@ -107,7 +109,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             layoutInflater
         )
         setContentView(binding.root)
-
         val status = intent.getStringExtra("helloCrop")
         Log.d("TAG", "onCreate: $status")
 
@@ -192,7 +193,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         binding.appBarMain.dashboardScreen.chatFab.setOnClickListener {
             if (!isGuest) {
                 startActivity(Intent(this, TempDashboardActivity::class.java))
-            }else{
+            } else {
                 Toast.makeText(this, "Please login to continue", Toast.LENGTH_SHORT).show()
             }
         }
@@ -267,6 +268,56 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 )
             }
             false
+        }
+        askForLocationAndMicrophonePermission()
+    }
+
+    private fun askForLocationAndMicrophonePermission() {
+        val permissionsNeeded = mutableListOf<String>()
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            permissionsNeeded.add(Manifest.permission.RECORD_AUDIO)
+        }
+
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            permissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+
+        if (permissionsNeeded.isNotEmpty()) {
+            ActivityCompat.requestPermissions(
+                this,
+                permissionsNeeded.toTypedArray(),
+                PERMISSION_REQUEST_CODE
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            for ((index, permission) in permissions.withIndex()) {
+                if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("Permissions", "$permission granted")
+                    UIToastMessage.show(this@DashboardScreen, "Access Permission granted for $permission")
+                    // Perform the related action (e.g., accessing the camera) if needed
+                } else {
+                    Log.d("Permissions", "$permission denied")
+                    UIToastMessage.show(this@DashboardScreen, "Access Permission denied for $permission")
+                    // Optionally handle specific denied permission cases here
+                }
+            }
         }
     }
 
@@ -655,8 +706,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
 
 
-
-
     private fun init() {
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
         if (farmerId > 0) {
@@ -669,13 +718,13 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             if (languageToLoad.equals("en", ignoreCase = true)) {
                 jsonArray = if (isGuest) {
                     AppHelper.getInstance().getForGuestOption()
-                }else{
+                } else {
                     AppHelper.getInstance().getMenuOption()
                 }
             } else if (languageToLoad.equals("mr", ignoreCase = true)) {
-                jsonArray = if (isGuest){
+                jsonArray = if (isGuest) {
                     AppHelper.getInstance().getMenuOptionForGuestMarathi()
-                }else {
+                } else {
                     AppHelper.getInstance().getMenuOptionMarathi()
                 }
             }
@@ -733,27 +782,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
 
         dialog.show()
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            for (i in permissions.indices) {
-                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission was granted
-                    // Perform the related action (e.g., accessing the camera)
-                    UIToastMessage.show(this@DashboardScreen, "Access Permission granted")
-                } else {
-                    // Permission was denied
-                    // Notify the user and handle the situation gracefully
-                    UIToastMessage.show(this@DashboardScreen, "Access Permission denied")
-                }
-            }
-        }
     }
 
     private fun deleteDialog() {
