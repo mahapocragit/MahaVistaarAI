@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -11,27 +13,24 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
-import `in`.co.appinventor.services_api.api.AppinventorIncAPI
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.listener.AlertListEventListener
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
-import `in`.co.appinventor.services_api.listener.DatePickerRequestListener
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
-import `in`.gov.mahapocra.mahavistaarai.ui.adapters.MarketPriceAdapter
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
-import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityMarketPriceBinding
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
-import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
+import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityMarketPriceBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.adapters.MarketPriceAdapter
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -40,9 +39,11 @@ import retrofit2.Retrofit
 import java.text.SimpleDateFormat
 import java.util.Date
 
+
 class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCallbackCode,
     AlertListEventListener, ApiJSONObjCallback {
 
+    private lateinit var marketPriceAdapter: MarketPriceAdapter
     lateinit var binding: ActivityMarketPriceBinding
     private var districtJSONArray: JSONArray? = null
     private var talukaJSONArray: JSONArray? = null
@@ -80,6 +81,16 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
         myLayoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.recyclerViewMarketPriceList.setLayoutManager(myLayoutManager)
         onClick()
+
+        binding.searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                marketPriceAdapter.filter(s.toString())
+            }
+
+            override fun afterTextChanged(s: Editable) {}
+        })
     }
 
     private fun setConfiguration() {
@@ -259,7 +270,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
         }
     }
 
-    private fun getMarketName(languageToLoad: String, districtCode:Int) {
+    private fun getMarketName(languageToLoad: String, districtCode: Int) {
         try {
             val jsonObject = JSONObject()
             jsonObject.put("lang", languageToLoad)
@@ -380,7 +391,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
                         binding.tvMarketDetails.text = (districtName + ", "
                                 + marketName + " " + resources.getString(R.string.market_c_price))
                     }
-                    val marketPriceAdapter =
+                    marketPriceAdapter =
                         MarketPriceAdapter(
                             this,
                             marketPriceDetailsJSONArray
@@ -435,7 +446,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
                         binding.tvMarketDetails.text = (resources.getString(R.string.market_state)
                                 + "" + resources.getString(R.string.market_c_price))
                     }
-                    val marketPriceAdapter =
+                    marketPriceAdapter =
                         MarketPriceAdapter(
                             this,
                             marketPriceDetailsJSONArray

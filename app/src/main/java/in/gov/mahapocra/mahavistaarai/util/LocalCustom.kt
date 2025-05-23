@@ -2,6 +2,7 @@ package `in`.gov.mahapocra.mahavistaarai.util
 
 import android.app.Activity
 import android.app.DownloadManager
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
@@ -12,8 +13,15 @@ import android.os.Environment
 import android.util.Log
 import android.webkit.URLUtil
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.CommonStatusCodes
+import com.google.android.gms.safetynet.SafetyNet
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
+import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.Year
@@ -21,6 +29,7 @@ import java.time.format.DateTimeParseException
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.concurrent.Executor
 
 object LocalCustom {
     fun configureLocale(baseContext: Context, languageToLoad: String): Context {
@@ -152,6 +161,22 @@ object LocalCustom {
 
     fun logThis(message:String){
         Log.d("TAGGER", "logThis: $message")
+    }
+
+    fun verifyWithRecaptcha(context: Context, callback: (Boolean) -> Unit) {
+        SafetyNet.getClient(context).verifyWithRecaptcha(APIKeys.SITE_KEY)
+            .addOnSuccessListener(ContextCompat.getMainExecutor(context)) { response ->
+                val userResponseToken = response.tokenResult
+                callback(userResponseToken?.isNotEmpty() == true)
+            }
+            .addOnFailureListener(ContextCompat.getMainExecutor(context)) { e ->
+                if (e is ApiException) {
+                    Log.d(TAG, "Error: ${CommonStatusCodes.getStatusCodeString(e.statusCode)}")
+                } else {
+                    Log.d(TAG, "Error: ${e.message}")
+                }
+                callback(false)
+            }
     }
 
 }

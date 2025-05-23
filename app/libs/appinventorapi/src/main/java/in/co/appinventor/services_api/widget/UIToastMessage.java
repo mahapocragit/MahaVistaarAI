@@ -24,21 +24,24 @@ public class UIToastMessage {
     private static void showToast(Context mContext, String message, int duration, int gravity) {
         Toast toast = Toast.makeText(mContext, message, duration);
         View view = toast.getView();
-        GradientDrawable shape = new GradientDrawable();
-        shape.setShape(GradientDrawable.RECTANGLE);
-        shape.setColor(0xFF000000); // black
-        shape.setCornerRadius(50f);
-        view.setBackground(shape);
-        toast.setGravity(gravity, 0, 0);
 
-        // Optional: adjust TextView inside Toast for padding, color, size if needed
-        TextView messageTextView = view.findViewById(android.R.id.message);
-        if (messageTextView != null) {
-            messageTextView.setPadding(15, 2, 15, 2);
-            messageTextView.setTextColor(0xFFFFFFFF); // white
-            messageTextView.setTextSize(16f);
+        if (view != null) {
+            GradientDrawable shape = new GradientDrawable();
+            shape.setShape(GradientDrawable.RECTANGLE);
+            shape.setColor(0xFF000000); // black
+            shape.setCornerRadius(50f);
+            view.setBackground(shape);
+
+            // Optional: adjust TextView inside Toast
+            TextView messageTextView = view.findViewById(android.R.id.message);
+            if (messageTextView != null) {
+                messageTextView.setPadding(15, 2, 15, 2);
+                messageTextView.setTextColor(0xFFFFFFFF); // white
+                messageTextView.setTextSize(16f);
+            }
         }
 
+        toast.setGravity(gravity, 0, 0);
         toast.show();
     }
 

@@ -19,25 +19,33 @@ import in.gov.mahapocra.mahavistaarai.R;
 public class MarketPriceAdapter  extends RecyclerView.Adapter<MarketPriceAdapter.ViewHolder> {
 
     private Context mContext;
-    private JSONArray mJSONArray;
+    private JSONArray mOriginalArray;
+    private JSONArray mFilteredArray;
 
     public MarketPriceAdapter(Context context, JSONArray jsonArray) {
         this.mContext = context;
-        this.mJSONArray = jsonArray;
+        this.mOriginalArray = jsonArray;
+        this.mFilteredArray = new JSONArray();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            try {
+                mFilteredArray.put(jsonArray.getJSONObject(i));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @NonNull
-    @NotNull
     @Override
-    public MarketPriceAdapter.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+    public MarketPriceAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.single_market_list, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull @NotNull ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         try {
-            viewHolder.onBind(mJSONArray.getJSONObject(position));
+            viewHolder.onBind(mFilteredArray.getJSONObject(position));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -45,11 +53,7 @@ public class MarketPriceAdapter  extends RecyclerView.Adapter<MarketPriceAdapter
 
     @Override
     public int getItemCount() {
-        if (mJSONArray != null) {
-            return mJSONArray.length();
-        } else {
-            return 0;
-        }
+        return mFilteredArray.length();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -81,5 +85,25 @@ public class MarketPriceAdapter  extends RecyclerView.Adapter<MarketPriceAdapter
             tvMinValue.setText(jsonObject.getString("min_price"));
             unitForQuantity.setText(String.format(" %s", jsonObject.getString("unit")));
         }
+    }
+
+    public void filter(String query) {
+        mFilteredArray = new JSONArray();
+        if (query == null || query.trim().isEmpty()) {
+            mFilteredArray = mOriginalArray;
+        } else {
+            query = query.toLowerCase();
+            for (int i = 0; i < mOriginalArray.length(); i++) {
+                try {
+                    JSONObject obj = mOriginalArray.getJSONObject(i);
+                    if (obj.getString("comm_name").toLowerCase().contains(query)) {
+                        mFilteredArray.put(obj);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 }
