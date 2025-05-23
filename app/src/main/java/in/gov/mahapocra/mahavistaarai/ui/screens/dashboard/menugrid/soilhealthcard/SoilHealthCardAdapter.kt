@@ -76,60 +76,72 @@ class SoilHealthCardAdapter(private val farmerJsonArray: JSONArray?) :
         potentialOfHydrogen: String,
         holder: FarmerViewHolder
     ) {
-        val nitroDouble = nitrogen.toDouble()
-        val phosDouble = phosphorus.toDouble()
-        val potasDouble = potassium.toDouble()
-        val electricalConductivityDouble = electricalConductivity.toDouble()
-        val organicCarbonDouble = organicCarbon.toDouble()
-        val potentialOfHydrogenDouble = potentialOfHydrogen.toDouble()
+        val nitroDouble = nitrogen.toDoubleOrNull()
+        val phosDouble = phosphorus.toDoubleOrNull()
+        val potasDouble = potassium.toDoubleOrNull()
+        val electricalConductivityDouble = electricalConductivity.toDoubleOrNull()
+        val organicCarbonDouble = organicCarbon.toDoubleOrNull()
+        val potentialOfHydrogenDouble = potentialOfHydrogen.toDoubleOrNull()
 
-
-        if (nitroDouble < 280) {
-            holder.nitrogenImageView.setImageResource(R.drawable.ic_soil_health_card_high)
-        } else if (nitroDouble > 280 && nitroDouble < 560){
-            holder.nitrogenImageView.setImageResource(R.drawable.ic_soil_health_card_low)
-        }else{
-            holder.nitrogenImageView.setImageResource(R.drawable.ic_soil_health_card_mid)
+        // You can either assign default values or skip updates if the value is null
+        nitroDouble?.let {
+            holder.nitrogenImageView.setImageResource(
+                when {
+                    it < 280 -> R.drawable.ic_soil_health_card_high
+                    it in 280.0..560.0 -> R.drawable.ic_soil_health_card_low
+                    else -> R.drawable.ic_soil_health_card_mid
+                }
+            )
         }
 
-        if (phosDouble < 14) {
-            holder.phosphorusImageView.setImageResource(R.drawable.ic_soil_health_card_high)
-        } else if (phosDouble > 15 && phosDouble < 28){
-            holder.phosphorusImageView.setImageResource(R.drawable.ic_soil_health_card_low)
-        }else{
-            holder.phosphorusImageView.setImageResource(R.drawable.ic_soil_health_card_mid)
+        phosDouble?.let {
+            holder.phosphorusImageView.setImageResource(
+                when {
+                    it < 14 -> R.drawable.ic_soil_health_card_high
+                    it in 15.0..28.0 -> R.drawable.ic_soil_health_card_low
+                    else -> R.drawable.ic_soil_health_card_mid
+                }
+            )
         }
 
-        if (potasDouble < 150) {
-            holder.potassiumImageView.setImageResource(R.drawable.ic_soil_health_card_high)
-        } else if (potasDouble > 150 && potasDouble < 250){
-            holder.potassiumImageView.setImageResource(R.drawable.ic_soil_health_card_low)
-        }else{
-            holder.potassiumImageView.setImageResource(R.drawable.ic_soil_health_card_mid)
+        potasDouble?.let {
+            holder.potassiumImageView.setImageResource(
+                when {
+                    it < 150 -> R.drawable.ic_soil_health_card_high
+                    it in 150.0..250.0 -> R.drawable.ic_soil_health_card_low
+                    else -> R.drawable.ic_soil_health_card_mid
+                }
+            )
         }
 
-        if (electricalConductivityDouble < 2) {
-            holder.ecImageView.setImageResource(R.drawable.ic_soil_health_card_high)
-        } else if (electricalConductivityDouble > 2 && electricalConductivityDouble < 4){
-            holder.ecImageView.setImageResource(R.drawable.ic_soil_health_card_low)
-        }else{
-            holder.ecImageView.setImageResource(R.drawable.ic_soil_health_card_mid)
+        electricalConductivityDouble?.let {
+            holder.ecImageView.setImageResource(
+                when {
+                    it < 2 -> R.drawable.ic_soil_health_card_high
+                    it in 2.0..4.0 -> R.drawable.ic_soil_health_card_low
+                    else -> R.drawable.ic_soil_health_card_mid
+                }
+            )
         }
 
-        if (organicCarbonDouble < 0.4) {
-            holder.ocImageView.setImageResource(R.drawable.ic_soil_health_card_high)
-        } else if (organicCarbonDouble > 0.4 && organicCarbonDouble < 0.8){
-            holder.ocImageView.setImageResource(R.drawable.ic_soil_health_card_low)
-        }else{
-            holder.ocImageView.setImageResource(R.drawable.ic_soil_health_card_mid)
+        organicCarbonDouble?.let {
+            holder.ocImageView.setImageResource(
+                when {
+                    it < 0.4 -> R.drawable.ic_soil_health_card_high
+                    it in 0.4..0.8 -> R.drawable.ic_soil_health_card_low
+                    else -> R.drawable.ic_soil_health_card_mid
+                }
+            )
         }
 
-        if (potentialOfHydrogenDouble < 6.5) {
-            holder.phImageView.setImageResource(R.drawable.ic_soil_health_card_high)
-        } else if (potentialOfHydrogenDouble > 6.5 && potentialOfHydrogenDouble < 7.5){
-            holder.phImageView.setImageResource(R.drawable.ic_soil_health_card_low)
-        }else{
-            holder.phImageView.setImageResource(R.drawable.ic_soil_health_card_mid)
+        potentialOfHydrogenDouble?.let {
+            holder.phImageView.setImageResource(
+                when {
+                    it < 6.5 -> R.drawable.ic_soil_health_card_high
+                    it in 6.5..7.5 -> R.drawable.ic_soil_health_card_low
+                    else -> R.drawable.ic_soil_health_card_mid
+                }
+            )
         }
     }
 

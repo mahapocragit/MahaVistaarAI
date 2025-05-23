@@ -13,6 +13,7 @@ import android.util.Log
 import android.webkit.URLUtil
 import androidx.annotation.RequiresApi
 import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.co.appinventor.services_api.widget.UIToastMessage
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.Year
@@ -74,6 +75,7 @@ object LocalCustom {
             setMimeType("application/pdf")
             setAllowedOverMetered(true)
             setAllowedOverRoaming(true)
+            UIToastMessage.show(context, "Downloading $fileName")
         }
 
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager

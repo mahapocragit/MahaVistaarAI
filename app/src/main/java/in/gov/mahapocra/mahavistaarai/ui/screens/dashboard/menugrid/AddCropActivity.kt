@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -34,6 +35,7 @@ import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.Year
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -120,19 +122,24 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
         if (i == 1) {
             receivedJson = obj as JSONObject
             logThis(receivedJson.toString())
-            AppUtility.getInstance().showDisabledFutureDatePicker(
-                this,
-                date,
-                1,
-                this
-            )
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+            val datePickerDialog = DatePickerDialog(this, { _, y, m, d ->
+                onDateSelected(1, d, m, y) // ✅ Manually invoke
+            }, year, month, day)
+
+            datePickerDialog.setTitle(getString(R.string.select_sowing_date))
+            datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
+            datePickerDialog.show()
         }
     }
 
-
     override fun onDateSelected(i: Int, day: Int, month: Int, year: Int) {
         if (i == 1) {
-            sowingDate = "$day-$month-$year"
+            sowingDate = "$day-${month + 1}-$year"
             logThis(sowingDate)
             cropId = receivedJson.optInt("id")
             viewModel.saveFarmerSelectedCrop(this, sowingDate, cropId)

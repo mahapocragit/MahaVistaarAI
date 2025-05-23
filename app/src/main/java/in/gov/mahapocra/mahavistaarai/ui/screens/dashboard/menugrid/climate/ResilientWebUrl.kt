@@ -24,7 +24,7 @@ class ResilientWebUrl : AppCompatActivity() {
     private lateinit var climateWebView: WebView
     private lateinit var progressDialog: ProgressDialog
     lateinit var languageToLoad: String
-    private lateinit var binding:ActivityResilientWebUrlBinding
+    private lateinit var binding: ActivityResilientWebUrlBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +37,8 @@ class ResilientWebUrl : AppCompatActivity() {
         binding = ActivityResilientWebUrlBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.layoutToolbar.textViewHeaderTitle.text = getString(R.string.climate_resilient_technology)
+        binding.layoutToolbar.textViewHeaderTitle.text =
+            getString(R.string.climate_resilient_technology)
         binding.layoutToolbar.imgBackArrow.visibility = View.VISIBLE
         binding.layoutToolbar.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
@@ -70,14 +71,21 @@ class ResilientWebUrl : AppCompatActivity() {
 
         climateWebView.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                progressDialog.show()
+                if (!this@ResilientWebUrl.isFinishing && !this@ResilientWebUrl.isDestroyed) {
+                    progressDialog.show()
+                }
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
-                progressDialog.dismiss()
+                if (progressDialog.isShowing) {
+                    progressDialog.dismiss()
+                }
             }
 
-            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+            override fun shouldOverrideUrlLoading(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): Boolean {
                 return false // Let WebView load URLs itself
             }
         }
@@ -87,6 +95,13 @@ class ResilientWebUrl : AppCompatActivity() {
 
     override fun onBackPressed() {
         finish()
+    }
+
+    override fun onDestroy() {
+        if (::progressDialog.isInitialized && progressDialog.isShowing) {
+            progressDialog.dismiss()
+        }
+        super.onDestroy()
     }
 
     override fun attachBaseContext(newBase: Context) {

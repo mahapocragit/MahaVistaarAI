@@ -54,7 +54,7 @@ class WarehouseAvailabilityAdapter(
             val wareHouseModel = WareHouseModel(jsonObject)
             warehouseName = wareHouseModel.getWarehouseName()
             val recordedDate: String = wareHouseModel.getRecordedDate()
-            val village: String = wareHouseModel.getVillage()
+            val totalCapacity: String = wareHouseModel.totalCapacity
             val address: String = wareHouseModel.getAddress()
             val phone: String = wareHouseModel.getPhone()
             val availableCapacity: String = wareHouseModel.getAvailableCapacity()
@@ -66,7 +66,8 @@ class WarehouseAvailabilityAdapter(
             binding.recordDate.text = recordedDate
             binding.tvAddress.text = address
             binding.tvContactNumber.text = phone
-            binding.tvTotalAvailableCapacity.text = "$availableCapacity MT"
+            binding.tvTotalCapacity.text = "Total Capacity: $totalCapacity MT"
+            binding.tvTotalAvailableCapacity.text = "Available Capacity: $availableCapacity MT"
         }
     }
 }

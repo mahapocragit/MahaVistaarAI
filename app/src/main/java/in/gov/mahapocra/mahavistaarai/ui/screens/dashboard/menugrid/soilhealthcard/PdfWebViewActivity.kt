@@ -26,9 +26,7 @@ class PdfWebViewActivity : AppCompatActivity() {
     private lateinit var gisViewModel: GisViewModel
     private lateinit var soilTestResultAdapter: SoilTestResultAdapter
     private lateinit var fertilizerRecommendationAdapter: FertilizerRecommendationAdapter
-    private lateinit var progressBar: ProgressBar
     private lateinit var languageToLoad: String
-    private val googleDriveView: String = "https://mozilla.github.io/pdf.js/web/viewer.html?file="
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +35,7 @@ class PdfWebViewActivity : AppCompatActivity() {
             languageToLoad = "en"
         }
         switchLanguage(this, languageToLoad)
-        binding= ActivityPdfViewBinding.inflate(layoutInflater)
+        binding = ActivityPdfViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         gisViewModel = ViewModelProvider(this)[GisViewModel::class.java]
@@ -48,28 +46,25 @@ class PdfWebViewActivity : AppCompatActivity() {
         }
 
         val url = intent.getStringExtra("pdf_url")
-        progressBar = findViewById(R.id.progressBar)
-        val settings: WebSettings = binding.webView.settings
-        settings.javaScriptEnabled = true
-        settings.builtInZoomControls = true
-        settings.displayZoomControls = false
-
         binding.floatingActionButton.setOnClickListener {
             url?.let { it1 -> LocalCustom.downloadPdf(this, it1) }
         }
-
-        binding.webView.webViewClient = WebViewClient()
-        binding.webView.loadUrl(googleDriveView + url)
         val shcNumber = intent.getStringExtra("shcNumber")
         Log.d("TAGGER", "onCreate: $languageToLoad")
-        shcNumber?.let { gisViewModel.fetchSoilHealthCardDetailsFromSHCNumber(this, it, languageToLoad) }
+        shcNumber?.let {
+            gisViewModel.fetchSoilHealthCardDetailsFromSHCNumber(
+                this,
+                it,
+                languageToLoad
+            )
+        }
         observeResponse()
     }
 
     private fun observeResponse() {
-        gisViewModel.shcInformationResponse.observe(this){
+        gisViewModel.shcInformationResponse.observe(this) {
             Log.d("TAGGER", "observeResponse: $it")
-            if (it!=null){
+            if (it != null) {
                 val jsonObject = JSONObject(it.toString())
                 val basicInfo = jsonObject.getJSONArray("basic_info")[0] as JSONObject
                 binding.soilHealthCardLayout.farmerName.text = basicInfo.optString("farmer_name")
@@ -80,19 +75,25 @@ class PdfWebViewActivity : AppCompatActivity() {
 
                 val soilTestResultJson = jsonObject.getJSONArray("soil_test_result")
                 soilTestResultAdapter = SoilTestResultAdapter(soilTestResultJson)
-                binding.soilHealthCardLayout.soilTestResultRecyclerView.layoutManager = LinearLayoutManager(this)
-                binding.soilHealthCardLayout.soilTestResultRecyclerView.adapter = soilTestResultAdapter
+                binding.soilHealthCardLayout.soilTestResultRecyclerView.layoutManager =
+                    LinearLayoutManager(this)
+                binding.soilHealthCardLayout.soilTestResultRecyclerView.adapter =
+                    soilTestResultAdapter
                 soilTestResultAdapter.notifyDataSetChanged()
 
-                val fertilizerRecommendationJson = jsonObject.getJSONArray("fertilizer_recommendation")
-                fertilizerRecommendationAdapter = FertilizerRecommendationAdapter(fertilizerRecommendationJson)
-                binding.soilHealthCardLayout.fertilizerRecommendationRecyclerView.layoutManager = LinearLayoutManager(this)
-                binding.soilHealthCardLayout.fertilizerRecommendationRecyclerView.adapter = fertilizerRecommendationAdapter
+                val fertilizerRecommendationJson =
+                    jsonObject.getJSONArray("fertilizer_recommendation")
+                fertilizerRecommendationAdapter =
+                    FertilizerRecommendationAdapter(fertilizerRecommendationJson)
+                binding.soilHealthCardLayout.fertilizerRecommendationRecyclerView.layoutManager =
+                    LinearLayoutManager(this)
+                binding.soilHealthCardLayout.fertilizerRecommendationRecyclerView.adapter =
+                    fertilizerRecommendationAdapter
                 fertilizerRecommendationAdapter.notifyDataSetChanged()
             }
         }
 
-        gisViewModel.error.observe(this){
+        gisViewModel.error.observe(this) {
             Log.d("TAGGER", "observeResponse: $it")
         }
     }

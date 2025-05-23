@@ -259,9 +259,10 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     }
 
     private fun getSelectedSavedOption() {
+        val farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
         val jsonObject = JSONObject()
         try {
-            jsonObject.put("farmer_id", "902")
+            jsonObject.put("farmer_id", farmerId)
             jsonObject.put("crop_id", cropId)
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
@@ -671,31 +672,64 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     }
 
     private fun saveOption(obj: JSONObject?) {
-        val jsonObject = JSONObject()
-        val fertilizerOption: JSONArray = obj!!.getJSONArray("Option")
-        try {
-            jsonObject.put("farmer_id", "902")
-            jsonObject.put("crop_id", cropId)
-            jsonObject.put("soil_test_n", nitrogenValue)
-            jsonObject.put("soil_test_p", phosphorusValue)
-            jsonObject.put("soil_test_k", potassiumValue)
-            jsonObject.put("fym", edtFYMValue)
-            jsonObject.put("plot_size", totalAcrArea)
-            jsonObject.put("plot_unit", "Acer")
-            jsonObject.put("option", fertilizerOption)
+        // Step 1: Null check
+        if (obj == null) {
+            Log.e("FertilizerCalc", "saveOption: Input JSONObject is null")
+            return
+        }
 
+        // Optional: Log the input JSON for debugging
+        Log.d("FertilizerCalc", "saveOption input: $obj")
+
+        // Step 2: Extract JSONArray safely
+        val fertilizerOption = obj.optJSONArray("Option")
+        if (fertilizerOption == null) {
+            Log.e("FertilizerCalc", "saveOption: 'Option' key is missing or not a JSONArray")
+            return
+        }
+
+        // Optional: Warn if array is empty
+        if (fertilizerOption.length() == 0) {
+            Log.w("FertilizerCalc", "saveOption: 'Option' array is empty")
+        }
+
+        try {
+            // Step 3: Construct JSON body
+            val farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
+
+            val jsonObject = JSONObject().apply {
+                put("farmer_id", farmerId)
+                put("crop_id", cropId)
+                put("soil_test_n", nitrogenValue)
+                put("soil_test_p", phosphorusValue)
+                put("soil_test_k", potassiumValue)
+                put("fym", edtFYMValue)
+                put("plot_size", totalAcrArea)
+                put("plot_unit", binding.areaTextView.text.toString())
+                put("option", fertilizerOption)
+            }
+
+            Log.d("TAGGER", "saveOption: ${binding.areaTextView.text}")
+
+            // Step 4: Prepare API request
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api =
-                AppInventorApi(this, APIServices.FARMER, "", AppString(this).getkMSG_WAIT(), true)
+            val api = AppInventorApi(this, APIServices.FARMER, "", AppString(this).getkMSG_WAIT(), true)
+
+            // Step 5: Make async network request using coroutine
             CoroutineScope(Dispatchers.IO).launch {
-                val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.saveFertilizerFormula(requestBody)
-                api.postRequest(responseCall, this@FertilizerCalculatorActivity, 3)
+                try {
+                    val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
+                    val responseCall: Call<JsonObject> = apiRequest.saveFertilizerFormula(requestBody)
+                    api.postRequest(responseCall, this@FertilizerCalculatorActivity, 3)
+                } catch (e: Exception) {
+                    Log.e("FertilizerCalc", "API request failed", e)
+                }
             }
         } catch (e: JSONException) {
-            e.printStackTrace()
+            Log.e("FertilizerCalc", "saveOption: JSON exception", e)
         }
     }
+
 
     override fun onDateSelected(i: Int, day: Int, month: Int, year: Int) {
         if (i == 1) {

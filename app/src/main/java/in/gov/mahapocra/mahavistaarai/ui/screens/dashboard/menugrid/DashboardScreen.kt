@@ -140,7 +140,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             }
         }
 
-        firebaseTokenFromServer
+        fetchFirebaseTokenFromServer()
         setConfiguration()
         this.window.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
@@ -692,18 +692,23 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             }
     }
 
-    private val firebaseTokenFromServer: Unit
-        get() {
-            FirebaseMessaging.getInstance().token
-                .addOnCompleteListener { task: Task<String?> ->
-                    if (!task.isSuccessful) {
-                        Objects.requireNonNull(task.exception)
-                            ?.printStackTrace()
-                    }
-                    val token = task.result
-                    appPreferenceManager.saveString("FCM_TOKEN", token)
+    private fun fetchFirebaseTokenFromServer() {
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.e("FCM", "Fetching FCM registration token failed", task.exception)
+                    return@addOnCompleteListener
                 }
-        }
+
+                val token = task.result
+                if (!token.isNullOrEmpty()) {
+                    Log.d("FCM", "FCM Token: $token")
+                    appPreferenceManager.saveString("FCM_TOKEN", token)
+                } else {
+                    Log.w("FCM", "FCM token is null or empty")
+                }
+            }
+    }
 
 
     private fun init() {

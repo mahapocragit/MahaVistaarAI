@@ -139,7 +139,9 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
     }
 
     override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        TODO("Not yet implemented")
+        Log.e("HealthCardActivity", "API call failed: ${th?.localizedMessage}", th)
+        // Optionally show a message to the user
+        UIToastMessage.show(this, "Failed to load data. Please check your connection.")
     }
 
     private fun observeResponse() {

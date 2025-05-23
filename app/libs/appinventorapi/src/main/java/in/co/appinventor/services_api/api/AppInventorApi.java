@@ -157,7 +157,11 @@ public class AppInventorApi {
         responseCall.enqueue(new Callback<JsonObject>() {
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull retrofit2.Response<JsonObject> response) {
                 if (AppInventorApi.this.mProgressDialog != null && AppInventorApi.this.mProgressDialog.isShowing()) {
-                    AppInventorApi.this.mProgressDialog.dismiss();
+                    if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                        if (mContext instanceof Activity && !((Activity) mContext).isFinishing()) {
+                            mProgressDialog.dismiss();
+                        }
+                    }
                 }
                 if (response.isSuccessful()) {
                     JsonObject serverResponse = response.body();
@@ -173,7 +177,11 @@ public class AppInventorApi {
 
             public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
                 if (AppInventorApi.this.mProgressDialog != null && AppInventorApi.this.mProgressDialog.isShowing()) {
-                    AppInventorApi.this.mProgressDialog.dismiss();
+                    if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                        if (mContext instanceof Activity && !((Activity) mContext).isFinishing()) {
+                            mProgressDialog.dismiss();
+                        }
+                    }
                 }
                 try {
                     apiCallback.onFailure(call, t, requestCode);

@@ -45,7 +45,7 @@ class TemperatureAdapter(private val jsonArray: JSONArray) :
         val rain = item.optString("rain")?:""
         val windSpeedTemp = "${holder.weatherCardView.context.getString(R.string.wind)}: $windSpeed km/h"
         val humidityTemp = "${holder.weatherCardView.context.getString(R.string.humidity)}: $humidity %"
-        val rainTemp = "${holder.weatherCardView.context.getString(R.string.rain)}: $rain %"
+        val rainTemp = "${holder.weatherCardView.context.getString(R.string.rain)}: $rain mm"
         val temperature = "$minTemp°C / $maxTemp°C"
         try {
             holder.titleTextView.text = item.getString("date")

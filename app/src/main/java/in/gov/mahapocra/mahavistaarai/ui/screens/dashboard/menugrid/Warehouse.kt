@@ -160,7 +160,14 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
     }
 
     override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        TODO("Not yet implemented")
+        UIToastMessage.show(this, "Something went wrong. Please try again.")
+
+        // Handle UI fallback based on the index `i`, if needed
+        if (i == 3) {
+            binding.wareHousereport.visibility = View.GONE
+            binding.wareHouseEmptyTextView.visibility = View.VISIBLE
+            resetValuesForWareHouse()
+        }
     }
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {

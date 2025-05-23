@@ -11,7 +11,7 @@
     <RelativeLayout
         android:id="@+id/appBar1"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="120dp"
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay">
 
@@ -57,9 +57,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="22°C"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/_18sdp"
+                        android:textSize="@dimen/_14sdp"
                         android:textStyle="bold" />
 
                     <ProgressBar
@@ -113,10 +113,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
+                    android:textStyle="bold"
                     android:layout_marginStart="@dimen/_10sdp"
                     android:text="Good Morning,"
-                    android:textSize="@dimen/_16sdp"
-                    android:textStyle="bold" />
+                    android:textSize="@dimen/_14sdp" />
 
                 <TextView
                     android:id="@+id/userFullNameTextView"
