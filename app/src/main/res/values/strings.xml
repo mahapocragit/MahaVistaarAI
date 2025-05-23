@@ -434,4 +434,6 @@
     <string name="data_not_available">Data Not Available</string>
     <string name="mobile_otp_error_text">You are not registered, Please register.</string>
     <string name="otp_error">You are registered already</string>
+    <string name="no_internet_found_text">No Internet found. Please Check your connection and</string>
+    <string name="try_again">Try Again</string>
 </resources>

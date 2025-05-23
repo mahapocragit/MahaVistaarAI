@@ -78,6 +78,8 @@ android {
 
 
 dependencies {
+    //captcha
+    implementation 'com.google.android.gms:play-services-safetynet:18.0.1'
     //osm
     implementation 'org.osmdroid:osmdroid-android:6.1.20'
     implementation 'com.intuit.sdp:sdp-android:1.1.1'

@@ -440,4 +440,6 @@
     <string name="data_not_available">डेटा उपलब्ध नाही</string>
     <string name="mobile_otp_error_text">तुम्ही नोंदणीकृत नाही आहात, कृपया नोंदणी करा.</string>
     <string name="otp_error">तुम्ही आधीच नोंदणीकृत आहात</string>
+    <string name="no_internet_found_text">इंटरनेट सापडले नाही. कृपया तुमचे कनेक्शन तपासा आणि</string>
+    <string name="try_again">पुन्हा प्रयत्न करा</string>
 </resources>

@@ -57,13 +57,24 @@ class TempDashboardActivity : AppCompatActivity() {
         mahavistaarViewModel.responseUrlForChatBot.observe(this) {
             ProgressHelper.disableProgressDialog()
             if (it != null && this@TempDashboardActivity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+                binding.webView.visibility = View.VISIBLE
+                binding.noInternetAvailableLayout.visibility = View.GONE
                 val url = it.get("url")?.asString.orEmpty()
                 loadWebView(url)
+            }else{
+                binding.webView.visibility = View.GONE
+                binding.noInternetAvailableLayout.visibility = View.VISIBLE
             }
         }
         mahavistaarViewModel.error.observe(this) {
+            binding.webView.visibility = View.GONE
+            binding.noInternetAvailableLayout.visibility = View.VISIBLE
             ProgressHelper.disableProgressDialog()
-            Toast.makeText(this, "Token generation failed!!", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.tryAgainTextView.setOnClickListener {
+            askForLocationAndMicrophonePermission()
+            mahavistaarViewModel.requestUrlForChatBot(this)
         }
     }
 
