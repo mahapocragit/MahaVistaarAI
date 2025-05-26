@@ -190,7 +190,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             )
         }
 
-        binding.appBarMain.dashboardScreen.chatFab.setOnClickListener {
+        binding.appBarMain.dashboardScreen.customNavBottom.navChat.setOnClickListener {
             if (!isGuest) {
                 startActivity(Intent(this, TempDashboardActivity::class.java))
             } else {
@@ -229,46 +229,79 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         setVersion()
         farmerViewModel.getFarmerSelectedCrop(this, languageToLoad)
 
-        binding.appBarMain.dashboardScreen.bottomNavigation.itemIconTintList = null
-        binding.appBarMain.dashboardScreen.bottomNavigation.setOnItemSelectedListener { item: MenuItem ->
-            when (item.itemId) {
-                R.id.nav_home -> startActivity(
-                    Intent(
-                        this@DashboardScreen,
-                        DashboardScreen::class.java
-                    )
+        binding.appBarMain.dashboardScreen.customNavBottom.navHome.setOnClickListener {
+            startActivity(
+                Intent(
+                    this@DashboardScreen,
+                    DashboardScreen::class.java
                 )
-
-                R.id.nav_about -> startActivity(
-                    Intent(
-                        this@DashboardScreen,
-                        CHCenterActivity::class.java
-                    )
-                )
-
-                R.id.nav_chat -> startActivity(
-                    Intent(
-                        this@DashboardScreen,
-                        TempDashboardActivity::class.java
-                    )
-                )
-
-                R.id.nav_about2 -> startActivity(
-                    Intent(
-                        this@DashboardScreen,
-                        AboutActivity::class.java
-                    )
-                )
-
-                R.id.nav_videos -> startActivity(
-                    Intent(
-                        this@DashboardScreen,
-                        VideosActivity::class.java
-                    )
-                )
-            }
-            false
+            )
         }
+        binding.appBarMain.dashboardScreen.customNavBottom.navChc.setOnClickListener {
+            startActivity(
+                Intent(
+                    this@DashboardScreen,
+                    CHCenterActivity::class.java
+                )
+            )
+        }
+        binding.appBarMain.dashboardScreen.customNavBottom.navVideos.setOnClickListener {
+            startActivity(
+                Intent(
+                    this@DashboardScreen,
+                    VideosActivity::class.java
+                )
+            )
+        }
+        binding.appBarMain.dashboardScreen.customNavBottom.navAbout.setOnClickListener {
+            startActivity(
+                Intent(
+                    this@DashboardScreen,
+                    AboutActivity::class.java
+                )
+            )
+        }
+
+//        binding.appBarMain.dashboardScreen.bottomNavigation.itemIconTintList = null
+//        binding.appBarMain.dashboardScreen.bottomNavigation.setOnItemSelectedListener { item: MenuItem ->
+//            when (item.itemId) {
+//                R.id.nav_home -> startActivity(
+//                    Intent(
+//                        this@DashboardScreen,
+//                        DashboardScreen::class.java
+//                    )
+//                )
+//
+//                R.id.nav_about -> startActivity(
+//                    Intent(
+//                        this@DashboardScreen,
+//                        CHCenterActivity::class.java
+//                    )
+//                )
+//
+//                R.id.nav_chat -> startActivity(
+//                    Intent(
+//                        this@DashboardScreen,
+//                        TempDashboardActivity::class.java
+//                    )
+//                )
+//
+//                R.id.nav_about2 -> startActivity(
+//                    Intent(
+//                        this@DashboardScreen,
+//                        AboutActivity::class.java
+//                    )
+//                )
+//
+//                R.id.nav_videos -> startActivity(
+//                    Intent(
+//                        this@DashboardScreen,
+//                        VideosActivity::class.java
+//                    )
+//                )
+//            }
+//            false
+//        }
         askForLocationAndMicrophonePermission()
     }
 
@@ -310,11 +343,17 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             for ((index, permission) in permissions.withIndex()) {
                 if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
                     Log.d("Permissions", "$permission granted")
-                    UIToastMessage.show(this@DashboardScreen, "Access Permission granted for $permission")
+                    UIToastMessage.show(
+                        this@DashboardScreen,
+                        "Access Permission granted for $permission"
+                    )
                     // Perform the related action (e.g., accessing the camera) if needed
                 } else {
                     Log.d("Permissions", "$permission denied")
-                    UIToastMessage.show(this@DashboardScreen, "Access Permission denied for $permission")
+                    UIToastMessage.show(
+                        this@DashboardScreen,
+                        "Access Permission denied for $permission"
+                    )
                     // Optionally handle specific denied permission cases here
                 }
             }

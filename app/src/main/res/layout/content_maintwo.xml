@@ -331,29 +331,12 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottomNavigation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            app:itemTextColor="@color/black"
-            android:layout_gravity="bottom"
-            app:labelVisibilityMode="labeled"
-            app:menu="@menu/bottom_nav_menu" />
-
-        <!-- Floating or enlarged chat icon -->
-        <ImageButton
-            android:id="@+id/chat_fab"
-            android:layout_width="@dimen/_65sdp"
-            android:layout_height="@dimen/_65sdp"
-            android:layout_gravity="center|bottom"
-            android:layout_marginBottom="@dimen/_2sdp"
-            android:elevation="@dimen/_10sdp"
-            android:background="@drawable/ic_chtbt"
-            android:contentDescription="chat"
-            android:scaleType="centerInside" />
+        <include
+            android:id="@+id/customNavBottom"
+            layout="@layout/custom_bottom_nav" />
     </FrameLayout>
 
 </RelativeLayout>

@@ -57,6 +57,6 @@
 
     <include
         android:id="@+id/dashboardScreen"
-        layout="@layout/content_maintwo" />
+        layout="@layout/temporary_layout" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
