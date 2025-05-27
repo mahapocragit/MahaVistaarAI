@@ -82,7 +82,6 @@ class SOPWebViewActivity : AppCompatActivity() {
     }
 
     private fun openWebView(url: String) {
-        Log.d("TAGGER", "Loading URL: $url")
         climateWebView.loadUrl(url)
     }
 

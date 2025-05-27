@@ -55,7 +55,6 @@ class MahaDbtSchemesActivity : AppCompatActivity() {
             if (it!=null){
                 val jsonObject = JSONObject(it.toString())
                 val schemesJSONArray = jsonObject.optJSONArray("data")
-                Log.d("TAGGER", "onCreate: $schemesJSONArray")
                 mahadbtSchemesAdapter = MahadbtSchemesAdapter(schemesJSONArray, languageToLoad)
                 binding.recyclerView.layoutManager = LinearLayoutManager(this)
                 binding.recyclerView.adapter = mahadbtSchemesAdapter

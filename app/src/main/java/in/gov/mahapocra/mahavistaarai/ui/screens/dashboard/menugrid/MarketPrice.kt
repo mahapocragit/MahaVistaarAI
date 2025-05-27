@@ -64,7 +64,6 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
         super.onCreate(savedInstanceState)
         languageToLoad = "mr"
         if (AppSettings.getLanguage(this@MarketPrice).equals("1", ignoreCase = true)) {
-            Log.d("getStrName=", AppSettings.getLanguage(this@MarketPrice))
             languageToLoad = "en"
         }
         switchLanguage(this, languageToLoad)
@@ -97,7 +96,6 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
     private fun setConfiguration() {
         languageToLoad = "mr"
         if (AppSettings.getLanguage(this@MarketPrice).equals("1", ignoreCase = true)) {
-            Log.d("getStrName=", AppSettings.getLanguage(this@MarketPrice))
             languageToLoad = "en"
         }
         districtName =
@@ -223,9 +221,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
     }
 
     override fun didSelectListItem(i: Int, s: String?, s1: String?) {
-
         if (i == 1) {
-            Log.d("TAGGER", "didSelectListItem: $s1")
             districtID = s1!!.toInt()
             if (s != null) {
                 districtName = s
@@ -264,7 +260,6 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
                 marketName = s.toString()
                 marketPreceDate = binding.tvMarketDate.text.toString()
                 val apmcID = JSONObject(s1).optInt("apmc_id")
-                Log.d("TAGGER", "didSelectListItem: $apmcID")
                 getMarketPriceDetails(apmcID)
             }
             binding.textViewMarket.text = s
@@ -349,7 +344,6 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
         }
 
         if (i == 3 && jSONObject != null) {
-            Log.d("TAGGER", "onResponse: $jSONObject")
             val response =
                 ResponseModel(
                     jSONObject

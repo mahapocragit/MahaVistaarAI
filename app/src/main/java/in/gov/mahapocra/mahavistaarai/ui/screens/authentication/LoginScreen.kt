@@ -21,6 +21,7 @@ import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
@@ -29,6 +30,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLoginScreenTempBindi
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.isStrongPassword
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
@@ -124,10 +126,10 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             startActivity(intent2)
         }
         binding.passwordEditText.setOnClickListener {
-            if (binding.passwordEditText.text.toString().length < 6) {
+            if (binding.passwordEditText.text.toString().length < 8) {
                 Toast.makeText(
                     this,
-                    "Please enter at least 6 character in password",
+                    "Please enter at least 8 character in password",
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -300,7 +302,6 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     val response: String = jSONObject.getString("response")
                     Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                     sentOTP = jSONObject.optInt("otp").toString()
-                    Log.d("TAGGER", "onResponse: $sentOTP")
                     addVerificationDialog()
                 }else if (jSONObject.optInt("status") == 201){
                     Toast.makeText(this, R.string.mobile_otp_error_text, Toast.LENGTH_LONG).show()
@@ -320,7 +321,6 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         }
         if (i == 2) {
             if (jSONObject != null) {
-                Log.d("TAGGER", "onResponse: $jSONObject")
                 if (jSONObject.optInt("status") == 200) {
                     if (loginOption == OTP_VERIFY) {
                         val message: String = jSONObject.getString("response")

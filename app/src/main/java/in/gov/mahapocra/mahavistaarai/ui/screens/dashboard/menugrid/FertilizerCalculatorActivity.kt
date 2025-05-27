@@ -104,13 +104,11 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         cropId = intent.getIntExtra("id", 0)
         cropName = intent.getStringExtra("mName")
         wotrCropId = intent.getIntExtra("wotr_crop_id", 0).toString()
-        Log.d("TAGGER", "onCreate: $wotrCropId & $cropName")
         mUrl = intent.getStringExtra("mUrl")
         sowingDate = intent.getStringExtra("sowingDate")
 
         binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {
             val sharing = Intent(this, AddCropActivity::class.java)
-            Log.d("TAGGER", "onCreate: $cropName")
             sharing.putExtra("id", cropId)
             sharing.putExtra("mName", cropName)
             sharing.putExtra("wotr_crop_id", wotrCropId)
@@ -405,7 +403,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         val date = formatter.parse(sowingDate ?: "")
         val newFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
         val finalSowingDate = newFormat.format(date!!)
-        Log.d("TAGGER", "getCalculatedFertilizerData: $finalSowingDate and $sowingDate")
         try {
             val api =
                 AppInventorApi(
@@ -481,7 +478,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             if (jSONObject != null) {
                 when (code) {
                     1 -> {
-                        Log.d("TAGGER", "onResponse: $jSONObject")
                         binding.availableOptionTv.visibility = View.INVISIBLE
                         val simpleFertilizersArray: JSONArray =
                             jSONObject.getJSONArray("SimpleFertilizers")
@@ -561,7 +557,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     }
 
                     2 -> {
-                        Log.d("TAGGER", "onResponse2: $jSONObject")
                         val response =
                             ResponseModel(
                                 jSONObject
@@ -576,7 +571,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     }
 
                     3 -> {
-                        Log.d("TAGGER", "onResponse3: $jSONObject")
                         val response =
                             ResponseModel(
                                 jSONObject
@@ -591,7 +585,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     }
 
                     4 -> {
-                        Log.d("TAGGER", "onResponse4: $jSONObject")
                         val response =
                             ResponseModel(
                                 jSONObject
@@ -604,7 +597,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     }
 
                     5 -> {
-                        Log.d("TAGGER", "onResponse5: $jSONObject")
                         val message = jSONObject.getString("response")
                         getSelectedSavedOption()
                         Toast.makeText(
@@ -697,9 +689,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             return
         }
 
-        // Optional: Log the input JSON for debugging
-        Log.d("FertilizerCalc", "saveOption input: $obj")
-
         // Step 2: Extract JSONArray safely
         val fertilizerOption = obj.optJSONArray("Option")
         if (fertilizerOption == null) {
@@ -727,8 +716,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                 put("plot_unit", binding.areaTextView.text.toString())
                 put("option", fertilizerOption)
             }
-
-            Log.d("TAGGER", "saveOption: ${binding.areaTextView.text}")
 
             // Step 4: Prepare API request
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())

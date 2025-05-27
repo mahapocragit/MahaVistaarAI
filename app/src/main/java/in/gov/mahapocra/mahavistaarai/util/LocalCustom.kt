@@ -178,4 +178,23 @@ object LocalCustom {
             }
     }
 
+    fun isStrongPassword(password: String): Boolean {
+        val minLength = 8
+        val specialChars = "!@#\$%^&*()_+=|<>?{}\\[\\]~-"
+
+        val commonPasswords = setOf(
+            "password", "123456", "12345678", "qwerty", "abc123", "111111",
+            "letmein", "123123", "welcome", "admin", "passw0rd", "iloveyou"
+        )
+
+        if (password.length < minLength) return false
+        if (!password.any { it.isUpperCase() }) return false
+        if (!password.any { it.isLowerCase() }) return false
+        if (!password.any { it.isDigit() }) return false
+        if (!password.any { it in specialChars }) return false
+        if (password.lowercase() in commonPasswords) return false
+
+        return true
+    }
+
 }

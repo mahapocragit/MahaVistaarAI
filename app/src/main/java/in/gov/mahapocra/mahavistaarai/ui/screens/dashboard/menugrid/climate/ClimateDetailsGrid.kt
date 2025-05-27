@@ -33,7 +33,6 @@ class ClimateDetailsGrid : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         languageToLoad = "mr"
         if (AppSettings.getLanguage(this@ClimateDetailsGrid).equals("1", ignoreCase = true)) {
-            Log.d("getStrName=", AppSettings.getLanguage(this@ClimateDetailsGrid))
             languageToLoad = "en"
         }
         switchLanguage(this, languageToLoad)

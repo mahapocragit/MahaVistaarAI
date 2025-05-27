@@ -12,6 +12,7 @@ import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
 import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
@@ -20,6 +21,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityChangePwdTempBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.isStrongPassword
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONException
@@ -76,6 +78,8 @@ class ConfirmPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode
             binding.confirmPasswordEditText.error =
                 resources.getString(R.string.pass_equals_confirmpass)
             binding.confirmPasswordEditText.requestFocus()
+        } else if (!isStrongPassword(binding.confirmPasswordEditText.text.toString())) {
+            UIToastMessage.show(this, resources.getString(R.string.weak_password))
         } else {
             val jsonObject = JSONObject()
             try {

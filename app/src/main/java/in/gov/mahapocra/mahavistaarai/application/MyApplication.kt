@@ -38,7 +38,6 @@ class MyApplication : Application() {
         firebaseRemoteConfig.fetch(60) // Fetch every minute
             .addOnCompleteListener { task: Task<Void?> ->
                 if (task.isSuccessful) {
-                    Log.d(ContentValues.TAG, "Remote config is fetched.")
                     firebaseRemoteConfig.activate()
                 }
             }

@@ -145,7 +145,6 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
             viewModel.saveFarmerSelectedCrop(this, sowingDate, cropId)
             viewModel.saveFarmerSelectedCrop.observe(this) {
                 if (it != null) {
-                    Log.d("TAGGER", "onDateSelected: $it")
                     if (it.get("status").toString() == "200") {
                         Toast.makeText(this, R.string.selected_crop_saved, Toast.LENGTH_SHORT).show()
                         startActivity(Intent(this, DashboardScreen::class.java).apply {

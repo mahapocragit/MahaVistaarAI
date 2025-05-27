@@ -103,8 +103,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             layoutInflater
         )
         setContentView(binding.root)
-        val status = intent.getStringExtra("helloCrop")
-        Log.d("TAG", "onCreate: $status")
 
         binding.appBarMain.dashboardScreen.progressBar.visibility = View.VISIBLE
         binding.appBarMain.dashboardScreen.temperatureTextView.visibility = View.GONE
@@ -336,14 +334,12 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         if (requestCode == PERMISSION_REQUEST_CODE) {
             for ((index, permission) in permissions.withIndex()) {
                 if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d("Permissions", "$permission granted")
                     UIToastMessage.show(
                         this@DashboardScreen,
                         "Access Permission granted for $permission"
                     )
                     // Perform the related action (e.g., accessing the camera) if needed
                 } else {
-                    Log.d("Permissions", "$permission denied")
                     UIToastMessage.show(
                         this@DashboardScreen,
                         "Access Permission denied for $permission"
@@ -587,12 +583,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        val status = intent.getStringExtra("savedCropResponse")
-        Log.d("TAG", "onResume: $status")
-    }
-
     private val greetingMessage: String
         get() {
             val calendar = Calendar.getInstance()
@@ -735,7 +725,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
                 val token = task.result
                 if (!token.isNullOrEmpty()) {
-                    Log.d("FCM", "FCM Token: $token")
                     appPreferenceManager.saveString("FCM_TOKEN", token)
                 } else {
                     Log.w("FCM", "FCM token is null or empty")

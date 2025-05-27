@@ -109,7 +109,6 @@ class ClimateResilientTechnology : AppCompatActivity(), ApiJSONObjCallback, ApiC
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 2) {
             if (jSONObject != null) {
-                Log.d("TAGGER", "onResponse: $jSONObject")
                 val response =
                     ResponseModel(
                         jSONObject

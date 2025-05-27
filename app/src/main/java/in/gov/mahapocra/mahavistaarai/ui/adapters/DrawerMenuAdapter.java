@@ -24,7 +24,6 @@ public class DrawerMenuAdapter extends BaseAdapter  {
     private final JSONArray mDataArray;
     private final Integer farmerId;
     public DrawerMenuAdapter(Context mContext, JSONArray mDataArray,Integer farmerId) {
-        Log.d("farmerId1212121221", farmerId.toString());
         this.mContext = mContext;
         this.mDataArray = mDataArray;
         this.farmerId = farmerId;
@@ -82,10 +81,6 @@ public class DrawerMenuAdapter extends BaseAdapter  {
            String logoutString = jsonObject.getString("name");
            String logInStatus = jsonObject.getString("name");
            String myProfile = jsonObject.getString("name");
-
-            Log.d("farmerId::logoutString",farmerId+""+logoutString);
-
-
 
             viewHolder.nameTextView.setText(jsonObject.getString("name"));
             if (jsonObject.getString("icon") == null) {

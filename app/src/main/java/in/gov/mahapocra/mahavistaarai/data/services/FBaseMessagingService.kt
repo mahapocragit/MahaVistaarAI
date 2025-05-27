@@ -28,7 +28,6 @@ class FBaseMessagingService : FirebaseMessagingService() {
         remoteMessage.notification?.let {
             val title = it.title ?: "Notification"
             val body = it.body ?: ""
-            Log.d("firebaseMessage", "FCM Title=$title, FCM Body=$body")
             sendNotification(title, body)
         }
     }

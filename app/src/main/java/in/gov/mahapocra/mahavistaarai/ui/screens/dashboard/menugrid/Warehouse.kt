@@ -207,7 +207,6 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
                     jSONObject
                 )
             if (response.status) {
-                Log.d("TAGGER", "onResponse: $jSONObject")
                 warehouseAvailabilityJSONArray = response.dataArrays
                 if (warehouseAvailabilityJSONArray?.length()!=0) {
                     binding.wareHousereport.visibility = View.VISIBLE

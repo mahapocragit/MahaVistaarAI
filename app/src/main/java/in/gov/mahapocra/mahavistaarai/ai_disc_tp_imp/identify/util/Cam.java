@@ -281,11 +281,8 @@ public class Cam extends AppCompatActivity {
         String fileName = "IMG_" + timeStamp + ".jpg";
 
         String folderName = "AI-DISC";
-        //Log.d(TAG, "saveImage sdk : " + Build.VERSION.SDK_INT);
-        //Log.d(TAG, "saveImage q: " + Build.VERSION_CODES.Q);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            // Log.d(TAG, "saveImage: inside if  q ");
             ContentResolver resolver = getContentResolver();
             ContentValues contentValues = new ContentValues();
             contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);

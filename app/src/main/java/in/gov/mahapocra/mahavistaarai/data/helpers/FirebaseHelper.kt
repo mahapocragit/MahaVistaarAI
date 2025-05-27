@@ -25,9 +25,6 @@ class FirebaseHelper(private val context: Context) {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val remoteAppVersion = snapshot.getValue(Int::class.java)
                 val currentAppVersion = getCurrentAppVersion()
-
-                Log.d("Firebase", "Remote: $remoteAppVersion | Current: $currentAppVersion")
-
                 if (remoteAppVersion != null && remoteAppVersion > currentAppVersion) {
                     showUpdateDialog()
                 }

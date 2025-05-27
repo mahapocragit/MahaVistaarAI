@@ -51,7 +51,6 @@ class PdfWebViewActivity : AppCompatActivity() {
             url?.let { it1 -> LocalCustom.downloadPdf(this, it1) }
         }
         val shcNumber = intent.getStringExtra("shcNumber")
-        Log.d("TAGGER", "onCreate: $languageToLoad")
         shcNumber?.let {
             gisViewModel.fetchSoilHealthCardDetailsFromSHCNumber(
                 this,
@@ -66,7 +65,6 @@ class PdfWebViewActivity : AppCompatActivity() {
     private fun observeResponse() {
         gisViewModel.shcInformationResponse.observe(this) {
             ProgressHelper.disableProgressDialog()
-            Log.d("TAGGER", "observeResponse: $it")
             if (it != null) {
                 val jsonObject = JSONObject(it.toString())
                 val basicInfo = jsonObject.getJSONArray("basic_info")[0] as JSONObject
@@ -98,7 +96,6 @@ class PdfWebViewActivity : AppCompatActivity() {
 
         gisViewModel.error.observe(this) {
             ProgressHelper.disableProgressDialog()
-            Log.d("TAGGER", "observeResponse: $it")
         }
     }
 

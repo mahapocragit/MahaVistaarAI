@@ -37,7 +37,6 @@ class NewsAdapter(val jsonArray: JSONArray, val language: String) :
         val englishTitle = jsonObject.optString("news_headline")
         val englishDescription = jsonObject.optString("short_description")
         val date = jsonObject.optString("date")
-        Log.d("TAGGER", "onBindViewHolder: ${formatDate(date)}")
 
         val translationsJsonObject = jsonObject.optJSONObject("translations")
         val marathiJsonObject = translationsJsonObject?.optJSONObject("mr")

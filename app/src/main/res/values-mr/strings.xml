@@ -454,4 +454,5 @@
     <string name="organic_nfertilizers">सेंद्रिय \nखते</string>
     <string name="bio_fertilizers">जैविक \nखते</string>
     <string name="qty_n_g_kg_of_seed">प्रमाण \n g/kg of seed</string>
+    <string name="weak_password">Your password is Weak! Please enter a strong password!!</string>
 </resources>

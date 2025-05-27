@@ -43,7 +43,6 @@ class MahaDbtSchemesDetailsActivity : AppCompatActivity() {
         // Get and parse JSON data
         val data = intent.getStringExtra("FARMERDBTRESPONSE")
         val jsonData = JSONObject(data ?: "{}")
-        Log.d("TAGGER", "onCreate: $jsonData")
 
         // Fallback to empty arrays to avoid crashes
         var mainComponent = jsonData.optJSONArray("MainComponent") ?: JSONArray()

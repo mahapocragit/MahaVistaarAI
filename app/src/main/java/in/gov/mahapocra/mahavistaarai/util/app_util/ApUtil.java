@@ -62,7 +62,6 @@ public class ApUtil {
         {
             e.printStackTrace();
         }
-        Log.d("capitalizeStrName=", capitalizeStrName);
         return capitalizeStrName;
     }
 }

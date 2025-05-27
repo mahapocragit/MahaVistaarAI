@@ -92,7 +92,6 @@ class PocraDbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
 
     private fun dbtSchemesLists() {
         dbtSchemesViewModel.responseUrlDbtSchemes.observe(this) {
-            Log.d("TAGGER", "dbtSchemesLists: $it")
             ProgressHelper.disableProgressDialog()
             if (it != null) {
                 val jSONObject = JSONObject(it.toString())

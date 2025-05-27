@@ -44,7 +44,6 @@ public class identify_croplist extends ViewModel {
                 .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("API_RESPONSE", response.toString());
                         identify_model_croplist output = new identify_model_croplist();
                         ArrayList<String> cropnames_dis = new ArrayList<>();
                         ArrayList<String> cropnames_pest = new ArrayList<>();

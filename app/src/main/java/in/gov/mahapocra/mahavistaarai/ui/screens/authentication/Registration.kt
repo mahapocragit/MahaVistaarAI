@@ -37,6 +37,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.isStrongPassword
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -94,7 +95,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     private var versionName: String? = null
     private var token: String? = null
     private var machineId: String? = null
-    private lateinit var farmerViewModel : FarmerViewModel
+    private lateinit var farmerViewModel: FarmerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,8 +119,8 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     }
 
     private fun observeResponse() {
-        farmerViewModel.talukaList.observe(this){
-            if (it!=null){
+        farmerViewModel.talukaList.observe(this) {
+            if (it != null) {
                 val jSONObject = JSONObject(it.toString())
                 val response = ResponseModel(jSONObject)
                 if (response.status) {
@@ -361,7 +362,8 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 CoroutineScope(Dispatchers.IO).launch {
                     val retrofit: Retrofit = api.getRetrofitInstance()
                     val apiRequest = retrofit.create(APIRequest::class.java)
-                    val responseCall: Call<JsonObject> = apiRequest.getOTPRegisterRequest(requestBody)
+                    val responseCall: Call<JsonObject> =
+                        apiRequest.getOTPRegisterRequest(requestBody)
                     api.postRequest(responseCall, this@Registration, 2)
                 }
             } catch (e: JSONException) {
@@ -410,8 +412,6 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 jsonObject.put("FAAPRegistrationID", fAAPRegistrationID)
                 jsonObject.put("Password", "")
                 jsonObject.put("SecurityKey", APIServices.SSO_KEY)
-
-                Log.d("TAGGER", "userValidationAndRegistration: $jsonObject")
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api =
                     AppInventorApi(
@@ -465,6 +465,8 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_taluka))
         } else if (villageID == 0) {
             UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_village))
+        } else if (!isStrongPassword(confirmPasswordEditText.text.toString())) {
+            UIToastMessage.show(this, resources.getString(R.string.weak_password))
         } else {
             val jsonObject = JSONObject()
             try {
@@ -485,8 +487,6 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 jsonObject.put("FAAPRegistrationID", fAAPRegistrationID)
                 jsonObject.put("Password", pass)
                 jsonObject.put("SecurityKey", APIServices.SSO_KEY)
-
-                Log.d("TAGGER", "userValidationAndRegistration: $jsonObject")
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api =
                     AppInventorApi(
@@ -515,7 +515,6 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
-        Log.d("sentOTP111", sentOTP)
         dialog.setContentView(R.layout.dialog_activity_verification)
         dialog.window!!.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -600,22 +599,19 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                     Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                     sentOTP = jSONObject.optInt("otp").toString()
                     addVerificationDialog(sentOTP)
-                }else if (jSONObject.optInt("status") == 201) {
+                } else if (jSONObject.optInt("status") == 201) {
                     Toast.makeText(this, R.string.otp_error, Toast.LENGTH_LONG).show()
                 }
             }
         }
 
         if (i == 3) {
-
-            Log.d("TAGGER", "userValidationAndRegistration: $jSONObject")
             if (jSONObject != null) {
-
                 if (jSONObject.optInt("status") == 200) {
                     val response: String = jSONObject.getString("response")
                     Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                     var intent = Intent(this, LoginScreen::class.java)
-                    if (isUserLoggedIn){
+                    if (isUserLoggedIn) {
                         intent = Intent(this, DashboardScreen::class.java)
                     }
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
