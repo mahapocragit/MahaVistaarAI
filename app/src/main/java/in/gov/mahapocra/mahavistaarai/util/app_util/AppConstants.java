@@ -1,7 +1,5 @@
 package in.gov.mahapocra.mahavistaarai.util.app_util;
 
-import org.jetbrains.annotations.Nullable;
-
 public interface AppConstants {
 
     String kAPP_BUILD_VERSION = "kAPP_BUILD_VERSION";

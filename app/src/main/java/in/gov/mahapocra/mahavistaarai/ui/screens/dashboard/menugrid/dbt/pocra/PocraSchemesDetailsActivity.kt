@@ -13,41 +13,27 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDbtSchemesDetailsBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import org.json.JSONObject
 
 class PocraSchemesDetailsActivity : AppCompatActivity() {
 
-    private lateinit var textViewHeaderTitle: TextView
-    private lateinit var imageMenushow: ImageView
-    private lateinit var importantDocumentsRecyclerView: RecyclerView
-    private lateinit var eligibilityCriteriaRecyclerView: RecyclerView
-    private lateinit var importantDocumentsCardTV: TextView
-    private lateinit var eligibilityCriteriaCardTV: TextView
-    private lateinit var importantDocImageView: ImageView
-    private lateinit var eligibilityCriteriaCardIV: ImageView
-    var languageToLoad: String = ""
+    private lateinit var binding: ActivityDbtSchemesDetailsBinding
+    private var languageToLoad: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         languageToLoad = if (AppSettings.getLanguage(this@PocraSchemesDetailsActivity)
                 .equals("2", ignoreCase = true)) { "mr" } else { "en" }
         switchLanguage(this, languageToLoad)
-        setContentView(R.layout.activity_dbt_schemes_details)
+        binding = ActivityDbtSchemesDetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
-        imageMenushow = findViewById(R.id.imageMenushow)
-        importantDocumentsRecyclerView = findViewById(R.id.importantDocumentsRecyclerView)
-        eligibilityCriteriaRecyclerView = findViewById(R.id.eligibilityCriteriaRecyclerView)
-        importantDocumentsCardTV = findViewById(R.id.importantDocumentsCardTV)
-        eligibilityCriteriaCardTV = findViewById(R.id.eligibilityCriteriaCardTV)
-        importantDocImageView = findViewById(R.id.importantDocImageView)
-        eligibilityCriteriaCardIV = findViewById(R.id.eligibilityCriteriaCardIV)
-
-        imageMenushow.visibility = View.VISIBLE
-        textViewHeaderTitle.setText(R.string.dbtschema)
-        imageMenushow.setOnClickListener {
+        binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
+        binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.dbtschema)
+        binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
@@ -64,28 +50,28 @@ class PocraSchemesDetailsActivity : AppCompatActivity() {
         val importantDocumentsArray = importantDocuments.split(";")
         val eligibilityCriteriaArray = eligibilityCriteria.split(";")
 
-        importantDocumentsCardTV.setOnClickListener {
-            openRecyclerView(importantDocumentsRecyclerView)
+        binding.importantDocumentsCardTV.setOnClickListener {
+            openRecyclerView(binding.importantDocumentsRecyclerView)
         }
 
-        importantDocImageView.setOnClickListener {
-            openRecyclerView(importantDocumentsRecyclerView)
+        binding.importantDocImageView.setOnClickListener {
+            openRecyclerView(binding.importantDocumentsRecyclerView)
         }
 
-        eligibilityCriteriaCardTV.setOnClickListener {
-            openRecyclerView(eligibilityCriteriaRecyclerView)
+        binding.eligibilityCriteriaCardTV.setOnClickListener {
+            openRecyclerView(binding.eligibilityCriteriaRecyclerView)
         }
 
-        eligibilityCriteriaCardIV.setOnClickListener {
-            openRecyclerView(eligibilityCriteriaRecyclerView)
+        binding.eligibilityCriteriaCardIV.setOnClickListener {
+            openRecyclerView(binding.eligibilityCriteriaRecyclerView)
         }
 
-        importantDocumentsRecyclerView.layoutManager = LinearLayoutManager(this)
-        importantDocumentsRecyclerView.adapter =
+        binding.importantDocumentsRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.importantDocumentsRecyclerView.adapter =
             PocraSchemeDetailsRecyclerAdapter(importantDocumentsArray)
 
-        eligibilityCriteriaRecyclerView.layoutManager = LinearLayoutManager(this)
-        eligibilityCriteriaRecyclerView.adapter =
+        binding.eligibilityCriteriaRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.eligibilityCriteriaRecyclerView.adapter =
             PocraSchemeDetailsRecyclerAdapter(eligibilityCriteriaArray)
     }
 

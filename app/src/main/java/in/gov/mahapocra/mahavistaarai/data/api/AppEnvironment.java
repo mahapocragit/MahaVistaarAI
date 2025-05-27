@@ -11,9 +11,11 @@ public class AppEnvironment {
         return baseUrl;
     }
 
-    public static final AppEnvironment DBT = new AppEnvironment("https://dbt-api.mahapocra.gov.in/SharedAPI/");
+    public static final AppEnvironment UAT_DBT = new AppEnvironment("https://uat-dbt.mahapocra.gov.in:8026/");
     public static final AppEnvironment FARMER = new AppEnvironment("https://farmers-app-api.mahapocra.gov.in/");
     public static final AppEnvironment WOTR = new AppEnvironment("https://kisan.wotr.org.in/");
     public static final AppEnvironment GIS = new AppEnvironment("https://gis.mahapocra.gov.in/");
+    public static final AppEnvironment PANI_FOUNDATION = new AppEnvironment("https://ianm-preprod.wadhwaniai.org/");
+    public static final AppEnvironment VISTAAR = new AppEnvironment("https://vistaar.maharashtra.gov.in/");
     public static final AppEnvironment SSO = new AppEnvironment("https://sso.mahapocra.gov.in/");
 }

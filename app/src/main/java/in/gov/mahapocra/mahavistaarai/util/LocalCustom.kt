@@ -84,7 +84,6 @@ object LocalCustom {
             setMimeType("application/pdf")
             setAllowedOverMetered(true)
             setAllowedOverRoaming(true)
-            UIToastMessage.show(context, "Downloading $fileName")
         }
 
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager

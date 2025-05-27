@@ -21,6 +21,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.WarehouseAvailabilityAdapter
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
+import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityWarehouseBinding
@@ -120,7 +121,7 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
             val api =
                 AppInventorApi(
                     this,
-                    APIServices.FARMER,
+                    AppEnvironment.FARMER.baseUrl,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true
@@ -145,7 +146,7 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
             val api =
                 AppInventorApi(
                     this,
-                    APIServices.FARMER,
+                    AppEnvironment.FARMER.baseUrl,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true

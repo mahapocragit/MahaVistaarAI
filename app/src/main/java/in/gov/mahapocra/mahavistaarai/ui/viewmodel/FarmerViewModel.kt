@@ -15,6 +15,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
+import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import kotlinx.coroutines.Dispatchers
@@ -90,7 +91,7 @@ class FarmerViewModel : ViewModel() {
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api = AppInventorApi(
                     context,
-                    APIServices.FARMER,
+                    AppEnvironment.FARMER.baseUrl,
                     "",
                     AppString(context).getkMSG_WAIT(),
                     false
@@ -121,7 +122,7 @@ class FarmerViewModel : ViewModel() {
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api = AppInventorApi(
                     context,
-                    APIServices.FARMER,
+                    AppEnvironment.FARMER.baseUrl,
                     "",
                     AppString(context).getkMSG_WAIT(),
                     false
@@ -159,7 +160,7 @@ class FarmerViewModel : ViewModel() {
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api = AppInventorApi(
                     context,
-                    APIServices.FARMER,
+                    AppEnvironment.FARMER.baseUrl,
                     "",
                     AppString(context).getkMSG_WAIT(),
                     false
@@ -190,7 +191,7 @@ class FarmerViewModel : ViewModel() {
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api = AppInventorApi(
                     context,
-                    APIServices.FARMER,
+                    AppEnvironment.FARMER.baseUrl,
                     "",
                     AppString(context).getkMSG_WAIT(),
                     false
@@ -225,7 +226,7 @@ class FarmerViewModel : ViewModel() {
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api = AppInventorApi(
                     context,
-                    APIServices.FARMER,
+                    AppEnvironment.FARMER.baseUrl,
                     "",
                     AppString(context).getkMSG_WAIT(),
                     false
@@ -256,7 +257,7 @@ class FarmerViewModel : ViewModel() {
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api = AppInventorApi(
                     context,
-                    APIServices.FARMER,
+                    AppEnvironment.FARMER.baseUrl,
                     "",
                     AppString(context).getkMSG_WAIT(),
                     false
@@ -291,7 +292,7 @@ class FarmerViewModel : ViewModel() {
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api = AppInventorApi(
                     context,
-                    APIServices.FARMER,
+                    AppEnvironment.FARMER.baseUrl,
                     "",
                     AppString(context).getkMSG_WAIT(),
                     false
@@ -316,7 +317,7 @@ class FarmerViewModel : ViewModel() {
             try {
                 val api = AppInventorApi(
                     context,
-                    APIServices.FARMER,
+                    AppEnvironment.FARMER.baseUrl,
                     "",
                     AppString(context).getkMSG_WAIT(),
                     false
@@ -343,7 +344,7 @@ class FarmerViewModel : ViewModel() {
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api = AppInventorApi(
                     context,
-                    APIServices.FARMER,
+                    AppEnvironment.FARMER.baseUrl,
                     "",
                     AppString(context).getkMSG_WAIT(),
                     false
@@ -375,7 +376,7 @@ class FarmerViewModel : ViewModel() {
                 val api =
                     AppInventorApi(
                         context,
-                        APIServices.FARMER,
+                        AppEnvironment.FARMER.baseUrl,
                         "",
                         AppString(context).getkMSG_WAIT(),
                         false
@@ -401,7 +402,7 @@ class FarmerViewModel : ViewModel() {
                 val api =
                     AppInventorApi(
                         context,
-                        APIServices.FARMER,
+                        AppEnvironment.FARMER.baseUrl,
                         "",
                         AppString(context).getkMSG_WAIT(),
                         false
@@ -428,7 +429,7 @@ class FarmerViewModel : ViewModel() {
                 val api =
                     AppInventorApi(
                         context,
-                        APIServices.FARMER,
+                        AppEnvironment.FARMER.baseUrl,
                         "",
                         AppString(context).getkMSG_WAIT(),
                         false

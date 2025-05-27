@@ -163,7 +163,9 @@
     <string name="feedback1_rating_error">Please give some rating for question1</string>
     <string name="feedback2_rating_error">Please give some rating for question2</string>
 
-
+    <string name="district">District</string>
+    <string name="taluka">Taluka</string>
+    <string name="village">Village</string>
     <string name="farmer_select_district">Select District</string>
     <string name="farmer_select_taluka">Select Taluka</string>
     <string name="farmer_select_village">Select Village</string>
@@ -436,4 +438,12 @@
     <string name="otp_error">You are registered already</string>
     <string name="no_internet_found_text">No Internet found. Please Check your connection and</string>
     <string name="try_again">Try Again</string>
+    <string name="test_parameter">Test parameter</string>
+    <string name="value">Value</string>
+    <string name="unit">Unit</string>
+    <string name="rating">Rating</string>
+    <string name="crop_variety">Crop Variety</string>
+    <string name="organic_nfertilizers">Organic \nFertilizers</string>
+    <string name="bio_fertilizers">Bio \nFertilizers</string>
+    <string name="qty_n_g_kg_of_seed">Qty \n g/kg of seed</string>
 </resources>

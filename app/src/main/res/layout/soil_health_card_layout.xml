@@ -114,7 +114,7 @@
                             android:gravity="center_vertical|end"
                             android:paddingVertical="@dimen/_5sdp"
                             android:paddingEnd="@dimen/_10sdp"
-                            android:text="Village" />
+                            android:text="@string/village" />
 
                         <TextView
                             android:id="@+id/villageTextView"
@@ -140,7 +140,7 @@
                             android:gravity="center_vertical|end"
                             android:paddingVertical="@dimen/_5sdp"
                             android:paddingEnd="@dimen/_10sdp"
-                            android:text="Taluka" />
+                            android:text="@string/taluka" />
 
                         <TextView
                             android:id="@+id/talukaTextView"
@@ -166,7 +166,7 @@
                             android:gravity="center_vertical|end"
                             android:paddingVertical="@dimen/_5sdp"
                             android:paddingEnd="@dimen/_10sdp"
-                            android:text="District" />
+                            android:text="@string/district" />
 
                         <TextView
                             android:id="@+id/districtTextView"
@@ -295,7 +295,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_weight="2"
                             android:paddingVertical="@dimen/_10sdp"
-                            android:text="Test parameter"
+                            android:text="@string/test_parameter"
                             android:textStyle="bold" />
 
                         <View
@@ -311,7 +311,7 @@
                             android:layout_weight="3"
                             android:gravity="center"
                             android:paddingVertical="@dimen/_10sdp"
-                            android:text="Value"
+                            android:text="@string/value"
                             android:textStyle="bold" />
 
                         <View
@@ -327,7 +327,7 @@
                             android:layout_weight="3"
                             android:gravity="center"
                             android:paddingVertical="@dimen/_10sdp"
-                            android:text="Unit"
+                            android:text="@string/unit"
                             android:textStyle="bold" />
 
                         <View
@@ -343,7 +343,7 @@
                             android:layout_weight="3"
                             android:gravity="center"
                             android:paddingVertical="@dimen/_10sdp"
-                            android:text="Rating"
+                            android:text="@string/rating"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -402,7 +402,7 @@
                             android:gravity="center_vertical"
                             android:layout_weight="1"
                             android:paddingVertical="@dimen/_10sdp"
-                            android:text="Crop Variety"
+                            android:text="@string/crop_variety"
                             android:textStyle="bold" />
 
                         <View
@@ -417,7 +417,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:paddingVertical="@dimen/_10sdp"
-                            android:text="Organic \nFertilizers"
+                            android:text="@string/organic_nfertilizers"
                             android:textStyle="bold" />
 
                         <View
@@ -432,7 +432,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:paddingVertical="@dimen/_10sdp"
-                            android:text="Bio \nFertilizers"
+                            android:text="@string/bio_fertilizers"
                             android:textStyle="bold" />
 
                         <View
@@ -447,7 +447,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:paddingVertical="@dimen/_10sdp"
-                            android:text="Qty \n g/kg of seed"
+                            android:text="@string/qty_n_g_kg_of_seed"
                             android:textStyle="bold" />
                     </LinearLayout>
 

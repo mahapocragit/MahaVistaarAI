@@ -24,6 +24,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
+import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityMarketPriceBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.MarketPriceAdapter
@@ -143,7 +144,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
             val api =
                 AppInventorApi(
                     this,
-                    APIServices.FARMER,
+                    AppEnvironment.FARMER.baseUrl,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true
@@ -183,7 +184,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
             val api =
                 AppInventorApi(
                     this,
-                    APIServices.FARMER,
+                    AppEnvironment.FARMER.baseUrl,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true
@@ -206,7 +207,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
             val api =
                 AppInventorApi(
                     this,
-                    APIServices.FARMER,
+                    AppEnvironment.FARMER.baseUrl,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true
@@ -281,7 +282,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
             val api =
                 AppInventorApi(
                     this,
-                    APIServices.FARMER,
+                    AppEnvironment.FARMER.baseUrl,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true

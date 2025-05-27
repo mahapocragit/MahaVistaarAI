@@ -11,6 +11,7 @@ import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.data.ApiService
+import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import kotlinx.coroutines.launch
@@ -40,7 +41,7 @@ class MahavistaarViewModel : ViewModel(){
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api = AppInventorApi(
                     context,
-                    "https://vistaar.maharashtra.gov.in/",
+                    AppEnvironment.VISTAAR.baseUrl,
                     "",
                     AppString(context).getkMSG_WAIT(),
                     false

@@ -20,6 +20,7 @@ import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
+import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
@@ -126,7 +127,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
 
     private fun fetchData(surveyNumber: Int) {
         val api = AppInventorApi(
-            this, APIServices.GIS, "",
+            this, AppEnvironment.GIS.baseUrl, "",
             AppString(this).getkMSG_WAIT(), true
         )
         val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
@@ -282,7 +283,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
             val api =
                 AppInventorApi(
                     this,
-                    APIServices.FARMER,
+                    AppEnvironment.FARMER.baseUrl,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true
@@ -307,7 +308,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api = AppInventorApi(
                 this,
-                APIServices.FARMER,
+                AppEnvironment.FARMER.baseUrl,
                 "",
                 AppString(this).getkMSG_WAIT(),
                 true

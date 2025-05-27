@@ -1,42 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" >
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.AD_ID" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_LOCATION" />
-
-    <uses-feature android:name="android.hardware.location.gps" />
-
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.hardware.location.network" />
-    <uses-permission android:name="android.permission.ACCESS_GPS" />
-    <uses-permission android:name="android.permission.ACCESS_ASSISTED_GPS" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.hardware.camera" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
-    <uses-feature android:name="android.hardware.camera.autofocus" />
-    <uses-feature android:name="android.hardware.camera.flash" />
-    <uses-feature
-        android:name="android.hardware.telephony"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29" />
 
     <application
         android:name=".application.MyApplication"
@@ -48,8 +22,7 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_store_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FarmerApp"
-        android:usesCleartextTraffic="true" >
+        android:theme="@style/Theme.FarmerApp">
         <activity
             android:name=".ui.screens.dashboard.menugrid.dbt.mahadbt.MahaDbtSchemesDetailsActivity"
             android:exported="false" />
@@ -107,7 +80,7 @@
             android:name=".ui.screens.dashboard.menugrid.soilhealthcard.PdfWebViewActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.screens.dashboard.menugrid.TempDashboardActivity"
+            android:name=".ui.screens.dashboard.menugrid.ChatbotActivity"
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.weather.WeatherActivity"
@@ -121,10 +94,10 @@
         <activity android:name=".ui.screens.dashboard.menugrid.pest.DiseaseInformation" />
         <activity
             android:name=".ai_disc_tp_imp.identify.Identify.Identify_dashboard"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".ai_disc_tp_imp.identify.Identify.Identify_img_upload"
-            android:exported="true"
+            android:exported="false"
             android:parentActivityName=".ai_disc_tp_imp.identify.Identify.Identify_dashboard" />
         <activity
             android:name=".ai_disc_tp_imp.identify.util.NetNotWorking"
@@ -133,7 +106,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ai_disc_tp_imp.identify.util.Cam"
-            android:exported="true"
+            android:exported="false"
             android:parentActivityName=".ai_disc_tp_imp.identify.Identify.Identify_img_upload" />
         <activity
             android:name=".ai_disc_tp_imp.identify.FarmerPestDiseaseIdentify"
@@ -141,7 +114,7 @@
             android:exported="false" />
         <activity
             android:name=".ai_disc_tp_imp.identify.Identify.Result_identified"
-            android:exported="true"
+            android:exported="false"
             android:parentActivityName=".ai_disc_tp_imp.identify.Identify.Identify_img_upload" />
         <activity
             android:name=".ui.screens.dashboard.menugrid.AddCropActivity"
@@ -181,7 +154,7 @@
 
         <service
             android:name=".data.services.FBaseMessagingService"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -189,7 +162,7 @@
 
         <activity
             android:name=".ui.screens.splash.SplashScreenActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -209,7 +182,7 @@
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.android.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true" >
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />

@@ -31,6 +31,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.FertilizersRecyclerAdapter
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
+import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.DeleteApi
@@ -202,13 +203,13 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                 if (!(s.contentEquals(""))) {
                     val acreNo: Int = s.toString().toInt()
                     if (acreNo > 99) {
-                        if (plotUnitCode == 3){
+                        if (plotUnitCode == 3) {
                             Toast.makeText(
                                 this@FertilizerCalculatorActivity,
                                 R.string.area_acre_exceed_warning,
                                 Toast.LENGTH_SHORT
                             ).show()
-                        }else{
+                        } else {
                             Toast.makeText(
                                 this@FertilizerCalculatorActivity,
                                 R.string.area_hectare_exceed_warning,
@@ -266,7 +267,13 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             jsonObject.put("crop_id", cropId)
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
-                AppInventorApi(this, APIServices.FARMER, "", AppString(this).getkMSG_WAIT(), true)
+                AppInventorApi(
+                    this,
+                    AppEnvironment.FARMER.baseUrl,
+                    "",
+                    AppString(this).getkMSG_WAIT(),
+                    true
+                )
             CoroutineScope(Dispatchers.IO).launch {
                 val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
                 val responseCall: Call<JsonObject> =
@@ -322,13 +329,13 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                 resources.getString(R.string.fertilizer_availability_for_crop)
             )
         } else if (acrArea.isBlank()) {
-            if (plotUnitCode == 3){
+            if (plotUnitCode == 3) {
                 Toast.makeText(
                     this@FertilizerCalculatorActivity,
                     R.string.Please_Enter_Your_Acre_Area,
                     Toast.LENGTH_SHORT
                 ).show()
-            }else{
+            } else {
                 Toast.makeText(
                     this@FertilizerCalculatorActivity,
                     R.string.Please_Enter_Your_Hectare_Area,
@@ -372,7 +379,13 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     private fun getToken() {
         try {
             val api =
-                AppInventorApi(this, APIServices.WOTR, "", AppString(this).getkMSG_WAIT(), true)
+                AppInventorApi(
+                    this,
+                    AppEnvironment.WOTR.baseUrl,
+                    "",
+                    AppString(this).getkMSG_WAIT(),
+                    true
+                )
             CoroutineScope(Dispatchers.IO).launch {
                 val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
                 val responseCall: Call<JsonObject> =
@@ -395,7 +408,13 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         Log.d("TAGGER", "getCalculatedFertilizerData: $finalSowingDate and $sowingDate")
         try {
             val api =
-                AppInventorApi(this, APIServices.WOTR, "", AppString(this).getkMSG_WAIT(), true)
+                AppInventorApi(
+                    this,
+                    AppEnvironment.WOTR.baseUrl,
+                    "",
+                    AppString(this).getkMSG_WAIT(),
+                    true
+                )
 
             CoroutineScope(Dispatchers.IO).launch {
                 val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
@@ -520,7 +539,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                             }
                             optionJsonObject1.put("Option", optionArray1)
                             optionFertilizerDataArray.put(mainIndex, optionJsonObject1)
-                        }else {
+                        } else {
                             val optionJsonObject = JSONObject()
                             val optionArray = JSONArray()
                             for (k in 0 until simpleFertilizersArray.length()) {
@@ -643,7 +662,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                     val api = AppInventorApi(
                         this@FertilizerCalculatorActivity,
-                        APIServices.FARMER,
+                        AppEnvironment.FARMER.baseUrl,
                         "",
                         AppString(this@FertilizerCalculatorActivity).getkMSG_WAIT(),
                         true
@@ -713,13 +732,20 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
 
             // Step 4: Prepare API request
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api = AppInventorApi(this, APIServices.FARMER, "", AppString(this).getkMSG_WAIT(), true)
+            val api = AppInventorApi(
+                this,
+                AppEnvironment.FARMER.baseUrl,
+                "",
+                AppString(this).getkMSG_WAIT(),
+                true
+            )
 
             // Step 5: Make async network request using coroutine
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
-                    val responseCall: Call<JsonObject> = apiRequest.saveFertilizerFormula(requestBody)
+                    val responseCall: Call<JsonObject> =
+                        apiRequest.saveFertilizerFormula(requestBody)
                     api.postRequest(responseCall, this@FertilizerCalculatorActivity, 3)
                 } catch (e: Exception) {
                     Log.e("FertilizerCalc", "API request failed", e)

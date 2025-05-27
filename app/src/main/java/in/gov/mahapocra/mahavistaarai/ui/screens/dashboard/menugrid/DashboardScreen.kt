@@ -1,7 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid
 
 import android.Manifest
-import android.animation.AnimatorSet
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
@@ -9,7 +8,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -25,9 +23,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.gms.tasks.Task
 import com.google.firebase.messaging.FirebaseMessaging
 import com.squareup.picasso.Picasso
 import `in`.co.appinventor.services_api.app_util.AppUtility
@@ -56,12 +52,10 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActi
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.ComingSoonActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
-import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MahavistaarViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
-import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.ApUtil
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppHelper
@@ -192,7 +186,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
         binding.appBarMain.dashboardScreen.customNavBottom.navChat.setOnClickListener {
             if (!isGuest) {
-                startActivity(Intent(this, TempDashboardActivity::class.java))
+                startActivity(Intent(this, ChatbotActivity::class.java))
             } else {
                 Toast.makeText(this, "Please login to continue", Toast.LENGTH_SHORT).show()
             }

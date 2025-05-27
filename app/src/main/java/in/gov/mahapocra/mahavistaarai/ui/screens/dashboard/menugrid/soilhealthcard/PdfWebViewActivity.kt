@@ -17,6 +17,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.GisViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import org.json.JSONObject
 import java.util.Locale
 
@@ -58,11 +59,13 @@ class PdfWebViewActivity : AppCompatActivity() {
                 languageToLoad
             )
         }
+        ProgressHelper.showProgressDialog(this)
         observeResponse()
     }
 
     private fun observeResponse() {
         gisViewModel.shcInformationResponse.observe(this) {
+            ProgressHelper.disableProgressDialog()
             Log.d("TAGGER", "observeResponse: $it")
             if (it != null) {
                 val jsonObject = JSONObject(it.toString())
@@ -94,6 +97,7 @@ class PdfWebViewActivity : AppCompatActivity() {
         }
 
         gisViewModel.error.observe(this) {
+            ProgressHelper.disableProgressDialog()
             Log.d("TAGGER", "observeResponse: $it")
         }
     }

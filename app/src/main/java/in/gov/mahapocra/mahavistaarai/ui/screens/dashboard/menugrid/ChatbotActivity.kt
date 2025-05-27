@@ -1,6 +1,5 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid
 
-import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.http.SslError
@@ -14,24 +13,20 @@ import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import `in`.co.appinventor.services_api.settings.AppSettings
-import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityTempDashboardBinding
+import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityChatbotBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MahavistaarViewModel
-import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
-import org.json.JSONObject
-import java.util.jar.Manifest
 
-class TempDashboardActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityTempDashboardBinding
+class ChatbotActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityChatbotBinding
     private lateinit var mahavistaarViewModel: MahavistaarViewModel
     private lateinit var languageToLoad: String
     private val PERMISSION_REQUEST_CODE = 1001
@@ -39,11 +34,11 @@ class TempDashboardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         languageToLoad = "mr"
-        if (AppSettings.getLanguage(this@TempDashboardActivity).equals("1", ignoreCase = true)) {
+        if (AppSettings.getLanguage(this@ChatbotActivity).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
         switchLanguage(this, languageToLoad)
-        binding = ActivityTempDashboardBinding.inflate(layoutInflater)
+        binding = ActivityChatbotBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         askForLocationAndMicrophonePermission()
@@ -56,7 +51,7 @@ class TempDashboardActivity : AppCompatActivity() {
         mahavistaarViewModel.requestUrlForChatBot(this)
         mahavistaarViewModel.responseUrlForChatBot.observe(this) {
             ProgressHelper.disableProgressDialog()
-            if (it != null && this@TempDashboardActivity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+            if (it != null && this@ChatbotActivity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
                 binding.webView.visibility = View.VISIBLE
                 binding.noInternetAvailableLayout.visibility = View.GONE
                 val url = it.get("url")?.asString.orEmpty()

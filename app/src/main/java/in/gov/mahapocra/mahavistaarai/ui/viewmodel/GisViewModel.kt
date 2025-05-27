@@ -10,6 +10,7 @@ import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.gov.mahapocra.mahavistaarai.data.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
+import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import kotlinx.coroutines.launch
 import org.json.JSONException
@@ -27,14 +28,15 @@ class GisViewModel : ViewModel() {
     fun fetchSoilHealthCardDetailsFromSHCNumber(context: Context, shcID: String, language: String) {
         viewModelScope.launch {
             try {
+                val lang = if (language =="mr") language else "eng"
                 val jsonObject = JSONObject().apply {
-                        put("language", language)
+                        put("language", lang)
                         put("shc_no", shcID)
                 }
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api = AppInventorApi(
                     context,
-                    APIServices.GIS,
+                    AppEnvironment.GIS.baseUrl,
                     "",
                     AppString(context).getkMSG_WAIT(),
                     false

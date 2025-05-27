@@ -22,6 +22,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonObject
+import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ClimateResilientTechnologyAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
@@ -83,7 +84,7 @@ class ClimateResilientTechnology : AppCompatActivity(), ApiJSONObjCallback, ApiC
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api = AppInventorApi(
                 this,
-                APIServices.FARMER,
+                AppEnvironment.FARMER.baseUrl,
                 "",
                 AppString(this).getkMSG_WAIT(),
                 true

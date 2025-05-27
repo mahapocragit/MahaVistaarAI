@@ -24,6 +24,7 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
+import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLoginScreenTempBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
@@ -157,7 +158,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 val api =
                     AppInventorApi(
                         this,
-                        APIServices.FARMER,
+                        AppEnvironment.FARMER.baseUrl,
                         "",
                         AppString(this).getkMSG_WAIT(),
                         true
@@ -208,7 +209,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 val api =
                     AppInventorApi(
                         this,
-                        APIServices.FARMER,
+                        AppEnvironment.FARMER.baseUrl,
                         "",
                         AppString(this).getkMSG_WAIT(),
                         true
@@ -244,7 +245,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 val api =
                     AppInventorApi(
                         this,
-                        APIServices.FARMER,
+                        AppEnvironment.FARMER.baseUrl,
                         "",
                         AppString(this).getkMSG_WAIT(),
                         true

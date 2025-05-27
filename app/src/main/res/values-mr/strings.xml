@@ -170,6 +170,10 @@
     <string name="pass_equals_confirmpass">पासवर्ड आणि पुष्टी केलेला पासवर्ड एकच असावा</string>
     <string name="error_invalid_password">मोबाईल नंबर टाका</string>
 
+
+    <string name="district">जिल्हा</string>
+    <string name="taluka">तालुका</string>
+    <string name="village">गाव</string>
     <string name="farmer_select_district">जिल्हा निवडा</string>
     <string name="farmer_select_taluka">तालुका निवडा</string>
     <string name="farmer_select_village">  गाव निवडा </string>
@@ -442,4 +446,12 @@
     <string name="otp_error">तुम्ही आधीच नोंदणीकृत आहात</string>
     <string name="no_internet_found_text">इंटरनेट सापडले नाही. कृपया तुमचे कनेक्शन तपासा आणि</string>
     <string name="try_again">पुन्हा प्रयत्न करा</string>
+    <string name="test_parameter">चाचणी घटक</string>
+    <string name="value">मूल्य</string>
+    <string name="unit">एकक</string>
+    <string name="rating">रेटिंग</string>
+    <string name="crop_variety">पीक विविधता</string>
+    <string name="organic_nfertilizers">सेंद्रिय \nखते</string>
+    <string name="bio_fertilizers">जैविक \nखते</string>
+    <string name="qty_n_g_kg_of_seed">प्रमाण \n g/kg of seed</string>
 </resources>

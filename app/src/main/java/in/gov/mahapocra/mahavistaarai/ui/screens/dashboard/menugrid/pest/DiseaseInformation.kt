@@ -19,6 +19,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DiseasesInformationImgAdapter
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
+import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
@@ -102,7 +103,7 @@ class DiseaseInformation : AppCompatActivity(), ApiCallbackCode {
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api = AppInventorApi(
                 this,
-                APIServices.FARMER,
+                AppEnvironment.FARMER.baseUrl,
                 "",
                 AppString(this).getkMSG_WAIT(),
                 true

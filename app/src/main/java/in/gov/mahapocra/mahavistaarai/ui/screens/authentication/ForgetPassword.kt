@@ -23,6 +23,7 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
+import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityForgetPasswordTempBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
@@ -94,7 +95,7 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
                 val api =
                     AppInventorApi(
                         this,
-                        APIServices.FARMER,
+                        AppEnvironment.FARMER.baseUrl,
                         "",
                         AppString(this).getkMSG_WAIT(),
                         true
@@ -124,7 +125,7 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
                 val api =
                     AppInventorApi(
                         this,
-                        APIServices.FARMER,
+                        AppEnvironment.FARMER.baseUrl,
                         "",
                         AppString(this).getkMSG_WAIT(),
                         true

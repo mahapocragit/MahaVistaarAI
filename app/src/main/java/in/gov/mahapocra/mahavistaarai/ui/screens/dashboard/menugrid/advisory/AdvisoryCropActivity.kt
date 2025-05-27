@@ -25,6 +25,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.adapters.StageAdvisoryAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.StageAdvisoryDetailAdaptr
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
+import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityAdvisoryCropBinding
@@ -150,7 +151,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
             val api =
                 AppInventorApi(
                     this,
-                    APIServices.FARMER,
+                    AppEnvironment.FARMER.baseUrl,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true

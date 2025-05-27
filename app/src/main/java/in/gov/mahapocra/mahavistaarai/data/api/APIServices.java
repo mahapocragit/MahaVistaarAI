@@ -1,12 +1,6 @@
 package in.gov.mahapocra.mahavistaarai.data.api;
 
 public interface APIServices {
-
-    String DBT = AppEnvironment.DBT.getBaseUrl();           // for production
-    String FARMER = AppEnvironment.FARMER.getBaseUrl();           // for production
-    String WOTR = AppEnvironment.WOTR.getBaseUrl();
-    String GIS = AppEnvironment.GIS.getBaseUrl();
-    String SSO = AppEnvironment.SSO.getBaseUrl();
     String SSO_KEY = in.gov.mahapocra.mahavistaarai.data.api.APIKeys.SSO_PROD;
     String USER_News_LIST = "Shareddbtapi/OtherApp/GetNews";
     String kOTPRequest = "authService/SendOTP";

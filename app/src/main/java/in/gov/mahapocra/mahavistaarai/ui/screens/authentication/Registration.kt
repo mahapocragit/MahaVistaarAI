@@ -32,6 +32,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.JsonObject
+import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
@@ -183,7 +184,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             val api =
                 AppInventorApi(
                     this,
-                    APIServices.FARMER,
+                    AppEnvironment.FARMER.baseUrl,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true
@@ -352,7 +353,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 val api =
                     AppInventorApi(
                         this,
-                        APIServices.FARMER,
+                        AppEnvironment.FARMER.baseUrl,
                         "",
                         AppString(this).getkMSG_WAIT(),
                         true
@@ -415,7 +416,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 val api =
                     AppInventorApi(
                         this,
-                        APIServices.FARMER,
+                        AppEnvironment.FARMER.baseUrl,
                         "",
                         AppString(this).getkMSG_WAIT(),
                         true
@@ -490,7 +491,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 val api =
                     AppInventorApi(
                         this,
-                        APIServices.FARMER,
+                        AppEnvironment.FARMER.baseUrl,
                         "",
                         AppString(this).getkMSG_WAIT(),
                         true
@@ -709,7 +710,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             val api =
                 AppInventorApi(
                     this,
-                    APIServices.FARMER,
+                    AppEnvironment.FARMER.baseUrl,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true

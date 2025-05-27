@@ -15,6 +15,7 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
+import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityChangePwdTempBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
@@ -85,7 +86,7 @@ class ConfirmPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api = AppInventorApi(
                     this,
-                    APIServices.FARMER,
+                    AppEnvironment.FARMER.baseUrl,
                     "",
                     AppString(this).getkMSG_WAIT(),
                     true
