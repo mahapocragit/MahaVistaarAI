@@ -4,7 +4,7 @@
         android:radius="14dp"
         />
     <solid
-        android:color="#96FA6C"
+        android:color="#909090"
         />
     <padding
         android:left="0dp"
@@ -18,6 +18,6 @@
         />
     <stroke
         android:width="3dp"
-        android:color="@color/actionbar_color_figma"
+        android:color="#3D3D3D"
         />
 </shape>

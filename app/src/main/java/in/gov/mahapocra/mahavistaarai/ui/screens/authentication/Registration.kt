@@ -29,10 +29,12 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.JsonObject
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
+import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityRegistrationBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
@@ -52,19 +54,7 @@ import retrofit2.Retrofit
 class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     AlertListEventListener {
 
-    private lateinit var nameEditText: EditText
-    private lateinit var mobNoEditText: EditText
-    private lateinit var emailId: EditText
-    private lateinit var passwordEditText: EditText
-    private lateinit var confirmPasswordEditText: EditText
-    private lateinit var textViewDist: TextView
-    private lateinit var textViewTaluka: TextView
-    private lateinit var textViewVillage: TextView
-    private lateinit var textViewVerify: TextView
-    private lateinit var backPressIcon: ImageView
-    private lateinit var textView5: TextView
-    private lateinit var textView6: TextView
-    private lateinit var submitButton: Button
+    private lateinit var binding: ActivityRegistrationBinding
     private var isUserLoggedIn: Boolean = false
 
     private lateinit var sentOTP: String
@@ -107,12 +97,12 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             languageToLoad = "en"
         }
         switchLanguage(this, languageToLoad)
-        setContentView(R.layout.activity_registration)
+        binding = ActivityRegistrationBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         versionName = LocalCustom.getVersionName(this)
         token = FirebaseMessaging.getInstance().token.toString()
         sessionManager = SessionManager(this)
-        init()
         setConfiguration()
         onclick()
         observeResponse()
@@ -135,9 +125,9 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     private fun setConfiguration() {
         farmerRegisterID = intent.getIntExtra("FAAPRegistrationID", 0)
         if (farmerRegisterID > 0) {
-            submitButton.text = getString(R.string.update_profile_text)
-            textView5.text = getString(R.string.user_info_text_1)
-            textView6.text = getString(R.string.user_info_text_2)
+            binding.submitButton.text = getString(R.string.update_profile_text)
+            binding.textView5.text = getString(R.string.user_info_text_1)
+            binding.textView6.text = getString(R.string.user_info_text_2)
             fAAPRegistrationID = farmerRegisterID.toString()
             mobileNumberStatus = true
             userName =
@@ -155,18 +145,18 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
             talukaID = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
             villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
-            passwordEditText.visibility = View.GONE
-            confirmPasswordEditText.visibility = View.GONE
-            nameEditText.setText(userName)
-            mobNoEditText.setText(registerMob)
-            emailId.setText(emailid)
-            textViewDist.text = districtName
-            textViewTaluka.text = talukaName
-            textViewVillage.text = villageName
+            binding.passwordEditText.visibility = View.GONE
+            binding.confirmPasswordEditText.visibility = View.GONE
+            binding.nameEditText.setText(userName)
+            binding.mobNoEditText.setText(registerMob)
+            binding.emailId.setText(emailid)
+            binding.textViewDist.text = districtName
+            binding.textViewTaluka.text = talukaName
+            binding.textViewVillage.text = villageName
 
         } else {
-            textView5.text = getString(R.string.register_text_1)
-            textView6.text = getString(R.string.register_text_2)
+            binding.textView5.text = getString(R.string.register_text_1)
+            binding.textView6.text = getString(R.string.register_text_2)
         }
         getDistrictData()
     }
@@ -201,28 +191,12 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         }
     }
 
-    private fun init() {
-        nameEditText = findViewById(R.id.nameEditText)
-        mobNoEditText = findViewById(R.id.mobNoEditText)
-        emailId = findViewById(R.id.emailId)
-        passwordEditText = findViewById(R.id.passwordEditText)
-        confirmPasswordEditText = findViewById(R.id.confirmPasswordEditText)
-        textViewDist = findViewById(R.id.textViewDist)
-        textViewTaluka = findViewById(R.id.textViewTaluka)
-        textViewVillage = findViewById(R.id.textViewVillage)
-        textViewVerify = findViewById(R.id.textViewVerify)
-        backPressIcon = findViewById(R.id.backPressIcon)
-        submitButton = findViewById(R.id.submitButton)
-        textView5 = findViewById(R.id.textView5)
-        textView6 = findViewById(R.id.textView6)
-    }
-
     private fun onclick() {
-        backPressIcon.setOnClickListener {
+        binding.backPressIcon.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        mobNoEditText.addTextChangedListener(object : TextWatcher {
+        binding.mobNoEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 if (farmerRegisterID > 0) {
                     mobileNumberStatus = false
@@ -241,7 +215,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             ) {
             }
         })
-        submitButton.setOnClickListener {
+        binding.submitButton.setOnClickListener {
             machineId = getMachineId()
             if (farmerRegisterID > 0) {
                 isUserLoggedIn = true
@@ -252,18 +226,18 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             }
 
         }
-        textViewVerify.setOnClickListener {
+        binding.textViewVerify.setOnClickListener {
             sendOTP()
         }
-        textViewDist.setOnClickListener {
+        binding.textViewDist.setOnClickListener {
             showDistrict()
         }
 
-        textViewTaluka.setOnClickListener {
+        binding.textViewTaluka.setOnClickListener {
             showTaluka()
         }
 
-        textViewVillage.setOnClickListener {
+        binding.textViewVillage.setOnClickListener {
             showVillage()
         }
     }
@@ -332,18 +306,18 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
 
 
     private fun sendOTP() {
-        mob = mobNoEditText.text.toString()
+        mob = binding.mobNoEditText.text.toString()
         // verification.setTextColor(Color.parseColor("#000000"))
 
         if (farmerRegisterID > 0 && mob != registerMob) {
             mobileNumberStatus = false
         }
         if (mob.isEmpty()) {
-            mobNoEditText.error = resources.getString(R.string.login_mob_err)
-            mobNoEditText.requestFocus()
+            binding.mobNoEditText.error = resources.getString(R.string.login_mob_err)
+            binding.mobNoEditText.requestFocus()
         } else if (!AppUtility.getInstance().isValidPhoneNumber(mob)) {
-            mobNoEditText.error = resources.getString(R.string.login_mob_valid_err)
-            mobNoEditText.requestFocus()
+            binding.mobNoEditText.error = resources.getString(R.string.login_mob_valid_err)
+            binding.mobNoEditText.requestFocus()
         } else {
             val jsonObject = JSONObject()
             try {
@@ -373,19 +347,19 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     }
 
     private fun userValidationAndUpdateProfile() {
-        userName = nameEditText.text.toString()
-        mob = mobNoEditText.text.toString()
-        emailid = emailId.text.toString()
+        userName = binding.nameEditText.text.toString()
+        mob = binding.mobNoEditText.text.toString()
+        emailid = binding.emailId.text.toString()
 
         if (userName.isEmpty()) {
-            nameEditText.error = resources.getString(R.string.name_error)
-            nameEditText.requestFocus()
+            binding.nameEditText.error = resources.getString(R.string.name_error)
+            binding.nameEditText.requestFocus()
         } else if (mob.isEmpty() && !AppUtility.getInstance().isValidPhoneNumber(mob)) {
-            mobNoEditText.error = resources.getString(R.string.login_mob_valid_err)
-            mobNoEditText.requestFocus()
+            binding.mobNoEditText.error = resources.getString(R.string.login_mob_valid_err)
+            binding.mobNoEditText.requestFocus()
         } else if (!mobileNumberStatus) {
-            mobNoEditText.error = resources.getString(R.string.regist_mob_verify_err)
-            mobNoEditText.requestFocus()
+            binding.mobNoEditText.error = resources.getString(R.string.regist_mob_verify_err)
+            binding.mobNoEditText.requestFocus()
         } else if (districtID == 0) {
             UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_district))
         } else if (talukaID == 0) {
@@ -435,37 +409,39 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     }
 
     private fun userValidationAndRegistration() {
-        userName = nameEditText.text.toString()
-        mob = mobNoEditText.text.toString()
-        pass = passwordEditText.text.toString()
-        confirmPass = confirmPasswordEditText.text.toString()
-        emailid = emailId.text.toString()
+        userName = binding.nameEditText.text.toString()
+        mob = binding.mobNoEditText.text.toString()
+        pass = binding.passwordEditText.text.toString()
+        confirmPass = binding.confirmPasswordEditText.text.toString()
+        emailid = binding.emailId.text.toString()
 
         if (userName.isEmpty()) {
-            nameEditText.error = resources.getString(R.string.name_error)
-            nameEditText.requestFocus()
+            binding.nameEditText.error = resources.getString(R.string.name_error)
+            binding.nameEditText.requestFocus()
         } else if (mob.isEmpty()) {
-            mobNoEditText.error = resources.getString(R.string.login_mob_valid_err)
-            mobNoEditText.requestFocus()
+            binding.mobNoEditText.error = resources.getString(R.string.login_mob_valid_err)
+            binding.mobNoEditText.requestFocus()
         } else if (!mobileNumberStatus) {
-            mobNoEditText.error = resources.getString(R.string.regist_mob_verify_err)
-            mobNoEditText.requestFocus()
+            binding.mobNoEditText.error = resources.getString(R.string.regist_mob_verify_err)
+            binding.mobNoEditText.requestFocus()
         } else if (pass.isEmpty()) {
-            passwordEditText.error = resources.getString(R.string.password_error)
-            passwordEditText.requestFocus()
+            binding.passwordEditText.error = resources.getString(R.string.password_error)
+            binding.passwordEditText.requestFocus()
         } else if (confirmPass.isEmpty()) {
-            confirmPasswordEditText.error = resources.getString(R.string.conf_password_error)
-            confirmPasswordEditText.requestFocus()
+            binding.confirmPasswordEditText.error =
+                resources.getString(R.string.conf_password_error)
+            binding.confirmPasswordEditText.requestFocus()
         } else if (pass != confirmPass) {
-            confirmPasswordEditText.error = resources.getString(R.string.pass_equals_confirmpass)
-            confirmPasswordEditText.requestFocus()
+            binding.confirmPasswordEditText.error =
+                resources.getString(R.string.pass_equals_confirmpass)
+            binding.confirmPasswordEditText.requestFocus()
         } else if (districtID == 0) {
             UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_district))
         } else if (talukaID == 0) {
             UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_taluka))
         } else if (villageID == 0) {
             UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_village))
-        } else if (!isStrongPassword(confirmPasswordEditText.text.toString())) {
+        } else if (!isStrongPassword(binding.confirmPasswordEditText.text.toString())) {
             UIToastMessage.show(this, resources.getString(R.string.weak_password))
         } else {
             val jsonObject = JSONObject()
@@ -562,9 +538,10 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
 
     private fun userVerification(enteredOTP: String) {
         if (enteredOTP == this.sentOTP) {
-            textViewVerify.text = resources.getString(R.string.reg_verified)
-            textViewVerify.setTextColor(Color.parseColor("#1d6b08"))
-            mobNoEditText.isEnabled = false
+            binding.textViewVerify.text = resources.getString(R.string.reg_verified)
+            binding.textViewVerify.setTextColor(Color.parseColor("#1d6b08"))
+            binding.textViewVerify.background = ContextCompat.getDrawable(this, R.drawable.layout_button_background)
+            binding.mobNoEditText.isEnabled = false
             mobileNumberStatus = true
             sessionManager?.setLoggedIn(true)
             dialog.dismiss()
@@ -595,6 +572,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         if (i == 2) {
             if (jSONObject != null) {
                 if (jSONObject.optInt("status") == 200) {
+                    Log.d("TAGGER", "onResponse: $jSONObject")
                     val response: String = jSONObject.getString("response")
                     Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                     sentOTP = jSONObject.optInt("otp").toString()
@@ -649,20 +627,20 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             if (s != null) {
                 districtName = s
             }
-            textViewDist.text = s
+            binding.textViewDist.text = s
             if (districtID > 0) {
                 AppSettings.getInstance().setIntValue(this, AppConstants.uDISTId, districtID)
                 farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
             }
             talukaID = 0
-            textViewTaluka.text = ""
-            textViewTaluka.hint = resources.getString(R.string.farmer_select_taluka)
-            textViewTaluka.setHintTextColor(Color.GRAY)
+            binding.textViewTaluka.text = ""
+            binding.textViewTaluka.hint = resources.getString(R.string.farmer_select_taluka)
+            binding.textViewTaluka.setHintTextColor(Color.GRAY)
 
             villageID = 0
-            textViewVillage.text = ""
-            textViewVillage.hint = resources.getString(R.string.farmer_select_village)
-            textViewVillage.setHintTextColor(Color.GRAY)
+            binding.textViewVillage.text = ""
+            binding.textViewVillage.hint = resources.getString(R.string.farmer_select_village)
+            binding.textViewVillage.setHintTextColor(Color.GRAY)
         }
 
 
@@ -673,15 +651,15 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             if (s != null) {
                 talukaName = s
             }
-            textViewTaluka.text = s
+            binding.textViewTaluka.text = s
             villageJSONArray = null
             if (talukaID > 0) {
                 getVillageAgainstTaluka()
             }
             villageID = 0
-            textViewVillage.text = ""
-            textViewVillage.hint = resources.getString(R.string.farmer_select_village)
-            textViewVillage.setHintTextColor(Color.GRAY)
+            binding.textViewVillage.text = ""
+            binding.textViewVillage.hint = resources.getString(R.string.farmer_select_village)
+            binding.textViewVillage.setHintTextColor(Color.GRAY)
 
         }
 
@@ -691,7 +669,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             }
 
             villageName = s.toString()
-            textViewVillage.text = s
+            binding.textViewVillage.text = s
         }
 
     }

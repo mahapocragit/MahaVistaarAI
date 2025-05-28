@@ -75,9 +75,6 @@ public interface APIRequest {
     @POST(APIServices.DELETE_FERTILIZER_FROM_SAVED)
     Call<JsonObject> deleteFertilizerFromSavedList(@Body RequestBody params);
 
-    @POST(APIServices.advisory_feedback)
-    Call<JsonObject> submitAdvisoryFeedback(@Body RequestBody params);
-
     @POST(APIServices.KSaveFertilizerFormula)
     Call<JsonObject> saveFertilizerFormula(@Body RequestBody params);
 
@@ -86,9 +83,6 @@ public interface APIRequest {
 
     @POST(APIServices.kResetPassword)
     Call<JsonObject> getNewPassword(@Body RequestBody params);
-
-    @GET(APIServices.kRevampedDBTSchemes)
-    Call<JsonObject> getRevampedDBTSchemes();
 
     @POST(APIServices.kGetTokenFromWotr)
     Call<JsonObject> getTokenFromWotr(@Query("MobileNo") String securityKey,

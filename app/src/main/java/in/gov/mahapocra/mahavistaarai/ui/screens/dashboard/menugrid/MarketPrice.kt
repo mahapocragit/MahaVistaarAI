@@ -137,7 +137,9 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
         try {
             jsonObject.put("api_key", APIKeys.SSO_PROD)
             jsonObject.put("apmc_id", apmcId)
-
+            if (languageToLoad=="mr") {
+                jsonObject.put("lang", languageToLoad)
+            }
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
                 AppInventorApi(
@@ -201,6 +203,9 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
         try {
             jsonObject.put("api_key", APIKeys.SSO_PROD)
             jsonObject.put("district_code", districtID)
+            if (languageToLoad=="mr") {
+                jsonObject.put("lang", languageToLoad)
+            }
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
                 AppInventorApi(

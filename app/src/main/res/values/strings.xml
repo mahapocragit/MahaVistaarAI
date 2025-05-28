@@ -447,4 +447,6 @@
     <string name="bio_fertilizers">Bio \nFertilizers</string>
     <string name="qty_n_g_kg_of_seed">Qty \n g/kg of seed</string>
     <string name="weak_password">Your password is Weak! Please enter a strong password!!</string>
+    <string name="password_validation">* Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.</string>
+    <string name="search_by_crop_name">Search for crops by name (e.g., Wheat)</string>
 </resources>
