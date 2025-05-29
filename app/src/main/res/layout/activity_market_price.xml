@@ -144,12 +144,13 @@
         android:layout_marginTop="@dimen/height10"
         android:orientation="horizontal">
 
-        <EditText
+        <TextView
             android:id="@+id/searchEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/layout_warehouse_dropdown"
             android:layout_marginStart="@dimen/padding20"
+            android:gravity="center_vertical"
             android:paddingStart="@dimen/padding20"
             android:paddingEnd="@dimen/padding20"
             android:textSize="@dimen/text14"

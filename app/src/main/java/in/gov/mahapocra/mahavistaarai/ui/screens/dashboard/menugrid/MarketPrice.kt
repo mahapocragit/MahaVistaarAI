@@ -7,8 +7,13 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.ListView
+import android.widget.SearchView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.JsonObject
@@ -29,6 +34,8 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityMarketPriceBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.MarketPriceAdapter
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.extractUniqueCommNames
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.showCommNameDialog
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
@@ -82,15 +89,17 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
         binding.recyclerViewMarketPriceList.setLayoutManager(myLayoutManager)
         onClick()
 
-        binding.searchEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                marketPriceAdapter.filter(s.toString())
+        binding.searchEditText.setOnClickListener {
+            marketPriceDetailsJSONArray?.let { extractUniqueCommNames(it) }?.let {
+                showCommNameDialog(
+                    this,
+                    it
+                ) { selectedName ->
+                    marketPriceAdapter.filter(selectedName)
+                    binding.searchEditText.text = selectedName
+                }
             }
-
-            override fun afterTextChanged(s: Editable) {}
-        })
+        }
     }
 
     private fun setConfiguration() {
@@ -133,7 +142,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
         try {
             jsonObject.put("api_key", APIKeys.SSO_PROD)
             jsonObject.put("apmc_id", apmcId)
-            if (languageToLoad=="mr") {
+            if (languageToLoad == "mr") {
                 jsonObject.put("lang", languageToLoad)
             }
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
@@ -199,7 +208,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
         try {
             jsonObject.put("api_key", APIKeys.SSO_PROD)
             jsonObject.put("district_code", districtID)
-            if (languageToLoad=="mr") {
+            if (languageToLoad == "mr") {
                 jsonObject.put("lang", languageToLoad)
             }
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())

@@ -11,8 +11,13 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.util.Log
+import android.view.LayoutInflater
 import android.webkit.URLUtil
+import android.widget.ArrayAdapter
+import android.widget.ListView
+import android.widget.SearchView
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
@@ -21,7 +26,9 @@ import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
+import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
+import org.json.JSONArray
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.Year
@@ -179,6 +186,54 @@ object LocalCustom {
         if (password.lowercase() in commonPasswords) return false
 
         return true
+    }
+
+    fun extractUniqueCommNames(jsonArray: JSONArray): Array<String> {
+        val commNamesSet = mutableSetOf<String>()
+        for (i in 0 until jsonArray.length()) {
+            val obj = jsonArray.getJSONObject(i)
+            if (obj.has("comm_name")) {
+                commNamesSet.add(obj.getString("comm_name"))
+            }
+        }
+        return commNamesSet.toTypedArray()
+    }
+
+    fun showCommNameDialog(
+        context: Context,
+        commNames: Array<String>,
+        onItemSelected: (String) -> Unit
+    ) {
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_searchable_list, null)
+        val searchView = dialogView.findViewById<SearchView>(R.id.search_view)
+        val listView = dialogView.findViewById<ListView>(R.id.list_view)
+
+        val adapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, commNames.toList())
+        listView.adapter = adapter
+
+        val dialog = AlertDialog.Builder(context)
+            .setTitle(R.string.search_commodity)
+            .setView(dialogView)
+            .setNegativeButton(R.string.cancel, null)
+            .create()
+
+        listView.setOnItemClickListener { _, _, position, _ ->
+            val selectedItem = adapter.getItem(position)
+            selectedItem?.let {
+                onItemSelected(it)
+                dialog.dismiss()
+            }
+        }
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean = false
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapter.filter.filter(newText)
+                return true
+            }
+        })
+
+        dialog.show()
     }
 
 }
