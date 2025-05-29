@@ -146,6 +146,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             talukaID = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
             villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
             binding.passwordEditText.visibility = View.GONE
+            binding.passwordErrorTextView.visibility = View.GONE
             binding.confirmPasswordEditText.visibility = View.GONE
             binding.nameEditText.setText(userName)
             binding.mobNoEditText.setText(registerMob)
@@ -442,6 +443,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         } else if (villageID == 0) {
             UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_village))
         } else if (!isStrongPassword(binding.confirmPasswordEditText.text.toString())) {
+            binding.passwordErrorTextView.visibility = View.VISIBLE
             UIToastMessage.show(this, resources.getString(R.string.weak_password))
         } else {
             val jsonObject = JSONObject()

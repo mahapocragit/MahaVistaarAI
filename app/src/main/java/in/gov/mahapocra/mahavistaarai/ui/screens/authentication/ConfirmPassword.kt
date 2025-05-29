@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.JsonObject
@@ -79,6 +80,7 @@ class ConfirmPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode
                 resources.getString(R.string.pass_equals_confirmpass)
             binding.confirmPasswordEditText.requestFocus()
         } else if (!isStrongPassword(binding.confirmPasswordEditText.text.toString())) {
+            binding.passwordErrorTextView.visibility = View.VISIBLE
             UIToastMessage.show(this, resources.getString(R.string.weak_password))
         } else {
             val jsonObject = JSONObject()

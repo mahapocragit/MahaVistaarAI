@@ -204,9 +204,10 @@
                     android:textSize="@dimen/text12" />
 
                 <TextView
-                    android:id="@+id/textView37"
+                    android:id="@+id/passwordErrorTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:layout_marginHorizontal="@dimen/_15sdp"
                     android:text="@string/password_validation"
                     android:textSize="@dimen/_9sdp" />

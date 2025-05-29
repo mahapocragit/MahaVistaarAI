@@ -94,10 +94,6 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
     }
 
     private fun setConfiguration() {
-        languageToLoad = "mr"
-        if (AppSettings.getLanguage(this@MarketPrice).equals("1", ignoreCase = true)) {
-            languageToLoad = "en"
-        }
         districtName =
             AppSettings.getInstance().getValue(this, AppConstants.uDIST, AppConstants.uDIST)
         talukaName =

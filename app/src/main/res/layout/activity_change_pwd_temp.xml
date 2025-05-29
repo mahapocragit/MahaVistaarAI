@@ -110,9 +110,10 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
-                android:id="@+id/textView38"
+                android:id="@+id/passwordErrorTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:text="@string/password_validation"
                 android:textSize="@dimen/_9sdp" />
 
