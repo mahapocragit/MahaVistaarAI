@@ -65,6 +65,10 @@ class FarmerViewModel : ViewModel() {
 
     private val _responseMarkerList = MutableLiveData<JsonObject>()
     val responseMarkerList: LiveData<JsonObject> = _responseMarkerList
+    private val _compareOtpResponse = MutableLiveData<JsonObject>()
+    val compareOtpResponse: LiveData<JsonObject> = _compareOtpResponse
+    private val _compareOtpResponseReg = MutableLiveData<JsonObject>()
+    val compareOtpResponseReg: LiveData<JsonObject> = _compareOtpResponseReg
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -391,7 +395,7 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun fetchLocationDataFromCoordinates(context: Context, latitude: Double, longitude: Double){
+    fun fetchLocationDataFromCoordinates(context: Context, latitude: Double, longitude: Double) {
         viewModelScope.launch {
             try {
                 val jsonObject = JSONObject()
@@ -417,7 +421,7 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun fetchMarketList(context: Context, languageToLoad: String, districtCode:Int){
+    fun fetchMarketList(context: Context, languageToLoad: String, districtCode: Int) {
         viewModelScope.launch {
             try {
                 val jsonObject = JSONObject()
@@ -440,6 +444,60 @@ class FarmerViewModel : ViewModel() {
                 _responseMarkerList.value = response
             } catch (e: Exception) {
                 _error.value = e.localizedMessage ?: "Failed to fetch user details"
+            }
+        }
+    }
+
+    fun compareOtp(context: Context, mobile: String, enteredOTP: String) {
+        viewModelScope.launch {
+            val jsonObject = JSONObject()
+            try {
+                jsonObject.put("mobile_no", mobile.trim { it <= ' ' })
+                jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+                jsonObject.put("otp", enteredOTP)
+
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api =
+                    AppInventorApi(
+                        context,
+                        AppEnvironment.FARMER.baseUrl,
+                        "",
+                        AppString(context).getkMSG_WAIT(),
+                        false
+                    )
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.compareOtp(requestBody)
+                _compareOtpResponse.value = response
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun compareOtpReg(context: Context, mobile: String, enteredOTP: String) {
+        viewModelScope.launch {
+            val jsonObject = JSONObject()
+            try {
+                jsonObject.put("mobile_no", mobile.trim { it <= ' ' })
+                jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+                jsonObject.put("otp", enteredOTP)
+
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api =
+                    AppInventorApi(
+                        context,
+                        AppEnvironment.FARMER.baseUrl,
+                        "",
+                        AppString(context).getkMSG_WAIT(),
+                        false
+                    )
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.compareOtpReg(requestBody)
+                _compareOtpResponseReg.value = response
+            } catch (e: JSONException) {
+                e.printStackTrace()
             }
         }
     }

@@ -16,6 +16,7 @@ import android.widget.RadioButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
@@ -28,6 +29,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLoginScreenTempBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.isStrongPassword
@@ -42,15 +44,16 @@ import retrofit2.Retrofit
 class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
     private lateinit var binding: ActivityLoginScreenTempBinding
+    private lateinit var farmerViewModel: FarmerViewModel
     private lateinit var refreshToken: String
     private lateinit var mobileNo: String
     private lateinit var dialog: Dialog
     private var userPass = ""
-    private var sentOTP: String = ""
     var languageToLoad = "mr"
     private var farmerRegisteredID: Int = 0
     private var loginOption: Int = 0
     private var mobile = ""
+    private var enteredOTP = ""
     private val PASSWORD_VERIFY = 0
     private val OTP_VERIFY = 1
 
@@ -67,7 +70,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         switchLanguage(this, languageToLoad)
         binding = ActivityLoginScreenTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         binding.changeLanguageImageView.setOnClickListener {
             openChangeLangPopup()
         }
@@ -176,19 +179,13 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     }
 
     private fun userValidateAndLogin() {
-        if (loginOption == OTP_VERIFY) {
-            mobileNo = binding.userIdEditText.text.toString()
-            userPass = ""
-            callRefreshTokenAPI(mobileNo, sentOTP)
+        mobileNo = binding.userIdEditText.text.toString()
+        userPass = binding.passwordEditText.text.toString()
+        if (userPass.isEmpty()) {
+            binding.passwordEditText.error = resources.getString(R.string.password_error)
+            binding.passwordEditText.requestFocus()
         } else {
-            mobileNo = binding.userIdEditText.text.toString()
-            userPass = binding.passwordEditText.text.toString()
-            if (userPass.isEmpty()) {
-                binding.passwordEditText.error = resources.getString(R.string.password_error)
-                binding.passwordEditText.requestFocus()
-            } else {
-                callRefreshTokenAPI(mobileNo, userPass)
-            }
+            callRefreshTokenAPI(mobileNo, userPass)
         }
     }
 
@@ -301,9 +298,8 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 if (jSONObject.optInt("status") == 200) {
                     val response: String = jSONObject.getString("response")
                     Toast.makeText(this, response, Toast.LENGTH_LONG).show()
-                    sentOTP = jSONObject.optInt("otp").toString()
                     addVerificationDialog()
-                }else if (jSONObject.optInt("status") == 201){
+                } else if (jSONObject.optInt("status") == 201) {
                     Toast.makeText(this, R.string.mobile_otp_error_text, Toast.LENGTH_LONG).show()
                 }
             }
@@ -312,7 +308,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             if (jSONObject != null) {
                 if (jSONObject.optInt("status") == 200) {
                     refreshToken = jSONObject.getString("refresh_token")
-                    callLoginAPI(refreshToken, sentOTP)
+                    callLoginAPI(refreshToken, enteredOTP)
                 } else {
                     val message: String = jSONObject.getString("response")
                     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
@@ -375,14 +371,25 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         cancelButton.setOnClickListener { dialog.dismiss() }
         submitButton.setOnClickListener {
 
-            val enteredOTP: String = receiveOTPEditText.text.toString()
+            enteredOTP = receiveOTPEditText.text.toString()
             if (enteredOTP.isEmpty()) {
                 receiveOTPEditText.error = resources.getString(R.string.regist_otp_err)
                 receiveOTPEditText.requestFocus()
             } else {
-                userVerification(enteredOTP)
+                farmerViewModel.compareOtp(this, mobile, enteredOTP)
+            }
+            farmerViewModel.compareOtpResponse.observe(this) {
+                if (it != null) {
+                    val jSONObject = JSONObject(it.toString())
+                    if (jSONObject.optInt("status") == 200) {
+                        userVerification(enteredOTP)
+                    } else {
+                        UIToastMessage.show(this, getString(R.string.wrong_OTP))
+                    }
+                }
             }
         }
+
         resendOTP.setOnClickListener {
             dialog.dismiss()
             userValidateAndLogin()
@@ -406,12 +413,8 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
     private fun userVerification(enteredOTP: String) {
         mobileNo = binding.userIdEditText.text.toString()
-        if (enteredOTP == this.sentOTP) {
-            callRefreshTokenAPI(mobileNo, userPass, sentOTP)
-            dialog.dismiss()
-        } else {
-            Toast.makeText(this, R.string.wrong_OTP, Toast.LENGTH_LONG).show()
-        }
+        callRefreshTokenAPI(mobileNo, userPass, enteredOTP)
+        dialog.dismiss()
     }
 
     override fun attachBaseContext(newBase: Context) {

@@ -162,22 +162,6 @@ object LocalCustom {
         Log.d("TAGGER", "logThis: $message")
     }
 
-    fun verifyWithRecaptcha(context: Context, callback: (Boolean) -> Unit) {
-        SafetyNet.getClient(context).verifyWithRecaptcha(APIKeys.SITE_KEY)
-            .addOnSuccessListener(ContextCompat.getMainExecutor(context)) { response ->
-                val userResponseToken = response.tokenResult
-                callback(userResponseToken?.isNotEmpty() == true)
-            }
-            .addOnFailureListener(ContextCompat.getMainExecutor(context)) { e ->
-                if (e is ApiException) {
-                    Log.d(TAG, "Error: ${CommonStatusCodes.getStatusCodeString(e.statusCode)}")
-                } else {
-                    Log.d(TAG, "Error: ${e.message}")
-                }
-                callback(false)
-            }
-    }
-
     fun isStrongPassword(password: String): Boolean {
         val minLength = 8
         val specialChars = "!@#\$%^&*()_+=|<>?{}\\[\\]~-"

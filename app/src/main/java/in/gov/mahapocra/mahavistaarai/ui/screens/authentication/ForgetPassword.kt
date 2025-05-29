@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
@@ -20,6 +21,7 @@ import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
 import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
@@ -27,6 +29,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityForgetPasswordTempBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
@@ -40,10 +43,10 @@ import java.util.Locale
 
 class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode {
 
-    lateinit var binding: ActivityForgetPasswordTempBinding
+    private lateinit var binding: ActivityForgetPasswordTempBinding
+    private lateinit var farmerViewModel: FarmerViewModel
     private lateinit var mob: String
     private var userPass: String = ""
-    private lateinit var sentOTP: String
     private lateinit var dialog: Dialog
     private var loginOption: Int = 0
     private var farmerRegistrationId: Int = 0
@@ -62,6 +65,7 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
         switchLanguage(this, languageToLoad)
         binding = ActivityForgetPasswordTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         onClick()
     }
 
@@ -163,7 +167,17 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
                 receiveOTPEditText.error = resources.getString(R.string.regist_otp_err)
                 receiveOTPEditText.requestFocus()
             } else {
-                userVerification(enteredOTP)
+                farmerViewModel.compareOtp(this, binding.mobileEditText.text.toString(), enteredOTP)
+            }
+            farmerViewModel.compareOtpResponse.observe(this) {
+                if (it != null) {
+                    val jSONObject = JSONObject(it.toString())
+                    if (jSONObject.optInt("status") == 200) {
+                        userVerification()
+                    } else {
+                        UIToastMessage.show(this, getString(R.string.wrong_OTP))
+                    }
+                }
             }
         }
         resendOTP.setOnClickListener {
@@ -173,16 +187,12 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
         dialog.show()
     }
 
-    private fun userVerification(enteredOTP: String) {
-        if (enteredOTP == this.sentOTP) {
-            Toast.makeText(this, "Thank you...", Toast.LENGTH_LONG).show()
-            val intent = Intent(this, ConfirmPassword::class.java)
-            intent.putExtra("MobileNo", mob)
-            startActivity(intent)
-            dialog.dismiss()
-        } else {
-            Toast.makeText(this, R.string.wrong_OTP, Toast.LENGTH_LONG).show()
-        }
+    private fun userVerification() {
+        Toast.makeText(this, "Thank you...", Toast.LENGTH_LONG).show()
+        val intent = Intent(this, ConfirmPassword::class.java)
+        intent.putExtra("MobileNo", mob)
+        startActivity(intent)
+        dialog.dismiss()
     }
 
     private fun userValidateAndLogin() {
@@ -198,7 +208,6 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
             if (jSONObject.optInt("status") == 200) {
                 val response: String = jSONObject.getString("response")
                 Toast.makeText(this, response, Toast.LENGTH_LONG).show()
-                sentOTP = jSONObject.optInt("otp").toString()
                 addVerificationDialog()
             }
         }
@@ -213,13 +222,11 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
                     if (loginOption == 1) {
                         val message: String = jSONObject.getString("Message")
                         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-                        sentOTP = jSONObject.getString("OTP")
                         farmerRegistrationId = jSONObject.getInt("FAAPRegistrationID")
                         addVerificationDialog()
                     } else {
                         val message: String = jSONObject.getString("Message")
                         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-                        sentOTP = jSONObject.getString("OTP")
                         farmerRegistrationId = jSONObject.getInt("FAAPRegistrationID")
                         AppSettings.getInstance()
                             .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegistrationId)

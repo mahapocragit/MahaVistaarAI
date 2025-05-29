@@ -55,9 +55,9 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     AlertListEventListener {
 
     private lateinit var binding: ActivityRegistrationBinding
+
     private var isUserLoggedIn: Boolean = false
 
-    private lateinit var sentOTP: String
     private lateinit var userName: String
     private lateinit var mob: String
     private lateinit var registerMob: String
@@ -485,7 +485,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         }
     }
 
-    private fun addVerificationDialog(sentOTP: String) {
+    private fun addVerificationDialog() {
         var countDownTimer: CountDownTimer? = null
         countDownTimer?.cancel()
         dialog = Dialog(this)
@@ -526,7 +526,18 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 receiveOTPEditText.error = resources.getString(R.string.regist_otp_err)
                 receiveOTPEditText.requestFocus()
             } else {
-                userVerification(enteredOTP)
+                farmerViewModel.compareOtpReg(this, binding.mobNoEditText.text.toString(), enteredOTP)
+            }
+            farmerViewModel.compareOtpResponseReg.observe(this) {
+                if (it != null) {
+                    val jSONObject = JSONObject(it.toString())
+                    if (jSONObject.optInt("status") == 200) {
+                        userVerification()
+                    } else {
+                        dialog.dismiss()
+                        UIToastMessage.show(this, getString(R.string.wrong_OTP))
+                    }
+                }
             }
         }
         resendOTP.setOnClickListener {
@@ -536,18 +547,15 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         dialog.show()
     }
 
-    private fun userVerification(enteredOTP: String) {
-        if (enteredOTP == this.sentOTP) {
-            binding.textViewVerify.text = resources.getString(R.string.reg_verified)
-            binding.textViewVerify.setTextColor(Color.parseColor("#1d6b08"))
-            binding.textViewVerify.background = ContextCompat.getDrawable(this, R.drawable.layout_button_background)
-            binding.mobNoEditText.isEnabled = false
-            mobileNumberStatus = true
-            sessionManager?.setLoggedIn(true)
-            dialog.dismiss()
-        } else {
-            Toast.makeText(this, R.string.wrong_OTP, Toast.LENGTH_LONG).show()
-        }
+    private fun userVerification() {
+        binding.textViewVerify.text = resources.getString(R.string.reg_verified)
+        binding.textViewVerify.setTextColor(Color.parseColor("#1d6b08"))
+        binding.textViewVerify.background =
+            ContextCompat.getDrawable(this, R.drawable.layout_button_background)
+        binding.mobNoEditText.isEnabled = false
+        mobileNumberStatus = true
+        sessionManager?.setLoggedIn(true)
+        dialog.dismiss()
     }
 
     override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
@@ -575,8 +583,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                     Log.d("TAGGER", "onResponse: $jSONObject")
                     val response: String = jSONObject.getString("response")
                     Toast.makeText(this, response, Toast.LENGTH_LONG).show()
-                    sentOTP = jSONObject.optInt("otp").toString()
-                    addVerificationDialog(sentOTP)
+                    addVerificationDialog()
                 } else if (jSONObject.optInt("status") == 201) {
                     Toast.makeText(this, R.string.otp_error, Toast.LENGTH_LONG).show()
                 }

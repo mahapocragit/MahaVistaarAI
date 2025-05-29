@@ -58,6 +58,12 @@ interface ApiService {
     @POST(APIServices.kGetMarketData)
     suspend fun getMarketList(@Body params: RequestBody): JsonObject
 
+    @POST(APIServices.kCompareOtp)
+    suspend fun compareOtp(@Body params: RequestBody): JsonObject
+
+    @POST(APIServices.kCompareOtpReg)
+    suspend fun compareOtpReg(@Body params: RequestBody): JsonObject
+
     @GET(APIServices.kRevampedDBTSchemes)
     suspend fun getDBTSchemes(): JsonObject
 

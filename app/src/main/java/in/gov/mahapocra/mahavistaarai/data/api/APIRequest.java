@@ -83,6 +83,8 @@ public interface APIRequest {
 
     @POST(APIServices.kResetPassword)
     Call<JsonObject> getNewPassword(@Body RequestBody params);
+    @POST(APIServices.kCompareOtp)
+    Call<JsonObject> compareOtp(@Body RequestBody params);
 
     @POST(APIServices.kGetTokenFromWotr)
     Call<JsonObject> getTokenFromWotr(@Query("MobileNo") String securityKey,
