@@ -313,7 +313,8 @@
         android:numColumns="3"
         android:paddingHorizontal="10dp"
         android:verticalSpacing="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout13"
+        android:layout_marginBottom="@dimen/_4sdp"
+        app:layout_constraintBottom_toTopOf="@+id/nav_chat"
         app:layout_constraintTop_toBottomOf="@+id/AddCrop" />
 
     <LinearLayout
@@ -328,6 +329,17 @@
             android:id="@+id/customNavBottom"
             layout="@layout/custom_bottom_nav" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/nav_chat"
+        android:layout_width="@dimen/_60sdp"
+        android:layout_height="@dimen/_60sdp"
+        android:elevation="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_6sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout13"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/chtbt_rf" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

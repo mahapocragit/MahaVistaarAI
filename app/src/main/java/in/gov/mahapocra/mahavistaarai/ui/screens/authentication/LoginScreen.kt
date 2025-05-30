@@ -33,6 +33,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.isStrongPassword
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.showCaptchaDialog
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
@@ -138,10 +139,19 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             }
         }
         binding.guestModeCardView.setOnClickListener {
-            val userId = LocalCustom.generateRandom10DigitNumber()
-            AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, userId)
-            AppSettings.getInstance().setBooleanValue(this, AppConstants.IS_USER_GUEST, true)
-            startActivity(Intent(this, DashboardScreen::class.java))
+            showCaptchaDialog(this) { verified ->
+                if (verified) {
+                    // CAPTCHA was successfully verified
+                    val userId = LocalCustom.generateRandom10DigitNumber()
+                    AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, userId)
+                    AppSettings.getInstance().setBooleanValue(this, AppConstants.IS_USER_GUEST, true)
+                    startActivity(Intent(this, DashboardScreen::class.java))
+                    // Do something here
+                } else {
+                    // CAPTCHA failed or dialog canceled
+                    UIToastMessage.show(this, "CAPTCHA verification Failed!!")
+                }
+            }
         }
     }
 

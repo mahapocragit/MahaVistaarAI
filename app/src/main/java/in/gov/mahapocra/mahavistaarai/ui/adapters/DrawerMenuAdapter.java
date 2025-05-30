@@ -18,12 +18,13 @@ import org.json.JSONObject;
 
 import in.gov.mahapocra.mahavistaarai.R;
 
-public class DrawerMenuAdapter extends BaseAdapter  {
+public class DrawerMenuAdapter extends BaseAdapter {
 
     private final Context mContext;
     private final JSONArray mDataArray;
     private final Integer farmerId;
-    public DrawerMenuAdapter(Context mContext, JSONArray mDataArray,Integer farmerId) {
+
+    public DrawerMenuAdapter(Context mContext, JSONArray mDataArray, Integer farmerId) {
         this.mContext = mContext;
         this.mDataArray = mDataArray;
         this.farmerId = farmerId;
@@ -41,7 +42,7 @@ public class DrawerMenuAdapter extends BaseAdapter  {
             return mDataArray.getJSONObject(position);
         } catch (JSONException e) {
             e.printStackTrace();
-          //  FirebaseCrashlytics.getInstance().recordException(e);
+            //  FirebaseCrashlytics.getInstance().recordException(e);
         }
         return null;
     }
@@ -65,8 +66,8 @@ public class DrawerMenuAdapter extends BaseAdapter  {
             if (mLayoutInflater != null) {
                 convertView = mLayoutInflater.inflate(R.layout.list_menu_drawer, null);
 
-                viewHolder.iconImageView =  convertView.findViewById(R.id.iconImageView);
-                viewHolder.nameTextView =  convertView.findViewById(R.id.nameTextView);
+                viewHolder.iconImageView = convertView.findViewById(R.id.iconImageView);
+                viewHolder.nameTextView = convertView.findViewById(R.id.nameTextView);
                 convertView.setTag(viewHolder);
             }
 
@@ -77,10 +78,10 @@ public class DrawerMenuAdapter extends BaseAdapter  {
         try {
             JSONObject jsonObject = mDataArray.getJSONObject(position);
 
-          // int farmerId = AppSettings.getInstance().getIntValue(mContext, AppConstants.fREGISTER_ID, 0);
-           String logoutString = jsonObject.getString("name");
-           String logInStatus = jsonObject.getString("name");
-           String myProfile = jsonObject.getString("name");
+            // int farmerId = AppSettings.getInstance().getIntValue(mContext, AppConstants.fREGISTER_ID, 0);
+            String logoutString = jsonObject.getString("name");
+            String logInStatus = jsonObject.getString("name");
+            String myProfile = jsonObject.getString("name");
 
             viewHolder.nameTextView.setText(jsonObject.getString("name"));
             if (jsonObject.getString("icon") == null) {
@@ -95,34 +96,34 @@ public class DrawerMenuAdapter extends BaseAdapter  {
                     viewHolder.iconImageView.setColorFilter(null);
                 }
 
-                if (jsonObject.getString("icon").equals("partners_ic")){
+                if (jsonObject.getString("icon").equals("partners_ic")) {
                     viewHolder.iconImageView.setImageResource(R.drawable.partners_ic);
                 }
 
             }
-            if(farmerId ==0 && (logoutString.equalsIgnoreCase("Logout")|| logoutString.equalsIgnoreCase("बाहेर पडणे"))){
+            if (farmerId == 0 && (logoutString.equalsIgnoreCase("Logout") || logoutString.equalsIgnoreCase("बाहेर पडणे"))) {
                 viewHolder.nameTextView.setVisibility(View.GONE);
                 viewHolder.iconImageView.setVisibility(View.GONE);
             }
-            if(farmerId ==0 && (myProfile.equalsIgnoreCase("My Profile")|| myProfile.equalsIgnoreCase("माझे प्रोफाईल"))){
+            if (farmerId == 0 && (myProfile.equalsIgnoreCase("My Profile") || myProfile.equalsIgnoreCase("माझे प्रोफाईल"))) {
                 viewHolder.nameTextView.setVisibility(View.GONE);
                 viewHolder.iconImageView.setVisibility(View.GONE);
             }
-            if(farmerId == 0 && (myProfile.equalsIgnoreCase("My DBT Application Status")|| myProfile.equalsIgnoreCase("डीबीटी अर्ज स्थिती"))){
+            if (farmerId == 0 && (myProfile.equalsIgnoreCase("My DBT Application Status") || myProfile.equalsIgnoreCase("डीबीटी अर्ज स्थिती"))) {
                 viewHolder.nameTextView.setVisibility(View.GONE);
                 viewHolder.iconImageView.setVisibility(View.GONE);
             }
-            if(farmerId == 0 && (myProfile.equalsIgnoreCase("GIS")|| myProfile.equalsIgnoreCase("जीआयएस- भौगोलिक माहिती प्रणाली"))){
+            if (farmerId == 0 && (myProfile.equalsIgnoreCase("GIS") || myProfile.equalsIgnoreCase("जीआयएस- भौगोलिक माहिती प्रणाली"))) {
                 viewHolder.nameTextView.setVisibility(View.GONE);
                 viewHolder.iconImageView.setVisibility(View.GONE);
             }
-            if(farmerId > 0 && (logInStatus.equalsIgnoreCase("Login/Registration") ||logInStatus.equalsIgnoreCase("लॉगइन/नोंदणी"))){
+            if (farmerId > 0 && (logInStatus.equalsIgnoreCase("Login/Registration") || logInStatus.equalsIgnoreCase("लॉगइन/नोंदणी"))) {
                 viewHolder.nameTextView.setVisibility(View.GONE);
                 viewHolder.iconImageView.setVisibility(View.GONE);
             }
         } catch (JSONException e) {
             e.printStackTrace();
-          //  FirebaseCrashlytics.getInstance().recordException(e);
+            //  FirebaseCrashlytics.getInstance().recordException(e);
         }
         return convertView;
     }

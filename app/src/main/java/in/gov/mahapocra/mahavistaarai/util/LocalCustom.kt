@@ -14,8 +14,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.webkit.URLUtil
 import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.ListView
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -232,6 +235,50 @@ object LocalCustom {
                 return true
             }
         })
+
+        dialog.show()
+    }
+
+    fun showCaptchaDialog(context: Context, onResult: (Boolean) -> Unit) {
+        val captcha = CaptchaGenerator.generateCaptchaBitmap(300, 100)
+
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_captcha, null)
+        val imageView = dialogView.findViewById<ImageView>(R.id.captchaImage)
+        val inputField = dialogView.findViewById<EditText>(R.id.captchaInput)
+
+        imageView.setImageBitmap(captcha.bitmap)
+
+        val dialog = AlertDialog.Builder(context)
+            .setTitle("Verify CAPTCHA")
+            .setView(dialogView)
+            .setPositiveButton("Submit", null)  // Override later
+            .setNegativeButton("Cancel") { _, _ ->
+                onResult(false)  // User canceled, so false
+            }
+            .create()
+
+        dialog.setOnShowListener {
+            val submitButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            submitButton.setOnClickListener {
+                val userInput = inputField.text.toString().trim().uppercase()
+                val captchaCode = captcha.code.uppercase()
+
+                if (userInput.isEmpty()) {
+                    inputField.error = "Please enter the CAPTCHA"
+                    return@setOnClickListener
+                }
+
+                if (userInput == captchaCode) {
+                    Toast.makeText(context, "CAPTCHA Verified ✅", Toast.LENGTH_SHORT).show()
+                    onResult(true)  // Notify success
+                    dialog.dismiss()
+                } else {
+                    Toast.makeText(context, "Incorrect CAPTCHA ❌", Toast.LENGTH_SHORT).show()
+                    inputField.text?.clear()
+                    inputField.requestFocus()
+                }
+            }
+        }
 
         dialog.show()
     }

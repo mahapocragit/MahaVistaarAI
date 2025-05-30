@@ -267,6 +267,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
 
         if (i == 3) {
             if (s != null) {
+                binding.searchEditText.text = getString(R.string.search_by_crop_name)
                 marketName = s.toString()
                 marketPreceDate = binding.tvMarketDate.text.toString()
                 val apmcID = JSONObject(s1).optInt("apmc_id")
