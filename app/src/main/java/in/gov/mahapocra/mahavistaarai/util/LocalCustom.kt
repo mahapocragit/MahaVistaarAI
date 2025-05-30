@@ -18,6 +18,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ListView
 import android.widget.SearchView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -240,13 +241,18 @@ object LocalCustom {
     }
 
     fun showCaptchaDialog(context: Context, onResult: (Boolean) -> Unit) {
-        val captcha = CaptchaGenerator.generateCaptchaBitmap(300, 100)
+        var captcha = CaptchaGenerator.generateCaptchaBitmap(300, 100)
 
         val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_captcha, null)
         val imageView = dialogView.findViewById<ImageView>(R.id.captchaImage)
         val inputField = dialogView.findViewById<EditText>(R.id.captchaInput)
+        val regenerateCaptchaTextView = dialogView.findViewById<TextView>(R.id.regenerateCaptchaTextView)
 
         imageView.setImageBitmap(captcha.bitmap)
+        regenerateCaptchaTextView.setOnClickListener {
+            captcha = CaptchaGenerator.generateCaptchaBitmap(300, 100)
+            imageView.setImageBitmap(captcha.bitmap)
+        }
 
         val dialog = AlertDialog.Builder(context)
             .setTitle("Verify CAPTCHA")

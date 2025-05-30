@@ -8,9 +8,19 @@
 
     <ImageView
         android:id="@+id/captchaImage"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="@dimen/_50sdp"
         android:layout_gravity="center" />
+
+    <TextView
+        android:id="@+id/regenerateCaptchaTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textColor="@color/red"
+        android:textStyle="bold"
+        android:text="regenerate Captcha" />
 
     <EditText
         android:id="@+id/captchaInput"

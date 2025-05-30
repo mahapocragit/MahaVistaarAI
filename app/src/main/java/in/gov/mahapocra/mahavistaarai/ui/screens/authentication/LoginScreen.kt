@@ -144,7 +144,8 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     // CAPTCHA was successfully verified
                     val userId = LocalCustom.generateRandom10DigitNumber()
                     AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, userId)
-                    AppSettings.getInstance().setBooleanValue(this, AppConstants.IS_USER_GUEST, true)
+                    AppSettings.getInstance()
+                        .setBooleanValue(this, AppConstants.IS_USER_GUEST, true)
                     startActivity(Intent(this, DashboardScreen::class.java))
                     // Do something here
                 } else {
@@ -164,26 +165,36 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             binding.userIdEditText.error = resources.getString(R.string.login_mob_valid_err)
             binding.userIdEditText.requestFocus()
         } else {
-            val jsonObject = JSONObject()
-            try {
-                jsonObject.put("MobileNo", mobile.trim { it <= ' ' })
-                jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+            showCaptchaDialog(this) { verified ->
+                if (verified) {
+                    // CAPTCHA was successfully verified
+                    val jsonObject = JSONObject()
+                    try {
+                        jsonObject.put("MobileNo", mobile.trim { it <= ' ' })
+                        jsonObject.put("SecurityKey", APIServices.SSO_KEY)
 
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api =
-                    AppInventorApi(
-                        this,
-                        AppEnvironment.FARMER.baseUrl,
-                        "",
-                        AppString(this).getkMSG_WAIT(),
-                        true
-                    )
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getOTPRequest(requestBody)
-                api.postRequest(responseCall, this, 1)
-            } catch (e: JSONException) {
-                e.printStackTrace()
+                        val requestBody =
+                            AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                        val api =
+                            AppInventorApi(
+                                this,
+                                AppEnvironment.FARMER.baseUrl,
+                                "",
+                                AppString(this).getkMSG_WAIT(),
+                                true
+                            )
+                        val retrofit: Retrofit = api.getRetrofitInstance()
+                        val apiRequest = retrofit.create(APIRequest::class.java)
+                        val responseCall: Call<JsonObject> = apiRequest.getOTPRequest(requestBody)
+                        api.postRequest(responseCall, this, 1)
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                    // Do something here
+                } else {
+                    // CAPTCHA failed or dialog canceled
+                    UIToastMessage.show(this, "CAPTCHA verification Failed!!")
+                }
             }
         }
     }
@@ -204,31 +215,42 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             binding.userIdEditText.error = resources.getString(R.string.lgn_register_phone_error)
             binding.userIdEditText.requestFocus()
         } else {
-            val jsonObject = JSONObject()
-            try {
-                jsonObject.put("SecurityKey", APIServices.SSO_KEY)
-                jsonObject.put("MobileNo", mobileNo.trim { it <= ' ' })
-                if (otp.isNotEmpty()) {
-                    jsonObject.put("otp", otp)
-                } else {
-                    jsonObject.put("Password", userPass)
-                }
+            showCaptchaDialog(this) { verified ->
+                if (verified) {
+                    // CAPTCHA was successfully verified
+                    val jsonObject = JSONObject()
+                    try {
+                        jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+                        jsonObject.put("MobileNo", mobileNo.trim { it <= ' ' })
+                        if (otp.isNotEmpty()) {
+                            jsonObject.put("otp", otp)
+                        } else {
+                            jsonObject.put("Password", userPass)
+                        }
 
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api =
-                    AppInventorApi(
-                        this,
-                        AppEnvironment.FARMER.baseUrl,
-                        "",
-                        AppString(this).getkMSG_WAIT(),
-                        true
-                    )
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getRefreshTokenLogin(requestBody)
-                api.postRequest(responseCall, this, 4)
-            } catch (e: JSONException) {
-                e.printStackTrace()
+                        val requestBody =
+                            AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                        val api =
+                            AppInventorApi(
+                                this,
+                                AppEnvironment.FARMER.baseUrl,
+                                "",
+                                AppString(this).getkMSG_WAIT(),
+                                true
+                            )
+                        val retrofit: Retrofit = api.getRetrofitInstance()
+                        val apiRequest = retrofit.create(APIRequest::class.java)
+                        val responseCall: Call<JsonObject> =
+                            apiRequest.getRefreshTokenLogin(requestBody)
+                        api.postRequest(responseCall, this, 4)
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                    // Do something here
+                } else {
+                    // CAPTCHA failed or dialog canceled
+                    UIToastMessage.show(this, "CAPTCHA verification Failed!!")
+                }
             }
         }
     }
