@@ -458,4 +458,5 @@
     <string name="password_validation">* पासवर्ड किमान ८ अक्षरांचा असावा आणि त्यामध्ये एक मोठं अक्षर, एक लहान अक्षर, एक संख्या आणि एक विशेष चिन्ह असणे आवश्यक आहे.</string>
     <string name="search_by_crop_name">पिकाचे नाव टाका</string>
     <string name="search_commodity">पीक शोधा</string>
+    <string name="shetishala">शेतीशाळा</string>
 </resources>

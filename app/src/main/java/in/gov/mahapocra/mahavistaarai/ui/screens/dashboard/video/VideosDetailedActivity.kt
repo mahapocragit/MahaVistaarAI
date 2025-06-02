@@ -2,12 +2,15 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityVideosDetailedBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
@@ -16,6 +19,7 @@ import org.json.JSONObject
 class VideosDetailedActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityVideosDetailedBinding
+    private lateinit var farmerViewModel: FarmerViewModel
     private lateinit var languageToLoad: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,25 +31,43 @@ class VideosDetailedActivity : AppCompatActivity() {
             languageToLoad = "en"
         }
         switchLanguage(this, languageToLoad)
-        binding= ActivityVideosDetailedBinding.inflate(layoutInflater)
+        binding = ActivityVideosDetailedBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.toolbar.textViewHeaderTitle.text = getString(R.string.videos_bottom)
+        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         binding.toolbar.imgBackArrow.visibility = View.VISIBLE
         binding.toolbar.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        val videosJsonObject  = intent.getStringExtra("videosJsonObject")
-        val jsonObject = JSONObject(videosJsonObject)
-        val videosJsonArray = jsonObject.optJSONArray("links")
-
-        binding.videosRecyclerView.layoutManager = GridLayoutManager(this, 2)
-        binding.videosRecyclerView.hasFixedSize()
-        binding.videosRecyclerView.adapter = videosJsonArray?.let {
-            VideosAdapter(
-                it
-            )
+        val videosJsonObject = intent.getStringExtra("videosJsonObject")
+        if (videosJsonObject != null) {
+            binding.toolbar.textViewHeaderTitle.text = getString(R.string.videos_bottom)
+            val jsonObject = JSONObject(videosJsonObject)
+            val videosJsonArray = jsonObject.optJSONArray("links")
+            binding.videosRecyclerView.layoutManager = GridLayoutManager(this, 2)
+            binding.videosRecyclerView.hasFixedSize()
+            binding.videosRecyclerView.adapter = videosJsonArray?.let {
+                VideosAdapter(
+                    it
+                )
+            }
+        } else {
+            binding.toolbar.textViewHeaderTitle.text = getString(R.string.shetishala)
+            farmerViewModel.getShetishalaVideos(this)
+            farmerViewModel.shetishalaVideosResponse.observe(this) {
+                if (it != null) {
+                    val jsonObject = JSONObject(it.toString())
+                    val videosJsonArray = jsonObject.optJSONArray("data")
+                    binding.videosRecyclerView.layoutManager = GridLayoutManager(this, 2)
+                    binding.videosRecyclerView.hasFixedSize()
+                    binding.videosRecyclerView.adapter = videosJsonArray?.let { video ->
+                        ShetishalaVideosAdapter(
+                            video
+                        )
+                    }
+                }
+            }
         }
     }
 

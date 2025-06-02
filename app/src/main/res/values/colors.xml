@@ -94,5 +94,6 @@
 
     <color name="nav_selected">#008D36</color> <!-- Green -->
     <color name="nav_unselected">#B0BEC5</color> <!-- Light gray -->
+    <color name="bottom_icon_tint">#64748B</color> <!-- Light gray -->
     <color name="nav_text">#263238</color> <!-- Dark gray for text -->
 </resources>

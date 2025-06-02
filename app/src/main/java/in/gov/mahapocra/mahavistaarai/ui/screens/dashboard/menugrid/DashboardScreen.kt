@@ -48,6 +48,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealth
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.AboutActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.CreditsActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosDetailedActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.ComingSoonActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
@@ -182,7 +183,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             )
         }
 
-        binding.appBarMain.dashboardScreen.navChat.setOnClickListener {
+        binding.appBarMain.dashboardScreen.customNavBottom.navChat.setOnClickListener {
             if (!isGuest) {
                 startActivity(Intent(this, ChatbotActivity::class.java))
             } else {
@@ -249,51 +250,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             startActivity(
                 Intent(
                     this@DashboardScreen,
-                    AboutActivity::class.java
+                    VideosDetailedActivity::class.java
                 )
             )
         }
-
-//        binding.appBarMain.dashboardScreen.bottomNavigation.itemIconTintList = null
-//        binding.appBarMain.dashboardScreen.bottomNavigation.setOnItemSelectedListener { item: MenuItem ->
-//            when (item.itemId) {
-//                R.id.nav_home -> startActivity(
-//                    Intent(
-//                        this@DashboardScreen,
-//                        DashboardScreen::class.java
-//                    )
-//                )
-//
-//                R.id.nav_about -> startActivity(
-//                    Intent(
-//                        this@DashboardScreen,
-//                        CHCenterActivity::class.java
-//                    )
-//                )
-//
-//                R.id.nav_chat -> startActivity(
-//                    Intent(
-//                        this@DashboardScreen,
-//                        TempDashboardActivity::class.java
-//                    )
-//                )
-//
-//                R.id.nav_about2 -> startActivity(
-//                    Intent(
-//                        this@DashboardScreen,
-//                        AboutActivity::class.java
-//                    )
-//                )
-//
-//                R.id.nav_videos -> startActivity(
-//                    Intent(
-//                        this@DashboardScreen,
-//                        VideosActivity::class.java
-//                    )
-//                )
-//            }
-//            false
-//        }
         askForLocationAndMicrophonePermission()
     }
 

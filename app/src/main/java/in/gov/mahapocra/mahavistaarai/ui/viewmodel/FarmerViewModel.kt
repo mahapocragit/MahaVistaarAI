@@ -65,10 +65,15 @@ class FarmerViewModel : ViewModel() {
 
     private val _responseMarkerList = MutableLiveData<JsonObject>()
     val responseMarkerList: LiveData<JsonObject> = _responseMarkerList
+
     private val _compareOtpResponse = MutableLiveData<JsonObject>()
     val compareOtpResponse: LiveData<JsonObject> = _compareOtpResponse
+
     private val _compareOtpResponseReg = MutableLiveData<JsonObject>()
     val compareOtpResponseReg: LiveData<JsonObject> = _compareOtpResponseReg
+
+    private val _shetishalaVideosResponse = MutableLiveData<JsonObject>()
+    val shetishalaVideosResponse: LiveData<JsonObject> = _shetishalaVideosResponse
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -499,6 +504,22 @@ class FarmerViewModel : ViewModel() {
             } catch (e: JSONException) {
                 e.printStackTrace()
             }
+        }
+    }
+
+    fun getShetishalaVideos(context: Context) {
+        viewModelScope.launch {
+            val api = AppInventorApi(
+                context,
+                AppEnvironment.FARMER.baseUrl,
+                "",
+                AppString(context).getkMSG_WAIT(),
+                false
+            )
+            val retrofit = api.getRetrofitInstance()
+            val apiRequest = retrofit.create(ApiService::class.java)
+            val response = apiRequest.getShetishalaVideos()
+            _shetishalaVideosResponse.value = response
         }
     }
 }

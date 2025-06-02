@@ -79,4 +79,7 @@ interface ApiService {
 
     @GET(APIServices.kGetVideosCategories)
     suspend fun getFarmersVideosJson(): JsonObject
+
+    @GET(APIServices.kGetShetishalaVideos)
+    suspend fun getShetishalaVideos(): JsonObject
 }
