@@ -4,10 +4,14 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -64,6 +68,7 @@ public class MarketPriceAdapter  extends RecyclerView.Adapter<MarketPriceAdapter
         private TextView tvAvgValue;
         private TextView tvMinValue;
         private TextView unitForQuantity;
+        private ImageView marketPriceImageView;
 
         public ViewHolder(@NonNull @NotNull View v) {
             super(v);
@@ -73,6 +78,7 @@ public class MarketPriceAdapter  extends RecyclerView.Adapter<MarketPriceAdapter
             tvAvgValue = v.findViewById(R.id.tvAvgValue);
             tvMinValue = v.findViewById(R.id.tvMinValue);
             unitForQuantity = v.findViewById(R.id.unitForQuantity);
+            marketPriceImageView = v.findViewById(R.id.marketPriceImageView);
         }
 
         public void onBind(JSONObject jsonObject) throws JSONException {
@@ -84,6 +90,10 @@ public class MarketPriceAdapter  extends RecyclerView.Adapter<MarketPriceAdapter
             tvAvgValue.setText(jsonObject.getString("avg_price"));
             tvMinValue.setText(jsonObject.getString("min_price"));
             unitForQuantity.setText(String.format(" %s", jsonObject.getString("unit")));
+            Glide.with(mContext)
+                    .load(R.drawable.marketimage)
+                    .transform(new RoundedCorners(30))
+                    .into(marketPriceImageView);
         }
     }
 
