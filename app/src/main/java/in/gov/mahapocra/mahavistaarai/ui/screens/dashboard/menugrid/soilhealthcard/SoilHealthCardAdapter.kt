@@ -47,22 +47,34 @@ class SoilHealthCardAdapter(private val farmerJsonArray: JSONArray?) :
             val electricalConductivity = npkUnfiltered.getString("ec")
             val organicCarbon = npkUnfiltered.getString("oc")
             val potentialOfHydrogen = npkUnfiltered.getString("ph")
-            mapNPKByColors(nitrogen, phosphorus, potassium, electricalConductivity, organicCarbon, potentialOfHydrogen, holder)
+            mapNPKByColors(
+                nitrogen,
+                phosphorus,
+                potassium,
+                electricalConductivity,
+                organicCarbon,
+                potentialOfHydrogen,
+                holder
+            )
             holder.farmerName.text = farmerObject.optString("farmer_name", "N/A")
             holder.farmSize.text = "${farmerObject.optString("farmsize", "0")} acres"
             holder.shcNo.text = "${farmerObject.optString("shc_no", "N/A")}"
             holder.surveyNo.text = "${farmerObject.optInt("survey_number", 0)}"
             holder.soilHealthReportLinearLayout.setOnClickListener {
-                val intent = Intent(holder.farmerName.context, PdfWebViewActivity::class.java)
-                intent.putExtra(
-                    "pdf_url",
-                    farmerObject.optString(
-                        "url",
-                        "https://s3.object.webwerksvmx.com/ffsauditlogs/gis-data/gis-data/SHC/531379.pdf"
-                    )
-                )
-                intent.putExtra("shcNumber", farmerObject.optString("shc_no", "N/A"))
-                holder.soilHealthReportLinearLayout.context.startActivity(intent)
+                holder.soilHealthReportLinearLayout.context.startActivity(
+                    Intent(
+                        holder.farmerName.context,
+                        PdfWebViewActivity::class.java
+                    ).apply {
+                        putExtra(
+                            "pdf_url",
+                            farmerObject.optString(
+                                "url",
+                                "https://s3.object.webwerksvmx.com/ffsauditlogs/gis-data/gis-data/SHC/531379.pdf"
+                            )
+                        )
+                        putExtra("shcNumber", farmerObject.optString("shc_no", "N/A"))
+                    })
             }
         }
     }

@@ -247,7 +247,6 @@
                 android:paddingEnd="@dimen/_10sdp"
                 android:layout_weight="1"
                 android:textStyle="bold"
-                android:fontFamily="sans-serif-light"
                 android:text="Guest mode" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>

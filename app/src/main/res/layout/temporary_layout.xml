@@ -10,7 +10,7 @@
     <LinearLayout
         android:id="@+id/temperatureLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_100sdp"
+        android:layout_height="@dimen/_110sdp"
         android:layout_margin="@dimen/_5sdp"
         android:background="@drawable/gradient_bg"
         android:orientation="horizontal"
@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:text="Mumbai"
                 android:textColor="@color/white"
-                android:textSize="22sp" />
+                android:textSize="@dimen/_16sdp" />
 
             <TextView
                 android:id="@+id/timestamp_textView"
@@ -205,6 +205,7 @@
                                     android:layout_weight="1"
                                     android:background="@drawable/background_for_chat_request"
                                     android:gravity="center"
+                                    android:textSize="@dimen/_10sdp"
                                     android:paddingVertical="@dimen/_8sdp"
                                     android:text="@string/change" />
 
@@ -214,6 +215,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginEnd="@dimen/_8sdp"
                                     android:layout_weight="1"
+                                    android:textSize="@dimen/_10sdp"
                                     android:background="@drawable/background_for_delete_request"
                                     android:gravity="center"
                                     android:paddingVertical="@dimen/_8sdp"

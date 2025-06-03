@@ -34,6 +34,7 @@
                     android:paddingVertical="@dimen/_5sdp"
                     android:background="@color/card_background_color_figma"
                     android:gravity="center_vertical|end"
+                    android:textSize="@dimen/_10sdp"
                     android:paddingEnd="@dimen/_10sdp"
                     android:text="@string/farmer_name" />
 
@@ -42,6 +43,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
+                    android:textSize="@dimen/_10sdp"
+                    android:paddingStart="@dimen/_5sdp"
                     android:paddingVertical="@dimen/_5sdp"
                     android:gravity="center_vertical"
                     android:text="TextView" />
@@ -61,6 +64,7 @@
                     android:paddingVertical="@dimen/_5sdp"
                     android:background="@color/card_background_color_figma"
                     android:gravity="center_vertical|end"
+                    android:textSize="@dimen/_10sdp"
                     android:paddingEnd="@dimen/_10sdp"
                     android:text="@string/soil_health_card_number" />
 
@@ -69,6 +73,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
+                    android:textSize="@dimen/_10sdp"
+                    android:paddingStart="@dimen/_5sdp"
                     android:paddingVertical="@dimen/_5sdp"
                     android:gravity="center_vertical"
                     android:text="TextView" />
@@ -86,6 +92,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="7"
                     android:paddingVertical="@dimen/_5sdp"
+                    android:textSize="@dimen/_10sdp"
                     android:background="@color/card_background_color_figma"
                     android:gravity="center_vertical|end"
                     android:paddingEnd="@dimen/_10sdp"
@@ -96,6 +103,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
+                    android:textSize="@dimen/_10sdp"
+                    android:paddingStart="@dimen/_5sdp"
                     android:paddingVertical="@dimen/_5sdp"
                     android:gravity="center_vertical"
                     android:text="TextView" />
@@ -112,6 +121,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="7"
                     android:paddingVertical="@dimen/_5sdp"
+                    android:textSize="@dimen/_10sdp"
                     android:background="@color/card_background_color_figma"
                     android:gravity="center_vertical|end"
                     android:paddingEnd="@dimen/_10sdp"
@@ -122,6 +132,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
+                    android:textSize="@dimen/_10sdp"
+                    android:paddingStart="@dimen/_5sdp"
                     android:paddingVertical="@dimen/_5sdp"
                     android:gravity="center_vertical"
                     android:text="TextView" />
@@ -154,6 +166,7 @@
                     android:id="@+id/textView31"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="@dimen/_10sdp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:text="N" />
@@ -171,6 +184,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/_10sdp"
                     android:layout_weight="1"
                     android:text="P" />
 
@@ -187,6 +201,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/_10sdp"
                     android:layout_weight="1"
                     android:text="K" />
 
@@ -203,6 +218,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/_10sdp"
                     android:layout_weight="1"
                     android:text="EC" />
 
@@ -219,6 +235,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/_10sdp"
                     android:layout_weight="1"
                     android:text="OC" />
 
@@ -236,6 +253,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
+                    android:textSize="@dimen/_10sdp"
                     android:text="PH" />
             </LinearLayout>
 

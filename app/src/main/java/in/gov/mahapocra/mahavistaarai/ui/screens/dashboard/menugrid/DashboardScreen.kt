@@ -337,7 +337,12 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
                             binding.appBarMain.dashboardScreen.apply {
                                 addChangeCropTV.setText(R.string.change_Crop)
-                                addChangeCropIV.setImageDrawable(ContextCompat.getDrawable(this@DashboardScreen, R.drawable.ic_swap))
+                                addChangeCropIV.setImageDrawable(
+                                    ContextCompat.getDrawable(
+                                        this@DashboardScreen,
+                                        R.drawable.ic_swap
+                                    )
+                                )
                                 savedCropNameCardView.visibility = View.VISIBLE
                                 savedCropNameTextView.text = savedCropName
                                 yourCropTv.visibility = View.GONE
@@ -378,7 +383,12 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                             yourCropTv.setText(R.string.no_crops_added)
                             addCropCardView.visibility = View.VISIBLE
                             addChangeCropTV.setText(R.string.add_Crop)
-                            addChangeCropIV.setImageDrawable(ContextCompat.getDrawable(this@DashboardScreen, R.drawable.baseline_add_24))
+                            addChangeCropIV.setImageDrawable(
+                                ContextCompat.getDrawable(
+                                    this@DashboardScreen,
+                                    R.drawable.baseline_add_24
+                                )
+                            )
                         }
                     }
                 } else {
@@ -423,12 +433,14 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             try {
                 val jsonObject = JSONObject(response.toString())
                 val talukaArray = jsonObject.optJSONArray("data")
-                val talukaID = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
+                val talukaID =
+                    AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
 
                 for (i in 0 until talukaArray!!.length()) {
                     val talukaItem = talukaArray.getJSONObject(i)
                     if (talukaItem.optInt("code") == talukaID) {
-                        binding.appBarMain.dashboardScreen.weatherTalukaTV.text = talukaItem.optString("name")
+                        binding.appBarMain.dashboardScreen.weatherTalukaTV.text =
+                            talukaItem.optString("name")
                     }
                 }
 
@@ -451,11 +463,15 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 }
 
                 val jsonObject = JSONObject(response.toString())
-                appPreferenceManager.saveString(AppConstants.WEATHER_RESPONSE, jsonObject.toString())
+                appPreferenceManager.saveString(
+                    AppConstants.WEATHER_RESPONSE,
+                    jsonObject.toString()
+                )
 
                 val weatherResponse = ResponseModel(jsonObject)
                 if (weatherResponse.getStatus()) {
-                    binding.appBarMain.dashboardScreen.temperatureTextView.text = getTemperatureFromJSON(jsonObject)
+                    binding.appBarMain.dashboardScreen.temperatureTextView.text =
+                        getTemperatureFromJSON(jsonObject)
                 }
 
             } catch (e: Exception) {
@@ -490,7 +506,11 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         setValue(this@DashboardScreen, AppConstants.uName, name)
                         setValue(this@DashboardScreen, AppConstants.uMobileNo, mobNo)
                         setValue(this@DashboardScreen, AppConstants.uEmail, emailId)
-                        if (ffaReg != -1) setIntValue(this@DashboardScreen, AppConstants.fREGISTER_ID, ffaReg)
+                        if (ffaReg != -1) setIntValue(
+                            this@DashboardScreen,
+                            AppConstants.fREGISTER_ID,
+                            ffaReg
+                        )
                         setValue(this@DashboardScreen, AppConstants.uDIST, distName)
                         setIntValue(this@DashboardScreen, AppConstants.uDISTId, distId)
                         setValue(this@DashboardScreen, AppConstants.uTALUKA, talukaName)
@@ -504,7 +524,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         if (isGuest) "Guest" else name
 
                     val userName = AppSettings.getInstance().getValue(this, AppConstants.uName, "")
-                    val userNumber = AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, "")
+                    val userNumber =
+                        AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, "")
                     val headerView = binding.navView.getHeaderView(0)
                     navUserName = headerView.findViewById(R.id.tv_farmerName)
                     navUserPhone = headerView.findViewById(R.id.tv_famerPhoneNumber)
@@ -693,7 +714,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     AppHelper.getInstance().getMenuOptionMarathi()
                 }
             }
-            val menuAdapter = DrawerMenuAdapter(this, jsonArray, farmerId)
+            val menuAdapter = jsonArray?.let { DrawerMenuAdapter(this, it) }
             binding.menuListView.adapter = menuAdapter
             binding.menuListView.onItemClickListener = this
         } catch (e: Exception) {
