@@ -5,15 +5,26 @@
     android:viewportWidth="360"
     android:viewportHeight="64">
 
+    <!-- This path defines the main blue background shape -->
     <path
         android:fillColor="#FFFFFF"
         android:pathData="
             M0,0
-            H140
-            C130,0 130,40 180,40
-            C230,40 230,0 260,0
+            H130
+            C145,0 150,40 180,40
+            C210,40 215,0 230,0
             H360
             V64
             H0
             Z" />
+
+    <path
+        android:pathData="
+            M0,0
+            H130
+            C145,0 150,40 180,40
+            C210,40 215,0 230,0
+            H360"
+        android:strokeWidth="2"
+        android:strokeColor="@color/actionbar_color_figma" />
 </vector>

@@ -102,6 +102,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         versionName = LocalCustom.getVersionName(this)
         token = FirebaseMessaging.getInstance().token.toString()
+        Log.d("TAGGER", "onCreate: $token")
         sessionManager = SessionManager(this)
         setConfiguration()
         onclick()

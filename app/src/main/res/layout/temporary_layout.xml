@@ -148,7 +148,7 @@
                             android:layout_weight="1"
                             android:paddingStart="@dimen/_10sdp"
                             android:text="@string/no_crops_added"
-                            android:textSize="@dimen/_12sdp"
+                            android:textSize="@dimen/_10sdp"
                             android:visibility="visible" />
 
                         <androidx.cardview.widget.CardView
@@ -316,8 +316,10 @@
         android:paddingHorizontal="10dp"
         android:verticalSpacing="10dp"
         android:layout_marginBottom="@dimen/_4sdp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout13"
-        app:layout_constraintTop_toBottomOf="@+id/AddCrop" />
+        app:layout_constraintBottom_toTopOf="@+id/imageView20"
+        app:layout_constraintTop_toBottomOf="@+id/AddCrop" >
+
+    </GridView>
 
     <LinearLayout
         android:id="@+id/linearLayout13"
@@ -331,5 +333,15 @@
             android:id="@+id/customNavBottom"
             layout="@layout/custom_bottom_nav" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView20"
+        android:layout_width="@dimen/_58sdp"
+        android:layout_height="@dimen/_58sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout13"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout13"
+        app:srcCompat="@drawable/chatbot_mhv_ic" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

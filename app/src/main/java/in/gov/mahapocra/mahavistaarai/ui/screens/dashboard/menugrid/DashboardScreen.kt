@@ -183,7 +183,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             )
         }
 
-        binding.appBarMain.dashboardScreen.customNavBottom.navChat.setOnClickListener {
+        binding.appBarMain.dashboardScreen.imageView20.setOnClickListener {
             if (!isGuest) {
                 startActivity(Intent(this, ChatbotActivity::class.java))
             } else {

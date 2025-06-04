@@ -70,6 +70,7 @@ class ChatbotActivity : AppCompatActivity() {
         binding.tryAgainTextView.setOnClickListener {
             askForLocationAndMicrophonePermission()
             mahavistaarViewModel.requestUrlForChatBot(this)
+            ProgressHelper.showProgressDialog(this)
         }
     }
 
