@@ -2,7 +2,6 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -11,9 +10,9 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityVideosDetailedBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
-import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import org.json.JSONObject
 
 class VideosDetailedActivity : AppCompatActivity() {
@@ -55,7 +54,9 @@ class VideosDetailedActivity : AppCompatActivity() {
         } else {
             binding.toolbar.textViewHeaderTitle.text = getString(R.string.shetishala)
             farmerViewModel.getShetishalaVideos(this)
+            ProgressHelper.showProgressDialog(this)
             farmerViewModel.shetishalaVideosResponse.observe(this) {
+                ProgressHelper.disableProgressDialog()
                 if (it != null) {
                     val jsonObject = JSONObject(it.toString())
                     val videosJsonArray = jsonObject.optJSONArray("data")
@@ -67,6 +68,10 @@ class VideosDetailedActivity : AppCompatActivity() {
                         )
                     }
                 }
+            }
+
+            farmerViewModel.error.observe(this) {
+                ProgressHelper.disableProgressDialog()
             }
         }
     }
