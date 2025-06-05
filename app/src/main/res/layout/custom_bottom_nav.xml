@@ -22,6 +22,7 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
+            app:tint="@color/actionbar_color_figma"
             android:src="@drawable/home_ic" />
 
         <TextView

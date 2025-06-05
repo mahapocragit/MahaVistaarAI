@@ -17,6 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
@@ -27,12 +28,12 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
+import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLoginScreenTempBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
-import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.isStrongPassword
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.showCaptchaDialog
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.OtpRateLimiter
@@ -72,6 +73,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         switchLanguage(this, languageToLoad)
         binding = ActivityLoginScreenTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        FirebaseHelper(this)
         farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         binding.changeLanguageImageView.setOnClickListener {
             openChangeLangPopup()
@@ -79,7 +81,16 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
         AppSettings.getInstance().clearIntValue(this, AppConstants.fREGISTER_ID)
         AppSettings.getInstance().setBooleanValue(this, AppConstants.IS_USER_GUEST, false)
-        onClick()
+        authenticationOperations()
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result
+                Log.d("FCM Token", token) // Copy this exact token
+            } else {
+                Log.e("FCM Token", "Fetching token failed", task.exception)
+            }
+        }
     }
 
     private fun openChangeLangPopup() {
@@ -112,24 +123,33 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         dialog.show()
     }
 
-    private fun onClick() {
+    private fun authenticationOperations() {
         binding.signInButton.setOnClickListener {
-            //0-Password 1-OTP
             AppSettings.getInstance().setBooleanValue(this, AppConstants.IS_USER_GUEST, false)
-            if (loginOption == PASSWORD_VERIFY) {
-                userValidateAndLogin()
-            } else {
-                sendOTP()
+            showCaptchaDialog(this) {
+                if (it) {
+                    if (loginOption == PASSWORD_VERIFY) {
+                        userValidateAndLogin()
+                    } else {
+                        sendOTP()
+                    }
+                } else {
+                    UIToastMessage.show(this, "CAPTCHA verification Failed!!")
+                }
             }
+
         }
+
         binding.forgotPassword.setOnClickListener {
             val intent2 = Intent(applicationContext, ForgetPassword::class.java)
             startActivity(intent2)
         }
+
         binding.registerTextView.setOnClickListener {
             val intent2 = Intent(applicationContext, Registration::class.java)
             startActivity(intent2)
         }
+
         binding.passwordEditText.setOnClickListener {
             if (binding.passwordEditText.text.toString().length < 8) {
                 Toast.makeText(
@@ -139,6 +159,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 ).show()
             }
         }
+
         binding.guestModeCardView.setOnClickListener {
             showCaptchaDialog(this) { verified ->
                 if (verified) {
@@ -177,37 +198,32 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             val timeLeftMillis = OtpRateLimiter.getBlockedTimeLeft(mobile)
             val minutesLeft = (timeLeftMillis / 60000).toInt()
             val secondsLeft = ((timeLeftMillis % 60000) / 1000).toInt()
-            UIToastMessage.show(this, "OTP limit reached. Try again in ${minutesLeft}m ${secondsLeft}s.")
+            UIToastMessage.show(
+                this,
+                "OTP limit reached. Try again in ${minutesLeft}m ${secondsLeft}s."
+            )
             return
         }
 
-        // Proceed with CAPTCHA verification
-        showCaptchaDialog(this) { verified ->
-            if (verified) {
-                // CAPTCHA was successfully verified
-                val jsonObject = JSONObject()
-                try {
-                    jsonObject.put("MobileNo", mobile.trim { it <= ' ' })
-                    jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+        val jsonObject = JSONObject()
+        try {
+            jsonObject.put("MobileNo", mobile.trim { it <= ' ' })
+            jsonObject.put("SecurityKey", APIServices.SSO_KEY)
 
-                    val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                    val api = AppInventorApi(
-                        this,
-                        AppEnvironment.FARMER.baseUrl,
-                        "",
-                        AppString(this).getkMSG_WAIT(),
-                        true
-                    )
-                    val retrofit: Retrofit = api.getRetrofitInstance()
-                    val apiRequest = retrofit.create(APIRequest::class.java)
-                    val responseCall: Call<JsonObject> = apiRequest.getOTPRequest(requestBody)
-                    api.postRequest(responseCall, this, 1)
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
-            } else {
-                UIToastMessage.show(this, "CAPTCHA verification Failed!!")
-            }
+            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+            val api = AppInventorApi(
+                this,
+                AppEnvironment.FARMER.baseUrl,
+                "",
+                AppString(this).getkMSG_WAIT(),
+                true
+            )
+            val retrofit: Retrofit = api.getRetrofitInstance()
+            val apiRequest = retrofit.create(APIRequest::class.java)
+            val responseCall: Call<JsonObject> = apiRequest.getOTPRequest(requestBody)
+            api.postRequest(responseCall, this, 1)
+        } catch (e: JSONException) {
+            e.printStackTrace()
         }
     }
 
@@ -227,42 +243,34 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             binding.userIdEditText.error = resources.getString(R.string.lgn_register_phone_error)
             binding.userIdEditText.requestFocus()
         } else {
-            showCaptchaDialog(this) { verified ->
-                if (verified) {
-                    // CAPTCHA was successfully verified
-                    val jsonObject = JSONObject()
-                    try {
-                        jsonObject.put("SecurityKey", APIServices.SSO_KEY)
-                        jsonObject.put("MobileNo", mobileNo.trim { it <= ' ' })
-                        if (otp.isNotEmpty()) {
-                            jsonObject.put("otp", otp)
-                        } else {
-                            jsonObject.put("Password", userPass)
-                        }
-
-                        val requestBody =
-                            AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                        val api =
-                            AppInventorApi(
-                                this,
-                                AppEnvironment.FARMER.baseUrl,
-                                "",
-                                AppString(this).getkMSG_WAIT(),
-                                true
-                            )
-                        val retrofit: Retrofit = api.getRetrofitInstance()
-                        val apiRequest = retrofit.create(APIRequest::class.java)
-                        val responseCall: Call<JsonObject> =
-                            apiRequest.getRefreshTokenLogin(requestBody)
-                        api.postRequest(responseCall, this, 4)
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                    }
-                    // Do something here
+            // CAPTCHA was successfully verified
+            val jsonObject = JSONObject()
+            try {
+                jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+                jsonObject.put("MobileNo", mobileNo.trim { it <= ' ' })
+                if (otp.isNotEmpty()) {
+                    jsonObject.put("otp", otp)
                 } else {
-                    // CAPTCHA failed or dialog canceled
-                    UIToastMessage.show(this, "CAPTCHA verification Failed!!")
+                    jsonObject.put("Password", userPass)
                 }
+
+                val requestBody =
+                    AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api =
+                    AppInventorApi(
+                        this,
+                        AppEnvironment.FARMER.baseUrl,
+                        "",
+                        AppString(this).getkMSG_WAIT(),
+                        true
+                    )
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(APIRequest::class.java)
+                val responseCall: Call<JsonObject> =
+                    apiRequest.getRefreshTokenLogin(requestBody)
+                api.postRequest(responseCall, this, 4)
+            } catch (e: JSONException) {
+                e.printStackTrace()
             }
         }
     }

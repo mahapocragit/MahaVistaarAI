@@ -92,19 +92,6 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         }
         binding.sowingInfoLayout.textView7.text = getString(R.string.sowing_date)
 
-
-//        binding.sowingInfoLayout.infoIconTextView.visibility = View.VISIBLE
-//        binding.sowingInfoLayout.infoIconTextView.setOnClickListener {
-//            val dialog = AlertDialog.Builder(this)
-//                .setTitle(R.string.sowing_date_alert_title)
-//                .setMessage(R.string.sowing_date_alert)
-//                .setPositiveButton("OK") { dialogInterface, _ ->
-//                    dialogInterface.dismiss()
-//                }
-//                .create()
-//            dialog.show()
-//        }
-
         //fetching values
         cropId = intent.getIntExtra("id", 0)
         cropName = intent.getStringExtra("mName")

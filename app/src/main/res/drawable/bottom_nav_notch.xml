@@ -20,10 +20,10 @@
 
     <path
         android:pathData="
-            M0,0
+            M0,1
             H130
             C145,0 150,40 180,40
-            C210,40 215,0 230,0
+            C210,40 215,0 230,1
             H360"
         android:strokeWidth="2"
         android:strokeColor="@color/actionbar_color_figma" />
