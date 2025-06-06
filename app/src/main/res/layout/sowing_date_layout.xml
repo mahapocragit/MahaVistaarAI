@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_60sdp"
         android:layout_margin="@dimen/_10sdp"
-        android:backgroundTint="@color/card_background_color_figma_dash"
+        android:backgroundTint="@color/card_background_color_figma"
         app:cardCornerRadius="@dimen/_15sdp">
 
         <LinearLayout
@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/_10sdp"
-                android:layout_weight="1"
+                android:layout_weight="6"
                 android:orientation="vertical">
 
                 <TextView
@@ -73,7 +73,7 @@
                 android:layout_height="@dimen/_40sdp"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/_10sdp"
-                android:layout_weight="1"
+                android:layout_weight="4"
                 app:cardCornerRadius="@dimen/_25sdp">
 
                 <LinearLayout
@@ -108,6 +108,7 @@
                         android:layout_marginStart="@dimen/_6sdp"
                         android:text="Cotton"
                         android:layout_weight="1"
+                        android:textSize="@dimen/_10sdp"
                         android:textColor="@color/font_color_figma"
                         android:textStyle="bold" />
 
