@@ -43,7 +43,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 
-class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCallbackCode,
+class MarketPrice : AppCompatActivity(), ApiCallbackCode,
     AlertListEventListener, ApiJSONObjCallback {
 
     private lateinit var marketPriceAdapter: MarketPriceAdapter
@@ -460,10 +460,6 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
                 Toast.makeText(this, "Data Not Found", Toast.LENGTH_LONG).show()
             }
         }
-    }
-
-    override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
-        TODO("Not yet implemented")
     }
 
     override fun attachBaseContext(newBase: Context) {

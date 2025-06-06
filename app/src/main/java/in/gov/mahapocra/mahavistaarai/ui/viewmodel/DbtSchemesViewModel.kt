@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.gov.mahapocra.mahavistaarai.data.ApiService
@@ -43,6 +44,7 @@ class DbtSchemesViewModel : ViewModel(){
 
             } catch (e: Exception) {
                 _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -66,6 +68,7 @@ class DbtSchemesViewModel : ViewModel(){
 
             } catch (e: Exception) {
                 _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }

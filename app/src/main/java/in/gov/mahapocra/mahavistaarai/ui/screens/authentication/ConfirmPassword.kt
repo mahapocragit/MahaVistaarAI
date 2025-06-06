@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
@@ -109,11 +110,17 @@ class ConfirmPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode
 
 
     override fun onFailure(th: Throwable?, i: Int) {
-        TODO("Not yet implemented")
+        th?.let {
+            Log.e("YourTag", "Request failed: ${it.localizedMessage}", it)
+            FirebaseCrashlytics.getInstance().recordException(it)
+        } ?: Log.e("YourTag", "Request failed with null Throwable, code: $i")
     }
 
     override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        TODO("Not yet implemented")
+        th?.let {
+            Log.e("YourTag", "Request failed: ${it.localizedMessage}", it)
+            FirebaseCrashlytics.getInstance().recordException(it)
+        } ?: Log.e("YourTag", "Request failed with null Throwable, code: $i")
     }
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {

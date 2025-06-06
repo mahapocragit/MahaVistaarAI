@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
@@ -108,6 +109,7 @@ class FarmerViewModel : ViewModel() {
 
             } catch (e: Exception) {
                 _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -139,12 +141,14 @@ class FarmerViewModel : ViewModel() {
                     }
                     _getFarmerSelectedCrop.value = response
                 } catch (e: Exception) {
-                    _error.value = "Error: ${e.localizedMessage}"
+                    _error.value = e.localizedMessage ?: "Unknown error"
+                    FirebaseCrashlytics.getInstance().recordException(e)
                 }
 
             } catch (e: JSONException) {
                 e.printStackTrace()
-                _error.value = "JSON Error: ${e.localizedMessage}"
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -178,7 +182,8 @@ class FarmerViewModel : ViewModel() {
                     response // or create a separate LiveData if needed
 
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Unknown error occurred"
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -210,7 +215,8 @@ class FarmerViewModel : ViewModel() {
 
             } catch (e: Exception) {
                 // Handle error case
-                _error.value = e.localizedMessage ?: "Unknown error occurred"
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -244,7 +250,8 @@ class FarmerViewModel : ViewModel() {
                 _talukaList.value = response // <- your LiveData for the UI
 
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Something went wrong"
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -276,7 +283,8 @@ class FarmerViewModel : ViewModel() {
                 _weatherResponse.value = response
 
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Weather fetch failed"
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -310,7 +318,8 @@ class FarmerViewModel : ViewModel() {
                 _userDetailsResponse.value = response
 
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Failed to fetch user details"
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -331,7 +340,8 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.getFarmersVideosJson()
                 _videosResponse.value = response
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Failed to fetch videos"
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -362,7 +372,8 @@ class FarmerViewModel : ViewModel() {
                 _sopResponse.value = response
 
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Failed to fetch user details"
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -389,7 +400,8 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.getCHCInformation(requestBody)
                 _chcCentersResponse.value = response
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Failed to fetch user details"
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -415,7 +427,8 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.getCodeFromCoordinates(requestBody)
                 _fetchLocationDataFromCoordinates.value = response
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Failed to fetch user details"
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -443,6 +456,7 @@ class FarmerViewModel : ViewModel() {
                 _responseMarkerList.value = response
             } catch (e: Exception) {
                 _error.value = e.localizedMessage ?: "Failed to fetch user details"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -470,6 +484,7 @@ class FarmerViewModel : ViewModel() {
                 _compareOtpResponse.value = response
             } catch (e: JSONException) {
                 _error.value = e.localizedMessage ?: "Failed to fetch user details"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -497,6 +512,7 @@ class FarmerViewModel : ViewModel() {
                 _compareOtpResponseReg.value = response
             } catch (e: JSONException) {
                 _error.value = e.localizedMessage ?: "Failed to fetch user details"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -517,6 +533,7 @@ class FarmerViewModel : ViewModel() {
                 _shetishalaVideosResponse.value = response
             } catch (e: JSONException) {
                 _error.value = e.localizedMessage ?: "Failed to fetch user details"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
