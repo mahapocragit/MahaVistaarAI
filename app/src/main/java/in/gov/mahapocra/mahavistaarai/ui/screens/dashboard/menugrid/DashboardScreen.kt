@@ -296,13 +296,13 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
                     UIToastMessage.show(
                         this@DashboardScreen,
-                        "Access Permission granted for $permission"
+                        "Access Permission Granted"
                     )
                     // Perform the related action (e.g., accessing the camera) if needed
                 } else {
                     UIToastMessage.show(
                         this@DashboardScreen,
-                        "Access Permission denied for $permission"
+                        "Access Permission Denied"
                     )
                     // Optionally handle specific denied permission cases here
                 }

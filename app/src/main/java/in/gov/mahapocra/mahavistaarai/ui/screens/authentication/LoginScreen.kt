@@ -429,21 +429,22 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 receiveOTPEditText.requestFocus()
             } else {
                 farmerViewModel.compareOtp(this, mobile, enteredOTP)
-            }
-            farmerViewModel.compareOtpResponse.observe(this) {
-                if (it != null) {
-                    val jSONObject = JSONObject(it.toString())
-                    if (jSONObject.optInt("status") == 200) {
-                        mobileNo = binding.userIdEditText.text.toString()
-                        callRefreshTokenAPI(mobileNo, userPass, enteredOTP)
-                        dialog.dismiss()
-                    } else {
-                        UIToastMessage.show(this, getString(R.string.wrong_OTP))
+                farmerViewModel.compareOtpResponse.observe(this) {
+                    if (it != null) {
+                        val jSONObject = JSONObject(it.toString())
+                        if (jSONObject.optInt("status") == 200) {
+                            mobileNo = binding.userIdEditText.text.toString()
+                            callRefreshTokenAPI(mobileNo, userPass, enteredOTP)
+                            dialog.dismiss()
+                        } else {
+                            UIToastMessage.show(this, getString(R.string.wrong_OTP))
+                            dialog.dismiss()
+                        }
                         dialog.dismiss()
                     }
-                    dialog.dismiss()
                 }
             }
+
         }
 
         resendOTP.setOnClickListener {

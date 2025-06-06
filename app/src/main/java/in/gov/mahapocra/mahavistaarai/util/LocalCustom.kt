@@ -54,10 +54,12 @@ object LocalCustom {
                 config.setLocale(locale)
                 return baseContext.createConfigurationContext(config)
             }
+
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 -> {
                 config.setLocale(locale)
                 return baseContext.createConfigurationContext(config)
             }
+
             else -> {
                 // Deprecated, but fallback for older devices
                 config.locale = locale
@@ -128,9 +130,14 @@ object LocalCustom {
                     val adjustedYear = if (month in 6..12) currentYear else currentYear - 1
 
                     // Changed format to DD-MM-YYYY
-                    formattedDate = String.format(Locale.US, "%02d-%02d-%04d", day, month, adjustedYear)
+                    formattedDate =
+                        String.format(Locale.US, "%02d-%02d-%04d", day, month, adjustedYear)
                 } catch (e: Exception) {
-                    Log.e("TAGGER", "Invalid number format in sowing date: $sowingDateUnfiltered", e)
+                    Log.e(
+                        "TAGGER",
+                        "Invalid number format in sowing date: $sowingDateUnfiltered",
+                        e
+                    )
                     formattedDate = ""
                 }
             } else {
@@ -156,9 +163,14 @@ object LocalCustom {
                     val day = parts[0].toInt()
                     val month = parts[1].toInt()
                     val adjustedYear = if (month > currentMonth) currentYear - 1 else currentYear
-                    formattedDate = String.format(Locale.US, "%02d-%02d-%04d", day, month, adjustedYear)
+                    formattedDate =
+                        String.format(Locale.US, "%02d-%02d-%04d", day, month, adjustedYear)
                 } catch (e: Exception) {
-                    Log.e("TAGGER", "Invalid number format in sowing date: $sowingDateUnfiltered", e)
+                    Log.e(
+                        "TAGGER",
+                        "Invalid number format in sowing date: $sowingDateUnfiltered",
+                        e
+                    )
                     formattedDate = ""
                 }
             } else {
@@ -172,7 +184,7 @@ object LocalCustom {
     }
 
 
-    fun logThis(message:String){
+    fun logThis(message: String) {
         Log.d("TAGGER", "logThis: $message")
     }
 
@@ -249,7 +261,8 @@ object LocalCustom {
         val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_captcha, null)
         val imageView = dialogView.findViewById<ImageView>(R.id.captchaImage)
         val inputField = dialogView.findViewById<EditText>(R.id.captchaInput)
-        val regenerateCaptchaTextView = dialogView.findViewById<TextView>(R.id.regenerateCaptchaTextView)
+        val regenerateCaptchaTextView =
+            dialogView.findViewById<TextView>(R.id.regenerateCaptchaTextView)
 
         imageView.setImageBitmap(captcha.bitmap)
         regenerateCaptchaTextView.setOnClickListener {
@@ -262,7 +275,7 @@ object LocalCustom {
             .setView(dialogView)
             .setPositiveButton("Submit", null)  // Override later
             .setNegativeButton("Cancel") { _, _ ->
-                onResult(false)  // User canceled, so false
+                onResult(false)
             }
             .create()
 
@@ -272,19 +285,26 @@ object LocalCustom {
                 val userInput = inputField.text.toString().trim().uppercase()
                 val captchaCode = captcha.code.uppercase()
 
-                if (userInput.isEmpty()) {
-                    inputField.error = "Please enter the CAPTCHA"
-                    return@setOnClickListener
-                }
+                when {
+                    userInput.isEmpty() -> {
+                        inputField.error = "Please enter the CAPTCHA"
+                    }
 
-                if (userInput == captchaCode) {
-                    Toast.makeText(context, "CAPTCHA Verified ✅", Toast.LENGTH_SHORT).show()
-                    onResult(true)  // Notify success
-                    dialog.dismiss()
-                } else {
-                    Toast.makeText(context, "Incorrect CAPTCHA ❌", Toast.LENGTH_SHORT).show()
-                    inputField.text?.clear()
-                    inputField.requestFocus()
+                    userInput.length != 6 -> {
+                        inputField.error = "CAPTCHA must be exactly 6 characters"
+                    }
+
+                    userInput == captchaCode -> {
+                        Toast.makeText(context, "CAPTCHA Verified ✅", Toast.LENGTH_SHORT).show()
+                        onResult(true)
+                        dialog.dismiss()
+                    }
+
+                    else -> {
+                        Toast.makeText(context, "Incorrect CAPTCHA ❌", Toast.LENGTH_SHORT).show()
+                        inputField.text?.clear()
+                        inputField.requestFocus()
+                    }
                 }
             }
         }
