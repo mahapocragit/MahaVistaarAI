@@ -107,8 +107,7 @@
             android:id="@+id/icon_search"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            app:tint="@color/bottom_icon_tint"
-            android:src="@drawable/dbt_icon" />
+            android:src="@drawable/dbt_ic" />
 
         <TextView
             android:id="@+id/label_search"

@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_60sdp"
         android:layout_margin="@dimen/_10sdp"
-        android:backgroundTint="@color/card_background_color_figma"
+        android:backgroundTint="@color/card_background_color_figma_dash"
         app:cardCornerRadius="@dimen/_15sdp">
 
         <LinearLayout
