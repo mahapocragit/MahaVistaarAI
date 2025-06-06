@@ -3,6 +3,8 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
+import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
@@ -14,8 +16,12 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.SettingsClient
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
@@ -75,19 +81,18 @@ class CHCenterActivity : AppCompatActivity() {
             tempStrArr.add("Hello $i")
         }
         fetchDataForCHC()
-        setupMapView()
         toggleView(true)
         binding.listViewToggleButton.setOnClickListener { toggleView(true) }
         binding.mapViewToggleButton.setOnClickListener { toggleView(false) }
+        setupMapView(locationLat, locationLong)
     }
 
     private fun checkLocationPermissions() {
         if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
+                this, Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
@@ -96,9 +101,43 @@ class CHCenterActivity : AppCompatActivity() {
                 LOCATION_PERMISSION_REQUEST
             )
             return
-        }else{
+        } else {
+            checkGPSEnabledAndFetchLocation()
+        }
+    }
+
+    private fun checkGPSEnabledAndFetchLocation() {
+        val locationRequest = LocationRequest.create()
+            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+        val builder = LocationSettingsRequest.Builder()
+            .addLocationRequest(locationRequest)
+        val client: SettingsClient = LocationServices.getSettingsClient(this)
+        val task = client.checkLocationSettings(builder.build())
+
+        task.addOnSuccessListener {
+            // GPS is enabled
             fetchLocation()
-            farmerViewModel.fetchDataForCHC(this, locationLat, locationLong)
+        }.addOnFailureListener { exception ->
+            if (exception is ResolvableApiException) {
+                try {
+                    exception.startResolutionForResult(this, 101)
+                } catch (sendEx: IntentSender.SendIntentException) {
+                    Toast.makeText(this, "Failed to open GPS settings", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, "GPS is not enabled", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 101) {
+            if (resultCode == RESULT_OK) {
+                fetchLocation()
+            } else {
+                Toast.makeText(this, "GPS not enabled", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -197,14 +236,17 @@ class CHCenterActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupMapView() {
+    private fun setupMapView(latitude: Double, longitude: Double) {
+        // Clear existing overlays to prevent duplicate markers
+        binding.mapView.overlays.clear()
+
         // Initialize MapView
         binding.mapView.setTileSource(TileSourceFactory.MAPNIK)
         binding.mapView.setMultiTouchControls(true)
 
         // Set map center and zoom level
         val mapController = binding.mapView.controller
-        val startPoint = GeoPoint(locationLat, locationLong) // Mumbai, India
+        val startPoint = GeoPoint(latitude, longitude)
         mapController.setZoom(12.0)
         mapController.setCenter(startPoint)
 
@@ -215,18 +257,28 @@ class CHCenterActivity : AppCompatActivity() {
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
         marker.title = "Current Location"
         binding.mapView.overlays.add(marker)
+
+        binding.mapView.invalidate()
     }
 
     @SuppressLint("MissingPermission")
     private fun fetchLocation() {
+        ProgressHelper.showProgressDialog(this) // Optional: move here if tied to fetch
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             if (location != null) {
                 locationLat = location.latitude
                 locationLong = location.longitude
-                Toast.makeText(this, "Location Updated!!\nLatitude: $locationLat, Longitude: $locationLong", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Location Updated!!", Toast.LENGTH_LONG).show()
+                setupMapView(locationLat, locationLong)
             } else {
-                Toast.makeText(this, "Unable to get location", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Unable to Fetch Location!!", Toast.LENGTH_SHORT).show()
             }
+
+            // Either way, attempt to fetch data (you can decide to block this if location is null)
+            farmerViewModel.fetchDataForCHC(this, locationLat, locationLong)
+        }.addOnFailureListener {
+            ProgressHelper.disableProgressDialog()
+            Toast.makeText(this, "Failed to get location", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -237,7 +289,6 @@ class CHCenterActivity : AppCompatActivity() {
         if (requestCode == LOCATION_PERMISSION_REQUEST && grantResults.isNotEmpty() &&
             grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             fetchLocation()
-            farmerViewModel.fetchDataForCHC(this, locationLat, locationLong)
         } else {
             Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show()
         }
