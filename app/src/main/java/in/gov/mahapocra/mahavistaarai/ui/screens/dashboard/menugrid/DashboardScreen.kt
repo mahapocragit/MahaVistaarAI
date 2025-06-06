@@ -250,7 +250,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             startActivity(
                 Intent(
                     this@DashboardScreen,
-                    VideosDetailedActivity::class.java
+                    DBTActivity::class.java
                 )
             )
         }
@@ -662,14 +662,20 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     }
 
                     7 -> {
+                        startActivity(
+                            Intent(
+                                this@DashboardScreen,
+                                VideosDetailedActivity::class.java
+                            )
+                        )
+                    }
+
+                    8 -> {
                         val warehouseIntent = Intent(this@DashboardScreen, Warehouse::class.java)
                         startActivity(warehouseIntent)
                     }
 
-                    8 -> {
-                        val dbtIntent = Intent(this@DashboardScreen, DBTActivity::class.java)
-                        startActivity(dbtIntent)
-                    }
+
                 }
             }
     }
@@ -883,8 +889,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             "Climate Resilent Technology",
             "Pest and Diseases",
             "Market Price",
-            "Warehouse Availabilities",
-            "DBT Schemes"
+            "Digital Shetishala",
+            "Warehouse Availabilities"
         )
 
         private val arrayCategoryMarathi = arrayOf(
@@ -895,8 +901,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             "बदलत्या हवामानास अनुकूल शेती पद्धती",
             "कीड व रोग",
             "बाजारभाव",
-            "गोदाम उपलब्धता",
-            "थेट लाभ हस्तांतरण योजना"
+            "डिजिटल शेतीशाळा",
+            "गोदाम उपलब्धता"
         )
 
         var arrayCategoryImg: IntArray = intArrayOf(
@@ -907,8 +913,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             R.drawable.climate_ic,
             R.drawable.ladybug,
             R.drawable.market_ic,
-            R.drawable.warehouse,
-            R.drawable.ic_dbt
+            R.drawable.farmschool_ic,
+            R.drawable.warehouse
         )
 
         val formattedTimestamp: String

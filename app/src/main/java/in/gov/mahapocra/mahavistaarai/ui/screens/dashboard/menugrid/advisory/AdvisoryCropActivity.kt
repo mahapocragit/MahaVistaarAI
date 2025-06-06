@@ -72,12 +72,6 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         setContentView(binding.root)
         viewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
 
-
-        binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
-        binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {
-            startActivity(Intent(this, DashboardScreen::class.java))
-        }
-
         binding.completedLabelTextView.text = getString(R.string.crop_stage_completed)
         binding.currentLabelTextView.text = getString(R.string.crop_stage_current)
         binding.pendingLabelTextView.text = getString(R.string.crop_stage_pending)

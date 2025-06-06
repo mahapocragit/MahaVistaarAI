@@ -450,5 +450,6 @@
     <string name="password_validation">* Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.</string>
     <string name="search_by_crop_name">Search for crops</string>
     <string name="search_commodity">Search Crop</string>
-    <string name="shetishala">Shetishala</string>
+    <string name="shetishala">Digital Shetishala</string>
+    <string name="dbt">DBT</string>
 </resources>

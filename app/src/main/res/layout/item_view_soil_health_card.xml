@@ -263,8 +263,9 @@
     <LinearLayout
         android:id="@+id/soilHealthReportLinearLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/_24sdp"
         android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:layout_marginHorizontal="@dimen/_10sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -273,17 +274,18 @@
         <TextView
             android:id="@+id/textView26"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_20sdp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
+            android:paddingTop="@dimen/_3sdp"
+            android:gravity="center_vertical|end"
             android:textSize="@dimen/_12sdp"
-            android:gravity="end|center"
             android:text="@string/viewsoilhealthreport"
             android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/imageView31"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_20sdp"
+            android:layout_height="match_parent"
             android:layout_weight="9"
             android:src="@drawable/baseline_arrow_right_24" />
     </LinearLayout>

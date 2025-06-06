@@ -64,7 +64,7 @@ class VideosDetailedActivity : AppCompatActivity() {
                     binding.videosRecyclerView.hasFixedSize()
                     binding.videosRecyclerView.adapter = videosJsonArray?.let { video ->
                         ShetishalaVideosAdapter(
-                            video
+                            video, languageToLoad
                         )
                     }
                 }

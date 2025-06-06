@@ -11,11 +11,11 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ItemVideosBinding
 import org.json.JSONArray
 import org.json.JSONObject
 
-class ShetishalaVideosAdapter(private val categoryArray:JSONArray) : RecyclerView.Adapter<ShetishalaVideosAdapter.ViewHolder>() {
+class ShetishalaVideosAdapter(private val categoryArray:JSONArray, val languageToLoad: String) : RecyclerView.Adapter<ShetishalaVideosAdapter.ViewHolder>() {
     class ViewHolder(val binding: ItemVideosBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(jsonObject: JSONObject) {
-            val activityName = jsonObject.optString("crop_name")
+        fun bind(jsonObject: JSONObject, languageToLoad: String) {
+            val activityName = if (languageToLoad == "en")jsonObject.optString("crop_name") else jsonObject.optString("crop_name_mr")
             binding.textView21.text = activityName
             binding.cardTrendingView.setOnClickListener {
                 val videoUrl = jsonObject.optString("link")
@@ -44,6 +44,6 @@ class ShetishalaVideosAdapter(private val categoryArray:JSONArray) : RecyclerVie
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val farmerObject = categoryArray.getJSONObject(position)
-        holder.bind(farmerObject)
+        holder.bind(farmerObject, languageToLoad)
     }
 }

@@ -1,6 +1,7 @@
 package in.gov.mahapocra.mahavistaarai.ui.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,7 @@ import org.json.JSONObject;
 
 import in.gov.mahapocra.mahavistaarai.R;
 
-public class MarketPriceAdapter  extends RecyclerView.Adapter<MarketPriceAdapter.ViewHolder> {
+public class MarketPriceAdapter extends RecyclerView.Adapter<MarketPriceAdapter.ViewHolder> {
 
     private Context mContext;
     private JSONArray mOriginalArray;
@@ -84,16 +85,24 @@ public class MarketPriceAdapter  extends RecyclerView.Adapter<MarketPriceAdapter
         public void onBind(JSONObject jsonObject) throws JSONException {
             String commCropName = jsonObject.getString("comm_name");
             String variableCropName = jsonObject.getString("variety_name");
-            tv_crop_name.setText(commCropName+" ("+variableCropName+")");
+            tv_crop_name.setText(commCropName + " (" + variableCropName + ")");
             tv_crop_date.setText(jsonObject.getString("date"));
             tvMaxValue.setText(jsonObject.getString("max_price"));
             tvAvgValue.setText(jsonObject.getString("avg_price"));
             tvMinValue.setText(jsonObject.getString("min_price"));
             unitForQuantity.setText(String.format(" %s", jsonObject.getString("unit")));
-            Glide.with(mContext)
-                    .load(R.drawable.marketimage)
-                    .transform(new RoundedCorners(30))
-                    .into(marketPriceImageView);
+            String imageUrl = jsonObject.getString("img_url");
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                Glide.with(mContext)
+                        .load(imageUrl)
+                        .transform(new RoundedCorners(30))
+                        .into(marketPriceImageView);
+            } else {
+                Glide.with(mContext)
+                        .load(R.drawable.marketimage)
+                        .transform(new RoundedCorners(30))
+                        .into(marketPriceImageView);
+            }
         }
     }
 

@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/home_bottom"
-            android:textColor="@color/black"
+            android:textColor="@color/actionbar_color_figma"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -108,7 +108,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             app:tint="@color/bottom_icon_tint"
-            android:src="@drawable/ic_growth" />
+            android:src="@drawable/dbt_icon" />
 
         <TextView
             android:id="@+id/label_search"
@@ -117,7 +117,7 @@
             android:gravity="center"
             android:textColor="@color/black"
             android:textSize="12sp"
-            android:text="@string/shetishala" />
+            android:text="@string/dbt" />
     </LinearLayout>
 
 </LinearLayout>

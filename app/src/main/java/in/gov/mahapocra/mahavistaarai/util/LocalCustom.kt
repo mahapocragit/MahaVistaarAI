@@ -115,7 +115,6 @@ object LocalCustom {
     fun getSowingDateWithYear(sowingDateUnfiltered: String): String {
         val calendar = Calendar.getInstance()
         val currentYear = calendar.get(Calendar.YEAR)
-        val currentMonth = calendar.get(Calendar.MONTH) + 1 // Calendar.MONTH is 0-based
         var formattedDate = ""
 
         if (sowingDateUnfiltered.contains("/")) {
@@ -124,8 +123,12 @@ object LocalCustom {
                 try {
                     val day = parts[0].toInt()
                     val month = parts[1].toInt()
-                    val adjustedYear = if (month > currentMonth) currentYear - 1 else currentYear
-                    formattedDate = String.format(Locale.US, "%04d-%02d-%02d", adjustedYear, month, day)
+
+                    // Agri year: June to May
+                    val adjustedYear = if (month in 6..12) currentYear else currentYear - 1
+
+                    // Changed format to DD-MM-YYYY
+                    formattedDate = String.format(Locale.US, "%02d-%02d-%04d", day, month, adjustedYear)
                 } catch (e: Exception) {
                     Log.e("TAGGER", "Invalid number format in sowing date: $sowingDateUnfiltered", e)
                     formattedDate = ""

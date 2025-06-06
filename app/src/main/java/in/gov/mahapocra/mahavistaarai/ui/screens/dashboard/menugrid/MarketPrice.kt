@@ -74,7 +74,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
         setContentView(binding.root)
 
         farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
-        binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
+        binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.marketprice)
         binding.tvSourceInformation.text = getString(R.string.source_info_market)
         binding.textViewMarket.text = getString(R.string.farmer_select_market)
@@ -110,7 +110,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
     }
 
     private fun onClick() {
-        binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {
+        binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
             val intent = Intent(this, DashboardScreen::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

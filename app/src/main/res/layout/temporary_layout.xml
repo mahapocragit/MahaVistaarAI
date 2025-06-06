@@ -342,6 +342,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/linearLayout13"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/linearLayout13"
-        app:srcCompat="@drawable/chatbot_mhv_ic" />
+        app:srcCompat="@drawable/chatbot_ic_mh" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
