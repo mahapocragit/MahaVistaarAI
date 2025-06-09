@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala
 
 import android.content.ActivityNotFoundException
 import android.content.Intent

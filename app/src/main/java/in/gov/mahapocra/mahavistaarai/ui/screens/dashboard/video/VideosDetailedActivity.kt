@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityVideosDetailedBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaVideosAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
@@ -34,6 +35,7 @@ class VideosDetailedActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
+        binding.toolbar.textViewHeaderTitle.text = getString(R.string.videos_bottom)
         binding.toolbar.imgBackArrow.visibility = View.VISIBLE
         binding.toolbar.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
@@ -41,7 +43,6 @@ class VideosDetailedActivity : AppCompatActivity() {
 
         val videosJsonObject = intent.getStringExtra("videosJsonObject")
         if (videosJsonObject != null) {
-            binding.toolbar.textViewHeaderTitle.text = getString(R.string.videos_bottom)
             val jsonObject = JSONObject(videosJsonObject)
             val videosJsonArray = jsonObject.optJSONArray("links")
             binding.videosRecyclerView.layoutManager = GridLayoutManager(this, 2)
@@ -52,7 +53,6 @@ class VideosDetailedActivity : AppCompatActivity() {
                 )
             }
         } else {
-            binding.toolbar.textViewHeaderTitle.text = getString(R.string.shetishala)
             farmerViewModel.getShetishalaVideos(this)
             ProgressHelper.showProgressDialog(this)
             farmerViewModel.shetishalaVideosResponse.observe(this) {

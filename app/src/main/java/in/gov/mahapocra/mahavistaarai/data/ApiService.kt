@@ -70,6 +70,10 @@ interface ApiService {
     @GET(APIServices.kRevampedMahaDBTSchemes)
     suspend fun getMahaDBTSchemes(): JsonObject
 
+
+    @GET(APIServices.kGetDigitalShetishalaSchedule)
+    suspend fun getDigitalShetishalaSchedule(): JsonObject
+
     @GET(APIServices.kEventsForNews)
     suspend fun eventsForNews(
         @Header("Authorization") authHeader: String,

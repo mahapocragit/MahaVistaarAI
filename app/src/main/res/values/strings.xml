@@ -452,4 +452,12 @@
     <string name="search_commodity">Search Crop</string>
     <string name="shetishala">Digital Shetishala</string>
     <string name="dbt">DBT</string>
+    <string name="schedules">Schedules</string>
+    <string name="shetishala_schedule">डिजिटल शेतीशाळा वेळापत्रक 2025</string>
+    <string name="crop">Crop</string>
+    <string name="time">Time</string>
+    <string name="zoom_id">Zoom Link</string>
+    <string name="use_youtube"><u>If you can\'t join the Zoom link, use YouTube Live link instead.</u></string>
+    <string name="day">Day</string>
+    <string name="link"><u>Link</u></string>
 </resources>

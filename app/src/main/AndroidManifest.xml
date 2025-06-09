@@ -24,6 +24,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FarmerApp">
         <activity
+            android:name=".ui.screens.dashboard.shetishala.ShetishalaScheduleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.screens.dashboard.shetishala.ShetishalaActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.screens.dashboard.menugrid.dbt.mahadbt.MahaDbtSchemesDetailsActivity"
             android:exported="false" />
         <activity

@@ -460,4 +460,12 @@
     <string name="search_commodity">पीक शोधा</string>
     <string name="shetishala">डिजिटल शेतीशाळा</string>
     <string name="dbt">डीबीटी</string>
+    <string name="schedules">वेळापत्रक</string>
+    <string name="shetishala_schedule">डिजिटल शेतीशाळा वेळापत्रक 2025</string>
+    <string name="crop">पीक</string>
+    <string name="time">वेळ</string>
+    <string name="zoom_id">झूम लिंक</string>
+    <string name="use_youtube"><u>जर तुम्ही झूम लिंकमध्ये सामील होऊ शकत नसाल, तर त्याऐवजी युट्यूब लाइव्ह लिंक वापरा.</u></string>
+    <string name="day">वार</string>
+    <string name="link"><u>लिंक</u></string>
 </resources>

@@ -52,7 +52,6 @@ class CHCenterActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val LOCATION_PERMISSION_REQUEST = 1001
     private lateinit var languageToLoad: String
-    private var tempStrArr = mutableListOf<String>()
     private var locationLat = 18.914708311426686
     private var locationLong = 72.81793873488796
 
@@ -76,10 +75,6 @@ class CHCenterActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
         binding.toolbar.textViewHeaderTitle.text = getString(R.string.chc_title)
-
-        for (i in 1..10) {
-            tempStrArr.add("Hello $i")
-        }
         fetchDataForCHC()
         toggleView(true)
         binding.listViewToggleButton.setOnClickListener { toggleView(true) }

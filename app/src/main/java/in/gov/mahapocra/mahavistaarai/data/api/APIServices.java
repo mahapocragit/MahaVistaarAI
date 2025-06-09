@@ -12,6 +12,7 @@ public interface APIServices {
     String getCodeFromCoordinates = "webservices/fetch_admin_info_for_location";
     String kRevampedDBTSchemes = "FarmerApp/ActivitiesData";
     String kRevampedMahaDBTSchemes = "FarmerApp/MahaDBTSchemesData";
+    String kGetDigitalShetishalaSchedule = "masterServices/get-digital-shetishala-urls";
     String kGetTokenFromWotr = "Api_GoM/login";
     String kGetFertilizerCalculatedDataWotr = "Api_GoM/getNutrient_calculator";
     String kWareHouseDetails = "warehouseService/warehouse-details";

@@ -45,6 +45,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate.Cl
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.DBTActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard.HealthCardActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.AboutActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.CreditsActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
@@ -246,7 +247,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 )
             )
         }
-        binding.appBarMain.dashboardScreen.customNavBottom.navAbout.setOnClickListener {
+        binding.appBarMain.dashboardScreen.customNavBottom.navDbt.setOnClickListener {
             startActivity(
                 Intent(
                     this@DashboardScreen,
@@ -665,7 +666,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         startActivity(
                             Intent(
                                 this@DashboardScreen,
-                                VideosDetailedActivity::class.java
+                                ShetishalaActivity::class.java
                             )
                         )
                     }

@@ -49,6 +49,9 @@ class FarmerViewModel : ViewModel() {
     private val _videosResponse = MutableLiveData<JsonObject>()
     val videosResponse: LiveData<JsonObject> = _videosResponse
 
+    private val _getDigitalShetishalaScheduleResponse = MutableLiveData<JsonObject>()
+    val getDigitalShetishalaScheduleResponse: LiveData<JsonObject> = _getDigitalShetishalaScheduleResponse
+
     private val _sopResponse = MutableLiveData<JsonObject>()
     val sopResponse: LiveData<JsonObject> = _sopResponse
 
@@ -339,6 +342,28 @@ class FarmerViewModel : ViewModel() {
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getFarmersVideosJson()
                 _videosResponse.value = response
+            } catch (e: Exception) {
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getDigitalShetishalaSchedule(context: Context) {
+        viewModelScope.launch {
+            try {
+                val api = AppInventorApi(
+                    context,
+                    AppEnvironment.FARMER.baseUrl,
+                    "",
+                    AppString(context).getkMSG_WAIT(),
+                    false
+                )
+
+                val retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.getDigitalShetishalaSchedule()
+                _getDigitalShetishalaScheduleResponse.value = response
             } catch (e: Exception) {
                 _error.value = e.localizedMessage ?: "Unknown error"
                 FirebaseCrashlytics.getInstance().recordException(e)
