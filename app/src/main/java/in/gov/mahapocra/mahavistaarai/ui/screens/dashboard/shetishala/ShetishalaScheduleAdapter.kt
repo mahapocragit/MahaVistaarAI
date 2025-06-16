@@ -1,6 +1,5 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

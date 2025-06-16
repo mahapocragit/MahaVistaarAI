@@ -274,8 +274,6 @@
     <string name="doc_upload"> प्रतिमा/कागदपत्रे असल्यास अपलोड करा</string>
 
     <string name="event_details"> कार्यक्रमाचा तपशील</string>
-    <!--    <string name="market_details"> महाराष्ट्र राज्य ,</string>-->
-    <string name="cropSapAdvisoryDummyDta"></string>
     <string name="my_crops">माझी पिके</string>
     <string name="edit_crop">पीक संपादित करा</string>
     <string name="sowing_date">पेरणीची तारीख</string>
@@ -284,7 +282,8 @@
     <string name="pets_and_diseases">पाळीव प्राणी आणि रोगपाळीव प्राणी आणि रोग</string>
 
     <string name="Crop_details">पीक सल्ला तपशील</string>
-    <string name="cancel">ठीक आहे</string>
+    <string name="okay">ठीक आहे</string>
+    <string name="cancel_it">रद्द करा</string>
     <string name="pests_n_diseases">कीड व रोग</string>
     <string name="Pests_n_diseases_by_stage">टप्प्यानुसार कीड व रोग</string>
     <string name="different_stages_text">तुमच्या पिकात वेगवेगळ्या टप्प्यांवर दिसू शकणारी सर्व कीड व रोग</string>
@@ -468,4 +467,10 @@
     <string name="use_youtube"><u>जर तुम्ही झूम लिंकमध्ये सामील होऊ शकत नसाल, तर त्याऐवजी युट्यूब लाइव्ह लिंक वापरा.</u></string>
     <string name="day">वार</string>
     <string name="link"><u>लिंक</u></string>
+    <string name="bot_chat_login_redirect_mesage">ही सुविधा केवळ लॉग इन केलेल्या वापरकर्त्यांसाठी उपलब्ध आहे. तुम्हाला लॉगिन करायचे आहे का?</string>
+    <string name="regenerate_captcha">कॅप्चा पुन्हा निर्माण करा</string>
+    <string name="enter_captcha">कॅप्चा प्रविष्ट करा</string>
+    <string name="verify_captcha">कॅप्चा सत्यापित करा</string>
+    <string name="you_re_too_early">आपण थोडे लवकर आले आहात</string>
+    <string name="the_meeting_hasn_t_started_yet_please_try_again_closer_to_the_scheduled_time">बैठक अद्याप सुरू झालेली नाही. कृपया ठरलेल्या वेळेनुसार पुन्हा प्रयत्न करा.</string>
 </resources>

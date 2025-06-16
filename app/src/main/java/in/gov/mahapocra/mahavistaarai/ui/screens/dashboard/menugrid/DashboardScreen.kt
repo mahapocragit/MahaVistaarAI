@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.GnssAntennaInfo.Listener
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -27,6 +28,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.messaging.FirebaseMessaging
 import com.squareup.picasso.Picasso
 import `in`.co.appinventor.services_api.app_util.AppUtility
+import `in`.co.appinventor.services_api.listener.Callback
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
@@ -188,7 +190,17 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             if (!isGuest) {
                 startActivity(Intent(this, ChatbotActivity::class.java))
             } else {
-                Toast.makeText(this, "Please login to continue", Toast.LENGTH_SHORT).show()
+                AlertDialog.Builder(this)
+                    .setMessage(R.string.bot_chat_login_redirect_mesage)
+                    .setPositiveButton(R.string.yes) { dialog, _ ->
+                        // Handle login action here
+                        startActivity(Intent(this, LoginScreen::class.java))
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton(R.string.no) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
             }
         }
 

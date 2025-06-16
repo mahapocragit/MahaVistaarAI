@@ -217,7 +217,7 @@ object LocalCustom {
         val dialog = AlertDialog.Builder(context)
             .setTitle(R.string.search_commodity)
             .setView(dialogView)
-            .setNegativeButton(R.string.cancel, null)
+            .setNegativeButton(R.string.okay, null)
             .create()
 
         listView.setOnItemClickListener { _, _, position, _ ->
@@ -255,10 +255,10 @@ object LocalCustom {
         }
 
         val dialog = AlertDialog.Builder(context)
-            .setTitle("Verify CAPTCHA")
+            .setTitle(context.getString(R.string.verify_captcha))
             .setView(dialogView)
-            .setPositiveButton("Submit", null)  // Override later
-            .setNegativeButton("Cancel") { _, _ ->
+            .setPositiveButton(R.string.reg_submit, null)  // Override later
+            .setNegativeButton(R.string.cancel_it) { _, _ ->
                 onResult(false)
             }
             .create()

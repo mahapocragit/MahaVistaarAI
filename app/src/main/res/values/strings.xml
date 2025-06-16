@@ -272,7 +272,6 @@
     <string name="event_details"> Event Details </string>
     <string name="hello_blank_fragment" tools:ignore="MissingTranslation">Hello blank fragment</string>
     <string name="change">Change</string>
-    <string name="cropSapAdvisoryDummyDta"></string>
     <string name="my_crops">My Crops</string>
     <string name="edit_crop">Edit Crop</string>
     <string name="sowing_date">Sowing Date</string>
@@ -282,7 +281,8 @@
     <string name="pets_and_diseases">Pets And Diseases</string>
 
     <string name="Crop_details">Crop Advisory details</string>
-    <string name="cancel">Okay</string>
+    <string name="okay">Okay</string>
+    <string name="cancel_it">Cancel</string>
     <string name="pests_n_diseases">Pests and Diseases</string>
     <string name="Pests_n_diseases_by_stage">Pests and Diseases by Stage</string>
     <string name="different_stages_text">All Pests and Diseases that might appear in your crop at different stages</string>
@@ -453,11 +453,17 @@
     <string name="shetishala">Digital Shetishala</string>
     <string name="dbt">DBT</string>
     <string name="schedules">Schedules</string>
-    <string name="shetishala_schedule">डिजिटल शेतीशाळा वेळापत्रक 2025</string>
+    <string name="shetishala_schedule">Digital Shetishala Timetable 2025</string>
     <string name="crop">Crop</string>
     <string name="time">Time</string>
     <string name="zoom_id">Zoom Link</string>
     <string name="use_youtube"><u>If you can\'t join the Zoom link, use YouTube Live link instead.</u></string>
     <string name="day">Day</string>
     <string name="link"><u>Link</u></string>
+    <string name="bot_chat_login_redirect_mesage">This feature is only available for logged-in users. Do you wish to login?</string>
+    <string name="regenerate_captcha">Regenerate Captcha</string>
+    <string name="enter_captcha">Enter CAPTCHA</string>
+    <string name="verify_captcha">Verify CAPTCHA</string>
+    <string name="you_re_too_early">You’re too early</string>
+    <string name="the_meeting_hasn_t_started_yet_please_try_again_closer_to_the_scheduled_time">The meeting hasn’t started yet. Please try again closer to the scheduled time.</string>
 </resources>
