@@ -33,7 +33,7 @@ class ShetishalaScheduleAdapter(private val jsonArray: JSONArray) :
         val title = item.optString("day")
         holder.dayTextView.text = title
         holder.zoomRecyclerView.layoutManager = LinearLayoutManager(holder.dayTextView.context)
-        holder.zoomRecyclerView.adapter = ShetishalaScheduleMeetAdapter(item.optJSONArray("sessions"))
+        holder.zoomRecyclerView.adapter = ShetishalaScheduleMeetAdapter(title, item.optJSONArray("sessions"))
         holder.zoomRecyclerView.setHasFixedSize(true)
 
 //        if (position%2==0) {

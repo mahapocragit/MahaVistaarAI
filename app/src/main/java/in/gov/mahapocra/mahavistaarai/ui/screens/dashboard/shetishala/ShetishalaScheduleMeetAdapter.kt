@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -13,8 +14,10 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import org.json.JSONArray
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
+import `in`.gov.mahapocra.mahavistaarai.util.DayMatcher.isTodayMatchingMarathiDay
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 
-class ShetishalaScheduleMeetAdapter(private val jsonArray: JSONArray) :
+class ShetishalaScheduleMeetAdapter(private val day: String, private val jsonArray: JSONArray) :
     RecyclerView.Adapter<ShetishalaScheduleMeetAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -42,8 +45,12 @@ class ShetishalaScheduleMeetAdapter(private val jsonArray: JSONArray) :
         holder.cropTextView.text = topic
 
         holder.zoomLinkTextView.setOnClickListener {
-            val browserIntent = Intent(Intent.ACTION_VIEW, link.toUri())
-            holder.itemView.context.startActivity(browserIntent)
+            if (isTodayMatchingMarathiDay(day)) {
+                val browserIntent = Intent(Intent.ACTION_VIEW, link.toUri())
+                holder.itemView.context.startActivity(browserIntent)
+            } else {
+                AlertDialog.Builder(holder.itemView.context).setTitle("This meeting is not available today. It is scheduled for $day.").setPositiveButton("OK", null).show()
+            }
         }
     }
 }
