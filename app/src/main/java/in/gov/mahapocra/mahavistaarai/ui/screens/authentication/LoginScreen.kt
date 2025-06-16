@@ -207,7 +207,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
         val jsonObject = JSONObject()
         try {
-            jsonObject.put("MobileNo", mobile.trim { it <= ' ' })
+            jsonObject.put("MobileNo", mobile.trim())
             jsonObject.put("SecurityKey", APIServices.SSO_KEY)
 
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())

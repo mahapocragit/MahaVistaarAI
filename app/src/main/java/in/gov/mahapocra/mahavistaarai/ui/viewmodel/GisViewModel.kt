@@ -19,7 +19,6 @@ import org.json.JSONObject
 
 class GisViewModel : ViewModel() {
 
-
     private val _shcInformationResponse = MutableLiveData<JsonObject>()
     val shcInformationResponse: LiveData<JsonObject> = _shcInformationResponse
 
@@ -53,5 +52,4 @@ class GisViewModel : ViewModel() {
             }
         }
     }
-
 }

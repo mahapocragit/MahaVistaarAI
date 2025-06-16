@@ -2,7 +2,6 @@ package `in`.gov.mahapocra.mahavistaarai.util
 
 import android.app.Activity
 import android.app.DownloadManager
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
@@ -19,28 +18,13 @@ import android.widget.ImageView
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.CommonStatusCodes
-import com.google.android.gms.safetynet.SafetyNet
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
 import `in`.co.appinventor.services_api.settings.AppSettings
-import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
 import org.json.JSONArray
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.Year
-import java.time.format.DateTimeParseException
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
-import java.util.concurrent.Executor
 
 object LocalCustom {
     fun configureLocale(baseContext: Context, languageToLoad: String): Context {
