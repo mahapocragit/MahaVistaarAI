@@ -57,21 +57,31 @@ class ShetishalaScheduleMeetAdapter(private val day: String, private val jsonArr
 
         holder.zoomLinkTextView.setOnClickListener {
             if (isTodayMatchingMarathiDay(day)) {
-                if (isUserTooEarly(time)) {
-                    showTooEarlyDialog(holder.itemView.context) // this = Activity or Context
-                } else {
-                    // allow user to join the meeting
-                    val browserIntent = Intent(Intent.ACTION_VIEW, link.toUri())
-                    holder.itemView.context.startActivity(browserIntent)
-                }
+//                if (isUserTooEarly(time)) {
+//                    showTooEarlyDialog(holder.itemView.context) // this = Activity or Context
+//                } else {
+//                    // allow user to join the meeting
+                val browserIntent = Intent(Intent.ACTION_VIEW, link.toUri())
+                holder.itemView.context.startActivity(browserIntent)
+//                }
             } else {
                 var zoomMeetingTemplateLabel = "ही बैठक आज उपलब्ध नाही. ती $day साठी निर्धारित आहे."
-                if (languageToLoad == "en"){
-                    zoomMeetingTemplateLabel = "This meeting is not available today. It is scheduled for $day."
+                if (languageToLoad == "en") {
+                    zoomMeetingTemplateLabel =
+                        "This meeting is not available today. It is scheduled for $day."
                 }
-                AlertDialog.Builder(holder.itemView.context).setTitle(zoomMeetingTemplateLabel).setPositiveButton(R.string.okay, null).show()
+                AlertDialog.Builder(holder.itemView.context).setTitle(zoomMeetingTemplateLabel)
+                    .setPositiveButton(R.string.okay, null).show()
             }
         }
+    }
+
+    // Check if current time is before meeting time
+    private fun isUserTooEarly(meetingTime: String): Boolean {
+        val convertedMeetingTime = convertMarathiTimeTo24Hour(meetingTime) ?: return false
+        val currentTime = SimpleDateFormat("HH:mm", Locale.ENGLISH).format(Date())
+
+        return currentTime < convertedMeetingTime
     }
 
     private fun convertMarathiTimeTo24Hour(time: String): String? {
@@ -103,14 +113,6 @@ class ShetishalaScheduleMeetAdapter(private val day: String, private val jsonArr
         } catch (e: Exception) {
             null
         }
-    }
-
-    // Check if current time is before meeting time
-    private fun isUserTooEarly(meetingTime: String): Boolean {
-        val convertedMeetingTime = convertMarathiTimeTo24Hour(meetingTime) ?: return false
-        val currentTime = SimpleDateFormat("HH:mm", Locale.ENGLISH).format(Date())
-
-        return currentTime < convertedMeetingTime
     }
 
     // Show a popup if too early

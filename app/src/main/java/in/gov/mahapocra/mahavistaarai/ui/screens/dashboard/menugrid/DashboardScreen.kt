@@ -194,7 +194,9 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     .setMessage(R.string.bot_chat_login_redirect_mesage)
                     .setPositiveButton(R.string.yes) { dialog, _ ->
                         // Handle login action here
-                        startActivity(Intent(this, LoginScreen::class.java))
+                        startActivity(Intent(this, LoginScreen::class.java).apply {
+                            putExtra("from", "dashboard")
+                        })
                         dialog.dismiss()
                     }
                     .setNegativeButton(R.string.no) { dialog, _ ->
@@ -842,7 +844,9 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         Intent(
                             this@DashboardScreen,
                             LoginScreen::class.java
-                        )
+                        ).apply {
+                            putExtra("from", "dashboard")
+                        }
                     )
                 }
 

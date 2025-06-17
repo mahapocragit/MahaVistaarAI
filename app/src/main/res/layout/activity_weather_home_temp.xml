@@ -47,20 +47,12 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/weatherTalukaTV"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Mumbai"
-                            android:textColor="@color/white"
-                            android:textSize="22sp" />
-
-                        <TextView
                             android:id="@+id/timestampTV"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="13 February 2025 | 14:00"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="@dimen/_11sdp" />
 
                         <TextView
                             android:id="@+id/temperatureTextView"
@@ -68,8 +60,16 @@
                             android:layout_height="wrap_content"
                             android:text="22°C"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/_18sdp"
+                            android:textSize="@dimen/_16sdp"
                             android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/weatherTalukaTV"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Mumbai"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_12sdp" />
 
                     </LinearLayout>
 
@@ -126,7 +126,7 @@
                                 android:layout_weight="2"
                                 android:gravity="center"
                                 android:text="73%"
-                                android:textSize="@dimen/_18sdp"
+                                android:textSize="@dimen/_16sdp"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
@@ -159,7 +159,7 @@
                                 android:layout_weight="2"
                                 android:gravity="center"
                                 android:text="61%"
-                                android:textSize="@dimen/_18sdp"
+                                android:textSize="@dimen/_16sdp"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
@@ -192,7 +192,7 @@
                                 android:layout_weight="2"
                                 android:gravity="center"
                                 android:text="7 km/h"
-                                android:textSize="@dimen/_18sdp"
+                                android:textSize="@dimen/_16sdp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </LinearLayout>

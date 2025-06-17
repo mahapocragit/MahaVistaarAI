@@ -80,7 +80,9 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         }
 
         AppSettings.getInstance().clearIntValue(this, AppConstants.fREGISTER_ID)
-        AppSettings.getInstance().setBooleanValue(this, AppConstants.IS_USER_GUEST, false)
+        if (intent.getStringExtra("from") != "dashboard") {
+            AppSettings.getInstance().setBooleanValue(this, AppConstants.IS_USER_GUEST, false)
+        }
         authenticationOperations()
 
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
