@@ -2,12 +2,13 @@
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/_5sdp"
     android:orientation="vertical">
 
     <ImageView
         android:id="@+id/grid_item_image"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_45sdp"
+        android:layout_height="@dimen/_65sdp"
         android:layout_margin="@dimen/_4sdp"
         android:contentDescription="image view"
         android:src="@drawable/crop_advsry" />
@@ -17,8 +18,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/_2sdp"
-        android:layout_marginBottom="@dimen/_10sdp"
         android:text="crop name"
         android:textAlignment="center"
         android:textSize="@dimen/_10sdp" />

@@ -68,7 +68,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/chatbot_custom" />
+            android:src="@drawable/ic_chatbot" />
     </LinearLayout>
 
     <LinearLayout

@@ -12,6 +12,9 @@ import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import android.view.animation.AnimationUtils
+import android.view.animation.CycleInterpolator
+import android.view.animation.TranslateAnimation
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.GridView
@@ -63,6 +66,10 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.ApUtil
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppHelper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -107,6 +114,28 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             layoutInflater
         )
         setContentView(binding.root)
+
+
+        val showOverlay = AppPreferenceManager(this).getBoolean("show_overlay")
+        if (showOverlay){
+            binding.overlayView.visibility = View.VISIBLE
+        }else{
+            binding.overlayView.visibility = View.GONE
+        }
+
+        binding.overlayView.setOnClickListener {
+            binding.overlayView.visibility = View.GONE
+            binding.overlayImage.visibility = View.GONE
+            AppPreferenceManager(this).saveBoolean("show_overlay", false)
+        }
+
+        val shakeAnimation = AnimationUtils.loadAnimation(this, R.anim.shake)
+        binding.appBarMain.dashboardScreen.imageView20.startAnimation(shakeAnimation)
+
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(3000)
+            binding.appBarMain.dashboardScreen.imageView20.clearAnimation()
+        }
 
         binding.appBarMain.dashboardScreen.progressBar.visibility = View.VISIBLE
         binding.appBarMain.dashboardScreen.temperatureTextView.visibility = View.GONE
@@ -272,6 +301,17 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         askForLocationAndMicrophonePermission()
     }
 
+    override fun onResume() {
+        super.onResume()
+        val shakeAnimation = AnimationUtils.loadAnimation(this, R.anim.shake)
+        binding.appBarMain.dashboardScreen.imageView20.startAnimation(shakeAnimation)
+
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(3000)
+            binding.appBarMain.dashboardScreen.imageView20.clearAnimation()
+        }
+    }
+
     private fun askForLocationAndMicrophonePermission() {
         val permissionsNeeded = mutableListOf<String>()
 
@@ -323,6 +363,14 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 }
             }
         }
+    }
+
+    fun shakeButton(button: View) {
+        val shake = TranslateAnimation(0f, 10f, 0f, 0f).apply {
+            duration = 100           // 0.1 second per shake
+            interpolator = CycleInterpolator(30f) // total cycles: 30 (about 3 sec)
+        }
+        button.startAnimation(shake)
     }
 
     private fun fetchReceivingData() {
@@ -907,31 +955,31 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             "Pest and Diseases",
             "Market Price",
             "Digital Shetishala",
-            "Warehouse Availabilities"
+            "Warehouse"
         )
 
         private val arrayCategoryMarathi = arrayOf(
             "पीक सल्ला",
-            "एस.ओ.पी.(SOP)",
+            "एस.ओ.पी.",
             "मृदा आरोग्य पत्रिका",
-            "खत मात्रा गणक (कॅलक्यूलेटर)",
-            "बदलत्या हवामानास अनुकूल शेती पद्धती",
+            "खत मात्रा गणक",
+            "हवामानास अनुकूल शेती पद्धती",
             "कीड व रोग",
             "बाजारभाव",
             "डिजिटल शेतीशाळा",
-            "गोदाम उपलब्धता"
+            "गोदाम"
         )
 
         var arrayCategoryImg: IntArray = intArrayOf(
-            R.drawable.ecology,
+            R.drawable.ic_cropadvisory,
             R.drawable.ic_sop,
-            R.drawable.soil,
-            R.drawable.fertilizer,
-            R.drawable.climate_ic,
-            R.drawable.ladybug,
-            R.drawable.market_ic,
-            R.drawable.farmschool_ic,
-            R.drawable.warehouse
+            R.drawable.ic_soilhealthcard,
+            R.drawable.ic_fertilizercalculator,
+            R.drawable.ic_climateresilenttechnology,
+            R.drawable.ic_pestsanddiseases,
+            R.drawable.ic_marketprice,
+            R.drawable.ic_digitalfarmer,
+            R.drawable.ic_warehouse
         )
 
         val formattedTimestamp: String

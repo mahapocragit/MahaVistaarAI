@@ -29,13 +29,12 @@ object CaptchaGenerator {
         val y = (height - fontMetrics.ascent - fontMetrics.descent) / 2
 
         canvas.drawText(captchaText, x, y, paint)
-        drawNoise(canvas, width, height)
-
         return CaptchaResult(bitmap, captchaText)
     }
 
     private fun generateRandomText(length: Int): String {
-        val chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+//        val chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        val chars = "0123456789"
         return (1..length).map { chars.random() }.joinToString("")
     }
 

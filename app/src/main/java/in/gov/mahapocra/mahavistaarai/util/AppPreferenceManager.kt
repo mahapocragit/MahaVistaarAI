@@ -15,6 +15,16 @@ class AppPreferenceManager(val context: Context) {
         editor.apply() // or editor.commit();
     }
 
+    fun saveBoolean(key:String, value: Boolean) {
+        val editor = sharedPreferences.edit()
+        editor.putBoolean(key, value)
+        editor.apply() // or editor.commit();
+    }
+
+    fun getBoolean(key:String): Boolean {
+        return sharedPreferences.getBoolean(key, false)
+    }
+
     fun getString(key:String): String? {
         return sharedPreferences.getString(key, "default_value")
     }
