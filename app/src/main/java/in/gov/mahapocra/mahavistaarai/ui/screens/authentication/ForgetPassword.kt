@@ -154,7 +154,7 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
         val dialogTitle = dialog.findViewById<TextView>(R.id.dialogTitle)
-        dialogTitle.text = getString(R.string.enter_otp)
+        dialogTitle.text = getString(R.string.enterOtp)
         val receiveOTPEditText = dialog.findViewById<EditText>(R.id.OptEditText)
         val submitButton = dialog.findViewById<Button>(R.id.submitButton)
         val resendOTP = dialog.findViewById<Button>(R.id.resentOTP)
