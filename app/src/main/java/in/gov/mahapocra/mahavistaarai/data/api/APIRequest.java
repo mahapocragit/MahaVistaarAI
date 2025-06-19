@@ -2,23 +2,17 @@ package in.gov.mahapocra.mahavistaarai.data.api;
 
 import com.google.gson.JsonObject;
 
-import java.util.Map;
-
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.GET;
-import retrofit2.http.Multipart;
 import retrofit2.http.POST;
-import retrofit2.http.Part;
-import retrofit2.http.PartMap;
 import retrofit2.http.Query;
 
 public interface APIRequest {
 
     @POST(APIServices.kOTPRequest)
     Call<JsonObject> getOTPRequest(@Body RequestBody params);
+
     @POST(APIServices.kOTPRegisterRequest)
     Call<JsonObject> getOTPRegisterRequest(@Body RequestBody params);
 
@@ -31,22 +25,11 @@ public interface APIRequest {
     @POST(APIServices.kRefreshTokenLogin)
     Call<JsonObject> getRefreshTokenLogin(@Body RequestBody params);
 
-    @POST(APIServices.getNearestCHCenters)
-    Call<JsonObject> getCHCInformation(@Body RequestBody params);
-
     @POST(APIServices.kWareHouseDetails)
     Call<JsonObject> getWareHouseDetails(@Body RequestBody params);
 
-    @GET(APIServices.kGetVideosCategories)
-    Call<JsonObject> getFarmersVideosJson();
-
-    @POST(APIServices.kGetmarketsList)
-    Call<JsonObject> getmarketList(@Body RequestBody params);
-
     @POST(APIServices.kGetDistrictList)
     Call<JsonObject> getDistrictList(@Body RequestBody params);
-    @POST(APIServices.kGetMarketData)
-    Call<JsonObject> getMarketList(@Body RequestBody params);
 
     @POST(APIServices.kGetMarketAndMarketName)
     Call<JsonObject> getMarketAndMarketName(@Body RequestBody params);
@@ -86,22 +69,22 @@ public interface APIRequest {
 
     @POST(APIServices.kGetTokenFromWotr)
     Call<JsonObject> getTokenFromWotr(@Query("MobileNo") String securityKey,
-                                                @Query("Password") String dataRequired
+                                      @Query("Password") String dataRequired
     );
 
     @POST(APIServices.kGetFertilizerCalculatedDataWotr)
     Call<JsonObject> getFertilizerCalculatedData(@Query("CropID") String cropID,
-                                      @Query("SowingDate") String sowingDate,
-                                      @Query("IsNPK") String isNPK,
-                                      @Query("SoilTestN") String soilTestN,
-                                      @Query("SoilTestP") String soilTestP,
-                                      @Query("SoilTestK") String soilTestK,
-                                      @Query("VillageCode") String villageCode,
-                                      @Query("FYM") String requiredFYM,
-                                      @Query("TargetYield") String targetYield,
-                                      @Query("PlotSize") String plotSize,
-                                      @Query("PlotUnit") String plotUnit,
-                                      @Query("Token") String token
+                                                 @Query("SowingDate") String sowingDate,
+                                                 @Query("IsNPK") String isNPK,
+                                                 @Query("SoilTestN") String soilTestN,
+                                                 @Query("SoilTestP") String soilTestP,
+                                                 @Query("SoilTestK") String soilTestK,
+                                                 @Query("VillageCode") String villageCode,
+                                                 @Query("FYM") String requiredFYM,
+                                                 @Query("TargetYield") String targetYield,
+                                                 @Query("PlotSize") String plotSize,
+                                                 @Query("PlotUnit") String plotUnit,
+                                                 @Query("Token") String token
     );
 
     @POST(APIServices.fetchFarmerListForSHC)

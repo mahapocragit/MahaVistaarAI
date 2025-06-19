@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/custom_bottom_nav"
     android:layout_width="match_parent"
     android:layout_height="@dimen/_48sdp"
-    android:background="@color/white"
+    android:background="@drawable/bottom_nav_notch"
     android:elevation="8dp"
     android:layout_marginTop="@dimen/_4sdp"
     android:gravity="center"
@@ -21,6 +22,7 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
+            app:tint="@color/actionbar_color_figma"
             android:src="@drawable/home_ic" />
 
         <TextView
@@ -28,7 +30,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/home_bottom"
-            android:textColor="@color/black"
+            android:textColor="@color/actionbar_color_figma"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -55,17 +57,18 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/nav_chat"
+        android:id="@+id/navChat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:visibility="invisible"
         android:gravity="center"
         android:orientation="vertical">
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/chatbot_mhv_ic" />
+            android:src="@drawable/ic_chatbot" />
     </LinearLayout>
 
     <LinearLayout
@@ -93,7 +96,7 @@
     <!-- Repeat similar blocks for other items -->
 
     <LinearLayout
-        android:id="@+id/nav_about"
+        android:id="@+id/nav_dbt"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -104,7 +107,7 @@
             android:id="@+id/icon_search"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/info_ic" />
+            android:src="@drawable/dbt_ic" />
 
         <TextView
             android:id="@+id/label_search"
@@ -113,7 +116,7 @@
             android:gravity="center"
             android:textColor="@color/black"
             android:textSize="12sp"
-            android:text="@string/about" />
+            android:text="@string/dbt" />
     </LinearLayout>
 
 </LinearLayout>

@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
@@ -79,6 +81,7 @@ class ConfirmPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode
                 resources.getString(R.string.pass_equals_confirmpass)
             binding.confirmPasswordEditText.requestFocus()
         } else if (!isStrongPassword(binding.confirmPasswordEditText.text.toString())) {
+            binding.passwordErrorTextView.visibility = View.VISIBLE
             UIToastMessage.show(this, resources.getString(R.string.weak_password))
         } else {
             val jsonObject = JSONObject()
@@ -107,11 +110,17 @@ class ConfirmPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode
 
 
     override fun onFailure(th: Throwable?, i: Int) {
-        TODO("Not yet implemented")
+        th?.let {
+            Log.e("YourTag", "Request failed: ${it.localizedMessage}", it)
+            FirebaseCrashlytics.getInstance().recordException(it)
+        } ?: Log.e("YourTag", "Request failed with null Throwable, code: $i")
     }
 
     override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        TODO("Not yet implemented")
+        th?.let {
+            Log.e("YourTag", "Request failed: ${it.localizedMessage}", it)
+            FirebaseCrashlytics.getInstance().recordException(it)
+        } ?: Log.e("YourTag", "Request failed with null Throwable, code: $i")
     }
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {

@@ -10,7 +10,7 @@
     <LinearLayout
         android:id="@+id/temperatureLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_100sdp"
+        android:layout_height="@dimen/_90sdp"
         android:layout_margin="@dimen/_5sdp"
         android:background="@drawable/gradient_bg"
         android:orientation="horizontal"
@@ -27,20 +27,12 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/weatherTalukaTV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Mumbai"
-                android:textColor="@color/white"
-                android:textSize="22sp" />
-
-            <TextView
                 android:id="@+id/timestamp_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="13 February 2025 | 14:00"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_12sdp" />
+                android:textSize="@dimen/_11sdp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -53,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:text="22°C"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/_14sdp"
+                    android:textSize="@dimen/_18sdp"
                     android:textStyle="bold"
                     android:visibility="visible" />
 
@@ -67,6 +59,14 @@
                     android:indeterminateTintMode="src_in"
                     android:visibility="visible" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/weatherTalukaTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mumbai"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12sdp" />
 
         </LinearLayout>
 
@@ -108,7 +108,7 @@
                     android:layout_marginStart="@dimen/_10sdp"
                     android:gravity="center_vertical"
                     android:text="Good Morning,"
-                    android:textSize="@dimen/_14sdp"
+                    android:textSize="@dimen/_12sdp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -119,14 +119,14 @@
                     android:layout_weight="4"
                     android:gravity="center_vertical"
                     android:text="Lorem Ipsum"
-                    android:textSize="@dimen/_14sdp" />
+                    android:textSize="@dimen/_12sdp" />
             </LinearLayout>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_60sdp"
                 android:layout_margin="@dimen/_10sdp"
-                android:backgroundTint="@color/card_background_color_figma"
+                android:backgroundTint="@color/card_background_color_figma_dash"
                 app:cardCornerRadius="@dimen/_15sdp">
 
                 <LinearLayout
@@ -136,8 +136,9 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_100sdp"
+                        android:layout_height="@dimen/_85sdp"
                         android:layout_weight="1"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <TextView
@@ -148,86 +149,87 @@
                             android:layout_weight="1"
                             android:paddingStart="@dimen/_10sdp"
                             android:text="@string/no_crops_added"
-                            android:textSize="@dimen/_12sdp"
+                            android:textSize="@dimen/_10sdp"
                             android:visibility="visible" />
 
-                        <androidx.cardview.widget.CardView
+                        <LinearLayout
                             android:id="@+id/savedCropNameCardView"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_50sdp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginHorizontal="@dimen/_4sdp"
-                            android:layout_marginVertical="@dimen/_2sdp"
-                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_10sdp"
+                            android:layout_marginEnd="@dimen/_10sdp"
+                            android:paddingVertical="@dimen/_6sdp"
+                            android:orientation="horizontal"
                             android:visibility="gone"
-                            app:cardCornerRadius="@dimen/_25sdp">
+                            android:gravity="center_vertical"> <!-- Optional background -->
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginStart="@dimen/_10sdp"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
+                            <!-- Image with circular background -->
+                            <FrameLayout
+                                android:layout_width="@dimen/_38sdp"
+                                android:layout_height="@dimen/_38sdp"
+                                android:background="@drawable/shape_round_gray">
 
-                                <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="@dimen/_30sdp"
-                                    android:layout_height="@dimen/_30sdp"
-                                    android:background="@drawable/shape_round_gray">
+                                <de.hdodenhof.circleimageview.CircleImageView
+                                    android:id="@+id/savedCropNameImageView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    app:civ_border_width="@dimen/_1sdp"
+                                    app:civ_border_color="#CBD5E1"
+                                    android:scaleType="centerCrop"
+                                    android:src="@drawable/trigo" />
+                            </FrameLayout>
 
-                                    <de.hdodenhof.circleimageview.CircleImageView
-                                        android:id="@+id/savedCropNameImageView"
-                                        android:layout_width="@dimen/_30sdp"
-                                        android:layout_height="@dimen/_30sdp"
-                                        android:padding="@dimen/_6sdp"
-                                        android:src="@drawable/trigo"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent" />
-                                </androidx.constraintlayout.widget.ConstraintLayout>
+                            <!-- Crop name with wrapping text -->
+                            <TextView
+                                android:id="@+id/savedCropNameTextView"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_8sdp"
+                                android:layout_marginEnd="@dimen/_8sdp"
+                                android:layout_weight="1"
+                                android:maxLines="2"
+                                android:ellipsize="end"
+                                android:text="Crop Name"
+                                android:textColor="@color/font_color_figma"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/_10sdp" />
 
+                            <!-- Change button -->
+                            <TextView
+                                android:id="@+id/changeCropText"
+                                android:layout_width="@dimen/_60sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="@dimen/_4sdp"
+                                android:textColor="@color/white"
+                                android:background="@drawable/background_for_chat_request_green"
+                                android:gravity="center"
+                                android:textSize="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_6sdp"
+                                android:text="@string/change" />
 
-                                <TextView
-                                    android:id="@+id/savedCropNameTextView"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/_6sdp"
-                                    android:layout_weight="1"
-                                    android:text="Crop Name"
-                                    android:textColor="@color/font_color_figma"
-                                    android:textStyle="bold" />
+                            <!-- Delete button -->
+                            <TextView
+                                android:id="@+id/deleteCropImageView"
+                                android:layout_width="@dimen/_60sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="@dimen/_4sdp"
+                                android:textColor="@color/red"
+                                android:background="@drawable/background_for_delete_request"
+                                android:gravity="center"
+                                android:textSize="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_6sdp"
+                                android:text="@string/delete" />
 
-                                <TextView
-                                    android:id="@+id/changeCropText"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginEnd="@dimen/_4sdp"
-                                    android:layout_weight="1"
-                                    android:background="@drawable/background_for_chat_request"
-                                    android:gravity="center"
-                                    android:paddingVertical="@dimen/_8sdp"
-                                    android:text="@string/change" />
+                        </LinearLayout>
 
-                                <TextView
-                                    android:id="@+id/deleteCropImageView"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginEnd="@dimen/_8sdp"
-                                    android:layout_weight="1"
-                                    android:background="@drawable/background_for_delete_request"
-                                    android:gravity="center"
-                                    android:paddingVertical="@dimen/_8sdp"
-                                    android:text="@string/delete" />
-
-                            </LinearLayout>
-                        </androidx.cardview.widget.CardView>
 
                         <androidx.cardview.widget.CardView
                             android:id="@+id/addCropCardView"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_40sdp"
                             android:layout_gravity="center_vertical"
-                            android:layout_margin="@dimen/_2sdp"
+                            android:layout_marginVertical="@dimen/_2sdp"
+                            android:layout_marginEnd="@dimen/_5sdp"
                             android:layout_weight="1"
                             android:visibility="visible"
                             app:cardCornerRadius="@dimen/_25sdp">
@@ -280,14 +282,6 @@
 
                     </LinearLayout>
 
-                    <View
-                        android:id="@+id/divider"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginEnd="@dimen/_10sdp"
-                        android:background="?android:attr/listDivider"
-                        android:visibility="gone" />
-
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/selectedCropRecyclerView"
                         android:layout_width="match_parent"
@@ -313,8 +307,11 @@
         android:numColumns="3"
         android:paddingHorizontal="10dp"
         android:verticalSpacing="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout13"
-        app:layout_constraintTop_toBottomOf="@+id/AddCrop" />
+        android:layout_marginBottom="@dimen/_4sdp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView20"
+        app:layout_constraintTop_toBottomOf="@+id/AddCrop" >
+
+    </GridView>
 
     <LinearLayout
         android:id="@+id/linearLayout13"
@@ -329,5 +326,14 @@
             layout="@layout/custom_bottom_nav" />
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/imageView20"
+        android:layout_width="@dimen/_58sdp"
+        android:layout_height="@dimen/_58sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout13"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout13"
+        app:srcCompat="@drawable/ic_chatbot" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

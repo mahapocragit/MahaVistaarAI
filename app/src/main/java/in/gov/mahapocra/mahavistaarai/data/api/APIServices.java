@@ -12,6 +12,7 @@ public interface APIServices {
     String getCodeFromCoordinates = "webservices/fetch_admin_info_for_location";
     String kRevampedDBTSchemes = "FarmerApp/ActivitiesData";
     String kRevampedMahaDBTSchemes = "FarmerApp/MahaDBTSchemesData";
+    String kGetDigitalShetishalaSchedule = "masterServices/get-digital-shetishala-urls";
     String kGetTokenFromWotr = "Api_GoM/login";
     String kGetFertilizerCalculatedDataWotr = "Api_GoM/getNutrient_calculator";
     String kWareHouseDetails = "warehouseService/warehouse-details";
@@ -24,10 +25,13 @@ public interface APIServices {
     String kEventsForNews = "api/events/";
     String kGeFarmersSelectedCrop = "farmerService/get-farmers-selected-crop";
     String kGetVideosCategories = "videoService/get-video-category-details";
+    String kGetShetishalaVideos = "videoService/get-digital-shetishala-details";
     String kdeleteFarmerSelectedCrop = "farmerService/delete-farmers-selected-crop";
     String kGetmarketsList = "masterService/get-markets-by-taluka";
     String kGetmarketsPriceDetails = "msambService/msamb-data";
     String kResetPassword = "authService/resetPassword";
+    String kCompareOtp = "authService/compareOTP";
+    String kCompareOtpReg = "authService/compareOTPReg";
     String fetchFarmerListForSHC = "webservices//fetch_farmer_shc_list";
     String kGetDistrictList = "masterService/get-all-district";
     String kGetCropCategorywise = "masterService/get-crop-categorywise";

@@ -8,6 +8,9 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.microsoft.clarity.Clarity
+import com.microsoft.clarity.ClarityConfig
+import com.microsoft.clarity.models.LogLevel
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
@@ -32,6 +35,13 @@ class SplashScreenActivity : AppCompatActivity() {
         }
         switchLanguage(this, languageToLoad)
         setContentView(R.layout.activity_splash_screen)
+
+        val config = ClarityConfig(
+            projectId = "rqkkntubvb",
+            logLevel = LogLevel.Verbose
+        )
+        Clarity.initialize(applicationContext, config)
+
         val isGuest =
             AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
         // Set Language Configuration

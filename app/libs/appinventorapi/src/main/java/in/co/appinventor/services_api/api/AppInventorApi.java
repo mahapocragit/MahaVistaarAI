@@ -3,6 +3,7 @@ package in.co.appinventor.services_api.api;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 
@@ -13,6 +14,8 @@ import com.google.gson.JsonObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
@@ -74,8 +77,10 @@ public class AppInventorApi {
 
     public Retrofit getRetrofitInstance() {
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
-        builder.readTimeout(200000, TimeUnit.SECONDS);
-        builder.connectTimeout(200000, TimeUnit.SECONDS);
+        builder.readTimeout(30, TimeUnit.SECONDS);
+        builder.connectTimeout(30, TimeUnit.SECONDS);
+        builder.writeTimeout(30, TimeUnit.SECONDS);
+        builder.retryOnConnectionFailure(true);
         Gson gson = new GsonBuilder().setLenient().create();
         builder.addInterceptor(chain -> {
             Request.Builder ongoing = chain.request().newBuilder();
@@ -127,7 +132,7 @@ public class AppInventorApi {
             builder.readTimeout(60, TimeUnit.SECONDS);
             builder.writeTimeout(30, TimeUnit.SECONDS);
             builder.followRedirects(false);
-            builder.addInterceptor(new NetworkConnectionInterceptor(context));
+            builder.addInterceptor(new NetworkConnectionInterceptor(context.getApplicationContext()));
 
             builder.addInterceptor(chain -> {
                 Request.Builder ongoing = chain.request().newBuilder();
@@ -147,8 +152,8 @@ public class AppInventorApi {
     }
 
     private void isInternetConnected() {
-        if (!Utility.checkConnection(this.mContext)) {
-            UIToastMessage.show(this.mContext, AppConstants.MESSAGE_NETWORK_UNAVAILABLE);
+        if (!Utility.checkConnection(mContext)) {
+            UIToastMessage.show(mContext, "No internet connection.");
         }
     }
 
@@ -156,10 +161,14 @@ public class AppInventorApi {
         isInternetConnected();
         responseCall.enqueue(new Callback<JsonObject>() {
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull retrofit2.Response<JsonObject> response) {
-                if (AppInventorApi.this.mProgressDialog != null && AppInventorApi.this.mProgressDialog.isShowing()) {
-                    if (mProgressDialog != null && mProgressDialog.isShowing()) {
-                        if (mContext instanceof Activity && !((Activity) mContext).isFinishing()) {
+                if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                    if (mContext instanceof Activity && !((Activity) mContext).isFinishing()) {
+                        try {
                             mProgressDialog.dismiss();
+                        } catch (IllegalArgumentException e) {
+                            e.printStackTrace();
+                        } finally {
+                            mProgressDialog = null;
                         }
                     }
                 }
@@ -176,19 +185,36 @@ public class AppInventorApi {
             }
 
             public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-                if (AppInventorApi.this.mProgressDialog != null && AppInventorApi.this.mProgressDialog.isShowing()) {
-                    if (mProgressDialog != null && mProgressDialog.isShowing()) {
-                        if (mContext instanceof Activity && !((Activity) mContext).isFinishing()) {
-                            mProgressDialog.dismiss();
+                if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                    if (mContext instanceof Activity) {
+                        Activity activity = (Activity) mContext;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                            if (!activity.isFinishing() && !activity.isDestroyed()) {
+                                try {
+                                    mProgressDialog.dismiss();
+                                } catch (IllegalArgumentException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
                     }
                 }
+
+                if (t instanceof SocketTimeoutException) {
+                    UIToastMessage.show(mContext, "Request timed out. Please try again.");
+                } else if (t instanceof IOException && t.getMessage().contains("Socket closed")) {
+                    UIToastMessage.show(mContext, "Connection was closed. Please retry.");
+                } else {
+                    UIToastMessage.show(mContext, "Something went wrong.");
+                }
+
                 try {
                     apiCallback.onFailure(call, t, requestCode);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+
         });
     }
 }

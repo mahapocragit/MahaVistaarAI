@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
@@ -17,7 +18,6 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class GisViewModel : ViewModel() {
-
 
     private val _shcInformationResponse = MutableLiveData<JsonObject>()
     val shcInformationResponse: LiveData<JsonObject> = _shcInformationResponse
@@ -48,8 +48,8 @@ class GisViewModel : ViewModel() {
             } catch (e: JSONException) {
                 e.printStackTrace()
                 _error.value = "JSON Error: ${e.localizedMessage}"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
-
 }

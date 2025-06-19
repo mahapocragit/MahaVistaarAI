@@ -15,30 +15,20 @@ import okhttp3.Response;
 public class NetworkConnectionInterceptor implements Interceptor {
 
     private Context mContext;
-
-
-    // Exception occurs in null pointer here
     public NetworkConnectionInterceptor(Context applicationContext) {
+        if (applicationContext == null) {
+            throw new IllegalArgumentException("Context must not be null");
+        }
         mContext = applicationContext;
     }
 
-
-
     @Override
     public Response intercept(Chain chain) throws IOException {
-        if (!Utility.checkConnection(mContext)) {
-            // Log it or throw a custom exception (no UI here!)
+        if (mContext == null || !Utility.checkConnection(mContext)) {
             throw new IOException("No internet connection");
         }
-
         Request.Builder builder = chain.request().newBuilder();
         return chain.proceed(builder.build());
-    }
-
-    private void isInternetConnected() {
-        if (!Utility.checkConnection(this.mContext)) {
-            UIToastMessage.show(this.mContext, AppConstants.MESSAGE_NETWORK_UNAVAILABLE);
-        }
     }
 }
 

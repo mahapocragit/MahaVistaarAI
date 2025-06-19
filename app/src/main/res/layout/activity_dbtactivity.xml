@@ -37,9 +37,16 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_32sdp"
+                    android:layout_height="@dimen/_38sdp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
+
+                    <com.mikhaellopez.circularimageview.CircularImageView
+                        android:id="@+id/imageView28"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        app:srcCompat="@drawable/pocra_latest_logo" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -50,11 +57,10 @@
                         android:text="@string/pocra_dbt_name" />
 
                     <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:rotation="270"
-                        android:layout_weight="9"
                         app:srcCompat="@drawable/ic_baseline_arrow_drop_down_24" />
                 </LinearLayout>
 
@@ -78,9 +84,16 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_32sdp"
+                    android:layout_height="@dimen/_38sdp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
+
+                    <com.mikhaellopez.circularimageview.CircularImageView
+                        android:id="@+id/imageView29"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        app:srcCompat="@drawable/mahadbt_ic" />
 
                     <TextView
                         android:id="@+id/fpoCardTV"
@@ -92,10 +105,9 @@
                         android:text="@string/maha_dbt_name" />
 
                     <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
                         android:layout_marginEnd="@dimen/_10sdp"
-                        android:layout_weight="9"
                         android:rotation="270"
                         app:srcCompat="@drawable/ic_baseline_arrow_drop_down_24" />
                 </LinearLayout>

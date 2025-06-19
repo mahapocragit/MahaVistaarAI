@@ -67,6 +67,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="3"
+                            android:paddingStart="@dimen/_5sdp"
                             android:gravity="center_vertical"
                             android:paddingVertical="@dimen/_5sdp"
                             android:text="TextView" />
@@ -94,6 +95,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="3"
+                            android:paddingStart="@dimen/_5sdp"
                             android:gravity="center_vertical"
                             android:paddingVertical="@dimen/_5sdp"
                             android:text="TextView" />
@@ -121,6 +123,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="3"
+                            android:paddingStart="@dimen/_5sdp"
                             android:gravity="center_vertical"
                             android:paddingVertical="@dimen/_5sdp"
                             android:text="TextView" />
@@ -147,6 +150,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="3"
+                            android:paddingStart="@dimen/_5sdp"
                             android:gravity="center_vertical"
                             android:paddingVertical="@dimen/_5sdp"
                             android:text="TextView" />
@@ -173,6 +177,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="3"
+                            android:paddingStart="@dimen/_5sdp"
                             android:gravity="center_vertical"
                             android:paddingVertical="@dimen/_5sdp"
                             android:text="TextView" />

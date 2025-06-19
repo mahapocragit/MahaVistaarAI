@@ -97,7 +97,7 @@ class StageAdvisoryDetailAdaptr(
             AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.Crop_details))
                 .setView(textView)
-                .setNegativeButton(context.getString(R.string.cancel)) { dialog, _ -> dialog.dismiss() }
+                .setNegativeButton(context.getString(R.string.okay)) { dialog, _ -> dialog.dismiss() }
                 .show()
         }
 

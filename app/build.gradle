@@ -26,8 +26,8 @@ android {
         applicationId "in.gov.mahapocra.mahavistaarai"
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 11
-        versionName "1.5"
+        versionCode 14
+        versionName "1.7"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resConfigs "en", "mr"
@@ -79,9 +79,10 @@ android {
 
 
 dependencies {
+    //Clarity
+    implementation 'com.microsoft.clarity:clarity:3.3.0'
     //captcha
     implementation 'com.google.android.recaptcha:recaptcha:18.4.0'
-    implementation 'com.google.android.gms:play-services-safetynet:18.0.1'
     //osm
     implementation 'org.osmdroid:osmdroid-android:6.1.20'
     implementation 'com.intuit.sdp:sdp-android:1.1.1'

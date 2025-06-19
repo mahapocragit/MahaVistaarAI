@@ -1,13 +1,18 @@
 package in.gov.mahapocra.mahavistaarai.ui.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -16,7 +21,7 @@ import org.json.JSONObject;
 
 import in.gov.mahapocra.mahavistaarai.R;
 
-public class MarketPriceAdapter  extends RecyclerView.Adapter<MarketPriceAdapter.ViewHolder> {
+public class MarketPriceAdapter extends RecyclerView.Adapter<MarketPriceAdapter.ViewHolder> {
 
     private Context mContext;
     private JSONArray mOriginalArray;
@@ -64,6 +69,7 @@ public class MarketPriceAdapter  extends RecyclerView.Adapter<MarketPriceAdapter
         private TextView tvAvgValue;
         private TextView tvMinValue;
         private TextView unitForQuantity;
+        private ImageView marketPriceImageView;
 
         public ViewHolder(@NonNull @NotNull View v) {
             super(v);
@@ -73,17 +79,30 @@ public class MarketPriceAdapter  extends RecyclerView.Adapter<MarketPriceAdapter
             tvAvgValue = v.findViewById(R.id.tvAvgValue);
             tvMinValue = v.findViewById(R.id.tvMinValue);
             unitForQuantity = v.findViewById(R.id.unitForQuantity);
+            marketPriceImageView = v.findViewById(R.id.marketPriceImageView);
         }
 
         public void onBind(JSONObject jsonObject) throws JSONException {
             String commCropName = jsonObject.getString("comm_name");
             String variableCropName = jsonObject.getString("variety_name");
-            tv_crop_name.setText(commCropName+" ("+variableCropName+")");
+            tv_crop_name.setText(commCropName + " (" + variableCropName + ")");
             tv_crop_date.setText(jsonObject.getString("date"));
             tvMaxValue.setText(jsonObject.getString("max_price"));
             tvAvgValue.setText(jsonObject.getString("avg_price"));
             tvMinValue.setText(jsonObject.getString("min_price"));
             unitForQuantity.setText(String.format(" %s", jsonObject.getString("unit")));
+            String imageUrl = jsonObject.getString("img_url");
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                Glide.with(mContext)
+                        .load(imageUrl)
+                        .transform(new RoundedCorners(30))
+                        .into(marketPriceImageView);
+            } else {
+                Glide.with(mContext)
+                        .load(R.drawable.marketimage)
+                        .transform(new RoundedCorners(30))
+                        .into(marketPriceImageView);
+            }
         }
     }
 

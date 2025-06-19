@@ -2,7 +2,6 @@ package `in`.gov.mahapocra.mahavistaarai.util
 
 import android.app.Activity
 import android.app.DownloadManager
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
@@ -11,25 +10,21 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.util.Log
+import android.view.LayoutInflater
 import android.webkit.URLUtil
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.CommonStatusCodes
-import com.google.android.gms.safetynet.SafetyNet
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.ListView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.SearchView
 import `in`.co.appinventor.services_api.settings.AppSettings
-import `in`.co.appinventor.services_api.widget.UIToastMessage
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.Year
-import java.time.format.DateTimeParseException
+import `in`.gov.mahapocra.mahavistaarai.R
+import org.json.JSONArray
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
-import java.util.concurrent.Executor
 
 object LocalCustom {
     fun configureLocale(baseContext: Context, languageToLoad: String): Context {
@@ -43,10 +38,12 @@ object LocalCustom {
                 config.setLocale(locale)
                 return baseContext.createConfigurationContext(config)
             }
+
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 -> {
                 config.setLocale(locale)
                 return baseContext.createConfigurationContext(config)
             }
+
             else -> {
                 // Deprecated, but fallback for older devices
                 config.locale = locale
@@ -104,7 +101,6 @@ object LocalCustom {
     fun getSowingDateWithYear(sowingDateUnfiltered: String): String {
         val calendar = Calendar.getInstance()
         val currentYear = calendar.get(Calendar.YEAR)
-        val currentMonth = calendar.get(Calendar.MONTH) + 1 // Calendar.MONTH is 0-based
         var formattedDate = ""
 
         if (sowingDateUnfiltered.contains("/")) {
@@ -113,10 +109,19 @@ object LocalCustom {
                 try {
                     val day = parts[0].toInt()
                     val month = parts[1].toInt()
-                    val adjustedYear = if (month > currentMonth) currentYear - 1 else currentYear
-                    formattedDate = String.format(Locale.US, "%04d-%02d-%02d", adjustedYear, month, day)
+
+                    // Agri year: June to May
+                    val adjustedYear = if (month in 6..12) currentYear else currentYear - 1
+
+                    // Changed format to DD-MM-YYYY
+                    formattedDate =
+                        String.format(Locale.US, "%02d-%02d-%04d", day, month, adjustedYear)
                 } catch (e: Exception) {
-                    Log.e("TAGGER", "Invalid number format in sowing date: $sowingDateUnfiltered", e)
+                    Log.e(
+                        "TAGGER",
+                        "Invalid number format in sowing date: $sowingDateUnfiltered",
+                        e
+                    )
                     formattedDate = ""
                 }
             } else {
@@ -142,9 +147,14 @@ object LocalCustom {
                     val day = parts[0].toInt()
                     val month = parts[1].toInt()
                     val adjustedYear = if (month > currentMonth) currentYear - 1 else currentYear
-                    formattedDate = String.format(Locale.US, "%02d-%02d-%04d", day, month, adjustedYear)
+                    formattedDate =
+                        String.format(Locale.US, "%02d-%02d-%04d", day, month, adjustedYear)
                 } catch (e: Exception) {
-                    Log.e("TAGGER", "Invalid number format in sowing date: $sowingDateUnfiltered", e)
+                    Log.e(
+                        "TAGGER",
+                        "Invalid number format in sowing date: $sowingDateUnfiltered",
+                        e
+                    )
                     formattedDate = ""
                 }
             } else {
@@ -158,24 +168,8 @@ object LocalCustom {
     }
 
 
-    fun logThis(message:String){
+    fun logThis(message: String) {
         Log.d("TAGGER", "logThis: $message")
-    }
-
-    fun verifyWithRecaptcha(context: Context, callback: (Boolean) -> Unit) {
-        SafetyNet.getClient(context).verifyWithRecaptcha(APIKeys.SITE_KEY)
-            .addOnSuccessListener(ContextCompat.getMainExecutor(context)) { response ->
-                val userResponseToken = response.tokenResult
-                callback(userResponseToken?.isNotEmpty() == true)
-            }
-            .addOnFailureListener(ContextCompat.getMainExecutor(context)) { e ->
-                if (e is ApiException) {
-                    Log.d(TAG, "Error: ${CommonStatusCodes.getStatusCodeString(e.statusCode)}")
-                } else {
-                    Log.d(TAG, "Error: ${e.message}")
-                }
-                callback(false)
-            }
     }
 
     fun isStrongPassword(password: String): Boolean {
@@ -195,6 +189,112 @@ object LocalCustom {
         if (password.lowercase() in commonPasswords) return false
 
         return true
+    }
+
+    fun extractUniqueCommNames(jsonArray: JSONArray): Array<String> {
+        val commNamesSet = mutableSetOf<String>()
+        for (i in 0 until jsonArray.length()) {
+            val obj = jsonArray.getJSONObject(i)
+            if (obj.has("comm_name")) {
+                commNamesSet.add(obj.getString("comm_name"))
+            }
+        }
+        return commNamesSet.toTypedArray()
+    }
+
+    fun showCommNameDialog(
+        context: Context,
+        commNames: Array<String>,
+        onItemSelected: (String) -> Unit
+    ) {
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_searchable_list, null)
+        val searchView = dialogView.findViewById<SearchView>(R.id.search_view)
+        val listView = dialogView.findViewById<ListView>(R.id.list_view)
+
+        val adapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, commNames.toList())
+        listView.adapter = adapter
+
+        val dialog = AlertDialog.Builder(context)
+            .setTitle(R.string.search_commodity)
+            .setView(dialogView)
+            .setNegativeButton(R.string.okay, null)
+            .create()
+
+        listView.setOnItemClickListener { _, _, position, _ ->
+            val selectedItem = adapter.getItem(position)
+            selectedItem?.let {
+                onItemSelected(it)
+                dialog.dismiss()
+            }
+        }
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean = false
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapter.filter.filter(newText)
+                return true
+            }
+        })
+
+        dialog.show()
+    }
+
+    fun showCaptchaDialog(context: Context, onResult: (Boolean) -> Unit) {
+        var captcha = CaptchaGenerator.generateCaptchaBitmap(300, 100)
+
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_captcha, null)
+        val imageView = dialogView.findViewById<ImageView>(R.id.captchaImage)
+        val inputField = dialogView.findViewById<EditText>(R.id.captchaInput)
+        val regenerateCaptchaTextView =
+            dialogView.findViewById<TextView>(R.id.regenerateCaptchaTextView)
+
+        imageView.setImageBitmap(captcha.bitmap)
+        regenerateCaptchaTextView.setOnClickListener {
+            captcha = CaptchaGenerator.generateCaptchaBitmap(300, 100)
+            imageView.setImageBitmap(captcha.bitmap)
+        }
+
+        val dialog = AlertDialog.Builder(context)
+            .setTitle(context.getString(R.string.verify_captcha))
+            .setView(dialogView)
+            .setPositiveButton(R.string.reg_submit, null)  // Override later
+            .setNegativeButton(R.string.cancel_it) { _, _ ->
+                onResult(false)
+            }
+            .create()
+
+        dialog.setOnShowListener {
+            val submitButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            submitButton.setOnClickListener {
+                val userInput = inputField.text.toString().trim().uppercase()
+                val captchaCode = captcha.code.uppercase()
+
+                when {
+                    userInput.isEmpty() -> {
+                        inputField.error = "Please enter the CAPTCHA"
+                    }
+
+                    userInput.length != 6 -> {
+                        inputField.error = "CAPTCHA must be exactly 6 characters"
+                    }
+
+                    userInput == captchaCode -> {
+                        Toast.makeText(context, "CAPTCHA Verified ✅", Toast.LENGTH_SHORT).show()
+                        AppPreferenceManager(context).saveBoolean("show_overlay", true)
+                        onResult(true)
+                        dialog.dismiss()
+                    }
+
+                    else -> {
+                        Toast.makeText(context, "Incorrect CAPTCHA ❌", Toast.LENGTH_SHORT).show()
+                        inputField.text?.clear()
+                        inputField.requestFocus()
+                    }
+                }
+            }
+        }
+
+        dialog.show()
     }
 
 }

@@ -72,12 +72,6 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         setContentView(binding.root)
         viewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
 
-
-        binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
-        binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {
-            startActivity(Intent(this, DashboardScreen::class.java))
-        }
-
         binding.completedLabelTextView.text = getString(R.string.crop_stage_completed)
         binding.currentLabelTextView.text = getString(R.string.crop_stage_current)
         binding.pendingLabelTextView.text = getString(R.string.crop_stage_pending)
@@ -91,19 +85,6 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
             startActivity(sharing)
         }
         binding.sowingInfoLayout.textView7.text = getString(R.string.sowing_date)
-
-
-//        binding.sowingInfoLayout.infoIconTextView.visibility = View.VISIBLE
-//        binding.sowingInfoLayout.infoIconTextView.setOnClickListener {
-//            val dialog = AlertDialog.Builder(this)
-//                .setTitle(R.string.sowing_date_alert_title)
-//                .setMessage(R.string.sowing_date_alert)
-//                .setPositiveButton("OK") { dialogInterface, _ ->
-//                    dialogInterface.dismiss()
-//                }
-//                .create()
-//            dialog.show()
-//        }
 
         //fetching values
         cropId = intent.getIntExtra("id", 0)

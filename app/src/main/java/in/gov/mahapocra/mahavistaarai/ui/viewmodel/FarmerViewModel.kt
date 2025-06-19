@@ -1,19 +1,17 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.viewmodel
 
 import android.content.Context
-import android.os.Handler
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.data.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
@@ -23,9 +21,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONException
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 
 class FarmerViewModel : ViewModel() {
@@ -54,6 +49,9 @@ class FarmerViewModel : ViewModel() {
     private val _videosResponse = MutableLiveData<JsonObject>()
     val videosResponse: LiveData<JsonObject> = _videosResponse
 
+    private val _getDigitalShetishalaScheduleResponse = MutableLiveData<JsonObject>()
+    val getDigitalShetishalaScheduleResponse: LiveData<JsonObject> = _getDigitalShetishalaScheduleResponse
+
     private val _sopResponse = MutableLiveData<JsonObject>()
     val sopResponse: LiveData<JsonObject> = _sopResponse
 
@@ -65,6 +63,15 @@ class FarmerViewModel : ViewModel() {
 
     private val _responseMarkerList = MutableLiveData<JsonObject>()
     val responseMarkerList: LiveData<JsonObject> = _responseMarkerList
+
+    private val _compareOtpResponse = MutableLiveData<JsonObject>()
+    val compareOtpResponse: LiveData<JsonObject> = _compareOtpResponse
+
+    private val _compareOtpResponseReg = MutableLiveData<JsonObject>()
+    val compareOtpResponseReg: LiveData<JsonObject> = _compareOtpResponseReg
+
+    private val _shetishalaVideosResponse = MutableLiveData<JsonObject>()
+    val shetishalaVideosResponse: LiveData<JsonObject> = _shetishalaVideosResponse
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -105,6 +112,7 @@ class FarmerViewModel : ViewModel() {
 
             } catch (e: Exception) {
                 _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -136,12 +144,14 @@ class FarmerViewModel : ViewModel() {
                     }
                     _getFarmerSelectedCrop.value = response
                 } catch (e: Exception) {
-                    _error.value = "Error: ${e.localizedMessage}"
+                    _error.value = e.localizedMessage ?: "Unknown error"
+                    FirebaseCrashlytics.getInstance().recordException(e)
                 }
 
             } catch (e: JSONException) {
                 e.printStackTrace()
-                _error.value = "JSON Error: ${e.localizedMessage}"
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -175,7 +185,8 @@ class FarmerViewModel : ViewModel() {
                     response // or create a separate LiveData if needed
 
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Unknown error occurred"
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -207,7 +218,8 @@ class FarmerViewModel : ViewModel() {
 
             } catch (e: Exception) {
                 // Handle error case
-                _error.value = e.localizedMessage ?: "Unknown error occurred"
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -241,7 +253,8 @@ class FarmerViewModel : ViewModel() {
                 _talukaList.value = response // <- your LiveData for the UI
 
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Something went wrong"
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -273,7 +286,8 @@ class FarmerViewModel : ViewModel() {
                 _weatherResponse.value = response
 
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Weather fetch failed"
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -307,7 +321,8 @@ class FarmerViewModel : ViewModel() {
                 _userDetailsResponse.value = response
 
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Failed to fetch user details"
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -328,7 +343,30 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.getFarmersVideosJson()
                 _videosResponse.value = response
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Failed to fetch videos"
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getDigitalShetishalaSchedule(context: Context) {
+        viewModelScope.launch {
+            try {
+                val api = AppInventorApi(
+                    context,
+                    AppEnvironment.FARMER.baseUrl,
+                    "",
+                    AppString(context).getkMSG_WAIT(),
+                    false
+                )
+
+                val retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.getDigitalShetishalaSchedule()
+                _getDigitalShetishalaScheduleResponse.value = response
+            } catch (e: Exception) {
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -359,7 +397,8 @@ class FarmerViewModel : ViewModel() {
                 _sopResponse.value = response
 
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Failed to fetch user details"
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -386,12 +425,13 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.getCHCInformation(requestBody)
                 _chcCentersResponse.value = response
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Failed to fetch user details"
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
 
-    fun fetchLocationDataFromCoordinates(context: Context, latitude: Double, longitude: Double){
+    fun fetchLocationDataFromCoordinates(context: Context, latitude: Double, longitude: Double) {
         viewModelScope.launch {
             try {
                 val jsonObject = JSONObject()
@@ -412,12 +452,13 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.getCodeFromCoordinates(requestBody)
                 _fetchLocationDataFromCoordinates.value = response
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Failed to fetch user details"
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
 
-    fun fetchMarketList(context: Context, languageToLoad: String, districtCode:Int){
+    fun fetchMarketList(context: Context, languageToLoad: String, districtCode: Int) {
         viewModelScope.launch {
             try {
                 val jsonObject = JSONObject()
@@ -440,6 +481,84 @@ class FarmerViewModel : ViewModel() {
                 _responseMarkerList.value = response
             } catch (e: Exception) {
                 _error.value = e.localizedMessage ?: "Failed to fetch user details"
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun compareOtp(context: Context, mobile: String, enteredOTP: String) {
+        viewModelScope.launch {
+            val jsonObject = JSONObject()
+            try {
+                jsonObject.put("mobile_no", mobile.trim { it <= ' ' })
+                jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+                jsonObject.put("otp", enteredOTP)
+
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api =
+                    AppInventorApi(
+                        context,
+                        AppEnvironment.FARMER.baseUrl,
+                        "",
+                        AppString(context).getkMSG_WAIT(),
+                        false
+                    )
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.compareOtp(requestBody)
+                _compareOtpResponse.value = response
+            } catch (e: JSONException) {
+                _error.value = e.localizedMessage ?: "Failed to fetch user details"
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun compareOtpReg(context: Context, mobile: String, enteredOTP: String) {
+        viewModelScope.launch {
+            val jsonObject = JSONObject()
+            try {
+                jsonObject.put("mobile_no", mobile.trim { it <= ' ' })
+                jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+                jsonObject.put("otp", enteredOTP)
+
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api =
+                    AppInventorApi(
+                        context,
+                        AppEnvironment.FARMER.baseUrl,
+                        "",
+                        AppString(context).getkMSG_WAIT(),
+                        false
+                    )
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.compareOtpReg(requestBody)
+                _compareOtpResponseReg.value = response
+            } catch (e: JSONException) {
+                _error.value = e.localizedMessage ?: "Failed to fetch user details"
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getShetishalaVideos(context: Context) {
+        viewModelScope.launch {
+            try {
+                val api = AppInventorApi(
+                    context,
+                    AppEnvironment.FARMER.baseUrl,
+                    "",
+                    AppString(context).getkMSG_WAIT(),
+                    false
+                )
+                val retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.getShetishalaVideos()
+                _shetishalaVideosResponse.value = response
+            } catch (e: JSONException) {
+                _error.value = e.localizedMessage ?: "Failed to fetch user details"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }

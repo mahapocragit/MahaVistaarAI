@@ -4,12 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
@@ -23,13 +22,16 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityMarketPriceBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.MarketPriceAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.extractUniqueCommNames
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.showCommNameDialog
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONArray
@@ -41,22 +43,23 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 
-class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCallbackCode,
+class MarketPrice : AppCompatActivity(), ApiCallbackCode,
     AlertListEventListener, ApiJSONObjCallback {
 
     private lateinit var marketPriceAdapter: MarketPriceAdapter
-    lateinit var binding: ActivityMarketPriceBinding
+    private lateinit var binding: ActivityMarketPriceBinding
+    private lateinit var farmerViewModel: FarmerViewModel
     private var districtJSONArray: JSONArray? = null
     private var talukaJSONArray: JSONArray? = null
     private var marketJSONArray: JSONArray? = null
     private var marketPriceDetailsJSONArray: JSONArray? = null
 
-    lateinit var districtName: String
+    private lateinit var districtName: String
     private var districtID: Int = 0
-    lateinit var talukaName: String
+    private lateinit var talukaName: String
     private var talukaID: Int = 0
     private var marketName: String? = null
-    lateinit var languageToLoad: String
+    private lateinit var languageToLoad: String
     private var marketPreceDate: String = ""
     private var cDate: Date? = null
 
@@ -70,8 +73,8 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
         binding = ActivityMarketPriceBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-        binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
+        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
+        binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.marketprice)
         binding.tvSourceInformation.text = getString(R.string.source_info_market)
         binding.textViewMarket.text = getString(R.string.farmer_select_market)
@@ -82,22 +85,20 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
         binding.recyclerViewMarketPriceList.setLayoutManager(myLayoutManager)
         onClick()
 
-        binding.searchEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                marketPriceAdapter.filter(s.toString())
+        binding.searchEditText.setOnClickListener {
+            marketPriceDetailsJSONArray?.let { extractUniqueCommNames(it) }?.let {
+                showCommNameDialog(
+                    this,
+                    it
+                ) { selectedName ->
+                    marketPriceAdapter.filter(selectedName)
+                    binding.searchEditText.text = selectedName
+                }
             }
-
-            override fun afterTextChanged(s: Editable) {}
-        })
+        }
     }
 
     private fun setConfiguration() {
-        languageToLoad = "mr"
-        if (AppSettings.getLanguage(this@MarketPrice).equals("1", ignoreCase = true)) {
-            languageToLoad = "en"
-        }
         districtName =
             AppSettings.getInstance().getValue(this, AppConstants.uDIST, AppConstants.uDIST)
         talukaName =
@@ -109,7 +110,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
     }
 
     private fun onClick() {
-        binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {
+        binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
             val intent = Intent(this, DashboardScreen::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -125,11 +126,39 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
             binding.tvMarketDate.text = ""
             marketPreceDate = ""
             getMarkets()
+            farmerViewModel.fetchMarketList(this, languageToLoad, districtID)
+            ProgressHelper.showProgressDialog(this)
         }
     }
 
     private fun getMarkets() {
-        getMarketName(languageToLoad, districtID)
+        farmerViewModel.responseMarkerList.observe(this) {
+            ProgressHelper.disableProgressDialog()
+            if (it != null) {
+                val jSONObject = JSONObject(it.toString())
+                val response =
+                    ResponseModel(
+                        jSONObject
+                    )
+
+                if (response.status) {
+                    marketJSONArray = response.getdataArray()
+                    AppUtility.getInstance().showListDialogMarketIndex(
+                        marketJSONArray,
+                        3,
+                        getString(R.string.farmer_select_market),
+                        "apmc_name",
+                        this,
+                        this
+                    )
+                } else {
+                    Toast.makeText(this, "Data Not Found", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+        farmerViewModel.error.observe(this) {
+            ProgressHelper.disableProgressDialog()
+        }
     }
 
     private fun getMarketPriceDetails(apmcId: Int) {
@@ -137,7 +166,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
         try {
             jsonObject.put("api_key", APIKeys.SSO_PROD)
             jsonObject.put("apmc_id", apmcId)
-            if (languageToLoad=="mr") {
+            if (languageToLoad == "mr") {
                 jsonObject.put("lang", languageToLoad)
             }
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
@@ -203,7 +232,7 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
         try {
             jsonObject.put("api_key", APIKeys.SSO_PROD)
             jsonObject.put("district_code", districtID)
-            if (languageToLoad=="mr") {
+            if (languageToLoad == "mr") {
                 jsonObject.put("lang", languageToLoad)
             }
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
@@ -262,37 +291,13 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
 
         if (i == 3) {
             if (s != null) {
+                binding.searchEditText.text = getString(R.string.search_by_crop_name)
                 marketName = s.toString()
                 marketPreceDate = binding.tvMarketDate.text.toString()
                 val apmcID = JSONObject(s1).optInt("apmc_id")
                 getMarketPriceDetails(apmcID)
             }
             binding.textViewMarket.text = s
-        }
-    }
-
-    private fun getMarketName(languageToLoad: String, districtCode: Int) {
-        try {
-            val jsonObject = JSONObject()
-            jsonObject.put("lang", languageToLoad)
-            jsonObject.put("api_key", APIKeys.SSO_PROD)
-            jsonObject.put("district_code", districtCode)
-
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api =
-                AppInventorApi(
-                    this,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(this).getkMSG_WAIT(),
-                    true
-                )
-            val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getMarketList(requestBody)
-            api.postRequest(responseCall, this, 3)
-        } catch (e: JSONException) {
-            e.printStackTrace()
         }
     }
 
@@ -343,27 +348,6 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
 
             if (response.status) {
                 talukaJSONArray = response.getdataArray()
-            } else {
-                Toast.makeText(this, "Data Not Found", Toast.LENGTH_LONG).show()
-            }
-        }
-
-        if (i == 3 && jSONObject != null) {
-            val response =
-                ResponseModel(
-                    jSONObject
-                )
-
-            if (response.status) {
-                marketJSONArray = response.getdataArray()
-                AppUtility.getInstance().showListDialogMarketIndex(
-                    marketJSONArray,
-                    3,
-                    getString(R.string.farmer_select_market),
-                    "apmc_name",
-                    this,
-                    this
-                )
             } else {
                 Toast.makeText(this, "Data Not Found", Toast.LENGTH_LONG).show()
             }
@@ -476,10 +460,6 @@ class MarketPrice : AppCompatActivity(), OnMultiRecyclerItemClickListener, ApiCa
                 Toast.makeText(this, "Data Not Found", Toast.LENGTH_LONG).show()
             }
         }
-    }
-
-    override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
-        TODO("Not yet implemented")
     }
 
     override fun attachBaseContext(newBase: Context) {

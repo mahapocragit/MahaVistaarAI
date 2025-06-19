@@ -58,11 +58,21 @@ interface ApiService {
     @POST(APIServices.kGetMarketData)
     suspend fun getMarketList(@Body params: RequestBody): JsonObject
 
+    @POST(APIServices.kCompareOtp)
+    suspend fun compareOtp(@Body params: RequestBody): JsonObject
+
+    @POST(APIServices.kCompareOtpReg)
+    suspend fun compareOtpReg(@Body params: RequestBody): JsonObject
+
     @GET(APIServices.kRevampedDBTSchemes)
     suspend fun getDBTSchemes(): JsonObject
 
     @GET(APIServices.kRevampedMahaDBTSchemes)
     suspend fun getMahaDBTSchemes(): JsonObject
+
+
+    @GET(APIServices.kGetDigitalShetishalaSchedule)
+    suspend fun getDigitalShetishalaSchedule(): JsonObject
 
     @GET(APIServices.kEventsForNews)
     suspend fun eventsForNews(
@@ -73,4 +83,7 @@ interface ApiService {
 
     @GET(APIServices.kGetVideosCategories)
     suspend fun getFarmersVideosJson(): JsonObject
+
+    @GET(APIServices.kGetShetishalaVideos)
+    suspend fun getShetishalaVideos(): JsonObject
 }

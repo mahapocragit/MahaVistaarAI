@@ -8,14 +8,14 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/weatherCardView"
         android:layout_width="@dimen/_120sdp"
-        android:layout_height="@dimen/_150sdp"
-        android:layout_margin="@dimen/_1sdp">
+        android:layout_margin="@dimen/_2sdp"
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:layout_gravity="center"
+            android:layout_marginVertical="@dimen/_5sdp"
             android:orientation="vertical">
 
             <TextView
@@ -23,6 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:textSize="@dimen/_10sdp"
                 android:text="TextView" />
 
             <ImageView
@@ -39,13 +40,14 @@
                 android:gravity="center"
                 android:text="23°"
                 android:textStyle="bold"
-                android:textSize="12sp" />
+                android:textSize="@dimen/_10sdp" />
 
             <TextView
                 android:id="@+id/rainTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:textSize="@dimen/_10sdp"
                 android:text="TextView" />
 
             <TextView
@@ -53,6 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:textSize="@dimen/_10sdp"
                 android:text="TextView" />
 
             <TextView
@@ -60,6 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:textSize="@dimen/_10sdp"
                 android:text="TextView" />
 
         </LinearLayout>

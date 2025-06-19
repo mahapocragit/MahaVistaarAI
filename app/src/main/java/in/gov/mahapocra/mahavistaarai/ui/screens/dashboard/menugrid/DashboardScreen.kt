@@ -6,11 +6,15 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.GnssAntennaInfo.Listener
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import android.view.animation.AnimationUtils
+import android.view.animation.CycleInterpolator
+import android.view.animation.TranslateAnimation
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.GridView
@@ -27,6 +31,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.messaging.FirebaseMessaging
 import com.squareup.picasso.Picasso
 import `in`.co.appinventor.services_api.app_util.AppUtility
+import `in`.co.appinventor.services_api.listener.Callback
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
@@ -45,9 +50,11 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate.Cl
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.DBTActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard.HealthCardActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.AboutActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.CreditsActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosDetailedActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.ComingSoonActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
@@ -59,6 +66,10 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.ApUtil
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppHelper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -103,6 +114,28 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             layoutInflater
         )
         setContentView(binding.root)
+
+
+        val showOverlay = AppPreferenceManager(this).getBoolean("show_overlay")
+        if (showOverlay){
+            binding.overlayView.visibility = View.VISIBLE
+        }else{
+            binding.overlayView.visibility = View.GONE
+        }
+
+        binding.overlayView.setOnClickListener {
+            binding.overlayView.visibility = View.GONE
+            binding.overlayImage.visibility = View.GONE
+            AppPreferenceManager(this).saveBoolean("show_overlay", false)
+        }
+
+        val shakeAnimation = AnimationUtils.loadAnimation(this, R.anim.shake)
+        binding.appBarMain.dashboardScreen.imageView20.startAnimation(shakeAnimation)
+
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(3000)
+            binding.appBarMain.dashboardScreen.imageView20.clearAnimation()
+        }
 
         binding.appBarMain.dashboardScreen.progressBar.visibility = View.VISIBLE
         binding.appBarMain.dashboardScreen.temperatureTextView.visibility = View.GONE
@@ -182,11 +215,23 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             )
         }
 
-        binding.appBarMain.dashboardScreen.customNavBottom.navChat.setOnClickListener {
+        binding.appBarMain.dashboardScreen.imageView20.setOnClickListener {
             if (!isGuest) {
                 startActivity(Intent(this, ChatbotActivity::class.java))
             } else {
-                Toast.makeText(this, "Please login to continue", Toast.LENGTH_SHORT).show()
+                AlertDialog.Builder(this)
+                    .setMessage(R.string.bot_chat_login_redirect_mesage)
+                    .setPositiveButton(R.string.yes) { dialog, _ ->
+                        // Handle login action here
+                        startActivity(Intent(this, LoginScreen::class.java).apply {
+                            putExtra("from", "dashboard")
+                        })
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton(R.string.no) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
             }
         }
 
@@ -245,56 +290,26 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 )
             )
         }
-        binding.appBarMain.dashboardScreen.customNavBottom.navAbout.setOnClickListener {
+        binding.appBarMain.dashboardScreen.customNavBottom.navDbt.setOnClickListener {
             startActivity(
                 Intent(
                     this@DashboardScreen,
-                    AboutActivity::class.java
+                    DBTActivity::class.java
                 )
             )
         }
-
-//        binding.appBarMain.dashboardScreen.bottomNavigation.itemIconTintList = null
-//        binding.appBarMain.dashboardScreen.bottomNavigation.setOnItemSelectedListener { item: MenuItem ->
-//            when (item.itemId) {
-//                R.id.nav_home -> startActivity(
-//                    Intent(
-//                        this@DashboardScreen,
-//                        DashboardScreen::class.java
-//                    )
-//                )
-//
-//                R.id.nav_about -> startActivity(
-//                    Intent(
-//                        this@DashboardScreen,
-//                        CHCenterActivity::class.java
-//                    )
-//                )
-//
-//                R.id.nav_chat -> startActivity(
-//                    Intent(
-//                        this@DashboardScreen,
-//                        TempDashboardActivity::class.java
-//                    )
-//                )
-//
-//                R.id.nav_about2 -> startActivity(
-//                    Intent(
-//                        this@DashboardScreen,
-//                        AboutActivity::class.java
-//                    )
-//                )
-//
-//                R.id.nav_videos -> startActivity(
-//                    Intent(
-//                        this@DashboardScreen,
-//                        VideosActivity::class.java
-//                    )
-//                )
-//            }
-//            false
-//        }
         askForLocationAndMicrophonePermission()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val shakeAnimation = AnimationUtils.loadAnimation(this, R.anim.shake)
+        binding.appBarMain.dashboardScreen.imageView20.startAnimation(shakeAnimation)
+
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(3000)
+            binding.appBarMain.dashboardScreen.imageView20.clearAnimation()
+        }
     }
 
     private fun askForLocationAndMicrophonePermission() {
@@ -336,13 +351,13 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
                     UIToastMessage.show(
                         this@DashboardScreen,
-                        "Access Permission granted for $permission"
+                        "Access Permission Granted"
                     )
                     // Perform the related action (e.g., accessing the camera) if needed
                 } else {
                     UIToastMessage.show(
                         this@DashboardScreen,
-                        "Access Permission denied for $permission"
+                        "Access Permission Denied"
                     )
                     // Optionally handle specific denied permission cases here
                 }
@@ -350,238 +365,245 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
     }
 
+    fun shakeButton(button: View) {
+        val shake = TranslateAnimation(0f, 10f, 0f, 0f).apply {
+            duration = 100           // 0.1 second per shake
+            interpolator = CycleInterpolator(30f) // total cycles: 30 (about 3 sec)
+        }
+        button.startAnimation(shake)
+    }
+
     private fun fetchReceivingData() {
-        farmerViewModel.getFarmerSelectedCrop.observe(this) {
-            if (it != null) {
-                try {
-                    val jSONObject = JSONObject(it.toString())
-                    val farmersSelectedCropResponse = ResponseModel(jSONObject)
-                    if (farmersSelectedCropResponse.getStatus()) {
-                        val selectedCrops: JSONArray =
-                            farmersSelectedCropResponse.getDataArrays()
-                        if (selectedCrops.length() > 0) {
-                            selectedCropList = ArrayList()
-                            var j = 0
-                            while (j < selectedCrops.length()) {
-                                try {
-                                    val selectedCrop = selectedCrops.getJSONObject(j)
-                                    savedCropId = selectedCrop.getInt("crop_id")
-                                    savedCropName = selectedCrop.getString("name")
-                                    savedCropImageUrl = selectedCrop.getString("image")
-                                    savedCropSowingDate = selectedCrop.getString("sowing_date")
-                                    savedCropWoTRId = selectedCrop.getString("wotr_crop_id")
-                                    binding.appBarMain.dashboardScreen.addChangeCropTV.setText(R.string.change_Crop)
-                                    binding.appBarMain.dashboardScreen.addChangeCropIV.setImageDrawable(
-                                        ContextCompat.getDrawable(
-                                            this, R.drawable.ic_swap
-                                        )
+        // Observe selected crop response
+        farmerViewModel.getFarmerSelectedCrop.observe(this) { response ->
+            response ?: return@observe
+
+            if (isFinishing || isDestroyed) return@observe
+
+            try {
+                val jsonObject = JSONObject(response.toString())
+                val cropResponse = ResponseModel(jsonObject)
+
+                if (cropResponse.getStatus()) {
+                    val selectedCrops = cropResponse.getDataArrays()
+                    if (selectedCrops.length() > 0) {
+                        selectedCropList = ArrayList()
+
+                        for (j in 0 until selectedCrops.length()) {
+                            val selectedCrop = selectedCrops.getJSONObject(j)
+
+                            savedCropId = selectedCrop.getInt("crop_id")
+                            savedCropName = selectedCrop.getString("name")
+                            savedCropImageUrl = selectedCrop.getString("image")
+                            savedCropSowingDate = selectedCrop.getString("sowing_date")
+                            savedCropWoTRId = selectedCrop.getString("wotr_crop_id")
+
+                            binding.appBarMain.dashboardScreen.apply {
+                                addChangeCropTV.setText(R.string.change_Crop)
+                                addChangeCropIV.setImageDrawable(
+                                    ContextCompat.getDrawable(
+                                        this@DashboardScreen,
+                                        R.drawable.ic_swap
                                     )
-                                    appPreferenceManager.saveInt("saved_crop_id", savedCropId)
-                                    binding.appBarMain.dashboardScreen.savedCropNameCardView.visibility =
-                                        View.VISIBLE
-                                    binding.appBarMain.dashboardScreen.savedCropNameTextView.text =
-                                        savedCropName
-                                    Picasso.get().load(savedCropImageUrl).fit().centerCrop()
-                                        .into(
-                                            binding.appBarMain.dashboardScreen.savedCropNameImageView
-                                        )
-                                    binding.appBarMain.dashboardScreen.yourCropTv.visibility =
-                                        View.GONE
-                                    binding.appBarMain.dashboardScreen.addCropCardView.visibility =
-                                        View.GONE
-                                    selectedCropList!!.add(
-                                        CropsCategName(
-                                            selectedCrop.getInt("crop_id"),
-                                            selectedCrop.getString("name"),
-                                            selectedCrop.getString("image"),
-                                            selectedCrop.getString("wotr_crop_id")
-                                        )
-                                    )
-                                } catch (e: JSONException) {
-                                    throw RuntimeException(e)
-                                }
-                                j++
+                                )
+                                savedCropNameCardView.visibility = View.VISIBLE
+                                savedCropNameTextView.text = savedCropName
+                                yourCropTv.visibility = View.GONE
+                                addCropCardView.visibility = View.GONE
                             }
-                            AppSettings.getInstance().setList(
-                                this, AppConstants.kFarmerCrop,
-                                mutableListOf<Any>(*selectedCropList!!.toTypedArray())
-                            )
-                        } else {
-                            binding.appBarMain.dashboardScreen.savedCropNameCardView.visibility =
-                                View.GONE
-                            binding.appBarMain.dashboardScreen.yourCropTv.visibility =
-                                View.VISIBLE
-                            binding.appBarMain.dashboardScreen.yourCropTv.setText(R.string.no_crops_added)
-                            binding.appBarMain.dashboardScreen.addCropCardView.visibility =
-                                View.VISIBLE
-                            binding.appBarMain.dashboardScreen.addChangeCropTV.setText(R.string.add_Crop)
-                            binding.appBarMain.dashboardScreen.addChangeCropIV.setImageDrawable(
-                                ContextCompat.getDrawable(
-                                    this, R.drawable.baseline_add_24
+
+                            if (!savedCropImageUrl.isNullOrEmpty() && !isFinishing && !isDestroyed) {
+                                Picasso.get()
+                                    .load(savedCropImageUrl)
+                                    .fit()
+                                    .centerCrop()
+                                    .error(R.drawable.ic_no_data_found) // fallback image
+                                    .into(binding.appBarMain.dashboardScreen.savedCropNameImageView)
+                            }
+
+                            appPreferenceManager.saveInt("saved_crop_id", savedCropId)
+
+                            selectedCropList?.add(
+                                CropsCategName(
+                                    savedCropId,
+                                    savedCropName,
+                                    savedCropImageUrl,
+                                    savedCropWoTRId
                                 )
                             )
                         }
+
+                        AppSettings.getInstance().setList(
+                            this,
+                            AppConstants.kFarmerCrop,
+                            mutableListOf<Any>(*selectedCropList!!.toTypedArray())
+                        )
+
                     } else {
-                        UIToastMessage.show(this, farmersSelectedCropResponse.getResponse())
+                        binding.appBarMain.dashboardScreen.apply {
+                            savedCropNameCardView.visibility = View.GONE
+                            yourCropTv.visibility = View.VISIBLE
+                            yourCropTv.setText(R.string.no_crops_added)
+                            addCropCardView.visibility = View.VISIBLE
+                            addChangeCropTV.setText(R.string.add_Crop)
+                            addChangeCropIV.setImageDrawable(
+                                ContextCompat.getDrawable(
+                                    this@DashboardScreen,
+                                    R.drawable.baseline_add_24
+                                )
+                            )
+                        }
                     }
-                    farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
-                } catch (e: Exception) {
-                    Log.d("TAGGER", "onResponse: $e")
+                } else {
+                    UIToastMessage.show(this, cropResponse.getResponse())
                 }
+
+                // Fetch taluka data next
+                farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
+
+            } catch (e: Exception) {
+                Log.e("fetchReceivingData", "Exception: ${e.localizedMessage}")
             }
         }
 
-        farmerViewModel.deleteFarmerSelectedCrop.observe(this) {
+        // Observe deletion of selected crop
+        farmerViewModel.deleteFarmerSelectedCrop.observe(this) { response ->
             try {
-                val jSONObject = JSONObject(it.toString())
-                val deleteSelectedCropResponse = ResponseModel(jSONObject)
-                if (deleteSelectedCropResponse.getStatus()) {
+                val jsonObject = JSONObject(response.toString())
+                val deleteResponse = ResponseModel(jsonObject)
+
+                if (deleteResponse.getStatus()) {
                     if (showToast) {
                         UIToastMessage.show(this, getString(R.string.selected_crop_deleted))
                     }
+
                     AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null)
                     selectedCropList?.clear()
                     farmerViewModel.getFarmerSelectedCrop(this, languageToLoad)
+
                 } else {
-                    UIToastMessage.show(this, deleteSelectedCropResponse.getResponse())
+                    UIToastMessage.show(this, deleteResponse.getResponse())
                 }
             } catch (e: Exception) {
-                Log.d("TAGGER", "onResponse: $e")
+                Log.e("deleteSelectedCrop", "Exception: ${e.localizedMessage}")
             }
         }
 
-        farmerViewModel.talukaList.observe(this) {
-            if (it != null) {
-                val jSONObject = JSONObject(it.toString())
-                try {
-                    val talukaID: Int = AppSettings.getInstance()
-                        .getIntValue(this, AppConstants.uTALUKAID, 0)
-                    val talukaArray = jSONObject.optJSONArray("data")
-                    for (i in 0 until talukaArray!!.length()) {
-                        val talukaIDJson = talukaArray.getJSONObject(i)
-                        if (talukaID == talukaIDJson.optInt("code")) {
-                            binding.appBarMain.dashboardScreen.weatherTalukaTV.text =
-                                talukaIDJson.optString("name")
-                        }
+        // Observe taluka list
+        farmerViewModel.talukaList.observe(this) { response ->
+            response ?: return@observe
+
+            try {
+                val jsonObject = JSONObject(response.toString())
+                val talukaArray = jsonObject.optJSONArray("data")
+                val talukaID =
+                    AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
+
+                for (i in 0 until talukaArray!!.length()) {
+                    val talukaItem = talukaArray.getJSONObject(i)
+                    if (talukaItem.optInt("code") == talukaID) {
+                        binding.appBarMain.dashboardScreen.weatherTalukaTV.text =
+                            talukaItem.optString("name")
                     }
-                    farmerViewModel.fetchWeatherDetails(this, talukaID, languageToLoad)
-                } catch (e: Exception) {
-                    Log.d("TAGGER", "onResponse: $e")
                 }
+
+                farmerViewModel.fetchWeatherDetails(this, talukaID, languageToLoad)
+
+            } catch (e: Exception) {
+                Log.e("talukaListObserver", "Exception: ${e.localizedMessage}")
             }
         }
 
-        farmerViewModel.weatherResponse.observe(this) {
-            if (it != null) {
-                binding.appBarMain.dashboardScreen.progressBar.visibility = View.GONE
-                binding.appBarMain.dashboardScreen.temperatureTextView.visibility = View.VISIBLE
-                binding.appBarMain.dashboardScreen.progressBar.progress = 0
-                val jSONObject = JSONObject(it.toString())
-                try {
-                    appPreferenceManager.saveString(
-                        AppConstants.WEATHER_RESPONSE,
-                        jSONObject.toString()
-                    )
-                    val response = ResponseModel(jSONObject)
-                    if (response.getStatus()) {
-                        binding.appBarMain.dashboardScreen.temperatureTextView.text =
-                            getTemperatureFromJSON(jSONObject)
-                    }
-                } catch (e: Exception) {
-                    Log.d("TAGGER", "onResponse: $e")
+        // Observe weather details
+        farmerViewModel.weatherResponse.observe(this) { response ->
+            response ?: return@observe
+
+            try {
+                binding.appBarMain.dashboardScreen.apply {
+                    progressBar.visibility = View.GONE
+                    temperatureTextView.visibility = View.VISIBLE
+                    progressBar.progress = 0
                 }
+
+                val jsonObject = JSONObject(response.toString())
+                appPreferenceManager.saveString(
+                    AppConstants.WEATHER_RESPONSE,
+                    jsonObject.toString()
+                )
+
+                val weatherResponse = ResponseModel(jsonObject)
+                if (weatherResponse.getStatus()) {
+                    binding.appBarMain.dashboardScreen.temperatureTextView.text =
+                        getTemperatureFromJSON(jsonObject)
+                }
+
+            } catch (e: Exception) {
+                Log.e("weatherResponse", "Exception: ${e.localizedMessage}")
             }
         }
 
-        farmerViewModel.userDetailsResponse.observe(this) {
-            if (it != null) {
-                val jSONObject = JSONObject(it.toString())
-                try {
-                    if (jSONObject.optInt("status") == 200) {
-                        try {
-                            val data = jSONObject.optJSONObject("data")
-                            val strName = data?.getString("Name")
-                            val strMobNo = data?.getString("MobileNo")
-                            val strEmailId = data?.getString("EmailId")
-                            val strFFAReg = data?.getInt("FAAPRegistrationID")
-                            val strDistName = data?.getString("DistrictName")
-                            val strDistId = data?.getInt("DistrictCode")
-                            val strTalukaName = data?.getString("TalukaName")
-                            val strTalukaId = data?.getInt("TalukaCode")
-                            val strVillageId = data?.getInt("VillageCode")
-                            val strVillageName = data?.getString("VillageName")
-                            if (strDistId != null) {
-                                districtCode = strDistId
-                            }
-                            if (strTalukaId != null) {
-                                villageCode = strTalukaId
-                            }
-                            AppSettings.getInstance()
-                                .setValue(this, AppConstants.uName, strName)
-                            binding.appBarMain.dashboardScreen.userFullNameTextView.text =
-                                if (isGuest) "Guest" else strName
-                            AppSettings.getInstance()
-                                .setValue(this, AppConstants.uMobileNo, strMobNo)
-                            AppSettings.getInstance()
-                                .setValue(this, AppConstants.uEmail, strEmailId)
-                            strFFAReg?.let {
-                                AppSettings.getInstance()
-                                    .setIntValue(this, AppConstants.fREGISTER_ID, it)
-                            }
-                            AppSettings.getInstance()
-                                .setValue(this, AppConstants.uDIST, strDistName)
-                            strDistId?.let {
-                                AppSettings.getInstance()
-                                    .setIntValue(this, AppConstants.uDISTId, it)
-                            }
-                            AppSettings.getInstance()
-                                .setValue(this, AppConstants.uTALUKA, strTalukaName)
-                            strTalukaId?.let {
-                                AppSettings.getInstance()
-                                    .setIntValue(this, AppConstants.uTALUKAID, it)
-                            }
-                            AppSettings.getInstance()
-                                .setValue(this, AppConstants.uVILLAGE, strVillageName)
-                            strVillageId?.let {
-                                AppSettings.getInstance()
-                                    .setIntValue(this, AppConstants.uVILLAGEID, it)
-                            }
-                            AppSettings.getInstance()
-                                .setBooleanValue(this, AppConstants.userDataSaved, true)
+        // Observe user details
+        farmerViewModel.userDetailsResponse.observe(this) { response ->
+            response ?: return@observe
 
-                            val userName: String = AppSettings.getInstance()
-                                .getValue(this, AppConstants.uName, AppConstants.uName)
-                            val userNumber: String = AppSettings.getInstance()
-                                .getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
-                            val hView = binding.navView.getHeaderView(0)
-                            navUserName = hView.findViewById(R.id.tv_farmerName)
-                            navUserPhone = hView.findViewById(R.id.tv_famerPhoneNumber)
-                            if (userName != "USER_NAME") {
-                                try {
-                                    val capitalizeStrName: String =
-                                        ApUtil.getCamelCaseStreing(userName)
-                                    navUserName.text = capitalizeStrName.ifEmpty { userName }
-                                    navUserPhone.text = userNumber
-                                } catch (e: StringIndexOutOfBoundsException) {
-                                    e.printStackTrace()
-                                }
-                            }
-                            strTalukaId?.let { it1 ->
-                                farmerViewModel.fetchWeatherDetails(
-                                    this,
-                                    it1, languageToLoad
-                                )
-                            }
-                        } catch (e: JSONException) {
-                            e.printStackTrace()
-                        }
+            try {
+                val jsonObject = JSONObject(response.toString())
+                if (jsonObject.optInt("status") == 200) {
+                    val data = jsonObject.optJSONObject("data") ?: return@observe
+
+                    val name = data.optString("Name", "")
+                    val mobNo = data.optString("MobileNo", "")
+                    val emailId = data.optString("EmailId", "")
+                    val ffaReg = data.optInt("FAAPRegistrationID", -1)
+                    val distName = data.optString("DistrictName", "")
+                    val distId = data.optInt("DistrictCode", 0)
+                    val talukaName = data.optString("TalukaName", "")
+                    val talukaId = data.optInt("TalukaCode", 0)
+                    val villageId = data.optInt("VillageCode", 0)
+                    val villageName = data.optString("VillageName", "")
+
+                    districtCode = distId
+                    villageCode = talukaId
+
+                    AppSettings.getInstance().apply {
+                        setValue(this@DashboardScreen, AppConstants.uName, name)
+                        setValue(this@DashboardScreen, AppConstants.uMobileNo, mobNo)
+                        setValue(this@DashboardScreen, AppConstants.uEmail, emailId)
+                        if (ffaReg != -1) setIntValue(
+                            this@DashboardScreen,
+                            AppConstants.fREGISTER_ID,
+                            ffaReg
+                        )
+                        setValue(this@DashboardScreen, AppConstants.uDIST, distName)
+                        setIntValue(this@DashboardScreen, AppConstants.uDISTId, distId)
+                        setValue(this@DashboardScreen, AppConstants.uTALUKA, talukaName)
+                        setIntValue(this@DashboardScreen, AppConstants.uTALUKAID, talukaId)
+                        setValue(this@DashboardScreen, AppConstants.uVILLAGE, villageName)
+                        setIntValue(this@DashboardScreen, AppConstants.uVILLAGEID, villageId)
+                        setBooleanValue(this@DashboardScreen, AppConstants.userDataSaved, true)
                     }
-                } catch (e: Exception) {
-                    Log.d("TAGGER", "onResponse: $e")
+
+                    binding.appBarMain.dashboardScreen.userFullNameTextView.text =
+                        if (isGuest) "Guest" else name
+
+                    val userName = AppSettings.getInstance().getValue(this, AppConstants.uName, "")
+                    val userNumber =
+                        AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, "")
+                    val headerView = binding.navView.getHeaderView(0)
+                    navUserName = headerView.findViewById(R.id.tv_farmerName)
+                    navUserPhone = headerView.findViewById(R.id.tv_famerPhoneNumber)
+
+                    navUserName.text = ApUtil.getCamelCaseStreing(userName).ifEmpty { userName }
+                    navUserPhone.text = userNumber
+
+                    farmerViewModel.fetchWeatherDetails(this, talukaId, languageToLoad)
                 }
+            } catch (e: Exception) {
+                Log.e("userDetailsObserver", "Exception: ${e.localizedMessage}")
             }
         }
     }
+
 
     private val greetingMessage: String
         get() {
@@ -703,14 +725,20 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     }
 
                     7 -> {
+                        startActivity(
+                            Intent(
+                                this@DashboardScreen,
+                                ShetishalaActivity::class.java
+                            )
+                        )
+                    }
+
+                    8 -> {
                         val warehouseIntent = Intent(this@DashboardScreen, Warehouse::class.java)
                         startActivity(warehouseIntent)
                     }
 
-                    8 -> {
-                        val dbtIntent = Intent(this@DashboardScreen, DBTActivity::class.java)
-                        startActivity(dbtIntent)
-                    }
+
                 }
             }
     }
@@ -755,7 +783,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     AppHelper.getInstance().getMenuOptionMarathi()
                 }
             }
-            val menuAdapter = DrawerMenuAdapter(this, jsonArray, farmerId)
+            val menuAdapter = jsonArray?.let { DrawerMenuAdapter(this, it) }
             binding.menuListView.adapter = menuAdapter
             binding.menuListView.onItemClickListener = this
         } catch (e: Exception) {
@@ -864,7 +892,9 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         Intent(
                             this@DashboardScreen,
                             LoginScreen::class.java
-                        )
+                        ).apply {
+                            putExtra("from", "dashboard")
+                        }
                     )
                 }
 
@@ -924,32 +954,32 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             "Climate Resilent Technology",
             "Pest and Diseases",
             "Market Price",
-            "Warehouse Availabilities",
-            "DBT Schemes"
+            "Digital Shetishala",
+            "Warehouse"
         )
 
         private val arrayCategoryMarathi = arrayOf(
             "पीक सल्ला",
-            "एस.ओ.पी.(SOP)",
+            "एस.ओ.पी.",
             "मृदा आरोग्य पत्रिका",
-            "खत मात्रा गणक (कॅलक्यूलेटर)",
-            "बदलत्या हवामानास अनुकूल शेती पद्धती",
+            "खत मात्रा गणक",
+            "हवामानास अनुकूल शेती पद्धती",
             "कीड व रोग",
             "बाजारभाव",
-            "गोदाम उपलब्धता",
-            "थेट लाभ हस्तांतरण योजना"
+            "डिजिटल शेतीशाळा",
+            "गोदाम"
         )
 
         var arrayCategoryImg: IntArray = intArrayOf(
-            R.drawable.ecology,
+            R.drawable.ic_cropadvisory,
             R.drawable.ic_sop,
-            R.drawable.soil,
-            R.drawable.fertilizer,
-            R.drawable.climate_ic,
-            R.drawable.ladybug,
-            R.drawable.market_ic,
-            R.drawable.warehouse,
-            R.drawable.ic_dbt
+            R.drawable.ic_soilhealthcard,
+            R.drawable.ic_fertilizercalculator,
+            R.drawable.ic_climateresilenttechnology,
+            R.drawable.ic_pestsanddiseases,
+            R.drawable.ic_marketprice,
+            R.drawable.ic_digitalfarmer,
+            R.drawable.ic_warehouse
         )
 
         val formattedTimestamp: String

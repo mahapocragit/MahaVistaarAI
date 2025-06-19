@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
@@ -55,6 +56,7 @@ class MahavistaarViewModel : ViewModel(){
 
             } catch (e: Exception) {
                 _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }

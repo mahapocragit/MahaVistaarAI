@@ -16,6 +16,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -39,7 +40,7 @@ class ClimateResilientTechnology : AppCompatActivity(), ApiJSONObjCallback, ApiC
 
     private var climateResilientGroup: RecyclerView? = null
     private var textViewHeaderTitle: TextView? = null
-    private var imageMenushow: ImageView? = null
+    private var imgBackArrow: ImageView? = null
     private lateinit var languageToLoad: String
     private var resilientGrpWiseDetailsJSONArray: JSONArray? = null
     private lateinit var resilientCRAGroupJSONArray: JSONArray
@@ -59,8 +60,9 @@ class ClimateResilientTechnology : AppCompatActivity(), ApiJSONObjCallback, ApiC
         setContentView(R.layout.activity_climate_resilint_technology)
         init()
         textViewHeaderTitle?.setText(R.string.climateTechnology)
-        imageMenushow?.visibility = View.VISIBLE
-        imageMenushow?.setOnClickListener {
+        textViewHeaderTitle?.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
+        imgBackArrow?.visibility = View.VISIBLE
+        imgBackArrow?.setOnClickListener {
             val intent = Intent(this, DashboardScreen::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -73,7 +75,7 @@ class ClimateResilientTechnology : AppCompatActivity(), ApiJSONObjCallback, ApiC
     private fun init() {
         climateResilientGroup = findViewById(R.id.climateResilint)
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
-        imageMenushow = findViewById(R.id.imageMenushow)
+        imgBackArrow = findViewById(R.id.imgBackArrow)
     }
 
     private fun climateResilientGroupList() {

@@ -61,7 +61,7 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
         districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
         init()
         onClick()
-        binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
+        binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.tvSourceInformation.text = getString(R.string.source_info_market)
         binding.relativeLayoutTopBar.textViewHeaderTitle.text =getString(R.string.wareHouse)
         binding.textViewDistrict.text =getString(R.string.farmer_select_district)
@@ -83,7 +83,7 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
     }
 
     private fun onClick() {
-        binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {
+        binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
             val intent = Intent(this, DashboardScreen::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
