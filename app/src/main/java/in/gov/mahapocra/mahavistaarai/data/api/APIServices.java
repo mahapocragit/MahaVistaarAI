@@ -32,6 +32,8 @@ public interface APIServices {
     String kResetPassword = "authService/resetPassword";
     String kCompareOtp = "authService/compareOTP";
     String kCompareOtpReg = "authService/compareOTPReg";
+    String kSearchFarmerRequest = "AgriStackToPoCRA/SearchFarmerRequest";
+    String kRetrieveFarmerData = "AgriStackToPoCRA/FetchFarmerData";
     String fetchFarmerListForSHC = "webservices//fetch_farmer_shc_list";
     String kGetDistrictList = "masterService/get-all-district";
     String kGetCropCategorywise = "masterService/get-crop-categorywise";

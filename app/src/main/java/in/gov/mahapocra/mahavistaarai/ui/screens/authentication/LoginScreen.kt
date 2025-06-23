@@ -16,6 +16,7 @@ import android.widget.RadioButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.JsonObject
@@ -91,6 +92,51 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 Log.d("FCM Token", token) // Copy this exact token
             } else {
                 Log.e("FCM Token", "Fetching token failed", task.exception)
+            }
+        }
+
+        binding.mobileNoOption.setOnClickListener {
+            binding.mobileNoOption.background =
+                ContextCompat.getDrawable(this, R.drawable.shape_right_green) //enabled
+            binding.farmerIdOption.background =
+                ContextCompat.getDrawable(this, R.drawable.shape_left_white)
+            binding.mobileNoOption.setTextColor(ContextCompat.getColor(this, R.color.white))
+            binding.farmerIdOption.setTextColor(ContextCompat.getColor(this, R.color.black))
+            binding.mobileLoginLayout.visibility = View.VISIBLE
+            binding.farmerLoginLayout.visibility = View.GONE
+//            setPreventControlMeasureWebView(preventiveMeasures) //sets what happens
+        }
+        binding.farmerIdOption.setOnClickListener {
+            binding.mobileNoOption.background =
+                ContextCompat.getDrawable(this, R.drawable.shape_right)
+            binding.farmerIdOption.background =
+                ContextCompat.getDrawable(this, R.drawable.shape_left)
+            binding.mobileNoOption.setTextColor(ContextCompat.getColor(this, R.color.black))
+            binding.farmerIdOption.setTextColor(ContextCompat.getColor(this, R.color.white))
+            binding.mobileNoOption
+            binding.farmerIdOption
+            binding.mobileLoginLayout.visibility = View.GONE
+            binding.farmerLoginLayout.visibility = View.VISIBLE
+//            setPreventControlMeasureWebView(preventiveMeasures) //sets what happens
+        }
+
+        binding.yesRadioButton.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                binding.mobileTIL.visibility = View.VISIBLE
+                binding.adharTIL.visibility = View.GONE
+            }else{
+                binding.mobileTIL.visibility = View.GONE
+                binding.adharTIL.visibility = View.VISIBLE
+            }
+        }
+
+        binding.noRadioButton.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                binding.mobileTIL.visibility = View.GONE
+                binding.adharTIL.visibility = View.VISIBLE
+            }else{
+                binding.mobileTIL.visibility = View.VISIBLE
+                binding.adharTIL.visibility = View.GONE
             }
         }
     }
@@ -326,7 +372,6 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         binding.passwordEditText.visibility = View.VISIBLE
                         binding.signInButton.visibility = View.VISIBLE
                         binding.signInButton.setText(R.string.login)
-                        Toast.makeText(this, "Enter your password ", Toast.LENGTH_LONG).show()
                         loginOption = PASSWORD_VERIFY
                     }
 

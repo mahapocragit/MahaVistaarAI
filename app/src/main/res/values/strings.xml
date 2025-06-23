@@ -466,4 +466,5 @@
     <string name="verify_captcha">Verify CAPTCHA</string>
     <string name="you_re_too_early">You’re too early</string>
     <string name="the_meeting_hasn_t_started_yet_please_try_again_closer_to_the_scheduled_time">The meeting hasn’t started yet. Please try again closer to the scheduled time.</string>
+    <string name="do_you_have_a_farmer_id">Do you have a Farmer ID?</string>
 </resources>

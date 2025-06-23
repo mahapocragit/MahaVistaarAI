@@ -70,6 +70,8 @@ interface ApiService {
     @GET(APIServices.kRevampedMahaDBTSchemes)
     suspend fun getMahaDBTSchemes(): JsonObject
 
+    @POST(APIServices.kSearchFarmerRequest)
+    suspend fun retrieveFarmerToken(@Body params: RequestBody): JsonObject
 
     @GET(APIServices.kGetDigitalShetishalaSchedule)
     suspend fun getDigitalShetishalaSchedule(): JsonObject
@@ -86,4 +88,7 @@ interface ApiService {
 
     @GET(APIServices.kGetShetishalaVideos)
     suspend fun getShetishalaVideos(): JsonObject
+
+    @POST(APIServices.kRetrieveFarmerData)
+    suspend fun retrieveFarmerData(requestBody: RequestBody): JsonObject
 }
