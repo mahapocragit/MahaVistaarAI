@@ -561,6 +561,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     val talukaId = data.optInt("TalukaCode", 0)
                     val villageId = data.optInt("VillageCode", 0)
                     val villageName = data.optString("VillageName", "")
+                    val agristack_id = data.optString("farmer_id", "")
 
                     districtCode = distId
                     villageCode = talukaId
@@ -581,6 +582,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         setValue(this@DashboardScreen, AppConstants.uVILLAGE, villageName)
                         setIntValue(this@DashboardScreen, AppConstants.uVILLAGEID, villageId)
                         setBooleanValue(this@DashboardScreen, AppConstants.userDataSaved, true)
+                        setValue(this@DashboardScreen, AppConstants.AGRISTACKID, agristack_id)
                     }
 
                     binding.appBarMain.dashboardScreen.userFullNameTextView.text =

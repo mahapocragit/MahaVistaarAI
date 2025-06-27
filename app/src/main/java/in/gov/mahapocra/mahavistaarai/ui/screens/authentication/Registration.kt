@@ -70,6 +70,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     private var talukaID: Int = 0
     private lateinit var villageName: String
     private var villageID: Int = 0
+    private var agristackId: String = ""
     private var fAAPRegistrationID: String = ""
     private var sessionManager: SessionManager? = null
 
@@ -102,11 +103,34 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         versionName = LocalCustom.getVersionName(this)
         token = FirebaseMessaging.getInstance().token.toString()
-        Log.d("TAGGER", "onCreate: $token")
         sessionManager = SessionManager(this)
         setConfiguration()
         onclick()
         observeResponse()
+    }
+
+    private fun disableView(){
+        binding.nameEditText.isEnabled = false
+        binding.mobNoEditText.isEnabled = false
+        binding.textViewVerify.isEnabled = false
+        binding.passwordEditText.isEnabled = false
+        binding.confirmPasswordEditText.isEnabled = false
+        binding.textViewDist.isEnabled = false
+        binding.textViewTaluka.isEnabled = false
+        binding.textViewVillage.isEnabled = false
+        binding.submitButton.isEnabled = false
+    }
+
+    private fun enableView(){
+        binding.nameEditText.isEnabled = true
+        binding.mobNoEditText.isEnabled = true
+        binding.textViewVerify.isEnabled = true
+        binding.passwordEditText.isEnabled = true
+        binding.confirmPasswordEditText.isEnabled = true
+        binding.textViewDist.isEnabled = true
+        binding.textViewTaluka.isEnabled = true
+        binding.textViewVillage.isEnabled = true
+        binding.submitButton.isEnabled = true
     }
 
     private fun observeResponse() {
@@ -141,11 +165,11 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 AppSettings.getInstance().getValue(this, AppConstants.uDIST, AppConstants.uDIST)
             talukaName =
                 AppSettings.getInstance().getValue(this, AppConstants.uTALUKA, AppConstants.uTALUKA)
-            villageName = AppSettings.getInstance()
-                .getValue(this, AppConstants.uVILLAGE, AppConstants.uVILLAGE)
+            villageName = AppSettings.getInstance().getValue(this, AppConstants.uVILLAGE, AppConstants.uVILLAGE)
             districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
             talukaID = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
             villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
+            agristackId = AppSettings.getInstance().getSavedValue(this, AppConstants.AGRISTACKID)
             binding.passwordEditText.visibility = View.GONE
             binding.passwordErrorTextView.visibility = View.GONE
             binding.confirmPasswordEditText.visibility = View.GONE
@@ -156,6 +180,12 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             binding.textViewTaluka.text = talukaName
             binding.textViewVillage.text = villageName
 
+            Log.d("TAGGER", "setConfiguration: $agristackId")
+            if (agristackId != "null" || agristackId != null){
+                disableView()
+            }else{
+                enableView()
+            }
         } else {
             binding.textView5.text = getString(R.string.register_text_1)
             binding.textView6.text = getString(R.string.register_text_2)

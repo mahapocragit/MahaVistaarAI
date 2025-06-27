@@ -75,16 +75,17 @@
 
             <ImageView
                 android:id="@+id/imageView37"
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_140sdp"
-                app:layout_constraintBottom_toBottomOf="@+id/overlayImage"
-                app:layout_constraintEnd_toStartOf="@+id/overlayImage"
-                app:srcCompat="@drawable/ic_chatbot_robot" />
+                android:layout_width="@dimen/_150sdp"
+                android:layout_height="@dimen/_240sdp"
+                android:textAlignment="textStart"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:srcCompat="@drawable/chatbotfarmericon" />
 
             <ImageView
                 android:id="@+id/imageView38"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/_150sdp"
                 app:layout_constraintBottom_toTopOf="@+id/overlayImage"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/overlayImage"

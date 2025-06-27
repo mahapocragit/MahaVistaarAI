@@ -25,6 +25,9 @@ interface ApiService {
     @POST(APIServices.kdeleteFarmerSelectedCrop)
     suspend fun deleteSelectedCrop(@Body params: RequestBody): JsonObject
 
+    @POST(APIServices.kLoginViaFarmerId)
+    suspend fun farmerLoginBasedOnID(@Body params: RequestBody): JsonObject
+
     @POST(APIServices.kGetCropCategorywise)
     suspend fun getCropCategoryWise(@Body params: RequestBody): JsonObject
 

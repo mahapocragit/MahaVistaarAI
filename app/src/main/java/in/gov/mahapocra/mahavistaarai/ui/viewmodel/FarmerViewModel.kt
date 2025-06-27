@@ -73,6 +73,9 @@ class FarmerViewModel : ViewModel() {
     private val _shetishalaVideosResponse = MutableLiveData<JsonObject>()
     val shetishalaVideosResponse: LiveData<JsonObject> = _shetishalaVideosResponse
 
+    private val _agristackLoginResponse = MutableLiveData<JsonObject>()
+    val agristackLoginResponse: LiveData<JsonObject> = _agristackLoginResponse
+
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
@@ -558,6 +561,37 @@ class FarmerViewModel : ViewModel() {
                 _shetishalaVideosResponse.value = response
             } catch (e: JSONException) {
                 _error.value = e.localizedMessage ?: "Failed to fetch user details"
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun farmerIdBasedLogin(context: Context, agristackID: String) {
+        viewModelScope.launch {
+            try {
+                val jsonObject = JSONObject().apply {
+                    put("SecurityKey", APIKeys.SSO_PROD)
+                    put("FarmerID", agristackID)
+                }
+
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api = AppInventorApi(
+                    context,
+                    AppEnvironment.FARMER.baseUrl,
+                    "",
+                    AppString(context).getkMSG_WAIT(),
+                    false
+                )
+                val retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+
+                val response = apiRequest.farmerLoginBasedOnID(requestBody)
+
+                // You can handle the result however you want, for example:
+                _agristackLoginResponse.value = response
+
+            } catch (e: Exception) {
+                _error.value = e.localizedMessage ?: "Unknown error"
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }

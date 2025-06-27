@@ -78,7 +78,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:id="@+id/mobileNoOption"
+                    android:id="@+id/farmerIdOption"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginVertical="5dp"
@@ -87,12 +87,12 @@
                     android:background="@drawable/shape_right_green"
                     android:elevation="5dp"
                     android:gravity="center"
-                    android:text="Mobile No."
+                    android:text="@string/farmer_id"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/farmerIdOption"
+                    android:id="@+id/mobileNoOption"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginVertical="5dp"
@@ -101,7 +101,7 @@
                     android:background="@drawable/shape_left_white"
                     android:elevation="5dp"
                     android:gravity="center"
-                    android:text="Farmer ID"
+                    android:text="@string/mobile_no"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
@@ -112,37 +112,8 @@
                 android:id="@+id/farmerLoginLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textView42"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/do_you_have_a_farmer_id"
-                    android:textSize="@dimen/_12sdp" />
-
-                <RadioGroup
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/yesRadioButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="@color/actionbar_color_figma"
-                        android:layout_marginEnd="@dimen/_10sdp"
-                        android:checked="true"
-                        android:text="@string/yes" />
-
-                    <RadioButton
-                        android:id="@+id/noRadioButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="@color/actionbar_color_figma"
-                        android:text="@string/no" />
-                </RadioGroup>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/mobileTIL"
@@ -159,7 +130,7 @@
                         android:background="@drawable/login_edit_bg"
                         android:digits="0987654321"
                         android:gravity="center|start"
-                        android:hint="Enter Farmer ID"
+                        android:hint="@string/enter_farmer_id"
                         android:inputType="number"
                         android:longClickable="false"
                         android:maxLength="11"
@@ -170,46 +141,31 @@
                         android:textSize="14sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/adharTIL"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_1sdp"
-                    android:visibility="gone"
-                    android:elevation="5dp"
-                    app:hintTextAppearance="@style/TextLabel">
-
-                    <EditText
-                        android:id="@+id/aadharEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/height70"
-                        android:background="@drawable/login_edit_bg"
-                        android:digits="0987654321"
-                        android:gravity="center|start"
-                        android:hint="Enter Aadhar Number"
-                        android:inputType="number"
-                        android:longClickable="false"
-                        android:maxLength="10"
-                        android:maxLines="1"
-                        android:paddingHorizontal="@dimen/padding5"
-                        android:textColor="@color/black"
-                        android:textIsSelectable="false"
-                        android:textSize="14sp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/signInButton2"
+                    android:id="@+id/sendFarmerIdOTPButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="@dimen/_1sdp"
                     android:backgroundTint="@color/actionbar_color_figma"
                     android:padding="@dimen/padding12"
-                    android:text="@string/login"
+                    android:text="@string/sendOtp"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text16"
                     app:cornerRadius="@dimen/_15sdp" />
+
+                <TextView
+                    android:id="@+id/knowYourFarmerIdText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:visibility="gone"
+                    android:textColor="@color/red"
+                    android:layout_weight="1"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:textSize="@dimen/_10sdp"
+                    android:text="@string/click_here_to_know_your_farmer_id" />
 
             </LinearLayout>
 
@@ -217,6 +173,7 @@
                 android:id="@+id/mobileLoginLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="gone"
                 android:orientation="vertical">
 
                 <com.google.android.material.textfield.TextInputLayout
