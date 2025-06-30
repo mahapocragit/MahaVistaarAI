@@ -79,6 +79,19 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         binding = ActivityLoginScreenTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
         FirebaseHelper(this)
+
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w("TAGGER", "Fetching FCM token failed", task.exception)
+                    return@addOnCompleteListener
+                }
+
+                // Get the actual token
+                val token = task.result
+                Log.d("TAGGER", "FCM Token: $token")
+            }
+
         farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         binding.changeLanguageImageView.setOnClickListener {
             openChangeLangPopup()
@@ -450,9 +463,9 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             if (jSONObject != null) {
                 if (jSONObject.optInt("status") == 200) {
                     refreshToken = jSONObject.getString("refresh_token")
-                    if (agriStackMobile!=""){
+                    if (agriStackMobile != "") {
                         callLoginAPIForFarmer(refreshToken, enteredOTP)
-                    }else{
+                    } else {
                         callLoginAPI(refreshToken, enteredOTP)
                     }
                 } else {

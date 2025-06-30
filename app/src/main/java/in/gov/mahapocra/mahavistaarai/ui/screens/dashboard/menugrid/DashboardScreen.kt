@@ -117,16 +117,19 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
 
         val showOverlay = AppPreferenceManager(this).getBoolean("show_overlay")
-        if (showOverlay){
-            binding.overlayView.visibility = View.VISIBLE
-        }else{
-            binding.overlayView.visibility = View.GONE
+        if (showOverlay) {
+            binding.drawerLayout1.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            binding.appBarMain.overlayView.visibility = View.VISIBLE
+        } else {
+            binding.drawerLayout1.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+            binding.appBarMain.overlayView.visibility = View.GONE
         }
 
-        binding.overlayView.setOnClickListener {
-            binding.overlayView.visibility = View.GONE
-            binding.overlayImage.visibility = View.GONE
+        binding.appBarMain.overlayView.setOnClickListener {
+            binding.appBarMain.overlayView.visibility = View.GONE
+            binding.appBarMain.overlayImage.visibility = View.GONE
             AppPreferenceManager(this).saveBoolean("show_overlay", false)
+            binding.drawerLayout1.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         }
 
         val shakeAnimation = AnimationUtils.loadAnimation(this, R.anim.shake)

@@ -280,7 +280,6 @@ object LocalCustom {
 
                     userInput == captchaCode -> {
                         Toast.makeText(context, "CAPTCHA Verified ✅", Toast.LENGTH_SHORT).show()
-                        AppPreferenceManager(context).saveBoolean("show_overlay", true)
                         onResult(true)
                         dialog.dismiss()
                     }
