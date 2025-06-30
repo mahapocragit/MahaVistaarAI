@@ -146,7 +146,13 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             if (farmerId.length != 11 && farmerId.isEmpty()) {
                 UIToastMessage.show(this, "Please enter valid Farmer ID")
             } else {
-                farmerViewModel.farmerIdBasedLogin(this, farmerId)
+                showCaptchaDialog(this){
+                    if (it) {
+                        farmerViewModel.farmerIdBasedLogin(this, farmerId)
+                    }else{
+                        UIToastMessage.show(this, "CAPTCHA verification Failed!!")
+                    }
+                }
             }
         }
 
