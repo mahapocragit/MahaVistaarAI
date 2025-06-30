@@ -464,6 +464,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         if (i == 2) {
             if (jSONObject != null) {
                 if (jSONObject.optInt("status") == 200) {
+                    AppPreferenceManager(this).saveBoolean("show_overlay", true)
                     if (loginOption == OTP_VERIFY) {
                         val message: String = jSONObject.getString("response")
                         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
