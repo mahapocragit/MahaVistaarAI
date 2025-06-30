@@ -1,19 +1,5 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication
 
-import `in`.co.appinventor.services_api.api.AppInventorApi
-import `in`.co.appinventor.services_api.app_util.AppUtility
-import `in`.co.appinventor.services_api.listener.AlertListEventListener
-import `in`.co.appinventor.services_api.listener.ApiCallbackCode
-import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
-import `in`.co.appinventor.services_api.settings.AppSettings
-import `in`.co.appinventor.services_api.widget.UIToastMessage
-import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.SessionManager
-import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -27,20 +13,38 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.JsonObject
+import `in`.co.appinventor.services_api.api.AppInventorApi
+import `in`.co.appinventor.services_api.app_util.AppUtility
+import `in`.co.appinventor.services_api.listener.AlertListEventListener
+import `in`.co.appinventor.services_api.listener.ApiCallbackCode
+import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
+import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.co.appinventor.services_api.widget.UIToastMessage
+import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
+import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
+import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityRegistrationBinding
-import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.isStrongPassword
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.SessionManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -169,7 +173,8 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
             talukaID = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
             villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
-            agristackId = AppSettings.getInstance().getSavedValue(this, AppConstants.AGRISTACKID)
+            val rawValue = AppSettings.getInstance().getSavedValue(this, AppConstants.AGRISTACKID)
+            agristackId = if (rawValue.isNullOrEmpty() || rawValue == "null") "" else rawValue
             binding.passwordEditText.visibility = View.GONE
             binding.passwordErrorTextView.visibility = View.GONE
             binding.confirmPasswordEditText.visibility = View.GONE
@@ -181,7 +186,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             binding.textViewVillage.text = villageName
 
             Log.d("TAGGER", "setConfiguration: $agristackId")
-            if (agristackId != "null" || agristackId != null){
+            if (agristackId != ""){
                 disableView()
             }else{
                 enableView()
