@@ -4,9 +4,7 @@ import android.content.Context;
 
 import java.io.IOException;
 
-import in.co.appinventor.services_api.app_util.AppConstants;
 import in.co.appinventor.services_api.util.Utility;
-import in.co.appinventor.services_api.widget.UIToastMessage;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;

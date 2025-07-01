@@ -1,6 +1,5 @@
 package in.co.appinventor.services_api.util;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,16 +8,9 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
-import android.provider.Settings;
-import android.telephony.TelephonyManager;
-
-import androidx.core.app.ActivityCompat;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.UUID;
-
-import in.co.appinventor.services_api.app_util.AppConstants;
 
 /* renamed from: in.co.appinventor.services_api.util.Utility */
 public class Utility {

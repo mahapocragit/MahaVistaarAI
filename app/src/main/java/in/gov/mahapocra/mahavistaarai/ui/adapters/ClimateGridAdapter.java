@@ -20,8 +20,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import in.gov.mahapocra.mahavistaarai.R;
-import in.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.DiseaseInformation;
 import in.gov.mahapocra.mahavistaarai.data.model.ClimateGridModel;
+import in.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.DiseaseInformation;
 
 public class ClimateGridAdapter extends ArrayAdapter<ClimateGridModel> {
 

@@ -1,9 +1,7 @@
 package `in`.gov.mahapocra.mahavistaarai.application
 
 import android.app.Application
-import android.content.ContentValues
 import android.content.Context
-import android.util.Log
 import com.androidnetworking.AndroidNetworking
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp

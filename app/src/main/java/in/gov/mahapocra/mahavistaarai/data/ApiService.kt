@@ -2,12 +2,7 @@ package `in`.gov.mahapocra.mahavistaarai.data
 
 import com.google.gson.JsonObject
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
-import `in`.gov.mahapocra.mahavistaarai.data.model.SchemeDataModel
 import okhttp3.RequestBody
-import org.json.JSONArray
-import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header

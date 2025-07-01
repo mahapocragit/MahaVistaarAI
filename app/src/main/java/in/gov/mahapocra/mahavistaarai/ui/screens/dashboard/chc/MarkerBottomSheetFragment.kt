@@ -11,7 +11,6 @@ import android.widget.TextView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import `in`.gov.mahapocra.mahavistaarai.R
 import org.json.JSONArray
-import org.json.JSONObject
 
 
 class MarkerBottomSheetFragment : BottomSheetDialogFragment() {

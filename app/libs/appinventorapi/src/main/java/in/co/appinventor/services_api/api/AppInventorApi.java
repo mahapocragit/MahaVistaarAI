@@ -23,14 +23,11 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import in.co.appinventor.services_api.app_util.AppConstants;
 import in.co.appinventor.services_api.listener.ApiCallbackCode;
 import in.co.appinventor.services_api.util.Utility;
 import in.co.appinventor.services_api.widget.UIToastMessage;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
