@@ -99,7 +99,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/overlayImage"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/overlayImage"
-                app:srcCompat="@drawable/arrow" />
+                app:srcCompat="@drawable/arrow_reversed" />
 
             <ImageView
                 android:id="@+id/imageView35"
