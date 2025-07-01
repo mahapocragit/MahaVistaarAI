@@ -99,30 +99,6 @@
         <activity android:name=".ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages" />
         <activity android:name=".ui.screens.dashboard.menugrid.pest.DiseaseInformation" />
         <activity
-            android:name=".ai_disc_tp_imp.identify.Identify.Identify_dashboard"
-            android:exported="false" />
-        <activity
-            android:name=".ai_disc_tp_imp.identify.Identify.Identify_img_upload"
-            android:exported="false"
-            android:parentActivityName=".ai_disc_tp_imp.identify.Identify.Identify_dashboard" />
-        <activity
-            android:name=".ai_disc_tp_imp.identify.util.NetNotWorking"
-            android:exported="false"
-            android:label="@string/title_activity_internet_not_working"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ai_disc_tp_imp.identify.util.Cam"
-            android:exported="false"
-            android:parentActivityName=".ai_disc_tp_imp.identify.Identify.Identify_img_upload" />
-        <activity
-            android:name=".ai_disc_tp_imp.identify.FarmerPestDiseaseIdentify"
-            android:configChanges="screenLayout|orientation|screenSize"
-            android:exported="false" />
-        <activity
-            android:name=".ai_disc_tp_imp.identify.Identify.Result_identified"
-            android:exported="false"
-            android:parentActivityName=".ai_disc_tp_imp.identify.Identify.Identify_img_upload" />
-        <activity
             android:name=".ui.screens.dashboard.menugrid.AddCropActivity"
             android:exported="false" />
         <activity android:name=".ui.screens.dashboard.sidenavigation.news.NewsListActivity" />
