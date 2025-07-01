@@ -80,13 +80,11 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         FirebaseMessaging.getInstance().token
             .addOnCompleteListener { task ->
                 if (!task.isSuccessful) {
-                    Log.w("TAGGER", "Fetching FCM token failed", task.exception)
                     return@addOnCompleteListener
                 }
 
                 // Get the actual token
                 val token = task.result
-                Log.d("TAGGER", "FCM Token: $token")
             }
 
         farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
@@ -155,7 +153,6 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
         farmerViewModel.agristackLoginResponse.observe(this) {
             if (it != null) {
-                Log.d("TAGGER", "farmerIdLayoutValidation success: $it")
                 val jsonObject = JSONObject(it.toString())
                 if (jsonObject.optInt("status") == 200) {
                     agriStackMobile = jsonObject.optString("mobile")
