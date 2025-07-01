@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,16 +9,6 @@
     <include
         android:id="@+id/relativeLayoutTopBar"
         layout="@layout/layout_toolbar" />
-
-    <RelativeLayout
-        android:id="@+id/appBar1"
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:visibility="gone"
-        android:background="@drawable/pocra_banner_image2"
-        android:fitsSystemWindows="true"
-        android:theme="@style/AppTheme.AppBarOverlay">
-    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mainRecyclerView"

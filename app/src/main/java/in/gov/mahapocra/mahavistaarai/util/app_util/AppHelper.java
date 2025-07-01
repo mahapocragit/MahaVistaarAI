@@ -32,7 +32,7 @@ public class AppHelper {
             jsonObject4.put("icon", "partners_ic");
 
             JSONObject jsonObject1 = new JSONObject();
-            jsonObject1.put("id", 3);
+            jsonObject1.put("id", 1);
             jsonObject1.put("name", "About");
             jsonObject1.put("icon", "about_ic");
 
@@ -63,7 +63,7 @@ public class AppHelper {
             jsonObject4.put("icon", "partners_ic");
 
             JSONObject jsonObject1 = new JSONObject();
-            jsonObject1.put("id", 3);
+            jsonObject1.put("id", 1);
             jsonObject1.put("name", "About");
             jsonObject1.put("icon", "about_ic");
 
@@ -96,7 +96,7 @@ public class AppHelper {
             jsonObject4.put("icon", "partners_ic");
 
             JSONObject jsonObject1 = new JSONObject();
-            jsonObject1.put("id", 3);
+            jsonObject1.put("id", 1);
             jsonObject1.put("name", "आमच्या विषयी");
             jsonObject1.put("icon", "about_ic");
 
@@ -126,7 +126,7 @@ public class AppHelper {
             jsonObject4.put("icon", "partners_ic");
 
             JSONObject jsonObject1 = new JSONObject();
-            jsonObject1.put("id", 3);
+            jsonObject1.put("id", 1);
             jsonObject1.put("name", "आमच्या विषयी");
             jsonObject1.put("icon", "about_ic");
 

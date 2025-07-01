@@ -14,7 +14,6 @@ import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.DiseaseInformation
-import `in`.gov.mahapocra.mahavistaarai.data.model.DiseasesDetails
 import org.json.JSONArray
 import org.json.JSONException
 

@@ -2,22 +2,19 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate
 
 import android.app.ProgressDialog
 import android.content.Context
-import `in`.co.appinventor.services_api.settings.AppSettings
-import `in`.gov.mahapocra.mahavistaarai.R
-import android.content.res.Configuration
 import android.graphics.Bitmap
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.appcompat.app.AppCompatActivity
+import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityResilientWebUrlBinding
-import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
-import java.util.*
 
 class ResilientWebUrl : AppCompatActivity() {
 

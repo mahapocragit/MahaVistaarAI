@@ -3,41 +3,28 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.listener.DatePickerRequestListener
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.model.CropsCategName
-import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
-import `in`.gov.mahapocra.mahavistaarai.data.model.VideoDetails
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropCategoriesAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
-import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.logThis
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
-import org.json.JSONArray
 import org.json.JSONObject
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.Year
 import java.util.Calendar
 import java.util.Date
-import java.util.Locale
 
 
 class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,

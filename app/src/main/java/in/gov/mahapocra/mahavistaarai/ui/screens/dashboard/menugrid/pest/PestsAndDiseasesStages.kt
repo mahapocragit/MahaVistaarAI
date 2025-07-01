@@ -18,7 +18,6 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.DiseaseStages
 import `in`.gov.mahapocra.mahavistaarai.data.model.DiseasesDetails

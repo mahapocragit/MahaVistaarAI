@@ -2,11 +2,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealt
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.webkit.WebSettings
-import android.webkit.WebViewClient
-import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +15,6 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import org.json.JSONObject
-import java.util.Locale
 
 class PdfWebViewActivity : AppCompatActivity() {
 

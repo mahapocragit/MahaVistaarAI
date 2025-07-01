@@ -1,10 +1,7 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation
 
 import android.content.Context
-import android.graphics.text.LineBreaker
-import android.os.Build
 import android.os.Bundle
-import android.text.Layout.JUSTIFICATION_MODE_INTER_WORD
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import `in`.co.appinventor.services_api.settings.AppSettings

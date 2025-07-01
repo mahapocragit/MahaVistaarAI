@@ -7,7 +7,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.gov.mahapocra.mahavistaarai.R
 import org.json.JSONArray
 import org.json.JSONObject

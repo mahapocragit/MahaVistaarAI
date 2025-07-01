@@ -3,7 +3,6 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest

@@ -3,10 +3,8 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.pocra
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.gov.mahapocra.mahavistaarai.databinding.FarmersDbtItemViewBinding
 import org.json.JSONArray
-import org.json.JSONObject
 
 class NRMrDBTRecyclerAdapter(
     private val farmersJSONArray: JSONArray,

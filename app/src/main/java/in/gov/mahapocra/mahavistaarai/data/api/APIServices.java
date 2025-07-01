@@ -27,6 +27,7 @@ public interface APIServices {
     String kGetVideosCategories = "videoService/get-video-category-details";
     String kGetShetishalaVideos = "videoService/get-digital-shetishala-details";
     String kdeleteFarmerSelectedCrop = "farmerService/delete-farmers-selected-crop";
+    String kLoginViaFarmerId = "authService/farmeridotp";
     String kGetmarketsList = "masterService/get-markets-by-taluka";
     String kGetmarketsPriceDetails = "msambService/msamb-data";
     String kResetPassword = "authService/resetPassword";

@@ -1,18 +1,17 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.pocra
 
 import android.content.Context
-import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
-import `in`.co.appinventor.services_api.settings.AppSettings
-import `in`.gov.mahapocra.mahavistaarai.R
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
+import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDbtSchemesBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.DbtSchemesViewModel

@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.GnssAntennaInfo.Listener
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -31,7 +30,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.messaging.FirebaseMessaging
 import com.squareup.picasso.Picasso
 import `in`.co.appinventor.services_api.app_util.AppUtility
-import `in`.co.appinventor.services_api.listener.Callback
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
@@ -54,7 +52,6 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.Shetisha
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.AboutActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.CreditsActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosDetailedActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.ComingSoonActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
@@ -117,16 +114,19 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
 
         val showOverlay = AppPreferenceManager(this).getBoolean("show_overlay")
-        if (showOverlay){
-            binding.overlayView.visibility = View.VISIBLE
-        }else{
-            binding.overlayView.visibility = View.GONE
+        if (showOverlay) {
+            binding.drawerLayout1.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            binding.appBarMain.overlayView.visibility = View.VISIBLE
+        } else {
+            binding.drawerLayout1.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+            binding.appBarMain.overlayView.visibility = View.GONE
         }
 
-        binding.overlayView.setOnClickListener {
-            binding.overlayView.visibility = View.GONE
-            binding.overlayImage.visibility = View.GONE
+        binding.appBarMain.overlayView.setOnClickListener {
+            binding.appBarMain.overlayView.visibility = View.GONE
+            binding.appBarMain.overlayImage.visibility = View.GONE
             AppPreferenceManager(this).saveBoolean("show_overlay", false)
+            binding.drawerLayout1.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         }
 
         val shakeAnimation = AnimationUtils.loadAnimation(this, R.anim.shake)
@@ -561,6 +561,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     val talukaId = data.optInt("TalukaCode", 0)
                     val villageId = data.optInt("VillageCode", 0)
                     val villageName = data.optString("VillageName", "")
+                    val agristack_id = data.optString("farmer_id", "")
 
                     districtCode = distId
                     villageCode = talukaId
@@ -581,6 +582,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         setValue(this@DashboardScreen, AppConstants.uVILLAGE, villageName)
                         setIntValue(this@DashboardScreen, AppConstants.uVILLAGEID, villageId)
                         setBooleanValue(this@DashboardScreen, AppConstants.userDataSaved, true)
+                        setValue(this@DashboardScreen, AppConstants.AGRISTACKID, agristack_id)
                     }
 
                     binding.appBarMain.dashboardScreen.userFullNameTextView.text =

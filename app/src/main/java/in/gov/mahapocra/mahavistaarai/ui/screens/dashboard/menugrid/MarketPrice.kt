@@ -17,7 +17,6 @@ import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.listener.AlertListEventListener
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
-import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys

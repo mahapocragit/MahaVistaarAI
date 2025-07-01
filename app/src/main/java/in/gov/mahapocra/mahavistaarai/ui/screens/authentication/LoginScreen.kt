@@ -33,6 +33,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLoginScreenTempBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.showCaptchaDialog
@@ -60,7 +61,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     private var enteredOTP = ""
     private val PASSWORD_VERIFY = 0
     private val OTP_VERIFY = 1
-
+    private var agriStackMobile = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +76,19 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         binding = ActivityLoginScreenTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
         FirebaseHelper(this)
+
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w("TAGGER", "Fetching FCM token failed", task.exception)
+                    return@addOnCompleteListener
+                }
+
+                // Get the actual token
+                val token = task.result
+                Log.d("TAGGER", "FCM Token: $token")
+            }
+
         farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         binding.changeLanguageImageView.setOnClickListener {
             openChangeLangPopup()
@@ -97,9 +111,9 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
         binding.mobileNoOption.setOnClickListener {
             binding.mobileNoOption.background =
-                ContextCompat.getDrawable(this, R.drawable.shape_right_green) //enabled
+                ContextCompat.getDrawable(this, R.drawable.shape_left) //enabled
             binding.farmerIdOption.background =
-                ContextCompat.getDrawable(this, R.drawable.shape_left_white)
+                ContextCompat.getDrawable(this, R.drawable.shape_right)
             binding.mobileNoOption.setTextColor(ContextCompat.getColor(this, R.color.white))
             binding.farmerIdOption.setTextColor(ContextCompat.getColor(this, R.color.black))
             binding.mobileLoginLayout.visibility = View.VISIBLE
@@ -108,9 +122,9 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         }
         binding.farmerIdOption.setOnClickListener {
             binding.mobileNoOption.background =
-                ContextCompat.getDrawable(this, R.drawable.shape_right)
+                ContextCompat.getDrawable(this, R.drawable.shape_left_white)
             binding.farmerIdOption.background =
-                ContextCompat.getDrawable(this, R.drawable.shape_left)
+                ContextCompat.getDrawable(this, R.drawable.shape_right_green)
             binding.mobileNoOption.setTextColor(ContextCompat.getColor(this, R.color.black))
             binding.farmerIdOption.setTextColor(ContextCompat.getColor(this, R.color.white))
             binding.mobileNoOption
@@ -120,24 +134,38 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 //            setPreventControlMeasureWebView(preventiveMeasures) //sets what happens
         }
 
-        binding.yesRadioButton.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
-                binding.mobileTIL.visibility = View.VISIBLE
-                binding.adharTIL.visibility = View.GONE
-            }else{
-                binding.mobileTIL.visibility = View.GONE
-                binding.adharTIL.visibility = View.VISIBLE
+        farmerIdLayoutValidation()
+    }
+
+    private fun farmerIdLayoutValidation() {
+        binding.sendFarmerIdOTPButton.setOnClickListener {
+            val farmerId = binding.farmerIdEditText.text.toString()
+            if (farmerId.length != 11 && farmerId.isEmpty()) {
+                UIToastMessage.show(this, "Please enter valid Farmer ID")
+            } else {
+                showCaptchaDialog(this){
+                    if (it) {
+                        farmerViewModel.farmerIdBasedLogin(this, farmerId)
+                    }else{
+                        UIToastMessage.show(this, "CAPTCHA verification Failed!!")
+                    }
+                }
             }
         }
 
-        binding.noRadioButton.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
-                binding.mobileTIL.visibility = View.GONE
-                binding.adharTIL.visibility = View.VISIBLE
-            }else{
-                binding.mobileTIL.visibility = View.VISIBLE
-                binding.adharTIL.visibility = View.GONE
+        farmerViewModel.agristackLoginResponse.observe(this) {
+            if (it != null) {
+                Log.d("TAGGER", "farmerIdLayoutValidation success: $it")
+                val jsonObject = JSONObject(it.toString())
+                if (jsonObject.optInt("status") == 200) {
+                    agriStackMobile = jsonObject.optString("mobile")
+                    addVerificationDialogForFarmer()
+                }
             }
+        }
+
+        farmerViewModel.error.observe(this) {
+            Log.d("TAGGER", "farmerIdLayoutValidation error: $it")
         }
     }
 
@@ -359,13 +387,44 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         }
     }
 
+    private fun callLoginAPIForFarmer(strToken: String, otp: String = "") {
+
+        val jsonObject = JSONObject()
+        try {
+            jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+            jsonObject.put("MobileNo", agriStackMobile.trim { it <= ' ' })
+            if (otp.isNotEmpty()) {
+                jsonObject.put("otp", otp)
+            } else {
+                jsonObject.put("Password", userPass)
+            }
+            jsonObject.put("refresh_token", strToken)
+
+            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+            val api =
+                AppInventorApi(
+                    this,
+                    AppEnvironment.FARMER.baseUrl,
+                    "",
+                    AppString(this).getkMSG_WAIT(),
+                    true
+                )
+            val retrofit: Retrofit = api.getRetrofitInstance()
+            val apiRequest = retrofit.create(APIRequest::class.java)
+            val responseCall: Call<JsonObject> = apiRequest.getUserLogin(requestBody)
+            api.postRequest(responseCall, this, 2)
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+    }
+
     fun onRadioButtonClicked(view: View) {
         if (view is RadioButton) {
             // Is the button now checked?
             val checked = view.isChecked
 
             // Check which radio button was clicked
-            when (view.getId()) {
+            when (view.id) {
                 R.id.radioButtonPwd ->
                     if (checked) {
                         binding.passwordTextInput.visibility = View.VISIBLE
@@ -407,7 +466,11 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             if (jSONObject != null) {
                 if (jSONObject.optInt("status") == 200) {
                     refreshToken = jSONObject.getString("refresh_token")
-                    callLoginAPI(refreshToken, enteredOTP)
+                    if (agriStackMobile != "") {
+                        callLoginAPIForFarmer(refreshToken, enteredOTP)
+                    } else {
+                        callLoginAPI(refreshToken, enteredOTP)
+                    }
                 } else {
                     val message: String = jSONObject.getString("response")
                     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
@@ -417,6 +480,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         if (i == 2) {
             if (jSONObject != null) {
                 if (jSONObject.optInt("status") == 200) {
+                    AppPreferenceManager(this).saveBoolean("show_overlay", true)
                     if (loginOption == OTP_VERIFY) {
                         val message: String = jSONObject.getString("response")
                         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
@@ -482,6 +546,56 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         if (jSONObject.optInt("status") == 200) {
                             mobileNo = binding.userIdEditText.text.toString()
                             callRefreshTokenAPI(mobileNo, userPass, enteredOTP)
+                            dialog.dismiss()
+                        } else {
+                            UIToastMessage.show(this, getString(R.string.wrong_OTP))
+                            dialog.dismiss()
+                        }
+                        dialog.dismiss()
+                    }
+                }
+            }
+
+        }
+
+        resendOTP.setOnClickListener {
+            dialog.dismiss()
+            userValidateAndLogin()
+        }
+        dialog.show()
+    }
+
+    private fun addVerificationDialogForFarmer() {
+        dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_activity_verification)
+        dialog.window!!.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        val dialogTitle = dialog.findViewById<TextView>(R.id.dialogTitle)
+        dialogTitle.text = resources.getString(R.string.enterOtp)
+        val receiveOTPEditText = dialog.findViewById<EditText>(R.id.OptEditText)
+        val submitButton = dialog.findViewById<Button>(R.id.submitButton)
+        val resendOTP = dialog.findViewById<Button>(R.id.resentOTP)
+        val cancelButton = dialog.findViewById<ImageView>(R.id.imageView_close)
+        otpVerification(resendOTP)
+        cancelButton.setOnClickListener { dialog.dismiss() }
+        submitButton.setOnClickListener {
+
+            enteredOTP = receiveOTPEditText.text.toString()
+            if (enteredOTP.isEmpty()) {
+                receiveOTPEditText.error = resources.getString(R.string.regist_otp_err)
+                receiveOTPEditText.requestFocus()
+            } else {
+                farmerViewModel.compareOtp(this, agriStackMobile, enteredOTP)
+                farmerViewModel.compareOtpResponse.observe(this) {
+                    if (it != null) {
+                        val jSONObject = JSONObject(it.toString())
+                        if (jSONObject.optInt("status") == 200) {
+                            callRefreshTokenAPI(agriStackMobile, userPass, enteredOTP)
                             dialog.dismiss()
                         } else {
                             UIToastMessage.show(this, getString(R.string.wrong_OTP))

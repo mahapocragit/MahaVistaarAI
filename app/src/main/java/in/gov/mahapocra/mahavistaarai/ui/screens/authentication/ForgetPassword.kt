@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
@@ -30,7 +29,6 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityForgetPasswordTempBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
-import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
@@ -39,7 +37,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
-import java.util.Locale
 
 class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode {
 
