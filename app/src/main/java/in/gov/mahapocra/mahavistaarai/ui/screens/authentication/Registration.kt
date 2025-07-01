@@ -185,7 +185,6 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             binding.textViewTaluka.text = talukaName
             binding.textViewVillage.text = villageName
 
-            Log.d("TAGGER", "setConfiguration: $agristackId")
             if (agristackId != ""){
                 disableView()
             }else{
