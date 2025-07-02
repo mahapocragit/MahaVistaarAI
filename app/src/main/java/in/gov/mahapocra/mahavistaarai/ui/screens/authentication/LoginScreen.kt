@@ -108,6 +108,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         }
 
         binding.mobileNoOption.setOnClickListener {
+            agriStackMobile = ""
             binding.mobileNoOption.background =
                 ContextCompat.getDrawable(this, R.drawable.shape_left) //enabled
             binding.farmerIdOption.background =
@@ -607,7 +608,12 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
         resendOTP.setOnClickListener {
             dialog.dismiss()
-            userValidateAndLogin()
+            if (agriStackMobile.isNotEmpty()){
+                val farmerId = binding.farmerIdEditText.text.toString()
+                farmerViewModel.farmerIdBasedLogin(this, farmerId)
+            }else{
+                userValidateAndLogin()
+            }
         }
         dialog.show()
     }
