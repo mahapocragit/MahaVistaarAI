@@ -23,6 +23,7 @@ import androidx.appcompat.widget.SearchView
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import org.json.JSONArray
+import java.security.MessageDigest
 import java.util.Calendar
 import java.util.Locale
 
@@ -88,14 +89,13 @@ object LocalCustom {
     }
 
     fun getVersionName(context: Context): String {
-        var packageInfo: PackageInfo? = null
-        try {
-            packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+        return try {
+            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+            packageInfo.versionName ?: "unknown"
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
+            "unknown"
         }
-        val versionName = packageInfo!!.versionName
-        return versionName
     }
 
     fun getSowingDateWithYear(sowingDateUnfiltered: String): String {
@@ -294,6 +294,18 @@ object LocalCustom {
         }
 
         dialog.show()
+    }
+
+    fun hashWithSHA512(password: String): String {
+        val md = MessageDigest.getInstance("SHA-512")
+        val bytes = md.digest(password.toByteArray())
+
+        val hexString = StringBuilder()
+        for (byte in bytes) {
+            hexString.append(String.format("%02x", byte))
+        }
+
+        return hexString.toString()
     }
 
 }

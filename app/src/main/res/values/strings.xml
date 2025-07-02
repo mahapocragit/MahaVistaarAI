@@ -14,11 +14,6 @@
         <item>Pest Management</item>
         <item>Bandhavan</item>
     </string-array>
-    <string name="pesticide_info" translatable="false">
-    Sure! Here are two common pesticides:\n<br /><br />
-    <b>1. Malathion</b> – An organophosphate insecticide used to control a variety of insects in agriculture and public health programs.\n<br /><br />
-    <b>2. Chlorpyrifos</b> – Another organophosphate insecticide used to manage pests on crops and in residential settings (though its use has been restricted in some countries due to health concerns).
-    </string>
     <string name="weather">  Weather</string>
     <string name="climateTechnology">Climate Resilient Technology</string>
     <string name="dbtschema"> DBT Schemes</string>
@@ -74,7 +69,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_Farmer_Name">Farmer Name</string>
     <string name="nav_header_subtitle">farmer </string>
-    <string name="nav_Farmer_phone_number"></string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
@@ -109,9 +103,7 @@
     <string name="regist_otp_err">Please enter OTP number</string>
 
     <string name="name_validation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ.</string>
-    <string name="char_validation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ.</string>
     <string name="alpha_num_validation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.</string>
-    <string name="name_char_validation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <string name="decimal">1234567890.</string>
     <string name="numeric">1234567890</string>
     <string name="ifsc_code">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890</string>
@@ -144,17 +136,12 @@
     <string name="do_not_have_account">Don\'t have an account?</string>
     <string name="create_new">Click here for registration</string>
 
-    <string name="not_register">Not Register?</string>
     <string name="name">Name</string>
-    <string name="phone_number">Phone Number</string>
     <string name="register">Register</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="change_password">Change Password</string>
     <string name="name_error">Please enter your name</string>
-    <string name="phone_error">Please enter your phone number</string>
     <string name="lgn_register_phone_error">Please enter your registered number</string>
-    <string name="email_error">Please enter your email address</string>
-    <string name="error_invalid_email">This email address is invalid</string>
     <string name="password_error">Please enter a password</string>
     <string name="conf_password_error">Please enter your confirm password</string>
     <string name="pass_equals_confirmpass">Password and confirmed password should be same</string>
@@ -177,18 +164,10 @@
     <string name="no_notifications_error">कोणत्याही नवीन सूचना आढळल्या नाहीत</string>
     <string name="NotificationMsg">Notification not found...!!! </string>
 
-    <string name="advisory_feedback_scale_text">On a scale of 5(1-lowest,5-highest), please provide your feedback on the following.</string>
-    <string name="advisory_questions1_text">1) Is advisory provided useful to you ?</string>
-    <string name="advisory_questions2_text">2) Are Pests &amp; Diseases mitigation provided feasible for you?</string>
-    <string name="advisory_questions2_1_text">2) As mentioned in advisory,Is there a pest/disease attack in your crop or in your area?</string>
-    <string name="advisory_comment_heading">Please provide your comment below if any:</string>
-
-
     <string name="min_Price">Min Price :  </string>
     <string name="max_Price">Max Price :  </string>
     <string name="avg_Price">Avg Price :  </string>
     <string name="advisoryTip"> टीप : वरील सल्ला भारतीय हवामान खात्याच्या अंदाजावर आधारित असून कृषि विद्यापीठाच्या शिफारशीप्रमाणे स्थानिक पीक परिस्थितीनुसार/ क्रॉपसॅपअंतर्गत तयार केलेला आहे. प्रकल्प व्यवस्थापन कक्ष मुंबई येथून सदर हवामान अंदाज व कृषि सल्ला प्रसारित करण्यात येत आहे. </string>
-
 
     <string name="error_farmer_select_district">Please Select District</string>
     <string name="error_farmer_select_taluka">Please Select Taluka</string>
@@ -199,10 +178,6 @@
     <string name="total_available_capacity">Total Availabale Capacity</string>
     <string name="record_date">Record Date </string>
     <string name="warehouse_details">Details </string>
-    <string name="weatherTextf">Forecast Next 5 days Advisory-(IMD)</string>
-    <string name="weatherTextp">Last 5 days Advisory-(Mahaved)</string>
-    <string name="badhvarText">Yashogatha</string>
-    <string name="my_vill_Profi_Pdf">PoCRA Village Profile</string>
 
     <string name="date_text">Select Date</string>
     <string name="date">Date: </string>
@@ -216,10 +191,6 @@
     <string name="cloud_cover">Cloud Cover</string>
 
     <string name="weatherText">Forecast Next 5 days Advisory</string>
-
-
-    <string name="pocra_village">PoCRA Village List</string>
-
     <string name="todays_temp">Todays Weather</string>
     <string name="select_crop">Select Crop</string>
     <string name="select_sowing_date">Select Sowing Date</string>
@@ -232,18 +203,11 @@
     <string name="max_value"> Max Temp</string>
     <string name="wind_value"> Wind Speed</string>
     <string name="humidity_value">Humidity</string>
-    <string name="next_days">Forecast Next 5 Days  </string>
-    <string name="previous_days">Previous 5 Days Weather</string>
     <string name="agromet">Agro-Met Advisory</string>
     <string name="source_info_market"> Information Source- Maharashtra State Agricultural Marketing Board</string>
-    <string name="source_info_warehouse">Information Source- Maharashtra State Warehousing Corporation </string>
-    <string name="source_info_weather">Information Source- (IMD &amp; Mahavedh) </string>
     <string name="agromet_details">हलक्या स्वरुपात पाऊस पडण्याची शक्यता.  आकाश अंशतः स्वच्छ ते बहुतांश ढगाळ राहण्याची शक्यता.  हळुवार वारा असण्याची शक्यता.  तापमान १८.८ ते ३४.१ अंश से. दरम्यान असण्याची शक्यता.</string>
-    <string name="about_pocra_details">Maharashtras Project On Climate Resilient Agriculture (POCRA) is a constructive effort to develop in farmers the skills to adapt to the changing climate patterns. The results of the efforts made through the Nanaji Deshmukh Krishi Sanjeevani project (POCRA) are being visible. The last few years have seen major changes in the climate. Agriculture and climate are closely related. The project is designed keeping in mind that climate has great impact on agriculture and to enhance the profitability of farmers despite the climate change.</string>
 
-    <string name="subsidey_string"><u>Subsidy</u></string>
     <string name="poCRA_dBT_activity">PoCRA DBT Activity</string>
-    <string name="required_Documents">Required Documents</string>
     <string name="eligibility_Criteria">Eligibility Criteria</string>
     <string name="notes">Notes</string>
 

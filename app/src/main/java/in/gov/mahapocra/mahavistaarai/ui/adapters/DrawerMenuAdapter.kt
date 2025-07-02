@@ -45,13 +45,10 @@ class DrawerMenuAdapter(
             val mLayoutInflater =
                 mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-            if (mLayoutInflater != null) {
-                convertView = mLayoutInflater.inflate(R.layout.list_menu_drawer, null)
-
-                viewHolder.iconImageView = convertView.findViewById(R.id.iconImageView)
-                viewHolder.nameTextView = convertView.findViewById(R.id.nameTextView)
-                convertView.tag = viewHolder
-            }
+            convertView = mLayoutInflater.inflate(R.layout.list_menu_drawer, null)
+            viewHolder.iconImageView = convertView.findViewById(R.id.iconImageView)
+            viewHolder.nameTextView = convertView.findViewById(R.id.nameTextView)
+            convertView.tag = viewHolder
         } else {
             viewHolder = convertView.tag as ViewHolder
         }
