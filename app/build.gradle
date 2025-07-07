@@ -111,13 +111,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-config'
 
-    // ML Kit
-    implementation 'com.google.mlkit:vision-common:17.3.0'
-    implementation 'com.google.mlkit:image-labeling-common:18.1.0'
-    implementation 'com.google.mlkit:image-labeling:17.0.7'
-    implementation 'com.google.mlkit:image-labeling-default-common:17.0.0'
-    implementation 'com.google.mlkit:object-detection:17.0.0'
-
     // Retrofit
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 

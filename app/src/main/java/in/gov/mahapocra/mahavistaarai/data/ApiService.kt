@@ -21,7 +21,9 @@ interface ApiService {
     suspend fun deleteSelectedCrop(@Body params: RequestBody): JsonObject
 
     @POST(APIServices.kLoginViaFarmerId)
-    suspend fun farmerLoginBasedOnID(@Body params: RequestBody): JsonObject
+    suspend fun farmerLoginBasedOnID(
+        @Header("FarmerID") farmerId: String,
+        @Body params: RequestBody): JsonObject
 
     @POST(APIServices.kGetCropCategorywise)
     suspend fun getCropCategoryWise(@Body params: RequestBody): JsonObject
@@ -33,7 +35,10 @@ interface ApiService {
     suspend fun getWeatherDetails(@Body params: RequestBody): JsonObject
 
     @POST(APIServices.kGetRegistration)
-    suspend fun getGetRegistration(@Body params: RequestBody): JsonObject
+    suspend fun getGetRegistration(
+        @Header("FAAPRegistrationID") registrationId: Int,
+        @Body params: RequestBody
+    ): JsonObject
 
     @POST(APIServices.kGetSOPByList)
     suspend fun getSOPByList(@Body params: RequestBody): JsonObject
@@ -57,10 +62,14 @@ interface ApiService {
     suspend fun getMarketList(@Body params: RequestBody): JsonObject
 
     @POST(APIServices.kCompareOtp)
-    suspend fun compareOtp(@Body params: RequestBody): JsonObject
+    suspend fun compareOtp(
+        @Header("MobileNo") mobileNo: String,
+        @Body params: RequestBody): JsonObject
 
     @POST(APIServices.kCompareOtpReg)
-    suspend fun compareOtpReg(@Body params: RequestBody): JsonObject
+    suspend fun compareOtpReg(
+        @Header("MobileNo") mobileNo: String,
+        @Body params: RequestBody): JsonObject
 
     @GET(APIServices.kRevampedDBTSchemes)
     suspend fun getDBTSchemes(): JsonObject

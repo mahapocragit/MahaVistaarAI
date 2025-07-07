@@ -89,9 +89,7 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
         } else {
             val jsonObject = JSONObject()
             try {
-                jsonObject.put("MobileNo", mob.trim { it <= ' ' })
                 jsonObject.put("SecurityKey", APIServices.SSO_KEY)
-
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api =
                     AppInventorApi(
@@ -103,7 +101,8 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
                     )
                 val retrofit: Retrofit = api.getRetrofitInstance()
                 val apiRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getOTPRequest(requestBody)
+                val responseCall: Call<JsonObject> =
+                    apiRequest.getOTPRequest(mob.trim { it <= ' ' }, requestBody)
                 api.postRequest(responseCall, this, 2)
             } catch (e: JSONException) {
                 e.printStackTrace()
@@ -119,9 +118,6 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
             val jsonObject = JSONObject()
             try {
                 jsonObject.put("SecurityKey", APIServices.SSO_KEY)
-                jsonObject.put("MobileNo", mobileNo.trim { it <= ' ' })
-                jsonObject.put("Password", userPass)
-
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api =
                     AppInventorApi(
@@ -133,7 +129,7 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
                     )
                 val retrofit: Retrofit = api.getRetrofitInstance()
                 val apiRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getUserLogin(requestBody)
+                val responseCall: Call<JsonObject> = apiRequest.getUserLogin(mobileNo.trim { it <= ' ' }, userPass, "",requestBody)
                 api.postRequest(responseCall, this, 3)
             } catch (e: JSONException) {
                 e.printStackTrace()

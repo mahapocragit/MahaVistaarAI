@@ -113,7 +113,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         observeResponse()
     }
 
-    private fun disableView(){
+    private fun disableView() {
         binding.nameEditText.isEnabled = false
         binding.mobNoEditText.isEnabled = false
         binding.textViewVerify.isEnabled = false
@@ -125,7 +125,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         binding.submitButton.isEnabled = false
     }
 
-    private fun enableView(){
+    private fun enableView() {
         binding.nameEditText.isEnabled = true
         binding.mobNoEditText.isEnabled = true
         binding.textViewVerify.isEnabled = true
@@ -163,13 +163,15 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName)
             registerMob = AppSettings.getInstance()
                 .getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
+            Log.d("TAGGER", "setConfiguration: $registerMob")
             emailid =
                 AppSettings.getInstance().getValue(this, AppConstants.uEmail, AppConstants.uEmail)
             districtName =
                 AppSettings.getInstance().getValue(this, AppConstants.uDIST, AppConstants.uDIST)
             talukaName =
                 AppSettings.getInstance().getValue(this, AppConstants.uTALUKA, AppConstants.uTALUKA)
-            villageName = AppSettings.getInstance().getValue(this, AppConstants.uVILLAGE, AppConstants.uVILLAGE)
+            villageName = AppSettings.getInstance()
+                .getValue(this, AppConstants.uVILLAGE, AppConstants.uVILLAGE)
             districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
             talukaID = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
             villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
@@ -185,9 +187,9 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             binding.textViewTaluka.text = talukaName
             binding.textViewVillage.text = villageName
 
-            if (agristackId != ""){
+            if (agristackId != "") {
                 disableView()
-            }else{
+            } else {
                 enableView()
             }
         } else {
@@ -343,8 +345,6 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
 
     private fun sendOTP() {
         mob = binding.mobNoEditText.text.toString()
-        // verification.setTextColor(Color.parseColor("#000000"))
-
         if (farmerRegisterID > 0 && mob != registerMob) {
             mobileNumberStatus = false
         }
@@ -357,9 +357,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         } else {
             val jsonObject = JSONObject()
             try {
-                jsonObject.put("MobileNo", mob.trim { it <= ' ' })
                 jsonObject.put("SecurityKey", APIServices.SSO_KEY)
-
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api =
                     AppInventorApi(
@@ -373,7 +371,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                     val retrofit: Retrofit = api.getRetrofitInstance()
                     val apiRequest = retrofit.create(APIRequest::class.java)
                     val responseCall: Call<JsonObject> =
-                        apiRequest.getOTPRegisterRequest(requestBody)
+                        apiRequest.getOTPRegisterRequest(mob.trim { it <= ' ' }, requestBody)
                     api.postRequest(responseCall, this@Registration, 2)
                 }
             } catch (e: JSONException) {
@@ -406,8 +404,6 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             val jsonObject = JSONObject()
             try {
                 jsonObject.put("Name", userName)
-                jsonObject.put("MobileNo", mob.trim { it <= ' ' })
-                jsonObject.put("NewMobileNo", mob.trim { it <= ' ' })
                 jsonObject.put("EmailId", emailid)
                 jsonObject.put("DistrictName", districtName)
                 jsonObject.put("DistrictCode", districtID)
@@ -435,7 +431,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                     val retrofit: Retrofit = api.getRetrofitInstance()
                     val apiRequest = retrofit.create(APIRequest::class.java)
                     val responseCall: Call<JsonObject> =
-                        apiRequest.getRegistrationRequest(requestBody)
+                        apiRequest.getRegistrationRequest(registerMob, mob.trim { it <= ' ' },requestBody)
                     api.postRequest(responseCall, this@Registration, 3)
                 }
             } catch (e: JSONException) {
@@ -484,8 +480,6 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             val jsonObject = JSONObject()
             try {
                 jsonObject.put("Name", userName)
-                jsonObject.put("MobileNo", mob.trim { it <= ' ' })
-                jsonObject.put("NewMobileNo", mob.trim { it <= ' ' })
                 jsonObject.put("EmailId", emailid)
                 jsonObject.put("DistrictName", districtName)
                 jsonObject.put("DistrictCode", districtID)
@@ -513,7 +507,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                     val retrofit: Retrofit = api.getRetrofitInstance()
                     val apiRequest = retrofit.create(APIRequest::class.java)
                     val responseCall: Call<JsonObject> =
-                        apiRequest.getRegistrationRequest(requestBody)
+                        apiRequest.getRegistrationRequest(mob.trim { it <= ' ' }, mob.trim { it <= ' ' },requestBody)
                     api.postRequest(responseCall, this@Registration, 3)
                 }
             } catch (e: JSONException) {
@@ -563,7 +557,11 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 receiveOTPEditText.error = resources.getString(R.string.regist_otp_err)
                 receiveOTPEditText.requestFocus()
             } else {
-                farmerViewModel.compareOtpReg(this, binding.mobNoEditText.text.toString(), enteredOTP)
+                farmerViewModel.compareOtpReg(
+                    this,
+                    binding.mobNoEditText.text.toString(),
+                    enteredOTP
+                )
             }
             farmerViewModel.compareOtpResponseReg.observe(this) {
                 if (it != null) {

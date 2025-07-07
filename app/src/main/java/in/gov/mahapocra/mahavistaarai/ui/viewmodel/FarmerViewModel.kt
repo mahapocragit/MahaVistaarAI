@@ -295,15 +295,11 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun fetchUserInformation(context: Context) {
+    fun fetchUserInformation(context: Context, farmerRegistrationID: Int) {
         viewModelScope.launch {
             try {
-                val farmerId =
-                    AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
-
                 val jsonObject = JSONObject().apply {
                     put("SecurityKey", APIServices.SSO_KEY)
-                    put("FAAPRegistrationID", farmerId)
                 }
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
@@ -318,7 +314,7 @@ class FarmerViewModel : ViewModel() {
                 val retrofit = api.getRetrofitInstance()
                 val apiRequest = retrofit.create(ApiService::class.java)
 
-                val response = apiRequest.getGetRegistration(requestBody)
+                val response = apiRequest.getGetRegistration(farmerRegistrationID, requestBody)
 
                 // Handle success
                 _userDetailsResponse.value = response
@@ -493,10 +489,8 @@ class FarmerViewModel : ViewModel() {
         viewModelScope.launch {
             val jsonObject = JSONObject()
             try {
-                jsonObject.put("mobile_no", mobile.trim { it <= ' ' })
                 jsonObject.put("SecurityKey", APIServices.SSO_KEY)
                 jsonObject.put("otp", enteredOTP)
-
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api =
                     AppInventorApi(
@@ -508,7 +502,7 @@ class FarmerViewModel : ViewModel() {
                     )
                 val retrofit: Retrofit = api.getRetrofitInstance()
                 val apiRequest = retrofit.create(ApiService::class.java)
-                val response = apiRequest.compareOtp(requestBody)
+                val response = apiRequest.compareOtp(mobile.trim { it <= ' ' },requestBody)
                 _compareOtpResponse.value = response
             } catch (e: JSONException) {
                 _error.value = e.localizedMessage ?: "Failed to fetch user details"
@@ -521,7 +515,6 @@ class FarmerViewModel : ViewModel() {
         viewModelScope.launch {
             val jsonObject = JSONObject()
             try {
-                jsonObject.put("mobile_no", mobile.trim { it <= ' ' })
                 jsonObject.put("SecurityKey", APIServices.SSO_KEY)
                 jsonObject.put("otp", enteredOTP)
 
@@ -536,7 +529,7 @@ class FarmerViewModel : ViewModel() {
                     )
                 val retrofit: Retrofit = api.getRetrofitInstance()
                 val apiRequest = retrofit.create(ApiService::class.java)
-                val response = apiRequest.compareOtpReg(requestBody)
+                val response = apiRequest.compareOtpReg(mobile.trim { it <= ' ' },requestBody)
                 _compareOtpResponseReg.value = response
             } catch (e: JSONException) {
                 _error.value = e.localizedMessage ?: "Failed to fetch user details"
@@ -571,9 +564,7 @@ class FarmerViewModel : ViewModel() {
             try {
                 val jsonObject = JSONObject().apply {
                     put("SecurityKey", APIKeys.SSO_PROD)
-                    put("FarmerID", agristackID)
                 }
-
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api = AppInventorApi(
                     context,
@@ -585,7 +576,7 @@ class FarmerViewModel : ViewModel() {
                 val retrofit = api.getRetrofitInstance()
                 val apiRequest = retrofit.create(ApiService::class.java)
 
-                val response = apiRequest.farmerLoginBasedOnID(requestBody)
+                val response = apiRequest.farmerLoginBasedOnID(agristackID, requestBody)
 
                 // You can handle the result however you want, for example:
                 _agristackLoginResponse.value = response

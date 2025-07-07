@@ -5,25 +5,42 @@ import com.google.gson.JsonObject;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface APIRequest {
 
     @POST(APIServices.kOTPRequest)
-    Call<JsonObject> getOTPRequest(@Body RequestBody params);
+    Call<JsonObject> getOTPRequest(
+            @Header("MobileNo") String mobileNo,
+            @Body RequestBody params);
 
     @POST(APIServices.kOTPRegisterRequest)
-    Call<JsonObject> getOTPRegisterRequest(@Body RequestBody params);
+    Call<JsonObject> getOTPRegisterRequest(
+            @Header("MobileNo") String mobileNo,
+            @Body RequestBody params);
 
     @POST(APIServices.kRegistrationRequest)
-    Call<JsonObject> getRegistrationRequest(@Body RequestBody params);
+    Call<JsonObject> getRegistrationRequest(
+            @Header("MobileNo") String mobileNo,
+            @Header("NewMobileNo") String updatedMobileNo,
+            @Body RequestBody params);
 
     @POST(APIServices.kUserLogin)
-    Call<JsonObject> getUserLogin(@Body RequestBody params);
+    Call<JsonObject> getUserLogin(
+            @Header("MobileNo") String mobileNo,
+            @Header("Password") String password,
+            @Header("otp") String enteredOTP,
+            @Body RequestBody params);
 
     @POST(APIServices.kRefreshTokenLogin)
-    Call<JsonObject> getRefreshTokenLogin(@Body RequestBody params);
+    Call<JsonObject> getRefreshTokenLogin(
+            @Header("MobileNo") String mobileNo,
+            @Header("Password") String password,
+            @Header("otp") String enteredOTP,
+            @Header("fcmToken") String firebaseToken,
+            @Body RequestBody params);
 
     @POST(APIServices.kWareHouseDetails)
     Call<JsonObject> getWareHouseDetails(@Body RequestBody params);

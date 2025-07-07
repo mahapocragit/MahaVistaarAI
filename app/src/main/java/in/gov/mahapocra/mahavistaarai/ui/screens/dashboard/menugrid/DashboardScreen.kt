@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -165,7 +166,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             }
         }
 
-        fetchFirebaseTokenFromServer()
         setConfiguration()
         this.window.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
@@ -298,7 +298,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 )
             )
         }
-        askForLocationAndMicrophonePermission()
+        askForPermissions()
     }
 
     override fun onResume() {
@@ -312,7 +312,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
     }
 
-    private fun askForLocationAndMicrophonePermission() {
+    private fun askForPermissions() {
         val permissionsNeeded = mutableListOf<String>()
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
@@ -321,13 +321,19 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             permissionsNeeded.add(Manifest.permission.RECORD_AUDIO)
         }
 
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
         ) {
             permissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+
+        // Only check POST_NOTIFICATIONS for Android 13 and above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                permissionsNeeded.add(Manifest.permission.POST_NOTIFICATIONS)
+            }
         }
 
         if (permissionsNeeded.isNotEmpty()) {
@@ -338,6 +344,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             )
         }
     }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -745,28 +752,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             }
     }
 
-    private fun fetchFirebaseTokenFromServer() {
-        FirebaseMessaging.getInstance().token
-            .addOnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    Log.e("FCM", "Fetching FCM registration token failed", task.exception)
-                    return@addOnCompleteListener
-                }
-
-                val token = task.result
-                if (!token.isNullOrEmpty()) {
-                    appPreferenceManager.saveString("FCM_TOKEN", token)
-                } else {
-                    Log.w("FCM", "FCM token is null or empty")
-                }
-            }
-    }
-
-
     private fun init() {
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
         if (farmerId > 0) {
-            farmerViewModel.fetchUserInformation(this)
+            farmerViewModel.fetchUserInformation(this, farmerId)
         }
     }
 
