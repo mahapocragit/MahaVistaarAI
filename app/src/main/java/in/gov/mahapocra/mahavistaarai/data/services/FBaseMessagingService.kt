@@ -54,14 +54,20 @@ class FBaseMessagingService : FirebaseMessagingService() {
             PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val notification = NotificationCompat.Builder(this, channelId).apply {
-            setContentTitle(title)
-            setContentText(body)
-            setSmallIcon(R.drawable.app_icon_store) // replace with your app's notification icon
-            setPriority(NotificationCompat.PRIORITY_HIGH)
-            setAutoCancel(true)
-            setContentIntent(pendingIntent)
-        }.build()
+        val bigTextStyle = NotificationCompat.BigTextStyle()
+            .bigText(body) // this is your full long message
+            .setBigContentTitle(title)
+            .setSummaryText("Tap to view")
+
+        val notification = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(R.drawable.app_icon_store) // your notification icon
+            .setContentTitle(title)
+            .setContentText(body.take(40) + "...") // short preview
+            .setStyle(bigTextStyle) // this makes it expandable
+            .setAutoCancel(true)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentIntent(pendingIntent)
+            .build()
 
         notificationManager.notify(System.currentTimeMillis().toInt(), notification)
     }
