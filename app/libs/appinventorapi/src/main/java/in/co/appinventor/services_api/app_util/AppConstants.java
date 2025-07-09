@@ -1,5 +1,7 @@
 package in.co.appinventor.services_api.app_util;
 
+import androidx.annotation.NonNull;
+
 /* renamed from: in.co.appinventor.services_api.app_util.AppConstants */
 public interface AppConstants {
     public static final int DEFAULT_TIMEOUT = 200000;
@@ -49,4 +51,6 @@ public interface AppConstants {
     public static final String kSUCCESS = "Success";
     public static final String kTW = "TW";
     public static final String kWB = "WB";
+    String JWT_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlblR5cGUiOiJBY2Nlc3NUb2tlbiIsImF1dGhvcml0eSI6IiIsInBhcmVudCI6IiIsInR5cGUiOiJFeHRlcm5hbFVzZXIiLCJ1c2VyIjoiNjgzOThlNmY0OTQ4NjAwMTJhNDdhMmQ5IiwidXNlcnN0YXR1cyI6IkFDVElWRSIsImlhdCI6MTc0ODYwMjQ3OSwiZXhwIjoxNzQ5MjA3Mjc5LCJhdWQiOiJzb2lsaGVhbHRoLmRhYy5nb3YuaW4iLCJpc3MiOiJzb2lsaGVhbHRoLmRhYy5nb3YuaW4iLCJqdGkiOiJjYzVlM2QwYS00M2QxLTRhNDQtOWZkYy1jN2JiNGM2MDA2OGQifQ.eAcPvJq5BFXDw_4uPcvEdRDXrB_hzEvQ8PHK752nV20";
+    String REFRESH_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlblR5cGUiOiJSZWZyZXNoVG9rZW4iLCJhdXRob3JpdHkiOiIiLCJwYXJlbnQiOiIiLCJ0eXBlIjoiRXh0ZXJuYWxVc2VyIiwic3ViIjoiNjgzOThlNmY0OTQ4NjAwMTJhNDdhMmQ5IiwidXNlcnN0YXR1cyI6IkFDVElWRSIsImlhdCI6MTc0ODYwMjQ3OSwiZXhwIjoxNzQ5MjA3Mjc5LCJhdWQiOiJzb2lsaGVhbHRoLmRhYy5nb3YuaW4iLCJpc3MiOiJzb2lsaGVhbHRoLmRhYy5nb3YuaW4iLCJqdGkiOiIyYjgzZTYzZS0xYTE0LTQ2M2MtODA0MC1kYzJmYjMwMjk1YjUifQ.Qb7rxWQUOUYOTfUc-XB7T0rNRt3YPRyIprcBJbnp2m8";
 }

@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
+    id 'com.apollographql.apollo3' version '3.2.1' apply false
 }
 
 android {
@@ -79,6 +80,8 @@ android {
 
 
 dependencies {
+    //Apollo
+    implementation 'com.apollographql.apollo3:apollo-runtime:3.2.1'
     //Clarity
     implementation 'com.microsoft.clarity:clarity:3.3.0'
     //captcha
