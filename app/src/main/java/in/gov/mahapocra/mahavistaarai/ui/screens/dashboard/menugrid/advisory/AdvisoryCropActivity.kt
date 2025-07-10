@@ -3,24 +3,17 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.JsonObject
-import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
-import `in`.co.appinventor.services_api.debug.DebugLog
-import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.listener.DatePickerRequestListener
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
-import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityAdvisoryCropBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.StageAdvisoryAdapter
@@ -32,16 +25,11 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Retrofit
 import java.util.Date
 
-class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
-    ApiCallbackCode, DatePickerRequestListener {
+class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener, DatePickerRequestListener {
 
     private lateinit var binding: ActivityAdvisoryCropBinding
     private lateinit var viewModel: FarmerViewModel
@@ -108,7 +96,8 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
             startActivity(Intent(this, DashboardScreen::class.java))
         }
-        getCropStagesAndAdvisory()
+        observeCropStagesAndAdvisory()
+        viewModel.getCropStagesAndAdvisory(this, cropId, sowingDate, languageToLoad)
     }
 
     override fun onBackPressed() {
@@ -118,39 +107,10 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
 
 
 
-    private fun getCropStagesAndAdvisory() {
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put("crop_id", cropId)
-            jsonObject.put("farmer_id", farmerId)
-            jsonObject.put("sowing_date", sowingDate)
-            jsonObject.put("lang", languageToLoad)
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api =
-                AppInventorApi(
-                    this,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(this).getkMSG_WAIT(),
-                    true
-                )
-            val retrofit: Retrofit = api.retrofitInstance
-            val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getCropStagesAndAdvisory(requestBody)
-            api.postRequest(responseCall, this, 1)
-        } catch (e: JSONException) {
-            DebugLog.getInstance().d("JSONException=$e")
-            e.printStackTrace()
-        }
-    }
-
-    override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        Log.d("TAG", "onFailure: ${th.toString()}")
-    }
-
-    override fun onResponse(jSONObject: JSONObject?, i: Int) {
-        if (i == 1) {
-            if (jSONObject != null) {
+    private fun observeCropStagesAndAdvisory() {
+        viewModel.getCropStagesAndAdvisoryResponse.observe(this) {
+            if (it != null) {
+                val jSONObject = JSONObject(it.toString())
                 val response =
                     ResponseModel(
                         jSONObject
@@ -171,7 +131,6 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
                         if (currentStagePos != -1) {
                             binding.cropStagesRecyclerView.post {
                                 binding.cropStagesRecyclerView.scrollToPosition(currentStagePos)
-                                // or use smoothScrollToPosition(currentStagePos) for animated scroll
                             }
                         }
                         stagesAdvisoryAdapter.notifyDataSetChanged()
@@ -216,7 +175,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
             viewModel.saveFarmerSelectedCrop.observe(this) {
                 if (it != null) {
                     if (it.get("status").toString() == "200") {
-                        getCropStagesAndAdvisory()
+                        viewModel.getCropStagesAndAdvisory(this, cropId, sowingDate, languageToLoad)
                     }
                 }
             }

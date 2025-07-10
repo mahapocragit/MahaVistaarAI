@@ -9,9 +9,11 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
+import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.data.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
+import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
@@ -21,6 +23,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONException
 import org.json.JSONObject
+import retrofit2.Call
 import retrofit2.Retrofit
 
 class FarmerViewModel : ViewModel() {
@@ -75,6 +78,9 @@ class FarmerViewModel : ViewModel() {
 
     private val _agristackLoginResponse = MutableLiveData<JsonObject>()
     val agristackLoginResponse: LiveData<JsonObject> = _agristackLoginResponse
+
+    private val _getCropStagesAndAdvisoryResponse = MutableLiveData<JsonObject>()
+    val getCropStagesAndAdvisoryResponse: LiveData<JsonObject> = _getCropStagesAndAdvisoryResponse
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -584,6 +590,35 @@ class FarmerViewModel : ViewModel() {
             } catch (e: Exception) {
                 _error.value = e.localizedMessage ?: "Unknown error"
                 FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getCropStagesAndAdvisory(context: Context, cropId: Int?, sowingDate: String, language: String) {
+        val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+        viewModelScope.launch {
+            val jsonObject = JSONObject()
+            try {
+                jsonObject.put("crop_id", cropId)
+                jsonObject.put("farmer_id", farmerId)
+                jsonObject.put("sowing_date", sowingDate)
+                jsonObject.put("lang", language)
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api =
+                    AppInventorApi(
+                        context,
+                        AppEnvironment.FARMER.baseUrl,
+                        "",
+                        AppString(context).getkMSG_WAIT(),
+                        false
+                    )
+                val retrofit: Retrofit = api.retrofitInstance
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.getCropStagesAndAdvisory(requestBody)
+                _getCropStagesAndAdvisoryResponse.value = response
+            } catch (e: JSONException) {
+                _error.value = e.localizedMessage ?: "Unknown error"
+                e.printStackTrace()
             }
         }
     }

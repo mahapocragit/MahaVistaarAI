@@ -69,9 +69,6 @@ public interface APIRequest {
     @POST(APIServices.kGetCropStages)
     Call<JsonObject> getCropStages(@Body RequestBody params);
 
-    @POST(APIServices.kGetCropStagesAndAdvisory)
-    Call<JsonObject> getCropStagesAndAdvisory(@Body RequestBody params);
-
     @POST(APIServices.DELETE_FERTILIZER_FROM_SAVED)
     Call<JsonObject> deleteFertilizerFromSavedList(@Body RequestBody params);
 
