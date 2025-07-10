@@ -38,6 +38,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.showCaptchaDialog
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.toSHA512
 import `in`.gov.mahapocra.mahavistaarai.util.OtpRateLimiter
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
@@ -335,7 +336,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 val responseCall: Call<JsonObject> =
                     apiRequest.getRefreshTokenLogin(
                         mobileNo.trim { it <= ' ' },
-                        userPass,
+                        toSHA512(userPass),
                         otp,
                         fcmToken,
                         requestBody
@@ -369,7 +370,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     )
                 val retrofit: Retrofit = api.getRetrofitInstance()
                 val apiRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getUserLogin(mobileNo.trim { it <= ' ' }, userPass, otp,requestBody)
+                val responseCall: Call<JsonObject> = apiRequest.getUserLogin(mobileNo.trim { it <= ' ' }, toSHA512(userPass), otp,requestBody)
                 api.postRequest(responseCall, this, 2)
             } catch (e: JSONException) {
                 e.printStackTrace()
@@ -395,7 +396,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 )
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getUserLogin(agriStackMobile.trim { it <= ' ' }, userPass, otp,requestBody)
+            val responseCall: Call<JsonObject> = apiRequest.getUserLogin(agriStackMobile.trim { it <= ' ' }, toSHA512(userPass), otp,requestBody)
             api.postRequest(responseCall, this, 2)
         } catch (e: JSONException) {
             e.printStackTrace()
@@ -443,6 +444,8 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     addVerificationDialog()
                 } else if (jSONObject.optInt("status") == 201) {
                     Toast.makeText(this, R.string.mobile_otp_error_text, Toast.LENGTH_LONG).show()
+                }else if (jSONObject.optInt("status") == 429) {
+                    Toast.makeText(this, "Too many requests. Please try after 1 minute.", Toast.LENGTH_LONG).show()
                 }
             }
         }

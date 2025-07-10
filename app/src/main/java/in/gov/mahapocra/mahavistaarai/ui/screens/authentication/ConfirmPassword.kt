@@ -24,6 +24,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityChangePwdTempBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.isStrongPassword
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.toSHA512
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONException
 import org.json.JSONObject
@@ -87,7 +88,7 @@ class ConfirmPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode
             try {
                 jsonObject.put("SecurityKey", APIServices.SSO_KEY)
                 jsonObject.put("MobileNo", userMobileNo.trim { it <= ' ' })
-                jsonObject.put("Password", newPwd)
+                jsonObject.put("Password", toSHA512(newPwd))
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api = AppInventorApi(

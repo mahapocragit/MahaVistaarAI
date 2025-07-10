@@ -42,6 +42,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.isStrongPassword
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.toSHA512
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SessionManager
@@ -492,7 +493,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 jsonObject.put("fcm_token", token)
                 jsonObject.put("device_id", machineId)
                 jsonObject.put("FAAPRegistrationID", fAAPRegistrationID)
-                jsonObject.put("Password", pass)
+                jsonObject.put("Password", toSHA512(pass))
                 jsonObject.put("SecurityKey", APIServices.SSO_KEY)
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api =

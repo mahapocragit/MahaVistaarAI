@@ -23,6 +23,7 @@ import androidx.appcompat.widget.SearchView
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import org.json.JSONArray
+import java.security.MessageDigest
 import java.util.Calendar
 import java.util.Locale
 
@@ -294,6 +295,13 @@ object LocalCustom {
         }
 
         dialog.show()
+    }
+
+    fun toSHA512(input: String): String {
+        val bytes = input.toByteArray()
+        val md = MessageDigest.getInstance("SHA-512")
+        val digest = md.digest(bytes)
+        return digest.joinToString("") { "%02x".format(it) }
     }
 
 }
