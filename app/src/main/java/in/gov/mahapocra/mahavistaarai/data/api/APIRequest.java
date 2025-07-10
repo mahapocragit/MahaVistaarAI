@@ -60,14 +60,8 @@ public interface APIRequest {
     @POST(APIServices.kGetmarketsPriceDetails)
     Call<JsonObject> getmarketPriceDetails(@Body RequestBody params);
 
-    @POST(APIServices.kClimateResilientTechnology)
-    Call<JsonObject> getClimateResilientList(@Body RequestBody params);
-
     @POST(APIServices.kGetPestDiseaseDetails)
     Call<JsonObject> getPestDiseaseDetails(@Body RequestBody params);
-
-    @POST(APIServices.kGetCropStages)
-    Call<JsonObject> getCropStages(@Body RequestBody params);
 
     @POST(APIServices.DELETE_FERTILIZER_FROM_SAVED)
     Call<JsonObject> deleteFertilizerFromSavedList(@Body RequestBody params);

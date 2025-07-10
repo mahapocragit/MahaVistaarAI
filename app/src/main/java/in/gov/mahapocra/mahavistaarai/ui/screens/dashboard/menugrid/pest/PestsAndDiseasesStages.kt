@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
@@ -26,9 +27,11 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityPestsAndDiseasesLibr
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.PestAndDiseasesAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONArray
@@ -37,12 +40,10 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
 
-class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
+class PestsAndDiseasesStages : AppCompatActivity() {
 
     private lateinit var binding: ActivityPestsAndDiseasesLibraryBinding
-    private var diseasesDetails: ArrayList<DiseasesDetails>? = null
-    private lateinit var diseaseStages: ArrayList<DiseaseStages>
-
+    private lateinit var farmerViewModel: FarmerViewModel
     var cropId: Int? = 0
     private var stagesId: Int = 0
     private var mUrl: String? = null
@@ -62,6 +63,7 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         switchLanguage(this, languageToLoad)
         binding = ActivityPestsAndDiseasesLibraryBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
 
         binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.pests_n_diseases)
         binding.sowingInfoLayout.textView7.text = getString(R.string.selected_crop)
@@ -103,52 +105,34 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         }
 
         if (cropId!! > 0) {
-            getCropStages()
+            observeCropStages()
+            farmerViewModel.getCropStages(this, cropId, languageToLoad)
         } else {
             Toast.makeText(this, "No Crops Added", Toast.LENGTH_SHORT).show()
         }
         binding.sowingInfoLayout.cropNameTextView.text = "$cropName"
     }
 
-    private fun getCropStages() {
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put("crop_id", cropId)
-            jsonObject.put("lang", languageToLoad)
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api = AppInventorApi(
-                this,
-                AppEnvironment.FARMER.baseUrl,
-                "",
-                AppString(this).getkMSG_WAIT(),
-                true
-            )
-            val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getCropStages(requestBody)
-            api.postRequest(responseCall, this, 1)
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
-    }
-
-    override fun onResponse(jSONObject: JSONObject?, n: Int) {
-        if (n == 1 && jSONObject != null) {
-            val response = ResponseModel(jSONObject)
-            if (response.getStatus()) {
-                stageJsonArray = response.getdataArray()
-                val adapter = PestAndDiseasesAdapter(this, stageJsonArray)
-                binding.diseasesByStage.layoutManager = LinearLayoutManager(this)
-                binding.diseasesByStage.adapter = adapter
-            } else {
-                UIToastMessage.show(this, response.response)
+    private fun observeCropStages() {
+        ProgressHelper.showProgressDialog(this)
+        farmerViewModel.getCropStagesResponse.observe(this) {
+            ProgressHelper.disableProgressDialog()
+            if (it != null) {
+                val jSONObject = JSONObject(it.toString())
+                val response = ResponseModel(jSONObject)
+                if (response.getStatus()) {
+                    stageJsonArray = response.getdataArray()
+                    val adapter = PestAndDiseasesAdapter(this, stageJsonArray)
+                    binding.diseasesByStage.layoutManager = LinearLayoutManager(this)
+                    binding.diseasesByStage.adapter = adapter
+                } else {
+                    UIToastMessage.show(this, response.response)
+                }
             }
         }
-    }
-
-
-    override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        Log.d("TAGGER", "onFailure: ${th?.message}")
+        farmerViewModel.error.observe(this){
+            ProgressHelper.disableProgressDialog()
+        }
     }
 
     override fun onBackPressed() {

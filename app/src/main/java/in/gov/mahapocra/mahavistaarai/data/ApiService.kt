@@ -105,4 +105,7 @@ interface ApiService {
 
     @POST(APIServices.kGetCropStagesAndAdvisory)
     suspend fun getCropStagesAndAdvisory(@Body params: RequestBody): JsonObject
+
+    @POST(APIServices.kGetCropStages)
+    suspend fun getCropStages(@Body params: RequestBody): JsonObject
 }

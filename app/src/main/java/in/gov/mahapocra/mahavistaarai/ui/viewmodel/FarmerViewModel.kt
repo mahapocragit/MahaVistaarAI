@@ -53,7 +53,8 @@ class FarmerViewModel : ViewModel() {
     val videosResponse: LiveData<JsonObject> = _videosResponse
 
     private val _getDigitalShetishalaScheduleResponse = MutableLiveData<JsonObject>()
-    val getDigitalShetishalaScheduleResponse: LiveData<JsonObject> = _getDigitalShetishalaScheduleResponse
+    val getDigitalShetishalaScheduleResponse: LiveData<JsonObject> =
+        _getDigitalShetishalaScheduleResponse
 
     private val _sopResponse = MutableLiveData<JsonObject>()
     val sopResponse: LiveData<JsonObject> = _sopResponse
@@ -84,6 +85,9 @@ class FarmerViewModel : ViewModel() {
 
     private val _getClimateResilientListResponse = MutableLiveData<JsonObject>()
     val getClimateResilientListResponse: LiveData<JsonObject> = _getClimateResilientListResponse
+
+    private val _getCropStagesResponse = MutableLiveData<JsonObject>()
+    val getCropStagesResponse: LiveData<JsonObject> = _getCropStagesResponse
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -511,7 +515,7 @@ class FarmerViewModel : ViewModel() {
                     )
                 val retrofit: Retrofit = api.getRetrofitInstance()
                 val apiRequest = retrofit.create(ApiService::class.java)
-                val response = apiRequest.compareOtp(mobile.trim { it <= ' ' },requestBody)
+                val response = apiRequest.compareOtp(mobile.trim { it <= ' ' }, requestBody)
                 _compareOtpResponse.value = response
             } catch (e: JSONException) {
                 _error.value = e.localizedMessage ?: "Failed to fetch user details"
@@ -538,7 +542,7 @@ class FarmerViewModel : ViewModel() {
                     )
                 val retrofit: Retrofit = api.getRetrofitInstance()
                 val apiRequest = retrofit.create(ApiService::class.java)
-                val response = apiRequest.compareOtpReg(mobile.trim { it <= ' ' },requestBody)
+                val response = apiRequest.compareOtpReg(mobile.trim { it <= ' ' }, requestBody)
                 _compareOtpResponseReg.value = response
             } catch (e: JSONException) {
                 _error.value = e.localizedMessage ?: "Failed to fetch user details"
@@ -597,7 +601,12 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun getCropStagesAndAdvisory(context: Context, cropId: Int?, sowingDate: String, language: String) {
+    fun getCropStagesAndAdvisory(
+        context: Context,
+        cropId: Int?,
+        sowingDate: String,
+        language: String
+    ) {
         val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
         viewModelScope.launch {
             val jsonObject = JSONObject()
@@ -644,6 +653,31 @@ class FarmerViewModel : ViewModel() {
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getClimateResilientList(requestBody)
                 _getClimateResilientListResponse.value = response
+            } catch (e: JSONException) {
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getCropStages(context: Context, cropId: Int?, language: String) {
+        viewModelScope.launch {
+            val jsonObject = JSONObject()
+            try {
+                jsonObject.put("crop_id", cropId)
+                jsonObject.put("lang", language)
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api = AppInventorApi(
+                    context,
+                    AppEnvironment.FARMER.baseUrl,
+                    "",
+                    AppString(context).getkMSG_WAIT(),
+                    false
+                )
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.getCropStages(requestBody)
+                _getCropStagesResponse.value = response
             } catch (e: JSONException) {
                 _error.value = e.localizedMessage ?: "Unknown error"
                 FirebaseCrashlytics.getInstance().recordException(e)
