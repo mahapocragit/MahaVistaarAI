@@ -24,6 +24,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import org.json.JSONArray
 import org.json.JSONObject
@@ -108,7 +109,9 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
 
 
     private fun observeCropStagesAndAdvisory() {
+        ProgressHelper.showProgressDialog(this)
         viewModel.getCropStagesAndAdvisoryResponse.observe(this) {
+            ProgressHelper.disableProgressDialog()
             if (it != null) {
                 val jSONObject = JSONObject(it.toString())
                 val response =
@@ -139,6 +142,10 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
                     UIToastMessage.show(this, response.response)
                 }
             }
+        }
+        viewModel.error.observe(this){
+            ProgressHelper.disableProgressDialog()
+            UIToastMessage.show(this, "Unable to fetch data")
         }
     }
 

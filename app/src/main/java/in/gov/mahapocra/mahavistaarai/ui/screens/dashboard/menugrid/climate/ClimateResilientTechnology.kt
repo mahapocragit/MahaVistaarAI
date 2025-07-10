@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonObject
@@ -24,8 +25,10 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ClimateResilientTechnologyAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONArray
 import org.json.JSONException
@@ -33,10 +36,10 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
 
-class ClimateResilientTechnology : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
-    OnMultiRecyclerItemClickListener {
+class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClickListener {
 
     private var climateResilientGroup: RecyclerView? = null
+    private lateinit var farmerViewModel: FarmerViewModel
     private var textViewHeaderTitle: TextView? = null
     private var imgBackArrow: ImageView? = null
     private lateinit var languageToLoad: String
@@ -67,48 +70,23 @@ class ClimateResilientTechnology : AppCompatActivity(), ApiJSONObjCallback, ApiC
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
-        climateResilientGroupList()
+        farmerViewModel.climateResilientGroupList(this, languageToLoad)
+        ProgressHelper.showProgressDialog(this)
+        observeClimateResilientGroupList()
     }
 
     private fun init() {
+        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         climateResilientGroup = findViewById(R.id.climateResilint)
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
         imgBackArrow = findViewById(R.id.imgBackArrow)
     }
 
-    private fun climateResilientGroupList() {
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put("api_key", APIServices.SSO_KEY)
-            jsonObject.put("lang", languageToLoad)
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api = AppInventorApi(
-                this,
-                AppEnvironment.FARMER.baseUrl,
-                "",
-                AppString(this).getkMSG_WAIT(),
-                true
-            )
-            val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getClimateResilientList(requestBody)
-            api.postRequest(responseCall, this, 2)
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
-    }
-
-    override fun onFailure(th: Throwable?, i: Int) {
-        th?.printStackTrace()
-    }
-
-    override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        th?.printStackTrace()
-    }
-
-    override fun onResponse(jSONObject: JSONObject?, i: Int) {
-        if (i == 2) {
-            if (jSONObject != null) {
+    private fun observeClimateResilientGroupList() {
+        farmerViewModel.getClimateResilientListResponse.observe(this) {
+            ProgressHelper.disableProgressDialog()
+            if (it != null) {
+                val jSONObject = JSONObject(it.toString())
                 val response =
                     ResponseModel(
                         jSONObject
@@ -132,6 +110,9 @@ class ClimateResilientTechnology : AppCompatActivity(), ApiJSONObjCallback, ApiC
                     adaptorResilientTechnologyGrp.notifyDataSetChanged()
                 }
             }
+        }
+        farmerViewModel.error.observe(this){
+            ProgressHelper.disableProgressDialog()
         }
     }
 

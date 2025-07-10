@@ -100,6 +100,8 @@ interface ApiService {
     @POST(APIServices.kRetrieveFarmerData)
     suspend fun retrieveFarmerData(requestBody: RequestBody): JsonObject
 
+    @POST(APIServices.kClimateResilientTechnology)
+    suspend fun getClimateResilientList(@Body params: RequestBody): JsonObject
 
     @POST(APIServices.kGetCropStagesAndAdvisory)
     suspend fun getCropStagesAndAdvisory(@Body params: RequestBody): JsonObject

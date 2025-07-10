@@ -82,6 +82,9 @@ class FarmerViewModel : ViewModel() {
     private val _getCropStagesAndAdvisoryResponse = MutableLiveData<JsonObject>()
     val getCropStagesAndAdvisoryResponse: LiveData<JsonObject> = _getCropStagesAndAdvisoryResponse
 
+    private val _getClimateResilientListResponse = MutableLiveData<JsonObject>()
+    val getClimateResilientListResponse: LiveData<JsonObject> = _getClimateResilientListResponse
+
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
@@ -618,7 +621,32 @@ class FarmerViewModel : ViewModel() {
                 _getCropStagesAndAdvisoryResponse.value = response
             } catch (e: JSONException) {
                 _error.value = e.localizedMessage ?: "Unknown error"
-                e.printStackTrace()
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun climateResilientGroupList(context: Context, languageToLoad: String) {
+        viewModelScope.launch {
+            val jsonObject = JSONObject()
+            try {
+                jsonObject.put("api_key", APIServices.SSO_KEY)
+                jsonObject.put("lang", languageToLoad)
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api = AppInventorApi(
+                    context,
+                    AppEnvironment.FARMER.baseUrl,
+                    "",
+                    AppString(context).getkMSG_WAIT(),
+                    false
+                )
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.getClimateResilientList(requestBody)
+                _getClimateResilientListResponse.value = response
+            } catch (e: JSONException) {
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
