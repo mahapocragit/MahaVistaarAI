@@ -432,7 +432,11 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                     val retrofit: Retrofit = api.getRetrofitInstance()
                     val apiRequest = retrofit.create(APIRequest::class.java)
                     val responseCall: Call<JsonObject> =
-                        apiRequest.getRegistrationRequest(registerMob, mob.trim { it <= ' ' },requestBody)
+                        apiRequest.getRegistrationRequest(
+                            registerMob,
+                            mob.trim { it <= ' ' },
+                            requestBody
+                        )
                     api.postRequest(responseCall, this@Registration, 3)
                 }
             } catch (e: JSONException) {
@@ -508,7 +512,11 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                     val retrofit: Retrofit = api.getRetrofitInstance()
                     val apiRequest = retrofit.create(APIRequest::class.java)
                     val responseCall: Call<JsonObject> =
-                        apiRequest.getRegistrationRequest(mob.trim { it <= ' ' }, mob.trim { it <= ' ' },requestBody)
+                        apiRequest.getRegistrationRequest(
+                            mob.trim { it <= ' ' },
+                            mob.trim { it <= ' ' },
+                            requestBody
+                        )
                     api.postRequest(responseCall, this@Registration, 3)
                 }
             } catch (e: JSONException) {
@@ -622,6 +630,8 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                     addVerificationDialog()
                 } else if (jSONObject.optInt("status") == 201) {
                     Toast.makeText(this, R.string.otp_error, Toast.LENGTH_LONG).show()
+                } else if (jSONObject.optInt("status") == 429) {
+                    Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_LONG).show()
                 }
             }
         }

@@ -11,8 +11,21 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.FertilizerCalculatorActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.MarketPrice
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.SOPActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.Warehouse
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.DBTActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.pocra.PocraDbtSchemes
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard.HealthCardActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
 
 class FBaseMessagingService : FirebaseMessagingService() {
 
@@ -40,8 +53,20 @@ class FBaseMessagingService : FirebaseMessagingService() {
         createNotificationChannelIfNeeded()
 
         val targetIntent = when (testValue?.lowercase()) {
+            "weather" -> Intent(this, WeatherActivity::class.java)
+            "advisory" -> Intent(this, AdvisoryCropActivity::class.java)
+            "sop" -> Intent(this, SOPActivity::class.java)
+            "soilCard" -> Intent(this, HealthCardActivity::class.java)
+            "fertilizer" -> Intent(this, FertilizerCalculatorActivity::class.java)
+            "climateTech" -> Intent(this, ClimateResilientTechnology::class.java)
+            "pestDisease" -> Intent(this, PestsAndDiseasesStages::class.java)
+            "marketPrice" -> Intent(this, MarketPrice::class.java)
+            "shetishala" -> Intent(this, ShetishalaActivity::class.java)
+            "warehouse" -> Intent(this, Warehouse::class.java)
+            "customHire" -> Intent(this, CHCenterActivity::class.java)
+            "videos" -> Intent(this, VideosActivity::class.java)
+            "dbtSchemes" -> Intent(this, DBTActivity::class.java)
             "dashboard" -> Intent(this, DashboardScreen::class.java)
-            "advisory" -> Intent(this, PocraDbtSchemes::class.java)
             else -> Intent(this, DashboardScreen::class.java) // default fallback
         }.apply {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)

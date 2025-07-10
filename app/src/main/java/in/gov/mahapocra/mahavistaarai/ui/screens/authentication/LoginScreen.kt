@@ -445,7 +445,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 } else if (jSONObject.optInt("status") == 201) {
                     Toast.makeText(this, R.string.mobile_otp_error_text, Toast.LENGTH_LONG).show()
                 }else if (jSONObject.optInt("status") == 429) {
-                    Toast.makeText(this, "Too many requests. Please try after 1 minute.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_LONG).show()
                 }
             }
         }
