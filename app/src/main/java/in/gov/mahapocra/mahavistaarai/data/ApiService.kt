@@ -3,6 +3,7 @@ package `in`.gov.mahapocra.mahavistaarai.data
 import com.google.gson.JsonObject
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -108,4 +109,7 @@ interface ApiService {
 
     @POST(APIServices.kGetCropStages)
     suspend fun getCropStages(@Body params: RequestBody): JsonObject
+
+    @POST(APIServices.kGetPestDiseaseDetails)
+    suspend fun getPestDiseaseDetails(@Body params: RequestBody): ResponseBody
 }

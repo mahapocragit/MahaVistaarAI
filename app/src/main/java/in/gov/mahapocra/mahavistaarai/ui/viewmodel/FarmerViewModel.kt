@@ -88,6 +88,8 @@ class FarmerViewModel : ViewModel() {
 
     private val _getCropStagesResponse = MutableLiveData<JsonObject>()
     val getCropStagesResponse: LiveData<JsonObject> = _getCropStagesResponse
+    private val _getPestDiseaseDetailsResponse = MutableLiveData<JSONObject>()
+    val getPestDiseaseDetailsResponse: LiveData<JSONObject> = _getPestDiseaseDetailsResponse
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -678,6 +680,32 @@ class FarmerViewModel : ViewModel() {
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getCropStages(requestBody)
                 _getCropStagesResponse.value = response
+            } catch (e: JSONException) {
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun showPestDiseaseDetails(context: Context, pestId: Int) {
+        viewModelScope.launch {
+            val jsonObject = JSONObject()
+            try {
+                jsonObject.put("pdid", pestId)
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api = AppInventorApi(
+                    context,
+                    AppEnvironment.FARMER.baseUrl,
+                    "",
+                    AppString(context).getkMSG_WAIT(),
+                    false
+                )
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val rawResponse = apiRequest.getPestDiseaseDetails(requestBody)
+                val jsonString = rawResponse.string()
+                val jsonObject = JSONObject(jsonString) // OR Gson().fromJson(jsonString, JsonObject::class.java)
+                _getPestDiseaseDetailsResponse.value = jsonObject
             } catch (e: JSONException) {
                 _error.value = e.localizedMessage ?: "Unknown error"
                 FirebaseCrashlytics.getInstance().recordException(e)
