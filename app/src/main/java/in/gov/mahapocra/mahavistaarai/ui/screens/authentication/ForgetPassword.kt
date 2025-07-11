@@ -129,7 +129,7 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
                     )
                 val retrofit: Retrofit = api.getRetrofitInstance()
                 val apiRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getUserLogin(mobileNo.trim { it <= ' ' }, userPass, "",requestBody)
+                val responseCall: Call<JsonObject> = apiRequest.getUserLoginPassword(mobileNo.trim { it <= ' ' }, userPass, requestBody)
                 api.postRequest(responseCall, this, 3)
             } catch (e: JSONException) {
                 e.printStackTrace()

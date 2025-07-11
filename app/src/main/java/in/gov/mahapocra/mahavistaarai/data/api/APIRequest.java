@@ -28,17 +28,28 @@ public interface APIRequest {
             @Body RequestBody params);
 
     @POST(APIServices.kUserLogin)
-    Call<JsonObject> getUserLogin(
+    Call<JsonObject> getUserLoginOTP(
             @Header("MobileNo") String mobileNo,
-            @Header("Password") String password,
             @Header("otp") String enteredOTP,
             @Body RequestBody params);
 
-    @POST(APIServices.kRefreshTokenLogin)
-    Call<JsonObject> getRefreshTokenLogin(
+    @POST(APIServices.kUserLogin)
+    Call<JsonObject> getUserLoginPassword(
             @Header("MobileNo") String mobileNo,
             @Header("Password") String password,
+            @Body RequestBody params);
+
+    @POST(APIServices.kRefreshTokenLogin)
+    Call<JsonObject> getRefreshTokenLoginViaOTP(
+            @Header("MobileNo") String mobileNo,
             @Header("otp") String enteredOTP,
+            @Header("fcmToken") String firebaseToken,
+            @Body RequestBody params);
+
+    @POST(APIServices.kRefreshTokenLogin)
+    Call<JsonObject> getRefreshTokenLoginViaPassword(
+            @Header("MobileNo") String mobileNo,
+            @Header("Password") String password,
             @Header("fcmToken") String firebaseToken,
             @Body RequestBody params);
 

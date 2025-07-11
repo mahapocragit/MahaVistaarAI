@@ -333,15 +333,26 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     )
                 val retrofit: Retrofit = api.getRetrofitInstance()
                 val apiRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> =
-                    apiRequest.getRefreshTokenLogin(
-                        mobileNo.trim { it <= ' ' },
-                        toSHA512(userPass),
-                        otp,
-                        fcmToken,
-                        requestBody
-                    )
-                api.postRequest(responseCall, this, 4)
+                if (otp!=""){
+                    val responseCall: Call<JsonObject> =
+                        apiRequest.getRefreshTokenLoginViaOTP(
+                            mobileNo.trim { it <= ' ' },
+                            otp,
+                            fcmToken,
+                            requestBody
+                        )
+                    api.postRequest(responseCall, this, 4)
+                }else{
+                    val responseCall: Call<JsonObject> =
+                        apiRequest.getRefreshTokenLoginViaPassword(
+                            mobileNo.trim { it <= ' ' },
+                            toSHA512(userPass),
+                            fcmToken,
+                            requestBody
+                        )
+                    api.postRequest(responseCall, this, 4)
+                }
+
             } catch (e: JSONException) {
                 e.printStackTrace()
             }
@@ -353,27 +364,54 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             binding.userIdEditText.error = resources.getString(R.string.lgn_register_phone_error)
             binding.userIdEditText.requestFocus()
         } else {
+            if (otp != "") {
+                val jsonObject = JSONObject()
+                try {
+                    jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+                    jsonObject.put("refresh_token", strToken)
 
-            val jsonObject = JSONObject()
-            try {
-                jsonObject.put("SecurityKey", APIServices.SSO_KEY)
-                jsonObject.put("refresh_token", strToken)
+                    val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                    val api =
+                        AppInventorApi(
+                            this,
+                            AppEnvironment.FARMER.baseUrl,
+                            "",
+                            AppString(this).getkMSG_WAIT(),
+                            true
+                        )
+                    val retrofit: Retrofit = api.getRetrofitInstance()
+                    val apiRequest = retrofit.create(APIRequest::class.java)
+                    Log.d("TAGGER", "callLoginAPI: true")
+                    val responseCall: Call<JsonObject> =
+                        apiRequest.getUserLoginOTP(mobileNo.trim { it <= ' ' }, otp, requestBody)
+                    api.postRequest(responseCall, this, 2)
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            }else{
+                val jsonObject = JSONObject()
+                try {
+                    jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+                    jsonObject.put("refresh_token", strToken)
 
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api =
-                    AppInventorApi(
-                        this,
-                        AppEnvironment.FARMER.baseUrl,
-                        "",
-                        AppString(this).getkMSG_WAIT(),
-                        true
-                    )
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getUserLogin(mobileNo.trim { it <= ' ' }, toSHA512(userPass), otp,requestBody)
-                api.postRequest(responseCall, this, 2)
-            } catch (e: JSONException) {
-                e.printStackTrace()
+                    val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                    val api =
+                        AppInventorApi(
+                            this,
+                            AppEnvironment.FARMER.baseUrl,
+                            "",
+                            AppString(this).getkMSG_WAIT(),
+                            true
+                        )
+                    val retrofit: Retrofit = api.getRetrofitInstance()
+                    val apiRequest = retrofit.create(APIRequest::class.java)
+                    Log.d("TAGGER", "callLoginAPI: true")
+                    val responseCall: Call<JsonObject> =
+                        apiRequest.getUserLoginPassword(mobileNo.trim { it <= ' ' }, toSHA512(userPass), requestBody)
+                    api.postRequest(responseCall, this, 2)
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
             }
         }
     }
@@ -396,7 +434,8 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 )
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getUserLogin(agriStackMobile.trim { it <= ' ' }, toSHA512(userPass), otp,requestBody)
+            Log.d("TAGGER", "callLoginAPIForFarmer: true")
+            val responseCall: Call<JsonObject> = apiRequest.getUserLoginOTP(agriStackMobile.trim { it <= ' ' },  otp,requestBody)
             api.postRequest(responseCall, this, 2)
         } catch (e: JSONException) {
             e.printStackTrace()
@@ -437,6 +476,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 1) {
+            Log.d("TAGGER", "onResponse: $jSONObject")
             if (jSONObject != null) {
                 if (jSONObject.optInt("status") == 200) {
                     val response: String = jSONObject.getString("response")
