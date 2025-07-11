@@ -9,15 +9,18 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.CycleInterpolator
 import android.view.animation.TranslateAnimation
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.GridView
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -28,6 +31,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.messaging.FirebaseMessaging
 import com.squareup.picasso.Picasso
 import `in`.co.appinventor.services_api.app_util.AppUtility
@@ -39,6 +44,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.CropsCategName
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDashboardScreenBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropRecyclerSapAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DashboardAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DrawerMenuAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
@@ -97,6 +103,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     private lateinit var farmerViewModel: FarmerViewModel
     private var jsonArray: JSONArray? = null
     private var showToast = true
+    private var etlAdvisoryJsonArray: JSONArray = JSONArray()
     private var selectedCropList: ArrayList<CropsCategName>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -299,6 +306,38 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             )
         }
         askForPermissions()
+        val animation = AnimationUtils.loadAnimation(this, R.anim.blink)
+        binding.appBarMain.dashboardScreen.etlWarningLayout.animation = animation
+        binding.appBarMain.dashboardScreen.etlWarningLayout.setOnClickListener {
+            val inflater = LayoutInflater.from(this)
+            val dialogView = inflater.inflate(R.layout.etl_crossed_dialog, null)
+            val cropSapRecyclerView = dialogView.findViewById<RecyclerView>(R.id.cropSapRecyclerView)
+            cropSapRecyclerView.apply {
+                hasFixedSize()
+                layoutManager = LinearLayoutManager(this@DashboardScreen)
+                adapter = CropRecyclerSapAdapter(etlAdvisoryJsonArray)
+            }
+            val closeIcon = dialogView.findViewById<ImageView>(R.id.closeIcon)
+
+            val dialog = AlertDialog.Builder(this)
+                .setView(dialogView)
+                .create()
+
+            dialog.show()
+            closeIcon.setOnClickListener {
+                dialog.dismiss()
+            }
+        }
+        farmerViewModel.getCropSapAdvisoryResponse.observe(this){
+            if(it!=null){
+                val jsonObject = JSONObject(it.toString())
+                val jsonArray = jsonObject.optJSONArray("advisory")
+                etlAdvisoryJsonArray = jsonArray
+            }
+        }
+        farmerViewModel.error.observe(this){
+            Log.d("TAGGER", "onCreate: $it")
+        }
     }
 
     override fun onResume() {
@@ -569,7 +608,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     val villageId = data.optInt("VillageCode", 0)
                     val villageName = data.optString("VillageName", "")
                     val agristack_id = data.optString("farmer_id", "")
-
+                    farmerViewModel.getCropSapAdvisory(this, 4128) //TODO: make it dynamic
                     districtCode = distId
                     villageCode = talukaId
 

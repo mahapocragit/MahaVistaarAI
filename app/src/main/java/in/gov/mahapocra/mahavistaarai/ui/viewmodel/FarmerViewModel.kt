@@ -90,6 +90,8 @@ class FarmerViewModel : ViewModel() {
     val getCropStagesResponse: LiveData<JsonObject> = _getCropStagesResponse
     private val _getPestDiseaseDetailsResponse = MutableLiveData<JSONObject>()
     val getPestDiseaseDetailsResponse: LiveData<JSONObject> = _getPestDiseaseDetailsResponse
+    private val _getCropSapAdvisoryResponse = MutableLiveData<JsonObject>()
+    val getCropSapAdvisoryResponse: LiveData<JsonObject> = _getCropSapAdvisoryResponse
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -706,6 +708,30 @@ class FarmerViewModel : ViewModel() {
                 val jsonString = rawResponse.string()
                 val jsonObject = JSONObject(jsonString) // OR Gson().fromJson(jsonString, JsonObject::class.java)
                 _getPestDiseaseDetailsResponse.value = jsonObject
+            } catch (e: JSONException) {
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getCropSapAdvisory(context: Context, talukaCode: Int) {
+        viewModelScope.launch {
+            val jsonObject = JSONObject()
+            try {
+                jsonObject.put("taluka_code", talukaCode.toString())
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api = AppInventorApi(
+                    context,
+                    AppEnvironment.FARMER.baseUrl,
+                    "",
+                    AppString(context).getkMSG_WAIT(),
+                    false
+                )
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.getCropSapAdvisory(requestBody)
+                _getCropSapAdvisoryResponse.value = response
             } catch (e: JSONException) {
                 _error.value = e.localizedMessage ?: "Unknown error"
                 FirebaseCrashlytics.getInstance().recordException(e)

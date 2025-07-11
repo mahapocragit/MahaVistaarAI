@@ -51,4 +51,5 @@ public interface APIServices {
     String kGetCropStagesAndAdvisory = "farmerService/get-crop-stages-and-advisory";
     String DELETE_FERTILIZER_FROM_SAVED = "farmerService/delete-fertilizer-formula-of-user";
     String advisory_feedback = "farmerService/advisory-feedback";
+    String GetCropSapAdvisory = "farmerService/getCropSapAdvisory";
 }
