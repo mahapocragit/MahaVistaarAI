@@ -24,13 +24,10 @@ class AuthRepository {
         callback: (GraphQLResponse?, String?) -> Unit
     ) {
         val query = """
-            query Query(${"$"}refreshToken: String!) {
-                generateAccessToken(refreshToken: ${"$"}refreshToken) {
-                    token
-                    refreshToken
-                }
-            }
-        """.trimIndent()
+    query Query(${'$'}refreshToken: String!) {
+        generateAccessToken(refreshToken: ${'$'}refreshToken)
+    }
+""".trimIndent()
 
         val request = GraphQLRequest(query, mapOf("refreshToken" to refreshToken))
 
