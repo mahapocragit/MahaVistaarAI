@@ -1,4 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.graph_ql
+
+import android.util.Log
 import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -45,5 +47,57 @@ class AuthRepository {
                 callback(null, "Network Error: ${t.localizedMessage}")
             }
         })
+    }
+
+    fun fetchResponse(callback: (JsonObject?) -> Unit) {
+        val query = """
+    query GetTestForPortal(${'$'}state: String, ${'$'}district: String, ${'$'}village: String,
+    ${'$'}phone: String, ${'$'}farmername: String, ${'$'}locale: String) {
+        getTestForPortal(state: ${'$'}state,
+        district: ${'$'}district, village: ${'$'}village, phone: ${'$'}phone, farmername: ${'$'}farmername) {
+            id
+            computedID
+            cycle
+            scheme
+            status
+            village
+            createdAt
+            sampleDate
+            crop
+            results
+            plot {
+                address
+            }
+            farmer {
+                state
+                district
+                name
+                phone
+            }
+            html(locale: ${'$'}locale)
+        }
+    }
+""".trimIndent()
+        val variables = Variables(phone = "+919356738043", locale = "hi")
+        val request = GQLRequest(query, variables)
+
+        api.getTestForPortal(request)
+            .enqueue(object : Callback<JsonObject> {
+                override fun onResponse(
+                    call: Call<JsonObject>,
+                    response: Response<JsonObject>
+                ) {
+                    if (response.isSuccessful) {
+                        val result = response.body()
+                        callback(result)
+                    } else {
+                        Log.e("API", "Error: ${response.errorBody()?.string()}")
+                    }
+                }
+
+                override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+                    Log.e("API", "Failure: ${t.message}")
+                }
+            })
     }
 }

@@ -1,6 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.graph_ql
 
-data class GraphQLRequest(
+data class GQLRequest(
     val query: String,
-    val variables: Map<String, String>
+    val variables: Variables
 )
