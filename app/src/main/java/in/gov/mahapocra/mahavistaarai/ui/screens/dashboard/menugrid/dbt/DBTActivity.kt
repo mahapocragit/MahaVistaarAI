@@ -11,7 +11,6 @@ import `in`.co.appinventor.services_api.app_util.AppConstants
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.graph_ql.GraphQLApi
 import `in`.gov.mahapocra.mahavistaarai.graph_ql.GraphQLRequest
-import `in`.gov.mahapocra.mahavistaarai.graph_ql.GraphQLResponse
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDbtactivityBinding
 import `in`.gov.mahapocra.mahavistaarai.graph_ql.AuthViewModel
@@ -19,6 +18,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.mahadb
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.pocra.PocraDbtSchemes
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -61,10 +61,7 @@ class DBTActivity : AppCompatActivity() {
         }
 
         viewModel.graphQLResponse.observe(this) { graphQlResponse ->
-            val token = graphQlResponse?.data?.generateAccessToken?.token
-            val newRefreshToken = graphQlResponse?.data?.generateAccessToken?.refreshToken
-            token?.let { Log.d("RefreshToken 1", it) }
-            newRefreshToken?.let { Log.d("RefreshToken 2", it) }
+            Log.d("TAGGER", "onCreate: $graphQlResponse")
         }
         viewModel.error.observe(this) {
             it?.let { msg -> Log.e("GraphQL", msg) }

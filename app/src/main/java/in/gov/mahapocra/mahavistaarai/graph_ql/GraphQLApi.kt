@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.graph_ql
 
+import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Header
@@ -10,5 +11,5 @@ interface GraphQLApi {
     fun generateAccessToken(
         @Header("Authorization") authToken: String,
         @Body request: GraphQLRequest
-    ): Call<GraphQLResponse>
+    ): Call<JsonObject>
 }

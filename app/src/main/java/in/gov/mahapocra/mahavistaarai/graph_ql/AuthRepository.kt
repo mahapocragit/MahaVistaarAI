@@ -1,4 +1,5 @@
 package `in`.gov.mahapocra.mahavistaarai.graph_ql
+import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,7 +22,7 @@ class AuthRepository {
     fun getAccessToken(
         authHeader: String,
         refreshToken: String,
-        callback: (GraphQLResponse?, String?) -> Unit
+        callback: (JsonObject?, String?) -> Unit
     ) {
         val query = """
     query Query(${'$'}refreshToken: String!) {
@@ -31,8 +32,8 @@ class AuthRepository {
 
         val request = GraphQLRequest(query, mapOf("refreshToken" to refreshToken))
 
-        api.generateAccessToken(authHeader, request).enqueue(object : Callback<GraphQLResponse> {
-            override fun onResponse(call: Call<GraphQLResponse>, response: Response<GraphQLResponse>) {
+        api.generateAccessToken(authHeader, request).enqueue(object : Callback<JsonObject> {
+            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
                 if (response.isSuccessful) {
                     callback(response.body(), null)
                 } else {
@@ -40,7 +41,7 @@ class AuthRepository {
                 }
             }
 
-            override fun onFailure(call: Call<GraphQLResponse>, t: Throwable) {
+            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
                 callback(null, "Network Error: ${t.localizedMessage}")
             }
         })
