@@ -99,7 +99,8 @@
                 android:id="@+id/etlWarningLayout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_20sdp"
-                android:backgroundTint="@color/yeellowies"
+                android:visibility="gone"
+                android:background="@color/yeellowies"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -114,9 +115,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginStart="@dimen/_5sdp"
                     android:textColor="@color/red"
-                    android:text="ETL crossed. Click here for advisory." />
+                    android:text="@string/etl_crossed_click_here_for_advisory" />
             </LinearLayout>
 
             <LinearLayout

@@ -50,6 +50,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DrawerMenuAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.Registration
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.etl.AgriStackAdvisoryActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.DBTActivity
@@ -66,6 +67,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getLatestAdvisoriesAsJsonArray
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.ApUtil
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
@@ -312,13 +314,17 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             val inflater = LayoutInflater.from(this)
             val dialogView = inflater.inflate(R.layout.etl_crossed_dialog, null)
             val cropSapRecyclerView = dialogView.findViewById<RecyclerView>(R.id.cropSapRecyclerView)
+            val redirectToETLAdvisoryTextView = dialogView.findViewById<TextView>(R.id.redirectToETLAdvisoryTextView)
             cropSapRecyclerView.apply {
                 hasFixedSize()
                 layoutManager = LinearLayoutManager(this@DashboardScreen)
-                adapter = CropRecyclerSapAdapter(etlAdvisoryJsonArray)
+                Log.d("TAGGER", "onCreate: ${getLatestAdvisoriesAsJsonArray(etlAdvisoryJsonArray)}")
+                adapter = CropRecyclerSapAdapter(getLatestAdvisoriesAsJsonArray(etlAdvisoryJsonArray))
             }
             val closeIcon = dialogView.findViewById<ImageView>(R.id.closeIcon)
-
+            redirectToETLAdvisoryTextView.setOnClickListener {
+                startActivity(Intent(this, AgriStackAdvisoryActivity::class.java))
+            }
             val dialog = AlertDialog.Builder(this)
                 .setView(dialogView)
                 .create()
@@ -332,7 +338,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             if(it!=null){
                 val jsonObject = JSONObject(it.toString())
                 val jsonArray = jsonObject.optJSONArray("advisory")
-                etlAdvisoryJsonArray = jsonArray
+                if(jsonArray.length()!=0) {
+                    binding.appBarMain.dashboardScreen.etlWarningLayout.visibility = View.VISIBLE
+                    etlAdvisoryJsonArray = jsonArray
+                }
             }
         }
         farmerViewModel.error.observe(this){
@@ -409,14 +418,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 }
             }
         }
-    }
-
-    fun shakeButton(button: View) {
-        val shake = TranslateAnimation(0f, 10f, 0f, 0f).apply {
-            duration = 100           // 0.1 second per shake
-            interpolator = CycleInterpolator(30f) // total cycles: 30 (about 3 sec)
-        }
-        button.startAnimation(shake)
     }
 
     private fun fetchReceivingData() {
@@ -608,7 +609,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     val villageId = data.optInt("VillageCode", 0)
                     val villageName = data.optString("VillageName", "")
                     val agristack_id = data.optString("farmer_id", "")
-                    farmerViewModel.getCropSapAdvisory(this, 4128) //TODO: make it dynamic
+                    farmerViewModel.getCropSapAdvisory(this, 4128) //TODO: static taluka code 4128
                     districtCode = distId
                     villageCode = talukaId
 

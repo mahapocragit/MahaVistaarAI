@@ -471,4 +471,7 @@
     <string name="mobile_no">Mobile No.</string>
     <string name="enter_farmer_id">Enter your Farmer ID</string>
     <string name="click_here_to_know_your_farmer_id">Click here to know your Farmer ID</string>
+    <string name="etl_crossed_click_here_for_advisory">Pest and Diseases Outbreak/Warning</string>
+    <string name="etl_crop_advisory">ETL Crop Advisory</string>
+    <string name="click_here_to_view_full_advisory">Click here to view full advisory</string>
 </resources>

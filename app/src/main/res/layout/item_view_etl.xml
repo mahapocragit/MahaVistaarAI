@@ -21,4 +21,12 @@
         android:textSize="@dimen/_10sdp"
         android:textStyle="italic" />
 
+    <TextView
+        android:id="@+id/etlAdvisoryDateTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:paddingEnd="@dimen/_5sdp"
+        android:text="TextView" />
+
 </LinearLayout>

@@ -269,7 +269,7 @@
     <string name="market_c_price"> बाजारभाव </string>
     <string name="grievance"> तुमच्या तक्रारीचे येथे वर्णन करा </string>
     <string name="success_farmer"> शेतकरी यशोगाथा येथे करणे </string>
-    <string name="crop_advisory">पीक सल्ला</string>
+    <string name="crop_advisory">पिकाचा कीड व रोग सल्ला</string>
 
     <string name="doc_upload"> प्रतिमा/कागदपत्रे असल्यास अपलोड करा</string>
 
@@ -478,4 +478,7 @@
     <string name="mobile_no">मोबाईल क्र.</string>
     <string name="enter_farmer_id">तुमचा शेतकरी आयडी टाका</string>
     <string name="click_here_to_know_your_farmer_id">तुमचा शेतकरी ओळख क्रमांक जाणून घेण्यासाठी येथे क्लिक करा</string>
+    <string name="etl_crossed_click_here_for_advisory">किड आणि रोगांचा इशारा</string>
+    <string name="etl_crop_advisory">पिकांच्या कीड व रोगावरील तज्ञांचा सल्ला</string>
+    <string name="click_here_to_view_full_advisory">पूर्ण सल्ला पाहण्यासाठी येथे क्लिक करा.</string>
 </resources>

@@ -24,6 +24,7 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import org.json.JSONArray
 import java.security.MessageDigest
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
@@ -302,6 +303,36 @@ object LocalCustom {
         val md = MessageDigest.getInstance("SHA-512")
         val digest = md.digest(bytes)
         return digest.joinToString("") { "%02x".format(it) }
+    }
+
+    fun convertDateFormat(dateStr: String): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+        val date = inputFormat.parse(dateStr)
+        return outputFormat.format(date!!)
+    }
+
+    fun getLatestAdvisoriesAsJsonArray(advisoryArray: JSONArray): JSONArray {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+
+        // Step 1: Find the latest date
+        val latestDate = (0 until advisoryArray.length()).maxOfOrNull {
+            dateFormat.parse(
+                advisoryArray.getJSONObject(it).getString("cropsap_advisory_date")
+            )
+        }
+
+        // Step 2: Filter advisories with the latest date and collect into a new JSONArray
+        val filteredArray = JSONArray()
+        for (i in 0 until advisoryArray.length()) {
+            val obj = advisoryArray.getJSONObject(i)
+            val objDate = dateFormat.parse(obj.getString("cropsap_advisory_date"))
+            if (objDate == latestDate) {
+                filteredArray.put(obj)
+            }
+        }
+
+        return filteredArray
     }
 
 }
