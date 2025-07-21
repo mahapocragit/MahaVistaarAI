@@ -4,24 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.JsonObject
-import `in`.co.appinventor.services_api.api.AppInventorApi
-import `in`.co.appinventor.services_api.app_util.AppUtility
-import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
-import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
-import `in`.gov.mahapocra.mahavistaarai.data.model.DiseaseStages
-import `in`.gov.mahapocra.mahavistaarai.data.model.DiseasesDetails
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityPestsAndDiseasesLibraryBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.PestAndDiseasesAdapter
@@ -33,12 +24,8 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Retrofit
 
 class PestsAndDiseasesStages : AppCompatActivity() {
 

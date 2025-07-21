@@ -134,7 +134,7 @@
             android:name=".ui.screens.dashboard.menugrid.Warehouse"
             android:exported="false" />
         <activity
-            android:name=".ui.screens.notification.ComingSoonActivity"
+            android:name=".ui.screens.notification.NotificationActivity"
             android:exported="false" />
         <activity android:name=".ui.screens.authentication.LoginScreen" />
 

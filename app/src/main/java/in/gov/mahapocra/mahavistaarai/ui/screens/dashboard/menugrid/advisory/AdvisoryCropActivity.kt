@@ -44,6 +44,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
     private var mUrl: String? = null
     private lateinit var languageToLoad: String
     private var sowingDate: String = ""
+    private var route: String = ""
     private val date = Date()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,6 +79,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         sowingDate = intent.getStringExtra("sowingDate").toString()
         wotrCropId = intent.getStringExtra("wotr_crop_id")
         mUrl = intent.getStringExtra("mUrl")
+        route = intent.getStringExtra("ROUTE").toString()
         villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
 
@@ -98,15 +100,20 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
             startActivity(Intent(this, DashboardScreen::class.java))
         }
         observeCropStagesAndAdvisory()
-        viewModel.getCropStagesAndAdvisory(this, cropId, sowingDate, languageToLoad)
+        if (route!=""){
+            val savedCropId = AppPreferenceManager(this).getInt("CROP_ID_SAVED")
+            val savedCropSowingDate = AppPreferenceManager(this).getString("CROP_SOWING_DATE_SAVED")
+            val savedCropName = AppPreferenceManager(this).getString("CROP_NAME_SAVED")
+            savedCropSowingDate?.let { viewModel.getCropStagesAndAdvisory(this, savedCropId, it, languageToLoad) }
+        }else{
+            viewModel.getCropStagesAndAdvisory(this, cropId, sowingDate, languageToLoad)
+        }
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
         startActivity(Intent(this, DashboardScreen::class.java))
     }
-
-
 
     private fun observeCropStagesAndAdvisory() {
         ProgressHelper.showProgressDialog(this)

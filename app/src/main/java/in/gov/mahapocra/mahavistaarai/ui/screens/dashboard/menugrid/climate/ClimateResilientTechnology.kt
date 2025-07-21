@@ -11,17 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.JsonObject
-import `in`.co.appinventor.services_api.api.AppInventorApi
-import `in`.co.appinventor.services_api.app_util.AppUtility
-import `in`.co.appinventor.services_api.listener.ApiCallbackCode
-import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
-import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ClimateResilientTechnologyAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
@@ -29,12 +21,8 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Retrofit
 
 class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClickListener {
 

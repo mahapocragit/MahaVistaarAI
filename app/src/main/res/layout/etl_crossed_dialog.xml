@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/crop_advisory"
+            android:text="@string/crop_advisory_etl"
             android:textSize="@dimen/_12sdp"
             android:textStyle="bold" />
 
@@ -41,12 +41,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxHeight="@dimen/_150sdp">
+            android:maxHeight="10dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/cropSapRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="true"
                 tools:listitem="@layout/item_view_etl" />
         </LinearLayout>
 
@@ -54,8 +55,8 @@
             android:id="@+id/redirectToETLAdvisoryTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="end"
             android:layout_marginTop="@dimen/_5sdp"
+            android:gravity="end"
             android:text="@string/click_here_to_view_full_advisory"
             android:textColor="@color/darkblue" />
     </LinearLayout>

@@ -41,7 +41,7 @@ class CropRecyclerSapAdapter(
         holder.cropAdvisoryETLTextView.text = if (language!="en") cropAdvisoryETL else cropSapAdvisoryEng
         holder.etlAdvisoryDateTextView.text =
             buildString {
-                append(holder.cropNameETLTextView.context.getString(R.string.date))
+                append(holder.cropNameETLTextView.context.getString(R.string.date_etl))
                 append(" ")
                 append(convertDateFormat(etlAdvisoryDate))
             }

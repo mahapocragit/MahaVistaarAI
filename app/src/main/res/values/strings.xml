@@ -80,7 +80,7 @@
 
     <string name="my_profile">My Profile</string>
     <string name="login_menu">Login / Registration</string>
-    <string name="my_Notification">My Notification</string>
+    <string name="my_notification">My Notification</string>
     <string name="my_dbt_status">My DBT Application Status</string>
     <string name="my_farm_survay">My farm Survey</string>
     <string name="crop_registration">Crop Registration</string>
@@ -268,6 +268,7 @@
     <string name="grievance">Describe Your Grievance </string>
     <string name="success_farmer"> Farmer Success Story </string>
     <string name="crop_advisory">Crop Advisory</string>
+    <string name="crop_advisory_etl">Crop Advisory</string>
     <string name="doc_upload"> Upload Image/Doc if any </string>
     <string name="event_details"> Event Details </string>
     <string name="hello_blank_fragment" tools:ignore="MissingTranslation">Hello blank fragment</string>
@@ -471,7 +472,8 @@
     <string name="mobile_no">Mobile No.</string>
     <string name="enter_farmer_id">Enter your Farmer ID</string>
     <string name="click_here_to_know_your_farmer_id">Click here to know your Farmer ID</string>
-    <string name="etl_crossed_click_here_for_advisory">Pest and Diseases Outbreak/Warning</string>
-    <string name="etl_crop_advisory">ETL Crop Advisory</string>
+    <string name="etl_crossed_click_here_for_advisory">Pest and Diseases Warning</string>
+    <string name="etl_crop_advisory">Crop Advisory</string>
     <string name="click_here_to_view_full_advisory">Click here to view full advisory</string>
+    <string name="date_etl">Date: </string>
 </resources>

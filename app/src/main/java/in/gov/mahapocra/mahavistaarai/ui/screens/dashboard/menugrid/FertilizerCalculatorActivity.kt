@@ -67,6 +67,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     private var sowingDate: String? = null
     private var cropName: String? = null
     private lateinit var token: String
+    private var route: String = ""
     private var acrArea: String = ""
     private var gunthaArea: String = ""
     private var edtFYMValue: String = ""
@@ -104,6 +105,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         wotrCropId = intent.getIntExtra("wotr_crop_id", 0).toString()
         mUrl = intent.getStringExtra("mUrl")
         sowingDate = intent.getStringExtra("sowingDate")
+        route = intent.getStringExtra("ROUTE").toString()
 
         binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {
             val sharing = Intent(this, AddCropActivity::class.java)

@@ -17,7 +17,7 @@
         android:id="@+id/agriStackRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/_37sdp"
+        android:layout_marginTop="@dimen/_40sdp"
         android:layout_marginHorizontal="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

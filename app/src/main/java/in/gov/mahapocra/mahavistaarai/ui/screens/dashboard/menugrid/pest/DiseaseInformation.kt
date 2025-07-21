@@ -1,7 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest
 
 import android.content.Context
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -22,7 +21,6 @@ import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import org.json.JSONArray
 import org.json.JSONObject
-import java.util.Locale
 
 
 class DiseaseInformation : AppCompatActivity() {

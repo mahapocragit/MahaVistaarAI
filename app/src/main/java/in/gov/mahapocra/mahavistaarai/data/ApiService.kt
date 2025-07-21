@@ -4,7 +4,6 @@ import com.google.gson.JsonObject
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
-import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -115,5 +114,8 @@ interface ApiService {
 
     @POST(APIServices.GetCropSapAdvisory)
     suspend fun getCropSapAdvisory(@Body params: RequestBody): JsonObject
+
+    @POST("notificationServices/fetch-notifications")
+    suspend fun getNotificationList(@Header("userid") userId: Int): JsonObject
 
 }

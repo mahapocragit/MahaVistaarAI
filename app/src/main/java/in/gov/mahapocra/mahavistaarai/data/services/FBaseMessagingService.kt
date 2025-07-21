@@ -20,7 +20,6 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.Warehouse
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.DBTActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.pocra.PocraDbtSchemes
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard.HealthCardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
@@ -53,13 +52,25 @@ class FBaseMessagingService : FirebaseMessagingService() {
         createNotificationChannelIfNeeded()
 
         val targetIntent = when (testValue?.lowercase()) {
-            "weather" -> Intent(this, WeatherActivity::class.java)
-            "advisory" -> Intent(this, AdvisoryCropActivity::class.java)
-            "sop" -> Intent(this, SOPActivity::class.java)
-            "soilCard" -> Intent(this, HealthCardActivity::class.java)
-            "fertilizer" -> Intent(this, FertilizerCalculatorActivity::class.java)
+            "advisory" -> Intent(this, AdvisoryCropActivity::class.java).apply {
+                putExtra("ROUTE", "NOTIFICATION_TRAY")
+            }
+
+            "sop" -> Intent(this, SOPActivity::class.java).apply {
+                putExtra("ROUTE", "NOTIFICATION_TRAY")
+            }
+
+            "fertilizer" -> Intent(this, FertilizerCalculatorActivity::class.java).apply {
+                putExtra("ROUTE", "NOTIFICATION_TRAY")
+            }
+
+            "pestDisease" -> Intent(this, PestsAndDiseasesStages::class.java).apply {
+                putExtra("ROUTE", "NOTIFICATION_TRAY")
+            }
+
             "climateTech" -> Intent(this, ClimateResilientTechnology::class.java)
-            "pestDisease" -> Intent(this, PestsAndDiseasesStages::class.java)
+            "weather" -> Intent(this, WeatherActivity::class.java)
+            "soilCard" -> Intent(this, HealthCardActivity::class.java)
             "marketPrice" -> Intent(this, MarketPrice::class.java)
             "shetishala" -> Intent(this, ShetishalaActivity::class.java)
             "warehouse" -> Intent(this, Warehouse::class.java)

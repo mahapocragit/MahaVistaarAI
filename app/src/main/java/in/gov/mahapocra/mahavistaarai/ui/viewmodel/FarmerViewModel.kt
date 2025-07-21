@@ -9,13 +9,12 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
-import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.data.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
+import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +22,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONException
 import org.json.JSONObject
-import retrofit2.Call
 import retrofit2.Retrofit
 
 class FarmerViewModel : ViewModel() {
@@ -92,6 +90,9 @@ class FarmerViewModel : ViewModel() {
     val getPestDiseaseDetailsResponse: LiveData<JSONObject> = _getPestDiseaseDetailsResponse
     private val _getCropSapAdvisoryResponse = MutableLiveData<JsonObject>()
     val getCropSapAdvisoryResponse: LiveData<JsonObject> = _getCropSapAdvisoryResponse
+
+    private val _getNotificationResponse = MutableLiveData<JsonObject>()
+    val getNotificationResponse: LiveData<JsonObject> = _getNotificationResponse
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -733,6 +734,31 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.getCropSapAdvisory(requestBody)
                 _getCropSapAdvisoryResponse.value = response
             } catch (e: JSONException) {
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getNotificationList(context: Context){
+        ProgressHelper.showProgressDialog(context)
+        viewModelScope.launch {
+            val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+            try {
+                val api = AppInventorApi(
+                    context,
+                    AppEnvironment.FARMER.baseUrl,
+                    "",
+                    AppString(context).getkMSG_WAIT(),
+                    false
+                )
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.getNotificationList(farmerId)
+                ProgressHelper.disableProgressDialog()
+                _getNotificationResponse.value = response
+            } catch (e: JSONException) {
+                ProgressHelper.disableProgressDialog()
                 _error.value = e.localizedMessage ?: "Unknown error"
                 FirebaseCrashlytics.getInstance().recordException(e)
             }

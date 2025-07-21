@@ -11,12 +11,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewTreeObserver
 import android.view.Window
 import android.view.WindowManager
-import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.view.animation.CycleInterpolator
-import android.view.animation.TranslateAnimation
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.GridView
@@ -33,7 +31,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.messaging.FirebaseMessaging
 import com.squareup.picasso.Picasso
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
@@ -61,7 +58,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.Abou
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.CreditsActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.ComingSoonActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.NotificationActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
@@ -250,7 +247,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         binding.appBarMain.imgNotification.setOnClickListener {
             val intent = Intent(
                 this@DashboardScreen,
-                ComingSoonActivity::class.java
+                NotificationActivity::class.java
             )
             startActivity(intent)
         }
@@ -313,38 +310,65 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         binding.appBarMain.dashboardScreen.etlWarningLayout.setOnClickListener {
             val inflater = LayoutInflater.from(this)
             val dialogView = inflater.inflate(R.layout.etl_crossed_dialog, null)
-            val cropSapRecyclerView = dialogView.findViewById<RecyclerView>(R.id.cropSapRecyclerView)
-            val redirectToETLAdvisoryTextView = dialogView.findViewById<TextView>(R.id.redirectToETLAdvisoryTextView)
+            val cropSapRecyclerView =
+                dialogView.findViewById<RecyclerView>(R.id.cropSapRecyclerView)
+            val redirectToETLAdvisoryTextView =
+                dialogView.findViewById<TextView>(R.id.redirectToETLAdvisoryTextView)
+            val cropRecyclerSapAdapter =
+                CropRecyclerSapAdapter(getLatestAdvisoriesAsJsonArray(etlAdvisoryJsonArray))
             cropSapRecyclerView.apply {
                 hasFixedSize()
                 layoutManager = LinearLayoutManager(this@DashboardScreen)
                 Log.d("TAGGER", "onCreate: ${getLatestAdvisoriesAsJsonArray(etlAdvisoryJsonArray)}")
-                adapter = CropRecyclerSapAdapter(getLatestAdvisoriesAsJsonArray(etlAdvisoryJsonArray))
+                adapter = cropRecyclerSapAdapter
             }
-            val closeIcon = dialogView.findViewById<ImageView>(R.id.closeIcon)
-            redirectToETLAdvisoryTextView.setOnClickListener {
-                startActivity(Intent(this, AgriStackAdvisoryActivity::class.java))
-            }
+
             val dialog = AlertDialog.Builder(this)
                 .setView(dialogView)
                 .create()
+
+            val closeIcon = dialogView.findViewById<ImageView>(R.id.closeIcon)
+            redirectToETLAdvisoryTextView.setOnClickListener {
+                dialog.dismiss()
+                startActivity(Intent(this, AgriStackAdvisoryActivity::class.java))
+            }
+
+            cropSapRecyclerView.viewTreeObserver.addOnGlobalLayoutListener(object :
+                ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    cropSapRecyclerView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                    val itemCount = cropRecyclerSapAdapter.itemCount
+                    val visibleItems = minOf(itemCount, 3) // Show up to 3 items
+                    val itemView = cropSapRecyclerView.findViewHolderForAdapterPosition(0)?.itemView
+
+                    if (itemView != null) {
+                        val itemHeight = itemView.measuredHeight
+                        val maxHeight = itemHeight * visibleItems
+                        cropSapRecyclerView.layoutParams.height = maxHeight
+                        cropSapRecyclerView.requestLayout()
+                    }
+                }
+            })
+
+
 
             dialog.show()
             closeIcon.setOnClickListener {
                 dialog.dismiss()
             }
         }
-        farmerViewModel.getCropSapAdvisoryResponse.observe(this){
-            if(it!=null){
+        farmerViewModel.getCropSapAdvisoryResponse.observe(this) {
+            if (it != null) {
                 val jsonObject = JSONObject(it.toString())
                 val jsonArray = jsonObject.optJSONArray("advisory")
-                if(jsonArray.length()!=0) {
+                if (jsonArray.length() != 0) {
                     binding.appBarMain.dashboardScreen.etlWarningLayout.visibility = View.VISIBLE
                     etlAdvisoryJsonArray = jsonArray
                 }
             }
         }
-        farmerViewModel.error.observe(this){
+        farmerViewModel.error.observe(this) {
             Log.d("TAGGER", "onCreate: $it")
         }
     }
@@ -444,6 +468,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                             savedCropImageUrl = selectedCrop.getString("image")
                             savedCropSowingDate = selectedCrop.getString("sowing_date")
                             savedCropWoTRId = selectedCrop.getString("wotr_crop_id")
+
+                            AppPreferenceManager(this).saveInt("CROP_ID_SAVED", savedCropId)
+                            AppPreferenceManager(this).saveString("CROP_SOWING_DATE_SAVED", savedCropSowingDate)
+                            AppPreferenceManager(this).saveString("CROP_NAME_SAVED", savedCropName)
 
                             binding.appBarMain.dashboardScreen.apply {
                                 addChangeCropTV.setText(R.string.change_Crop)
@@ -609,7 +637,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     val villageId = data.optInt("VillageCode", 0)
                     val villageName = data.optString("VillageName", "")
                     val agristack_id = data.optString("farmer_id", "")
-                    farmerViewModel.getCropSapAdvisory(this, 4128) //TODO: static taluka code 4128
+                    farmerViewModel.getCropSapAdvisory(this, talukaId) //TODO: static taluka code 4128
                     districtCode = distId
                     villageCode = talukaId
 

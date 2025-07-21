@@ -1,6 +1,7 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.etl
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -12,6 +13,7 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityAgriStackAdvisoryBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropRecyclerSapAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
@@ -44,7 +46,7 @@ class AgriStackAdvisoryActivity : AppCompatActivity() {
         )
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+            startActivity(Intent(this, DashboardScreen::class.java))
         }
 
         observeResponse()
@@ -52,6 +54,11 @@ class AgriStackAdvisoryActivity : AppCompatActivity() {
         if (talukaCode!=0) {
             farmerViewModel.getCropSapAdvisory(this, talukaCode) //TODO: static taluka code 4128
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        startActivity(Intent(this, DashboardScreen::class.java))
     }
 
     private fun observeResponse() {
