@@ -81,8 +81,6 @@ android {
 dependencies {
     //Clarity
     implementation 'com.microsoft.clarity:clarity:3.3.0'
-    //captcha
-    implementation 'com.google.android.recaptcha:recaptcha:18.4.0'
     //osm
     implementation 'org.osmdroid:osmdroid-android:6.1.20'
     implementation 'com.intuit.sdp:sdp-android:1.1.1'
@@ -110,19 +108,19 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:32.0.0')
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-config'
+    implementation 'com.google.firebase:firebase-crashlytics:19.4.3'
+    implementation 'com.google.firebase:firebase-database-ktx:21.0.0'
 
     // Retrofit
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     // Image Loading
     implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation 'com.github.bumptech.glide:glide:4.12.0'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.firebase:firebase-database-ktx:21.0.0'
-    implementation 'com.google.android.gms:play-services-location:21.3.0'
-    implementation 'com.google.firebase:firebase-crashlytics:19.4.3'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
     implementation 'com.makeramen:roundedimageview:2.3.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'com.google.android.gms:play-services-location:21.3.0'
 
     // Lifecycle
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
