@@ -25,6 +25,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealth
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.DetailedNotificationActivity
 
 class FBaseMessagingService : FirebaseMessagingService() {
 
@@ -51,34 +52,8 @@ class FBaseMessagingService : FirebaseMessagingService() {
     private fun sendNotification(title: String, body: String, testValue: String?) {
         createNotificationChannelIfNeeded()
 
-        val targetIntent = when (testValue?.lowercase()) {
-            "advisory" -> Intent(this, AdvisoryCropActivity::class.java).apply {
-                putExtra("ROUTE", "NOTIFICATION_TRAY")
-            }
-
-            "sop" -> Intent(this, SOPActivity::class.java).apply {
-                putExtra("ROUTE", "NOTIFICATION_TRAY")
-            }
-
-            "fertilizer" -> Intent(this, FertilizerCalculatorActivity::class.java).apply {
-                putExtra("ROUTE", "NOTIFICATION_TRAY")
-            }
-
-            "pestDisease" -> Intent(this, PestsAndDiseasesStages::class.java).apply {
-                putExtra("ROUTE", "NOTIFICATION_TRAY")
-            }
-
-            "climateTech" -> Intent(this, ClimateResilientTechnology::class.java)
-            "weather" -> Intent(this, WeatherActivity::class.java)
-            "soilCard" -> Intent(this, HealthCardActivity::class.java)
-            "marketPrice" -> Intent(this, MarketPrice::class.java)
-            "shetishala" -> Intent(this, ShetishalaActivity::class.java)
-            "warehouse" -> Intent(this, Warehouse::class.java)
-            "customHire" -> Intent(this, CHCenterActivity::class.java)
-            "videos" -> Intent(this, VideosActivity::class.java)
-            "dbtSchemes" -> Intent(this, DBTActivity::class.java)
-            "dashboard" -> Intent(this, DashboardScreen::class.java)
-            else -> Intent(this, DashboardScreen::class.java) // default fallback
+        val targetIntent = Intent(this, DetailedNotificationActivity::class.java).apply {
+            putExtra("ROUTE", "NOTIFICATION_TRAY")
         }.apply {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         }

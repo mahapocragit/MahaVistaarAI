@@ -59,55 +59,21 @@ class NotificationActivity : AppCompatActivity() {
                 val jsonObject = JSONObject(it.toString())
                 val notificationJsonArray = jsonObject.getJSONArray("notifications")
                 binding.notificationRecyclerView.apply {
+                    Log.d("TAG", "onCreate: $jsonObject")
                     hasFixedSize()
                     layoutManager = LinearLayoutManager(this@NotificationActivity)
                     adapter = NotificationAdapter(notificationJsonArray) { jsonObject ->
-                        val page = jsonObject.optString("page")
-                        val notificationMessage = jsonObject.optString("body")
-                        val notificationDate = jsonObject.optString("notification_date")
-                        Log.d("TAGGER", "onCreate: $jsonObject")
-                        redirectToScreen(page)
+                        startActivity(Intent(this@NotificationActivity,
+                            DetailedNotificationActivity::class.java).apply {
+                                putExtra("id", jsonObject.optInt("id"))
+                        })
                     }
                 }
             }
         }
     }
 
-    private fun redirectToScreen(testValue: String) {
-        val targetIntent = when (testValue.lowercase()) {
 
-            "advisory" -> Intent(this, AdvisoryCropActivity::class.java).apply {
-                putExtra("ROUTE", "NOTIFICATION_LIST")
-            }
-
-            "sop" -> Intent(this, SOPActivity::class.java).apply {
-                putExtra("ROUTE", "NOTIFICATION_LIST")
-            }
-
-            "fertilizer" -> Intent(this, FertilizerCalculatorActivity::class.java).apply {
-                putExtra("ROUTE", "NOTIFICATION_LIST")
-            }
-
-            "pestDisease" -> Intent(this, PestsAndDiseasesStages::class.java).apply {
-                putExtra("ROUTE", "NOTIFICATION_LIST")
-            }
-
-            "weather" -> Intent(this, WeatherActivity::class.java)
-            "soilCard" -> Intent(this, HealthCardActivity::class.java)
-            "climateTech" -> Intent(this, ClimateResilientTechnology::class.java)
-            "marketPrice" -> Intent(this, MarketPrice::class.java)
-            "shetishala" -> Intent(this, ShetishalaActivity::class.java)
-            "warehouse" -> Intent(this, Warehouse::class.java)
-            "customHire" -> Intent(this, CHCenterActivity::class.java)
-            "videos" -> Intent(this, VideosActivity::class.java)
-            "dbtSchemes" -> Intent(this, DBTActivity::class.java)
-            "dashboard" -> Intent(this, DashboardScreen::class.java)
-            else -> Intent(this, DashboardScreen::class.java) // default fallback
-        }.apply {
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
-        startActivity(targetIntent)
-    }
 
     override fun attachBaseContext(newBase: Context) {
         languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {

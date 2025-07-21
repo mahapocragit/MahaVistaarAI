@@ -118,4 +118,7 @@ interface ApiService {
     @POST("notificationServices/fetch-notifications")
     suspend fun getNotificationList(@Header("userid") userId: Int): JsonObject
 
+    @POST("notificationServices/fetch-notifications-indetail")
+    suspend fun getNotificationDetails(@Body params: RequestBody): JsonObject
+
 }

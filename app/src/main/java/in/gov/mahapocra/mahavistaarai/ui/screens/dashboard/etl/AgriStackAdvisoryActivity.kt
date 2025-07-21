@@ -50,9 +50,9 @@ class AgriStackAdvisoryActivity : AppCompatActivity() {
         }
 
         observeResponse()
-        val talukaCode = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
-        if (talukaCode!=0) {
-            farmerViewModel.getCropSapAdvisory(this, talukaCode) //TODO: static taluka code 4128
+        val villageCode = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
+        if (villageCode!=0) {
+            farmerViewModel.getCropSapAdvisory(this, villageCode) //TODO: static villageCode code 537820
         }
     }
 

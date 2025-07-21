@@ -637,7 +637,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     val villageId = data.optInt("VillageCode", 0)
                     val villageName = data.optString("VillageName", "")
                     val agristack_id = data.optString("farmer_id", "")
-                    farmerViewModel.getCropSapAdvisory(this, talukaId) //TODO: static taluka code 4128
+                    farmerViewModel.getCropSapAdvisory(this, villageId) //TODO: static village code 537820
                     districtCode = distId
                     villageCode = talukaId
 
