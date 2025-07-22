@@ -65,7 +65,7 @@ class NotificationActivity : AppCompatActivity() {
                     adapter = NotificationAdapter(notificationJsonArray) { jsonObject ->
                         startActivity(Intent(this@NotificationActivity,
                             DetailedNotificationActivity::class.java).apply {
-                                putExtra("id", jsonObject.optInt("id"))
+                                putExtra("id", jsonObject.optLong("id"))
                         })
                     }
                 }

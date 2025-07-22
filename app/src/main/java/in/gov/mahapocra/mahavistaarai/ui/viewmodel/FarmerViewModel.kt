@@ -95,6 +95,8 @@ class FarmerViewModel : ViewModel() {
     val getNotificationResponse: LiveData<JsonObject> = _getNotificationResponse
     private val _getNotificationDetailedResponse = MutableLiveData<JsonObject>()
     val getNotificationDetailedResponse: LiveData<JsonObject> = _getNotificationDetailedResponse
+    private val _updateNotificationStatusResponse = MutableLiveData<JsonObject>()
+    val updateNotificationStatusResponse: LiveData<JsonObject> = _updateNotificationStatusResponse
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -767,7 +769,7 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun getNotificationDetails(context: Context, notificationID: Int){
+    fun getNotificationDetails(context: Context, notificationID: Long){
         ProgressHelper.showProgressDialog(context)
         viewModelScope.launch {
             val jsonObject = JSONObject().apply {
@@ -787,6 +789,33 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.getNotificationDetails(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _getNotificationDetailedResponse.value = response
+            } catch (e: JSONException) {
+                ProgressHelper.disableProgressDialog()
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+    fun updateNotificationStatus(context: Context, notificationID: Long){
+        ProgressHelper.showProgressDialog(context)
+        viewModelScope.launch {
+            val jsonObject = JSONObject().apply {
+                put("notification_id", notificationID)
+            }
+            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+            try {
+                val api = AppInventorApi(
+                    context,
+                    AppEnvironment.FARMER.baseUrl,
+                    "",
+                    AppString(context).getkMSG_WAIT(),
+                    false
+                )
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.updateNotificationStatus(requestBody)
+                ProgressHelper.disableProgressDialog()
+                _updateNotificationStatusResponse.value = response
             } catch (e: JSONException) {
                 ProgressHelper.disableProgressDialog()
                 _error.value = e.localizedMessage ?: "Unknown error"

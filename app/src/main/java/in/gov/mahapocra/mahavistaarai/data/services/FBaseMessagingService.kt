@@ -42,18 +42,19 @@ class FBaseMessagingService : FirebaseMessagingService() {
         if (remoteMessage.data.isNotEmpty()) {
             Log.d(tag, "Data payload: ${remoteMessage.data}")
 
+            val notificationId = remoteMessage.data["not_id"] ?: "0"
             val title = remoteMessage.data["title"] ?: "Notification"
             val body = remoteMessage.data["body"] ?: "You have a new message"
-            val testValue = remoteMessage.data["page"]
-            sendNotification(title, body, testValue)
+            sendNotification(title, body, notificationId)
         }
     }
 
-    private fun sendNotification(title: String, body: String, testValue: String?) {
+    private fun sendNotification(title: String, body: String, notificationId: String?) {
         createNotificationChannelIfNeeded()
 
         val targetIntent = Intent(this, DetailedNotificationActivity::class.java).apply {
             putExtra("ROUTE", "NOTIFICATION_TRAY")
+            putExtra("id", notificationId?.toLong())
         }.apply {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         }

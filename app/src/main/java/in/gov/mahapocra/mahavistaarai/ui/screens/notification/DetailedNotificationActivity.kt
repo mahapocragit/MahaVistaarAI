@@ -49,13 +49,14 @@ class DetailedNotificationActivity : AppCompatActivity() {
         setContentView(binding.root)
         farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
 
-        val id = intent.getIntExtra("id", 14423)
+        val id = intent.getLongExtra("id", 0L)
+        Log.d("TAGGER", "onCreate: $id")
         farmerViewModel.getNotificationDetails(this, id)
         farmerViewModel.getNotificationDetailedResponse.observe(this) {
             if (it != null) {
                 val jsonObject = JSONObject(it.toString())
                 val notificationObject = jsonObject.optJSONObject("notifications")
-                setUpPageContent(notificationObject)
+                setUpPageContent(notificationObject, id)
             }
         }
 
@@ -66,7 +67,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpPageContent(jsonObject: JSONObject) {
+    private fun setUpPageContent(jsonObject: JSONObject, notificationId: Long) {
         val page = jsonObject.optString("page")
         val title = jsonObject.optString("title")
         val shortDescription = jsonObject.optString("body")
@@ -81,6 +82,10 @@ class DetailedNotificationActivity : AppCompatActivity() {
         binding.dateTextView.text = notificationDate
         binding.redirectTextView.text = redirectionText ?: "अधिक माहितीसाठी येथे क्लिक करा."
         binding.redirectTextView.setOnClickListener { redirectToScreen(page) }
+        farmerViewModel.updateNotificationStatus(this, notificationId)
+        farmerViewModel.updateNotificationStatusResponse.observe(this){
+
+        }
     }
 
     private fun redirectToScreen(testValue: String) {
