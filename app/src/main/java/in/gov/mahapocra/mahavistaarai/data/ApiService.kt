@@ -120,7 +120,11 @@ interface ApiService {
 
     @POST("notificationServices/fetch-notifications-indetail")
     suspend fun getNotificationDetails(@Body params: RequestBody): JsonObject
+
     @POST("notificationServices/update-notification-read-status")
     suspend fun updateNotificationStatus(@Body params: RequestBody): JsonObject
+
+    @POST("authService/updateFcmToken")
+    suspend fun updateFCMToken(@Header("")farmerId:Int, @Header("") fcmToken:String): JsonObject
 
 }

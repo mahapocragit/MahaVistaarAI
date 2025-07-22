@@ -19,6 +19,7 @@ import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
+import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityHealthCardBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
@@ -286,7 +287,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
                     true
                 )
             CoroutineScope(Dispatchers.IO).launch {
-                val retrofit: Retrofit = api.getRetrofitInstance()
+                val retrofit: Retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.PANI_FOUNDATION.baseUrl)
                 val apiRequest = retrofit.create(APIRequest::class.java)
                 val responseCall: Call<JsonObject> = apiRequest.getDistrictList(requestBody)
                 api.postRequest(responseCall, this@HealthCardActivity, 1)

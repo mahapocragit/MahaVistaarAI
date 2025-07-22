@@ -7,16 +7,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
-import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.data.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
+import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -98,6 +97,10 @@ class FarmerViewModel : ViewModel() {
     private val _updateNotificationStatusResponse = MutableLiveData<JsonObject>()
     val updateNotificationStatusResponse: LiveData<JsonObject> = _updateNotificationStatusResponse
 
+
+    private val _updateFCMTokenResponse = MutableLiveData<JsonObject>()
+    val updateFCMTokenResponse: LiveData<JsonObject> = _updateFCMTokenResponse
+
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
@@ -121,14 +124,7 @@ class FarmerViewModel : ViewModel() {
                 }
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api = AppInventorApi(
-                    context,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(context).getkMSG_WAIT(),
-                    false
-                )
-                val retrofit = api.getRetrofitInstance()
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
 
                 // Retrofit suspend call
@@ -153,14 +149,7 @@ class FarmerViewModel : ViewModel() {
                 jsonObject.put("farmer_id", farmerId)
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api = AppInventorApi(
-                    context,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(context).getkMSG_WAIT(),
-                    false
-                )
-                val retrofit = api.getRetrofitInstance()
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
 
                 try {
@@ -193,14 +182,7 @@ class FarmerViewModel : ViewModel() {
                 }
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api = AppInventorApi(
-                    context,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(context).getkMSG_WAIT(),
-                    false
-                )
-                val retrofit = api.getRetrofitInstance()
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
 
                 val response = apiRequest.deleteSelectedCrop(requestBody)
@@ -225,14 +207,7 @@ class FarmerViewModel : ViewModel() {
                 }
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api = AppInventorApi(
-                    context,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(context).getkMSG_WAIT(),
-                    false
-                )
-                val retrofit = api.getRetrofitInstance()
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
 
                 // Suspend call
@@ -261,14 +236,7 @@ class FarmerViewModel : ViewModel() {
                 }
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api = AppInventorApi(
-                    context,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(context).getkMSG_WAIT(),
-                    false
-                )
-                val retrofit = api.getRetrofitInstance()
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
 
                 // This is the suspend function call
@@ -293,15 +261,7 @@ class FarmerViewModel : ViewModel() {
                 }
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api = AppInventorApi(
-                    context,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(context).getkMSG_WAIT(),
-                    false
-                )
-
-                val retrofit = api.getRetrofitInstance()
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
 
                 // Suspend API call
@@ -325,15 +285,7 @@ class FarmerViewModel : ViewModel() {
                 }
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api = AppInventorApi(
-                    context,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(context).getkMSG_WAIT(),
-                    false
-                )
-
-                val retrofit = api.getRetrofitInstance()
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
 
                 val response = apiRequest.getGetRegistration(farmerRegistrationID, requestBody)
@@ -351,15 +303,7 @@ class FarmerViewModel : ViewModel() {
     fun getVideosForFarmer(context: Context) {
         viewModelScope.launch {
             try {
-                val api = AppInventorApi(
-                    context,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(context).getkMSG_WAIT(),
-                    false
-                )
-
-                val retrofit = api.getRetrofitInstance()
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getFarmersVideosJson()
                 _videosResponse.value = response
@@ -373,15 +317,7 @@ class FarmerViewModel : ViewModel() {
     fun getDigitalShetishalaSchedule(context: Context) {
         viewModelScope.launch {
             try {
-                val api = AppInventorApi(
-                    context,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(context).getkMSG_WAIT(),
-                    false
-                )
-
-                val retrofit = api.getRetrofitInstance()
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getDigitalShetishalaSchedule()
                 _getDigitalShetishalaScheduleResponse.value = response
@@ -401,15 +337,7 @@ class FarmerViewModel : ViewModel() {
                 }
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api = AppInventorApi(
-                    context,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(context).getkMSG_WAIT(),
-                    false
-                )
-
-                val retrofit = api.getRetrofitInstance()
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
 
                 val response = apiRequest.getSOPByList(requestBody)
@@ -433,15 +361,8 @@ class FarmerViewModel : ViewModel() {
                 jsonObject.put("lon", longitude)
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api =
-                    AppInventorApi(
-                        context,
-                        AppEnvironment.FARMER.baseUrl,
-                        "",
-                        AppString(context).getkMSG_WAIT(),
-                        false
-                    )
-                val retrofit: Retrofit = api.getRetrofitInstance()
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getCHCInformation(requestBody)
                 _chcCentersResponse.value = response
@@ -460,15 +381,8 @@ class FarmerViewModel : ViewModel() {
                 jsonObject.put("lon", longitude)
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api =
-                    AppInventorApi(
-                        context,
-                        AppEnvironment.FARMER.baseUrl,
-                        "",
-                        AppString(context).getkMSG_WAIT(),
-                        false
-                    )
-                val retrofit: Retrofit = api.getRetrofitInstance()
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getCodeFromCoordinates(requestBody)
                 _fetchLocationDataFromCoordinates.value = response
@@ -488,15 +402,8 @@ class FarmerViewModel : ViewModel() {
                 jsonObject.put("district_code", districtCode)
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api =
-                    AppInventorApi(
-                        context,
-                        AppEnvironment.FARMER.baseUrl,
-                        "",
-                        AppString(context).getkMSG_WAIT(),
-                        false
-                    )
-                val retrofit: Retrofit = api.getRetrofitInstance()
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getMarketList(requestBody)
                 _responseMarkerList.value = response
@@ -514,15 +421,8 @@ class FarmerViewModel : ViewModel() {
                 jsonObject.put("SecurityKey", APIServices.SSO_KEY)
                 jsonObject.put("otp", enteredOTP)
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api =
-                    AppInventorApi(
-                        context,
-                        AppEnvironment.FARMER.baseUrl,
-                        "",
-                        AppString(context).getkMSG_WAIT(),
-                        false
-                    )
-                val retrofit: Retrofit = api.getRetrofitInstance()
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.compareOtp(mobile.trim { it <= ' ' }, requestBody)
                 _compareOtpResponse.value = response
@@ -541,15 +441,8 @@ class FarmerViewModel : ViewModel() {
                 jsonObject.put("otp", enteredOTP)
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api =
-                    AppInventorApi(
-                        context,
-                        AppEnvironment.FARMER.baseUrl,
-                        "",
-                        AppString(context).getkMSG_WAIT(),
-                        false
-                    )
-                val retrofit: Retrofit = api.getRetrofitInstance()
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.compareOtpReg(mobile.trim { it <= ' ' }, requestBody)
                 _compareOtpResponseReg.value = response
@@ -563,14 +456,7 @@ class FarmerViewModel : ViewModel() {
     fun getShetishalaVideos(context: Context) {
         viewModelScope.launch {
             try {
-                val api = AppInventorApi(
-                    context,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(context).getkMSG_WAIT(),
-                    false
-                )
-                val retrofit = api.getRetrofitInstance()
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getShetishalaVideos()
                 _shetishalaVideosResponse.value = response
@@ -588,14 +474,7 @@ class FarmerViewModel : ViewModel() {
                     put("SecurityKey", APIKeys.SSO_PROD)
                 }
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api = AppInventorApi(
-                    context,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(context).getkMSG_WAIT(),
-                    false
-                )
-                val retrofit = api.getRetrofitInstance()
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
 
                 val response = apiRequest.farmerLoginBasedOnID(agristackID, requestBody)
@@ -625,15 +504,8 @@ class FarmerViewModel : ViewModel() {
                 jsonObject.put("sowing_date", sowingDate)
                 jsonObject.put("lang", language)
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api =
-                    AppInventorApi(
-                        context,
-                        AppEnvironment.FARMER.baseUrl,
-                        "",
-                        AppString(context).getkMSG_WAIT(),
-                        false
-                    )
-                val retrofit: Retrofit = api.retrofitInstance
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getCropStagesAndAdvisory(requestBody)
                 _getCropStagesAndAdvisoryResponse.value = response
@@ -651,14 +523,8 @@ class FarmerViewModel : ViewModel() {
                 jsonObject.put("api_key", APIServices.SSO_KEY)
                 jsonObject.put("lang", languageToLoad)
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api = AppInventorApi(
-                    context,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(context).getkMSG_WAIT(),
-                    false
-                )
-                val retrofit: Retrofit = api.getRetrofitInstance()
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getClimateResilientList(requestBody)
                 _getClimateResilientListResponse.value = response
@@ -676,14 +542,8 @@ class FarmerViewModel : ViewModel() {
                 jsonObject.put("crop_id", cropId)
                 jsonObject.put("lang", language)
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api = AppInventorApi(
-                    context,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(context).getkMSG_WAIT(),
-                    false
-                )
-                val retrofit: Retrofit = api.getRetrofitInstance()
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getCropStages(requestBody)
                 _getCropStagesResponse.value = response
@@ -700,18 +560,13 @@ class FarmerViewModel : ViewModel() {
             try {
                 jsonObject.put("pdid", pestId)
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api = AppInventorApi(
-                    context,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(context).getkMSG_WAIT(),
-                    false
-                )
-                val retrofit: Retrofit = api.getRetrofitInstance()
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val rawResponse = apiRequest.getPestDiseaseDetails(requestBody)
                 val jsonString = rawResponse.string()
-                val jsonObject = JSONObject(jsonString) // OR Gson().fromJson(jsonString, JsonObject::class.java)
+                val jsonObject =
+                    JSONObject(jsonString) // OR Gson().fromJson(jsonString, JsonObject::class.java)
                 _getPestDiseaseDetailsResponse.value = jsonObject
             } catch (e: JSONException) {
                 _error.value = e.localizedMessage ?: "Unknown error"
@@ -726,14 +581,8 @@ class FarmerViewModel : ViewModel() {
             try {
                 jsonObject.put("village_code", villageCode.toString())
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api = AppInventorApi(
-                    context,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(context).getkMSG_WAIT(),
-                    false
-                )
-                val retrofit: Retrofit = api.getRetrofitInstance()
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getCropSapAdvisory(requestBody)
                 _getCropSapAdvisoryResponse.value = response
@@ -744,19 +593,14 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun getNotificationList(context: Context){
+    fun getNotificationList(context: Context) {
         ProgressHelper.showProgressDialog(context)
         viewModelScope.launch {
-            val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+            val farmerId =
+                AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
             try {
-                val api = AppInventorApi(
-                    context,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(context).getkMSG_WAIT(),
-                    false
-                )
-                val retrofit: Retrofit = api.getRetrofitInstance()
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getNotificationList(farmerId)
                 ProgressHelper.disableProgressDialog()
@@ -769,7 +613,7 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun getNotificationDetails(context: Context, notificationID: Long){
+    fun getNotificationDetails(context: Context, notificationID: Long) {
         ProgressHelper.showProgressDialog(context)
         viewModelScope.launch {
             val jsonObject = JSONObject().apply {
@@ -777,14 +621,8 @@ class FarmerViewModel : ViewModel() {
             }
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             try {
-                val api = AppInventorApi(
-                    context,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(context).getkMSG_WAIT(),
-                    false
-                )
-                val retrofit: Retrofit = api.getRetrofitInstance()
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getNotificationDetails(requestBody)
                 ProgressHelper.disableProgressDialog()
@@ -796,7 +634,8 @@ class FarmerViewModel : ViewModel() {
             }
         }
     }
-    fun updateNotificationStatus(context: Context, notificationID: Long){
+
+    fun updateNotificationStatus(context: Context, notificationID: Long) {
         ProgressHelper.showProgressDialog(context)
         viewModelScope.launch {
             val jsonObject = JSONObject().apply {
@@ -804,18 +643,31 @@ class FarmerViewModel : ViewModel() {
             }
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             try {
-                val api = AppInventorApi(
-                    context,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(context).getkMSG_WAIT(),
-                    false
-                )
-                val retrofit: Retrofit = api.getRetrofitInstance()
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.updateNotificationStatus(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _updateNotificationStatusResponse.value = response
+            } catch (e: JSONException) {
+                ProgressHelper.disableProgressDialog()
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun updateFCMToken(context: Context, fcmToken: String) {
+        ProgressHelper.showProgressDialog(context)
+        val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+        viewModelScope.launch {
+            try {
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.updateFCMToken(farmerId, fcmToken)
+                ProgressHelper.disableProgressDialog()
+                _updateFCMTokenResponse.value = response
             } catch (e: JSONException) {
                 ProgressHelper.disableProgressDialog()
                 _error.value = e.localizedMessage ?: "Unknown error"

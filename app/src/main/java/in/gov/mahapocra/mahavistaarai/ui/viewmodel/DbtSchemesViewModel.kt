@@ -7,11 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
-import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.gov.mahapocra.mahavistaarai.data.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
+import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import retrofit2.Retrofit
@@ -36,15 +35,7 @@ class DbtSchemesViewModel : ViewModel() {
     fun getDBTSchemes(context: Context) {
         viewModelScope.launch {
             try {
-                val api =
-                    AppInventorApi(
-                        context,
-                        AppEnvironment.UAT_DBT.baseUrl,
-                        "",
-                        AppString(context).getkMSG_WAIT(),
-                        false
-                    )
-                val retrofit: Retrofit = api.getRetrofitInstance()
+                val retrofit: Retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.UAT_DBT.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 // Retrofit suspend call
                 val response = apiRequest.getDBTSchemes()
@@ -60,15 +51,7 @@ class DbtSchemesViewModel : ViewModel() {
     fun getMahaDBTSchemes(context: Context) {
         viewModelScope.launch {
             try {
-                val api =
-                    AppInventorApi(
-                        context,
-                        AppEnvironment.UAT_DBT.baseUrl,
-                        "",
-                        AppString(context).getkMSG_WAIT(),
-                        false
-                    )
-                val retrofit: Retrofit = api.getRetrofitInstance()
+                val retrofit: Retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.UAT_DBT.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 // Retrofit suspend call
                 val response = apiRequest.getMahaDBTSchemes()
@@ -87,15 +70,7 @@ class DbtSchemesViewModel : ViewModel() {
                 val jsonObject = JSONObject()
                 jsonObject.put("FarmerID", farmerId)
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api =
-                    AppInventorApi(
-                        context,
-                        AppEnvironment.UAT_DBT.baseUrl,
-                        "",
-                        AppString(context).getkMSG_WAIT(),
-                        false
-                    )
-                val retrofit: Retrofit = api.getRetrofitInstance()
+                val retrofit: Retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.UAT_DBT.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 // Retrofit suspend call
                 val response = apiRequest.retrieveFarmerToken(requestBody)
@@ -114,15 +89,7 @@ class DbtSchemesViewModel : ViewModel() {
                 val jsonObject = JSONObject()
                 jsonObject.put("CorrelationId", correlationId)
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api =
-                    AppInventorApi(
-                        context,
-                        AppEnvironment.UAT_DBT.baseUrl,
-                        "",
-                        AppString(context).getkMSG_WAIT(),
-                        false
-                    )
-                val retrofit: Retrofit = api.getRetrofitInstance()
+                val retrofit: Retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.UAT_DBT.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 // Retrofit suspend call
                 val response = apiRequest.retrieveFarmerData(requestBody)

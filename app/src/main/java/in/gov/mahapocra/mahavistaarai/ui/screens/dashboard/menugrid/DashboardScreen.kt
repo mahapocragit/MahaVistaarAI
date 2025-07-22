@@ -982,6 +982,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null)
         AppUtility.getInstance().clearAppSharedPrefData(this, AppConstants.kSHARED_PREF)
         AppSettings.getInstance().setBooleanValue(this, AppConstants.userDataSaved, false)
+        farmerViewModel.updateFCMToken(this, "")
         val intent = Intent(this@DashboardScreen, SplashScreenActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
