@@ -46,7 +46,6 @@ class NotificationActivity : AppCompatActivity() {
                 val jsonObject = JSONObject(it.toString())
                 val notificationJsonArray = jsonObject.getJSONArray("notifications")
                 binding.notificationRecyclerView.apply {
-                    Log.d("TAG", "onCreate: $jsonObject")
                     hasFixedSize()
                     layoutManager = LinearLayoutManager(this@NotificationActivity)
                     adapter = NotificationAdapter(notificationJsonArray) { jsonObject ->
@@ -60,7 +59,10 @@ class NotificationActivity : AppCompatActivity() {
         }
     }
 
-
+    override fun onResume() {
+        super.onResume()
+        farmerViewModel.getNotificationList(this)
+    }
 
     override fun attachBaseContext(newBase: Context) {
         languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {

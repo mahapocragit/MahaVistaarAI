@@ -70,6 +70,12 @@ class PestsAndDiseasesStages : AppCompatActivity() {
         cropName = intent.getStringExtra("mName")
         particularStagesDiseases = intent.getStringExtra("ParticularStagesDiseases").toString()
         stagesId = intent.getIntExtra("id", 0)
+        if (cropId == 0) {
+            cropId = AppPreferenceManager(this).getInt("CROP_ID_SAVED")
+            cropName = AppPreferenceManager(this).getString("CROP_NAME_SAVED")
+            mUrl = AppPreferenceManager(this).getString("CROP_IMAGE_SAVED")
+            wotrCropId = AppPreferenceManager(this).getString("CROP_WOTR_ID_SAVED")
+        }
         AppSettings.getInstance()
             .setValue(this, AppConstants.tmpCROPNAME, cropName)
 

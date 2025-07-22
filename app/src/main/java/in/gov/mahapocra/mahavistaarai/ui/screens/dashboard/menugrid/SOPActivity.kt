@@ -3,6 +3,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -26,12 +27,9 @@ class SOPActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener {
     private lateinit var farmerViewModel: FarmerViewModel
     var cropId: Int? = 0
     private var cropName: String? = null
-    private var farmerId: Int = 0
-    private var villageID: Int = 0
     private var wotrCropId: String? = null
     private var mUrl: String? = null
     private var sowingDate: String = ""
-    private var route: String = ""
     private lateinit var languageToLoad: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,25 +49,21 @@ class SOPActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener {
         sowingDate = intent.getStringExtra("sowingDate").toString()
         wotrCropId = intent.getStringExtra("wotr_crop_id")
         mUrl = intent.getStringExtra("mUrl")
-        route = intent.getStringExtra("ROUTE").toString()
-        villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
-        farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
+
+        if (cropId == 0) {
+            cropId = AppPreferenceManager(this).getInt("CROP_ID_SAVED")
+            cropName = AppPreferenceManager(this).getString("CROP_NAME_SAVED")
+            mUrl = AppPreferenceManager(this).getString("CROP_IMAGE_SAVED")
+            sowingDate = AppPreferenceManager(this).getString("CROP_SOWING_DATE_SAVED").toString()
+            wotrCropId = AppPreferenceManager(this).getString("CROP_WOTR_ID_SAVED")
+        }
 
         binding.sowingInfoLayout.sowingDateTextView.visibility = View.GONE
         binding.sowingInfoLayout.editSowingDateIcon.visibility = View.GONE
         binding.sowingInfoLayout.textView7.text = getString(R.string.selected_crop)
+        binding.sowingInfoLayout.cropNameTextView.text = cropName
 
-        val savedCropId = AppPreferenceManager(this).getInt("CROP_ID_SAVED")
-        val savedCropSowingDate = AppPreferenceManager(this).getString("CROP_SOWING_DATE_SAVED")
-        val savedCropName = AppPreferenceManager(this).getString("CROP_NAME_SAVED")
-
-        if (route!=""){
-            farmerViewModel.fetchSOPDate(this, savedCropId)
-            binding.sowingInfoLayout.cropNameTextView.text = savedCropName
-        }else{
-            cropId?.let { farmerViewModel.fetchSOPDate(this, it) }
-            binding.sowingInfoLayout.cropNameTextView.text = cropName
-        }
+        cropId?.let { farmerViewModel.fetchSOPDate(this, it) }
         ProgressHelper.showProgressDialog(this)
 
         binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {
@@ -96,10 +90,6 @@ class SOPActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener {
         }
         binding.toolbar.textViewHeaderTitle.text = getString(R.string.sop_title)
 
-        observeSopResponse()
-    }
-
-    private fun observeSopResponse() {
         farmerViewModel.sopResponse.observe(this) {
             ProgressHelper.disableProgressDialog()
             if (it != null) {

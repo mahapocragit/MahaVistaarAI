@@ -6,7 +6,8 @@
     android:layout_margin="@dimen/_5sdp"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp"
-    android:backgroundTint="#E6F8F4">
+    android:backgroundTint="#E6F8F4"
+    android:id="@+id/notificationCard">
 
     <LinearLayout
         android:id="@+id/notificationCardView"

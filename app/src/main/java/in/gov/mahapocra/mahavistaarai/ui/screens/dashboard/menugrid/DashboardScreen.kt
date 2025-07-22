@@ -470,8 +470,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                             savedCropWoTRId = selectedCrop.getString("wotr_crop_id")
 
                             AppPreferenceManager(this).saveInt("CROP_ID_SAVED", savedCropId)
-                            AppPreferenceManager(this).saveString("CROP_SOWING_DATE_SAVED", savedCropSowingDate)
                             AppPreferenceManager(this).saveString("CROP_NAME_SAVED", savedCropName)
+                            AppPreferenceManager(this).saveString("CROP_IMAGE_SAVED", savedCropImageUrl)
+                            AppPreferenceManager(this).saveString("CROP_SOWING_DATE_SAVED", savedCropSowingDate)
+                            AppPreferenceManager(this).saveString("CROP_WOTR_ID_SAVED", savedCropWoTRId)
 
                             binding.appBarMain.dashboardScreen.apply {
                                 addChangeCropTV.setText(R.string.change_Crop)

@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.mahavistaarai.R
 import org.json.JSONArray
@@ -24,6 +26,11 @@ class NotificationAdapter(private val jsonArray: JSONArray, private val callback
         val title = jsonObject.optString("title")
         val body = jsonObject.optString("body")
         val notificationDate = jsonObject.optString("notification_date")
+        val notificationStatus = jsonObject.optInt("is_read")
+        if (notificationStatus == 1) {
+            holder.notificationCard.backgroundTintList =
+                ContextCompat.getColorStateList(holder.itemView.context, R.color.white_dim_dark)
+        }
         holder.notificationTitle.text = title
         holder.notificationMessage.text = body
         holder.notificationDate.text = notificationDate
@@ -41,5 +48,6 @@ class NotificationAdapter(private val jsonArray: JSONArray, private val callback
         val notificationMessage: TextView = itemView.findViewById(R.id.notificationMessage)
         val notificationDate: TextView = itemView.findViewById(R.id.notificationDate)
         val notificationCardView: LinearLayout = itemView.findViewById(R.id.notificationCardView)
+        val notificationCard: CardView = itemView.findViewById(R.id.notificationCard)
     }
 }

@@ -80,6 +80,13 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         wotrCropId = intent.getStringExtra("wotr_crop_id")
         mUrl = intent.getStringExtra("mUrl")
         route = intent.getStringExtra("ROUTE").toString()
+        if (cropId == 0) {
+            cropId = AppPreferenceManager(this).getInt("CROP_ID_SAVED")
+            cropName = AppPreferenceManager(this).getString("CROP_NAME_SAVED")
+            mUrl = AppPreferenceManager(this).getString("CROP_IMAGE_SAVED")
+            sowingDate = AppPreferenceManager(this).getString("CROP_SOWING_DATE_SAVED").toString()
+            wotrCropId = AppPreferenceManager(this).getString("CROP_WOTR_ID_SAVED")
+        }
         villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
 

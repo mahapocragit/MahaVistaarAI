@@ -89,7 +89,6 @@ class DetailedNotificationActivity : AppCompatActivity() {
 
     private fun redirectToScreen(testValue: String) {
         val targetIntent = when (testValue.lowercase()) {
-
             "advisory" -> Intent(this, AdvisoryCropActivity::class.java).apply {
                 putExtra("ROUTE", "NOTIFICATION_LIST")
             }
@@ -102,23 +101,21 @@ class DetailedNotificationActivity : AppCompatActivity() {
                 putExtra("ROUTE", "NOTIFICATION_LIST")
             }
 
-            "pestDisease" -> Intent(this, PestsAndDiseasesStages::class.java).apply {
+            "pestdisease" -> Intent(this, PestsAndDiseasesStages::class.java).apply {
                 putExtra("ROUTE", "NOTIFICATION_LIST")
             }
 
             "weather" -> Intent(this, WeatherActivity::class.java)
-            "soilCard" -> Intent(this, HealthCardActivity::class.java)
-            "climateTech" -> Intent(this, ClimateResilientTechnology::class.java)
-            "marketPrice" -> Intent(this, MarketPrice::class.java)
+            "soilcard" -> Intent(this, HealthCardActivity::class.java)
+            "climatetech" -> Intent(this, ClimateResilientTechnology::class.java)
+            "marketprice" -> Intent(this, MarketPrice::class.java)
             "shetishala" -> Intent(this, ShetishalaActivity::class.java)
             "warehouse" -> Intent(this, Warehouse::class.java)
-            "customHire" -> Intent(this, CHCenterActivity::class.java)
+            "customhire" -> Intent(this, CHCenterActivity::class.java)
             "videos" -> Intent(this, VideosActivity::class.java)
-            "dbtSchemes" -> Intent(this, DBTActivity::class.java)
+            "dbtschemes" -> Intent(this, DBTActivity::class.java)
             "dashboard" -> Intent(this, DashboardScreen::class.java)
-            else -> Intent(this, DashboardScreen::class.java) // default fallback
-        }.apply {
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            else -> Intent(this, DashboardScreen::class.java)
         }
         startActivity(targetIntent)
     }
