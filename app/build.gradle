@@ -80,7 +80,7 @@ android {
 
 dependencies {
     //Clarity
-    implementation 'com.microsoft.clarity:clarity:3.4.1'
+    implementation 'com.microsoft.clarity:clarity:3.4.3'
     //osm
     implementation 'org.osmdroid:osmdroid-android:6.1.20'
     implementation 'com.intuit.sdp:sdp-android:1.1.1'
@@ -89,7 +89,7 @@ dependencies {
     implementation project(path: ':app:libs:appinventorapi')
 
     // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:2.1.0"
 
     // AndroidX Libraries
     implementation 'androidx.core:core-ktx:1.16.0'
@@ -98,17 +98,17 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
 
     // Navigation
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.9.0'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.9.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.9.2'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.9.2'
 
     // Material Design
     implementation 'com.google.android.material:material:1.12.0'
 
     // Firebase
-    implementation platform('com.google.firebase:firebase-bom:33.16.0')
+    implementation platform('com.google.firebase:firebase-bom:34.0.0')
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-config'
-    implementation 'com.google.firebase:firebase-crashlytics:19.4.3'
+    implementation 'com.google.firebase:firebase-crashlytics:20.0.0'
     implementation 'com.google.firebase:firebase-database-ktx:21.0.0'
 
     // Retrofit
@@ -120,14 +120,13 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.google.firebase:firebase-database-ktx:21.0.0'
     implementation 'com.google.android.gms:play-services-location:21.3.0'
-    implementation 'com.google.firebase:firebase-crashlytics:19.4.4'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
     implementation 'com.makeramen:roundedimageview:2.3.0'
 
     // Lifecycle
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.1'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.9.1'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.9.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.2'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.9.2'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.9.2'
 
     // RxJava
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'

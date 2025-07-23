@@ -35,7 +35,6 @@ import `in`.gov.mahapocra.mahavistaarai.ui.adapters.FertilizersRecyclerAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
-import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.logThis
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
@@ -429,12 +428,9 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     villageID.toString(), edtFYMValue, "0",
                     totalAcrArea.toString(), plotUnitCode.toString(), token
                 )
-
-                logThis(responseCall.request().toString())
                 api.postRequest(responseCall, this@FertilizerCalculatorActivity, 1)
             }
         } catch (e: JSONException) {
-            logThis(e.toString())
             e.printStackTrace()
         }
     }

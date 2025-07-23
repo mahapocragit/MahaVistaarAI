@@ -5,7 +5,6 @@ import android.app.DownloadManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -29,8 +28,8 @@ import androidx.core.view.WindowInsetsCompat
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import org.json.JSONArray
-import java.text.SimpleDateFormat
 import java.security.MessageDigest
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
@@ -174,11 +173,6 @@ object LocalCustom {
         return formattedDate
     }
 
-
-    fun logThis(message: String) {
-        Log.d("TAGGER", "logThis: $message")
-    }
-
     fun isStrongPassword(password: String): Boolean {
         val minLength = 8
         val specialChars = "!@#\$%^&*()_+=|<>?{}\\[\\]~-"
@@ -301,18 +295,6 @@ object LocalCustom {
         }
 
         dialog.show()
-    }
-
-    fun hashWithSHA512(password: String): String {
-        val md = MessageDigest.getInstance("SHA-512")
-        val bytes = md.digest(password.toByteArray())
-
-        val hexString = StringBuilder()
-        for (byte in bytes) {
-            hexString.append(String.format("%02x", byte))
-        }
-
-        return hexString.toString()
     }
 
     fun toSHA512(input: String): String {
