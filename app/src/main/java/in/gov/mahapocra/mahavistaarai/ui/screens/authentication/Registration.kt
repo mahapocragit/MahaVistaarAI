@@ -21,7 +21,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
@@ -33,7 +32,7 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
+import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityRegistrationBinding
@@ -211,7 +210,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     private fun getDistrictData() {
         val jsonObject = JSONObject()
         try {
-            // jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+            // jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
             jsonObject.put("lang", languageToLoad)
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =
@@ -361,7 +360,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         } else {
             val jsonObject = JSONObject()
             try {
-                jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api =
                     AppInventorApi(
@@ -421,7 +420,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 jsonObject.put("device_id", machineId)
                 jsonObject.put("FAAPRegistrationID", fAAPRegistrationID)
                 jsonObject.put("Password", "")
-                jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api =
                     AppInventorApi(
@@ -501,7 +500,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 jsonObject.put("device_id", machineId)
                 jsonObject.put("FAAPRegistrationID", fAAPRegistrationID)
                 jsonObject.put("Password", toSHA512(pass))
-                jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api =
                     AppInventorApi(

@@ -1,21 +1,15 @@
-package in.gov.mahapocra.mahavistaarai.data.api;
+package `in`.gov.mahapocra.mahavistaarai.data.api
 
-public class AppEnvironment {
-    private final String baseUrl;
+class AppEnvironment(val baseUrl: String?) {
+    companion object {
+        val UAT_DBT: AppEnvironment = AppEnvironment("https://uat-dbt.mahapocra.gov.in:8026/")
 
-    public AppEnvironment(String baseUrl) {
-        this.baseUrl = baseUrl;
+        //    public static final AppEnvironment FARMER = new AppEnvironment("https://farmers-app-api.mahapocra.gov.in/"); //For Production
+        val FARMER: AppEnvironment =
+            AppEnvironment("https://stage-farmers-app-api.mahapocra.gov.in/") //For Internal Testing
+        val WOTR: AppEnvironment = AppEnvironment("https://kisan.wotr.org.in/")
+        val GIS: AppEnvironment = AppEnvironment("https://gis.mahapocra.gov.in/")
+        val PANI_FOUNDATION: AppEnvironment = AppEnvironment("https://ianm-preprod.wadhwaniai.org/")
+        val VISTAAR: AppEnvironment = AppEnvironment("https://vistaar.maharashtra.gov.in/")
     }
-
-    public String getBaseUrl() {
-        return baseUrl;
-    }
-
-    public static final AppEnvironment UAT_DBT = new AppEnvironment("https://uat-dbt.mahapocra.gov.in:8026/");
-//    public static final AppEnvironment FARMER = new AppEnvironment("https://farmers-app-api.mahapocra.gov.in/"); //For Production
-    public static final AppEnvironment FARMER = new AppEnvironment("https://stage-farmers-app-api.mahapocra.gov.in/"); //For Internal Testing
-    public static final AppEnvironment WOTR = new AppEnvironment("https://kisan.wotr.org.in/");
-    public static final AppEnvironment GIS = new AppEnvironment("https://gis.mahapocra.gov.in/");
-    public static final AppEnvironment PANI_FOUNDATION = new AppEnvironment("https://ianm-preprod.wadhwaniai.org/");
-    public static final AppEnvironment VISTAAR = new AppEnvironment("https://vistaar.maharashtra.gov.in/");
 }

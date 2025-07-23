@@ -1,55 +1,58 @@
-package in.gov.mahapocra.mahavistaarai.data.api;
+package `in`.gov.mahapocra.mahavistaarai.data.api
 
-public interface APIServices {
-    String SSO_KEY = in.gov.mahapocra.mahavistaarai.data.api.APIKeys.SSO_PROD;
-    String USER_News_LIST = "Shareddbtapi/OtherApp/GetNews";
-    String kOTPRequest = "authService/SendOTP";
-    String kOTPRegisterRequest = "authService/SendOTPRegistration";
-    String kRegistrationRequest = "authService/AddEditRegistration";
-    String kUserLogin = "authService/LoginCheck";
-    String kRefreshTokenLogin = "authService/refreshtoken";
-    String getNearestCHCenters = "chcService/get-nearest-chc-centers";
-    String getCodeFromCoordinates = "webservices/fetch_admin_info_for_location";
-    String kRevampedDBTSchemes = "FarmerApp/ActivitiesData";
-    String kRevampedMahaDBTSchemes = "FarmerApp/MahaDBTSchemesData";
-    String kGetDigitalShetishalaSchedule = "masterServices/get-digital-shetishala-urls";
-    String kGetTokenFromWotr = "Api_GoM/login";
-    String kGetFertilizerCalculatedDataWotr = "Api_GoM/getNutrient_calculator";
-    String kWareHouseDetails = "warehouseService/warehouse-details";
-    String kWeatherDetails = "imdService/imd-forcast-previous-weather-details";
-    String kGetRegistration = "authService/getUserdetails";
-    String kGetSOPByList = "sopServices/get_sop_by_crop";
-    String kSoilHealthCardDetailsFromSHCNumber = "webservices/fetch_soil_health_card_json";
-    String kRequestForChatBot = "jwt-token-url.php";
-    String kAuthenticationForNews = "api/auth/login";
-    String kEventsForNews = "api/events/";
-    String kGeFarmersSelectedCrop = "farmerService/get-farmers-selected-crop";
-    String kGetVideosCategories = "videoService/get-video-category-details";
-    String kGetShetishalaVideos = "videoService/get-digital-shetishala-details";
-    String kdeleteFarmerSelectedCrop = "farmerService/delete-farmers-selected-crop";
-    String kLoginViaFarmerId = "authService/farmeridotp";
-    String kGetmarketsList = "masterService/get-markets-by-taluka";
-    String kGetmarketsPriceDetails = "msambService/msamb-data";
-    String kResetPassword = "authService/resetPassword";
-    String kCompareOtp = "authService/compareOTP";
-    String kCompareOtpReg = "authService/compareOTPReg";
-    String kSearchFarmerRequest = "AgriStackToPoCRA/SearchFarmerRequest";
-    String kRetrieveFarmerData = "AgriStackToPoCRA/FetchFarmerData";
-    String fetchFarmerListForSHC = "webservices//fetch_farmer_shc_list";
-    String kGetDistrictList = "masterService/get-all-district";
-    String kGetCropCategorywise = "masterService/get-crop-categorywise";
-    String kGetTalukaList = "masterService/get-taluka-on-district";
-    String kGetVillageList = "masterService/get-village-on-taluka";
-    String kSaveFarmerSelectedCrop = "farmerService/save-farmers-selected-crop";
-    String kGetMarketAndMarketName = "msambService/get-markets-by-districts";
-    String kGetMarketData = "msambService/get-markets";
-    String KSaveFertilizerFormula = "farmerService/save-fertilizer-formula-of-user";
-    String kGetFertilizerSavedFormula = "farmerService/get-fertilizer-formula-of-user";
-    String kClimateResilientTechnology = "craService/get_cra_groups";
-    String kGetPestDiseaseDetails = "farmerService/get-pest-disease-details";
-    String kGetCropStages = "farmerService/get-crop-stages";
-    String kGetCropStagesAndAdvisory = "farmerService/get-crop-stages-and-advisory";
-    String DELETE_FERTILIZER_FROM_SAVED = "farmerService/delete-fertilizer-formula-of-user";
-    String advisory_feedback = "farmerService/advisory-feedback";
-    String GetCropSapAdvisory = "farmerService/getCropSapAdvisory";
+object ApiConstants {
+    val SSO_KEY: String = APIKeys.SSO_PROD
+    const val USER_News_LIST: String = "Shareddbtapi/OtherApp/GetNews"
+    const val kOTPRequest: String = "authService/SendOTP"
+    const val kOTPRegisterRequest: String = "authService/SendOTPRegistration"
+    const val kRegistrationRequest: String = "authService/AddEditRegistration"
+    const val kUserLogin: String = "authService/LoginCheck"
+    const val kRefreshTokenLogin: String = "authService/refreshtoken"
+    const val getNearestCHCenters: String = "chcService/get-nearest-chc-centers"
+    const val getCodeFromCoordinates: String = "webservices/fetch_admin_info_for_location"
+    const val kRevampedDBTSchemes: String = "FarmerApp/ActivitiesData"
+    const val kRevampedMahaDBTSchemes: String = "FarmerApp/MahaDBTSchemesData"
+    const val kGetDigitalShetishalaSchedule: String =
+        "masterServices/get-digital-shetishala-urls"
+    const val kGetTokenFromWotr: String = "Api_GoM/login"
+    const val kGetFertilizerCalculatedDataWotr: String = "Api_GoM/getNutrient_calculator"
+    const val kWareHouseDetails: String = "warehouseService/warehouse-details"
+    const val kWeatherDetails: String = "imdService/imd-forcast-previous-weather-details"
+    const val kGetRegistration: String = "authService/getUserdetails"
+    const val kGetSOPByList: String = "sopServices/get_sop_by_crop"
+    const val kSoilHealthCardDetailsFromSHCNumber: String =
+        "webservices/fetch_soil_health_card_json"
+    const val kRequestForChatBot: String = "jwt-token-url.php"
+    const val kAuthenticationForNews: String = "api/auth/login"
+    const val kEventsForNews: String = "api/events/"
+    const val kGeFarmersSelectedCrop: String = "farmerService/get-farmers-selected-crop"
+    const val kGetVideosCategories: String = "videoService/get-video-category-details"
+    const val kGetShetishalaVideos: String = "videoService/get-digital-shetishala-details"
+    const val kdeleteFarmerSelectedCrop: String = "farmerService/delete-farmers-selected-crop"
+    const val kLoginViaFarmerId: String = "authService/farmeridotp"
+    const val kGetmarketsPriceDetails: String = "msambService/msamb-data"
+    const val kResetPassword: String = "authService/resetPassword"
+    const val kCompareOtp: String = "authService/compareOTP"
+    const val kCompareOtpReg: String = "authService/compareOTPReg"
+    const val kSearchFarmerRequest: String = "AgriStackToPoCRA/SearchFarmerRequest"
+    const val kRetrieveFarmerData: String = "AgriStackToPoCRA/FetchFarmerData"
+    const val fetchFarmerListForSHC: String = "webservices//fetch_farmer_shc_list"
+    const val kGetDistrictList: String = "masterService/get-all-district"
+    const val kGetCropCategorywise: String = "masterService/get-crop-categorywise"
+    const val kGetTalukaList: String = "masterService/get-taluka-on-district"
+    const val kGetVillageList: String = "masterService/get-village-on-taluka"
+    const val kSaveFarmerSelectedCrop: String = "farmerService/save-farmers-selected-crop"
+    const val kGetMarketAndMarketName: String = "msambService/get-markets-by-districts"
+    const val kGetMarketData: String = "msambService/get-markets"
+    const val KSaveFertilizerFormula: String = "farmerService/save-fertilizer-formula-of-user"
+    const val kGetFertilizerSavedFormula: String =
+        "farmerService/get-fertilizer-formula-of-user"
+    const val kClimateResilientTechnology: String = "craService/get_cra_groups"
+    const val kGetPestDiseaseDetails: String = "farmerService/get-pest-disease-details"
+    const val kGetCropStages: String = "farmerService/get-crop-stages"
+    const val kGetCropStagesAndAdvisory: String = "farmerService/get-crop-stages-and-advisory"
+    const val DELETE_FERTILIZER_FROM_SAVED: String =
+        "farmerService/delete-fertilizer-formula-of-user"
+    const val GetCropSapAdvisory: String = "farmerService/getCropSapAdvisory"
+
 }

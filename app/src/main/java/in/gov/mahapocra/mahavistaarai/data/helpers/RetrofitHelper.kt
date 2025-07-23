@@ -9,8 +9,8 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitHelper {
 
-    fun createRetrofitInstance(baseURL: String): Retrofit {
-        val gson = GsonBuilder().setLenient().create()
+    fun createRetrofitInstance(baseURL: String?): Retrofit {
+        val gson = GsonBuilder().create()
 
         val client = OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)

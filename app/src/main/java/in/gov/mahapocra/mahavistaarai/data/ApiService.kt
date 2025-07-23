@@ -1,7 +1,7 @@
 package `in`.gov.mahapocra.mahavistaarai.data
 
 import com.google.gson.JsonObject
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
+import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.http.Body
@@ -12,107 +12,107 @@ import retrofit2.http.Query
 
 interface ApiService {
 
-    @POST(APIServices.kGeFarmersSelectedCrop)
+    @POST(ApiConstants.kGeFarmersSelectedCrop)
     suspend fun getFarmersSelectedCrop(@Body params: RequestBody): JsonObject
 
-    @POST(APIServices.kSaveFarmerSelectedCrop)
+    @POST(ApiConstants.kSaveFarmerSelectedCrop)
     suspend fun kSaveFarmerSelectedCrop(@Body params: RequestBody): JsonObject
 
-    @POST(APIServices.kdeleteFarmerSelectedCrop)
+    @POST(ApiConstants.kdeleteFarmerSelectedCrop)
     suspend fun deleteSelectedCrop(@Body params: RequestBody): JsonObject
 
-    @POST(APIServices.kLoginViaFarmerId)
+    @POST(ApiConstants.kLoginViaFarmerId)
     suspend fun farmerLoginBasedOnID(
         @Header("FarmerID") farmerId: String,
         @Body params: RequestBody): JsonObject
 
-    @POST(APIServices.kGetCropCategorywise)
+    @POST(ApiConstants.kGetCropCategorywise)
     suspend fun getCropCategoryWise(@Body params: RequestBody): JsonObject
 
-    @POST(APIServices.kGetTalukaList)
+    @POST(ApiConstants.kGetTalukaList)
     suspend fun getTalukaList(@Body params: RequestBody): JsonObject
 
-    @POST(APIServices.kWeatherDetails)
+    @POST(ApiConstants.kWeatherDetails)
     suspend fun getWeatherDetails(@Body params: RequestBody): JsonObject
 
-    @POST(APIServices.kGetRegistration)
+    @POST(ApiConstants.kGetRegistration)
     suspend fun getGetRegistration(
         @Header("FAAPRegistrationID") registrationId: Int,
         @Body params: RequestBody
     ): JsonObject
 
-    @POST(APIServices.kGetSOPByList)
+    @POST(ApiConstants.kGetSOPByList)
     suspend fun getSOPByList(@Body params: RequestBody): JsonObject
 
-    @POST(APIServices.kSoilHealthCardDetailsFromSHCNumber)
+    @POST(ApiConstants.kSoilHealthCardDetailsFromSHCNumber)
     suspend fun getSoilHealthCardDetailsFromSHCNumber(@Body params: RequestBody): JsonObject
 
-    @POST(APIServices.kRequestForChatBot)
+    @POST(ApiConstants.kRequestForChatBot)
     suspend fun requestForChatBotURL(@Body params: RequestBody): JsonObject
 
-    @POST(APIServices.kAuthenticationForNews)
+    @POST(ApiConstants.kAuthenticationForNews)
     suspend fun authenticationForNews(@Body params: RequestBody): JsonObject
 
-    @POST(APIServices.getNearestCHCenters)
+    @POST(ApiConstants.getNearestCHCenters)
     suspend fun getCHCInformation(@Body params: RequestBody): JsonObject
 
-    @POST(APIServices.getCodeFromCoordinates)
+    @POST(ApiConstants.getCodeFromCoordinates)
     suspend fun getCodeFromCoordinates(@Body params: RequestBody): JsonObject
 
-    @POST(APIServices.kGetMarketData)
+    @POST(ApiConstants.kGetMarketData)
     suspend fun getMarketList(@Body params: RequestBody): JsonObject
 
-    @POST(APIServices.kCompareOtp)
+    @POST(ApiConstants.kCompareOtp)
     suspend fun compareOtp(
         @Header("MobileNo") mobileNo: String,
         @Body params: RequestBody): JsonObject
 
-    @POST(APIServices.kCompareOtpReg)
+    @POST(ApiConstants.kCompareOtpReg)
     suspend fun compareOtpReg(
         @Header("MobileNo") mobileNo: String,
         @Body params: RequestBody): JsonObject
 
-    @GET(APIServices.kRevampedDBTSchemes)
+    @GET(ApiConstants.kRevampedDBTSchemes)
     suspend fun getDBTSchemes(): JsonObject
 
-    @GET(APIServices.kRevampedMahaDBTSchemes)
+    @GET(ApiConstants.kRevampedMahaDBTSchemes)
     suspend fun getMahaDBTSchemes(): JsonObject
 
-    @POST(APIServices.kSearchFarmerRequest)
+    @POST(ApiConstants.kSearchFarmerRequest)
     suspend fun retrieveFarmerToken(@Body params: RequestBody): JsonObject
 
-    @GET(APIServices.kGetDigitalShetishalaSchedule)
+    @GET(ApiConstants.kGetDigitalShetishalaSchedule)
     suspend fun getDigitalShetishalaSchedule(): JsonObject
 
-    @GET(APIServices.kEventsForNews)
+    @GET(ApiConstants.kEventsForNews)
     suspend fun eventsForNews(
         @Header("Authorization") authHeader: String,
         @Query("state") state: String,
         @Query("is_rejected") isRejected: Boolean
     ): JsonObject
 
-    @GET(APIServices.kGetVideosCategories)
+    @GET(ApiConstants.kGetVideosCategories)
     suspend fun getFarmersVideosJson(): JsonObject
 
-    @GET(APIServices.kGetShetishalaVideos)
+    @GET(ApiConstants.kGetShetishalaVideos)
     suspend fun getShetishalaVideos(): JsonObject
 
-    @POST(APIServices.kRetrieveFarmerData)
+    @POST(ApiConstants.kRetrieveFarmerData)
     suspend fun retrieveFarmerData(requestBody: RequestBody): JsonObject
 
-    @POST(APIServices.kClimateResilientTechnology)
+    @POST(ApiConstants.kClimateResilientTechnology)
     suspend fun getClimateResilientList(@Body params: RequestBody): JsonObject
 
-    @POST(APIServices.kGetCropStagesAndAdvisory)
+    @POST(ApiConstants.kGetCropStagesAndAdvisory)
     suspend fun getCropStagesAndAdvisory(@Body params: RequestBody): JsonObject
 
-    @POST(APIServices.kGetCropStages)
+    @POST(ApiConstants.kGetCropStages)
     suspend fun getCropStages(@Body params: RequestBody): JsonObject
 
-    @POST(APIServices.kGetPestDiseaseDetails)
+    @POST(ApiConstants.kGetPestDiseaseDetails)
     suspend fun getPestDiseaseDetails(@Body params: RequestBody): ResponseBody
 
-    @POST(APIServices.GetCropSapAdvisory)
+    @POST(ApiConstants.GetCropSapAdvisory)
     suspend fun getCropSapAdvisory(@Body params: RequestBody): JsonObject
 
     @POST("notificationServices/fetch-notifications")

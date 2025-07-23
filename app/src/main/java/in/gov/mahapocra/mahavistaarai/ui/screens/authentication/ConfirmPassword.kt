@@ -17,7 +17,7 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
+import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityChangePwdTempBinding
@@ -88,7 +88,7 @@ class ConfirmPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode
         } else {
             val jsonObject = JSONObject()
             try {
-                jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
                 jsonObject.put("MobileNo", userMobileNo.trim { it <= ' ' })
                 jsonObject.put("Password", toSHA512(newPwd))
 

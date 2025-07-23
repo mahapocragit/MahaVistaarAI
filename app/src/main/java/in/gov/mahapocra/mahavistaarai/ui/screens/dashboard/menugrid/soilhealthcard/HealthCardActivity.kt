@@ -276,7 +276,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
     private fun getDistrictData() {
         val jsonObject = JSONObject()
         try {
-            // jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+            // jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
             jsonObject.put("lang", languageToLoad)
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api =

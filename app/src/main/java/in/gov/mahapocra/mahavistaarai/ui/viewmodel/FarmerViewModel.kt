@@ -11,7 +11,7 @@ import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.data.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
+import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
@@ -281,7 +281,7 @@ class FarmerViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val jsonObject = JSONObject().apply {
-                    put("SecurityKey", APIServices.SSO_KEY)
+                    put("SecurityKey", ApiConstants.SSO_KEY)
                 }
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
@@ -332,7 +332,7 @@ class FarmerViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val jsonObject = JSONObject().apply {
-                    put("api_key", APIServices.SSO_KEY)
+                    put("api_key", ApiConstants.SSO_KEY)
                     put("crop_id", cropId)
                 }
 
@@ -356,7 +356,7 @@ class FarmerViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val jsonObject = JSONObject()
-                jsonObject.put("api_key", APIServices.SSO_KEY)
+                jsonObject.put("api_key", ApiConstants.SSO_KEY)
                 jsonObject.put("lat", latitude)
                 jsonObject.put("lon", longitude)
 
@@ -418,7 +418,7 @@ class FarmerViewModel : ViewModel() {
         viewModelScope.launch {
             val jsonObject = JSONObject()
             try {
-                jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
                 jsonObject.put("otp", enteredOTP)
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit: Retrofit =
@@ -437,7 +437,7 @@ class FarmerViewModel : ViewModel() {
         viewModelScope.launch {
             val jsonObject = JSONObject()
             try {
-                jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
                 jsonObject.put("otp", enteredOTP)
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
@@ -520,7 +520,7 @@ class FarmerViewModel : ViewModel() {
         viewModelScope.launch {
             val jsonObject = JSONObject()
             try {
-                jsonObject.put("api_key", APIServices.SSO_KEY)
+                jsonObject.put("api_key", ApiConstants.SSO_KEY)
                 jsonObject.put("lang", languageToLoad)
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit: Retrofit =
