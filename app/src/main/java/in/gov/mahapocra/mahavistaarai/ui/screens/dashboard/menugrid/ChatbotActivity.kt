@@ -23,6 +23,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityChatbotBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MahavistaarViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 
 class ChatbotActivity : AppCompatActivity() {
@@ -40,6 +41,7 @@ class ChatbotActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityChatbotBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root, window)
 
         askForLocationAndMicrophonePermission()
         mahavistaarViewModel = ViewModelProvider(this)[MahavistaarViewModel::class.java]

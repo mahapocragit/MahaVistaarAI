@@ -30,6 +30,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.extractUniqueCommNames
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.showCommNameDialog
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
@@ -71,6 +72,7 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
         switchLanguage(this, languageToLoad)
         binding = ActivityMarketPriceBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root, window)
 
         farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE

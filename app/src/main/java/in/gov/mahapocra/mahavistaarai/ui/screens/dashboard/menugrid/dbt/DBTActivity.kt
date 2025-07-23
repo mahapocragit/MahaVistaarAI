@@ -12,6 +12,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.mahadb
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.pocra.PocraDbtSchemes
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 
 class DBTActivity : AppCompatActivity() {
 
@@ -28,6 +29,7 @@ class DBTActivity : AppCompatActivity() {
         binding = ActivityDbtactivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        uiResponsive(binding.root, window)
         binding.toolbar.textViewHeaderTitle.text = getString(R.string.dbtschema)
         binding.toolbar.imgBackArrow.visibility = View.VISIBLE
         binding.toolbar.imgBackArrow.setOnClickListener {

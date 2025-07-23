@@ -16,6 +16,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityShetishalaScheduleBi
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import org.json.JSONObject
 
@@ -36,6 +37,7 @@ class ShetishalaScheduleActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityShetishalaScheduleBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root, window)
 
         farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         setUpToolbar()

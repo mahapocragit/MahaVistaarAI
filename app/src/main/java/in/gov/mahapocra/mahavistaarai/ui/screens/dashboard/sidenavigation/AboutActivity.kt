@@ -9,6 +9,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityAboutBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 
 class AboutActivity : AppCompatActivity() {
 
@@ -24,6 +25,7 @@ class AboutActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityAboutBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root, window)
 
         if (languageToLoad == "en"){
             binding.aboutAppIcon.setImageResource(R.drawable.about_logo_en)

@@ -25,6 +25,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityHealthCardBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import kotlinx.coroutines.CoroutineScope
@@ -61,6 +62,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
         switchLanguage(this, languageToLoad)
         binding = ActivityHealthCardBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root, window)
         farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
 
 

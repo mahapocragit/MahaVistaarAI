@@ -15,6 +15,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityMahaDbtSchemesBindin
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.DbtSchemesViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import org.json.JSONObject
 
@@ -34,6 +35,7 @@ class MahaDbtSchemesActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityMahaDbtSchemesBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root, window)
 
         binding.layoutToolbar.textViewHeaderTitle.text = getString(R.string.maha_dbt_name)
         binding.layoutToolbar.imgBackArrow.visibility = View.VISIBLE

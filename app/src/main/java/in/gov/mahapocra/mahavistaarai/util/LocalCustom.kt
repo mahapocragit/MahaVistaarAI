@@ -3,14 +3,16 @@ package `in`.gov.mahapocra.mahavistaarai.util
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
-import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
+import android.view.Window
 import android.webkit.URLUtil
 import android.widget.ArrayAdapter
 import android.widget.EditText
@@ -19,14 +21,14 @@ import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import org.json.JSONArray
-import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.security.MessageDigest
 import java.util.Calendar
@@ -350,12 +352,15 @@ object LocalCustom {
         return filteredArray
     }
 
-    fun uiResponsive(){
-        ViewCompat.setOnApplyWindowInsetsListener(AppCompatActivity().findViewById(R.id.main)) { v, insets ->
+    fun uiResponsive(view: View, window: Window){
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        ViewCompat.setOnApplyWindowInsetsListener(view) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        window.statusBarColor = ContextCompat.getColor(view.context, R.color.actionbar_color_figma)
+        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = false
     }
 
 }

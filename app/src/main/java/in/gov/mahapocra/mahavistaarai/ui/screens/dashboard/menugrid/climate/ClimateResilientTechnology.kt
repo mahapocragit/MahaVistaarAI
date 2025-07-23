@@ -15,11 +15,14 @@ import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListene
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
+import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityClimateResilintTechnologyBinding
+import `in`.gov.mahapocra.mahavistaarai.databinding.SingleClimateResilientTechBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ClimateResilientTechnologyAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import org.json.JSONArray
 import org.json.JSONObject
@@ -27,6 +30,7 @@ import org.json.JSONObject
 class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClickListener {
 
     private var climateResilientGroup: RecyclerView? = null
+    private lateinit var binding: ActivityClimateResilintTechnologyBinding
     private lateinit var farmerViewModel: FarmerViewModel
     private var textViewHeaderTitle: TextView? = null
     private var imgBackArrow: ImageView? = null
@@ -46,7 +50,9 @@ class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClick
             languageToLoad = "en"
         }
         switchLanguage(this, languageToLoad)
-        setContentView(R.layout.activity_climate_resilint_technology)
+        binding = ActivityClimateResilintTechnologyBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        uiResponsive(binding.root, window)
         init()
         textViewHeaderTitle?.setText(R.string.climateTechnology)
         textViewHeaderTitle?.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)

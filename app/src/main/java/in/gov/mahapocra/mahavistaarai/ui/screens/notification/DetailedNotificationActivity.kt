@@ -27,6 +27,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import org.json.JSONObject
 
 class DetailedNotificationActivity : AppCompatActivity() {
@@ -46,6 +47,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityDetailedNotificationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root, window)
         farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
 
         val id = intent.getLongExtra("id", 0L)

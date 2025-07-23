@@ -24,6 +24,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityWarehouseBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.WarehouseAvailabilityAdapter
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONArray
@@ -55,6 +56,7 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
         switchLanguage(this, languageToLoad)
         binding = ActivityWarehouseBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root, window)
         districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
         init()
         onClick()

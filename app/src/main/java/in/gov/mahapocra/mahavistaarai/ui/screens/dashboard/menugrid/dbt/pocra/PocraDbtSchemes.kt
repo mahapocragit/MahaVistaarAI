@@ -17,6 +17,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardS
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.DbtSchemesViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import org.json.JSONObject
 
@@ -37,6 +38,7 @@ class PocraDbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
         switchLanguage(this, languageToLoad)
         binding = ActivityDbtSchemesBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root, window)
 
         dbtSchemesViewModel = ViewModelProvider(this)[DbtSchemesViewModel::class.java]
         dbtSchemesLists()

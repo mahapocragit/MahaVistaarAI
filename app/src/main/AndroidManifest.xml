@@ -101,7 +101,6 @@
             android:theme="@style/WeatherTheme" />
         <activity
             android:name=".ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity"
-            android:fitsSystemWindows="true"
             android:exported="false" />
         <activity android:name=".ui.screens.dashboard.menugrid.FertilizerCalculatorActivity" />
         <activity android:name=".ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages" />

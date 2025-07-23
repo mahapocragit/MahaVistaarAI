@@ -3,7 +3,6 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.notification
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -16,6 +15,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardS
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import org.json.JSONObject
 
 class NotificationActivity : AppCompatActivity() {
@@ -32,6 +32,7 @@ class NotificationActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityNotificationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root, window)
 
         binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.my_notification)
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE

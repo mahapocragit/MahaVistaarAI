@@ -9,6 +9,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityCreditsBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 
 class CreditsActivity : AppCompatActivity() {
 
@@ -24,6 +25,7 @@ class CreditsActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding=ActivityCreditsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root, window)
 
         binding.toolbarLayout.imgBackArrow.visibility = View.VISIBLE
         binding.toolbarLayout.imgBackArrow.setOnClickListener {

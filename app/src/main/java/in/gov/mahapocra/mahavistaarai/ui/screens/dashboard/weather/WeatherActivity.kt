@@ -17,6 +17,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import org.json.JSONArray
 import org.json.JSONObject
@@ -42,6 +43,7 @@ class WeatherActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityWeatherHomeTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root, window)
         farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         binding.relativeLayoutTopBar.relativeLayoutToolbar.setBackgroundColor(
             ContextCompat.getColor(

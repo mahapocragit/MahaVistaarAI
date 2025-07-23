@@ -66,6 +66,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getLatestAdvisoriesAsJsonArray
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.ApUtil
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppHelper
@@ -118,8 +119,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             layoutInflater
         )
         setContentView(binding.root)
-
-
         val showOverlay = AppPreferenceManager(this).getBoolean("show_overlay")
         if (showOverlay) {
             binding.drawerLayout1.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
@@ -471,9 +470,18 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
                             AppPreferenceManager(this).saveInt("CROP_ID_SAVED", savedCropId)
                             AppPreferenceManager(this).saveString("CROP_NAME_SAVED", savedCropName)
-                            AppPreferenceManager(this).saveString("CROP_IMAGE_SAVED", savedCropImageUrl)
-                            AppPreferenceManager(this).saveString("CROP_SOWING_DATE_SAVED", savedCropSowingDate)
-                            AppPreferenceManager(this).saveString("CROP_WOTR_ID_SAVED", savedCropWoTRId)
+                            AppPreferenceManager(this).saveString(
+                                "CROP_IMAGE_SAVED",
+                                savedCropImageUrl
+                            )
+                            AppPreferenceManager(this).saveString(
+                                "CROP_SOWING_DATE_SAVED",
+                                savedCropSowingDate
+                            )
+                            AppPreferenceManager(this).saveString(
+                                "CROP_WOTR_ID_SAVED",
+                                savedCropWoTRId
+                            )
 
                             binding.appBarMain.dashboardScreen.apply {
                                 addChangeCropTV.setText(R.string.change_Crop)
@@ -639,7 +647,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     val villageId = data.optInt("VillageCode", 0)
                     val villageName = data.optString("VillageName", "")
                     val agristack_id = data.optString("farmer_id", "")
-                    farmerViewModel.getCropSapAdvisory(this, villageId) //TODO: static village code 537820
+                    farmerViewModel.getCropSapAdvisory(
+                        this,
+                        villageId
+                    ) //TODO: static village code 537820
                     districtCode = distId
                     villageCode = talukaId
 

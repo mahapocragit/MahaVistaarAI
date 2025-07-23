@@ -11,6 +11,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityMahaDbtSchemesDetailsBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -27,6 +28,7 @@ class MahaDbtSchemesDetailsActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityMahaDbtSchemesDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root, window)
 
         // Header setup
         binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.dbtschema)

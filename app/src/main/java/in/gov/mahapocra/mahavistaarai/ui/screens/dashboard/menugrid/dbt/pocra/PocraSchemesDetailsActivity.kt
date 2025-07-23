@@ -11,6 +11,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDbtSchemesDetailsBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import org.json.JSONObject
 
 class PocraSchemesDetailsActivity : AppCompatActivity() {
@@ -25,6 +26,7 @@ class PocraSchemesDetailsActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityDbtSchemesDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root, window)
 
         binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.dbtschema)

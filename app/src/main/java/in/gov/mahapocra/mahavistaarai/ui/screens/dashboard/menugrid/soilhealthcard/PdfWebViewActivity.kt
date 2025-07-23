@@ -13,6 +13,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.GisViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import org.json.JSONObject
 
@@ -33,6 +34,7 @@ class PdfWebViewActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityPdfViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root, window)
 
         gisViewModel = ViewModelProvider(this)[GisViewModel::class.java]
         binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.soil_health_card)

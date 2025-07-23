@@ -14,6 +14,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityResilientWebUrlBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 
 class SOPWebViewActivity : AppCompatActivity() {
 
@@ -31,6 +32,7 @@ class SOPWebViewActivity : AppCompatActivity() {
         // Inflate layout
         binding = ActivityResilientWebUrlBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root, window)
 
         // Toolbar setup
         binding.layoutToolbar.textViewHeaderTitle.text = getString(R.string.sop_title)

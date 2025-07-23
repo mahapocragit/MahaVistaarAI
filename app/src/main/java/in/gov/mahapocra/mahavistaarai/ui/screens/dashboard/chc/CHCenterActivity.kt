@@ -27,6 +27,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityChcenterBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import org.json.JSONObject
 import org.osmdroid.config.Configuration
@@ -55,6 +56,7 @@ class CHCenterActivity : AppCompatActivity() {
         binding = ActivityChcenterBinding.inflate(layoutInflater)
         Configuration.getInstance().load(this, getSharedPreferences("osmdroid", MODE_PRIVATE))
         setContentView(binding.root)
+        uiResponsive(binding.root, window)
         farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)

@@ -11,6 +11,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityShetishalaBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosDetailedActivity
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 
 class ShetishalaActivity : AppCompatActivity() {
 
@@ -26,6 +27,7 @@ class ShetishalaActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityShetishalaBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root, window)
 
         binding.toolbar.imgBackArrow.visibility = View.VISIBLE
         binding.toolbar.imgBackArrow.setOnClickListener {
