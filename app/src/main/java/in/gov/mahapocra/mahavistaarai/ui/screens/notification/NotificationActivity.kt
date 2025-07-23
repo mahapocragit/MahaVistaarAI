@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,7 +22,7 @@ import org.json.JSONObject
 class NotificationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNotificationBinding
     private lateinit var languageToLoad: String
-    private lateinit var farmerViewModel: FarmerViewModel
+    private val farmerViewModel: FarmerViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +41,6 @@ class NotificationActivity : AppCompatActivity() {
             startActivity(Intent(this, DashboardScreen::class.java))
         }
 
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         farmerViewModel.getNotificationList(this)
         farmerViewModel.getNotificationResponse.observe(this) {
             if (it != null) {
@@ -50,10 +50,13 @@ class NotificationActivity : AppCompatActivity() {
                     hasFixedSize()
                     layoutManager = LinearLayoutManager(this@NotificationActivity)
                     adapter = NotificationAdapter(notificationJsonArray) { jsonObject ->
-                        startActivity(Intent(this@NotificationActivity,
-                            DetailedNotificationActivity::class.java).apply {
+                        startActivity(
+                            Intent(
+                                this@NotificationActivity,
+                                DetailedNotificationActivity::class.java
+                            ).apply {
                                 putExtra("id", jsonObject.optLong("id"))
-                        })
+                            })
                     }
                 }
             }

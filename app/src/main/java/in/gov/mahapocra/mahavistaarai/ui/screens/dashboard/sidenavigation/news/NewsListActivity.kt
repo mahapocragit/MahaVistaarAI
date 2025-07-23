@@ -3,6 +3,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.new
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,7 +18,7 @@ import org.json.JSONObject
 
 class NewsListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNotificationListBinding
-    private lateinit var newsWadhwaniViewModel: NewsWadhwaniViewModel
+    private val newsWadhwaniViewModel: NewsWadhwaniViewModel by viewModels()
     private lateinit var languageToLoad: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +32,6 @@ class NewsListActivity : AppCompatActivity() {
             layoutInflater
         )
         setContentView(binding.root)
-        newsWadhwaniViewModel = ViewModelProvider(this)[NewsWadhwaniViewModel::class.java]
         binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.news)
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
@@ -57,7 +57,8 @@ class NewsListActivity : AppCompatActivity() {
                 val dataJsonObject = jsonObject.optJSONObject("data")
                 val eventJsonArray = dataJsonObject?.optJSONArray("events")
                 binding.newsRecyclerView.layoutManager = LinearLayoutManager(this)
-                binding.newsRecyclerView.adapter = eventJsonArray?.let { it1 -> NewsAdapter(it1, languageToLoad) }
+                binding.newsRecyclerView.adapter =
+                    eventJsonArray?.let { it1 -> NewsAdapter(it1, languageToLoad) }
             }
         }
     }

@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.View
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -55,8 +56,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     OnMultiRecyclerItemClickListener, ApiCallbackCode, DatePickerRequestListener {
 
     private lateinit var binding: ActivityFertilizerCalculatorActivityBinding
-    private lateinit var viewModel: FarmerViewModel
-
+    private val farmerViewModel: FarmerViewModel by viewModels()
     private var soilTestOption: Int = 1
     private lateinit var languageToLoad: String
 
@@ -92,7 +92,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         binding = ActivityFertilizerCalculatorActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root, window)
-        viewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
 
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
@@ -753,8 +752,8 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             val formattedDay = String.format("%02d", day)
             val formattedMonth = String.format("%02d", month)
             sowingDate = "$formattedDay-$formattedMonth-$year"
-            cropId?.let { viewModel.saveFarmerSelectedCrop(this, sowingDate!!, it) }
-            viewModel.saveFarmerSelectedCrop.observe(this) {
+            cropId?.let { farmerViewModel.saveFarmerSelectedCrop(this, sowingDate!!, it) }
+            farmerViewModel.saveFarmerSelectedCrop.observe(this) {
                 if (it != null) {
                     if (it.get("status").toString() == "200") {
                         binding.sowingInfoLayout.sowingDateTextView.text = sowingDate

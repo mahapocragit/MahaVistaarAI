@@ -10,6 +10,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -34,12 +35,13 @@ import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
+import kotlin.getValue
 
 class CHCenterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChcenterBinding
     private lateinit var adapter: CHCenterRecyclerAdapter
-    private lateinit var farmerViewModel: FarmerViewModel
+    private val farmerViewModel: FarmerViewModel by viewModels()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val LOCATION_PERMISSION_REQUEST = 1001
     private lateinit var languageToLoad: String
@@ -57,7 +59,6 @@ class CHCenterActivity : AppCompatActivity() {
         Configuration.getInstance().load(this, getSharedPreferences("osmdroid", MODE_PRIVATE))
         setContentView(binding.root)
         uiResponsive(binding.root, window)
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         checkLocationPermissions()

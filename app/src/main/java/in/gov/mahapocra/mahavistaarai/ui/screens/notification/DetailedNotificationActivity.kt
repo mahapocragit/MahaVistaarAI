@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import `in`.co.appinventor.services_api.settings.AppSettings
@@ -34,7 +35,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailedNotificationBinding
     private lateinit var languageToLoad: String
-    private lateinit var farmerViewModel: FarmerViewModel
+    private val farmerViewModel: FarmerViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +49,6 @@ class DetailedNotificationActivity : AppCompatActivity() {
         binding = ActivityDetailedNotificationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root, window)
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
 
         val id = intent.getLongExtra("id", 0L)
         Log.d("TAGGER", "onCreate: $id")

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -51,7 +52,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
     private var districtJSONArray: JSONArray? = null
     private var talukaJSONArray: JSONArray? = null
     private var villageJSONArray: JSONArray? = null
-    private lateinit var farmerViewModel: FarmerViewModel
+    private val farmerViewModel: FarmerViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,8 +64,6 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
         binding = ActivityHealthCardBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root, window)
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
-
 
         //Loading URL in webView
         if (supportActionBar != null) {

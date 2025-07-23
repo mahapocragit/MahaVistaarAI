@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -48,7 +49,7 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
 
     private lateinit var marketPriceAdapter: MarketPriceAdapter
     private lateinit var binding: ActivityMarketPriceBinding
-    private lateinit var farmerViewModel: FarmerViewModel
+    private val farmerViewModel: FarmerViewModel by viewModels()
     private var districtJSONArray: JSONArray? = null
     private var talukaJSONArray: JSONArray? = null
     private var marketJSONArray: JSONArray? = null
@@ -74,7 +75,6 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
         setContentView(binding.root)
         uiResponsive(binding.root, window)
 
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.marketprice)
         binding.tvSourceInformation.text = getString(R.string.source_info_market)

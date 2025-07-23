@@ -3,6 +3,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealt
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,7 +21,7 @@ import org.json.JSONObject
 class PdfWebViewActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPdfViewBinding
-    private lateinit var gisViewModel: GisViewModel
+    private val gisViewModel: GisViewModel by viewModels()
     private lateinit var soilTestResultAdapter: SoilTestResultAdapter
     private lateinit var fertilizerRecommendationAdapter: FertilizerRecommendationAdapter
     private lateinit var languageToLoad: String
@@ -36,7 +37,6 @@ class PdfWebViewActivity : AppCompatActivity() {
         setContentView(binding.root)
         uiResponsive(binding.root, window)
 
-        gisViewModel = ViewModelProvider(this)[GisViewModel::class.java]
         binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.soil_health_card)
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {

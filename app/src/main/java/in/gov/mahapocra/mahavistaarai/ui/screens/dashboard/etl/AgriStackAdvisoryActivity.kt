@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,10 +20,11 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import org.json.JSONObject
+import kotlin.getValue
 
 class AgriStackAdvisoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAgriStackAdvisoryBinding
-    private lateinit var farmerViewModel: FarmerViewModel
+    private val farmerViewModel: FarmerViewModel by viewModels()
     private lateinit var languageToLoad: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +38,6 @@ class AgriStackAdvisoryActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityAgriStackAdvisoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
 
         binding.relativeLayoutTopBar.textViewHeaderTitle.text =
             getString(R.string.etl_crop_advisory)

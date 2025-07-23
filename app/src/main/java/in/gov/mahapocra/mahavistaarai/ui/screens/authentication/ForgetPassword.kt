@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.JsonObject
@@ -42,7 +43,7 @@ import retrofit2.Retrofit
 class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode {
 
     private lateinit var binding: ActivityForgetPasswordTempBinding
-    private lateinit var farmerViewModel: FarmerViewModel
+    private val farmerViewModel: FarmerViewModel by viewModels()
     private lateinit var mob: String
     private var userPass: String = ""
     private lateinit var dialog: Dialog
@@ -64,7 +65,6 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
         binding = ActivityForgetPasswordTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root, window)
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         onClick()
     }
 

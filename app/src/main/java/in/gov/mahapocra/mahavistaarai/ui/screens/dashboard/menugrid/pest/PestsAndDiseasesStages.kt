@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -31,7 +32,7 @@ import org.json.JSONObject
 class PestsAndDiseasesStages : AppCompatActivity() {
 
     private lateinit var binding: ActivityPestsAndDiseasesLibraryBinding
-    private lateinit var farmerViewModel: FarmerViewModel
+    private val farmerViewModel: FarmerViewModel by viewModels()
     var cropId: Int? = 0
     private var stagesId: Int = 0
     private var mUrl: String? = null
@@ -52,7 +53,6 @@ class PestsAndDiseasesStages : AppCompatActivity() {
         binding = ActivityPestsAndDiseasesLibraryBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root, window)
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
 
         binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.pests_n_diseases)
         binding.sowingInfoLayout.textView7.text = getString(R.string.selected_crop)

@@ -15,6 +15,7 @@ import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -47,11 +48,12 @@ import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
+import kotlin.getValue
 
 class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
     private lateinit var binding: ActivityLoginScreenTempBinding
-    private lateinit var farmerViewModel: FarmerViewModel
+    private val farmerViewModel: FarmerViewModel by viewModels()
     private lateinit var refreshToken: String
     private lateinit var mobileNo: String
     private lateinit var dialog: Dialog
@@ -91,7 +93,6 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 val token = task.result
             }
 
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         binding.changeLanguageImageView.setOnClickListener {
             openChangeLangPopup()
         }

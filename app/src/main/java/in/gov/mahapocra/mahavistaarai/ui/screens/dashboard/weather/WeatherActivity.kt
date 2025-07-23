@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -28,7 +29,7 @@ import java.util.Locale
 class WeatherActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWeatherHomeTempBinding
-    private lateinit var farmerViewModel: FarmerViewModel
+    private val farmerViewModel: FarmerViewModel by viewModels()
     private lateinit var recyclerAdapter: TemperatureAdapter
     private lateinit var jsonArrayForecast: JSONArray
     private lateinit var jsonArrayPrevious: JSONArray
@@ -44,7 +45,6 @@ class WeatherActivity : AppCompatActivity() {
         binding = ActivityWeatherHomeTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root, window)
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         binding.relativeLayoutTopBar.relativeLayoutToolbar.setBackgroundColor(
             ContextCompat.getColor(
                 this,

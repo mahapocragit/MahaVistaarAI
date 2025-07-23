@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,7 +25,7 @@ import org.json.JSONObject
 class SOPActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener {
 
     private lateinit var binding: ActivitySopactivityBinding
-    private lateinit var farmerViewModel: FarmerViewModel
+    private val farmerViewModel: FarmerViewModel by viewModels()
     var cropId: Int? = 0
     private var cropName: String? = null
     private var wotrCropId: String? = null
@@ -42,7 +43,6 @@ class SOPActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener {
         binding = ActivitySopactivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root, window)
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
 
         //fetching values
         cropId = intent.getIntExtra("id", 0)

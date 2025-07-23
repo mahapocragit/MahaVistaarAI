@@ -21,6 +21,7 @@ import android.widget.GridView
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -99,7 +100,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     private var savedCropWoTRId: String? = null
     private var savedCropImageUrl: String? = null
     private lateinit var appPreferenceManager: AppPreferenceManager
-    private lateinit var farmerViewModel: FarmerViewModel
+    private val farmerViewModel: FarmerViewModel by viewModels()
     private var jsonArray: JSONArray? = null
     private var showToast = true
     private var etlAdvisoryJsonArray: JSONArray = JSONArray()
@@ -145,7 +146,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         binding.appBarMain.dashboardScreen.progressBar.visibility = View.VISIBLE
         binding.appBarMain.dashboardScreen.temperatureTextView.visibility = View.GONE
         isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         fetchReceivingData()
         appPreferenceManager = AppPreferenceManager(this)
         init()

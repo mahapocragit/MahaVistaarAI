@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -27,7 +28,7 @@ import org.json.JSONObject
 class DiseaseInformation : AppCompatActivity() {
 
     private lateinit var binding: ActivityDiseaseInformationBinding
-    private lateinit var farmerViewModel: FarmerViewModel
+    private val farmerViewModel: FarmerViewModel by viewModels()
     var id: Int = 0
     private lateinit var imgBackArrow: ImageView
     private lateinit var textViewHeaderTitle: TextView
@@ -50,7 +51,6 @@ class DiseaseInformation : AppCompatActivity() {
         binding = ActivityDiseaseInformationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root, window)
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
         imgBackArrow = findViewById(R.id.imgBackArrow)
 

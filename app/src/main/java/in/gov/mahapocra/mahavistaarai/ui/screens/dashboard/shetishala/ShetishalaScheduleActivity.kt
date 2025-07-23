@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModelProvider
@@ -23,7 +24,7 @@ import org.json.JSONObject
 class ShetishalaScheduleActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityShetishalaScheduleBinding
-    private lateinit var farmerViewModel: FarmerViewModel
+    private val farmerViewModel: FarmerViewModel by viewModels()
     private lateinit var languageToLoad: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +40,6 @@ class ShetishalaScheduleActivity : AppCompatActivity() {
         setContentView(binding.root)
         uiResponsive(binding.root, window)
 
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         setUpToolbar()
         binding.useYoutubeLayout.setOnClickListener {
             loadYoutubeUrl("https://www.youtube.com/@PaaniFoundation/live")

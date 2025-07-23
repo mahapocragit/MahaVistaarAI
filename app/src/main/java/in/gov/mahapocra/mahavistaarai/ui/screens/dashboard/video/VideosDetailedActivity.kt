@@ -3,6 +3,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,7 +21,7 @@ import org.json.JSONObject
 class VideosDetailedActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityVideosDetailedBinding
-    private lateinit var farmerViewModel: FarmerViewModel
+    private val farmerViewModel: FarmerViewModel by viewModels()
     private lateinit var languageToLoad: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +37,6 @@ class VideosDetailedActivity : AppCompatActivity() {
         setContentView(binding.root)
         uiResponsive(binding.root, window)
 
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         binding.toolbar.textViewHeaderTitle.text = getString(R.string.videos_bottom)
         binding.toolbar.imgBackArrow.visibility = View.VISIBLE
         binding.toolbar.imgBackArrow.setOnClickListener {

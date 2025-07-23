@@ -7,6 +7,7 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,7 +31,7 @@ class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClick
 
     private var climateResilientGroup: RecyclerView? = null
     private lateinit var binding: ActivityClimateResilintTechnologyBinding
-    private lateinit var farmerViewModel: FarmerViewModel
+    private val farmerViewModel: FarmerViewModel by viewModels()
     private var textViewHeaderTitle: TextView? = null
     private var imgBackArrow: ImageView? = null
     private lateinit var languageToLoad: String
@@ -69,7 +70,6 @@ class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClick
     }
 
     private fun init() {
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         climateResilientGroup = findViewById(R.id.climateResilint)
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
         imgBackArrow = findViewById(R.id.imgBackArrow)

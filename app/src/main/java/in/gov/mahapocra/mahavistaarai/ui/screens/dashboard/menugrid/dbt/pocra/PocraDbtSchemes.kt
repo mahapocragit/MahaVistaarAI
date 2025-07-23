@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,7 +24,7 @@ import org.json.JSONObject
 
 class PocraDbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
 
-    private lateinit var dbtSchemesViewModel: DbtSchemesViewModel
+    private val dbtSchemesViewModel: DbtSchemesViewModel by viewModels()
     private lateinit var binding: ActivityDbtSchemesBinding
     var languageToLoad: String = ""
 
@@ -40,7 +41,6 @@ class PocraDbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
         setContentView(binding.root)
         uiResponsive(binding.root, window)
 
-        dbtSchemesViewModel = ViewModelProvider(this)[DbtSchemesViewModel::class.java]
         dbtSchemesLists()
         ProgressHelper.showProgressDialog(this)
         dbtSchemesViewModel.getDBTSchemes(this)

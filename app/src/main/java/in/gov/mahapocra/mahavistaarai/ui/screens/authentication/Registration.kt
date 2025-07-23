@@ -18,6 +18,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -55,6 +56,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
+import kotlin.getValue
 
 
 class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
@@ -92,7 +94,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     private var versionName: String? = null
     private var token: String? = null
     private var machineId: String? = null
-    private lateinit var farmerViewModel: FarmerViewModel
+    private val farmerViewModel: FarmerViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,7 +109,6 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         binding = ActivityRegistrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root, window)
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         versionName = LocalCustom.getVersionName(this)
         token = FirebaseMessaging.getInstance().token.toString()
         sessionManager = SessionManager(this)
