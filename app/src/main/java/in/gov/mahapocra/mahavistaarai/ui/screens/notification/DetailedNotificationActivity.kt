@@ -25,10 +25,12 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.Shetisha
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import org.json.JSONArray
 import org.json.JSONObject
 
 class DetailedNotificationActivity : AppCompatActivity() {
@@ -36,6 +38,12 @@ class DetailedNotificationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailedNotificationBinding
     private lateinit var languageToLoad: String
     private val farmerViewModel: FarmerViewModel by viewModels()
+    val flatCropsJsonArray = JSONArray()
+    var cropId: Int? = 0
+    private var cropName: String? = null
+    private var wotrCropId: String? = null
+    private var mUrl: String? = null
+    private var sowingDate: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,22 +57,85 @@ class DetailedNotificationActivity : AppCompatActivity() {
         binding = ActivityDetailedNotificationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root, window)
-
-        val id = intent.getLongExtra("id", 0L)
-        Log.d("TAGGER", "onCreate: $id")
-        farmerViewModel.getNotificationDetails(this, id)
-        farmerViewModel.getNotificationDetailedResponse.observe(this) {
-            if (it != null) {
-                val jsonObject = JSONObject(it.toString())
-                val notificationObject = jsonObject.optJSONObject("notifications")
-                setUpPageContent(notificationObject, id)
+        val notificationObject = intent.getStringExtra("notificationObject")
+        if (notificationObject != null) {
+            val jsonObject = JSONObject(notificationObject)
+            val id = jsonObject.optLong("id")
+            val flatCropId = jsonObject.optInt("crop")
+            farmerViewModel.getNotificationDetails(this, id)
+            farmerViewModel.getNotificationDetailedResponse.observe(this) {
+                if (it != null) {
+                    Log.d("TAGGER", "onCreate: $it")
+                    val jsonObject = JSONObject(it.toString())
+                    val notificationObject = jsonObject.optJSONObject("notifications")
+                    setUpPageContent(notificationObject, id)
+                }
+            }
+            fetchCropList(flatCropId)
+        } else {
+//            val id = intent.getLongExtra("id", 0L)
+            val id = 5541753347614
+            farmerViewModel.getNotificationDetails(this, id)
+            farmerViewModel.getNotificationDetailedResponse.observe(this) {
+                if (it != null) {
+                    val jsonObject = JSONObject(it.toString())
+                    Log.d("TAGGER", "getNotificationDetails: $jsonObject")
+                    val notificationObject = jsonObject.optJSONObject("notifications")
+                    val flatCropId = notificationObject?.optInt("crop")
+                    Log.d("TAGGER", "onCreate: $flatCropId")
+                    setUpPageContent(notificationObject, id)
+                    fetchCropList(flatCropId)
+                }
             }
         }
+
 
         binding.relativeLayoutTopBar.textViewHeaderTitle.text = "अधिक माहिती"
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
+        }
+    }
+
+    private fun fetchCropList(flatCropId:Int?) {
+        farmerViewModel.getCropCategoriesAndCropDetails(this, languageToLoad)
+        farmerViewModel.cropCategoryResponse.observe(this) { response ->
+            if (response != null) {
+                try {
+                    val jsonObject = JSONObject(response.toString())
+                    val dataArray = jsonObject.optJSONArray("data")
+
+                    if (dataArray != null) {
+                        for (i in 0 until dataArray.length()) {
+                            val categoryObject = dataArray.optJSONObject(i)
+                            val crops = categoryObject.optJSONArray("crops")
+
+                            if (crops != null) {
+                                for (j in 0 until crops.length()) {
+                                    val crop = crops.optJSONObject(j)
+                                    flatCropsJsonArray.put(crop)
+                                }
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            if (flatCropsJsonArray!=null && flatCropsJsonArray.length()>0) {
+                for (i in 0 until flatCropsJsonArray.length()) {
+                    val jsonObject = flatCropsJsonArray.getJSONObject(i)
+                    val id = jsonObject.optInt("id")
+                    if (id == flatCropId) {
+                        Log.d("TAGGER", "checkCropIdAndFetchJson: $jsonObject")
+                        cropId = jsonObject.optInt("id")
+                        cropName = jsonObject.optString("name")
+                        sowingDate = jsonObject.optString("sowing_date")
+                        wotrCropId = jsonObject.optString("wotr_crop_id")
+                        mUrl = jsonObject.optString("mUrl")
+                    }
+                }
+            }
         }
     }
 
@@ -84,7 +155,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
         binding.redirectTextView.text = redirectionText ?: "अधिक माहितीसाठी येथे क्लिक करा."
         binding.redirectTextView.setOnClickListener { redirectToScreen(page) }
         farmerViewModel.updateNotificationStatus(this, notificationId)
-        farmerViewModel.updateNotificationStatusResponse.observe(this){
+        farmerViewModel.updateNotificationStatusResponse.observe(this) {
 
         }
     }
@@ -92,19 +163,35 @@ class DetailedNotificationActivity : AppCompatActivity() {
     private fun redirectToScreen(testValue: String) {
         val targetIntent = when (testValue.lowercase()) {
             "advisory" -> Intent(this, AdvisoryCropActivity::class.java).apply {
-                putExtra("ROUTE", "NOTIFICATION_LIST")
+                putExtra("id", cropId)
+                putExtra("wotr_crop_id", wotrCropId)
+                putExtra("mUrl", mUrl)
+                putExtra("sowingDate", sowingDate)
+                putExtra("mName", cropName)
             }
 
             "sop" -> Intent(this, SOPActivity::class.java).apply {
-                putExtra("ROUTE", "NOTIFICATION_LIST")
+                putExtra("id", cropId)
+                putExtra("wotr_crop_id", wotrCropId)
+                putExtra("mUrl", mUrl)
+                putExtra("sowingDate", sowingDate)
+                putExtra("mName", cropName)
             }
 
             "fertilizer" -> Intent(this, FertilizerCalculatorActivity::class.java).apply {
-                putExtra("ROUTE", "NOTIFICATION_LIST")
+                putExtra("id", cropId)
+                putExtra("wotr_crop_id", wotrCropId)
+                putExtra("mUrl", mUrl)
+                putExtra("sowingDate", sowingDate)
+                putExtra("mName", cropName)
             }
 
             "pestdisease" -> Intent(this, PestsAndDiseasesStages::class.java).apply {
-                putExtra("ROUTE", "NOTIFICATION_LIST")
+                putExtra("id", cropId)
+                putExtra("wotr_crop_id", wotrCropId)
+                putExtra("mUrl", mUrl)
+                putExtra("sowingDate", sowingDate)
+                putExtra("mName", cropName)
             }
 
             "weather" -> Intent(this, WeatherActivity::class.java)
