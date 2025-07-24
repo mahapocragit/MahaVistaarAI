@@ -73,8 +73,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
             }
             fetchCropList(flatCropId)
         } else {
-//            val id = intent.getLongExtra("id", 0L)
-            val id = 5541753347614
+            val id = intent.getLongExtra("id", 0L)
             farmerViewModel.getNotificationDetails(this, id)
             farmerViewModel.getNotificationDetailedResponse.observe(this) {
                 if (it != null) {
@@ -140,6 +139,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
     }
 
     private fun setUpPageContent(jsonObject: JSONObject, notificationId: Long) {
+        binding.notificationInfoLayout.visibility = View.VISIBLE
         val page = jsonObject.optString("page")
         val title = jsonObject.optString("title")
         val shortDescription = jsonObject.optString("body")
