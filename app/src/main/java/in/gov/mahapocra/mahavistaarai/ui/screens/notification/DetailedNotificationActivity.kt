@@ -56,7 +56,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityDetailedNotificationBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
         val notificationObject = intent.getStringExtra("notificationObject")
         if (notificationObject != null) {
             val jsonObject = JSONObject(notificationObject)

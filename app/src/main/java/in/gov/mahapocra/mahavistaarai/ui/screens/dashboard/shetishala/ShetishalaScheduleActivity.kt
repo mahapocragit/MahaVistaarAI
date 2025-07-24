@@ -38,7 +38,7 @@ class ShetishalaScheduleActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityShetishalaScheduleBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
 
         setUpToolbar()
         binding.useYoutubeLayout.setOnClickListener {

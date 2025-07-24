@@ -67,7 +67,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
         switchLanguage(this, languageToLoad)
         binding = ActivityHealthCardBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
 
         //Loading URL in webView
         if (supportActionBar != null) {

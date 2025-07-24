@@ -28,7 +28,7 @@ class MahaDbtSchemesDetailsActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityMahaDbtSchemesDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
 
         // Header setup
         binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.dbtschema)

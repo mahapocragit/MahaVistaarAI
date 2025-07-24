@@ -93,7 +93,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         switchLanguage(this, languageToLoad)
         binding = ActivityFertilizerCalculatorActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
 
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {

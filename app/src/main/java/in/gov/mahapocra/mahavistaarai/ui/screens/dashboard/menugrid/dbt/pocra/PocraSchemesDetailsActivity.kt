@@ -26,7 +26,7 @@ class PocraSchemesDetailsActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityDbtSchemesDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
 
         binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.dbtschema)

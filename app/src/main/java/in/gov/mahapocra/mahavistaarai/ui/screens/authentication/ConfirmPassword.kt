@@ -53,7 +53,7 @@ class ConfirmPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode
         switchLanguage(this, languageToLoad)
         binding = ActivityChangePwdTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
 
         userMobileNo = intent.getStringExtra("MobileNo").toString()
         onClick()

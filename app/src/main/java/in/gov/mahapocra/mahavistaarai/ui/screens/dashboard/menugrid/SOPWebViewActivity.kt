@@ -32,7 +32,7 @@ class SOPWebViewActivity : AppCompatActivity() {
         // Inflate layout
         binding = ActivityResilientWebUrlBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
 
         // Toolbar setup
         binding.layoutToolbar.textViewHeaderTitle.text = getString(R.string.sop_title)

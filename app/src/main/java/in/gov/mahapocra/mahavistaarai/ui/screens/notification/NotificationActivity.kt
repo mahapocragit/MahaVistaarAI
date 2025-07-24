@@ -36,7 +36,7 @@ class NotificationActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityNotificationBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
 
         binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.my_notification)
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE

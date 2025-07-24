@@ -107,7 +107,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         switchLanguage(this, languageToLoad)
         binding = ActivityRegistrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
         versionName = LocalCustom.getVersionName(this)
         token = FirebaseMessaging.getInstance().token.toString()
         sessionManager = SessionManager(this)

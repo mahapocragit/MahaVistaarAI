@@ -75,7 +75,7 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
         switchLanguage(this, languageToLoad)
         binding = ActivityMarketPriceBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
 
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.marketprice)

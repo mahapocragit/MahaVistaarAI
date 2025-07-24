@@ -31,7 +31,7 @@ class ShetishalaActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityShetishalaBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
 
         binding.toolbar.imgBackArrow.visibility = View.VISIBLE
         binding.toolbar.imgBackArrow.setOnClickListener {

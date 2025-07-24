@@ -25,7 +25,7 @@ class AboutActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityAboutBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
 
         if (languageToLoad == "en"){
             binding.aboutAppIcon.setImageResource(R.drawable.about_logo_en)

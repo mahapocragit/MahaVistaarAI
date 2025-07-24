@@ -50,7 +50,7 @@ class DiseaseInformation : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityDiseaseInformationBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
         imgBackArrow = findViewById(R.id.imgBackArrow)
 

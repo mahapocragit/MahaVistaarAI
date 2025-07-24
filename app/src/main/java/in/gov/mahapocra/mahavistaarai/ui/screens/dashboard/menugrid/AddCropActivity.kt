@@ -47,7 +47,7 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
         switchLanguage(this, languageToLoad)
         binding = ActivityAddCropBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
 
         viewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         imgBackArrow = findViewById(R.id.imgBackArrow)

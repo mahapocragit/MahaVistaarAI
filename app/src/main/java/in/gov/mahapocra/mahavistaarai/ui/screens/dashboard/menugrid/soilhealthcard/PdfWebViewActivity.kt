@@ -35,7 +35,7 @@ class PdfWebViewActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityPdfViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
 
         binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.soil_health_card)
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE

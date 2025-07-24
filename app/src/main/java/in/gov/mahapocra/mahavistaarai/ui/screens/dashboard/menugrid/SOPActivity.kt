@@ -44,7 +44,7 @@ class SOPActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener {
         switchLanguage(this, languageToLoad)
         binding = ActivitySopactivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
 
         //fetching values
         cropId = intent.getIntExtra("id", 0)

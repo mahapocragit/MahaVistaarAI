@@ -334,15 +334,14 @@ object LocalCustom {
         return filteredArray
     }
 
-    fun uiResponsive(view: View, window: Window){
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        ViewCompat.setOnApplyWindowInsetsListener(view) { view, insets ->
+    fun uiResponsive(view: View) {
+        // Handle insets manually
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        window.statusBarColor = ContextCompat.getColor(view.context, R.color.actionbar_color_figma)
-        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = false
     }
+
 
 }

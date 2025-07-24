@@ -39,7 +39,7 @@ class PocraDbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
         switchLanguage(this, languageToLoad)
         binding = ActivityDbtSchemesBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
 
         dbtSchemesLists()
         ProgressHelper.showProgressDialog(this)

@@ -58,7 +58,7 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
         switchLanguage(this, languageToLoad)
         binding = ActivityWarehouseBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
         districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
         init()
         onClick()

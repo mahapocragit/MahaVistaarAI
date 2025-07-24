@@ -39,7 +39,7 @@ class ClimateDetailsGrid : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityClimateDetailsGridBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
         init()
         textViewHeaderTitle?.setText(R.string.climate_resilient_technology)
         val b = intent.extras

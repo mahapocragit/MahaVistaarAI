@@ -37,7 +37,7 @@ class AgriStackAdvisoryActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityAgriStackAdvisoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
 
         binding.relativeLayoutTopBar.textViewHeaderTitle.text =
             getString(R.string.etl_crop_advisory)

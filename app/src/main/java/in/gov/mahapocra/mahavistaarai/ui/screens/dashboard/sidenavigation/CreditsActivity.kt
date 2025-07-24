@@ -25,7 +25,7 @@ class CreditsActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding=ActivityCreditsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
 
         binding.toolbarLayout.imgBackArrow.visibility = View.VISIBLE
         binding.toolbarLayout.imgBackArrow.setOnClickListener {

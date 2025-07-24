@@ -36,7 +36,7 @@ class MahaDbtSchemesActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityMahaDbtSchemesBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
 
         binding.layoutToolbar.textViewHeaderTitle.text = getString(R.string.maha_dbt_name)
         binding.layoutToolbar.imgBackArrow.visibility = View.VISIBLE

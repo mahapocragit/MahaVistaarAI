@@ -42,7 +42,7 @@ class ChatbotActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityChatbotBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
 
         askForLocationAndMicrophonePermission()
         binding.toolbar.imageViewHeaderBack.setVisibility(View.VISIBLE)

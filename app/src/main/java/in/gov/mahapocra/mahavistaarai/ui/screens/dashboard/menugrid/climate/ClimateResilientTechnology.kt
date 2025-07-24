@@ -56,7 +56,7 @@ class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClick
         switchLanguage(this, languageToLoad)
         binding = ActivityClimateResilintTechnologyBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
         init()
         textViewHeaderTitle?.setText(R.string.climateTechnology)
         textViewHeaderTitle?.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)

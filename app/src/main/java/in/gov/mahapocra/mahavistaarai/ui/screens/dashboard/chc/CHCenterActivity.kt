@@ -62,7 +62,7 @@ class CHCenterActivity : AppCompatActivity() {
         binding = ActivityChcenterBinding.inflate(layoutInflater)
         Configuration.getInstance().load(this, getSharedPreferences("osmdroid", MODE_PRIVATE))
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         checkLocationPermissions()

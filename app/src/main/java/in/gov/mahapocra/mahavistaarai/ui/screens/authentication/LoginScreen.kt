@@ -79,7 +79,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         switchLanguage(this, languageToLoad)
         binding = ActivityLoginScreenTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
         FirebaseHelper(this)
 
         FirebaseMessaging.getInstance().token

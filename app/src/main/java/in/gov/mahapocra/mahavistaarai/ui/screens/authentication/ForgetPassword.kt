@@ -63,7 +63,7 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
         switchLanguage(this, languageToLoad)
         binding = ActivityForgetPasswordTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
         onClick()
     }
 

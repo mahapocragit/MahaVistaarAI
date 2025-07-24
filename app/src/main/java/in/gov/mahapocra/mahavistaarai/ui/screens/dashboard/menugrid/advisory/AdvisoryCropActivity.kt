@@ -2,11 +2,13 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.co.appinventor.services_api.app_util.AppUtility
@@ -61,8 +63,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         switchLanguage(this, languageToLoad)
         binding = ActivityAdvisoryCropBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
-
+        uiResponsive(binding.root)
         viewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
 
         binding.completedLabelTextView.text = getString(R.string.crop_stage_completed)
@@ -116,7 +117,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         if (route!=""){
             val savedCropId = AppPreferenceManager(this).getInt("CROP_ID_SAVED")
             val savedCropSowingDate = AppPreferenceManager(this).getString("CROP_SOWING_DATE_SAVED")
-            val savedCropName = AppPreferenceManager(this).getString("CROP_NAME_SAVED")
+            AppPreferenceManager(this).getString("CROP_NAME_SAVED")
             savedCropSowingDate?.let { viewModel.getCropStagesAndAdvisory(this, savedCropId, it, languageToLoad) }
         }else{
             viewModel.getCropStagesAndAdvisory(this, cropId, sowingDate, languageToLoad)

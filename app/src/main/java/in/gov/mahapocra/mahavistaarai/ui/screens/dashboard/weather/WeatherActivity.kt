@@ -48,7 +48,7 @@ class WeatherActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityWeatherHomeTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
         binding.relativeLayoutTopBar.relativeLayoutToolbar.setBackgroundColor(
             ContextCompat.getColor(
                 this,

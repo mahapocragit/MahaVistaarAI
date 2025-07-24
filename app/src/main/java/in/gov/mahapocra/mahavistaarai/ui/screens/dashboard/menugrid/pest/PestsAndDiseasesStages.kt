@@ -55,7 +55,7 @@ class PestsAndDiseasesStages : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityPestsAndDiseasesLibraryBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root, window)
+        uiResponsive(binding.root)
 
         binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.pests_n_diseases)
         binding.sowingInfoLayout.textView7.text = getString(R.string.selected_crop)
