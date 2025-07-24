@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,294 +7,307 @@
     android:orientation="vertical"
     tools:context=".ui.screens.dashboard.weather.WeatherActivity">
 
-    <include
-        android:id="@+id/relativeLayoutTopBar"
-        layout="@layout/layout_toolbar" />
-
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/scrollView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rl_toolbar">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <include
+            android:id="@+id/relativeLayoutTopBar"
+            layout="@layout/layout_toolbar" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_200sdp"
-                android:background="@drawable/gradient_not_rounded_bg"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/temperatureLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:orientation="horizontal">
+                    android:layout_height="@dimen/_200sdp"
+                    android:background="@drawable/gradient_not_rounded_bg"
+                    android:orientation="vertical">
 
                     <LinearLayout
+                        android:id="@+id/temperatureLayout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="24dp"
-                        android:layout_weight="4"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/timestampTV"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="13 February 2025 | 14:00"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/_11sdp" />
-
-                        <TextView
-                            android:id="@+id/temperatureTextView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="22°C"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/_16sdp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/weatherTalukaTV"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Mumbai"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/_12sdp" />
-
-                    </LinearLayout>
-
-                    <ImageView
-                        android:id="@+id/imageView4"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:padding="@dimen/_10sdp"
-                        android:layout_weight="6"
-                        app:srcCompat="@drawable/weather_ic" />
-                </LinearLayout>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginHorizontal="@dimen/_20sdp"
-                    android:layout_marginBottom="@dimen/_10sdp"
-                    android:layout_weight="5"
-                    app:cardCornerRadius="@dimen/_15sdp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_weight="3"
                         android:orientation="horizontal">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_margin="@dimen/_2sdp"
-                            android:layout_weight="1"
+                            android:layout_marginStart="24dp"
+                            android:layout_weight="4"
+                            android:gravity="center_vertical"
                             android:orientation="vertical">
 
-                            <ImageView
-                                android:id="@+id/imageView5"
+                            <TextView
+                                android:id="@+id/timestampTV"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginTop="@dimen/_1sdp"
-                                android:layout_weight="3"
-                                app:srcCompat="@drawable/rain_ic" />
+                                android:layout_height="wrap_content"
+                                android:text="13 February 2025 | 14:00"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_11sdp" />
 
                             <TextView
-                                android:id="@+id/textView12"
+                                android:id="@+id/temperatureTextView"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_weight="3"
-                                android:gravity="center"
-                                android:text="@string/rain" />
-
-                            <TextView
-                                android:id="@+id/rainTextView"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_weight="2"
-                                android:gravity="center"
-                                android:text="73%"
+                                android:layout_height="wrap_content"
+                                android:text="22°C"
+                                android:textColor="@color/white"
                                 android:textSize="@dimen/_16sdp"
                                 android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/weatherTalukaTV"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Mumbai"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_12sdp" />
+
                         </LinearLayout>
 
-                        <LinearLayout
+                        <ImageView
+                            android:id="@+id/imageView4"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_margin="@dimen/_2sdp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/imageView8"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginTop="@dimen/_1sdp"
-                                android:layout_weight="3"
-                                app:srcCompat="@drawable/humidity_ic" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_weight="3"
-                                android:gravity="center"
-                                android:text="@string/humidity" />
-
-                            <TextView
-                                android:id="@+id/humidityTextView"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_weight="2"
-                                android:gravity="center"
-                                android:text="61%"
-                                android:textSize="@dimen/_16sdp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_margin="@dimen/_2sdp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/imageView9"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginTop="@dimen/_1sdp"
-                                android:layout_weight="3"
-                                app:srcCompat="@drawable/wind_ic" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_weight="3"
-                                android:gravity="center"
-                                android:text="@string/wind" />
-
-                            <TextView
-                                android:id="@+id/windTextView"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_weight="2"
-                                android:gravity="center"
-                                android:text="7 km/h"
-                                android:textSize="@dimen/_16sdp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="6"
+                            android:padding="@dimen/_10sdp"
+                            app:srcCompat="@drawable/weather_ic" />
                     </LinearLayout>
-                </androidx.cardview.widget.CardView>
 
-            </LinearLayout>
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginHorizontal="@dimen/_20sdp"
+                        android:layout_marginBottom="@dimen/_10sdp"
+                        android:layout_weight="5"
+                        app:cardCornerRadius="@dimen/_15sdp">
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:layout_marginHorizontal="5dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tabIndicatorColor="@color/black"
-                app:tabSelectedTextColor="@color/black"
-                app:tabTextColor="@color/black" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/viewPager"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_90sdp"
-                android:layout_marginHorizontal="5dp"
-                android:padding="5dp"
-                android:layout_marginTop="@dimen/_2sdp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tabLayout" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="@dimen/_2sdp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/linearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginHorizontal="5dp"
-                android:layout_marginVertical="@dimen/_6sdp"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                                <ImageView
+                                    android:id="@+id/imageView5"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginTop="@dimen/_1sdp"
+                                    android:layout_weight="3"
+                                    app:srcCompat="@drawable/rain_ic" />
 
-                <TextView
-                    android:id="@+id/previousSevenDayTV"
+                                <TextView
+                                    android:id="@+id/textView12"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="3"
+                                    android:gravity="center"
+                                    android:text="@string/rain" />
+
+                                <TextView
+                                    android:id="@+id/rainTextView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="2"
+                                    android:gravity="center"
+                                    android:text="73%"
+                                    android:textSize="@dimen/_16sdp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="@dimen/_2sdp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/imageView8"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginTop="@dimen/_1sdp"
+                                    android:layout_weight="3"
+                                    app:srcCompat="@drawable/humidity_ic" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="3"
+                                    android:gravity="center"
+                                    android:text="@string/humidity" />
+
+                                <TextView
+                                    android:id="@+id/humidityTextView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="2"
+                                    android:gravity="center"
+                                    android:text="61%"
+                                    android:textSize="@dimen/_16sdp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="@dimen/_2sdp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/imageView9"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginTop="@dimen/_1sdp"
+                                    android:layout_weight="3"
+                                    app:srcCompat="@drawable/wind_ic" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="3"
+                                    android:gravity="center"
+                                    android:text="@string/wind" />
+
+                                <TextView
+                                    android:id="@+id/windTextView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="2"
+                                    android:gravity="center"
+                                    android:text="7 km/h"
+                                    android:textSize="@dimen/_16sdp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginVertical="5dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/shape_right"
-                    android:elevation="5dp"
-                    android:gravity="center"
-                    android:text="@string/previous_seven_days"
-                    android:textStyle="bold" />
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginTop="5dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tabIndicatorColor="@color/black"
+                    app:tabSelectedTextColor="@color/black"
+                    app:tabTextColor="@color/black" />
 
-                <TextView
-                    android:id="@+id/nextSevenDayTV"
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_90sdp"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:padding="5dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tabLayout" />
+
+                <LinearLayout
+                    android:id="@+id/linearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginVertical="@dimen/_6sdp"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/previousSevenDayTV"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_right"
+                        android:elevation="5dp"
+                        android:gravity="center"
+                        android:text="@string/previous_seven_days"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/nextSevenDayTV"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_left"
+                        android:elevation="5dp"
+                        android:gravity="center"
+                        android:text="@string/next_seven_days"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginVertical="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/shape_left"
-                    android:elevation="5dp"
-                    android:gravity="center"
-                    android:text="@string/next_seven_days"
-                    android:textColor="@color/white"
+                    android:layout_marginHorizontal="5dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="@string/advisory_agro_met"
+                    android:textColor="@color/status_green"
+                    android:textSize="@dimen/_12sdp"
                     android:textStyle="bold" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.8dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="5dp"
+                    android:background="@color/status_green" />
+
+                <TextView
+                    android:id="@+id/tvAgroMetAdvisory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:justificationMode="inter_word"
+                    android:paddingHorizontal="10dp"
+                    android:text="@string/agromet_details"
+                    android:textSize="@dimen/_10sdp" />
 
             </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_marginHorizontal="5dp"
-                android:layout_height="match_parent" />
+    <ImageView
+        android:id="@+id/chatbotIcon"
+        android:layout_width="@dimen/_58sdp"
+        android:layout_height="@dimen/_58sdp"
+        android:layout_margin="@dimen/_10sdp"
+        android:elevation="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_chatbot" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/status_green"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:textSize="@dimen/_12sdp"
-                android:textStyle="bold"
-                android:text="@string/advisory_agro_met" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.8dp"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginVertical="5dp"
-                android:background="@color/status_green"/>
-
-            <TextView
-                android:id="@+id/tvAgroMetAdvisory"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="10dp"
-                android:textSize="@dimen/_10sdp"
-                android:justificationMode="inter_word"
-                android:text="@string/agromet_details" />
-
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

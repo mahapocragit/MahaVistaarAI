@@ -13,6 +13,7 @@ import android.widget.RadioButton
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -33,6 +34,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityFertilizerCalculatorActivityBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.FertilizersRecyclerAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -249,6 +251,26 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             }
         })
         binding.sowingInfoLayout.cropNameTextView.text = cropName
+        val isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
+        binding.chatbotIcon.setOnClickListener {
+            if (!isGuest) {
+                startActivity(Intent(this, ChatbotActivity::class.java))
+            } else {
+                AlertDialog.Builder(this)
+                    .setMessage(R.string.bot_chat_login_redirect_mesage)
+                    .setPositiveButton(R.string.yes) { dialog, _ ->
+                        // Handle login action here
+                        startActivity(Intent(this, LoginScreen::class.java).apply {
+                            putExtra("from", "dashboard")
+                        })
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton(R.string.no) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+            }
+        }
     }
 
     private fun settingUpTheViewsAsPerLanguage() {

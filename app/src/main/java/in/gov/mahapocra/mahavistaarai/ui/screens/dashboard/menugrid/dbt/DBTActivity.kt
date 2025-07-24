@@ -4,15 +4,19 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDbtactivityBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.mahadbt.MahaDbtSchemesActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.pocra.PocraDbtSchemes
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 
 class DBTActivity : AppCompatActivity() {
 
@@ -46,6 +50,26 @@ class DBTActivity : AppCompatActivity() {
             startActivity(Intent(this, MahaDbtSchemesActivity::class.java).apply {
                 putExtra("dbtFromDashboard", "mahaDBTCardView")
             })
+        }
+        val isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
+        binding.chatbotIcon.setOnClickListener {
+            if (!isGuest) {
+                startActivity(Intent(this, ChatbotActivity::class.java))
+            } else {
+                AlertDialog.Builder(this)
+                    .setMessage(R.string.bot_chat_login_redirect_mesage)
+                    .setPositiveButton(R.string.yes) { dialog, _ ->
+                        // Handle login action here
+                        startActivity(Intent(this, LoginScreen::class.java).apply {
+                            putExtra("from", "dashboard")
+                        })
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton(R.string.no) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+            }
         }
     }
 

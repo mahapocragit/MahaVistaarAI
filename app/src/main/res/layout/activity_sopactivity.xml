@@ -20,7 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:layout_marginBottom="1dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -55,13 +54,23 @@
     <TextView
         android:id="@+id/sopTextView"
         android:layout_width="match_parent"
-        android:layout_marginHorizontal="@dimen/_20sdp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:gravity="center"
         android:text="@string/sop_not_available"
         android:visibility="gone"
-        android:gravity="center"
         app:layout_constraintEnd_toEndOf="@+id/noDataFoundImageView"
         app:layout_constraintStart_toStartOf="@+id/noDataFoundImageView"
         app:layout_constraintTop_toBottomOf="@+id/noDataFoundImageView" />
+
+    <ImageView
+        android:id="@+id/chatbotIcon"
+        android:layout_width="@dimen/_58sdp"
+        android:layout_height="@dimen/_58sdp"
+        android:layout_margin="@dimen/_10sdp"
+        android:elevation="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_chatbot" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
