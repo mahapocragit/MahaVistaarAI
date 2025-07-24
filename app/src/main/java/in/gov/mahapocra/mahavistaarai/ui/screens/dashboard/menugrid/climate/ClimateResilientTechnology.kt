@@ -94,7 +94,7 @@ class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClick
     }
 
     private fun init() {
-        climateResilientGroup = findViewById(R.id.climateResilint)
+        climateResilientGroup = findViewById(R.id.climateResilientRecyclerView)
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
         imgBackArrow = findViewById(R.id.imgBackArrow)
     }
@@ -154,6 +154,7 @@ class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClick
     }
 
     override fun onBackPressed() {
+        super.onBackPressed()
         val intent = Intent(this, DashboardScreen::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

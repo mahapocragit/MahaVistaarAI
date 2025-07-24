@@ -4,19 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.ClimateResilintTechnology">
+    tools:context=".ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:id="@+id/linearLayout16"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <include
             android:id="@+id/relativeLayoutTopBar"
             layout="@layout/layout_toolbar" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/climateResilint"
+            android:id="@+id/climateResilientRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbarAlwaysDrawHorizontalTrack="true"
