@@ -79,6 +79,7 @@ class ClimateDetailsGrid : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        super.onBackPressed()
         climateModelArrayList.clear()
         val intent = Intent(this, ClimateResilientTechnology::class.java)
         startActivity(intent)

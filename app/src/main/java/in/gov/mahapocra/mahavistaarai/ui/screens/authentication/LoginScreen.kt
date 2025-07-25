@@ -47,7 +47,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
-import kotlin.getValue
 
 class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 

@@ -87,6 +87,7 @@ class SOPWebViewActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        super.onBackPressed()
         if (climateWebView.canGoBack()) {
             climateWebView.goBack()
         } else {
