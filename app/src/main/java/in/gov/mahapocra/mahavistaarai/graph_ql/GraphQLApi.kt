@@ -14,11 +14,9 @@ interface GraphQLApi {
         @Body request: GraphQLRequest
     ): Call<JsonObject>
 
-    @Headers(
-        "Content-Type: application/json",
-        "Authorization: Bearer", // You can append token if available
-        "Cookie: ADRUM_BT=R:0|i:471885|g:e07108b5-490b-44d8-b5a9-abe1742ec2e721612255|e:1777|n:moafw-pov_64ad3129-73a7-4dd2-a21f-a0a2b120ed62"
-    )
     @POST("/")
-    fun getTestForPortal(@Body request: GQLRequest): Call<JsonObject>
+    fun getTestForPortal(
+        @Header("Authorization") token: String,
+        @Body request: GQLRequest
+    ): Call<JsonObject>
 }

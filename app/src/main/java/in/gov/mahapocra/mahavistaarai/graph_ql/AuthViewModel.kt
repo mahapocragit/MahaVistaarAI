@@ -12,6 +12,8 @@ class AuthViewModel : ViewModel() {
     private val repository = AuthRepository()
     private val _graphQLResponse = MutableLiveData<JsonObject?>()
     val graphQLResponse: LiveData<JsonObject?> = _graphQLResponse
+    private val _soilHealthResponse = MutableLiveData<JsonObject?>()
+    val soilHealthResponse: LiveData<JsonObject?> = _soilHealthResponse
 
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
@@ -20,11 +22,22 @@ class AuthViewModel : ViewModel() {
         val token = AppConstants.JWT_TOKEN
         val refreshToken = AppConstants.REFRESH_TOKEN
         repository.getAccessToken("Bearer $token", refreshToken) { graphQlResponse, errorMsg ->
-            if (graphQlResponse!=null){
+            if (graphQlResponse != null) {
                 _graphQLResponse.value = graphQlResponse
             } else {
                 _error.postValue(errorMsg)
             }
         }
     }
+
+    fun soilHealth(mobile: String, bearerToken: String) {
+        repository.fetchResponse(mobile, bearerToken) { soilHealthJsonResponse ->
+            if (soilHealthJsonResponse != null) {
+                _soilHealthResponse.value = soilHealthJsonResponse
+            }else{
+                _error.postValue("Error")
+            }
+        }
+    }
+
 }

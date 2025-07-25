@@ -49,7 +49,7 @@ class AuthRepository {
         })
     }
 
-    fun fetchResponse(callback: (JsonObject?) -> Unit) {
+    fun fetchResponse(phoneNumber:String, bearerToken: String, callback: (JsonObject?) -> Unit) {
         val query = """
     query GetTestForPortal(${'$'}state: String, ${'$'}district: String, ${'$'}village: String,
     ${'$'}phone: String, ${'$'}farmername: String, ${'$'}locale: String) {
@@ -78,10 +78,10 @@ class AuthRepository {
         }
     }
 """.trimIndent()
-        val variables = Variables(phone = "+919356738043", locale = "hi")
+        val variables = Variables(phone = phoneNumber, locale = "hi")
         val request = GQLRequest(query, variables)
 
-        api.getTestForPortal(request)
+        api.getTestForPortal(bearerToken, request)
             .enqueue(object : Callback<JsonObject> {
                 override fun onResponse(
                     call: Call<JsonObject>,

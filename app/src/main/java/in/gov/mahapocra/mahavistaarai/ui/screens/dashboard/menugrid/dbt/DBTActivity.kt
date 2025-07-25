@@ -28,7 +28,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 class DBTActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDbtactivityBinding
-    private lateinit var viewModel: AuthViewModel
     private lateinit var languageToLoad: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +38,6 @@ class DBTActivity : AppCompatActivity() {
         }
         switchLanguage(this, languageToLoad)
         binding = ActivityDbtactivityBinding.inflate(layoutInflater)
-        viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         setContentView(binding.root)
 
         binding.toolbar.textViewHeaderTitle.text = getString(R.string.dbtschema)
@@ -59,14 +57,6 @@ class DBTActivity : AppCompatActivity() {
                 putExtra("dbtFromDashboard", "mahaDBTCardView")
             })
         }
-
-        viewModel.graphQLResponse.observe(this) { graphQlResponse ->
-            Log.d("TAGGER", "onCreate: $graphQlResponse")
-        }
-        viewModel.error.observe(this) {
-            it?.let { msg -> Log.e("GraphQL", msg) }
-        }
-        viewModel.fetchAccessToken()
     }
 
     override fun attachBaseContext(newBase: Context) {
