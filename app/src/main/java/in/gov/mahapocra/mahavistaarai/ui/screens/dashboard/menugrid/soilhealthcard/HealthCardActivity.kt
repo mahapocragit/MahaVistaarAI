@@ -1,6 +1,7 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -124,11 +125,15 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
                 return@observe
             }
             val jSONObject = JSONObject(graphQlResponse.toString())
-            Log.d("TAGGER", "onCreate jSONObject: $jSONObject")
+            startActivity(
+                Intent(this, PdfWebViewActivity::class.java).putExtra(
+                    "soilHealthCardData", jSONObject.toString()
+                )
+            )
         }
         binding.submitButton.setOnClickListener {
             ProgressHelper.showProgressDialog(this)
-            viewModel.soilHealth("+919356738043", "Bearer $bearerTokenString")
+            viewModel.soilHealth("+919356738043", bearerTokenString)
 //            val surveyNo = binding.edtSurveyNo.text.toString()
 //            if (villageID != null) {
 //                if (surveyNo.isNotEmpty()) {
@@ -308,7 +313,8 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
                     true
                 )
             CoroutineScope(Dispatchers.IO).launch {
-                val retrofit: Retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.PANI_FOUNDATION.baseUrl)
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.PANI_FOUNDATION.baseUrl)
                 val apiRequest = retrofit.create(APIRequest::class.java)
                 val responseCall: Call<JsonObject> = apiRequest.getDistrictList(requestBody)
                 api.postRequest(responseCall, this@HealthCardActivity, 1)
@@ -400,7 +406,9 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
     }
 
     fun fetchHealthCardDetails() {
+        ProgressHelper.showProgressDialog(this)
         viewModel.graphQLResponse.observe(this) { graphQlResponse ->
+            ProgressHelper.disableProgressDialog()
             if (graphQlResponse == null) {
                 return@observe
             }
@@ -413,6 +421,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
             Log.d("TAGGER", "onCreate: $token \nand $refreshToken")
         }
         viewModel.error.observe(this) {
+            ProgressHelper.disableProgressDialog()
             it?.let { msg -> Log.e("GraphQL", msg) }
         }
         viewModel.fetchAccessToken()

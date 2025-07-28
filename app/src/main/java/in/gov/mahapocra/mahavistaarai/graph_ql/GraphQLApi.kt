@@ -15,7 +15,7 @@ interface GraphQLApi {
     ): Call<JsonObject>
 
     @POST("/")
-    fun getTestForPortal(
+    fun getTestForAuthUser(
         @Header("Authorization") token: String,
         @Body request: GQLRequest
     ): Call<JsonObject>

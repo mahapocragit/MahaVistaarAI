@@ -49,31 +49,37 @@ class AuthRepository {
         })
     }
 
-    fun fetchResponse(phoneNumber:String, bearerToken: String, callback: (JsonObject?) -> Unit) {
+    fun fetchResponse(phoneNumber: String, bearerToken: String, callback: (JsonObject?) -> Unit) {
         val query = """
-    query GetTestForPortal(${'$'}state: String, ${'$'}district: String, ${'$'}village: String,
-    ${'$'}phone: String, ${'$'}farmername: String, ${'$'}locale: String) {
-        getTestForPortal(state: ${'$'}state,
-        district: ${'$'}district, village: ${'$'}village, phone: ${'$'}phone, farmername: ${'$'}farmername) {
+    query GetTestForAuthUser(${'$'}computedId:String, ${'$'}phone: PhoneNumber, ${'$'}state: String,${'$'}district: String, ${'$'}name: String, ${'$'}farmer:String, ${'$'}from: Datetime, ${'$'}to: Datetime,${'$'}cycle: String, ${'$'}locale: String, ${'$'}scheme:String, ${'$'}limit: Int, ${'$'}skip: Int) {
+        getTestForAuthUser(computedID:${'$'}computedId, phone: ${'$'}phone, state: ${'$'}state, district: ${'$'}district, name: ${'$'}name, farmer:${'$'}farmer, from: ${'$'}from, to: ${'$'}to, cycle: ${'$'}cycle, scheme: ${'$'}scheme, limit: ${'$'}limit, skip: ${'$'}skip) {
             id
             computedID
             cycle
             scheme
-            status
-            village
-            createdAt
-            sampleDate
-            crop
-            results
             plot {
                 address
+                area
+                surveyNo
             }
             farmer {
-                state
-                district
+                address
                 name
                 phone
             }
+            crop
+            location
+            testparameters
+            rdfValues
+            status
+            testCompletedAt
+            sampleDate
+            reportData
+            district
+            block
+            village
+            results
+            fertilizer
             html(locale: ${'$'}locale)
         }
     }
@@ -81,15 +87,11 @@ class AuthRepository {
         val variables = Variables(phone = phoneNumber, locale = "hi")
         val request = GQLRequest(query, variables)
 
-        api.getTestForPortal(bearerToken, request)
+        api.getTestForAuthUser("Bearer $bearerToken", request)
             .enqueue(object : Callback<JsonObject> {
-                override fun onResponse(
-                    call: Call<JsonObject>,
-                    response: Response<JsonObject>
-                ) {
+                override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
                     if (response.isSuccessful) {
-                        val result = response.body()
-                        callback(result)
+                        callback(response.body())
                     } else {
                         Log.e("API", "Error: ${response.errorBody()?.string()}")
                     }

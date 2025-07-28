@@ -2,6 +2,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealt
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -43,19 +44,41 @@ class PdfWebViewActivity : AppCompatActivity() {
         }
 
         val url = intent.getStringExtra("pdf_url")
-        binding.floatingActionButton.setOnClickListener {
-            url?.let { it1 -> LocalCustom.downloadPdf(this, it1) }
+//        binding.floatingActionButton.setOnClickListener {
+//            url?.let { it1 -> LocalCustom.downloadPdf(this, it1) }
+//        }
+//        val shcNumber = intent.getStringExtra("shcNumber")
+//        shcNumber?.let {
+//            gisViewModel.fetchSoilHealthCardDetailsFromSHCNumber(
+//                this,
+//                it,
+//                languageToLoad
+//            )
+//        }
+//        ProgressHelper.showProgressDialog(this)
+        val dataJsonString = intent.getStringExtra("soilHealthCardData")
+        if (dataJsonString != null) {
+            val dataJsonObject = JSONObject(dataJsonString)
+            val dataJson = dataJsonObject.optJSONObject("data")
+            val getTestForPortal = dataJson.optJSONArray("getTestForAuthUser")
+            val json = getTestForPortal[0] as JSONObject
+            val computedID = json.optString("computedID")
+            val farmerDataJson = json.optJSONObject("farmer")
+            val name = farmerDataJson.optString("name")
+            val blockDataJson = json.optJSONObject("block")
+            val blockName = blockDataJson.optString("name")
+            val districtDataJson = json.optJSONObject("district")
+            val districtName = districtDataJson.optString("name")
+            val villageDataJson = json.optJSONObject("village")
+            val villageName = villageDataJson.optString("name")
+            binding.soilHealthCardLayout.farmerName.text = name
+            binding.soilHealthCardLayout.shcNo.text = computedID
+            binding.soilHealthCardLayout.villageTextView.text = villageName
+            binding.soilHealthCardLayout.districtTextView.text = districtName
+            binding.soilHealthCardLayout.talukaTextView.text = blockName
+            Log.d("TAGGER", "onCreate dataJsonString: $dataJsonObject")
         }
-        val shcNumber = intent.getStringExtra("shcNumber")
-        shcNumber?.let {
-            gisViewModel.fetchSoilHealthCardDetailsFromSHCNumber(
-                this,
-                it,
-                languageToLoad
-            )
-        }
-        ProgressHelper.showProgressDialog(this)
-        observeResponse()
+//        observeResponse()
     }
 
     private fun observeResponse() {
