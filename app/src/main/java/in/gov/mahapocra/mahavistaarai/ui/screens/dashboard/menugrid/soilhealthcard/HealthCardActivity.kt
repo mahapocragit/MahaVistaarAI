@@ -97,12 +97,12 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
 //        binding.textViewVillage.text =
 //            if (villageName == "uVILLAGE") getString(R.string.farmer_select_village) else villageName
 //
-//        binding.relativeLayoutToolbar.textViewHeaderTitle.text =
-//            getString(R.string.soil_health_card)
-//        binding.relativeLayoutToolbar.imgBackArrow.visibility = View.VISIBLE
-//        binding.relativeLayoutToolbar.imgBackArrow.setOnClickListener {
-//            onBackPressedDispatcher.onBackPressed()
-//        }
+        binding.relativeLayoutToolbar.textViewHeaderTitle.text =
+            getString(R.string.soil_health_card)
+        binding.relativeLayoutToolbar.imgBackArrow.visibility = View.VISIBLE
+        binding.relativeLayoutToolbar.imgBackArrow.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
 //
 //        getDistrictData()
 //
