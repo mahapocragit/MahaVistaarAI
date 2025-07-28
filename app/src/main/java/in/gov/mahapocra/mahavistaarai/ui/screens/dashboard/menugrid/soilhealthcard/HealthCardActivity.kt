@@ -22,10 +22,10 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityHealthCardBinding
-import `in`.gov.mahapocra.mahavistaarai.graph_ql.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
@@ -41,7 +41,6 @@ import retrofit2.Retrofit
 class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventListener {
 
     private lateinit var languageToLoad: String
-    private var bearerTokenString: String = ""
     private lateinit var binding: ActivityHealthCardBinding
     private lateinit var districtName: String
     private var districtID: Int = 0
@@ -53,8 +52,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
     private var districtJSONArray: JSONArray? = null
     private var talukaJSONArray: JSONArray? = null
     private var villageJSONArray: JSONArray? = null
-    private val farmerViewModel: FarmerViewModel by viewModels()
-    private val viewModel: AuthViewModel by viewModels()
+    private lateinit var farmerViewModel: FarmerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +63,8 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
         switchLanguage(this, languageToLoad)
         binding = ActivityHealthCardBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root)
+
         //Loading URL in webView
         if (supportActionBar != null) {
             supportActionBar!!.elevation = 0f
@@ -304,7 +304,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
                     true
                 )
             CoroutineScope(Dispatchers.IO).launch {
-                val retrofit: Retrofit = api.getRetrofitInstance()
+                val retrofit: Retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.PANI_FOUNDATION.baseUrl)
                 val apiRequest = retrofit.create(APIRequest::class.java)
                 val responseCall: Call<JsonObject> = apiRequest.getDistrictList(requestBody)
                 api.postRequest(responseCall, this@HealthCardActivity, 1)

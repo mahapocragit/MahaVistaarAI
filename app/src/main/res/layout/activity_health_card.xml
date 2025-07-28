@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/status_colored_background"
     tools:context=".ui.screens.dashboard.menugrid.soilhealthcard.HealthCardActivity">
 
     <LinearLayout
@@ -166,16 +167,16 @@
             android:layout_width="@dimen/_80sdp"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:elevation="@dimen/_10sdp"
             android:layout_marginVertical="@dimen/_8sdp"
             android:layout_marginEnd="@dimen/_20sdp"
-            android:padding="@dimen/_10sdp"
             android:background="@drawable/green_bg_gradient"
+            android:elevation="@dimen/_10sdp"
+            android:gravity="center"
+            android:padding="@dimen/_10sdp"
             android:text="@string/reg_submit"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -285,4 +286,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
         app:srcCompat="@drawable/ic_no_data_found" />
+
+    <ImageView
+        android:id="@+id/chatbotIcon"
+        android:layout_width="@dimen/_58sdp"
+        android:layout_height="@dimen/_58sdp"
+        android:layout_margin="@dimen/_10sdp"
+        android:elevation="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_chatbot" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,10 +11,11 @@ import android.util.Log
 import android.view.View
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
@@ -32,11 +33,12 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityFertilizerCalculatorActivityBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.FertilizersRecyclerAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
-import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.logThis
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.DeleteApi
@@ -55,8 +57,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     OnMultiRecyclerItemClickListener, ApiCallbackCode, DatePickerRequestListener {
 
     private lateinit var binding: ActivityFertilizerCalculatorActivityBinding
-    private lateinit var viewModel: FarmerViewModel
-
+    private val farmerViewModel: FarmerViewModel by viewModels()
     private var soilTestOption: Int = 1
     private lateinit var languageToLoad: String
 
@@ -67,6 +68,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     private var sowingDate: String? = null
     private var cropName: String? = null
     private lateinit var token: String
+    private var route: String = ""
     private var acrArea: String = ""
     private var gunthaArea: String = ""
     private var edtFYMValue: String = ""
@@ -90,9 +92,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         switchLanguage(this, languageToLoad)
         binding = ActivityFertilizerCalculatorActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
-
-
+        uiResponsive(binding.root)
 
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
@@ -104,6 +104,15 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         wotrCropId = intent.getIntExtra("wotr_crop_id", 0).toString()
         mUrl = intent.getStringExtra("mUrl")
         sowingDate = intent.getStringExtra("sowingDate")
+        route = intent.getStringExtra("ROUTE").toString()
+
+        if (cropId == 0) {
+            cropId = AppPreferenceManager(this).getInt("CROP_ID_SAVED")
+            cropName = AppPreferenceManager(this).getString("CROP_NAME_SAVED")
+            mUrl = AppPreferenceManager(this).getString("CROP_IMAGE_SAVED")
+            sowingDate = AppPreferenceManager(this).getString("CROP_SOWING_DATE_SAVED").toString()
+            wotrCropId = AppPreferenceManager(this).getString("CROP_WOTR_ID_SAVED")
+        }
 
         binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {
             val sharing = Intent(this, AddCropActivity::class.java)
@@ -241,6 +250,26 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             }
         })
         binding.sowingInfoLayout.cropNameTextView.text = cropName
+        val isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
+        binding.chatbotIcon.setOnClickListener {
+            if (!isGuest) {
+                startActivity(Intent(this, ChatbotActivity::class.java))
+            } else {
+                AlertDialog.Builder(this)
+                    .setMessage(R.string.bot_chat_login_redirect_mesage)
+                    .setPositiveButton(R.string.yes) { dialog, _ ->
+                        // Handle login action here
+                        startActivity(Intent(this, LoginScreen::class.java).apply {
+                            putExtra("from", "dashboard")
+                        })
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton(R.string.no) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+            }
+        }
     }
 
     private fun settingUpTheViewsAsPerLanguage() {
@@ -419,12 +448,9 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     villageID.toString(), edtFYMValue, "0",
                     totalAcrArea.toString(), plotUnitCode.toString(), token
                 )
-
-                logThis(responseCall.request().toString())
                 api.postRequest(responseCall, this@FertilizerCalculatorActivity, 1)
             }
         } catch (e: JSONException) {
-            logThis(e.toString())
             e.printStackTrace()
         }
     }
@@ -747,8 +773,8 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             val formattedDay = String.format("%02d", day)
             val formattedMonth = String.format("%02d", month)
             sowingDate = "$formattedDay-$formattedMonth-$year"
-            cropId?.let { viewModel.saveFarmerSelectedCrop(this, sowingDate!!, it) }
-            viewModel.saveFarmerSelectedCrop.observe(this) {
+            cropId?.let { farmerViewModel.saveFarmerSelectedCrop(this, sowingDate!!, it) }
+            farmerViewModel.saveFarmerSelectedCrop.observe(this) {
                 if (it != null) {
                     if (it.get("status").toString() == "200") {
                         binding.sowingInfoLayout.sowingDateTextView.text = sowingDate

@@ -3,7 +3,6 @@ package `in`.gov.mahapocra.mahavistaarai.util
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
-import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
@@ -11,6 +10,7 @@ import android.os.Build
 import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.webkit.URLUtil
 import android.widget.ArrayAdapter
 import android.widget.EditText
@@ -20,9 +20,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import org.json.JSONArray
+import java.security.MessageDigest
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
@@ -88,14 +92,13 @@ object LocalCustom {
     }
 
     fun getVersionName(context: Context): String {
-        var packageInfo: PackageInfo? = null
-        try {
-            packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+        return try {
+            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+            packageInfo.versionName ?: "unknown"
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
+            "unknown"
         }
-        val versionName = packageInfo!!.versionName
-        return versionName
     }
 
     fun getSowingDateWithYear(sowingDateUnfiltered: String): String {
@@ -165,11 +168,6 @@ object LocalCustom {
         }
 
         return formattedDate
-    }
-
-
-    fun logThis(message: String) {
-        Log.d("TAGGER", "logThis: $message")
     }
 
     fun isStrongPassword(password: String): Boolean {
@@ -295,5 +293,52 @@ object LocalCustom {
 
         dialog.show()
     }
+
+    fun toSHA512(input: String): String {
+        val bytes = input.toByteArray()
+        val md = MessageDigest.getInstance("SHA-512")
+        val digest = md.digest(bytes)
+        return digest.joinToString("") { "%02x".format(it) }
+    }
+
+    fun convertDateFormat(dateStr: String): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+        val date = inputFormat.parse(dateStr)
+        return outputFormat.format(date!!)
+    }
+
+    fun getLatestAdvisoriesAsJsonArray(advisoryArray: JSONArray): JSONArray {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+
+        // Step 1: Find the latest date
+        val latestDate = (0 until advisoryArray.length()).maxOfOrNull {
+            dateFormat.parse(
+                advisoryArray.getJSONObject(it).getString("cropsap_advisory_date")
+            )
+        }
+
+        // Step 2: Filter advisories with the latest date and collect into a new JSONArray
+        val filteredArray = JSONArray()
+        for (i in 0 until advisoryArray.length()) {
+            val obj = advisoryArray.getJSONObject(i)
+            val objDate = dateFormat.parse(obj.getString("cropsap_advisory_date"))
+            if (objDate == latestDate) {
+                filteredArray.put(obj)
+            }
+        }
+
+        return filteredArray
+    }
+
+    fun uiResponsive(view: View) {
+        // Handle insets manually
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+    }
+
 
 }

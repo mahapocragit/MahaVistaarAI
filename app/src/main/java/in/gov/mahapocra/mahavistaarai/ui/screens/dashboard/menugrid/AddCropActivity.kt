@@ -11,35 +11,31 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import `in`.co.appinventor.services_api.listener.DatePickerRequestListener
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityAddCropBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropCategoriesAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
-import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.logThis
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import org.json.JSONObject
 import java.util.Calendar
-import java.util.Date
 
 
 class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
     DatePickerRequestListener {
-
-    private var mainCropCategoryRecycle: RecyclerView? = null
     private lateinit var languageToLoad: String
     private lateinit var viewModel: FarmerViewModel
     private lateinit var textViewHeaderTitle: TextView
     private lateinit var imageMenuShow: ImageView
     private lateinit var imgBackArrow: ImageView
-    private var sowingDate: String = ""
     private lateinit var receivedJson: JSONObject
     private var cropId: Int = 0
-    private var date = Date()
+    private lateinit var binding: ActivityAddCropBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,23 +45,18 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
             languageToLoad = "en"
         }
         switchLanguage(this, languageToLoad)
-        setContentView(R.layout.activity_add_crop)
-
+        binding = ActivityAddCropBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        uiResponsive(binding.root)
 
         viewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
-        mainCropCategoryRecycle = findViewById(R.id.mainRecyclerView)
         imgBackArrow = findViewById(R.id.imgBackArrow)
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
         imageMenuShow = findViewById(R.id.imageMenushow)
         textViewHeaderTitle.setText(R.string.select_crop)
 
         fetchCropInfo()
-
-        if (languageToLoad != "mr") {
-            textViewHeaderTitle.text = "Select Crop"
-        } else {
-            textViewHeaderTitle.text = "पीक निवडा"
-        }
+        textViewHeaderTitle.text = getString(R.string.select_crop)
 
         imageMenuShow.setOnClickListener {
             val intent = Intent(this, DashboardScreen::class.java)
@@ -81,11 +72,12 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
     }
 
     private fun fetchCropInfo() {
-        viewModel.cropCategoryResponse.observe(this){
+        viewModel.cropCategoryResponse.observe(this) {
             ProgressHelper.disableProgressDialog()
             val jSONObject = JSONObject(it.toString())
             val jsonDataArray = jSONObject.getJSONArray("data")
-            var adapter = CropCategoriesAdapter(this, jsonDataArray, "TitleVideosDetailsAdpter", this)
+            var adapter =
+                CropCategoriesAdapter(this, jsonDataArray, "TitleVideosDetailsAdpter", this)
             val str = intent.getStringExtra("NO_NEED_TO_ADD_SOWING_DATE")
             if (str != null) {
                 adapter =
@@ -96,11 +88,11 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
                         this
                     )
             }
-            mainCropCategoryRecycle?.layoutManager = LinearLayoutManager(this)
-            mainCropCategoryRecycle?.hasFixedSize()
-            mainCropCategoryRecycle?.setAdapter(adapter)
+            binding.mainRecyclerView.layoutManager = LinearLayoutManager(this)
+            binding.mainRecyclerView.hasFixedSize()
+            binding.mainRecyclerView.setAdapter(adapter)
         }
-        viewModel.error.observe(this){
+        viewModel.error.observe(this) {
             ProgressHelper.disableProgressDialog()
         }
     }
@@ -108,7 +100,6 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
         if (i == 1) {
             receivedJson = obj as JSONObject
-            logThis(receivedJson.toString())
             val calendar = Calendar.getInstance()
             val year = calendar.get(Calendar.YEAR)
             val month = calendar.get(Calendar.MONTH)
@@ -126,14 +117,14 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
 
     override fun onDateSelected(i: Int, day: Int, month: Int, year: Int) {
         if (i == 1) {
-            sowingDate = "$day-${month + 1}-$year"
-            logThis(sowingDate)
+            val sowingDate = "$day-${month + 1}-$year"
             cropId = receivedJson.optInt("id")
             viewModel.saveFarmerSelectedCrop(this, sowingDate, cropId)
             viewModel.saveFarmerSelectedCrop.observe(this) {
                 if (it != null) {
                     if (it.get("status").toString() == "200") {
-                        Toast.makeText(this, R.string.selected_crop_saved, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, R.string.selected_crop_saved, Toast.LENGTH_SHORT)
+                            .show()
                         startActivity(Intent(this, DashboardScreen::class.java).apply {
                             putExtra("savedCropResponse", it.get("status").toString())
                         })

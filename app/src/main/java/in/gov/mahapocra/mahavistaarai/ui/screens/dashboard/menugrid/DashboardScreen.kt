@@ -6,19 +6,22 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewTreeObserver
 import android.view.Window
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
-import android.view.animation.CycleInterpolator
-import android.view.animation.TranslateAnimation
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.GridView
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -26,8 +29,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.messaging.FirebaseMessaging
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
@@ -38,11 +41,13 @@ import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.CropsCategName
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDashboardScreenBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropRecyclerSapAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DashboardAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DrawerMenuAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.Registration
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.etl.AgriStackAdvisoryActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.DBTActivity
@@ -53,12 +58,13 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.Abou
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.CreditsActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.ComingSoonActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.NotificationActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getLatestAdvisoriesAsJsonArray
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.ApUtil
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
@@ -93,9 +99,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     private var savedCropWoTRId: String? = null
     private var savedCropImageUrl: String? = null
     private lateinit var appPreferenceManager: AppPreferenceManager
-    private lateinit var farmerViewModel: FarmerViewModel
+    private val farmerViewModel: FarmerViewModel by viewModels()
     private var jsonArray: JSONArray? = null
     private var showToast = true
+    private var etlAdvisoryJsonArray: JSONArray = JSONArray()
     private var selectedCropList: ArrayList<CropsCategName>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,8 +118,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             layoutInflater
         )
         setContentView(binding.root)
-
-
         val showOverlay = AppPreferenceManager(this).getBoolean("show_overlay")
         if (showOverlay) {
             binding.drawerLayout1.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
@@ -140,7 +145,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         binding.appBarMain.dashboardScreen.progressBar.visibility = View.VISIBLE
         binding.appBarMain.dashboardScreen.temperatureTextView.visibility = View.GONE
         isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         fetchReceivingData()
         appPreferenceManager = AppPreferenceManager(this)
         init()
@@ -165,7 +169,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             }
         }
 
-        fetchFirebaseTokenFromServer()
         setConfiguration()
         this.window.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
@@ -241,7 +244,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         binding.appBarMain.imgNotification.setOnClickListener {
             val intent = Intent(
                 this@DashboardScreen,
-                ComingSoonActivity::class.java
+                NotificationActivity::class.java
             )
             startActivity(intent)
         }
@@ -298,7 +301,73 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 )
             )
         }
-        askForLocationAndMicrophonePermission()
+        askForPermissions()
+        val animation = AnimationUtils.loadAnimation(this, R.anim.blink)
+        binding.appBarMain.dashboardScreen.etlWarningLayout.animation = animation
+        binding.appBarMain.dashboardScreen.etlWarningLayout.setOnClickListener {
+            val inflater = LayoutInflater.from(this)
+            val dialogView = inflater.inflate(R.layout.etl_crossed_dialog, null)
+            val cropSapRecyclerView =
+                dialogView.findViewById<RecyclerView>(R.id.cropSapRecyclerView)
+            val redirectToETLAdvisoryTextView =
+                dialogView.findViewById<TextView>(R.id.redirectToETLAdvisoryTextView)
+            val cropRecyclerSapAdapter =
+                CropRecyclerSapAdapter(getLatestAdvisoriesAsJsonArray(etlAdvisoryJsonArray))
+            cropSapRecyclerView.apply {
+                hasFixedSize()
+                layoutManager = LinearLayoutManager(this@DashboardScreen)
+                Log.d("TAGGER", "onCreate: ${getLatestAdvisoriesAsJsonArray(etlAdvisoryJsonArray)}")
+                adapter = cropRecyclerSapAdapter
+            }
+
+            val dialog = AlertDialog.Builder(this)
+                .setView(dialogView)
+                .create()
+
+            val closeIcon = dialogView.findViewById<ImageView>(R.id.closeIcon)
+            redirectToETLAdvisoryTextView.setOnClickListener {
+                dialog.dismiss()
+                startActivity(Intent(this, AgriStackAdvisoryActivity::class.java))
+            }
+
+            cropSapRecyclerView.viewTreeObserver.addOnGlobalLayoutListener(object :
+                ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    cropSapRecyclerView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                    val itemCount = cropRecyclerSapAdapter.itemCount
+                    val visibleItems = minOf(itemCount, 3) // Show up to 3 items
+                    val itemView = cropSapRecyclerView.findViewHolderForAdapterPosition(0)?.itemView
+
+                    if (itemView != null) {
+                        val itemHeight = itemView.measuredHeight
+                        val maxHeight = itemHeight * visibleItems
+                        cropSapRecyclerView.layoutParams.height = maxHeight
+                        cropSapRecyclerView.requestLayout()
+                    }
+                }
+            })
+
+
+
+            dialog.show()
+            closeIcon.setOnClickListener {
+                dialog.dismiss()
+            }
+        }
+        farmerViewModel.getCropSapAdvisoryResponse.observe(this) {
+            if (it != null) {
+                val jsonObject = JSONObject(it.toString())
+                val jsonArray = jsonObject.optJSONArray("advisory")
+                if (jsonArray.length() != 0) {
+                    binding.appBarMain.dashboardScreen.etlWarningLayout.visibility = View.VISIBLE
+                    etlAdvisoryJsonArray = jsonArray
+                }
+            }
+        }
+        farmerViewModel.error.observe(this) {
+            Log.d("TAGGER", "onCreate: $it")
+        }
     }
 
     override fun onResume() {
@@ -312,7 +381,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
     }
 
-    private fun askForLocationAndMicrophonePermission() {
+    private fun askForPermissions() {
         val permissionsNeeded = mutableListOf<String>()
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
@@ -321,13 +390,19 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             permissionsNeeded.add(Manifest.permission.RECORD_AUDIO)
         }
 
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
         ) {
             permissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+
+        // Only check POST_NOTIFICATIONS for Android 13 and above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                permissionsNeeded.add(Manifest.permission.POST_NOTIFICATIONS)
+            }
         }
 
         if (permissionsNeeded.isNotEmpty()) {
@@ -338,6 +413,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             )
         }
     }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -365,14 +441,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
     }
 
-    fun shakeButton(button: View) {
-        val shake = TranslateAnimation(0f, 10f, 0f, 0f).apply {
-            duration = 100           // 0.1 second per shake
-            interpolator = CycleInterpolator(30f) // total cycles: 30 (about 3 sec)
-        }
-        button.startAnimation(shake)
-    }
-
     private fun fetchReceivingData() {
         // Observe selected crop response
         farmerViewModel.getFarmerSelectedCrop.observe(this) { response ->
@@ -397,6 +465,21 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                             savedCropImageUrl = selectedCrop.getString("image")
                             savedCropSowingDate = selectedCrop.getString("sowing_date")
                             savedCropWoTRId = selectedCrop.getString("wotr_crop_id")
+
+                            AppPreferenceManager(this).saveInt("CROP_ID_SAVED", savedCropId)
+                            AppPreferenceManager(this).saveString("CROP_NAME_SAVED", savedCropName)
+                            AppPreferenceManager(this).saveString(
+                                "CROP_IMAGE_SAVED",
+                                savedCropImageUrl
+                            )
+                            AppPreferenceManager(this).saveString(
+                                "CROP_SOWING_DATE_SAVED",
+                                savedCropSowingDate
+                            )
+                            AppPreferenceManager(this).saveString(
+                                "CROP_WOTR_ID_SAVED",
+                                savedCropWoTRId
+                            )
 
                             binding.appBarMain.dashboardScreen.apply {
                                 addChangeCropTV.setText(R.string.change_Crop)
@@ -562,7 +645,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     val villageId = data.optInt("VillageCode", 0)
                     val villageName = data.optString("VillageName", "")
                     val agristack_id = data.optString("farmer_id", "")
-
+                    farmerViewModel.getCropSapAdvisory(
+                        this,
+                        villageId
+                    ) //TODO: static village code 537820
                     districtCode = distId
                     villageCode = talukaId
 
@@ -745,28 +831,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             }
     }
 
-    private fun fetchFirebaseTokenFromServer() {
-        FirebaseMessaging.getInstance().token
-            .addOnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    Log.e("FCM", "Fetching FCM registration token failed", task.exception)
-                    return@addOnCompleteListener
-                }
-
-                val token = task.result
-                if (!token.isNullOrEmpty()) {
-                    appPreferenceManager.saveString("FCM_TOKEN", token)
-                } else {
-                    Log.w("FCM", "FCM token is null or empty")
-                }
-            }
-    }
-
-
     private fun init() {
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
         if (farmerId > 0) {
-            farmerViewModel.fetchUserInformation(this)
+            farmerViewModel.fetchUserInformation(this, farmerId)
         }
     }
 
@@ -925,6 +993,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null)
         AppUtility.getInstance().clearAppSharedPrefData(this, AppConstants.kSHARED_PREF)
         AppSettings.getInstance().setBooleanValue(this, AppConstants.userDataSaved, false)
+        farmerViewModel.updateFCMToken(this, "")
         val intent = Intent(this@DashboardScreen, SplashScreenActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)

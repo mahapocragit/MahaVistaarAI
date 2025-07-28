@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/status_colored_background"
+    tools:context=".ui.screens.notification.DetailedNotificationActivity">
+
+    <include
+        android:id="@+id/relativeLayoutTopBar"
+        layout="@layout/layout_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:id="@+id/notificationInfoLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/_40sdp"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="@dimen/_14sdp"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/shortDescriptionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/_12sdp"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/dateTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/longDescriptionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:text="मान्सूनच्या आगमनानंतर खरीप हंगामाची तयारी सुरू करणे अत्यंत आवश्यक असते. पावसाचे पहिल्या सरी आल्यावर शेतकरी बियाणे, खते आणि यंत्रसामग्रीची तयारी करू लागतात. योग्य वेळ आणि योग्य नियोजन केल्यास उत्पादनामध्ये चांगली वाढ करता येते. पेरणीसाठी जमिनीतील वाफसा स्थिती योग्य असणे महत्त्वाचे आहे, कारण वाफसा असल्याशिवाय बियाण्याची उगम प्रक्रिया सुरळीत होत नाही. त्यामुळे प्रत्येक शेतकऱ्याने आपल्या शेतातील मातीची स्थिती तपासून योग्य वेळी पेरणी करावी.
+
+यासोबतच, पेरणीपूर्वी जमिनीची नांगरणी आणि सडलेले शेणखत किंवा कंपोस्ट खत मिसळणे फायदेशीर ठरते. पिकाच्या गरजेनुसार जमिनीत पोषणद्रव्यांची कमतरता असेल तर मृदा परीक्षण करून आवश्यक ती खते वापरणे हितकारक ठरते. योग्य बियाण्यांची निवड, त्याचे प्रमाण व पेरणीची पद्धत ठरवणे देखील या टप्प्यावर महत्त्वाचे असते. मान्सूनच्या सुरुवातीच्या काळात योग्य नियोजन आणि अंमलबजावणी केली तर खरीप हंगामात अधिक उत्पादन आणि चांगला नफा मिळवता येतो." />
+
+        <TextView
+            android:id="@+id/redirectTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/darkblue"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:gravity="end"
+            android:text="एसओपी पाहण्यासाठी, येथे क्लिक करा." />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

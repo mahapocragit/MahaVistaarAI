@@ -14,6 +14,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityResilientWebUrlBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 
 class SOPWebViewActivity : AppCompatActivity() {
 
@@ -31,6 +32,7 @@ class SOPWebViewActivity : AppCompatActivity() {
         // Inflate layout
         binding = ActivityResilientWebUrlBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root)
 
         // Toolbar setup
         binding.layoutToolbar.textViewHeaderTitle.text = getString(R.string.sop_title)
@@ -85,6 +87,7 @@ class SOPWebViewActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        super.onBackPressed()
         if (climateWebView.canGoBack()) {
             climateWebView.goBack()
         } else {
@@ -93,8 +96,12 @@ class SOPWebViewActivity : AppCompatActivity() {
     }
 
     override fun attachBaseContext(newBase: Context) {
-        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) "en" else "mr"
-        val updatedContext = configureLocale(newBase, languageToLoad)
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
         super.attachBaseContext(updatedContext)
     }
 }

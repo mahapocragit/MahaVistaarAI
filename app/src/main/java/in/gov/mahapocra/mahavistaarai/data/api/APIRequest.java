@@ -5,74 +5,90 @@ import com.google.gson.JsonObject;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface APIRequest {
 
-    @POST(APIServices.kOTPRequest)
-    Call<JsonObject> getOTPRequest(@Body RequestBody params);
+    @POST(ApiConstants.kOTPRequest)
+    Call<JsonObject> getOTPRequest(
+            @Header("MobileNo") String mobileNo,
+            @Body RequestBody params);
 
-    @POST(APIServices.kOTPRegisterRequest)
-    Call<JsonObject> getOTPRegisterRequest(@Body RequestBody params);
+    @POST(ApiConstants.kOTPRegisterRequest)
+    Call<JsonObject> getOTPRegisterRequest(
+            @Header("MobileNo") String mobileNo,
+            @Body RequestBody params);
 
-    @POST(APIServices.kRegistrationRequest)
-    Call<JsonObject> getRegistrationRequest(@Body RequestBody params);
+    @POST(ApiConstants.kRegistrationRequest)
+    Call<JsonObject> getRegistrationRequest(
+            @Header("MobileNo") String mobileNo,
+            @Header("NewMobileNo") String updatedMobileNo,
+            @Body RequestBody params);
 
-    @POST(APIServices.kUserLogin)
-    Call<JsonObject> getUserLogin(@Body RequestBody params);
+    @POST(ApiConstants.kUserLogin)
+    Call<JsonObject> getUserLoginOTP(
+            @Header("MobileNo") String mobileNo,
+            @Header("otp") String enteredOTP,
+            @Body RequestBody params);
 
-    @POST(APIServices.kRefreshTokenLogin)
-    Call<JsonObject> getRefreshTokenLogin(@Body RequestBody params);
+    @POST(ApiConstants.kUserLogin)
+    Call<JsonObject> getUserLoginPassword(
+            @Header("MobileNo") String mobileNo,
+            @Header("Password") String password,
+            @Body RequestBody params);
 
-    @POST(APIServices.kWareHouseDetails)
+    @POST(ApiConstants.kRefreshTokenLogin)
+    Call<JsonObject> getRefreshTokenLoginViaOTP(
+            @Header("MobileNo") String mobileNo,
+            @Header("otp") String enteredOTP,
+            @Header("fcmToken") String firebaseToken,
+            @Body RequestBody params);
+
+    @POST(ApiConstants.kRefreshTokenLogin)
+    Call<JsonObject> getRefreshTokenLoginViaPassword(
+            @Header("MobileNo") String mobileNo,
+            @Header("Password") String password,
+            @Header("fcmToken") String firebaseToken,
+            @Body RequestBody params);
+
+    @POST(ApiConstants.kWareHouseDetails)
     Call<JsonObject> getWareHouseDetails(@Body RequestBody params);
 
-    @POST(APIServices.kGetDistrictList)
+    @POST(ApiConstants.kGetDistrictList)
     Call<JsonObject> getDistrictList(@Body RequestBody params);
 
-    @POST(APIServices.kGetMarketAndMarketName)
+    @POST(ApiConstants.kGetMarketAndMarketName)
     Call<JsonObject> getMarketAndMarketName(@Body RequestBody params);
 
-    @POST(APIServices.kGetVillageList)
+    @POST(ApiConstants.kGetVillageList)
     Call<JsonObject> kGetVillageList(@Body RequestBody params);
 
-    @POST(APIServices.USER_News_LIST)
+    @POST(ApiConstants.USER_News_LIST)
     Call<JsonObject> getNewsList(@Body RequestBody params);
 
-    @POST(APIServices.kGetmarketsPriceDetails)
+    @POST(ApiConstants.kGetmarketsPriceDetails)
     Call<JsonObject> getmarketPriceDetails(@Body RequestBody params);
 
-    @POST(APIServices.kClimateResilientTechnology)
-    Call<JsonObject> getClimateResilientList(@Body RequestBody params);
-
-    @POST(APIServices.kGetPestDiseaseDetails)
-    Call<JsonObject> getPestDiseaseDetails(@Body RequestBody params);
-
-    @POST(APIServices.kGetCropStages)
-    Call<JsonObject> getCropStages(@Body RequestBody params);
-
-    @POST(APIServices.kGetCropStagesAndAdvisory)
-    Call<JsonObject> getCropStagesAndAdvisory(@Body RequestBody params);
-
-    @POST(APIServices.DELETE_FERTILIZER_FROM_SAVED)
+    @POST(ApiConstants.DELETE_FERTILIZER_FROM_SAVED)
     Call<JsonObject> deleteFertilizerFromSavedList(@Body RequestBody params);
 
-    @POST(APIServices.KSaveFertilizerFormula)
+    @POST(ApiConstants.KSaveFertilizerFormula)
     Call<JsonObject> saveFertilizerFormula(@Body RequestBody params);
 
-    @POST(APIServices.kGetFertilizerSavedFormula)
+    @POST(ApiConstants.kGetFertilizerSavedFormula)
     Call<JsonObject> getFertilizerSavedFormula(@Body RequestBody params);
 
-    @POST(APIServices.kResetPassword)
+    @POST(ApiConstants.kResetPassword)
     Call<JsonObject> getNewPassword(@Body RequestBody params);
 
-    @POST(APIServices.kGetTokenFromWotr)
+    @POST(ApiConstants.kGetTokenFromWotr)
     Call<JsonObject> getTokenFromWotr(@Query("MobileNo") String securityKey,
                                       @Query("Password") String dataRequired
     );
 
-    @POST(APIServices.kGetFertilizerCalculatedDataWotr)
+    @POST(ApiConstants.kGetFertilizerCalculatedDataWotr)
     Call<JsonObject> getFertilizerCalculatedData(@Query("CropID") String cropID,
                                                  @Query("SowingDate") String sowingDate,
                                                  @Query("IsNPK") String isNPK,
@@ -87,6 +103,6 @@ public interface APIRequest {
                                                  @Query("Token") String token
     );
 
-    @POST(APIServices.fetchFarmerListForSHC)
+    @POST(ApiConstants.fetchFarmerListForSHC)
     Call<JsonObject> fetchFarmerListForSHC(@Body RequestBody params);
 }

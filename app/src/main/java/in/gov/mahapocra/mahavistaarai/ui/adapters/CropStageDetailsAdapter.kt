@@ -23,7 +23,6 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.A
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
-import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.logThis
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import org.json.JSONArray
 import org.json.JSONException
@@ -102,7 +101,6 @@ class CropStageDetailsAdapter(
                     val intent = Intent(context, FertilizerCalculatorActivity::class.java)
                     intent.putExtra("id", jsonObject.optInt("id"))
                     intent.putExtra("wotr_crop_id", jsonObject.optInt("wotr_crop_id"))
-                    logThis("sent inside intent ${jsonObject.optInt("wotr_crop_id")}")
                     intent.putExtra("mUrl", jsonObject.optString("image"))
                     intent.putExtra("mName", jsonObject.optString("name"))
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

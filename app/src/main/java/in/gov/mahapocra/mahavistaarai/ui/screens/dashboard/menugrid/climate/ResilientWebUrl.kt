@@ -15,6 +15,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityResilientWebUrlBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 
 class ResilientWebUrl : AppCompatActivity() {
 
@@ -33,6 +34,7 @@ class ResilientWebUrl : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityResilientWebUrlBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root)
 
         binding.layoutToolbar.textViewHeaderTitle.text =
             getString(R.string.climate_resilient_technology)
@@ -91,6 +93,7 @@ class ResilientWebUrl : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        super.onBackPressed()
         finish()
     }
 

@@ -4,45 +4,37 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.JsonObject
-import `in`.co.appinventor.services_api.api.AppInventorApi
-import `in`.co.appinventor.services_api.app_util.AppUtility
-import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
-import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
-import `in`.gov.mahapocra.mahavistaarai.data.model.DiseaseStages
-import `in`.gov.mahapocra.mahavistaarai.data.model.DiseasesDetails
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityPestsAndDiseasesLibraryBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.PestAndDiseasesAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Retrofit
 
-class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
+class PestsAndDiseasesStages : AppCompatActivity() {
 
     private lateinit var binding: ActivityPestsAndDiseasesLibraryBinding
-    private var diseasesDetails: ArrayList<DiseasesDetails>? = null
-    private lateinit var diseaseStages: ArrayList<DiseaseStages>
-
+    private val farmerViewModel: FarmerViewModel by viewModels()
     var cropId: Int? = 0
     private var stagesId: Int = 0
     private var mUrl: String? = null
@@ -62,6 +54,7 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         switchLanguage(this, languageToLoad)
         binding = ActivityPestsAndDiseasesLibraryBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root)
 
         binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.pests_n_diseases)
         binding.sowingInfoLayout.textView7.text = getString(R.string.selected_crop)
@@ -81,6 +74,12 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         cropName = intent.getStringExtra("mName")
         particularStagesDiseases = intent.getStringExtra("ParticularStagesDiseases").toString()
         stagesId = intent.getIntExtra("id", 0)
+        if (cropId == 0) {
+            cropId = AppPreferenceManager(this).getInt("CROP_ID_SAVED")
+            cropName = AppPreferenceManager(this).getString("CROP_NAME_SAVED")
+            mUrl = AppPreferenceManager(this).getString("CROP_IMAGE_SAVED")
+            wotrCropId = AppPreferenceManager(this).getString("CROP_WOTR_ID_SAVED")
+        }
         AppSettings.getInstance()
             .setValue(this, AppConstants.tmpCROPNAME, cropName)
 
@@ -103,52 +102,54 @@ class PestsAndDiseasesStages : AppCompatActivity(), ApiCallbackCode {
         }
 
         if (cropId!! > 0) {
-            getCropStages()
+            observeCropStages()
+            farmerViewModel.getCropStages(this, cropId, languageToLoad)
         } else {
             Toast.makeText(this, "No Crops Added", Toast.LENGTH_SHORT).show()
         }
         binding.sowingInfoLayout.cropNameTextView.text = "$cropName"
-    }
-
-    private fun getCropStages() {
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put("crop_id", cropId)
-            jsonObject.put("lang", languageToLoad)
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api = AppInventorApi(
-                this,
-                AppEnvironment.FARMER.baseUrl,
-                "",
-                AppString(this).getkMSG_WAIT(),
-                true
-            )
-            val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getCropStages(requestBody)
-            api.postRequest(responseCall, this, 1)
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
-    }
-
-    override fun onResponse(jSONObject: JSONObject?, n: Int) {
-        if (n == 1 && jSONObject != null) {
-            val response = ResponseModel(jSONObject)
-            if (response.getStatus()) {
-                stageJsonArray = response.getdataArray()
-                val adapter = PestAndDiseasesAdapter(this, stageJsonArray)
-                binding.diseasesByStage.layoutManager = LinearLayoutManager(this)
-                binding.diseasesByStage.adapter = adapter
+        val isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
+        binding.chatbotIcon.setOnClickListener {
+            if (!isGuest) {
+                startActivity(Intent(this, ChatbotActivity::class.java))
             } else {
-                UIToastMessage.show(this, response.response)
+                AlertDialog.Builder(this)
+                    .setMessage(R.string.bot_chat_login_redirect_mesage)
+                    .setPositiveButton(R.string.yes) { dialog, _ ->
+                        // Handle login action here
+                        startActivity(Intent(this, LoginScreen::class.java).apply {
+                            putExtra("from", "dashboard")
+                        })
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton(R.string.no) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
             }
         }
     }
 
-
-    override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        Log.d("TAGGER", "onFailure: ${th?.message}")
+    private fun observeCropStages() {
+        ProgressHelper.showProgressDialog(this)
+        farmerViewModel.getCropStagesResponse.observe(this) {
+            ProgressHelper.disableProgressDialog()
+            if (it != null) {
+                val jSONObject = JSONObject(it.toString())
+                val response = ResponseModel(jSONObject)
+                if (response.getStatus()) {
+                    stageJsonArray = response.getdataArray()
+                    val adapter = PestAndDiseasesAdapter(this, stageJsonArray)
+                    binding.diseasesByStage.layoutManager = LinearLayoutManager(this)
+                    binding.diseasesByStage.adapter = adapter
+                } else {
+                    UIToastMessage.show(this, response.response)
+                }
+            }
+        }
+        farmerViewModel.error.observe(this){
+            ProgressHelper.disableProgressDialog()
+        }
     }
 
     override fun onBackPressed() {

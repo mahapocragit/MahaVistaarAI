@@ -56,14 +56,13 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_Farmer_Name">शेतकऱ्याचे नाव</string>
     <string name="nav_header_subtitle">शेतकऱी </string>
-    <string name="nav_Farmer_phone_number">मोबाईल नंबर</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
 
     <string name="my_profile">My Profile</string>
     <string name="login_menu">Login / Registration</string>
-    <string name="my_Notification">सूचना</string>
+    <string name="my_notification">सूचना</string>
     <string name="my_dbt_status">डीबीटी अर्ज स्थिती</string>
     <string name="my_farm_survay">शेेत सर्वेक्षण</string>
     <string name="crop_registration">पीक व्यवस्थापन</string>
@@ -90,9 +89,7 @@
     <string name="main_component">मुख्य घटक</string>
 
     <string name="name_validation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ.</string>
-    <string name="char_validation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ.</string>
     <string name="alpha_num_validation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.</string>
-    <string name="name_char_validation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <string name="decimal">1234567890.</string>
     <string name="numeric">1234567890</string>
     <string name="ifsc_code">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890</string>
@@ -110,23 +107,6 @@
     <string name="list_fpo">List of FPOs</string>
     <string name="maps">Maps</string>
     <string name="water_balance">Water Balance</string>
-
-    <!--    हवामान-->
-    <!--    हवामान अनुकूल तंत्रज्ञान-->
-    <!--    थेट लाभ हस्तांतरण योजना-->
-    <!--    मृदा आरोग्य पत्रिका-->
-    <!--    बाजारभाव-->
-    <!--    गोदाम उपलब्धता-->
-    <!--    जीआयएस- भौगोलिक माहिती प्रणाली-->
-    <!--    कीड व्यवस्थापन-->
-    <!--    आवाज शेतकऱ्यांचा-->
-
-    <!--    पोक्रा बद्दल-->
-    <!--    माझ्या गावाचे प्रोफाईल-->
-
-    <!--    कृषी मंच-->
-    <!--    मदत व तक्रार निवारण-->
-    <!--    मुख्यपृष्ठ-->
 
     शेतकरी
     माझे प्रोफाईल
@@ -150,17 +130,12 @@
     <string name="otp">ओटीपी</string>
     <string name="Time">वेळ</string>
 
-    <string name="not_register">Not Register?</string>
     <string name="name">नाव</string>
-    <string name="phone_number">मोबाईल नंबर</string>
     <string name="register">Register</string>
     <string name="forgot_password">पासवर्ड विसरलात?</string>
     <string name="change_password"> पासवर्ड बदला</string>
     <string name="name_error"> तुमचे नाव लिहा</string>
-    <string name="phone_error">मोबाईल नंबर टाका</string>
     <string name="lgn_register_phone_error">  नोंदणीकृत मोबाईल नंबर टाका</string>
-    <string name="email_error">ईमेल आयडी टाका (ऐच्छिक)</string>
-    <string name="error_invalid_email">ईमेल आयडी पुन्हा तपासून बघा</string>
     <string name="password_error">पासवर्ड तपासून बघा</string>
 
     <string name="feedback1_rating_error">Please give some rating for question1</string>
@@ -185,12 +160,6 @@
     <string name="no_notifications_error">लवकरच येत आहे ........</string>
     <string name="NotificationMsg">सूचना सापडली नाही...!!!</string>
 
-    <string name="advisory_feedback_scale_text">5 च्या प्रमाणात (1-सवाात कमी, 5-सवाापिक), कृपया खालील बाबींवर तुमचा अपिप्राय द्या.</string>
-    <string name="advisory_questions1_text">1)दिलेला सल्ला तुमच्यासाठी उपयुक्त आहे का?</string>
-    <string name="advisory_questions2_text">2) कीटक आहेत &amp; रोग कमी करणे तुमच्यासाठी शक्य आहे का?</string>
-    <string name="advisory_questions2_1_text">2) पीक सल्ल्यात नमिू केल्याप्रमाणे, तुमच्या पपकावर पकिंवा तुमच्या िागात कीटक/रोगाचा प्राििुााव झाला आहेका?</string>
-    <string name="advisory_comment_heading">कृपया काही असल्यास खाली तुमची टिप्पणी द्या:</string>
-
     <string name="min_Price">कमीत कमी दर :  </string>
     <string name="max_Price">जास्तीत जास्त दर :  </string>
     <string name="avg_Price">सर्वसाधारण दर :  </string>
@@ -205,11 +174,6 @@
     <string name="total_available_capacity">गोदामांची एकूण उपलब्ध क्षमता</string>
     <string name="record_date">नोंदणी दिनांक </string>
     <string name="warehouse_details">तपशील</string>
-    <string name="weatherTextf">पुढील पाच दिवसांसाठी हवामानाचा अंदाज (IMD कडून प्राप्त)</string>
-    <string name="weatherTextp">मागील आठवड्यातील हवामान (महावेध कडून प्राप्त)</string>
-    <string name="badhvarText">यशोगाथा</string>
-    <string name="my_vill_Profi_Pdf">पोक्रा व्हिलेज प्रोफाइल</string>
-    <string name="pocra_village">प्रकल्प क्षेत्र आणि गावे</string>
 
     <string name="date_text">दिनांक निवडा</string>
     <string name="date">दिनांक: </string>
@@ -235,21 +199,14 @@
     <string name="max_value"> कमाल तापमान </string>
     <string name="wind_value"> वाऱ्याचा वेग  </string>
     <string name="humidity_value"> आर्द्रता </string>
-    <string name="next_days">पुढील आठवड्यातील हवामान अंदाज (सौजन्य : IMD) </string>
-    <string name="previous_days">मागील आठवड्यातील हवामान (सौजन्य : महावेध)</string>
     <string name="agromet">हवामान सल्ला</string>
     <string name="source_info_market">माहितीचा स्त्रोत- महाराष्ट्र राज्य कृषि पणन मंडळ</string>
-    <string name="source_info_warehouse">माहितीचा स्त्रोत- महाराष्ट्र राज्य वखार महामंडळ</string>
-    <string name="source_info_weather">माहितीचा स्त्रोत- (IMD &amp; महावेध) </string>
     <string name="agromet_details">हलक्या स्वरुपात पाऊस पडण्याची शक्यता.  आकाश अंशतः स्वच्छ ते बहुतांश ढगाळ राहण्याची शक्यता.  हळुवार वारा असण्याची शक्यता.  तापमान १८.८ ते ३४.१ अंश से. दरम्यान असण्याची शक्यता.</string>
-    <string name="about_pocra_details">बदलत्या हवामानाच्या संकटाचे संधीत रुपांतर करण्याचे कौशल्य शेतकऱ्यांमध्ये विकसित करण्याचे रचनात्मक प्रयत्न म्हणजेच हा हवामान अनुकूल शेती प्रकल्प होय. नानाजी देशमुख कृषी संजीवनी प्रकल्पाच्या माध्यमातून करण्यात येणाऱ्या प्रयत्नांची फळं काही प्रमाणात दिसू लागली आहेत. मागील काही वर्षांत हवामानात मोठे बदल दिसून येत आहेत. शेती व हवामान यांचा परस्परांशी खूप जवळचा संबंध आहे. हवामानाचा शेतीवर परिणाम होतो ही गोष्ट लक्षात घेऊन या प्रकल्पाची आखणी करण्यात आली आहे</string>
 
     <string name="farm_name">शेताचे नाव एंटर करा</string>
     <string name="save_farm">जतन करा</string>
 
-    <string name="subsidey_string"><u>अनुदान</u></string>
     <string name="poCRA_dBT_activity">डीबीटी- थेट लाभ हस्तांतरण</string>
-    <string name="required_Documents">आवश्यक कागदपत्रे</string>
     <string name="eligibility_Criteria">पात्रता निकष</string>
     <string name="notes"> टिप </string>
     <string name="reg_name">तुमचे नाव लिहा</string>
@@ -270,6 +227,7 @@
     <string name="grievance"> तुमच्या तक्रारीचे येथे वर्णन करा </string>
     <string name="success_farmer"> शेतकरी यशोगाथा येथे करणे </string>
     <string name="crop_advisory">पीक सल्ला</string>
+    <string name="crop_advisory_etl">पिकांचा कीड व रोग सल्ला</string>
 
     <string name="doc_upload"> प्रतिमा/कागदपत्रे असल्यास अपलोड करा</string>
 
@@ -478,4 +436,8 @@
     <string name="mobile_no">मोबाईल क्र.</string>
     <string name="enter_farmer_id">तुमचा शेतकरी आयडी टाका</string>
     <string name="click_here_to_know_your_farmer_id">तुमचा शेतकरी ओळख क्रमांक जाणून घेण्यासाठी येथे क्लिक करा</string>
+    <string name="etl_crossed_click_here_for_advisory">किड आणि रोगांचा इशारा</string>
+    <string name="etl_crop_advisory">पिकांच्या कीड व रोगावरील तज्ञांचा सल्ला</string>
+    <string name="click_here_to_view_full_advisory">पूर्ण सल्ला पाहण्यासाठी येथे क्लिक करा.</string>
+    <string name="date_etl">दि.: </string>
 </resources>

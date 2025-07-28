@@ -7,11 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
-import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.gov.mahapocra.mahavistaarai.data.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
+import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
@@ -35,14 +34,7 @@ class NewsWadhwaniViewModel : ViewModel() {
                 }
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api = AppInventorApi(
-                    context,
-                    AppEnvironment.PANI_FOUNDATION.baseUrl,
-                    "",
-                    AppString(context).getkMSG_WAIT(),
-                    false
-                )
-                val retrofit = api.getRetrofitInstance()
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.PANI_FOUNDATION.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
 
                 // Retrofit suspend call
@@ -59,14 +51,7 @@ class NewsWadhwaniViewModel : ViewModel() {
     fun getNewsWadhwani(context: Context, bearerToken: String) {
         viewModelScope.launch {
             try {
-                val api = AppInventorApi(
-                    context,
-                    AppEnvironment.PANI_FOUNDATION.baseUrl,
-                    "",
-                    AppString(context).getkMSG_WAIT(),
-                    false
-                )
-                val retrofit = api.getRetrofitInstance()
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.PANI_FOUNDATION.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
 
                 // Retrofit suspend call

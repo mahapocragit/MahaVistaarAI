@@ -8,7 +8,7 @@ plugins {
 
 android {
 
-    compileSdk 34
+    compileSdk 35
     namespace 'in.gov.mahapocra.mahavistaarai'
 
     signingConfigs {
@@ -25,13 +25,13 @@ android {
 
     defaultConfig {
         applicationId "in.gov.mahapocra.mahavistaarai"
-        minSdkVersion 21
-        targetSdkVersion 34
+        minSdkVersion 23
+        targetSdkVersion 35
         versionCode 15
         versionName "1.8"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        resConfigs "en", "mr"
+        resourceConfigurations += ['en', 'mr']
     }
 
     bundle {
@@ -57,10 +57,6 @@ android {
         }
     }
 
-    lintOptions {
-        checkReleaseBuilds false
-        abortOnError false // Continue build even when errors are found
-    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -75,6 +71,10 @@ android {
         viewBinding true
         dataBinding true
     }
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
 
 }
 
@@ -83,9 +83,7 @@ dependencies {
     //Apollo
     implementation 'com.apollographql.apollo3:apollo-runtime:3.2.1'
     //Clarity
-    implementation 'com.microsoft.clarity:clarity:3.3.0'
-    //captcha
-    implementation 'com.google.android.recaptcha:recaptcha:18.4.0'
+    implementation 'com.microsoft.clarity:clarity:3.4.3'
     //osm
     implementation 'org.osmdroid:osmdroid-android:6.1.20'
     implementation 'com.intuit.sdp:sdp-android:1.1.1'
@@ -94,54 +92,49 @@ dependencies {
     implementation project(path: ':app:libs:appinventorapi')
 
     // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:2.1.0"
 
     // AndroidX Libraries
-    implementation 'androidx.core:core-ktx:1.6.0'
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.core:core-ktx:1.16.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+    implementation 'androidx.recyclerview:recyclerview:1.4.0'
 
     // Navigation
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.9.2'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.9.2'
 
     // Material Design
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'com.google.android.material:material:1.12.0'
 
     // Firebase
-    implementation platform('com.google.firebase:firebase-bom:32.0.0')
+    implementation platform('com.google.firebase:firebase-bom:34.0.0')
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-config'
-
-    // ML Kit
-    implementation 'com.google.mlkit:vision-common:17.3.0'
-    implementation 'com.google.mlkit:image-labeling-common:18.1.0'
-    implementation 'com.google.mlkit:image-labeling:17.0.7'
-    implementation 'com.google.mlkit:image-labeling-default-common:17.0.0'
-    implementation 'com.google.mlkit:object-detection:17.0.0'
+    implementation 'com.google.firebase:firebase-crashlytics:20.0.0'
+    implementation 'com.google.firebase:firebase-database-ktx:21.0.0'
 
     // Retrofit
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:3.0.0'
 
     // Image Loading
     implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.google.firebase:firebase-database-ktx:21.0.0'
     implementation 'com.google.android.gms:play-services-location:21.3.0'
-    implementation 'com.google.firebase:firebase-crashlytics:19.4.3'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
     implementation 'com.makeramen:roundedimageview:2.3.0'
 
     // Lifecycle
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.2'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.9.2'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.9.2'
+    implementation 'androidx.activity:activity-ktx:1.10.1'
 
     // RxJava
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.13'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
 
     // Networking
     implementation 'com.squareup.okhttp:okhttp:2.7.5'
@@ -151,13 +144,13 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
     // Testing
-    testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 
     // Multidex
     implementation "androidx.multidex:multidex:2.0.1"
 
     // Calligraphy (optional)
-    implementation 'uk.co.chrisjenx:calligraphy:2.2.0'
+    implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
 }

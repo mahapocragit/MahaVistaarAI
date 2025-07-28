@@ -7,13 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
-import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.data.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
+import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
@@ -39,14 +38,7 @@ class MahavistaarViewModel : ViewModel(){
                 }
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api = AppInventorApi(
-                    context,
-                    AppEnvironment.VISTAAR.baseUrl,
-                    "",
-                    AppString(context).getkMSG_WAIT(),
-                    false
-                )
-                val retrofit = api.getRetrofitInstance()
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.VISTAAR.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
 
                 // Retrofit suspend call

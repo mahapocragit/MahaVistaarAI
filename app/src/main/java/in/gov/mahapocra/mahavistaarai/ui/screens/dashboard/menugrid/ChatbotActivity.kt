@@ -13,21 +13,22 @@ import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityChatbotBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MahavistaarViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 
 class ChatbotActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChatbotBinding
-    private lateinit var mahavistaarViewModel: MahavistaarViewModel
+    private val mahavistaarViewModel: MahavistaarViewModel by viewModels()
     private lateinit var languageToLoad: String
     private val PERMISSION_REQUEST_CODE = 1001
 
@@ -40,9 +41,9 @@ class ChatbotActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityChatbotBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root)
 
         askForLocationAndMicrophonePermission()
-        mahavistaarViewModel = ViewModelProvider(this)[MahavistaarViewModel::class.java]
         binding.toolbar.imageViewHeaderBack.setVisibility(View.VISIBLE)
         binding.toolbar.imageViewHeaderBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
         binding.toolbar.textViewHeaderTitle.text = ""

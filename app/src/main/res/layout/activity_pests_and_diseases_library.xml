@@ -1,56 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/status_colored_background"
     tools:context=".ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages">
 
-    <include
-        android:id="@+id/relativeLayoutTopBar"
-        layout="@layout/layout_toolbar" />
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <include
-            android:id="@+id/sowingInfoLayout"
-            layout="@layout/sowing_date_layout" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_5sdp"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/disease_stage"
+        <include
+            android:id="@+id/relativeLayoutTopBar"
+            layout="@layout/layout_toolbar" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:visibility="gone"
-            android:text="@string/Pests_n_diseases_by_stage"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text16"/>
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/tvAgroMetAdvisory"
+            <include
+                android:id="@+id/sowingInfoLayout"
+                layout="@layout/sowing_date_layout" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/different_stages_text"/>
+            android:layout_marginHorizontal="@dimen/_5sdp"
+            android:orientation="vertical">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/diseasesByStage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/height5"
-            tools:listitem="@layout/particular_stage_diseases"
-            android:scrollbarAlwaysDrawHorizontalTrack="true"
-            android:scrollbarStyle="insideOverlay"
-            android:scrollbars="vertical"/>
+            <TextView
+                android:id="@+id/disease_stage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/Pests_n_diseases_by_stage"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text16"
+                android:visibility="gone" />
 
+            <TextView
+                android:id="@+id/tvAgroMetAdvisory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/different_stages_text" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/diseasesByStage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/height5"
+                android:scrollbarAlwaysDrawHorizontalTrack="true"
+                android:scrollbarStyle="insideOverlay"
+                android:scrollbars="vertical"
+                tools:listitem="@layout/particular_stage_diseases" />
+
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+
+    <ImageView
+        android:id="@+id/chatbotIcon"
+        android:layout_width="@dimen/_58sdp"
+        android:layout_height="@dimen/_58sdp"
+        android:layout_margin="@dimen/_10sdp"
+        android:elevation="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_chatbot" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,18 +4,21 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivitySopactivityBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.SOPAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import org.json.JSONObject
@@ -23,11 +26,9 @@ import org.json.JSONObject
 class SOPActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener {
 
     private lateinit var binding: ActivitySopactivityBinding
-    private lateinit var farmerViewModel: FarmerViewModel
+    private val farmerViewModel: FarmerViewModel by viewModels()
     var cropId: Int? = 0
     private var cropName: String? = null
-    private var farmerId: Int = 0
-    private var villageID: Int = 0
     private var wotrCropId: String? = null
     private var mUrl: String? = null
     private var sowingDate: String = ""
@@ -42,7 +43,7 @@ class SOPActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener {
         switchLanguage(this, languageToLoad)
         binding = ActivitySopactivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
+        uiResponsive(binding.root)
 
         //fetching values
         cropId = intent.getIntExtra("id", 0)
@@ -50,8 +51,14 @@ class SOPActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener {
         sowingDate = intent.getStringExtra("sowingDate").toString()
         wotrCropId = intent.getStringExtra("wotr_crop_id")
         mUrl = intent.getStringExtra("mUrl")
-        villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
-        farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
+
+        if (cropId == 0) {
+            cropId = AppPreferenceManager(this).getInt("CROP_ID_SAVED")
+            cropName = AppPreferenceManager(this).getString("CROP_NAME_SAVED")
+            mUrl = AppPreferenceManager(this).getString("CROP_IMAGE_SAVED")
+            sowingDate = AppPreferenceManager(this).getString("CROP_SOWING_DATE_SAVED").toString()
+            wotrCropId = AppPreferenceManager(this).getString("CROP_WOTR_ID_SAVED")
+        }
 
         binding.sowingInfoLayout.sowingDateTextView.visibility = View.GONE
         binding.sowingInfoLayout.editSowingDateIcon.visibility = View.GONE
@@ -109,6 +116,26 @@ class SOPActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener {
             binding.sopRecyclerView.visibility = View.GONE
             binding.noDataFoundImageView.visibility = View.VISIBLE
             binding.sopTextView.visibility = View.VISIBLE
+        }
+        val isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
+        binding.chatbotIcon.setOnClickListener {
+            if (!isGuest) {
+                startActivity(Intent(this, ChatbotActivity::class.java))
+            } else {
+                AlertDialog.Builder(this)
+                    .setMessage(R.string.bot_chat_login_redirect_mesage)
+                    .setPositiveButton(R.string.yes) { dialog, _ ->
+                        // Handle login action here
+                        startActivity(Intent(this, LoginScreen::class.java).apply {
+                            putExtra("from", "dashboard")
+                        })
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton(R.string.no) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+            }
         }
     }
 

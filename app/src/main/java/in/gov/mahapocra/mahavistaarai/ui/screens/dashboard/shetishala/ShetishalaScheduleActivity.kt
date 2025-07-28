@@ -6,9 +6,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
@@ -16,13 +16,14 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityShetishalaScheduleBi
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import org.json.JSONObject
 
 class ShetishalaScheduleActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityShetishalaScheduleBinding
-    private lateinit var farmerViewModel: FarmerViewModel
+    private val farmerViewModel: FarmerViewModel by viewModels()
     private lateinit var languageToLoad: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,8 +37,8 @@ class ShetishalaScheduleActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityShetishalaScheduleBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root)
 
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         setUpToolbar()
         binding.useYoutubeLayout.setOnClickListener {
             loadYoutubeUrl("https://www.youtube.com/@PaaniFoundation/live")

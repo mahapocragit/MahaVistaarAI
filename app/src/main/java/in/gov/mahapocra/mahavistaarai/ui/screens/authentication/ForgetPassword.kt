@@ -11,8 +11,8 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
@@ -23,7 +23,7 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
+import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityForgetPasswordTempBinding
@@ -31,6 +31,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardS
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONException
@@ -41,7 +42,7 @@ import retrofit2.Retrofit
 class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode {
 
     private lateinit var binding: ActivityForgetPasswordTempBinding
-    private lateinit var farmerViewModel: FarmerViewModel
+    private val farmerViewModel: FarmerViewModel by viewModels()
     private lateinit var mob: String
     private var userPass: String = ""
     private lateinit var dialog: Dialog
@@ -62,7 +63,7 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
         switchLanguage(this, languageToLoad)
         binding = ActivityForgetPasswordTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
+        uiResponsive(binding.root)
         onClick()
     }
 
@@ -89,9 +90,7 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
         } else {
             val jsonObject = JSONObject()
             try {
-                jsonObject.put("MobileNo", mob.trim { it <= ' ' })
-                jsonObject.put("SecurityKey", APIServices.SSO_KEY)
-
+                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api =
                     AppInventorApi(
@@ -103,7 +102,8 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
                     )
                 val retrofit: Retrofit = api.getRetrofitInstance()
                 val apiRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getOTPRequest(requestBody)
+                val responseCall: Call<JsonObject> =
+                    apiRequest.getOTPRequest(mob.trim { it <= ' ' }, requestBody)
                 api.postRequest(responseCall, this, 2)
             } catch (e: JSONException) {
                 e.printStackTrace()
@@ -118,10 +118,7 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
         } else {
             val jsonObject = JSONObject()
             try {
-                jsonObject.put("SecurityKey", APIServices.SSO_KEY)
-                jsonObject.put("MobileNo", mobileNo.trim { it <= ' ' })
-                jsonObject.put("Password", userPass)
-
+                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api =
                     AppInventorApi(
@@ -133,7 +130,7 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
                     )
                 val retrofit: Retrofit = api.getRetrofitInstance()
                 val apiRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getUserLogin(requestBody)
+                val responseCall: Call<JsonObject> = apiRequest.getUserLoginPassword(mobileNo.trim { it <= ' ' }, userPass, requestBody)
                 api.postRequest(responseCall, this, 3)
             } catch (e: JSONException) {
                 e.printStackTrace()

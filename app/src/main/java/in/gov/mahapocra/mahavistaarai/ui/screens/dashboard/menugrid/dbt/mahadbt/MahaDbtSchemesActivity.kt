@@ -6,8 +6,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
@@ -15,6 +15,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityMahaDbtSchemesBindin
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.DbtSchemesViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import org.json.JSONObject
 
@@ -22,7 +23,7 @@ class MahaDbtSchemesActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMahaDbtSchemesBinding
     private lateinit var languageToLoad: String
-    private lateinit var dbtSchemesViewModel: DbtSchemesViewModel
+    private val dbtSchemesViewModel: DbtSchemesViewModel by viewModels()
     private lateinit var mahadbtSchemesAdapter: MahadbtSchemesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +35,7 @@ class MahaDbtSchemesActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityMahaDbtSchemesBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root)
 
         binding.layoutToolbar.textViewHeaderTitle.text = getString(R.string.maha_dbt_name)
         binding.layoutToolbar.imgBackArrow.visibility = View.VISIBLE
@@ -47,12 +49,11 @@ class MahaDbtSchemesActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        dbtSchemesViewModel = ViewModelProvider(this)[DbtSchemesViewModel::class.java]
         dbtSchemesViewModel.getMahaDBTSchemes(this)
         ProgressHelper.showProgressDialog(this)
         dbtSchemesViewModel.responseUrlMahaDbtSchemes.observe(this) {
             ProgressHelper.disableProgressDialog()
-            if (it!=null){
+            if (it != null) {
                 val jsonObject = JSONObject(it.toString())
                 val schemesJSONArray = jsonObject.optJSONArray("data")
                 mahadbtSchemesAdapter = MahadbtSchemesAdapter(schemesJSONArray, languageToLoad)
@@ -60,7 +61,7 @@ class MahaDbtSchemesActivity : AppCompatActivity() {
                 binding.recyclerView.adapter = mahadbtSchemesAdapter
             }
         }
-        dbtSchemesViewModel.error.observe(this){
+        dbtSchemesViewModel.error.observe(this) {
             ProgressHelper.disableProgressDialog()
             Log.d("TAGGER", "error: $it")
         }
