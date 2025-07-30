@@ -1,5 +1,5 @@
-package in.gov.mahapocra.mahavistaarai.data.api;
+package `in`.gov.mahapocra.mahavistaarai.data.api
 
-public class APIKeys {
-    public static final String SSO_PROD = "67840097657891";
+object APIKeys {
+    const val SSO_PROD: String = "67840097657891"
 }

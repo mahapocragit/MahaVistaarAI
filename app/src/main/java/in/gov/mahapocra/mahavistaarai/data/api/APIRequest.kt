@@ -1,108 +1,115 @@
-package in.gov.mahapocra.mahavistaarai.data.api;
+package `in`.gov.mahapocra.mahavistaarai.data.api
 
-import com.google.gson.JsonObject;
+import com.google.gson.JsonObject
+import okhttp3.RequestBody
+import retrofit2.Call
+import retrofit2.http.Body
+import retrofit2.http.Header
+import retrofit2.http.POST
+import retrofit2.http.Query
 
-import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.Header;
-import retrofit2.http.POST;
-import retrofit2.http.Query;
-
-public interface APIRequest {
-
+interface APIRequest {
     @POST(ApiConstants.kOTPRequest)
-    Call<JsonObject> getOTPRequest(
-            @Header("MobileNo") String mobileNo,
-            @Body RequestBody params);
+    fun getOTPRequest(
+        @Header("MobileNo") mobileNo: String,
+        @Body params: RequestBody
+    ): Call<JsonObject>
 
     @POST(ApiConstants.kOTPRegisterRequest)
-    Call<JsonObject> getOTPRegisterRequest(
-            @Header("MobileNo") String mobileNo,
-            @Body RequestBody params);
+    fun getOTPRegisterRequest(
+        @Header("MobileNo") mobileNo: String,
+        @Body params: RequestBody
+    ): Call<JsonObject>
 
     @POST(ApiConstants.kRegistrationRequest)
-    Call<JsonObject> getRegistrationRequest(
-            @Header("MobileNo") String mobileNo,
-            @Header("NewMobileNo") String updatedMobileNo,
-            @Body RequestBody params);
+    fun getRegistrationRequest(
+        @Header("MobileNo") mobileNo: String,
+        @Header("NewMobileNo") updatedMobileNo: String,
+        @Body params: RequestBody
+    ): Call<JsonObject>
 
     @POST(ApiConstants.kUserLogin)
-    Call<JsonObject> getUserLoginOTP(
-            @Header("MobileNo") String mobileNo,
-            @Header("otp") String enteredOTP,
-            @Body RequestBody params);
+    fun getUserLoginOTP(
+        @Header("MobileNo") mobileNo: String,
+        @Header("otp") enteredOTP: String,
+        @Body params: RequestBody
+    ): Call<JsonObject>
 
     @POST(ApiConstants.kUserLogin)
-    Call<JsonObject> getUserLoginPassword(
-            @Header("MobileNo") String mobileNo,
-            @Header("Password") String password,
-            @Body RequestBody params);
+    fun getUserLoginPassword(
+        @Header("MobileNo") mobileNo: String,
+        @Header("Password") password: String,
+        @Body params: RequestBody
+    ): Call<JsonObject>
 
     @POST(ApiConstants.kRefreshTokenLogin)
-    Call<JsonObject> getRefreshTokenLoginViaOTP(
-            @Header("MobileNo") String mobileNo,
-            @Header("otp") String enteredOTP,
-            @Header("fcmToken") String firebaseToken,
-            @Body RequestBody params);
+    fun getRefreshTokenLoginViaOTP(
+        @Header("MobileNo") mobileNo: String,
+        @Header("otp") enteredOTP: String,
+        @Header("fcmToken") firebaseToken: String,
+        @Body params: RequestBody?
+    ): Call<JsonObject>
 
     @POST(ApiConstants.kRefreshTokenLogin)
-    Call<JsonObject> getRefreshTokenLoginViaPassword(
-            @Header("MobileNo") String mobileNo,
-            @Header("Password") String password,
-            @Header("fcmToken") String firebaseToken,
-            @Body RequestBody params);
+    fun getRefreshTokenLoginViaPassword(
+        @Header("MobileNo") mobileNo: String,
+        @Header("Password") password: String,
+        @Header("fcmToken") firebaseToken: String,
+        @Body params: RequestBody
+    ): Call<JsonObject>
 
     @POST(ApiConstants.kWareHouseDetails)
-    Call<JsonObject> getWareHouseDetails(@Body RequestBody params);
+    fun getWareHouseDetails(@Body params: RequestBody): Call<JsonObject>
 
     @POST(ApiConstants.kGetDistrictList)
-    Call<JsonObject> getDistrictList(@Body RequestBody params);
+    fun getDistrictList(@Body params: RequestBody): Call<JsonObject>
 
     @POST(ApiConstants.kGetMarketAndMarketName)
-    Call<JsonObject> getMarketAndMarketName(@Body RequestBody params);
+    fun getMarketAndMarketName(@Body params: RequestBody): Call<JsonObject>
 
     @POST(ApiConstants.kGetVillageList)
-    Call<JsonObject> kGetVillageList(@Body RequestBody params);
+    fun kGetVillageList(@Body params: RequestBody): Call<JsonObject>
 
     @POST(ApiConstants.USER_News_LIST)
-    Call<JsonObject> getNewsList(@Body RequestBody params);
+    fun getNewsList(@Body params: RequestBody): Call<JsonObject>
 
     @POST(ApiConstants.kGetmarketsPriceDetails)
-    Call<JsonObject> getmarketPriceDetails(@Body RequestBody params);
+    fun getmarketPriceDetails(@Body params: RequestBody): Call<JsonObject>
 
     @POST(ApiConstants.DELETE_FERTILIZER_FROM_SAVED)
-    Call<JsonObject> deleteFertilizerFromSavedList(@Body RequestBody params);
+    fun deleteFertilizerFromSavedList(@Body params: RequestBody): Call<JsonObject>
 
     @POST(ApiConstants.KSaveFertilizerFormula)
-    Call<JsonObject> saveFertilizerFormula(@Body RequestBody params);
+    fun saveFertilizerFormula(@Body params: RequestBody): Call<JsonObject>
 
     @POST(ApiConstants.kGetFertilizerSavedFormula)
-    Call<JsonObject> getFertilizerSavedFormula(@Body RequestBody params);
+    fun getFertilizerSavedFormula(@Body params: RequestBody): Call<JsonObject>
 
     @POST(ApiConstants.kResetPassword)
-    Call<JsonObject> getNewPassword(@Body RequestBody params);
+    fun getNewPassword(@Body params: RequestBody): Call<JsonObject>
 
     @POST(ApiConstants.kGetTokenFromWotr)
-    Call<JsonObject> getTokenFromWotr(@Query("MobileNo") String securityKey,
-                                      @Query("Password") String dataRequired
-    );
+    fun getTokenFromWotr(
+        @Query("MobileNo") securityKey: String,
+        @Query("Password") dataRequired: String
+    ): Call<JsonObject>
 
     @POST(ApiConstants.kGetFertilizerCalculatedDataWotr)
-    Call<JsonObject> getFertilizerCalculatedData(@Query("CropID") String cropID,
-                                                 @Query("SowingDate") String sowingDate,
-                                                 @Query("IsNPK") String isNPK,
-                                                 @Query("SoilTestN") String soilTestN,
-                                                 @Query("SoilTestP") String soilTestP,
-                                                 @Query("SoilTestK") String soilTestK,
-                                                 @Query("VillageCode") String villageCode,
-                                                 @Query("FYM") String requiredFYM,
-                                                 @Query("TargetYield") String targetYield,
-                                                 @Query("PlotSize") String plotSize,
-                                                 @Query("PlotUnit") String plotUnit,
-                                                 @Query("Token") String token
-    );
+    fun getFertilizerCalculatedData(
+        @Query("CropID") cropID: String?,
+        @Query("SowingDate") sowingDate: String,
+        @Query("IsNPK") isNPK: String,
+        @Query("SoilTestN") soilTestN: String,
+        @Query("SoilTestP") soilTestP: String,
+        @Query("SoilTestK") soilTestK: String,
+        @Query("VillageCode") villageCode: String,
+        @Query("FYM") requiredFYM: String,
+        @Query("TargetYield") targetYield: String,
+        @Query("PlotSize") plotSize: String,
+        @Query("PlotUnit") plotUnit: String,
+        @Query("Token") token: String
+    ): Call<JsonObject>
 
     @POST(ApiConstants.fetchFarmerListForSHC)
-    Call<JsonObject> fetchFarmerListForSHC(@Body RequestBody params);
+    fun fetchFarmerListForSHC(@Body params: RequestBody): Call<JsonObject>
 }
