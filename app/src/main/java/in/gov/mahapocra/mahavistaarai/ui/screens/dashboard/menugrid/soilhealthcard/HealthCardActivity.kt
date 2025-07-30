@@ -19,7 +19,7 @@ import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
+import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
@@ -152,17 +152,18 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
             this, AppEnvironment.GIS.baseUrl, "",
             AppString(this).getkMSG_WAIT(), true
         )
-        val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
-        val jsonObject = JSONObject()
-        jsonObject.put("vincode", villageID)
-        jsonObject.put("survey_number", surveyNumber)
+        val apiRequest = api.getRetrofitInstance().create(ApiService::class.java)
+        val jsonObject = JSONObject().apply {
+            put("vincode", villageID)
+            put("survey_number", surveyNumber)
+        }
         val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
         val responseCall: Call<JsonObject> = apiRequest.fetchFarmerListForSHC(requestBody)
         api.postRequest(responseCall, this, 3)
     }
 
     override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        Log.e("HealthCardActivity", "API call failed: ${th?.localizedMessage}", th)
+        Log.e("HealthCardActivity", "API $i call failed: ${th?.localizedMessage}", th)
         // Optionally show a message to the user
         UIToastMessage.show(this, "Failed to load data. Please check your connection.")
     }
@@ -311,8 +312,8 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
                     true
                 )
             CoroutineScope(Dispatchers.IO).launch {
-                val retrofit: Retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.PANI_FOUNDATION.baseUrl)
-                val apiRequest = retrofit.create(APIRequest::class.java)
+                val retrofit: Retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val apiRequest = retrofit.create(ApiService::class.java)
                 val responseCall: Call<JsonObject> = apiRequest.getDistrictList(requestBody)
                 api.postRequest(responseCall, this@HealthCardActivity, 1)
             }
@@ -338,7 +339,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
 
             CoroutineScope(Dispatchers.IO).launch {
                 val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
+                val apiRequest = retrofit.create(ApiService::class.java)
                 val responseCall: Call<JsonObject> = apiRequest.kGetVillageList(requestBody)
                 api.postRequest(responseCall, this@HealthCardActivity, 5)
             }

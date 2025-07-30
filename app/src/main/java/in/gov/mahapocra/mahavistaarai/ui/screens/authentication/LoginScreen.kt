@@ -26,7 +26,7 @@ import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
+import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
@@ -294,7 +294,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 true
             )
             val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
+            val apiRequest = retrofit.create(ApiService::class.java)
             val responseCall: Call<JsonObject> =
                 apiRequest.getOTPRequest(mobile.trim(), requestBody)
             api.postRequest(responseCall, this, 1)
@@ -334,7 +334,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         true
                     )
                 val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
+                val apiRequest = retrofit.create(ApiService::class.java)
                 if (otp!=""){
                     val responseCall: Call<JsonObject> =
                         apiRequest.getRefreshTokenLoginViaOTP(
@@ -382,7 +382,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                             true
                         )
                     val retrofit: Retrofit = api.getRetrofitInstance()
-                    val apiRequest = retrofit.create(APIRequest::class.java)
+                    val apiRequest = retrofit.create(ApiService::class.java)
                     Log.d("TAGGER", "callLoginAPI: true")
                     val responseCall: Call<JsonObject> =
                         apiRequest.getUserLoginOTP(mobileNo.trim { it <= ' ' }, otp, requestBody)
@@ -406,7 +406,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                             true
                         )
                     val retrofit: Retrofit = api.getRetrofitInstance()
-                    val apiRequest = retrofit.create(APIRequest::class.java)
+                    val apiRequest = retrofit.create(ApiService::class.java)
                     Log.d("TAGGER", "callLoginAPI: true")
                     val responseCall: Call<JsonObject> =
                         apiRequest.getUserLoginPassword(mobileNo.trim { it <= ' ' }, toSHA512(userPass), requestBody)
@@ -435,7 +435,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     true
                 )
             val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
+            val apiRequest = retrofit.create(ApiService::class.java)
             Log.d("TAGGER", "callLoginAPIForFarmer: true")
             val responseCall: Call<JsonObject> = apiRequest.getUserLoginOTP(agriStackMobile.trim { it <= ' ' },  otp,requestBody)
             api.postRequest(responseCall, this, 2)

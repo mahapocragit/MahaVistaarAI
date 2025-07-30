@@ -28,7 +28,7 @@ import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListene
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
+import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityFertilizerCalculatorActivityBinding
@@ -300,7 +300,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     true
                 )
             CoroutineScope(Dispatchers.IO).launch {
-                val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
+                val apiRequest = api.getRetrofitInstance().create(ApiService::class.java)
                 val responseCall: Call<JsonObject> =
                     apiRequest.getFertilizerSavedFormula(requestBody)
                 api.postRequest(responseCall, this@FertilizerCalculatorActivity, 4)
@@ -412,7 +412,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     true
                 )
             CoroutineScope(Dispatchers.IO).launch {
-                val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
+                val apiRequest = api.getRetrofitInstance().create(ApiService::class.java)
                 val responseCall: Call<JsonObject> =
                     apiRequest.getTokenFromWotr("8470807282", "PMU%40PoCRA%232023")
                 api.postRequest(responseCall, this@FertilizerCalculatorActivity, 2)
@@ -441,7 +441,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                 )
 
             CoroutineScope(Dispatchers.IO).launch {
-                val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
+                val apiRequest = api.getRetrofitInstance().create(ApiService::class.java)
                 val responseCall: Call<JsonObject> = apiRequest.getFertilizerCalculatedData(
                     wotrCropId, finalSowingDate, soilTestOption.toString(),
                     nitrogenValue, phosphorusValue, potassiumValue,
@@ -684,7 +684,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                         true
                     )
                     CoroutineScope(Dispatchers.IO).launch {
-                        val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
+                        val apiRequest = api.getRetrofitInstance().create(ApiService::class.java)
                         val responseCall: Call<JsonObject> =
                             apiRequest.deleteFertilizerFromSavedList(requestBody)
                         api.postRequest(responseCall, this@FertilizerCalculatorActivity, 5)
@@ -754,7 +754,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             // Step 5: Make async network request using coroutine
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
+                    val apiRequest = api.getRetrofitInstance().create(ApiService::class.java)
                     val responseCall: Call<JsonObject> =
                         apiRequest.saveFertilizerFormula(requestBody)
                     api.postRequest(responseCall, this@FertilizerCalculatorActivity, 3)

@@ -31,7 +31,7 @@ import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
+import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
@@ -222,7 +222,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 )
             CoroutineScope(Dispatchers.IO).launch {
                 val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
+                val apiRequest = retrofit.create(ApiService::class.java)
                 val responseCall: Call<JsonObject> = apiRequest.getDistrictList(requestBody)
                 api.postRequest(responseCall, this@Registration, 1)
             }
@@ -371,7 +371,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                     )
                 CoroutineScope(Dispatchers.IO).launch {
                     val retrofit: Retrofit = api.getRetrofitInstance()
-                    val apiRequest = retrofit.create(APIRequest::class.java)
+                    val apiRequest = retrofit.create(ApiService::class.java)
                     val responseCall: Call<JsonObject> =
                         apiRequest.getOTPRegisterRequest(mob.trim { it <= ' ' }, requestBody)
                     api.postRequest(responseCall, this@Registration, 2)
@@ -431,7 +431,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                     )
                 CoroutineScope(Dispatchers.IO).launch {
                     val retrofit: Retrofit = api.getRetrofitInstance()
-                    val apiRequest = retrofit.create(APIRequest::class.java)
+                    val apiRequest = retrofit.create(ApiService::class.java)
                     val responseCall: Call<JsonObject> =
                         apiRequest.getRegistrationRequest(
                             registerMob,
@@ -511,7 +511,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                     )
                 CoroutineScope(Dispatchers.IO).launch {
                     val retrofit: Retrofit = api.getRetrofitInstance()
-                    val apiRequest = retrofit.create(APIRequest::class.java)
+                    val apiRequest = retrofit.create(ApiService::class.java)
                     val responseCall: Call<JsonObject> =
                         apiRequest.getRegistrationRequest(
                             mob.trim { it <= ' ' },
@@ -746,7 +746,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
 
             CoroutineScope(Dispatchers.IO).launch {
                 val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
+                val apiRequest = retrofit.create(ApiService::class.java)
                 val responseCall: Call<JsonObject> = apiRequest.kGetVillageList(requestBody)
                 api.postRequest(responseCall, this@Registration, 5)
             }

@@ -20,8 +20,8 @@ import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityMarketPriceBinding
@@ -201,7 +201,7 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
                     true
                 )
             val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
+            val apiRequest = retrofit.create(ApiService::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getmarketPriceDetails(requestBody)
             api.postRequest(responseCall, this, 4)
         } catch (e: JSONException) {
@@ -241,7 +241,7 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
                     true
                 )
             val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
+            val apiRequest = retrofit.create(ApiService::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getDistrictList(requestBody)
             api.postRequest(responseCall, this, 1)
         } catch (e: JSONException) {
@@ -267,7 +267,7 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
                     true
                 )
             val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
+            val apiRequest = retrofit.create(ApiService::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getMarketAndMarketName(requestBody)
             api.postRequest(responseCall, this, 5)
         } catch (e: JSONException) {
