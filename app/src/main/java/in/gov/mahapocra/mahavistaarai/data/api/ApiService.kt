@@ -128,7 +128,7 @@ interface ApiService {
     suspend fun updateNotificationStatus(@Body params: RequestBody): JsonObject
 
     @POST("authService/updateFcmToken")
-    suspend fun updateFCMToken(@Header("")farmerId:Int, @Header("") fcmToken:String): JsonObject
+    suspend fun updateFCMToken(@Header("userid")farmerId:Int, @Header("fcmtoken") fcmToken:String): JsonObject
 
     @POST(ApiConstants.kOTPRequest)
     fun getOTPRequest(
