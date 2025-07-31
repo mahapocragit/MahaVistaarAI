@@ -4,9 +4,8 @@ class AppEnvironment(val baseUrl: String?) {
     companion object {
         val UAT_DBT: AppEnvironment = AppEnvironment("https://uat-dbt.mahapocra.gov.in:8026/")
 
-        //    public static final AppEnvironment FARMER = new AppEnvironment("https://farmers-app-api.mahapocra.gov.in/"); //For Production
-        val FARMER: AppEnvironment =
-            AppEnvironment("https://stage-farmers-app-api.mahapocra.gov.in/") //For Internal Testing
+        val FARMER: AppEnvironment = AppEnvironment("https://farmers-app-api.mahapocra.gov.in/"); //For Production
+//        val FARMER: AppEnvironment = AppEnvironment("https://stage-farmers-app-api.mahapocra.gov.in/") //For Internal Testing
         val WOTR: AppEnvironment = AppEnvironment("https://kisan.wotr.org.in/")
         val GIS: AppEnvironment = AppEnvironment("https://gis.mahapocra.gov.in/")
         val PANI_FOUNDATION: AppEnvironment = AppEnvironment("https://ianm-preprod.wadhwaniai.org/")
