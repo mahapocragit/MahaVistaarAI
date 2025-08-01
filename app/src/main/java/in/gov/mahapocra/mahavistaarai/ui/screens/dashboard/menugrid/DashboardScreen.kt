@@ -590,7 +590,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     selectedCropList?.clear()
                     farmerViewModel.getFarmerSelectedCrop(this, languageToLoad)
                     savedCropName = ""
-                    AppPreferenceManager(this).clearPreference("CROP_ID_SAVED")
+                    AppPreferenceManager(this).saveInt("CROP_ID_SAVED", 0)
                     AppPreferenceManager(this).clearPreference("CROP_NAME_SAVED")
                     AppPreferenceManager(this).clearPreference("CROP_IMAGE_SAVED")
                     AppPreferenceManager(this).clearPreference("CROP_SOWING_DATE_SAVED")
@@ -830,7 +830,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         startActivity(sharing)
                     } else {
                         val intent = Intent(this, PestsAndDiseasesStages::class.java)
-                        intent.putExtra("cropId", savedCropId)
+                        intent.putExtra("id", savedCropId)
                         intent.putExtra("wotr_crop_id", savedCropWoTRId)
                         intent.putExtra("sowingDate", savedCropSowingDate)
                         intent.putExtra("mUrl", savedCropImageUrl)

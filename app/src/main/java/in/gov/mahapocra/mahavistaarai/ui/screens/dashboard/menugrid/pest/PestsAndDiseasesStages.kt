@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -68,18 +69,13 @@ class PestsAndDiseasesStages : AppCompatActivity() {
             startActivity(Intent(this@PestsAndDiseasesStages, DashboardScreen::class.java))
         }
 
-        cropId = intent.getIntExtra("cropId", 0)
+        cropId = intent.getIntExtra("id", 0)
         wotrCropId = intent.getStringExtra("wotr_crop_id")
         mUrl = intent.getStringExtra("mUrl")
         cropName = intent.getStringExtra("mName")
         particularStagesDiseases = intent.getStringExtra("ParticularStagesDiseases").toString()
         stagesId = intent.getIntExtra("id", 0)
-        if (cropId == 0) {
-            cropId = AppPreferenceManager(this).getInt("CROP_ID_SAVED")
-            cropName = AppPreferenceManager(this).getString("CROP_NAME_SAVED")
-            mUrl = AppPreferenceManager(this).getString("CROP_IMAGE_SAVED")
-            wotrCropId = AppPreferenceManager(this).getString("CROP_WOTR_ID_SAVED")
-        }
+        Log.d("TAGGER", "onCreate---------->: $cropId")
         AppSettings.getInstance()
             .setValue(this, AppConstants.tmpCROPNAME, cropName)
 

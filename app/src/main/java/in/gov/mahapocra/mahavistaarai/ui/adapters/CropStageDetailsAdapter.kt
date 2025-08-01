@@ -84,7 +84,7 @@ class CropStageDetailsAdapter(
                     context?.let { it1 -> AppPreferenceManager(it1).getString(AppConstants.ACTION_FROM_DASHBOARD) }
                 if (source.equals(AppConstants.PEST_AND_DISEASES_STAGES)) {
                     val intent = Intent(context, PestsAndDiseasesStages::class.java)
-                    intent.putExtra("cropId", jsonObject.optInt("id"))
+                    intent.putExtra("id", jsonObject.optInt("id"))
                     intent.putExtra("wotr_crop_id", jsonObject.optInt("wotr_crop_id"))
                     intent.putExtra("mUrl", jsonObject.optString("image"))
                     intent.putExtra("mName", jsonObject.optString("name"))

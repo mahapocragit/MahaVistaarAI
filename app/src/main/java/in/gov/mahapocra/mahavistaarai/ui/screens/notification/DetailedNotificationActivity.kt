@@ -11,6 +11,7 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDetailedNotificationBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.FertilizerCalculatorActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.MarketPrice
@@ -173,38 +174,10 @@ class DetailedNotificationActivity : AppCompatActivity() {
 
     private fun redirectToScreen(testValue: String) {
         val targetIntent = when (testValue.lowercase()) {
-            "advisory" -> Intent(this, AdvisoryCropActivity::class.java).apply {
-                putExtra("id", cropId)
-                putExtra("wotr_crop_id", wotrCropId)
-                putExtra("mUrl", mUrl)
-                putExtra("sowingDate", sowingDate)
-                putExtra("mName", cropName)
-            }
-
-            "sop" -> Intent(this, SOPActivity::class.java).apply {
-                putExtra("id", cropId)
-                putExtra("wotr_crop_id", wotrCropId)
-                putExtra("mUrl", mUrl)
-                putExtra("sowingDate", sowingDate)
-                putExtra("mName", cropName)
-            }
-
-            "fertilizer" -> Intent(this, FertilizerCalculatorActivity::class.java).apply {
-                putExtra("id", cropId)
-                putExtra("wotr_crop_id", wotrCropId)
-                putExtra("mUrl", mUrl)
-                putExtra("sowingDate", sowingDate)
-                putExtra("mName", cropName)
-            }
-
-            "pestdisease" -> Intent(this, PestsAndDiseasesStages::class.java).apply {
-                putExtra("id", cropId)
-                putExtra("wotr_crop_id", wotrCropId)
-                putExtra("mUrl", mUrl)
-                putExtra("sowingDate", sowingDate)
-                putExtra("mName", cropName)
-            }
-
+            "advisory" -> checkAndRedirect(AdvisoryCropActivity::class.java)
+            "sop" -> checkAndRedirect(SOPActivity::class.java)
+            "fertilizer" -> checkAndRedirect(FertilizerCalculatorActivity::class.java)
+            "pestdisease" -> checkAndRedirect(PestsAndDiseasesStages::class.java)
             "weather" -> Intent(this, WeatherActivity::class.java)
             "soilcard" -> Intent(this, HealthCardActivity::class.java)
             "climatetech" -> Intent(this, ClimateResilientTechnology::class.java)
@@ -228,5 +201,20 @@ class DetailedNotificationActivity : AppCompatActivity() {
         }
         val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
         super.attachBaseContext(updatedContext)
+    }
+
+    private fun checkAndRedirect(targetClass: Class<*>): Intent {
+        return if (cropId == 0) {
+            Intent(this, AddCropActivity::class.java)
+        } else {
+            Log.d("TAGGER", "checkAndRedirect: $cropId")
+            Intent(this, targetClass).apply {
+                putExtra("id", cropId)
+                putExtra("wotr_crop_id", wotrCropId)
+                putExtra("mUrl", mUrl)
+                putExtra("sowingDate", sowingDate)
+                putExtra("mName", cropName)
+            }
+        }
     }
 }
