@@ -22,6 +22,7 @@
         <item name="windowNoTitle">true</item>
         <item name="android:fontFamily">@font/poppins_regular_font</item>
         <item name="fontFamily">@font/poppins_regular_font</item>
+        <item name="android:statusBarColor">@color/actionbar_color_figma</item>
     </style>
 
     <style name="Theme.FarmerApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">

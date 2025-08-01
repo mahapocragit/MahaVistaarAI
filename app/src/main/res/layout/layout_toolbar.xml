@@ -10,7 +10,7 @@
         android:id="@+id/relativeLayoutToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="48dp">
+        android:minHeight="@dimen/_38sdp">
 
         <ImageView
             android:id="@+id/imgBackArrow"
