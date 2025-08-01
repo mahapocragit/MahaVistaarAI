@@ -3,6 +3,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -85,13 +86,6 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         wotrCropId = intent.getStringExtra("wotr_crop_id")
         mUrl = intent.getStringExtra("mUrl")
         route = intent.getStringExtra("ROUTE").toString()
-        if (cropId == 0) {
-            cropId = AppPreferenceManager(this).getInt("CROP_ID_SAVED")
-            cropName = AppPreferenceManager(this).getString("CROP_NAME_SAVED")
-            mUrl = AppPreferenceManager(this).getString("CROP_IMAGE_SAVED")
-            sowingDate = AppPreferenceManager(this).getString("CROP_SOWING_DATE_SAVED").toString()
-            wotrCropId = AppPreferenceManager(this).getString("CROP_WOTR_ID_SAVED")
-        }
         villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
 
@@ -112,14 +106,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
             startActivity(Intent(this, DashboardScreen::class.java))
         }
         observeCropStagesAndAdvisory()
-        if (route!=""){
-            val savedCropId = AppPreferenceManager(this).getInt("CROP_ID_SAVED")
-            val savedCropSowingDate = AppPreferenceManager(this).getString("CROP_SOWING_DATE_SAVED")
-            AppPreferenceManager(this).getString("CROP_NAME_SAVED")
-            savedCropSowingDate?.let { viewModel.getCropStagesAndAdvisory(this, savedCropId, it, languageToLoad) }
-        }else{
-            viewModel.getCropStagesAndAdvisory(this, cropId, sowingDate, languageToLoad)
-        }
+        viewModel.getCropStagesAndAdvisory(this, cropId, sowingDate, languageToLoad)
         val isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
         binding.chatbotIcon.setOnClickListener {
             if (!isGuest) {
@@ -150,6 +137,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
     private fun observeCropStagesAndAdvisory() {
         ProgressHelper.showProgressDialog(this)
         viewModel.getCropStagesAndAdvisoryResponse.observe(this) {
+            Log.d("TAGGER", "observeCropStagesAndAdvisory: $it")
             ProgressHelper.disableProgressDialog()
             if (it != null) {
                 val jSONObject = JSONObject(it.toString())
@@ -183,6 +171,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
             }
         }
         viewModel.error.observe(this){
+            Log.d("TAGGER", "error: $it")
             ProgressHelper.disableProgressDialog()
             UIToastMessage.show(this, "Unable to fetch data")
         }

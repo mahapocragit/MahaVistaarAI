@@ -25,6 +25,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.Shetisha
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
@@ -87,7 +88,8 @@ class DetailedNotificationActivity : AppCompatActivity() {
             }
         }
 
-        binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.detailed_notifications)
+        binding.relativeLayoutTopBar.textViewHeaderTitle.text =
+            getString(R.string.detailed_notifications)
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
@@ -95,7 +97,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
         }
     }
 
-    private fun fetchCropList(flatCropId:Int?) {
+    private fun fetchCropList(flatCropId: Int?) {
         farmerViewModel.getCropCategoriesAndCropDetails(this, languageToLoad)
         farmerViewModel.cropCategoryResponse.observe(this) { response ->
             if (response != null) {
@@ -120,17 +122,27 @@ class DetailedNotificationActivity : AppCompatActivity() {
                     e.printStackTrace()
                 }
             }
-            if (flatCropsJsonArray!=null && flatCropsJsonArray.length()>0) {
+            if (flatCropsJsonArray != null && flatCropsJsonArray.length() > 0) {
                 for (i in 0 until flatCropsJsonArray.length()) {
                     val jsonObject = flatCropsJsonArray.getJSONObject(i)
                     val id = jsonObject.optInt("id")
                     if (id == flatCropId) {
                         Log.d("TAGGER", "checkCropIdAndFetchJson: $jsonObject")
                         cropId = jsonObject.optInt("id")
-                        cropName = jsonObject.optString("name")
-                        sowingDate = jsonObject.optString("sowing_date")
-                        wotrCropId = jsonObject.optString("wotr_crop_id")
-                        mUrl = jsonObject.optString("mUrl")
+                        if (cropId != 0) {
+                            cropName = jsonObject.optString("name")
+                            sowingDate = jsonObject.optString("sowing_date")
+                            wotrCropId = jsonObject.optString("wotr_crop_id")
+                            mUrl = jsonObject.optString("mUrl")
+                        } else {
+                            cropId = AppPreferenceManager(this).getInt("CROP_ID_SAVED")
+                            cropName = AppPreferenceManager(this).getString("CROP_NAME_SAVED")
+                            mUrl = AppPreferenceManager(this).getString("CROP_IMAGE_SAVED")
+                            sowingDate =
+                                AppPreferenceManager(this).getString("CROP_SOWING_DATE_SAVED")
+                                    .toString()
+                            wotrCropId = AppPreferenceManager(this).getString("CROP_WOTR_ID_SAVED")
+                        }
                     }
                 }
             }

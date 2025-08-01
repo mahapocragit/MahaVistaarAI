@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,6 +64,7 @@ class CropStageDetailsAdapter(
 
         try {
             val jsonObject = cropStageDetailsJsonArray.getJSONObject(position) as JSONObject
+            Log.d("TAGGER", "onBindViewHolder: $jsonObject")
             holder.titleTextView.text = jsonObject.optString("name")
             val transformation = RoundedTransformationBuilder()
                 .borderColor(Color.WHITE)
@@ -89,13 +91,14 @@ class CropStageDetailsAdapter(
                     context?.startActivity(intent)
                 }else if (source.equals(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD)) {
                     val intent = Intent(context, AdvisoryCropActivity::class.java)
-                    intent.putExtra("dataSavedInLocal", "dataSavedInLocal")
                     intent.putExtra("id", jsonObject.optInt("id"))
+                    intent.putExtra("wotr_crop_id", jsonObject.optInt("wotr_crop_id"))
+                    intent.putExtra("mUrl", jsonObject.optString("image"))
                     intent.putExtra("mName", jsonObject.optString("name"))
-                    intent.putExtra("editCrop", "NoEditCrop")
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        intent.putExtra("sowingDate", LocalCustom.getSowingDateWithYear(jsonObject.optString("sowing_date")))
+                        intent.putExtra("sowingDate", LocalCustom.getSowingDateInDayMonthYearFormat(jsonObject.optString("sowing_date")))
                     }
+                    intent.putExtra("editCrop", "NoEditCrop")
                     context?.startActivity(intent)
                 }else if (source.equals(AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD)) {
                     val intent = Intent(context, FertilizerCalculatorActivity::class.java)

@@ -1,6 +1,7 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,6 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONException
 import org.json.JSONObject
+import retrofit2.HttpException
 import retrofit2.Retrofit
 
 class FarmerViewModel : ViewModel() {
@@ -503,14 +505,25 @@ class FarmerViewModel : ViewModel() {
                 jsonObject.put("farmer_id", farmerId)
                 jsonObject.put("sowing_date", sowingDate)
                 jsonObject.put("lang", language)
+                Log.d("TAGGER", "getCropStagesAndAdvisory jsonObject: $jsonObject")
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val retrofit: Retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
-                val response = apiRequest.getCropStagesAndAdvisory(requestBody)
-                _getCropStagesAndAdvisoryResponse.value = response
+
+                try {
+                    val response = apiRequest.getCropStagesAndAdvisory(requestBody)
+                    _getCropStagesAndAdvisoryResponse.value = response
+                } catch (httpException: HttpException) {
+                    val errorBody = httpException.response()?.errorBody()?.string()
+                    _error.value = "Server error: ${httpException.code()} - $errorBody"
+                    FirebaseCrashlytics.getInstance().recordException(httpException)
+                }
+
             } catch (e: JSONException) {
                 _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
+            } catch (e: Exception) {
+                _error.value = e.localizedMessage ?: "Unexpected error"
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
