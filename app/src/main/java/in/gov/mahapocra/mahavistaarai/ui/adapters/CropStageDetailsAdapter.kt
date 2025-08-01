@@ -64,7 +64,6 @@ class CropStageDetailsAdapter(
 
         try {
             val jsonObject = cropStageDetailsJsonArray.getJSONObject(position) as JSONObject
-            Log.d("TAGGER", "onBindViewHolder: $jsonObject")
             holder.titleTextView.text = jsonObject.optString("name")
             val transformation = RoundedTransformationBuilder()
                 .borderColor(Color.WHITE)

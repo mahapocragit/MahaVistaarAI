@@ -123,28 +123,40 @@ class DetailedNotificationActivity : AppCompatActivity() {
                     e.printStackTrace()
                 }
             }
-            if (flatCropsJsonArray != null && flatCropsJsonArray.length() > 0) {
+
+            var foundMatch = false
+            if (flatCropsJsonArray.length() > 0 && flatCropId != null) {
                 for (i in 0 until flatCropsJsonArray.length()) {
                     val jsonObject = flatCropsJsonArray.getJSONObject(i)
                     val id = jsonObject.optInt("id")
                     if (id == flatCropId) {
                         Log.d("TAGGER", "checkCropIdAndFetchJson: $jsonObject")
                         cropId = jsonObject.optInt("id")
-                        if (cropId != 0) {
-                            cropName = jsonObject.optString("name")
-                            sowingDate = jsonObject.optString("sowing_date")
-                            wotrCropId = jsonObject.optString("wotr_crop_id")
-                            mUrl = jsonObject.optString("mUrl")
-                        } else {
-                            cropId = AppPreferenceManager(this).getInt("CROP_ID_SAVED")
-                            cropName = AppPreferenceManager(this).getString("CROP_NAME_SAVED")
-                            mUrl = AppPreferenceManager(this).getString("CROP_IMAGE_SAVED")
-                            sowingDate =
-                                AppPreferenceManager(this).getString("CROP_SOWING_DATE_SAVED")
-                                    .toString()
-                            wotrCropId = AppPreferenceManager(this).getString("CROP_WOTR_ID_SAVED")
-                        }
+                        cropName = jsonObject.optString("name")
+                        sowingDate = jsonObject.optString("sowing_date")
+                        wotrCropId = jsonObject.optString("wotr_crop_id")
+                        mUrl = jsonObject.optString("mUrl")
+                        foundMatch = true
+                        break
                     }
+                }
+            }
+
+            // 🔁 Fallback to saved preferences if no matching crop found
+            if (!foundMatch) {
+                val prefs = AppPreferenceManager(this)
+                cropId = prefs.getInt("CROP_ID_SAVED")
+                if (cropId != 0) {
+                    cropName = prefs.getString("CROP_NAME_SAVED")
+                    mUrl = prefs.getString("CROP_IMAGE_SAVED")
+                    sowingDate = prefs.getString("CROP_SOWING_DATE_SAVED") ?: ""
+                    wotrCropId = prefs.getString("CROP_WOTR_ID_SAVED")
+                } else {
+                    cropId = 25
+                    cropName = "Cotton"
+                    mUrl = "https://s3.object.webwerksvmx.com/ffsauditlogs/ffs-api/ffs-api/uploads/crop_image/25_Cotton_1697091770.png"
+                    sowingDate = "22/06"
+                    wotrCropId = "1"
                 }
             }
         }
@@ -204,17 +216,13 @@ class DetailedNotificationActivity : AppCompatActivity() {
     }
 
     private fun checkAndRedirect(targetClass: Class<*>): Intent {
-        return if (cropId == 0) {
-            Intent(this, AddCropActivity::class.java)
-        } else {
-            Log.d("TAGGER", "checkAndRedirect: $cropId")
-            Intent(this, targetClass).apply {
-                putExtra("id", cropId)
-                putExtra("wotr_crop_id", wotrCropId)
-                putExtra("mUrl", mUrl)
-                putExtra("sowingDate", sowingDate)
-                putExtra("mName", cropName)
-            }
+        Log.d("TAGGER", "checkAndRedirect: $cropId")
+        return Intent(this, targetClass).apply {
+            putExtra("id", cropId)
+            putExtra("wotr_crop_id", wotrCropId)
+            putExtra("mUrl", mUrl)
+            putExtra("sowingDate", sowingDate)
+            putExtra("mName", cropName)
         }
     }
 }
