@@ -8,6 +8,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDetailedNotificationBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
@@ -86,11 +87,11 @@ class DetailedNotificationActivity : AppCompatActivity() {
             }
         }
 
-
-        binding.relativeLayoutTopBar.textViewHeaderTitle.text = "अधिक माहिती"
+        binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.detailed_notifications)
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
+            Log.d("TAGGER", "onCreate relativeLayoutTopBar: $it")
         }
     }
 

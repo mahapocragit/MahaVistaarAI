@@ -368,13 +368,39 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         farmerViewModel.error.observe(this) {
             Log.d("TAGGER", "onCreate: $it")
         }
+        farmerViewModel.getNotificationList(this)
+        farmerViewModel.getNotificationResponse.observe(this) {
+            if (it != null) {
+                val jsonObject = JSONObject(it.toString())
+                val notificationJsonArray = jsonObject.getJSONArray("notifications")
+
+                var unreadCount = 0
+                for (i in 0 until notificationJsonArray.length()) {
+                    val notification = notificationJsonArray.getJSONObject(i)
+                    if (notification.optInt("is_read") == 0) {
+                        unreadCount++
+                    }
+                }
+                // Optionally update your badge view
+                updateNotificationCount(unreadCount)
+            }
+        }
+    }
+
+    private fun updateNotificationCount(unreadNotificationsCount:Int){
+        if (unreadNotificationsCount>0) {
+            binding.appBarMain.notificationBadge.text = unreadNotificationsCount.toString()
+            binding.appBarMain.notificationBadge.visibility = View.VISIBLE
+        }else{
+            binding.appBarMain.notificationBadge.visibility = View.GONE
+        }
     }
 
     override fun onResume() {
         super.onResume()
         val shakeAnimation = AnimationUtils.loadAnimation(this, R.anim.shake)
         binding.appBarMain.dashboardScreen.imageView20.startAnimation(shakeAnimation)
-
+        farmerViewModel.getNotificationList(this)
         CoroutineScope(Dispatchers.Main).launch {
             delay(3000)
             binding.appBarMain.dashboardScreen.imageView20.clearAnimation()

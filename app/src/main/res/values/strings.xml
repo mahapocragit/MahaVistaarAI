@@ -440,4 +440,6 @@
     <string name="etl_crop_advisory">Crop Advisory</string>
     <string name="click_here_to_view_full_advisory">Click here to view full advisory</string>
     <string name="date_etl">Date: </string>
+    <string name="no_notification_right_now">No notification Right Now!!</string>
+    <string name="detailed_notifications">Detailed Notification</string>
 </resources>

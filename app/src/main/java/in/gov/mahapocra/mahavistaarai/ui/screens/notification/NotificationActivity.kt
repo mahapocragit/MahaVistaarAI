@@ -45,18 +45,25 @@ class NotificationActivity : AppCompatActivity() {
             if (it != null) {
                 val jsonObject = JSONObject(it.toString())
                 val notificationJsonArray = jsonObject.getJSONArray("notifications")
-                binding.notificationRecyclerView.apply {
-                    hasFixedSize()
-                    layoutManager = LinearLayoutManager(this@NotificationActivity)
-                    adapter = NotificationAdapter(notificationJsonArray) { jsonObject ->
-                        startActivity(
-                            Intent(
-                                this@NotificationActivity,
-                                DetailedNotificationActivity::class.java
-                            ).apply {
-                                putExtra("notificationObject", jsonObject.toString())
-                            })
+                if (notificationJsonArray.length() > 0) {
+                    binding.notificationRecyclerView.visibility = View.VISIBLE
+                    binding.notificationNotFoundLayout.visibility = View.GONE
+                    binding.notificationRecyclerView.apply {
+                        hasFixedSize()
+                        layoutManager = LinearLayoutManager(this@NotificationActivity)
+                        adapter = NotificationAdapter(notificationJsonArray) { jsonObject ->
+                            startActivity(
+                                Intent(
+                                    this@NotificationActivity,
+                                    DetailedNotificationActivity::class.java
+                                ).apply {
+                                    putExtra("notificationObject", jsonObject.toString())
+                                })
+                        }
                     }
+                } else {
+                    binding.notificationRecyclerView.visibility = View.GONE
+                    binding.notificationNotFoundLayout.visibility = View.VISIBLE
                 }
             }
         }
