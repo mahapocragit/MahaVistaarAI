@@ -43,7 +43,7 @@ class AgriStackAdvisoryActivity : AppCompatActivity() {
             getString(R.string.etl_crop_advisory)
         binding.relativeLayoutTopBar.textViewHeaderTitle.setTextSize(
             TypedValue.COMPLEX_UNIT_SP,
-            18f
+            16f
         )
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
