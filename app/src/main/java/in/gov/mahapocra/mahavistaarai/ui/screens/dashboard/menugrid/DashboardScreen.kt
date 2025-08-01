@@ -563,7 +563,12 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null)
                     selectedCropList?.clear()
                     farmerViewModel.getFarmerSelectedCrop(this, languageToLoad)
-
+                    savedCropName = ""
+                    AppPreferenceManager(this).clearPreference("CROP_ID_SAVED")
+                    AppPreferenceManager(this).clearPreference("CROP_NAME_SAVED")
+                    AppPreferenceManager(this).clearPreference("CROP_IMAGE_SAVED")
+                    AppPreferenceManager(this).clearPreference("CROP_SOWING_DATE_SAVED")
+                    AppPreferenceManager(this).clearPreference("CROP_WOTR_ID_SAVED")
                 } else {
                     UIToastMessage.show(this, deleteResponse.getResponse())
                 }
