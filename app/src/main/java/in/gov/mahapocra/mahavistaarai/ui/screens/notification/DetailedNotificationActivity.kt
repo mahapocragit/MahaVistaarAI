@@ -154,7 +154,8 @@ class DetailedNotificationActivity : AppCompatActivity() {
                 } else {
                     cropId = 25
                     cropName = "Cotton"
-                    mUrl = "https://s3.object.webwerksvmx.com/ffsauditlogs/ffs-api/ffs-api/uploads/crop_image/25_Cotton_1697091770.png"
+                    mUrl =
+                        "https://s3.object.webwerksvmx.com/ffsauditlogs/ffs-api/ffs-api/uploads/crop_image/25_Cotton_1697091770.png"
                     sowingDate = "22/06"
                     wotrCropId = "1"
                 }
@@ -217,12 +218,27 @@ class DetailedNotificationActivity : AppCompatActivity() {
 
     private fun checkAndRedirect(targetClass: Class<*>): Intent {
         Log.d("TAGGER", "checkAndRedirect: $cropId")
+        val sowingDateFormat = if (
+            (targetClass == FertilizerCalculatorActivity::class.java || targetClass == AdvisoryCropActivity::class.java)
+            && isShortDateFormat(sowingDate)
+        ) {
+            LocalCustom.getSowingDateInDayMonthYearFormat(sowingDate)
+        } else {
+            sowingDate
+        }
         return Intent(this, targetClass).apply {
             putExtra("id", cropId)
             putExtra("wotr_crop_id", wotrCropId)
             putExtra("mUrl", mUrl)
-            putExtra("sowingDate", sowingDate)
+            putExtra("sowingDate", sowingDateFormat)
             putExtra("mName", cropName)
         }
+    }
+
+    private fun isShortDateFormat(date: String?): Boolean {
+        if (date.isNullOrEmpty()) return false
+        // Simple check: pattern matches "dd/MM" only
+        val regex = Regex("""\d{2}/\d{2}""")
+        return regex.matches(date.trim())
     }
 }

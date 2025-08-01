@@ -104,15 +104,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         wotrCropId = intent.getIntExtra("wotr_crop_id", 0).toString()
         mUrl = intent.getStringExtra("mUrl")
         sowingDate = intent.getStringExtra("sowingDate")
-        route = intent.getStringExtra("ROUTE").toString()
-
-        if (cropId == 0) {
-            cropId = AppPreferenceManager(this).getInt("CROP_ID_SAVED")
-            cropName = AppPreferenceManager(this).getString("CROP_NAME_SAVED")
-            mUrl = AppPreferenceManager(this).getString("CROP_IMAGE_SAVED")
-            sowingDate = AppPreferenceManager(this).getString("CROP_SOWING_DATE_SAVED").toString()
-            wotrCropId = AppPreferenceManager(this).getString("CROP_WOTR_ID_SAVED")
-        }
 
         binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {
             val sharing = Intent(this, AddCropActivity::class.java)
