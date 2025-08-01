@@ -27,7 +27,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 35
         versionCode 16
-        versionName "1.8"
+        versionName "1.9"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resourceConfigurations += ['en', 'mr']
