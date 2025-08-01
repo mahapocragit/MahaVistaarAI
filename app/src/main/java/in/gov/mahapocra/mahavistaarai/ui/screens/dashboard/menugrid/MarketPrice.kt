@@ -142,12 +142,11 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
         binding.textViewDistrict.setOnClickListener {
             showDistrict()
         }
-
+        setupObservers()
         binding.textViewMarket.setOnClickListener {
             binding.calenderLayout.visibility = View.GONE
             binding.tvMarketDate.text = ""
             marketPreceDate = ""
-            getMarkets()
             farmerViewModel.fetchMarketList(this, languageToLoad, districtID)
             ProgressHelper.showProgressDialog(this)
         }
@@ -180,6 +179,43 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
         }
         farmerViewModel.error.observe(this) {
             ProgressHelper.disableProgressDialog()
+        }
+    }
+
+    private fun setupObservers() {
+        // Observe market list only once per lifecycle
+        farmerViewModel.responseMarkerList.observe(this) { responseStr ->
+            ProgressHelper.disableProgressDialog()
+            if (responseStr != null) {
+                try {
+                    val jSONObject = JSONObject(responseStr.toString())
+                    val response = ResponseModel(jSONObject)
+
+                    if (response.status) {
+                        marketJSONArray = response.getdataArray()
+                        AppUtility.getInstance().showListDialogMarketIndex(
+                            marketJSONArray,
+                            3,
+                            getString(R.string.farmer_select_market),
+                            "apmc_name",
+                            this,
+                            this
+                        )
+                    } else {
+                        Toast.makeText(this, "Data Not Found", Toast.LENGTH_LONG).show()
+                    }
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(this, "Error parsing response", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+        // Handle errors
+        farmerViewModel.error.observe(this) {
+            ProgressHelper.disableProgressDialog()
+            Toast.makeText(this, "Error fetching data", Toast.LENGTH_SHORT).show()
         }
     }
 
