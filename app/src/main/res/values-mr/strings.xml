@@ -441,5 +441,5 @@
     <string name="click_here_to_view_full_advisory">पूर्ण सल्ला पाहण्यासाठी येथे क्लिक करा.</string>
     <string name="date_etl">दि.: </string>
     <string name="no_notification_right_now">सध्या कोणतीही सूचना नाही!!</string>
-    <string name="detailed_notifications">सविस्तर सूचना</string>
+    <string name="detailed_notifications">अधिसूचना</string>
 </resources>
