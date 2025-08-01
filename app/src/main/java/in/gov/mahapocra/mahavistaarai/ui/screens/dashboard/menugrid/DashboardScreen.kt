@@ -1011,10 +1011,12 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     }
 
     private fun logoutFromApp() {
+        Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show()
+        farmerViewModel.updateFCMToken(this, "NA")
         AppSettings.getInstance().setValue(this, AppConstants.uName, AppConstants.uName)
         AppSettings.getInstance().setValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
         AppSettings.getInstance().setValue(this, AppConstants.uEmail, AppConstants.uEmail)
-        AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, 0)
+//        AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, 0)
         AppSettings.getInstance().setValue(this, AppConstants.uDIST, AppConstants.uDIST)
         AppSettings.getInstance().setIntValue(this, AppConstants.uDISTId, 0)
         AppSettings.getInstance().setValue(this, AppConstants.uTALUKA, AppConstants.uTALUKA)
@@ -1024,7 +1026,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null)
         AppUtility.getInstance().clearAppSharedPrefData(this, AppConstants.kSHARED_PREF)
         AppSettings.getInstance().setBooleanValue(this, AppConstants.userDataSaved, false)
-        farmerViewModel.updateFCMToken(this, "")
         val intent = Intent(this@DashboardScreen, SplashScreenActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)

@@ -104,6 +104,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 fcmToken = task.result
+                Log.d("FCM Token", "onCreate: ${fcmToken}")
             } else {
                 Log.e("FCM Token", "Fetching token failed", task.exception)
             }
