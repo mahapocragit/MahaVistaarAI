@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
@@ -98,10 +99,10 @@ class FarmerViewModel : ViewModel() {
     val getNotificationDetailedResponse: LiveData<JsonObject> = _getNotificationDetailedResponse
     private val _updateNotificationStatusResponse = MutableLiveData<JsonObject>()
     val updateNotificationStatusResponse: LiveData<JsonObject> = _updateNotificationStatusResponse
-
-
     private val _updateFCMTokenResponse = MutableLiveData<JsonObject>()
     val updateFCMTokenResponse: LiveData<JsonObject> = _updateFCMTokenResponse
+    private val _checkFCMTokenResponse = MutableLiveData<JsonObject>()
+    val checkFCMTokenResponse: LiveData<JsonObject> = _checkFCMTokenResponse
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -507,7 +508,8 @@ class FarmerViewModel : ViewModel() {
                 jsonObject.put("lang", language)
                 Log.d("TAGGER", "getCropStagesAndAdvisory jsonObject: $jsonObject")
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit: Retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
 
                 try {
@@ -680,7 +682,32 @@ class FarmerViewModel : ViewModel() {
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.updateFCMToken(farmerId, fcmToken)
                 ProgressHelper.disableProgressDialog()
-                _updateFCMTokenResponse.value = response
+                val jsonString = """{"status": 200,"response": "FCM Cleared"}""".trimIndent()
+                val jsonObject: JsonObject = JsonParser.parseString(jsonString).asJsonObject
+                if (fcmToken == "NA") {
+                    _updateFCMTokenResponse.value = jsonObject
+                }else{
+                    _updateFCMTokenResponse.value = response
+                }
+            } catch (e: JSONException) {
+                ProgressHelper.disableProgressDialog()
+                _error.value = e.localizedMessage ?: "Unknown error"
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun validateFCMToken(context: Context) {
+        ProgressHelper.showProgressDialog(context)
+        val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+        viewModelScope.launch {
+            try {
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.checkFcmToken(farmerId)
+                ProgressHelper.disableProgressDialog()
+                _checkFCMTokenResponse.value = response
             } catch (e: JSONException) {
                 ProgressHelper.disableProgressDialog()
                 _error.value = e.localizedMessage ?: "Unknown error"

@@ -130,6 +130,9 @@ interface ApiService {
     @POST("authService/updateFcmToken")
     suspend fun updateFCMToken(@Header("userid")farmerId:Int, @Header("fcmtoken") fcmToken:String): JsonObject
 
+    @POST("authService/checkFcmToken")
+    suspend fun checkFcmToken(@Header("userid")farmerId:Int): JsonObject
+
     @POST(ApiConstants.kOTPRequest)
     fun getOTPRequest(
         @Header("MobileNo") mobileNo: String,

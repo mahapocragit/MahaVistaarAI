@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.View
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -261,6 +262,12 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     .show()
             }
         }
+
+        onBackPressedDispatcher.addCallback( object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                startActivity(Intent(this@FertilizerCalculatorActivity, DashboardScreen::class.java))
+            }
+        })
     }
 
     private fun settingUpTheViewsAsPerLanguage() {
@@ -268,11 +275,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         binding.plotSizeTitleTextView.text = getString(R.string.plot_size)
         binding.acreRadioButton.text = getString(R.string.acre)
         binding.radioButton2.text = getString(R.string.hectare)
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        startActivity(Intent(this, DashboardScreen::class.java))
     }
 
     private fun getSelectedSavedOption() {

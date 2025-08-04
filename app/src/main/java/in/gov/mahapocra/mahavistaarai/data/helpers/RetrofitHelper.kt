@@ -41,12 +41,12 @@ object RetrofitHelper {
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
             .addInterceptor { chain ->
-                val request = chain.request().newBuilder().apply {
-                    addHeader("Accept", "application/json;versions=1")
-                    addHeader("Content-Type", "application/json; charset=UTF-8")
-                    addHeader("Content-Encoding", "gzip")
-                }.build()
-                chain.proceed(request)
+                val request = chain.request().newBuilder()
+                    .addHeader("Accept", "application/json;versions=1")
+                    .addHeader("Content-Type", "application/json; charset=UTF-8")
+                    .addHeader("Content-Encoding", "gzip")
+                    .build()
+                return@addInterceptor chain.proceed(request)
             }
             .build()
     }

@@ -13,9 +13,11 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityNotificationBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.NotificationAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import org.json.JSONObject
 
 class NotificationActivity : AppCompatActivity() {
@@ -39,8 +41,11 @@ class NotificationActivity : AppCompatActivity() {
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
             startActivity(Intent(this, DashboardScreen::class.java))
         }
-
-        farmerViewModel.getNotificationList(this)
+        if (NetworkUtils.isInternetAvailable(this)){
+            farmerViewModel.getNotificationList(this)
+        }else{
+            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+        }
         farmerViewModel.getNotificationResponse.observe(this) {
             if (it != null) {
                 val jsonObject = JSONObject(it.toString())
@@ -71,7 +76,11 @@ class NotificationActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        farmerViewModel.getNotificationList(this)
+        if (NetworkUtils.isInternetAvailable(this)){
+            farmerViewModel.getNotificationList(this)
+        }else{
+            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+        }
     }
 
     override fun attachBaseContext(newBase: Context) {

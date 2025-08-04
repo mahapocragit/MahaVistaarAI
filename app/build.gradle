@@ -7,7 +7,7 @@ plugins {
 
 android {
 
-    compileSdk 35
+    compileSdk 36
     namespace 'in.gov.mahapocra.mahavistaarai'
 
     signingConfigs {
@@ -25,7 +25,7 @@ android {
     defaultConfig {
         applicationId "in.gov.mahapocra.mahavistaarai"
         minSdkVersion 23
-        targetSdkVersion 35
+        targetSdkVersion 36
         versionCode 16
         versionName "1.9"
         multiDexEnabled true
