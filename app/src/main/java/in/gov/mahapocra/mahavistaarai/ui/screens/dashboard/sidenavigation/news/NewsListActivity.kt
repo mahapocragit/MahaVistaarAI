@@ -12,6 +12,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityNotificationListBind
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.NewsWadhwaniViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import org.json.JSONObject
 
@@ -31,6 +32,7 @@ class NewsListActivity : AppCompatActivity() {
             layoutInflater
         )
         setContentView(binding.root)
+        uiResponsive(binding.root)
         binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.news)
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener { onBackPressedDispatcher.onBackPressed() }

@@ -57,6 +57,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealth
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.AboutActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.CreditsActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.news.NewsListActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.NotificationActivity
@@ -1120,6 +1121,14 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     val notificationIntent = Intent(
                         this@DashboardScreen,
                         CreditsActivity::class.java
+                    )
+                    startActivity(notificationIntent)
+                }
+
+                4 -> {
+                    val notificationIntent = Intent(
+                        this@DashboardScreen,
+                        NewsListActivity::class.java
                     )
                     startActivity(notificationIntent)
                 }
