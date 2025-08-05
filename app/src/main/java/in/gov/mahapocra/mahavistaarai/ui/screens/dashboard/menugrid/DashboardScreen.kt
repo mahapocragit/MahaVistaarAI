@@ -409,6 +409,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
         farmerViewModel.checkFCMTokenResponse.observe(this) {
             if (it != null) {
+                AppPreferenceManager(this).saveBoolean("FCM_VALIDATED", true)
                 val jSONObject = JSONObject(it.toString())
                 val status = jSONObject.optInt("status")
                 if (status != 200) {
@@ -420,7 +421,9 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             }
         }
         if (NetworkUtils.isInternetAvailable(this)) {
-            farmerViewModel.validateFCMToken(this)
+            if (!AppPreferenceManager(this).getBoolean("FCM_VALIDATED")) {
+                farmerViewModel.validateFCMToken(this)
+            }
         } else {
             LocalCustom.createSnackbar(binding.root, "Internet not available!")
         }
