@@ -120,6 +120,7 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.google.firebase:firebase-database-ktx:21.0.0'
     implementation 'com.google.android.gms:play-services-location:21.3.0'
+    implementation 'androidx.activity:activity:1.10.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
     implementation 'com.makeramen:roundedimageview:2.3.0'
 

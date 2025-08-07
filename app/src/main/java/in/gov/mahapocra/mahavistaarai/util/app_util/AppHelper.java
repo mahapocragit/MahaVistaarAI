@@ -31,6 +31,11 @@ public class AppHelper {
             aboutObject.put("name", "About");
             aboutObject.put("icon", "about_ic");
 
+            JSONObject expertsObject = new JSONObject();
+            expertsObject.put("id", 2);
+            expertsObject.put("name", "Experts Corner");
+            expertsObject.put("icon", "experts_ic");
+
             JSONObject partnerObject = new JSONObject();
             partnerObject.put("id", 3);
             partnerObject.put("name", "Credits");
@@ -48,6 +53,7 @@ public class AppHelper {
 
             jsonArray.put(profileObject);
             jsonArray.put(partnerObject);
+            jsonArray.put(expertsObject);
             jsonArray.put(aboutObject);
             jsonArray.put(newsObject);
             jsonArray.put(logoutObject);
@@ -63,13 +69,18 @@ public class AppHelper {
         try {
             JSONObject profileObject = new JSONObject();
             profileObject.put("id", 0);
-            profileObject.put("name","माझी प्रोफाईल");
+            profileObject.put("name", "माझी प्रोफाईल");
             profileObject.put("icon", "myprofile");
 
             JSONObject aboutObject = new JSONObject();
             aboutObject.put("id", 1);
             aboutObject.put("name", "आमच्या विषयी");
             aboutObject.put("icon", "about_ic");
+
+            JSONObject expertsObject = new JSONObject();
+            expertsObject.put("id", 2);
+            expertsObject.put("name", "Experts Corner");
+            expertsObject.put("icon", "experts_ic");
 
             JSONObject partnerObject = new JSONObject();
             partnerObject.put("id", 3);
@@ -88,6 +99,7 @@ public class AppHelper {
 
             jsonArray.put(profileObject);
             jsonArray.put(aboutObject);
+            jsonArray.put(expertsObject);
             jsonArray.put(partnerObject);
             jsonArray.put(newsObject);
             jsonArray.put(logoutObject);
@@ -108,6 +120,11 @@ public class AppHelper {
             aboutObject.put("name", "About");
             aboutObject.put("icon", "about_ic");
 
+            JSONObject expertsObject = new JSONObject();
+            expertsObject.put("id", 2);
+            expertsObject.put("name", "Experts Corner");
+            expertsObject.put("icon", "experts_ic");
+
             JSONObject creditObject = new JSONObject();
             creditObject.put("id", 3);
             creditObject.put("name", "Credits");
@@ -125,6 +142,7 @@ public class AppHelper {
 
             jsonArray.put(aboutObject);
             jsonArray.put(creditObject);
+            jsonArray.put(expertsObject);
             jsonArray.put(newsObject);
             jsonArray.put(profileObject);
 
@@ -143,6 +161,11 @@ public class AppHelper {
             aboutObject.put("name", "आमच्या विषयी");
             aboutObject.put("icon", "about_ic");
 
+            JSONObject expertsObject = new JSONObject();
+            expertsObject.put("id", 2);
+            expertsObject.put("name", "Experts Corner");
+            expertsObject.put("icon", "experts_ic");
+
             JSONObject creditObject = new JSONObject();
             creditObject.put("id", 3);
             creditObject.put("name", "भागीदार");
@@ -160,6 +183,7 @@ public class AppHelper {
 
             jsonArray.put(aboutObject);
             jsonArray.put(creditObject);
+            jsonArray.put(expertsObject);
             jsonArray.put(newsObject);
             jsonArray.put(profileObject);
 

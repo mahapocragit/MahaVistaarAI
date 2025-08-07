@@ -34,7 +34,8 @@ class NewsWadhwaniViewModel : ViewModel() {
                 }
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.PANI_FOUNDATION.baseUrl)
+                val retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.PANI_FOUNDATION.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
 
                 // Retrofit suspend call
@@ -48,14 +49,16 @@ class NewsWadhwaniViewModel : ViewModel() {
         }
     }
 
-    fun getNewsWadhwani(context: Context, bearerToken: String) {
+    fun getNewsWadhwani(bearerToken: String, offset: Int, dateSevenDaysAgo: String, currentDateTime: String) {
         viewModelScope.launch {
             try {
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.PANI_FOUNDATION.baseUrl)
+                val retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.PANI_FOUNDATION.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
 
                 // Retrofit suspend call
-                val response = apiRequest.eventsForNews("Bearer $bearerToken", "Maharashtra", false)
+                val response =
+                    apiRequest.eventsForNews("Bearer $bearerToken", "Maharashtra", offset,dateSevenDaysAgo, currentDateTime,  false)
                 _responseNewsWadhwani.value = response
 
             } catch (e: Exception) {

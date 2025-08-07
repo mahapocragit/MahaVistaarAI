@@ -91,6 +91,9 @@ interface ApiService {
     suspend fun eventsForNews(
         @Header("Authorization") authHeader: String,
         @Query("state") state: String,
+        @Query("offset") offset: Int,
+        @Query("from_date") dateSevenDaysAgo: String,
+        @Query("to_date") currentDateTime: String,
         @Query("is_rejected") isRejected: Boolean
     ): JsonObject
 

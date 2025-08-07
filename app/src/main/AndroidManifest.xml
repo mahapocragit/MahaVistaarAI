@@ -25,6 +25,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FarmerApp">
         <activity
+            android:name=".ui.screens.dashboard.sidenavigation.experts.ExpertsCornerFarmerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.screens.dashboard.sidenavigation.experts.ExpertsCornerAdminActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.screens.notification.DetailedNotificationActivity"
             android:exported="false" />
         <activity

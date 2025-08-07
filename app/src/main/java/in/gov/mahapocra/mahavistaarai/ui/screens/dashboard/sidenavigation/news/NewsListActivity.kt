@@ -15,11 +15,16 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class NewsListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNotificationListBinding
     private val newsWadhwaniViewModel: NewsWadhwaniViewModel by viewModels()
     private lateinit var languageToLoad: String
+    private var offset = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +53,21 @@ class NewsListActivity : AppCompatActivity() {
                 val jsonObject = JSONObject(it.toString())
                 val dataJsonObject = jsonObject.optJSONObject("data")
                 val bearerToken = dataJsonObject.optString("token")
-                newsWadhwaniViewModel.getNewsWadhwani(this, bearerToken)
+                val calendar = Calendar.getInstance()
+                calendar.add(Calendar.DAY_OF_YEAR, -7) // Go back 7 days
+                val dateSevenDaysAgo = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH).format(calendar.time)
+                val currentDateTime = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH).format(
+                    Date()
+                )
+                newsWadhwaniViewModel.getNewsWadhwani(bearerToken, offset, dateSevenDaysAgo, currentDateTime)
+                binding.nextButton.setOnClickListener {
+                    offset +=10
+                    newsWadhwaniViewModel.getNewsWadhwani(bearerToken, offset, dateSevenDaysAgo, currentDateTime)
+                }
+                binding.prevButton.setOnClickListener {
+                    offset -=10
+                    newsWadhwaniViewModel.getNewsWadhwani(bearerToken, offset, dateSevenDaysAgo, currentDateTime)
+                }
             }
         }
         newsWadhwaniViewModel.responseNewsWadhwani.observe(this) {

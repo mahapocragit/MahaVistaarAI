@@ -57,6 +57,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealth
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.AboutActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.CreditsActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.experts.ExpertsCornerAdminActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.news.NewsListActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
@@ -993,8 +994,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                             LocalCustom.createSnackbar(binding.root, "Internet not available!")
                         }
                     }
-
-
                 }
             }
     }
@@ -1115,6 +1114,14 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     )
                 } else {
                     UIToastMessage.show(this@DashboardScreen, "Please Login First...")
+                }
+
+                2 -> {
+                    val notificationIntent = Intent(
+                        this@DashboardScreen,
+                        ExpertsCornerAdminActivity::class.java
+                    )
+                    startActivity(notificationIntent)
                 }
 
                 3 -> {
