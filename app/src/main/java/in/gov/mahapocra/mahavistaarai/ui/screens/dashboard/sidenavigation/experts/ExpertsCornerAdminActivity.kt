@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.experts
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -61,6 +62,9 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
         }
         binding.addPostToggleButton.setOnClickListener { toggleView(true) }
         binding.myPostToggleButton.setOnClickListener { toggleView(false) }
+        binding.submitButton.setOnClickListener {
+            startActivity(Intent(this, ExpertsCornerFarmerActivity::class.java))
+        }
     }
 
     private fun toggleView(showAddView: Boolean) {
