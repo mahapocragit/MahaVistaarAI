@@ -559,7 +559,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         val submitButton = dialog.findViewById<Button>(R.id.submitButton)
         val resendOTP = dialog.findViewById<Button>(R.id.resentOTP)
         val cancelButton = dialog.findViewById<ImageView>(R.id.imageView_close)
-
+        otpVerification(resendOTP)
         cancelButton.setOnClickListener { dialog.dismiss() }
         submitButton.setOnClickListener {
             val enteredOTP: String = receiveOTPEditText.text.toString()
@@ -763,5 +763,27 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         }
         val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
         super.attachBaseContext(updatedContext)
+    }
+
+    private fun otpVerification(resendOTP: Button) {
+        // Disable and gray out the button before starting timer
+        resendOTP.isEnabled = false
+        resendOTP.setBackgroundColor(ContextCompat.getColor(this, R.color.gray))
+        resendOTP.setTextColor(ContextCompat.getColor(this, R.color.white))
+
+        object : CountDownTimer(30000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                resendOTP.text =
+                    resources.getString(R.string.Time) + ":" + millisUntilFinished / 1000
+            }
+
+            override fun onFinish() {
+                // Enable and reset button appearance
+                resendOTP.isEnabled = true
+                resendOTP.text = resources.getString(R.string.Resend_OTP)
+                resendOTP.setBackgroundColor(ContextCompat.getColor(this@Registration, R.color.status_green))
+                resendOTP.setTextColor(ContextCompat.getColor(this@Registration, R.color.white))
+            }
+        }.start()
     }
 }

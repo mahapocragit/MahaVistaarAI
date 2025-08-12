@@ -590,7 +590,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
         resendOTP.setOnClickListener {
             dialog.dismiss()
-            userValidateAndLogin()
+            sendOTP()
         }
         dialog.show()
     }
@@ -651,15 +651,23 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     }
 
     private fun otpVerification(resendOTP: Button) {
+        // Disable and gray out the button before starting timer
+        resendOTP.isEnabled = false
+        resendOTP.setBackgroundColor(ContextCompat.getColor(this, R.color.gray))
+        resendOTP.setTextColor(ContextCompat.getColor(this, R.color.white))
+
         object : CountDownTimer(30000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 resendOTP.text =
                     resources.getString(R.string.Time) + ":" + millisUntilFinished / 1000
-                //here you can have your logic to set text to edittext
             }
 
             override fun onFinish() {
+                // Enable and reset button appearance
+                resendOTP.isEnabled = true
                 resendOTP.text = resources.getString(R.string.Resend_OTP)
+                resendOTP.setBackgroundColor(ContextCompat.getColor(this@LoginScreen, R.color.status_green))
+                resendOTP.setTextColor(ContextCompat.getColor(this@LoginScreen, R.color.white))
             }
         }.start()
     }
