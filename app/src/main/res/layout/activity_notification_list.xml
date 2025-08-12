@@ -13,8 +13,9 @@
         layout="@layout/layout_toolbar" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_40sdp"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:layout_gravity="end"
         android:orientation="horizontal">
 
         <ImageView
@@ -22,7 +23,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:padding="@dimen/_2sdp"
             app:srcCompat="@drawable/pre" />
+
+        <TextView
+            android:id="@+id/countText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:gravity="center" android:text="1" />
 
         <ImageView
             android:id="@+id/nextButton"

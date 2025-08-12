@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityNotificationListBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.NewsWadhwaniViewModel
@@ -62,6 +63,7 @@ class NewsListActivity : AppCompatActivity() {
                 newsWadhwaniViewModel.getNewsWadhwani(bearerToken, offset, dateSevenDaysAgo, currentDateTime)
                 binding.nextButton.setOnClickListener {
                     offset +=10
+                    binding.countText.text = offset.toString()
                     newsWadhwaniViewModel.getNewsWadhwani(bearerToken, offset, dateSevenDaysAgo, currentDateTime)
                 }
                 binding.prevButton.setOnClickListener {
@@ -76,9 +78,14 @@ class NewsListActivity : AppCompatActivity() {
                 val jsonObject = JSONObject(it.toString())
                 val dataJsonObject = jsonObject.optJSONObject("data")
                 val eventJsonArray = dataJsonObject?.optJSONArray("events")
-                binding.newsRecyclerView.layoutManager = LinearLayoutManager(this)
-                binding.newsRecyclerView.adapter =
-                    eventJsonArray?.let { it1 -> NewsAdapter(it1, languageToLoad) }
+                if (eventJsonArray?.length() != 0) {
+                    binding.newsRecyclerView.layoutManager = LinearLayoutManager(this)
+                    binding.newsRecyclerView.adapter =
+                        eventJsonArray?.let { it1 -> NewsAdapter(it1, languageToLoad) }
+                }else{
+                    offset -=10
+                    UIToastMessage.show(this, "This is the last page")
+                }
             }
         }
     }

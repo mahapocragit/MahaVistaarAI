@@ -152,7 +152,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
                     wotrCropId = prefs.getString("CROP_WOTR_ID_SAVED")
                 } else {
                     cropId = 25
-                    cropName = "Cotton"
+                    cropName = if (languageToLoad == "en") "Cotton" else "कापूस"
                     mUrl =
                         "https://s3.object.webwerksvmx.com/ffsauditlogs/ffs-api/ffs-api/uploads/crop_image/25_Cotton_1697091770.png"
                     sowingDate = "22/06"
