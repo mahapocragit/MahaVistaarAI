@@ -3,6 +3,8 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.notification
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
@@ -32,6 +34,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import org.json.JSONArray
 import org.json.JSONObject
+
 
 class DetailedNotificationActivity : AppCompatActivity() {
 
@@ -176,7 +179,9 @@ class DetailedNotificationActivity : AppCompatActivity() {
         binding.shortDescriptionTextView.text = shortDescription
         binding.longDescriptionTextView.text = longDescription
         binding.dateTextView.text = notificationDate
-        binding.redirectTextView.text = redirectionText ?: "अधिक माहितीसाठी येथे क्लिक करा."
+        val content = SpannableString(redirectionText ?: "अधिक माहितीसाठी येथे क्लिक करा.")
+        content.setSpan(UnderlineSpan(), 0, content.length, 0)
+        binding.redirectTextView.text = content
         binding.redirectTextView.setOnClickListener { redirectToScreen(page) }
         farmerViewModel.updateNotificationStatus(this, notificationId)
         farmerViewModel.updateNotificationStatusResponse.observe(this) {
