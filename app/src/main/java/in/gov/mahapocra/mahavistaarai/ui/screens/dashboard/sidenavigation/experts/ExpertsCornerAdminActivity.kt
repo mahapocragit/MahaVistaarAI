@@ -2,9 +2,13 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.exp
 
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -52,18 +56,33 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
 
         binding.addPostToggleButton.apply {
             background =
-                ContextCompat.getDrawable(this@ExpertsCornerAdminActivity, R.drawable.shape_right_green)
+                ContextCompat.getDrawable(
+                    this@ExpertsCornerAdminActivity,
+                    R.drawable.shape_right_green
+                )
             setTextColor(Color.WHITE)
         }
         binding.myPostToggleButton.apply {
             background =
-                ContextCompat.getDrawable(this@ExpertsCornerAdminActivity, R.drawable.shape_left_white)
+                ContextCompat.getDrawable(
+                    this@ExpertsCornerAdminActivity,
+                    R.drawable.shape_left_white
+                )
             setTextColor(Color.BLACK)
         }
         binding.addPostToggleButton.setOnClickListener { toggleView(true) }
         binding.myPostToggleButton.setOnClickListener { toggleView(false) }
         binding.submitButton.setOnClickListener {
             startActivity(Intent(this, ExpertsCornerFarmerActivity::class.java))
+        }
+        binding.uploadFileButton.setOnClickListener {
+            pickFileLauncher.launch(
+                arrayOf(
+                    "application/pdf",
+                    "application/msword", // .doc
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document" // .docx
+                )
+            )
         }
     }
 
@@ -73,12 +92,18 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
             binding.myPostLayout.visibility = View.GONE
             binding.addPostToggleButton.apply {
                 background =
-                    ContextCompat.getDrawable(this@ExpertsCornerAdminActivity, R.drawable.shape_right_green)
+                    ContextCompat.getDrawable(
+                        this@ExpertsCornerAdminActivity,
+                        R.drawable.shape_right_green
+                    )
                 setTextColor(Color.WHITE)
             }
             binding.myPostToggleButton.apply {
                 background =
-                    ContextCompat.getDrawable(this@ExpertsCornerAdminActivity, R.drawable.shape_left_white)
+                    ContextCompat.getDrawable(
+                        this@ExpertsCornerAdminActivity,
+                        R.drawable.shape_left_white
+                    )
                 setTextColor(Color.BLACK)
             }
         } else {
@@ -86,13 +111,41 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
             binding.myPostLayout.visibility = View.VISIBLE
             binding.addPostToggleButton.apply {
                 background =
-                    ContextCompat.getDrawable(this@ExpertsCornerAdminActivity, R.drawable.shape_right)
+                    ContextCompat.getDrawable(
+                        this@ExpertsCornerAdminActivity,
+                        R.drawable.shape_right
+                    )
                 setTextColor(Color.BLACK)
             }
             binding.myPostToggleButton.apply {
-                background = ContextCompat.getDrawable(this@ExpertsCornerAdminActivity, R.drawable.shape_left)
+                background = ContextCompat.getDrawable(
+                    this@ExpertsCornerAdminActivity,
+                    R.drawable.shape_left
+                )
                 setTextColor(Color.WHITE)
             }
         }
+    }
+
+    private val pickFileLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
+        if (uri != null) {
+            val fileName = getFileName(uri)
+            binding.selectedFileNameTextView.text = fileName
+            Toast.makeText(this, "Selected: $fileName", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun getFileName(uri: Uri): String {
+        var name = ""
+        contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+            val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            if (nameIndex != -1) {
+                cursor.moveToFirst()
+                name = cursor.getString(nameIndex)
+            }
+        }
+        return name
     }
 }
