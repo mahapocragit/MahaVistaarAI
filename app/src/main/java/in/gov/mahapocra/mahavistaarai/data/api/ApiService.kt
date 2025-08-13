@@ -54,6 +54,15 @@ interface ApiService {
     @POST(ApiConstants.kAuthenticationForNews)
     suspend fun authenticationForNews(@Body params: RequestBody): JsonObject
 
+    @GET("api/category")
+    suspend fun fetchNewsCategories(@Header("Authorization") bearerToken: String): JsonObject
+
+    @GET("api/category/sub_category")
+    suspend fun fetchNewsSubCategories(
+        @Header("Authorization") bearerToken: String,
+        @Query("category") category: String
+    ): JsonObject
+
     @POST(ApiConstants.getNearestCHCenters)
     suspend fun getCHCInformation(@Body params: RequestBody): JsonObject
 
@@ -131,10 +140,13 @@ interface ApiService {
     suspend fun updateNotificationStatus(@Body params: RequestBody): JsonObject
 
     @POST("authService/updateFcmToken")
-    suspend fun updateFCMToken(@Header("userid")farmerId:Int, @Header("fcmtoken") fcmToken:String): JsonObject
+    suspend fun updateFCMToken(
+        @Header("userid") farmerId: Int,
+        @Header("fcmtoken") fcmToken: String
+    ): JsonObject
 
     @POST("authService/checkFcmToken")
-    suspend fun checkFcmToken(@Header("userid")farmerId:Int): JsonObject
+    suspend fun checkFcmToken(@Header("userid") farmerId: Int): JsonObject
 
     @POST(ApiConstants.kOTPRequest)
     fun getOTPRequest(

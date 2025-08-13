@@ -13,7 +13,7 @@
         layout="@layout/layout_toolbar" />
 
     <LinearLayout
-        android:layout_width="@dimen/_100sdp"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/_20sdp"
         android:layout_gravity="end"
         android:orientation="horizontal">
@@ -40,6 +40,13 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:srcCompat="@drawable/next" />
+
+        <ImageView
+            android:id="@+id/filterImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/dbt_icon" />
 
     </LinearLayout>
 
