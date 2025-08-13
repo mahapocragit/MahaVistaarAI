@@ -66,7 +66,7 @@ class NewsWadhwaniViewModel : ViewModel() {
 
                 // Retrofit suspend call
                 val response =
-                    apiRequest.eventsForNews("Bearer $bearerToken", "Maharashtra", offset,dateSevenDaysAgo, currentDateTime,  false)
+                    apiRequest.eventsForNews("Bearer $bearerToken", "Maharashtra", offset,dateSevenDaysAgo, currentDateTime,  false, "", "")
                 _responseNewsWadhwani.value = response
 
             } catch (e: Exception) {

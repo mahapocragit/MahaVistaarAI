@@ -130,7 +130,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             binding.drawerLayout1.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
             binding.appBarMain.overlayView.visibility = View.GONE
         }
-
+        observeResponse()
         binding.appBarMain.overlayView.setOnClickListener {
             binding.appBarMain.overlayView.visibility = View.GONE
             binding.appBarMain.overlayImage.visibility = View.GONE
@@ -149,7 +149,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         binding.appBarMain.dashboardScreen.progressBar.visibility = View.VISIBLE
         binding.appBarMain.dashboardScreen.temperatureTextView.visibility = View.GONE
         isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
-        fetchReceivingData()
         appPreferenceManager = AppPreferenceManager(this)
         init()
         FirebaseHelper(this)
@@ -375,24 +374,49 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 dialog.dismiss()
             }
         }
-        farmerViewModel.getCropSapAdvisoryResponse.observe(this) {
-            if (it != null) {
-                val jsonObject = JSONObject(it.toString())
-                val jsonArray = jsonObject.optJSONArray("advisory")
-                if (jsonArray.length() != 0) {
-                    binding.appBarMain.dashboardScreen.etlWarningLayout.visibility = View.VISIBLE
-                    etlAdvisoryJsonArray = jsonArray
-                }
-            }
-        }
-        farmerViewModel.error.observe(this) {
-            Log.d("TAGGER", "onCreate: $it")
-        }
+
+
         if (NetworkUtils.isInternetAvailable(this)) {
             farmerViewModel.getNotificationList(this)
         } else {
             LocalCustom.createSnackbar(binding.root, "Internet not available!")
         }
+
+
+        if (NetworkUtils.isInternetAvailable(this)) {
+            if (!AppPreferenceManager(this).getBoolean("FCM_VALIDATED")) {
+                farmerViewModel.validateFCMToken(this)
+            }
+        } else {
+            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+        }
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                finishAffinity()
+            }
+        })
+    }
+
+    fun observeResponse(){
+
+        farmerViewModel.error.observe(this) {
+            Log.d("TAGGER", "onCreate: $it")
+        }
+
+        farmerViewModel.checkFCMTokenResponse.observe(this) {
+            if (it != null) {
+                AppPreferenceManager(this).saveBoolean("FCM_VALIDATED", true)
+                val jSONObject = JSONObject(it.toString())
+                val status = jSONObject.optInt("status")
+                if (status != 200) {
+                    FirebaseHelper(this).getFCMToken { fcmToken ->
+                        Log.d("TAGGER", "onCreate checkFCMTokenResponse: $it \n $fcmToken")
+                        farmerViewModel.updateFCMToken(this, fcmToken)
+                    }
+                }
+            }
+        }
+
         farmerViewModel.getNotificationResponse.observe(this) {
             if (it != null) {
                 val jsonObject = JSONObject(it.toString())
@@ -409,119 +433,18 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 updateNotificationCount(unreadCount)
             }
         }
-        farmerViewModel.checkFCMTokenResponse.observe(this) {
+
+        farmerViewModel.getCropSapAdvisoryResponse.observe(this) {
             if (it != null) {
-                AppPreferenceManager(this).saveBoolean("FCM_VALIDATED", true)
-                val jSONObject = JSONObject(it.toString())
-                val status = jSONObject.optInt("status")
-                if (status != 200) {
-                    FirebaseHelper(this).getFCMToken { fcmToken ->
-                        Log.d("TAGGER", "onCreate checkFCMTokenResponse: $it \n $fcmToken")
-                        farmerViewModel.updateFCMToken(this, fcmToken)
-                    }
+                val jsonObject = JSONObject(it.toString())
+                val jsonArray = jsonObject.optJSONArray("advisory")
+                if (jsonArray.length() != 0) {
+                    binding.appBarMain.dashboardScreen.etlWarningLayout.visibility = View.VISIBLE
+                    etlAdvisoryJsonArray = jsonArray
                 }
             }
         }
-        if (NetworkUtils.isInternetAvailable(this)) {
-            if (!AppPreferenceManager(this).getBoolean("FCM_VALIDATED")) {
-                farmerViewModel.validateFCMToken(this)
-            }
-        } else {
-            LocalCustom.createSnackbar(binding.root, "Internet not available!")
-        }
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                finishAffinity()
-            }
-        })
-    }
 
-    private fun updateNotificationCount(unreadNotificationsCount: Int) {
-        if (unreadNotificationsCount > 0) {
-            binding.appBarMain.notificationBadge.text = unreadNotificationsCount.toString()
-            binding.appBarMain.notificationBadge.visibility = View.VISIBLE
-        } else {
-            binding.appBarMain.notificationBadge.visibility = View.GONE
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        val shakeAnimation = AnimationUtils.loadAnimation(this, R.anim.shake)
-        binding.appBarMain.dashboardScreen.imageView20.startAnimation(shakeAnimation)
-        if (NetworkUtils.isInternetAvailable(this)) {
-            farmerViewModel.getNotificationList(this)
-        } else {
-            LocalCustom.createSnackbar(binding.root, "Internet not available!")
-        }
-        CoroutineScope(Dispatchers.Main).launch {
-            delay(3000)
-            binding.appBarMain.dashboardScreen.imageView20.clearAnimation()
-        }
-    }
-
-    private fun askForPermissions() {
-        val permissionsNeeded = mutableListOf<String>()
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            permissionsNeeded.add(Manifest.permission.RECORD_AUDIO)
-        }
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            permissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION)
-        }
-
-        // Only check POST_NOTIFICATIONS for Android 13 and above
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-                != PackageManager.PERMISSION_GRANTED
-            ) {
-                permissionsNeeded.add(Manifest.permission.POST_NOTIFICATIONS)
-            }
-        }
-
-        if (permissionsNeeded.isNotEmpty()) {
-            ActivityCompat.requestPermissions(
-                this,
-                permissionsNeeded.toTypedArray(),
-                PERMISSION_REQUEST_CODE
-            )
-        }
-    }
-
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            for ((index, permission) in permissions.withIndex()) {
-                if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
-                    UIToastMessage.show(
-                        this@DashboardScreen,
-                        "Access Permission Granted"
-                    )
-                    // Perform the related action (e.g., accessing the camera) if needed
-                } else {
-                    UIToastMessage.show(
-                        this@DashboardScreen,
-                        "Access Permission Denied"
-                    )
-                    // Optionally handle specific denied permission cases here
-                }
-            }
-        }
-    }
-
-    private fun fetchReceivingData() {
-        // Observe selected crop response
         farmerViewModel.getFarmerSelectedCrop.observe(this) { response ->
             response ?: return@observe
 
@@ -813,6 +736,89 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
     }
 
+    private fun updateNotificationCount(unreadNotificationsCount: Int) {
+        if (unreadNotificationsCount > 0) {
+            binding.appBarMain.notificationBadge.text = unreadNotificationsCount.toString()
+            binding.appBarMain.notificationBadge.visibility = View.VISIBLE
+        } else {
+            binding.appBarMain.notificationBadge.visibility = View.GONE
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val shakeAnimation = AnimationUtils.loadAnimation(this, R.anim.shake)
+        binding.appBarMain.dashboardScreen.imageView20.startAnimation(shakeAnimation)
+        if (NetworkUtils.isInternetAvailable(this)) {
+            farmerViewModel.getNotificationList(this)
+        } else {
+            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+        }
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(3000)
+            binding.appBarMain.dashboardScreen.imageView20.clearAnimation()
+        }
+    }
+
+    private fun askForPermissions() {
+        val permissionsNeeded = mutableListOf<String>()
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            permissionsNeeded.add(Manifest.permission.RECORD_AUDIO)
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            permissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+
+        // Only check POST_NOTIFICATIONS for Android 13 and above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                permissionsNeeded.add(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+
+        if (permissionsNeeded.isNotEmpty()) {
+            ActivityCompat.requestPermissions(
+                this,
+                permissionsNeeded.toTypedArray(),
+                PERMISSION_REQUEST_CODE
+            )
+        }
+    }
+
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            for ((index, permission) in permissions.withIndex()) {
+                if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
+                    UIToastMessage.show(
+                        this@DashboardScreen,
+                        "Access Permission Granted"
+                    )
+                    // Perform the related action (e.g., accessing the camera) if needed
+                } else {
+                    UIToastMessage.show(
+                        this@DashboardScreen,
+                        "Access Permission Denied"
+                    )
+                    // Optionally handle specific denied permission cases here
+                }
+            }
+        }
+    }
 
     private val greetingMessage: String
         get() {
