@@ -168,7 +168,11 @@ class DetailedNotificationActivity : AppCompatActivity() {
     private fun setUpPageContent(jsonObject: JSONObject, notificationId: Long) {
         binding.notificationInfoLayout.visibility = View.VISIBLE
         val page = jsonObject.optString("page")
-        val title = jsonObject.optString("title")
+        val type = jsonObject.optString("type")
+        var title = jsonObject.optString("title")
+        if (type=="etl"){
+            title = jsonObject.optString("crop")
+        }
         val shortDescription = jsonObject.optString("body")
         val longDescription = jsonObject.optString("description")
         val notificationDate =
@@ -205,6 +209,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
             "videos" -> Intent(this, VideosActivity::class.java)
             "dbtschemes" -> Intent(this, DBTActivity::class.java)
             "dashboard" -> Intent(this, DashboardScreen::class.java)
+            "etl_page" -> Intent(this, DashboardScreen::class.java)
             else -> Intent(this, DashboardScreen::class.java)
         }
         startActivity(targetIntent)

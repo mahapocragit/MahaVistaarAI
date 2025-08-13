@@ -31,6 +31,7 @@ import org.json.JSONArray
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 object LocalCustom {
@@ -352,6 +353,18 @@ object LocalCustom {
         params.setMargins(24, 0, 24, 200) // left, top, right, bottom
         view.layoutParams = params
         snackbar.show()
+    }
+
+    fun getCurrentDate(): String {
+        return SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH).format(
+            Date()
+        )
+    }
+
+    fun getSevenDaysBeforeDate(): String {
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_YEAR, -7) // Go back 7 days
+        return SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH).format(calendar.time)
     }
 
 }
