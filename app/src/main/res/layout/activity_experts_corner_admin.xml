@@ -76,14 +76,14 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <EditText
-                android:id="@+id/edtSurveyNo4"
+                android:id="@+id/titleEditText"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_48sdp"
                 android:layout_marginHorizontal="20dp"
                 android:background="@drawable/login_edit_bg"
                 android:gravity="start|center"
                 android:hint="Enter Title"
-                android:inputType="number"
+                android:inputType="text"
                 android:paddingHorizontal="@dimen/padding20"
                 android:textColor="@color/heading"
                 android:textColorHint="@color/text_black"
@@ -97,12 +97,14 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textViewDist"
+                    android:id="@+id/spinnerCategory"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_48sdp"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
+                    android:focusable="true"
+                    android:clickable="true"
                     android:background="@drawable/login_edit_bg"
                     android:gravity="start|center"
                     android:hint="Category"
@@ -137,12 +139,14 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textViewTaluka"
+                    android:id="@+id/spinnerSubcategories"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_48sdp"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
+                    android:focusable="true"
+                    android:clickable="true"
                     android:background="@drawable/login_edit_bg"
                     android:gravity="start|center"
                     android:hint="Sub Category"
@@ -170,14 +174,14 @@
             </RelativeLayout>
 
             <EditText
-                android:id="@+id/edtSurveyNo3"
+                android:id="@+id/descriptionTextView"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_68sdp"
                 android:layout_marginHorizontal="20dp"
                 android:background="@drawable/login_edit_bg"
                 android:gravity="start|center"
                 android:hint="Description"
-                android:inputType="number"
+                android:inputType="text"
                 android:paddingHorizontal="@dimen/padding20"
                 android:textColor="@color/heading"
                 android:textColorHint="@color/text_black"

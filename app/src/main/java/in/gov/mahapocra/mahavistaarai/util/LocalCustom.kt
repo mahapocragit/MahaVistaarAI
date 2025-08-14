@@ -27,7 +27,11 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.snackbar.Snackbar
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import org.json.JSONArray
+import java.io.File
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -365,6 +369,20 @@ object LocalCustom {
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.DAY_OF_YEAR, -7) // Go back 7 days
         return SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH).format(calendar.time)
+    }
+
+    fun createPartFromString(value: String): RequestBody {
+        return RequestBody.create("text/plain".toMediaTypeOrNull(), value)
+    }
+
+    fun prepareFilePart(context: Context, partName: String, fileUri: Uri): MultipartBody.Part {
+        val file =
+            File(fileUri.path!!) // If you have URI from storage, you may need a proper file copy
+        val requestFile = RequestBody.create(
+            context.contentResolver.getType(fileUri)?.toMediaTypeOrNull(),
+            file
+        )
+        return MultipartBody.Part.createFormData(partName, file.name, requestFile)
     }
 
 }

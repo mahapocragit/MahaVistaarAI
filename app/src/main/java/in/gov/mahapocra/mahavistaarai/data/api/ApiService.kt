@@ -1,13 +1,16 @@
 package `in`.gov.mahapocra.mahavistaarai.data.api
 
 import com.google.gson.JsonObject
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Query
 
 interface ApiService {
@@ -253,5 +256,26 @@ interface ApiService {
 
     @POST(ApiConstants.fetchFarmerListForSHC)
     fun fetchFarmerListForSHC(@Body params: RequestBody): Call<JsonObject>
+
+    //Expert Corner
+    @Multipart
+    @POST("expertscornerServices/upload-article")
+    suspend fun uploadArticle(
+        @Part file: MultipartBody.Part,
+        @Part("title") title: RequestBody,
+        @Part("description") description: RequestBody,
+        @Part("category") category: RequestBody,
+        @Part("subcategory") subcategory: RequestBody,
+        @Part("user") user: RequestBody
+    ): JsonObject
+
+    @GET("expertscornerServices/get-categories")
+    suspend fun getCategoriesForExpertCorner(): JsonObject
+
+    @POST("expertscornerServices/get-subcategories")
+    suspend fun getSubCategoriesForExpertCorner(@Body params: RequestBody): JsonObject
+
+    @POST("expertscornerServices/get-users-articles")
+    suspend fun getUserArticles(@Body params: RequestBody): JsonObject
 
 }

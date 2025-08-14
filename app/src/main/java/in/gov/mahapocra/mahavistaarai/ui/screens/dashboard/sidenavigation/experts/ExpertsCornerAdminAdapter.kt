@@ -35,7 +35,6 @@ class ExpertsCornerAdminAdapter(private val posts: JSONArray) :
         fun bind(postObject: JSONObject) {
             val title = postObject.optString("title", "No Title")
             val description = postObject.optString("description", "No Description")
-
             titleTextView.text = title
             descriptionTextView.text = description
         }
