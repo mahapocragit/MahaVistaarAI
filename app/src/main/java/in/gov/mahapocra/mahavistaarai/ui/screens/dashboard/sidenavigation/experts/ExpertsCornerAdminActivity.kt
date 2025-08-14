@@ -59,16 +59,6 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
         expertsViewModel.getCategories()
         expertsViewModel.getUserArticles(this)
         binding.expertsCornerAdminRecycler.layoutManager = LinearLayoutManager(this)
-        val jsonString = """
-    [
-        {"title": "What are the safest pesticides to use for farming", "description": "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum"},
-        {"title": "What are the safest pesticides to use for farming", "description": "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum"},
-        {"title": "What are the safest pesticides to use for farming", "description": "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum"},
-        {"title": "What are the safest pesticides to use for farming", "description": "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum"},
-        {"title": "What are the safest pesticides to use for farming", "description": "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum"},
-        {"title": "What are the safest pesticides to use for farming", "description": "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum"}
-    ]
-"""
         binding.spinnerCategory.setOnClickListener {
             if (apiCategories.isNotEmpty()) {
                 // Show only the names in the dialog
@@ -89,24 +79,11 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
             }
         }
         binding.spinnerSubcategories.setOnClickListener {
-            expertsViewModel.getSubCategories(selectedCategoryId)
-            if (apiSubcategories.isNotEmpty()) {
-                // Show only the names in the dialog
-                val items = apiSubcategories.map { it.name }.toTypedArray()
-
-                AlertDialog.Builder(this)
-                    .setTitle("Select Category")
-                    .setItems(items) { dialog, which ->
-                        val selected = apiSubcategories[which]   // The actual Category object
-                        binding.spinnerSubcategories.text = selected.name  // Show name in TextView
-                        selectedSubCategoryId = selected.id          // You can store ID for API
-                        Log.d("SelectedID", "SUB_ID = $selectedSubCategoryId")
-                        dialog.dismiss()
-                    }
-                    .show()
-            } else {
-                Toast.makeText(this, "No categories loaded", Toast.LENGTH_SHORT).show()
+            if (selectedCategoryId == 0) {
+                Toast.makeText(this, "Please select a category first", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+            expertsViewModel.getSubCategories(selectedCategoryId)
         }
 
         binding.addPostToggleButton.apply {
@@ -184,7 +161,11 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
                 val jsonObject = JSONObject(response.toString())
                 val dataArray = jsonObject.optJSONArray("data")
                 apiSubcategories = jsonArrayToNameList(dataArray)
+                if (apiSubcategories.isNotEmpty()) {
+                    showSubCategoryDialog(apiSubcategories)
+                }
             }
+
         }
         expertsViewModel.getUserArticlesResponse.observe(this) { response ->
             Log.d("TAGGER", "observeResponse getUserArticles: $response")
@@ -292,4 +273,19 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
         }
         return list
     }
+
+    private fun showSubCategoryDialog(subcategories: List<Category>) {
+        val items = subcategories.map { it.name }.toTypedArray()
+        AlertDialog.Builder(this)
+            .setTitle("Select Subcategory")
+            .setItems(items) { dialog, which ->
+                val selected = subcategories[which]
+                binding.spinnerSubcategories.text = selected.name
+                selectedSubCategoryId = selected.id
+                Log.d("SelectedID", "SUB_ID = $selectedSubCategoryId")
+                dialog.dismiss()
+            }
+            .show()
+    }
+
 }

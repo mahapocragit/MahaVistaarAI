@@ -3,6 +3,7 @@ package `in`.gov.mahapocra.mahavistaarai.util
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
@@ -13,6 +14,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.webkit.URLUtil
+import android.webkit.WebView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -383,6 +385,37 @@ object LocalCustom {
             file
         )
         return MultipartBody.Part.createFormData(partName, file.name, requestFile)
+    }
+
+    fun openFile(context: Context, fileUrl: String) {
+        val uri = Uri.parse(fileUrl)
+
+        when {
+            fileUrl.endsWith(".pdf", ignoreCase = true) -> {
+                // PDFs can be shown in WebView or PDF viewer
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.setDataAndType(uri, "application/pdf")
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                context.startActivity(intent)
+            }
+
+            fileUrl.endsWith(".docx", ignoreCase = true) ||
+                    fileUrl.endsWith(".doc", ignoreCase = true) -> {
+                // DOC/DOCX via Google Docs Viewer in WebView
+                val webView = WebView(context)
+                webView.settings.javaScriptEnabled = true
+                webView.loadUrl("https://docs.google.com/viewer?url=$fileUrl&embedded=true")
+
+                AlertDialog.Builder(context)
+                    .setView(webView)
+                    .setPositiveButton("Close", null)
+                    .show()
+            }
+
+            else -> {
+                Toast.makeText(context, "Unsupported file format", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
 }
