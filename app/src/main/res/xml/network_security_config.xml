@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
 
-    <!-- For domains with system CA trust only -->
-    <domain-config cleartextTrafficPermitted="true">
+    <!-- Default config: use only system CA trust -->
+    <domain-config cleartextTrafficPermitted="false">
         <domain includeSubdomains="true">ilab-mlp-api.pocra.work</domain>
         <domain includeSubdomains="true">ilab-sso.mahapocra.gov.in</domain>
         <domain includeSubdomains="true">ilab-sma-api.mahapocra.gov.in</domain>
@@ -20,8 +20,8 @@
         </trust-anchors>
     </domain-config>
 
-    <!-- For nibpp.krishimegh.in and vistaar.maharashtra.gov.in allow user CA as well -->
-    <domain-config cleartextTrafficPermitted="true">
+    <!-- For these domains, allow user-installed CAs in addition to system -->
+    <domain-config cleartextTrafficPermitted="false">
         <domain includeSubdomains="true">nibpp.krishimegh.in</domain>
         <domain includeSubdomains="true">vistaar.maharashtra.gov.in</domain>
 
