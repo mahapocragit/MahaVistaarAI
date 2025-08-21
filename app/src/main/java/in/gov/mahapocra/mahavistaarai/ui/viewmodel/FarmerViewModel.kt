@@ -611,8 +611,7 @@ class FarmerViewModel : ViewModel() {
     fun getNotificationList(context: Context) {
         ProgressHelper.showProgressDialog(context)
         viewModelScope.launch {
-            val farmerId =
-                AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+            val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
             try {
                 val retrofit: Retrofit =
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)

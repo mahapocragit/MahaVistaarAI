@@ -65,27 +65,12 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <ScrollView
+        <WebView
+            android:id="@+id/webView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_400sdp"
             android:layout_marginHorizontal="@dimen/_5sdp"
-            android:fadeScrollbars="false"
-            android:layout_marginTop="@dimen/_10sdp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/longDescriptionTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="long description"
-                    android:textAlignment="gravity"
-                    android:textSize="@dimen/_11sdp" />
-            </LinearLayout>
-        </ScrollView>
+            android:layout_marginTop="@dimen/_10sdp"/>
 
         <TextView
             android:id="@+id/redirectTextView"

@@ -156,7 +156,11 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             cropId = savedCropId
             deleteDialog()
         }
-        farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
+        if (NetworkUtils.isInternetAvailable(this)) {
+            farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
+        } else {
+            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+        }
         binding.appBarMain.dashboardScreen.greetingsTextView.text = greetingMessage
         binding.appBarMain.dashboardScreen.timestampTextView.text = formattedTimestamp
         binding.appBarMain.dashboardScreen.temperatureLayout.setOnClickListener {
