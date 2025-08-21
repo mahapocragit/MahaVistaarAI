@@ -180,7 +180,9 @@ class DetailedNotificationActivity : AppCompatActivity() {
         val notificationDate =
             LocalCustom.convertDateFormat(jsonObject.optString("notification_date"))
         val redirectionText = jsonObject.optString("redirection_text")
-
+        if (redirectionText.isEmpty()){
+            binding.redirectTextView.visibility = View.GONE
+        }
         binding.titleTextView.text = title
         binding.shortDescriptionTextView.text = shortDescription
         if (url.isEmpty()) {

@@ -408,6 +408,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     fun observeResponse(){
 
         farmerViewModel.error.observe(this) {
+            LocalCustom.createSnackbar(binding.root, it)
             Log.d("TAGGER", "onCreate: $it")
         }
 

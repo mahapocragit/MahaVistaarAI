@@ -25,6 +25,9 @@ import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.HttpException
 import retrofit2.Retrofit
+import java.io.IOException
+import java.net.SocketException
+import java.net.SocketTimeoutException
 
 class FarmerViewModel : ViewModel() {
 
@@ -135,7 +138,13 @@ class FarmerViewModel : ViewModel() {
                 _saveFarmerSelectedCrop.value = response
 
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Unknown error"
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -161,13 +170,24 @@ class FarmerViewModel : ViewModel() {
                     }
                     _getFarmerSelectedCrop.value = response
                 } catch (e: Exception) {
-                    _error.value = e.localizedMessage ?: "Unknown error"
+                    val message = when (e) {
+                        is SocketTimeoutException -> "Request timed out. Please try again."
+                        is SocketException -> "Connection lost. Please check your internet."
+                        is IOException -> "Network error occurred."
+                        else -> e.localizedMessage ?: "Unknown error"
+                    }
+                    _error.value = message
                     FirebaseCrashlytics.getInstance().recordException(e)
                 }
 
-            } catch (e: JSONException) {
-                e.printStackTrace()
-                _error.value = e.localizedMessage ?: "Unknown error"
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -195,7 +215,13 @@ class FarmerViewModel : ViewModel() {
                     response // or create a separate LiveData if needed
 
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Unknown error"
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -220,8 +246,13 @@ class FarmerViewModel : ViewModel() {
                 _cropCategoryResponse.value = response // ← use appropriate LiveData
 
             } catch (e: Exception) {
-                // Handle error case
-                _error.value = e.localizedMessage ?: "Unknown error"
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -249,7 +280,13 @@ class FarmerViewModel : ViewModel() {
                 _talukaList.value = response // <- your LiveData for the UI
 
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Unknown error"
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -274,7 +311,13 @@ class FarmerViewModel : ViewModel() {
                 _weatherResponse.value = response
 
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Unknown error"
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -297,7 +340,13 @@ class FarmerViewModel : ViewModel() {
                 _userDetailsResponse.value = response
 
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Unknown error"
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -311,7 +360,13 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.getFarmersVideosJson()
                 _videosResponse.value = response
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Unknown error"
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -325,7 +380,13 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.getDigitalShetishalaSchedule()
                 _getDigitalShetishalaScheduleResponse.value = response
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Unknown error"
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -349,7 +410,13 @@ class FarmerViewModel : ViewModel() {
                 _sopResponse.value = response
 
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Unknown error"
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -370,7 +437,13 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.getCHCInformation(requestBody)
                 _chcCentersResponse.value = response
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Unknown error"
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -390,7 +463,13 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.getCodeFromCoordinates(requestBody)
                 _fetchLocationDataFromCoordinates.value = response
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Unknown error"
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -411,7 +490,13 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.getMarketList(requestBody)
                 _responseMarkerList.value = response
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Failed to fetch user details"
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -429,8 +514,14 @@ class FarmerViewModel : ViewModel() {
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.compareOtp(mobile.trim { it <= ' ' }, requestBody)
                 _compareOtpResponse.value = response
-            } catch (e: JSONException) {
-                _error.value = e.localizedMessage ?: "Failed to fetch user details"
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -449,8 +540,14 @@ class FarmerViewModel : ViewModel() {
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.compareOtpReg(mobile.trim { it <= ' ' }, requestBody)
                 _compareOtpResponseReg.value = response
-            } catch (e: JSONException) {
-                _error.value = e.localizedMessage ?: "Failed to fetch user details"
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -463,8 +560,14 @@ class FarmerViewModel : ViewModel() {
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getShetishalaVideos()
                 _shetishalaVideosResponse.value = response
-            } catch (e: JSONException) {
-                _error.value = e.localizedMessage ?: "Failed to fetch user details"
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -486,7 +589,13 @@ class FarmerViewModel : ViewModel() {
                 _agristackLoginResponse.value = response
 
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Unknown error"
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -515,17 +624,34 @@ class FarmerViewModel : ViewModel() {
                 try {
                     val response = apiRequest.getCropStagesAndAdvisory(requestBody)
                     _getCropStagesAndAdvisoryResponse.value = response
-                } catch (httpException: HttpException) {
-                    val errorBody = httpException.response()?.errorBody()?.string()
-                    _error.value = "Server error: ${httpException.code()} - $errorBody"
-                    FirebaseCrashlytics.getInstance().recordException(httpException)
+                } catch (e: Exception) {
+                    val message = when (e) {
+                        is SocketTimeoutException -> "Request timed out. Please try again."
+                        is SocketException -> "Connection lost. Please check your internet."
+                        is IOException -> "Network error occurred."
+                        else -> e.localizedMessage ?: "Unknown error"
+                    }
+                    _error.value = message
+                    FirebaseCrashlytics.getInstance().recordException(e)
                 }
 
-            } catch (e: JSONException) {
-                _error.value = e.localizedMessage ?: "Unknown error"
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Unexpected error"
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -543,8 +669,14 @@ class FarmerViewModel : ViewModel() {
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getClimateResilientList(requestBody)
                 _getClimateResilientListResponse.value = response
-            } catch (e: JSONException) {
-                _error.value = e.localizedMessage ?: "Unknown error"
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -562,8 +694,14 @@ class FarmerViewModel : ViewModel() {
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getCropStages(requestBody)
                 _getCropStagesResponse.value = response
-            } catch (e: JSONException) {
-                _error.value = e.localizedMessage ?: "Unknown error"
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -583,8 +721,14 @@ class FarmerViewModel : ViewModel() {
                 val jsonObject =
                     JSONObject(jsonString) // OR Gson().fromJson(jsonString, JsonObject::class.java)
                 _getPestDiseaseDetailsResponse.value = jsonObject
-            } catch (e: JSONException) {
-                _error.value = e.localizedMessage ?: "Unknown error"
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -601,8 +745,14 @@ class FarmerViewModel : ViewModel() {
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getCropSapAdvisory(requestBody)
                 _getCropSapAdvisoryResponse.value = response
-            } catch (e: JSONException) {
-                _error.value = e.localizedMessage ?: "Unknown error"
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -619,9 +769,14 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.getNotificationList(farmerId)
                 ProgressHelper.disableProgressDialog()
                 _getNotificationResponse.value = response
-            } catch (e: JSONException) {
-                ProgressHelper.disableProgressDialog()
-                _error.value = e.localizedMessage ?: "Unknown error"
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -641,9 +796,14 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.getNotificationDetails(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _getNotificationDetailedResponse.value = response
-            } catch (e: JSONException) {
-                ProgressHelper.disableProgressDialog()
-                _error.value = e.localizedMessage ?: "Unknown error"
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -663,9 +823,14 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.updateNotificationStatus(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _updateNotificationStatusResponse.value = response
-            } catch (e: JSONException) {
-                ProgressHelper.disableProgressDialog()
-                _error.value = e.localizedMessage ?: "Unknown error"
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -688,9 +853,14 @@ class FarmerViewModel : ViewModel() {
                 }else{
                     _updateFCMTokenResponse.value = response
                 }
-            } catch (e: JSONException) {
-                ProgressHelper.disableProgressDialog()
-                _error.value = e.localizedMessage ?: "Unknown error"
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -707,9 +877,14 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.checkFcmToken(farmerId)
                 ProgressHelper.disableProgressDialog()
                 _checkFCMTokenResponse.value = response
-            } catch (e: JSONException) {
-                ProgressHelper.disableProgressDialog()
-                _error.value = e.localizedMessage ?: "Unknown error"
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
