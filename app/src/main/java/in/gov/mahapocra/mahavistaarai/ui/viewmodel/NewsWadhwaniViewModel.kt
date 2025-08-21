@@ -11,6 +11,7 @@ import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
+import `in`.gov.mahapocra.mahavistaarai.data.model.Category
 import kotlinx.coroutines.launch
 import okhttp3.RequestBody
 import org.json.JSONObject
@@ -57,7 +58,7 @@ class NewsWadhwaniViewModel : ViewModel() {
         }
     }
 
-    fun getNewsWadhwani(bearerToken: String, offset: Int, dateSevenDaysAgo: String, currentDateTime: String) {
+    fun getNewsWadhwani(bearerToken: String, offset: Int, dateSevenDaysAgo: String, currentDateTime: String, category: String, subCategory: String) {
         viewModelScope.launch {
             try {
                 val retrofit =
@@ -66,7 +67,7 @@ class NewsWadhwaniViewModel : ViewModel() {
 
                 // Retrofit suspend call
                 val response =
-                    apiRequest.eventsForNews("Bearer $bearerToken", "Maharashtra", offset,dateSevenDaysAgo, currentDateTime,  false, "", "")
+                    apiRequest.eventsForNews("Bearer $bearerToken", "Maharashtra", offset,dateSevenDaysAgo, currentDateTime,  false, category, subCategory)
                 _responseNewsWadhwani.value = response
 
             } catch (e: Exception) {
