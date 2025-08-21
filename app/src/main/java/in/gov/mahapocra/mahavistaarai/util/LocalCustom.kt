@@ -3,17 +3,21 @@ package `in`.gov.mahapocra.mahavistaarai.util
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.webkit.URLUtil
+import android.webkit.WebView
 import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ListView
 import android.widget.TextView
@@ -22,12 +26,18 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.snackbar.Snackbar
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import org.json.JSONArray
+import java.io.File
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 object LocalCustom {
@@ -340,5 +350,72 @@ object LocalCustom {
         }
     }
 
+    fun createSnackbar(view: View, message: String) {
+        val snackbar = Snackbar.make(view, message, Snackbar.LENGTH_SHORT)
+
+        val view = snackbar.view
+        val params = view.layoutParams as FrameLayout.LayoutParams
+        params.gravity = Gravity.BOTTOM // or Gravity.CENTER
+        params.setMargins(24, 0, 24, 200) // left, top, right, bottom
+        view.layoutParams = params
+        snackbar.show()
+    }
+
+    fun getCurrentDate(): String {
+        return SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH).format(
+            Date()
+        )
+    }
+
+    fun getSevenDaysBeforeDate(): String {
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_YEAR, -7) // Go back 7 days
+        return SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH).format(calendar.time)
+    }
+
+    fun createPartFromString(value: String): RequestBody {
+        return RequestBody.create("text/plain".toMediaTypeOrNull(), value)
+    }
+
+    fun prepareFilePart(context: Context, partName: String, fileUri: Uri): MultipartBody.Part {
+        val file =
+            File(fileUri.path!!) // If you have URI from storage, you may need a proper file copy
+        val requestFile = RequestBody.create(
+            context.contentResolver.getType(fileUri)?.toMediaTypeOrNull(),
+            file
+        )
+        return MultipartBody.Part.createFormData(partName, file.name, requestFile)
+    }
+
+    fun openFile(context: Context, fileUrl: String) {
+        val uri = Uri.parse(fileUrl)
+
+        when {
+            fileUrl.endsWith(".pdf", ignoreCase = true) -> {
+                // PDFs can be shown in WebView or PDF viewer
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.setDataAndType(uri, "application/pdf")
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                context.startActivity(intent)
+            }
+
+            fileUrl.endsWith(".docx", ignoreCase = true) ||
+                    fileUrl.endsWith(".doc", ignoreCase = true) -> {
+                // DOC/DOCX via Google Docs Viewer in WebView
+                val webView = WebView(context)
+                webView.settings.javaScriptEnabled = true
+                webView.loadUrl("https://docs.google.com/viewer?url=$fileUrl&embedded=true")
+
+                AlertDialog.Builder(context)
+                    .setView(webView)
+                    .setPositiveButton("Close", null)
+                    .show()
+            }
+
+            else -> {
+                Toast.makeText(context, "Unsupported file format", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
 }

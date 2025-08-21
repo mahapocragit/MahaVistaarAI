@@ -52,14 +52,6 @@ class SOPActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener {
         wotrCropId = intent.getStringExtra("wotr_crop_id")
         mUrl = intent.getStringExtra("mUrl")
 
-        if (cropId == 0) {
-            cropId = AppPreferenceManager(this).getInt("CROP_ID_SAVED")
-            cropName = AppPreferenceManager(this).getString("CROP_NAME_SAVED")
-            mUrl = AppPreferenceManager(this).getString("CROP_IMAGE_SAVED")
-            sowingDate = AppPreferenceManager(this).getString("CROP_SOWING_DATE_SAVED").toString()
-            wotrCropId = AppPreferenceManager(this).getString("CROP_WOTR_ID_SAVED")
-        }
-
         binding.sowingInfoLayout.sowingDateTextView.visibility = View.GONE
         binding.sowingInfoLayout.editSowingDateIcon.visibility = View.GONE
         binding.sowingInfoLayout.textView7.text = getString(R.string.selected_crop)

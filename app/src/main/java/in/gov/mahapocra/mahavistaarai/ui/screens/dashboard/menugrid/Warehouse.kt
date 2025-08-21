@@ -18,7 +18,7 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
+import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityWarehouseBinding
@@ -148,7 +148,7 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
                     true
                 )
             val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
+            val apiRequest = retrofit.create(ApiService::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getDistrictList(requestBody)
             api.postRequest(responseCall, this, 1)
         } catch (e: JSONException) {
@@ -173,7 +173,7 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
                     true
                 )
             val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
+            val apiRequest = retrofit.create(ApiService::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getWareHouseDetails(requestBody)
             api.postRequest(responseCall, this, 3)
         } catch (e: JSONException) {

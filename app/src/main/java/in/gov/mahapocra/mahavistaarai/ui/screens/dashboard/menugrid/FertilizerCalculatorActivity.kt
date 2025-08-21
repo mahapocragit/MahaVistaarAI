@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.View
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -28,7 +29,7 @@ import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListene
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
+import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityFertilizerCalculatorActivityBinding
@@ -104,15 +105,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         wotrCropId = intent.getIntExtra("wotr_crop_id", 0).toString()
         mUrl = intent.getStringExtra("mUrl")
         sowingDate = intent.getStringExtra("sowingDate")
-        route = intent.getStringExtra("ROUTE").toString()
-
-        if (cropId == 0) {
-            cropId = AppPreferenceManager(this).getInt("CROP_ID_SAVED")
-            cropName = AppPreferenceManager(this).getString("CROP_NAME_SAVED")
-            mUrl = AppPreferenceManager(this).getString("CROP_IMAGE_SAVED")
-            sowingDate = AppPreferenceManager(this).getString("CROP_SOWING_DATE_SAVED").toString()
-            wotrCropId = AppPreferenceManager(this).getString("CROP_WOTR_ID_SAVED")
-        }
 
         binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {
             val sharing = Intent(this, AddCropActivity::class.java)
@@ -270,6 +262,12 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     .show()
             }
         }
+
+        onBackPressedDispatcher.addCallback( object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                startActivity(Intent(this@FertilizerCalculatorActivity, DashboardScreen::class.java))
+            }
+        })
     }
 
     private fun settingUpTheViewsAsPerLanguage() {
@@ -277,11 +275,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         binding.plotSizeTitleTextView.text = getString(R.string.plot_size)
         binding.acreRadioButton.text = getString(R.string.acre)
         binding.radioButton2.text = getString(R.string.hectare)
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        startActivity(Intent(this, DashboardScreen::class.java))
     }
 
     private fun getSelectedSavedOption() {
@@ -300,7 +293,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     true
                 )
             CoroutineScope(Dispatchers.IO).launch {
-                val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
+                val apiRequest = api.getRetrofitInstance().create(ApiService::class.java)
                 val responseCall: Call<JsonObject> =
                     apiRequest.getFertilizerSavedFormula(requestBody)
                 api.postRequest(responseCall, this@FertilizerCalculatorActivity, 4)
@@ -412,7 +405,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     true
                 )
             CoroutineScope(Dispatchers.IO).launch {
-                val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
+                val apiRequest = api.getRetrofitInstance().create(ApiService::class.java)
                 val responseCall: Call<JsonObject> =
                     apiRequest.getTokenFromWotr("8470807282", "PMU%40PoCRA%232023")
                 api.postRequest(responseCall, this@FertilizerCalculatorActivity, 2)
@@ -441,7 +434,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                 )
 
             CoroutineScope(Dispatchers.IO).launch {
-                val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
+                val apiRequest = api.getRetrofitInstance().create(ApiService::class.java)
                 val responseCall: Call<JsonObject> = apiRequest.getFertilizerCalculatedData(
                     wotrCropId, finalSowingDate, soilTestOption.toString(),
                     nitrogenValue, phosphorusValue, potassiumValue,
@@ -684,7 +677,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                         true
                     )
                     CoroutineScope(Dispatchers.IO).launch {
-                        val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
+                        val apiRequest = api.getRetrofitInstance().create(ApiService::class.java)
                         val responseCall: Call<JsonObject> =
                             apiRequest.deleteFertilizerFromSavedList(requestBody)
                         api.postRequest(responseCall, this@FertilizerCalculatorActivity, 5)
@@ -754,7 +747,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             // Step 5: Make async network request using coroutine
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
+                    val apiRequest = api.getRetrofitInstance().create(ApiService::class.java)
                     val responseCall: Call<JsonObject> =
                         apiRequest.saveFertilizerFormula(requestBody)
                     api.postRequest(responseCall, this@FertilizerCalculatorActivity, 3)

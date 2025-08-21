@@ -31,8 +31,8 @@ import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
+import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityRegistrationBinding
@@ -222,7 +222,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 )
             CoroutineScope(Dispatchers.IO).launch {
                 val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
+                val apiRequest = retrofit.create(ApiService::class.java)
                 val responseCall: Call<JsonObject> = apiRequest.getDistrictList(requestBody)
                 api.postRequest(responseCall, this@Registration, 1)
             }
@@ -371,7 +371,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                     )
                 CoroutineScope(Dispatchers.IO).launch {
                     val retrofit: Retrofit = api.getRetrofitInstance()
-                    val apiRequest = retrofit.create(APIRequest::class.java)
+                    val apiRequest = retrofit.create(ApiService::class.java)
                     val responseCall: Call<JsonObject> =
                         apiRequest.getOTPRegisterRequest(mob.trim { it <= ' ' }, requestBody)
                     api.postRequest(responseCall, this@Registration, 2)
@@ -431,7 +431,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                     )
                 CoroutineScope(Dispatchers.IO).launch {
                     val retrofit: Retrofit = api.getRetrofitInstance()
-                    val apiRequest = retrofit.create(APIRequest::class.java)
+                    val apiRequest = retrofit.create(ApiService::class.java)
                     val responseCall: Call<JsonObject> =
                         apiRequest.getRegistrationRequest(
                             registerMob,
@@ -511,7 +511,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                     )
                 CoroutineScope(Dispatchers.IO).launch {
                     val retrofit: Retrofit = api.getRetrofitInstance()
-                    val apiRequest = retrofit.create(APIRequest::class.java)
+                    val apiRequest = retrofit.create(ApiService::class.java)
                     val responseCall: Call<JsonObject> =
                         apiRequest.getRegistrationRequest(
                             mob.trim { it <= ' ' },
@@ -559,7 +559,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         val submitButton = dialog.findViewById<Button>(R.id.submitButton)
         val resendOTP = dialog.findViewById<Button>(R.id.resentOTP)
         val cancelButton = dialog.findViewById<ImageView>(R.id.imageView_close)
-
+        otpVerification(resendOTP)
         cancelButton.setOnClickListener { dialog.dismiss() }
         submitButton.setOnClickListener {
             val enteredOTP: String = receiveOTPEditText.text.toString()
@@ -746,7 +746,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
 
             CoroutineScope(Dispatchers.IO).launch {
                 val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
+                val apiRequest = retrofit.create(ApiService::class.java)
                 val responseCall: Call<JsonObject> = apiRequest.kGetVillageList(requestBody)
                 api.postRequest(responseCall, this@Registration, 5)
             }
@@ -763,5 +763,27 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
         }
         val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
         super.attachBaseContext(updatedContext)
+    }
+
+    private fun otpVerification(resendOTP: Button) {
+        // Disable and gray out the button before starting timer
+        resendOTP.isEnabled = false
+        resendOTP.setBackgroundColor(ContextCompat.getColor(this, R.color.gray))
+        resendOTP.setTextColor(ContextCompat.getColor(this, R.color.white))
+
+        object : CountDownTimer(30000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                resendOTP.text =
+                    resources.getString(R.string.Time) + ":" + millisUntilFinished / 1000
+            }
+
+            override fun onFinish() {
+                // Enable and reset button appearance
+                resendOTP.isEnabled = true
+                resendOTP.text = resources.getString(R.string.Resend_OTP)
+                resendOTP.setBackgroundColor(ContextCompat.getColor(this@Registration, R.color.status_green))
+                resendOTP.setTextColor(ContextCompat.getColor(this@Registration, R.color.white))
+            }
+        }.start()
     }
 }

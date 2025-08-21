@@ -8,7 +8,7 @@ plugins {
 
 android {
 
-    compileSdk 35
+    compileSdk 36
     namespace 'in.gov.mahapocra.mahavistaarai'
 
     signingConfigs {
@@ -26,9 +26,9 @@ android {
     defaultConfig {
         applicationId "in.gov.mahapocra.mahavistaarai"
         minSdkVersion 23
-        targetSdkVersion 35
-        versionCode 15
-        versionName "1.8"
+        targetSdkVersion 36
+        versionCode 17
+        versionName "1.9.1"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resourceConfigurations += ['en', 'mr']
@@ -123,6 +123,7 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.google.firebase:firebase-database-ktx:21.0.0'
     implementation 'com.google.android.gms:play-services-location:21.3.0'
+    implementation 'androidx.activity:activity:1.10.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
     implementation 'com.makeramen:roundedimageview:2.3.0'
 

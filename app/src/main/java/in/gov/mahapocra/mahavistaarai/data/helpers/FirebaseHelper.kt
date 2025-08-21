@@ -10,6 +10,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.messaging.FirebaseMessaging
 
 class FirebaseHelper(private val context: Context) {
 
@@ -69,6 +70,19 @@ class FirebaseHelper(private val context: Context) {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
             )
+        }
+    }
+
+    fun getFCMToken(callback: (String) -> Unit) {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result
+                Log.d("FCM Token", "Fetched token: $token")
+                callback(token)
+            } else {
+                Log.e("FCM Token", "Fetching token failed", task.exception)
+                callback("") // or handle error appropriately
+            }
         }
     }
 }

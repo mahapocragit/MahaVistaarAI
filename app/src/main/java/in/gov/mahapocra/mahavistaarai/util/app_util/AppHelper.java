@@ -21,30 +21,88 @@ public class AppHelper {
         JSONArray jsonArray = new JSONArray();
 
         try {
-            JSONObject jsonObject0 = new JSONObject();
-            jsonObject0.put("id", 0);
-            jsonObject0.put("name", "My Profile");
-            jsonObject0.put("icon", "myprofile");
+            JSONObject profileObject = new JSONObject();
+            profileObject.put("id", 0);
+            profileObject.put("name", "My Profile");
+            profileObject.put("icon", "myprofile");
 
-            JSONObject jsonObject4 = new JSONObject();
-            jsonObject4.put("id", 3);
-            jsonObject4.put("name", "Credits");
-            jsonObject4.put("icon", "partners_ic");
+            JSONObject aboutObject = new JSONObject();
+            aboutObject.put("id", 1);
+            aboutObject.put("name", "About");
+            aboutObject.put("icon", "about_ic");
 
-            JSONObject jsonObject1 = new JSONObject();
-            jsonObject1.put("id", 1);
-            jsonObject1.put("name", "About");
-            jsonObject1.put("icon", "about_ic");
+            JSONObject expertsObject = new JSONObject();
+            expertsObject.put("id", 2);
+            expertsObject.put("name", "Experts Corner");
+            expertsObject.put("icon", "experts_ic");
 
-            JSONObject jsonObject9 = new JSONObject();
-            jsonObject9.put("id", 7);
-            jsonObject9.put("name", "Logout");
-            jsonObject9.put("icon", "logout");
+            JSONObject partnerObject = new JSONObject();
+            partnerObject.put("id", 3);
+            partnerObject.put("name", "Credits");
+            partnerObject.put("icon", "partners_ic");
 
-            jsonArray.put(jsonObject0);
-            jsonArray.put(jsonObject4);
-            jsonArray.put(jsonObject1);
-            jsonArray.put(jsonObject9);
+            JSONObject newsObject = new JSONObject();
+            newsObject.put("id", 4);
+            newsObject.put("name", "News");
+            newsObject.put("icon", "news_ic");
+
+            JSONObject logoutObject = new JSONObject();
+            logoutObject.put("id", 7);
+            logoutObject.put("name", "Logout");
+            logoutObject.put("icon", "logout");
+
+            jsonArray.put(profileObject);
+            jsonArray.put(partnerObject);
+            jsonArray.put(expertsObject);
+            jsonArray.put(aboutObject);
+            jsonArray.put(newsObject);
+            jsonArray.put(logoutObject);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonArray;
+    }
+
+    public JSONArray getMenuOptionMarathi() {
+        JSONArray jsonArray = new JSONArray();
+        try {
+            JSONObject profileObject = new JSONObject();
+            profileObject.put("id", 0);
+            profileObject.put("name", "माझी प्रोफाईल");
+            profileObject.put("icon", "myprofile");
+
+            JSONObject aboutObject = new JSONObject();
+            aboutObject.put("id", 1);
+            aboutObject.put("name", "आमच्या विषयी");
+            aboutObject.put("icon", "about_ic");
+
+            JSONObject expertsObject = new JSONObject();
+            expertsObject.put("id", 2);
+            expertsObject.put("name", "Experts Corner");
+            expertsObject.put("icon", "experts_ic");
+
+            JSONObject partnerObject = new JSONObject();
+            partnerObject.put("id", 3);
+            partnerObject.put("name", "भागीदार");
+            partnerObject.put("icon", "partners_ic");
+
+            JSONObject newsObject = new JSONObject();
+            newsObject.put("id", 4);
+            newsObject.put("name", "बातम्या");
+            newsObject.put("icon", "news_ic");
+
+            JSONObject logoutObject = new JSONObject();
+            logoutObject.put("id", 7);
+            logoutObject.put("name", "बाहेर पडा");
+            logoutObject.put("icon", "logout");
+
+            jsonArray.put(profileObject);
+            jsonArray.put(aboutObject);
+            jsonArray.put(expertsObject);
+            jsonArray.put(partnerObject);
+            jsonArray.put(newsObject);
+            jsonArray.put(logoutObject);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -57,58 +115,36 @@ public class AppHelper {
         JSONArray jsonArray = new JSONArray();
 
         try {
-            JSONObject jsonObject4 = new JSONObject();
-            jsonObject4.put("id", 3);
-            jsonObject4.put("name", "Credits");
-            jsonObject4.put("icon", "partners_ic");
+            JSONObject aboutObject = new JSONObject();
+            aboutObject.put("id", 1);
+            aboutObject.put("name", "About");
+            aboutObject.put("icon", "about_ic");
 
-            JSONObject jsonObject1 = new JSONObject();
-            jsonObject1.put("id", 1);
-            jsonObject1.put("name", "About");
-            jsonObject1.put("icon", "about_ic");
+            JSONObject expertsObject = new JSONObject();
+            expertsObject.put("id", 2);
+            expertsObject.put("name", "Experts Corner");
+            expertsObject.put("icon", "experts_ic");
 
-            JSONObject jsonObject7 = new JSONObject();
-            jsonObject7.put("id", 6);
-            jsonObject7.put("name", "Login/Registration");
-            jsonObject7.put("icon", "myprofile");
+            JSONObject creditObject = new JSONObject();
+            creditObject.put("id", 3);
+            creditObject.put("name", "Credits");
+            creditObject.put("icon", "partners_ic");
 
-            jsonArray.put(jsonObject7);
-            jsonArray.put(jsonObject4);
-            jsonArray.put(jsonObject1);
+            JSONObject newsObject = new JSONObject();
+            newsObject.put("id", 4);
+            newsObject.put("name", "News");
+            newsObject.put("icon", "news_ic");
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonArray;
-    }
+            JSONObject profileObject = new JSONObject();
+            profileObject.put("id", 6);
+            profileObject.put("name", "Login/Registration");
+            profileObject.put("icon", "myprofile");
 
-    public JSONArray getMenuOptionMarathi() {
-        JSONArray jsonArray = new JSONArray();
-        try {
-            JSONObject jsonObject0 = new JSONObject();
-            jsonObject0.put("id", 0);
-            jsonObject0.put("name","माझी प्रोफाईल");
-            jsonObject0.put("icon", "myprofile");
-
-            JSONObject jsonObject4 = new JSONObject();
-            jsonObject4.put("id", 3);
-            jsonObject4.put("name", "भागीदार");
-            jsonObject4.put("icon", "partners_ic");
-
-            JSONObject jsonObject1 = new JSONObject();
-            jsonObject1.put("id", 1);
-            jsonObject1.put("name", "आमच्या विषयी");
-            jsonObject1.put("icon", "about_ic");
-
-            JSONObject jsonObject9 = new JSONObject();
-            jsonObject9.put("id", 7);
-            jsonObject9.put("name", "बाहेर पडा");
-            jsonObject9.put("icon", "logout");
-
-            jsonArray.put(jsonObject0);
-            jsonArray.put(jsonObject4);
-            jsonArray.put(jsonObject1);
-            jsonArray.put(jsonObject9);
+            jsonArray.put(aboutObject);
+            jsonArray.put(creditObject);
+            jsonArray.put(expertsObject);
+            jsonArray.put(newsObject);
+            jsonArray.put(profileObject);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -120,24 +156,36 @@ public class AppHelper {
         JSONArray jsonArray = new JSONArray();
         try {
 
-            JSONObject jsonObject4 = new JSONObject();
-            jsonObject4.put("id", 3);
-            jsonObject4.put("name", "भागीदार");
-            jsonObject4.put("icon", "partners_ic");
+            JSONObject aboutObject = new JSONObject();
+            aboutObject.put("id", 1);
+            aboutObject.put("name", "आमच्या विषयी");
+            aboutObject.put("icon", "about_ic");
 
-            JSONObject jsonObject1 = new JSONObject();
-            jsonObject1.put("id", 1);
-            jsonObject1.put("name", "आमच्या विषयी");
-            jsonObject1.put("icon", "about_ic");
+            JSONObject expertsObject = new JSONObject();
+            expertsObject.put("id", 2);
+            expertsObject.put("name", "Experts Corner");
+            expertsObject.put("icon", "experts_ic");
 
-            JSONObject jsonObject7 = new JSONObject();
-            jsonObject7.put("id", 6);
-            jsonObject7.put("name", "लॉगइन/नोंदणी");
-            jsonObject7.put("icon", "myprofile");
+            JSONObject creditObject = new JSONObject();
+            creditObject.put("id", 3);
+            creditObject.put("name", "भागीदार");
+            creditObject.put("icon", "partners_ic");
 
-            jsonArray.put(jsonObject7);
-            jsonArray.put(jsonObject4);
-            jsonArray.put(jsonObject1);
+            JSONObject newsObject = new JSONObject();
+            newsObject.put("id", 4);
+            newsObject.put("name", "बातम्या");
+            newsObject.put("icon", "news_ic");
+
+            JSONObject profileObject = new JSONObject();
+            profileObject.put("id", 6);
+            profileObject.put("name", "लॉगइन/नोंदणी");
+            profileObject.put("icon", "myprofile");
+
+            jsonArray.put(aboutObject);
+            jsonArray.put(creditObject);
+            jsonArray.put(expertsObject);
+            jsonArray.put(newsObject);
+            jsonArray.put(profileObject);
 
         } catch (JSONException e) {
             e.printStackTrace();

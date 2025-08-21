@@ -26,8 +26,8 @@ import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
+import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLoginScreenTempBinding
@@ -104,6 +104,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 fcmToken = task.result
+                Log.d("FCM Token", "onCreate: ${fcmToken}")
             } else {
                 Log.e("FCM Token", "Fetching token failed", task.exception)
             }
@@ -294,7 +295,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 true
             )
             val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
+            val apiRequest = retrofit.create(ApiService::class.java)
             val responseCall: Call<JsonObject> =
                 apiRequest.getOTPRequest(mobile.trim(), requestBody)
             api.postRequest(responseCall, this, 1)
@@ -334,7 +335,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         true
                     )
                 val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
+                val apiRequest = retrofit.create(ApiService::class.java)
                 if (otp!=""){
                     val responseCall: Call<JsonObject> =
                         apiRequest.getRefreshTokenLoginViaOTP(
@@ -382,7 +383,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                             true
                         )
                     val retrofit: Retrofit = api.getRetrofitInstance()
-                    val apiRequest = retrofit.create(APIRequest::class.java)
+                    val apiRequest = retrofit.create(ApiService::class.java)
                     Log.d("TAGGER", "callLoginAPI: true")
                     val responseCall: Call<JsonObject> =
                         apiRequest.getUserLoginOTP(mobileNo.trim { it <= ' ' }, otp, requestBody)
@@ -406,7 +407,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                             true
                         )
                     val retrofit: Retrofit = api.getRetrofitInstance()
-                    val apiRequest = retrofit.create(APIRequest::class.java)
+                    val apiRequest = retrofit.create(ApiService::class.java)
                     Log.d("TAGGER", "callLoginAPI: true")
                     val responseCall: Call<JsonObject> =
                         apiRequest.getUserLoginPassword(mobileNo.trim { it <= ' ' }, toSHA512(userPass), requestBody)
@@ -435,7 +436,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     true
                 )
             val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
+            val apiRequest = retrofit.create(ApiService::class.java)
             Log.d("TAGGER", "callLoginAPIForFarmer: true")
             val responseCall: Call<JsonObject> = apiRequest.getUserLoginOTP(agriStackMobile.trim { it <= ' ' },  otp,requestBody)
             api.postRequest(responseCall, this, 2)
@@ -589,7 +590,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
         resendOTP.setOnClickListener {
             dialog.dismiss()
-            userValidateAndLogin()
+            sendOTP()
         }
         dialog.show()
     }
@@ -650,15 +651,23 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     }
 
     private fun otpVerification(resendOTP: Button) {
+        // Disable and gray out the button before starting timer
+        resendOTP.isEnabled = false
+        resendOTP.setBackgroundColor(ContextCompat.getColor(this, R.color.gray))
+        resendOTP.setTextColor(ContextCompat.getColor(this, R.color.white))
+
         object : CountDownTimer(30000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 resendOTP.text =
                     resources.getString(R.string.Time) + ":" + millisUntilFinished / 1000
-                //here you can have your logic to set text to edittext
             }
 
             override fun onFinish() {
+                // Enable and reset button appearance
+                resendOTP.isEnabled = true
                 resendOTP.text = resources.getString(R.string.Resend_OTP)
+                resendOTP.setBackgroundColor(ContextCompat.getColor(this@LoginScreen, R.color.status_green))
+                resendOTP.setTextColor(ContextCompat.getColor(this@LoginScreen, R.color.white))
             }
         }.start()
     }

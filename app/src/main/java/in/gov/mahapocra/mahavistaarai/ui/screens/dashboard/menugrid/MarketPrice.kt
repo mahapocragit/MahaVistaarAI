@@ -21,7 +21,7 @@ import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
+import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityMarketPriceBinding
@@ -142,12 +142,11 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
         binding.textViewDistrict.setOnClickListener {
             showDistrict()
         }
-
+        setupObservers()
         binding.textViewMarket.setOnClickListener {
             binding.calenderLayout.visibility = View.GONE
             binding.tvMarketDate.text = ""
             marketPreceDate = ""
-            getMarkets()
             farmerViewModel.fetchMarketList(this, languageToLoad, districtID)
             ProgressHelper.showProgressDialog(this)
         }
@@ -183,6 +182,43 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
         }
     }
 
+    private fun setupObservers() {
+        // Observe market list only once per lifecycle
+        farmerViewModel.responseMarkerList.observe(this) { responseStr ->
+            ProgressHelper.disableProgressDialog()
+            if (responseStr != null) {
+                try {
+                    val jSONObject = JSONObject(responseStr.toString())
+                    val response = ResponseModel(jSONObject)
+
+                    if (response.status) {
+                        marketJSONArray = response.getdataArray()
+                        AppUtility.getInstance().showListDialogMarketIndex(
+                            marketJSONArray,
+                            3,
+                            getString(R.string.farmer_select_market),
+                            "apmc_name",
+                            this,
+                            this
+                        )
+                    } else {
+                        Toast.makeText(this, "Data Not Found", Toast.LENGTH_LONG).show()
+                    }
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(this, "Error parsing response", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+        // Handle errors
+        farmerViewModel.error.observe(this) {
+            ProgressHelper.disableProgressDialog()
+            Toast.makeText(this, "Error fetching data", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun getMarketPriceDetails(apmcId: Int) {
         val jsonObject = JSONObject()
         try {
@@ -201,7 +237,7 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
                     true
                 )
             val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
+            val apiRequest = retrofit.create(ApiService::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getmarketPriceDetails(requestBody)
             api.postRequest(responseCall, this, 4)
         } catch (e: JSONException) {
@@ -241,7 +277,7 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
                     true
                 )
             val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
+            val apiRequest = retrofit.create(ApiService::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getDistrictList(requestBody)
             api.postRequest(responseCall, this, 1)
         } catch (e: JSONException) {
@@ -267,7 +303,7 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
                     true
                 )
             val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
+            val apiRequest = retrofit.create(ApiService::class.java)
             val responseCall: Call<JsonObject> = apiRequest.getMarketAndMarketName(requestBody)
             api.postRequest(responseCall, this, 5)
         } catch (e: JSONException) {

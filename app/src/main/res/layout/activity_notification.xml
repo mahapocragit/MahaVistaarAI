@@ -7,23 +7,6 @@
     android:background="@drawable/status_colored_background"
     tools:context=".ui.screens.notification.NotificationActivity">
 
-    <TextView
-        android:id="@+id/textNotificationMsg"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/no_notifications_error"
-        android:textColor="@color/status_green"
-        android:textSize="25dp"
-        android:textStyle="bold"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </TextView>
-
     <include
         android:id="@+id/relativeLayoutTopBar"
         layout="@layout/layout_toolbar"
@@ -36,9 +19,35 @@
         android:layout_height="match_parent"
         android:layout_marginHorizontal="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_40sdp"
-        tools:listitem="@layout/item_view_notification"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/item_view_notification" />
+
+    <LinearLayout
+        android:id="@+id/notificationNotFoundLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_40sdp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_100sdp"
+            app:srcCompat="@drawable/ic_no_data_found" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/no_notification_right_now"/>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

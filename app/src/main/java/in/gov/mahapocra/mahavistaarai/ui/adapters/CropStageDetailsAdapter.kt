@@ -82,20 +82,21 @@ class CropStageDetailsAdapter(
                     context?.let { it1 -> AppPreferenceManager(it1).getString(AppConstants.ACTION_FROM_DASHBOARD) }
                 if (source.equals(AppConstants.PEST_AND_DISEASES_STAGES)) {
                     val intent = Intent(context, PestsAndDiseasesStages::class.java)
-                    intent.putExtra("cropId", jsonObject.optInt("id"))
+                    intent.putExtra("id", jsonObject.optInt("id"))
                     intent.putExtra("wotr_crop_id", jsonObject.optInt("wotr_crop_id"))
                     intent.putExtra("mUrl", jsonObject.optString("image"))
                     intent.putExtra("mName", jsonObject.optString("name"))
                     context?.startActivity(intent)
                 }else if (source.equals(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD)) {
                     val intent = Intent(context, AdvisoryCropActivity::class.java)
-                    intent.putExtra("dataSavedInLocal", "dataSavedInLocal")
                     intent.putExtra("id", jsonObject.optInt("id"))
+                    intent.putExtra("wotr_crop_id", jsonObject.optInt("wotr_crop_id"))
+                    intent.putExtra("mUrl", jsonObject.optString("image"))
                     intent.putExtra("mName", jsonObject.optString("name"))
-                    intent.putExtra("editCrop", "NoEditCrop")
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        intent.putExtra("sowingDate", LocalCustom.getSowingDateWithYear(jsonObject.optString("sowing_date")))
+                        intent.putExtra("sowingDate", LocalCustom.getSowingDateInDayMonthYearFormat(jsonObject.optString("sowing_date")))
                     }
+                    intent.putExtra("editCrop", "NoEditCrop")
                     context?.startActivity(intent)
                 }else if (source.equals(AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD)) {
                     val intent = Intent(context, FertilizerCalculatorActivity::class.java)

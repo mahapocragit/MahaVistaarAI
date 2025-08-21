@@ -13,9 +13,11 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityNotificationBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.NotificationAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import org.json.JSONObject
 
 class NotificationActivity : AppCompatActivity() {
@@ -39,24 +41,34 @@ class NotificationActivity : AppCompatActivity() {
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
             startActivity(Intent(this, DashboardScreen::class.java))
         }
-
-        farmerViewModel.getNotificationList(this)
+        if (NetworkUtils.isInternetAvailable(this)){
+            farmerViewModel.getNotificationList(this)
+        }else{
+            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+        }
         farmerViewModel.getNotificationResponse.observe(this) {
             if (it != null) {
                 val jsonObject = JSONObject(it.toString())
                 val notificationJsonArray = jsonObject.getJSONArray("notifications")
-                binding.notificationRecyclerView.apply {
-                    hasFixedSize()
-                    layoutManager = LinearLayoutManager(this@NotificationActivity)
-                    adapter = NotificationAdapter(notificationJsonArray) { jsonObject ->
-                        startActivity(
-                            Intent(
-                                this@NotificationActivity,
-                                DetailedNotificationActivity::class.java
-                            ).apply {
-                                putExtra("notificationObject", jsonObject.toString())
-                            })
+                if (notificationJsonArray.length() > 0) {
+                    binding.notificationRecyclerView.visibility = View.VISIBLE
+                    binding.notificationNotFoundLayout.visibility = View.GONE
+                    binding.notificationRecyclerView.apply {
+                        hasFixedSize()
+                        layoutManager = LinearLayoutManager(this@NotificationActivity)
+                        adapter = NotificationAdapter(notificationJsonArray) { jsonObject ->
+                            startActivity(
+                                Intent(
+                                    this@NotificationActivity,
+                                    DetailedNotificationActivity::class.java
+                                ).apply {
+                                    putExtra("notificationObject", jsonObject.toString())
+                                })
+                        }
                     }
+                } else {
+                    binding.notificationRecyclerView.visibility = View.GONE
+                    binding.notificationNotFoundLayout.visibility = View.VISIBLE
                 }
             }
         }
@@ -64,7 +76,11 @@ class NotificationActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        farmerViewModel.getNotificationList(this)
+        if (NetworkUtils.isInternetAvailable(this)){
+            farmerViewModel.getNotificationList(this)
+        }else{
+            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+        }
     }
 
     override fun attachBaseContext(newBase: Context) {

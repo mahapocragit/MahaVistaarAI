@@ -3,11 +3,14 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.notification
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDetailedNotificationBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
@@ -24,12 +27,14 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.Shetisha
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import org.json.JSONArray
 import org.json.JSONObject
+
 
 class DetailedNotificationActivity : AppCompatActivity() {
 
@@ -86,15 +91,16 @@ class DetailedNotificationActivity : AppCompatActivity() {
             }
         }
 
-
-        binding.relativeLayoutTopBar.textViewHeaderTitle.text = "अधिक माहिती"
+        binding.relativeLayoutTopBar.textViewHeaderTitle.text =
+            getString(R.string.detailed_notifications)
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
+            Log.d("TAGGER", "onCreate relativeLayoutTopBar: $it")
         }
     }
 
-    private fun fetchCropList(flatCropId:Int?) {
+    private fun fetchCropList(flatCropId: Int?) {
         farmerViewModel.getCropCategoriesAndCropDetails(this, languageToLoad)
         farmerViewModel.cropCategoryResponse.observe(this) { response ->
             if (response != null) {
@@ -119,7 +125,9 @@ class DetailedNotificationActivity : AppCompatActivity() {
                     e.printStackTrace()
                 }
             }
-            if (flatCropsJsonArray!=null && flatCropsJsonArray.length()>0) {
+
+            var foundMatch = false
+            if (flatCropsJsonArray.length() > 0 && flatCropId != null) {
                 for (i in 0 until flatCropsJsonArray.length()) {
                     val jsonObject = flatCropsJsonArray.getJSONObject(i)
                     val id = jsonObject.optInt("id")
@@ -130,7 +138,28 @@ class DetailedNotificationActivity : AppCompatActivity() {
                         sowingDate = jsonObject.optString("sowing_date")
                         wotrCropId = jsonObject.optString("wotr_crop_id")
                         mUrl = jsonObject.optString("mUrl")
+                        foundMatch = true
+                        break
                     }
+                }
+            }
+
+            // 🔁 Fallback to saved preferences if no matching crop found
+            if (!foundMatch) {
+                val prefs = AppPreferenceManager(this)
+                cropId = prefs.getInt("CROP_ID_SAVED")
+                if (cropId != 0) {
+                    cropName = prefs.getString("CROP_NAME_SAVED")
+                    mUrl = prefs.getString("CROP_IMAGE_SAVED")
+                    sowingDate = prefs.getString("CROP_SOWING_DATE_SAVED") ?: ""
+                    wotrCropId = prefs.getString("CROP_WOTR_ID_SAVED")
+                } else {
+                    cropId = 25
+                    cropName = if (languageToLoad == "en") "Cotton" else "कापूस"
+                    mUrl =
+                        "https://s3.object.webwerksvmx.com/ffsauditlogs/ffs-api/ffs-api/uploads/crop_image/25_Cotton_1697091770.png"
+                    sowingDate = "22/06"
+                    wotrCropId = "1"
                 }
             }
         }
@@ -139,7 +168,11 @@ class DetailedNotificationActivity : AppCompatActivity() {
     private fun setUpPageContent(jsonObject: JSONObject, notificationId: Long) {
         binding.notificationInfoLayout.visibility = View.VISIBLE
         val page = jsonObject.optString("page")
-        val title = jsonObject.optString("title")
+        val type = jsonObject.optString("type")
+        var title = jsonObject.optString("title")
+        if (type=="etl"){
+            title = jsonObject.optString("crop")
+        }
         val shortDescription = jsonObject.optString("body")
         val longDescription = jsonObject.optString("description")
         val notificationDate =
@@ -150,7 +183,9 @@ class DetailedNotificationActivity : AppCompatActivity() {
         binding.shortDescriptionTextView.text = shortDescription
         binding.longDescriptionTextView.text = longDescription
         binding.dateTextView.text = notificationDate
-        binding.redirectTextView.text = redirectionText ?: "अधिक माहितीसाठी येथे क्लिक करा."
+        val content = SpannableString(redirectionText ?: "अधिक माहितीसाठी येथे क्लिक करा.")
+        content.setSpan(UnderlineSpan(), 0, content.length, 0)
+        binding.redirectTextView.text = content
         binding.redirectTextView.setOnClickListener { redirectToScreen(page) }
         farmerViewModel.updateNotificationStatus(this, notificationId)
         farmerViewModel.updateNotificationStatusResponse.observe(this) {
@@ -160,38 +195,10 @@ class DetailedNotificationActivity : AppCompatActivity() {
 
     private fun redirectToScreen(testValue: String) {
         val targetIntent = when (testValue.lowercase()) {
-            "advisory" -> Intent(this, AdvisoryCropActivity::class.java).apply {
-                putExtra("id", cropId)
-                putExtra("wotr_crop_id", wotrCropId)
-                putExtra("mUrl", mUrl)
-                putExtra("sowingDate", sowingDate)
-                putExtra("mName", cropName)
-            }
-
-            "sop" -> Intent(this, SOPActivity::class.java).apply {
-                putExtra("id", cropId)
-                putExtra("wotr_crop_id", wotrCropId)
-                putExtra("mUrl", mUrl)
-                putExtra("sowingDate", sowingDate)
-                putExtra("mName", cropName)
-            }
-
-            "fertilizer" -> Intent(this, FertilizerCalculatorActivity::class.java).apply {
-                putExtra("id", cropId)
-                putExtra("wotr_crop_id", wotrCropId)
-                putExtra("mUrl", mUrl)
-                putExtra("sowingDate", sowingDate)
-                putExtra("mName", cropName)
-            }
-
-            "pestdisease" -> Intent(this, PestsAndDiseasesStages::class.java).apply {
-                putExtra("id", cropId)
-                putExtra("wotr_crop_id", wotrCropId)
-                putExtra("mUrl", mUrl)
-                putExtra("sowingDate", sowingDate)
-                putExtra("mName", cropName)
-            }
-
+            "advisory" -> checkAndRedirect(AdvisoryCropActivity::class.java)
+            "sop" -> checkAndRedirect(SOPActivity::class.java)
+            "fertilizer" -> checkAndRedirect(FertilizerCalculatorActivity::class.java)
+            "pestdisease" -> checkAndRedirect(PestsAndDiseasesStages::class.java)
             "weather" -> Intent(this, WeatherActivity::class.java)
             "soilcard" -> Intent(this, HealthCardActivity::class.java)
             "climatetech" -> Intent(this, ClimateResilientTechnology::class.java)
@@ -202,6 +209,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
             "videos" -> Intent(this, VideosActivity::class.java)
             "dbtschemes" -> Intent(this, DBTActivity::class.java)
             "dashboard" -> Intent(this, DashboardScreen::class.java)
+            "etl_page" -> Intent(this, DashboardScreen::class.java)
             else -> Intent(this, DashboardScreen::class.java)
         }
         startActivity(targetIntent)
@@ -215,5 +223,31 @@ class DetailedNotificationActivity : AppCompatActivity() {
         }
         val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
         super.attachBaseContext(updatedContext)
+    }
+
+    private fun checkAndRedirect(targetClass: Class<*>): Intent {
+        Log.d("TAGGER", "checkAndRedirect: $cropId")
+        val sowingDateFormat = if (
+            (targetClass == FertilizerCalculatorActivity::class.java || targetClass == AdvisoryCropActivity::class.java)
+            && isShortDateFormat(sowingDate)
+        ) {
+            LocalCustom.getSowingDateInDayMonthYearFormat(sowingDate)
+        } else {
+            sowingDate
+        }
+        return Intent(this, targetClass).apply {
+            putExtra("id", cropId)
+            putExtra("wotr_crop_id", wotrCropId)
+            putExtra("mUrl", mUrl)
+            putExtra("sowingDate", sowingDateFormat)
+            putExtra("mName", cropName)
+        }
+    }
+
+    private fun isShortDateFormat(date: String?): Boolean {
+        if (date.isNullOrEmpty()) return false
+        // Simple check: pattern matches "dd/MM" only
+        val regex = Regex("""\d{2}/\d{2}""")
+        return regex.matches(date.trim())
     }
 }

@@ -9,6 +9,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityNewsWebViewBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 
 class NewsWebViewActivity : AppCompatActivity() {
 
@@ -25,6 +26,7 @@ class NewsWebViewActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding =  ActivityNewsWebViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root)
 
         binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.news)
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE

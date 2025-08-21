@@ -53,8 +53,11 @@ class SplashScreenActivity : AppCompatActivity() {
         )
 
         appVersionText = findViewById(R.id.appVersionText)
-        appVersionText.text =
-            "${getString(R.string.app_version)} ${LocalCustom.getVersionName(this)}"
+        appVersionText.text = buildString {
+                append(getString(R.string.app_version))
+                append(" ")
+                append(LocalCustom.getVersionName(this@SplashScreenActivity))
+            }
         // Get Farmer ID
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
 
