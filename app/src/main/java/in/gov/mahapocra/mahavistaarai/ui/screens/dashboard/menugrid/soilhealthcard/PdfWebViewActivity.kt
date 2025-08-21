@@ -43,25 +43,9 @@ class PdfWebViewActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        val url = intent.getStringExtra("pdf_url")
-//        binding.floatingActionButton.setOnClickListener {
-//            url?.let { it1 -> LocalCustom.downloadPdf(this, it1) }
-//        }
-//        val shcNumber = intent.getStringExtra("shcNumber")
-//        shcNumber?.let {
-//            gisViewModel.fetchSoilHealthCardDetailsFromSHCNumber(
-//                this,
-//                it,
-//                languageToLoad
-//            )
-//        }
-//        ProgressHelper.showProgressDialog(this)
-        val dataJsonString = intent.getStringExtra("soilHealthCardData")
+        val dataJsonString = intent.getStringExtra("healthCardObj")
         if (dataJsonString != null) {
-            val dataJsonObject = JSONObject(dataJsonString)
-            val dataJson = dataJsonObject.optJSONObject("data")
-            val getTestForPortal = dataJson.optJSONArray("getTestForAuthUser")
-            val json = getTestForPortal[0] as JSONObject
+            val json = JSONObject(dataJsonString)
             val computedID = json.optString("computedID")
             val farmerDataJson = json.optJSONObject("farmer")
             val name = farmerDataJson.optString("name")
@@ -76,7 +60,7 @@ class PdfWebViewActivity : AppCompatActivity() {
             binding.soilHealthCardLayout.villageTextView.text = villageName
             binding.soilHealthCardLayout.districtTextView.text = districtName
             binding.soilHealthCardLayout.talukaTextView.text = blockName
-            Log.d("TAGGER", "onCreate dataJsonString: $dataJsonObject")
+            Log.d("TAGGER", "onCreate dataJsonString: $json")
         }
 //        observeResponse()
     }

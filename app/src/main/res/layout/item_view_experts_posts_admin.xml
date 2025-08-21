@@ -19,12 +19,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_5sdp"
             android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                >
 
 
                 <com.mikhaellopez.circularimageview.CircularImageView
@@ -77,18 +79,22 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="TextView"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView19"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
 
                     android:text="At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias " />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -102,10 +108,18 @@
                         android:id="@+id/statusTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="end"
                         android:layout_weight="1"
+                        android:gravity="end"
                         android:text="Status" />
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/remarkText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_10sdp"
+                    android:background="#F8FAFC"
+                    android:text="TextView" />
 
             </LinearLayout>
 

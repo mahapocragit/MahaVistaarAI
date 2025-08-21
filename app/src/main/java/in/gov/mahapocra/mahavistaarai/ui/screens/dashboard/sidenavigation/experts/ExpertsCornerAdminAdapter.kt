@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.experts
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,15 +35,20 @@ class ExpertsCornerAdminAdapter(private val posts: JSONArray) :
         private val descriptionTextView: TextView = view.findViewById(R.id.textView19)
         private val redirectTextView: TextView = view.findViewById(R.id.redirectTextView)
         private val statusTextView: TextView = view.findViewById(R.id.statusTextView)
+        private val remarkText: TextView = view.findViewById(R.id.remarkText)
 
         fun bind(postObject: JSONObject) {
             val title = postObject.optString("title", "No Title")
             val description = postObject.optString("description", "No Description")
             val fileUrl = postObject.optString("file_url", "No Description")
             val statusLabel = postObject.optString("status_label", "No Description")
+            val remark = postObject.optString("remark", "No Remark")
+            Log.d("TAGGER", "bind: $remark")
             titleTextView.text = title
             descriptionTextView.text = description
             statusTextView.text = statusLabel
+            remarkText.visibility = if (remark!="null") View.VISIBLE else View.GONE
+            remarkText.text = remark
             redirectTextView.setOnClickListener {
                 LocalCustom.openFile(redirectTextView.context, fileUrl)
             }

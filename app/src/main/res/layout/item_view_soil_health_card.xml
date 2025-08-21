@@ -156,10 +156,10 @@
 
                 <ImageView
                     android:id="@+id/nitrogenImageView"
-                    android:layout_width="match_parent"
+                    android:layout_width="@dimen/_12sdp"
                     android:layout_height="@dimen/_12sdp"
                     android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
+                    android:layout_margin="@dimen/_1sdp"
                     app:srcCompat="@drawable/ic_soil_health_card_high" />
 
                 <TextView
@@ -169,14 +169,14 @@
                     android:textSize="@dimen/_10sdp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:text="N" />
+                    android:text="Nitrogen(N)" />
 
                 <ImageView
                     android:id="@+id/phosphorusImageView"
-                    android:layout_width="match_parent"
+                    android:layout_width="@dimen/_12sdp"
                     android:layout_height="@dimen/_12sdp"
                     android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
+                    android:layout_margin="@dimen/_1sdp"
                     app:srcCompat="@drawable/ic_soil_health_card_high" />
 
                 <TextView
@@ -186,14 +186,13 @@
                     android:layout_gravity="center_vertical"
                     android:textSize="@dimen/_10sdp"
                     android:layout_weight="1"
-                    android:text="P" />
+                    android:text="Phospherus(P)" />
 
                 <ImageView
                     android:id="@+id/potassiumImageView"
-                    android:layout_width="match_parent"
+                    android:layout_width="@dimen/_12sdp"
                     android:layout_height="@dimen/_12sdp"
                     android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
                     app:srcCompat="@drawable/ic_soil_health_card_high" />
 
                 <TextView
@@ -201,60 +200,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_margin="@dimen/_1sdp"
                     android:textSize="@dimen/_10sdp"
                     android:layout_weight="1"
-                    android:text="K" />
+                    android:text="Potassium(K)" />
 
-                <ImageView
-                    android:id="@+id/ecImageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_12sdp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/ic_soil_health_card_high" />
-
-                <TextView
-                    android:id="@+id/textView34"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textSize="@dimen/_10sdp"
-                    android:layout_weight="1"
-                    android:text="EC" />
-
-                <ImageView
-                    android:id="@+id/ocImageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_12sdp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/ic_soil_health_card_high" />
-
-                <TextView
-                    android:id="@+id/textView35"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textSize="@dimen/_10sdp"
-                    android:layout_weight="1"
-                    android:text="OC" />
-
-                <ImageView
-                    android:id="@+id/phImageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_12sdp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/ic_soil_health_card_high" />
-
-                <TextView
-                    android:id="@+id/textView36"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:textSize="@dimen/_10sdp"
-                    android:text="PH" />
             </LinearLayout>
 
         </LinearLayout>
