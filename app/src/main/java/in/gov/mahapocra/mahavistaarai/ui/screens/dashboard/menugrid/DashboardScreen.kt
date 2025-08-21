@@ -278,7 +278,11 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             startActivity(intent)
         }
         setVersion()
-        farmerViewModel.getFarmerSelectedCrop(this, languageToLoad)
+        if (NetworkUtils.isInternetAvailable(this)) {
+            farmerViewModel.getFarmerSelectedCrop(this, languageToLoad)
+        } else {
+            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+        }
 
         binding.appBarMain.dashboardScreen.customNavBottom.navHome.setOnClickListener {
             startActivity(
@@ -1011,7 +1015,11 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     private fun init() {
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
         if (farmerId > 0) {
-            farmerViewModel.fetchUserInformation(this, farmerId)
+            if (NetworkUtils.isInternetAvailable(this)) {
+                farmerViewModel.fetchUserInformation(this, farmerId)
+            } else {
+                LocalCustom.createSnackbar(binding.root, "Internet not available!")
+            }
         }
     }
 

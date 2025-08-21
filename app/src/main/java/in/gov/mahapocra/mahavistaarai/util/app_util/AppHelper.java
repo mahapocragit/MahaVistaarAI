@@ -52,10 +52,10 @@ public class AppHelper {
             logoutObject.put("icon", "logout");
 
             jsonArray.put(profileObject);
+//            jsonArray.put(expertsObject);
+//            jsonArray.put(newsObject);
             jsonArray.put(partnerObject);
-            jsonArray.put(expertsObject);
             jsonArray.put(aboutObject);
-            jsonArray.put(newsObject);
             jsonArray.put(logoutObject);
 
         } catch (JSONException e) {
@@ -98,10 +98,10 @@ public class AppHelper {
             logoutObject.put("icon", "logout");
 
             jsonArray.put(profileObject);
-            jsonArray.put(aboutObject);
-            jsonArray.put(expertsObject);
+//            jsonArray.put(expertsObject);
+//            jsonArray.put(newsObject);
             jsonArray.put(partnerObject);
-            jsonArray.put(newsObject);
+            jsonArray.put(aboutObject);
             jsonArray.put(logoutObject);
 
         } catch (JSONException e) {
@@ -141,9 +141,9 @@ public class AppHelper {
             profileObject.put("icon", "myprofile");
 
             jsonArray.put(aboutObject);
+//            jsonArray.put(expertsObject);
+//            jsonArray.put(newsObject);
             jsonArray.put(creditObject);
-            jsonArray.put(expertsObject);
-            jsonArray.put(newsObject);
             jsonArray.put(profileObject);
 
         } catch (JSONException e) {
@@ -182,9 +182,9 @@ public class AppHelper {
             profileObject.put("icon", "myprofile");
 
             jsonArray.put(aboutObject);
+//            jsonArray.put(expertsObject);
+//            jsonArray.put(newsObject);
             jsonArray.put(creditObject);
-            jsonArray.put(expertsObject);
-            jsonArray.put(newsObject);
             jsonArray.put(profileObject);
 
         } catch (JSONException e) {
