@@ -8,6 +8,7 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.GridView
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
@@ -70,20 +71,25 @@ class ClimateDetailsGrid : AppCompatActivity() {
             val intent = Intent(this, ClimateResilientTechnology::class.java)
             startActivity(intent)
         }
+
+        backPressedMethod()
+    }
+
+    private fun backPressedMethod() {
+        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                climateModelArrayList.clear()
+                val intent = Intent(this@ClimateDetailsGrid, ClimateResilientTechnology::class.java)
+                startActivity(intent)
+                finish()
+            }
+        })
     }
 
     fun init() {
         gridView = findViewById<View>(R.id.gridViewJobs) as GridView
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
         imgBackArrow = findViewById(R.id.imgBackArrow)
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        climateModelArrayList.clear()
-        val intent = Intent(this, ClimateResilientTechnology::class.java)
-        startActivity(intent)
-        finish()
     }
 
     override fun attachBaseContext(newBase: Context) {
