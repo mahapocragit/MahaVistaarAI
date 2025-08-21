@@ -50,6 +50,8 @@ class SOPWebViewActivity : AppCompatActivity() {
     }
 
     private fun setupWebView() {
+
+        binding.webViewProgressBar.visibility = View.VISIBLE
         with(climateWebView.settings) {
             javaScriptEnabled = true
             domStorageEnabled = true
