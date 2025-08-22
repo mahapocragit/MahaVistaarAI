@@ -32,6 +32,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.microsoft.clarity.Clarity
 import com.squareup.picasso.Picasso
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
@@ -196,6 +197,25 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         toggle.syncState()
         toggle.isDrawerSlideAnimationEnabled = true
 
+        drawer.addDrawerListener(object : DrawerLayout.DrawerListener {
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+                // Called when the drawer is sliding
+            }
+
+            override fun onDrawerOpened(drawerView: View) {
+                // 👉 Drawer is fully opened
+                Clarity.sendCustomEvent("SIDEBAR_BUTTON_CLICKED")
+            }
+
+            override fun onDrawerClosed(drawerView: View) {
+                // 👉 Drawer is fully closed
+            }
+
+            override fun onDrawerStateChanged(newState: Int) {
+                // Called when drawer state changes (idle, dragging, settling)
+            }
+        })
+
         // Set Data
         val userName: String =
             AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName)
@@ -226,6 +246,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
 
         binding.appBarMain.dashboardScreen.imageView20.setOnClickListener {
+            Clarity.sendCustomEvent("VISTAAR_AI_BUTTON_CLICKED")
             if (NetworkUtils.isInternetAvailable(this)) {
                 if (!isGuest) {
                     startActivity(Intent(this, ChatbotActivity::class.java))
@@ -285,6 +306,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
 
         binding.appBarMain.dashboardScreen.customNavBottom.navHome.setOnClickListener {
+            Clarity.sendCustomEvent("HOME_BUTTON_CLICKED")
             startActivity(
                 Intent(
                     this@DashboardScreen,
@@ -293,6 +315,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             )
         }
         binding.appBarMain.dashboardScreen.customNavBottom.navChc.setOnClickListener {
+            Clarity.sendCustomEvent("CHC_BUTTON_CLICKED")
             if (NetworkUtils.isInternetAvailable(this)) {
                 startActivity(
                     Intent(
@@ -305,6 +328,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             }
         }
         binding.appBarMain.dashboardScreen.customNavBottom.navVideos.setOnClickListener {
+            Clarity.sendCustomEvent("VIDEOS_BUTTON_CLICKED")
             if (NetworkUtils.isInternetAvailable(this)) {
                 startActivity(
                     Intent(
@@ -317,6 +341,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             }
         }
         binding.appBarMain.dashboardScreen.customNavBottom.navDbt.setOnClickListener {
+            Clarity.sendCustomEvent("DBT_BUTTON_CLICKED")
             if (NetworkUtils.isInternetAvailable(this)) {
                 startActivity(
                     Intent(

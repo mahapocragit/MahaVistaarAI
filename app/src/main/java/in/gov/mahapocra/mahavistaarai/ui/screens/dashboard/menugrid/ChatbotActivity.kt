@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
+import com.microsoft.clarity.Clarity
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityChatbotBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MahavistaarViewModel
@@ -44,8 +45,11 @@ class ChatbotActivity : AppCompatActivity() {
         uiResponsive(binding.root)
 
         askForLocationAndMicrophonePermission()
-        binding.toolbar.imageViewHeaderBack.setVisibility(View.VISIBLE)
-        binding.toolbar.imageViewHeaderBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
+        binding.toolbar.imageViewHeaderBack.visibility = View.VISIBLE
+        binding.toolbar.imageViewHeaderBack.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+            Clarity.sendCustomEvent("WEBVIEW_CLOSED")
+        }
         binding.toolbar.textViewHeaderTitle.text = ""
 
         ProgressHelper.showProgressDialog(this)
@@ -56,13 +60,16 @@ class ChatbotActivity : AppCompatActivity() {
                 binding.webView.visibility = View.VISIBLE
                 binding.noInternetAvailableLayout.visibility = View.GONE
                 val url = it.get("url")?.asString.orEmpty()
+                Clarity.sendCustomEvent("WEBVIEW_OPENED")
                 loadWebView(url)
-            }else{
+            } else {
+                Clarity.sendCustomEvent("WEBVIEW_STOPPED")
                 binding.webView.visibility = View.GONE
                 binding.noInternetAvailableLayout.visibility = View.VISIBLE
             }
         }
         mahavistaarViewModel.error.observe(this) {
+            Clarity.sendCustomEvent("WEBVIEW_STOPPED")
             binding.webView.visibility = View.GONE
             binding.noInternetAvailableLayout.visibility = View.VISIBLE
             ProgressHelper.disableProgressDialog()
@@ -84,14 +91,21 @@ class ChatbotActivity : AppCompatActivity() {
             permissionsNeeded.add(android.Manifest.permission.RECORD_AUDIO)
         }
 
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            )
             != PackageManager.PERMISSION_GRANTED
         ) {
             permissionsNeeded.add(android.Manifest.permission.ACCESS_FINE_LOCATION)
         }
 
         if (permissionsNeeded.isNotEmpty()) {
-            ActivityCompat.requestPermissions(this, permissionsNeeded.toTypedArray(), PERMISSION_REQUEST_CODE)
+            ActivityCompat.requestPermissions(
+                this,
+                permissionsNeeded.toTypedArray(),
+                PERMISSION_REQUEST_CODE
+            )
         }
     }
 
