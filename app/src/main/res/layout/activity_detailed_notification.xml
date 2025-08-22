@@ -14,76 +14,80 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:id="@+id/notificationInfoLayout"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_5sdp"
-        android:layout_marginTop="@dimen/_44sdp"
-        android:orientation="vertical"
-        android:visibility="gone"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/_45sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.cardview.widget.CardView
+        <LinearLayout
+            android:id="@+id/notificationInfoLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/_2sdp"
-            android:backgroundTint="@color/card_background_color_figma"
-            app:cardCornerRadius="@dimen/_10sdp">
+            android:orientation="vertical"
+            android:visibility="visible">
 
-            <LinearLayout
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="@dimen/_5sdp"
-                android:orientation="vertical">
+                android:layout_margin="@dimen/_2sdp"
+                android:backgroundTint="@color/card_background_color_figma"
+                app:cardCornerRadius="@dimen/_10sdp">
 
-                <TextView
-                    android:id="@+id/titleTextView"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="TextView"
-                    android:textColor="@color/actionbar_color_figma"
-                    android:textSize="@dimen/_11sdp"
-                    android:textStyle="bold" />
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/shortDescriptionTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="TextView"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_11sdp" />
+                    <TextView
+                        android:id="@+id/titleTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="TextView"
+                        android:textColor="@color/actionbar_color_figma"
+                        android:textSize="@dimen/_11sdp"
+                        android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/dateTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="TextView"
-                    android:textSize="@dimen/_11sdp" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:id="@+id/shortDescriptionTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="TextView"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_11sdp" />
 
-        <WebView
-            android:id="@+id/webView"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_450sdp"
-            android:layout_marginHorizontal="@dimen/_5sdp"
-            android:fadeScrollbars="false"
-            android:layout_marginTop="@dimen/_10sdp">
-        </WebView>
+                    <TextView
+                        android:id="@+id/dateTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="TextView"
+                        android:textSize="@dimen/_11sdp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/redirectTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_5sdp"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:gravity="end"
-            android:text="redirect"
-            android:textColor="@color/darkblue"
-            android:textSize="@dimen/_11sdp" />
-    </LinearLayout>
+            <WebView
+                android:id="@+id/webView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_430sdp"
+                android:layout_marginHorizontal="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:fadeScrollbars="false"></WebView>
+
+            <TextView
+                android:id="@+id/redirectTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_5sdp"
+                android:layout_marginVertical="@dimen/_10sdp"
+                android:gravity="end"
+                android:text="redirect"
+                android:textColor="@color/darkblue"
+                android:textSize="@dimen/_11sdp" />
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
