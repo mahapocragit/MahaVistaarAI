@@ -17,15 +17,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.model.Category
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityExpertsCornerAdminBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.ExpertsViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.UriFileHelper
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONObject
 

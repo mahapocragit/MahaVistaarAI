@@ -21,9 +21,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONException
 import org.json.JSONObject
-import retrofit2.HttpException
 import retrofit2.Retrofit
 import java.io.IOException
 import java.net.SocketException
