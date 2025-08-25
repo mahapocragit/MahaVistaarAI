@@ -442,4 +442,5 @@
     <string name="date_etl">Date: </string>
     <string name="no_notification_right_now">No notification Right Now!!</string>
     <string name="detailed_notifications">Detailed Notification</string>
+    <string name="cost_calculator">Cost Calculator</string>
 </resources>

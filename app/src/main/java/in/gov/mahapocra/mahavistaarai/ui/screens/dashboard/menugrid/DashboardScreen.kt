@@ -57,6 +57,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.Pests
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard.HealthCardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.AboutActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.CostCalculatorDashboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.CreditsActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.experts.ExpertsCornerAdminActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.news.NewsListActivity
@@ -1053,15 +1054,15 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         try {
             if (languageToLoad.equals("en", ignoreCase = true)) {
                 jsonArray = if (isGuest) {
-                    AppHelper.getInstance().getForGuestOption()
+                    AppHelper.instance.forGuestOption
                 } else {
-                    AppHelper.getInstance().getMenuOption()
+                    AppHelper.instance.menuOption
                 }
             } else if (languageToLoad.equals("mr", ignoreCase = true)) {
                 jsonArray = if (isGuest) {
-                    AppHelper.getInstance().getMenuOptionForGuestMarathi()
+                    AppHelper.instance.menuOptionForGuestMarathi
                 } else {
-                    AppHelper.getInstance().getMenuOptionMarathi()
+                    AppHelper.instance.menuOptionMarathi
                 }
             }
             val menuAdapter = jsonArray?.let { DrawerMenuAdapter(this, it) }
@@ -1182,6 +1183,14 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         NewsListActivity::class.java
                     )
                     startActivity(notificationIntent)
+                }
+
+                5 -> {
+                    val costCalculatorIntent = Intent(
+                        this@DashboardScreen,
+                        CostCalculatorDashboardActivity::class.java
+                    )
+                    startActivity(costCalculatorIntent)
                 }
 
                 6 -> {

@@ -1,195 +1,209 @@
-package in.gov.mahapocra.mahavistaarai.util.app_util;
+package `in`.gov.mahapocra.mahavistaarai.util.app_util
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 
-public class AppHelper {
+class AppHelper private constructor() {
+    val menuOption: JSONArray
+        get() {
+            val jsonArray = JSONArray()
 
-    private static final AppHelper ourInstance = new AppHelper();
+            try {
+                val profileObject = JSONObject()
+                profileObject.put("id", 0)
+                profileObject.put("name", "My Profile")
+                profileObject.put("icon", "myprofile")
 
-    public static AppHelper getInstance() {
-        return ourInstance;
-    }
+                val aboutObject = JSONObject()
+                aboutObject.put("id", 1)
+                aboutObject.put("name", "About")
+                aboutObject.put("icon", "about_ic")
 
-    private AppHelper() {
+                val expertsObject = JSONObject()
+                expertsObject.put("id", 2)
+                expertsObject.put("name", "Experts Corner")
+                expertsObject.put("icon", "experts_ic")
 
-    }
+                val partnerObject = JSONObject()
+                partnerObject.put("id", 3)
+                partnerObject.put("name", "Credits")
+                partnerObject.put("icon", "partners_ic")
 
-    public JSONArray getMenuOption() {
+                val newsObject = JSONObject()
+                newsObject.put("id", 4)
+                newsObject.put("name", "News")
+                newsObject.put("icon", "news_ic")
 
-        JSONArray jsonArray = new JSONArray();
+                val costCalculatorObject = JSONObject()
+                costCalculatorObject.put("id", 5)
+                costCalculatorObject.put("name", "Cost Calculator")
+                costCalculatorObject.put("icon", "cost_calculator_ic")
 
-        try {
-            JSONObject profileObject = new JSONObject();
-            profileObject.put("id", 0);
-            profileObject.put("name", "My Profile");
-            profileObject.put("icon", "myprofile");
+                val logoutObject = JSONObject()
+                logoutObject.put("id", 7)
+                logoutObject.put("name", "Logout")
+                logoutObject.put("icon", "logout")
 
-            JSONObject aboutObject = new JSONObject();
-            aboutObject.put("id", 1);
-            aboutObject.put("name", "About");
-            aboutObject.put("icon", "about_ic");
-
-            JSONObject expertsObject = new JSONObject();
-            expertsObject.put("id", 2);
-            expertsObject.put("name", "Experts Corner");
-            expertsObject.put("icon", "experts_ic");
-
-            JSONObject partnerObject = new JSONObject();
-            partnerObject.put("id", 3);
-            partnerObject.put("name", "Credits");
-            partnerObject.put("icon", "partners_ic");
-
-            JSONObject newsObject = new JSONObject();
-            newsObject.put("id", 4);
-            newsObject.put("name", "News");
-            newsObject.put("icon", "news_ic");
-
-            JSONObject logoutObject = new JSONObject();
-            logoutObject.put("id", 7);
-            logoutObject.put("name", "Logout");
-            logoutObject.put("icon", "logout");
-
-            jsonArray.put(profileObject);
-//            jsonArray.put(expertsObject);
-//            jsonArray.put(newsObject);
-            jsonArray.put(partnerObject);
-            jsonArray.put(aboutObject);
-            jsonArray.put(logoutObject);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+                jsonArray.put(profileObject)
+                jsonArray.put(expertsObject)
+                jsonArray.put(newsObject)
+                jsonArray.put(costCalculatorObject)
+                jsonArray.put(partnerObject)
+                jsonArray.put(aboutObject)
+                jsonArray.put(logoutObject)
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+            return jsonArray
         }
-        return jsonArray;
-    }
 
-    public JSONArray getMenuOptionMarathi() {
-        JSONArray jsonArray = new JSONArray();
-        try {
-            JSONObject profileObject = new JSONObject();
-            profileObject.put("id", 0);
-            profileObject.put("name", "माझी प्रोफाईल");
-            profileObject.put("icon", "myprofile");
+    val menuOptionMarathi: JSONArray
+        get() {
+            val jsonArray = JSONArray()
+            try {
+                val profileObject = JSONObject()
+                profileObject.put("id", 0)
+                profileObject.put("name", "माझी प्रोफाईल")
+                profileObject.put("icon", "myprofile")
 
-            JSONObject aboutObject = new JSONObject();
-            aboutObject.put("id", 1);
-            aboutObject.put("name", "आमच्या विषयी");
-            aboutObject.put("icon", "about_ic");
+                val aboutObject = JSONObject()
+                aboutObject.put("id", 1)
+                aboutObject.put("name", "आमच्या विषयी")
+                aboutObject.put("icon", "about_ic")
 
-            JSONObject expertsObject = new JSONObject();
-            expertsObject.put("id", 2);
-            expertsObject.put("name", "Experts Corner");
-            expertsObject.put("icon", "experts_ic");
+                val expertsObject = JSONObject()
+                expertsObject.put("id", 2)
+                expertsObject.put("name", "Experts Corner")
+                expertsObject.put("icon", "experts_ic")
 
-            JSONObject partnerObject = new JSONObject();
-            partnerObject.put("id", 3);
-            partnerObject.put("name", "भागीदार");
-            partnerObject.put("icon", "partners_ic");
+                val partnerObject = JSONObject()
+                partnerObject.put("id", 3)
+                partnerObject.put("name", "भागीदार")
+                partnerObject.put("icon", "partners_ic")
 
-            JSONObject newsObject = new JSONObject();
-            newsObject.put("id", 4);
-            newsObject.put("name", "बातम्या");
-            newsObject.put("icon", "news_ic");
+                val newsObject = JSONObject()
+                newsObject.put("id", 4)
+                newsObject.put("name", "बातम्या")
+                newsObject.put("icon", "news_ic")
 
-            JSONObject logoutObject = new JSONObject();
-            logoutObject.put("id", 7);
-            logoutObject.put("name", "बाहेर पडा");
-            logoutObject.put("icon", "logout");
+                val costCalculatorObject = JSONObject()
+                costCalculatorObject.put("id", 5)
+                costCalculatorObject.put("name", "Cost Calculator")
+                costCalculatorObject.put("icon", "cost_calculator_ic")
 
-            jsonArray.put(profileObject);
-//            jsonArray.put(expertsObject);
-//            jsonArray.put(newsObject);
-            jsonArray.put(partnerObject);
-            jsonArray.put(aboutObject);
-            jsonArray.put(logoutObject);
+                val logoutObject = JSONObject()
+                logoutObject.put("id", 7)
+                logoutObject.put("name", "बाहेर पडा")
+                logoutObject.put("icon", "logout")
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+                jsonArray.put(profileObject)
+                jsonArray.put(expertsObject)
+                jsonArray.put(newsObject)
+                jsonArray.put(costCalculatorObject)
+                jsonArray.put(partnerObject)
+                jsonArray.put(aboutObject)
+                jsonArray.put(logoutObject)
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+            return jsonArray
         }
-        return jsonArray;
-    }
 
-    public JSONArray getForGuestOption() {
+    val forGuestOption: JSONArray
+        get() {
+            val jsonArray = JSONArray()
 
-        JSONArray jsonArray = new JSONArray();
+            try {
+                val aboutObject = JSONObject()
+                aboutObject.put("id", 1)
+                aboutObject.put("name", "About")
+                aboutObject.put("icon", "about_ic")
 
-        try {
-            JSONObject aboutObject = new JSONObject();
-            aboutObject.put("id", 1);
-            aboutObject.put("name", "About");
-            aboutObject.put("icon", "about_ic");
+                val expertsObject = JSONObject()
+                expertsObject.put("id", 2)
+                expertsObject.put("name", "Experts Corner")
+                expertsObject.put("icon", "experts_ic")
 
-            JSONObject expertsObject = new JSONObject();
-            expertsObject.put("id", 2);
-            expertsObject.put("name", "Experts Corner");
-            expertsObject.put("icon", "experts_ic");
+                val creditObject = JSONObject()
+                creditObject.put("id", 3)
+                creditObject.put("name", "Credits")
+                creditObject.put("icon", "partners_ic")
 
-            JSONObject creditObject = new JSONObject();
-            creditObject.put("id", 3);
-            creditObject.put("name", "Credits");
-            creditObject.put("icon", "partners_ic");
+                val newsObject = JSONObject()
+                newsObject.put("id", 4)
+                newsObject.put("name", "News")
+                newsObject.put("icon", "news_ic")
 
-            JSONObject newsObject = new JSONObject();
-            newsObject.put("id", 4);
-            newsObject.put("name", "News");
-            newsObject.put("icon", "news_ic");
+                val costCalculatorObject = JSONObject()
+                costCalculatorObject.put("id", 5)
+                costCalculatorObject.put("name", "Cost Calculator")
+                costCalculatorObject.put("icon", "cost_calculator_ic")
 
-            JSONObject profileObject = new JSONObject();
-            profileObject.put("id", 6);
-            profileObject.put("name", "Login/Registration");
-            profileObject.put("icon", "myprofile");
+                val profileObject = JSONObject()
+                profileObject.put("id", 6)
+                profileObject.put("name", "Login/Registration")
+                profileObject.put("icon", "myprofile")
 
-            jsonArray.put(aboutObject);
-//            jsonArray.put(expertsObject);
-//            jsonArray.put(newsObject);
-            jsonArray.put(creditObject);
-            jsonArray.put(profileObject);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+                jsonArray.put(profileObject)
+                jsonArray.put(expertsObject)
+                jsonArray.put(newsObject)
+                jsonArray.put(costCalculatorObject)
+                jsonArray.put(creditObject)
+                jsonArray.put(aboutObject)
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+            return jsonArray
         }
-        return jsonArray;
-    }
 
-    public JSONArray getMenuOptionForGuestMarathi() {
-        JSONArray jsonArray = new JSONArray();
-        try {
+    val menuOptionForGuestMarathi: JSONArray
+        get() {
+            val jsonArray = JSONArray()
+            try {
+                val aboutObject = JSONObject()
+                aboutObject.put("id", 1)
+                aboutObject.put("name", "आमच्या विषयी")
+                aboutObject.put("icon", "about_ic")
 
-            JSONObject aboutObject = new JSONObject();
-            aboutObject.put("id", 1);
-            aboutObject.put("name", "आमच्या विषयी");
-            aboutObject.put("icon", "about_ic");
+                val expertsObject = JSONObject()
+                expertsObject.put("id", 2)
+                expertsObject.put("name", "Experts Corner")
+                expertsObject.put("icon", "experts_ic")
 
-            JSONObject expertsObject = new JSONObject();
-            expertsObject.put("id", 2);
-            expertsObject.put("name", "Experts Corner");
-            expertsObject.put("icon", "experts_ic");
+                val creditObject = JSONObject()
+                creditObject.put("id", 3)
+                creditObject.put("name", "भागीदार")
+                creditObject.put("icon", "partners_ic")
 
-            JSONObject creditObject = new JSONObject();
-            creditObject.put("id", 3);
-            creditObject.put("name", "भागीदार");
-            creditObject.put("icon", "partners_ic");
+                val newsObject = JSONObject()
+                newsObject.put("id", 4)
+                newsObject.put("name", "बातम्या")
+                newsObject.put("icon", "news_ic")
 
-            JSONObject newsObject = new JSONObject();
-            newsObject.put("id", 4);
-            newsObject.put("name", "बातम्या");
-            newsObject.put("icon", "news_ic");
+                val costCalculatorObject = JSONObject()
+                costCalculatorObject.put("id", 5)
+                costCalculatorObject.put("name", "Cost Calculator")
+                costCalculatorObject.put("icon", "cost_calculator_ic")
 
-            JSONObject profileObject = new JSONObject();
-            profileObject.put("id", 6);
-            profileObject.put("name", "लॉगइन/नोंदणी");
-            profileObject.put("icon", "myprofile");
+                val profileObject = JSONObject()
+                profileObject.put("id", 6)
+                profileObject.put("name", "लॉगइन/नोंदणी")
+                profileObject.put("icon", "myprofile")
 
-            jsonArray.put(aboutObject);
-//            jsonArray.put(expertsObject);
-//            jsonArray.put(newsObject);
-            jsonArray.put(creditObject);
-            jsonArray.put(profileObject);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+                jsonArray.put(profileObject)
+                jsonArray.put(expertsObject)
+                jsonArray.put(newsObject)
+                jsonArray.put(costCalculatorObject)
+                jsonArray.put(creditObject)
+                jsonArray.put(aboutObject)
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+            return jsonArray
         }
-        return jsonArray;
+
+    companion object {
+        val instance: AppHelper = AppHelper()
     }
 }
