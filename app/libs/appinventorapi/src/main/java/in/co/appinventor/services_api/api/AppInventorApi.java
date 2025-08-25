@@ -65,7 +65,7 @@ public class AppInventorApi {
                 } else {
                     this.mProgressDialog.setMessage(this.mMessage);
                 }
-                this.mProgressDialog.setCancelable(false);
+                this.mProgressDialog.setCancelable(true);
                 this.mProgressDialog.setCanceledOnTouchOutside(false);
                 this.mProgressDialog.show();
             }

@@ -13,6 +13,7 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDetailedNotificationBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.etl.AgriStackAdvisoryActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.FertilizerCalculatorActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.MarketPrice
@@ -170,18 +171,25 @@ class DetailedNotificationActivity : AppCompatActivity() {
         val page = jsonObject.optString("page")
         val type = jsonObject.optString("type")
         var title = jsonObject.optString("title")
-        if (type=="etl"){
+        if (type == "etl") {
             title = jsonObject.optString("crop")
         }
         val shortDescription = jsonObject.optString("body")
-        val longDescription = jsonObject.optString("description")
+        val url = jsonObject.optString("url") ?: ""
+        Log.d("TAGGER", "setUpPageContent: $url")
         val notificationDate =
             LocalCustom.convertDateFormat(jsonObject.optString("notification_date"))
         val redirectionText = jsonObject.optString("redirection_text")
-
+        if (redirectionText.isEmpty()){
+            binding.redirectTextView.visibility = View.GONE
+        }
         binding.titleTextView.text = title
         binding.shortDescriptionTextView.text = shortDescription
-        binding.longDescriptionTextView.text = longDescription
+        if (url.isEmpty()) {
+            binding.webView.visibility = View.GONE
+        } else {
+            binding.webView.loadUrl(url)
+        }
         binding.dateTextView.text = notificationDate
         val content = SpannableString(redirectionText ?: "अधिक माहितीसाठी येथे क्लिक करा.")
         content.setSpan(UnderlineSpan(), 0, content.length, 0)
@@ -209,7 +217,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
             "videos" -> Intent(this, VideosActivity::class.java)
             "dbtschemes" -> Intent(this, DBTActivity::class.java)
             "dashboard" -> Intent(this, DashboardScreen::class.java)
-            "etl_page" -> Intent(this, DashboardScreen::class.java)
+            "etl_page" -> Intent(this, AgriStackAdvisoryActivity::class.java)
             else -> Intent(this, DashboardScreen::class.java)
         }
         startActivity(targetIntent)

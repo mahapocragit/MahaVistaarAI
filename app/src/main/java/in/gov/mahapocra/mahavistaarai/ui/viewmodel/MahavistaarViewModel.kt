@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
+import com.microsoft.clarity.Clarity
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
@@ -42,10 +43,12 @@ class MahavistaarViewModel : ViewModel(){
                 val apiRequest = retrofit.create(ApiService::class.java)
 
                 // Retrofit suspend call
+                Clarity.sendCustomEvent("JWT_SESSION_START")
                 val response = apiRequest.requestForChatBotURL(requestBody)
                 _responseUrlForChatBot.value = response
 
             } catch (e: Exception) {
+                Clarity.sendCustomEvent("JWT_SESSION_STOPPED")
                 _error.value = e.localizedMessage ?: "Unknown error"
                 FirebaseCrashlytics.getInstance().recordException(e)
             }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Transparent fill -->
+    <solid android:color="@android:color/transparent" />
+
+    <!-- Dashed stroke -->
+    <stroke
+        android:width="2dp"
+        android:color="@android:color/darker_gray"
+        android:dashWidth="10dp"
+        android:dashGap="5dp" />
+
+    <!-- Rounded corners (optional) -->
+    <corners android:radius="8dp" />
+</shape>

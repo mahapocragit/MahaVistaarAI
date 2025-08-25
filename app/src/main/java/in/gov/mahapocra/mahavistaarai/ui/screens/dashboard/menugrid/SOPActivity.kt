@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -109,7 +110,8 @@ class SOPActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener {
             binding.noDataFoundImageView.visibility = View.VISIBLE
             binding.sopTextView.visibility = View.VISIBLE
         }
-        val isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
+        val isGuest =
+            AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
         binding.chatbotIcon.setOnClickListener {
             if (!isGuest) {
                 startActivity(Intent(this, ChatbotActivity::class.java))
@@ -129,12 +131,12 @@ class SOPActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener {
                     .show()
             }
         }
-    }
 
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        startActivity(Intent(this, DashboardScreen::class.java))
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                startActivity(Intent(this@SOPActivity, DashboardScreen::class.java))
+            }
+        })
     }
 
     override fun attachBaseContext(newBase: Context) {

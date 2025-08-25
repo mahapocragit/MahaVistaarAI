@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -50,16 +51,17 @@ class AgriStackAdvisoryActivity : AppCompatActivity() {
             startActivity(Intent(this, DashboardScreen::class.java))
         }
 
+        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                startActivity(Intent(this@AgriStackAdvisoryActivity, DashboardScreen::class.java))
+            }
+        })
+
         observeResponse()
         val villageCode = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
         if (villageCode!=0) {
             farmerViewModel.getCropSapAdvisory(this, villageCode) //TODO: static villageCode code 537820
         }
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        startActivity(Intent(this, DashboardScreen::class.java))
     }
 
     private fun observeResponse() {

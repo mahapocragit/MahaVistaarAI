@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropCategoriesAdapter
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import org.json.JSONArray
 import org.json.JSONObject

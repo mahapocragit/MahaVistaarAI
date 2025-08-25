@@ -8,6 +8,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
@@ -47,9 +48,20 @@ class SOPWebViewActivity : AppCompatActivity() {
 
         // Load URL
         intent.getStringExtra("webUrl")?.let { openWebView(it) }
+
+        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                if (climateWebView.canGoBack()) {
+                    climateWebView.goBack()
+                } else {
+                    finish()
+                }
+            }
+        })
     }
 
     private fun setupWebView() {
+        binding.webViewProgressBar.visibility = View.VISIBLE
         with(climateWebView.settings) {
             javaScriptEnabled = true
             domStorageEnabled = true
@@ -84,15 +96,6 @@ class SOPWebViewActivity : AppCompatActivity() {
 
     private fun openWebView(url: String) {
         climateWebView.loadUrl(url)
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        if (climateWebView.canGoBack()) {
-            climateWebView.goBack()
-        } else {
-            finish()
-        }
     }
 
     override fun attachBaseContext(newBase: Context) {
