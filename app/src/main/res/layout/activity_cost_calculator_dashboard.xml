@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/status_colored_background"
-    tools:context=".ui.screens.dashboard.sidenavigation.CostCalculatorDashboardActivity">
+    tools:context=".ui.screens.dashboard.sidenavigation.costcalculator.CostCalculatorDashboardActivity">
 
     <include
         android:id="@+id/toolbarLayout"
@@ -65,16 +65,17 @@
             android:paddingVertical="@dimen/_5sdp">
 
             <ImageView
-                android:id="@+id/imageView41"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                app:srcCompat="@drawable/alert_ic" />
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
+                android:padding="@dimen/_3sdp"
+                app:srcCompat="@drawable/indicator_ic" />
 
             <TextView
                 android:id="@+id/textView47"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_5sdp"
+                android:textSize="@dimen/_12sdp"
                 android:gravity="center_vertical"
                 android:text="Calculate profit" />
         </LinearLayout>
@@ -185,8 +186,11 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            tools:itemCount="5"
+            tools:listitem="@layout/cost_calculator_crop_item_view"/>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
