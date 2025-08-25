@@ -52,6 +52,9 @@ class PdfWebViewActivity : AppCompatActivity() {
             val blockDataJson = json.optJSONObject("block")
             val blockName = blockDataJson.optString("name")
             val districtDataJson = json.optJSONObject("district")
+            val plotDataJson = json.optJSONObject("plot")
+            val areaText = plotDataJson.optDouble("area")
+            val surveyNumberText = plotDataJson.optString("surveyNo")
             val districtName = districtDataJson.optString("name")
             val villageDataJson = json.optJSONObject("village")
             val villageName = villageDataJson.optString("name")
@@ -60,6 +63,8 @@ class PdfWebViewActivity : AppCompatActivity() {
             binding.soilHealthCardLayout.villageTextView.text = villageName
             binding.soilHealthCardLayout.districtTextView.text = districtName
             binding.soilHealthCardLayout.talukaTextView.text = blockName
+            binding.soilHealthCardLayout.farmSizeTextView.text = "$areaText acre"
+            binding.soilHealthCardLayout.surveyNoTextView.text = surveyNumberText
             Log.d("TAGGER", "onCreate dataJsonString: $json")
         }
 //        observeResponse()
