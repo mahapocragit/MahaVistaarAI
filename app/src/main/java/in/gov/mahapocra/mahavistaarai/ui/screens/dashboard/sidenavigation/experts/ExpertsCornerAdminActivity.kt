@@ -51,6 +51,9 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
         binding.toolbar.textViewHeaderTitle.text = "Experts Corner"
+        binding.toolbar.textViewHeaderTitle.setOnClickListener {
+            startActivity(Intent(this, ExpertsCornerFarmerActivity::class.java))
+        }
         observeResponse()
         expertsViewModel.getCategories()
         expertsViewModel.getUserArticles(this)
@@ -179,7 +182,6 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
                 val responseMessage = jSONObject.optString("response")
                 if (status==200){
                     Toast.makeText(this, responseMessage, Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, ExpertsCornerFarmerActivity::class.java))
                 }else{
                     Toast.makeText(this, responseMessage, Toast.LENGTH_SHORT).show()
                 }

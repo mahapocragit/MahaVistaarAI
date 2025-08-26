@@ -151,6 +151,21 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 }
             }
         }
+
+        farmerViewModel.districtIdResponse.observe(this){
+            if (it != null) {
+                val jSONObject = JSONObject(it.toString())
+                val response =
+                    ResponseModel(
+                        jSONObject
+                    )
+                if (response.status) {
+                    districtJSONArray = response.getdataArray()
+                } else {
+                    UIToastMessage.show(this, response.response)
+                }
+            }
+        }
     }
 
     private fun setConfiguration() {
@@ -198,37 +213,12 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             binding.textView5.text = getString(R.string.register_text_1)
             binding.textView6.text = getString(R.string.register_text_2)
         }
-        getDistrictData()
+        farmerViewModel.getDistrictData(this, languageToLoad)
     }
 
     @JvmName("getMachineId1")
     fun getMachineId(): String? {
         return Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
-    }
-
-    private fun getDistrictData() {
-        val jsonObject = JSONObject()
-        try {
-            // jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
-            jsonObject.put("lang", languageToLoad)
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api =
-                AppInventorApi(
-                    this,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(this).getkMSG_WAIT(),
-                    true
-                )
-            CoroutineScope(Dispatchers.IO).launch {
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(ApiService::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getDistrictList(requestBody)
-                api.postRequest(responseCall, this@Registration, 1)
-            }
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
     }
 
     private fun onclick() {
@@ -330,7 +320,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
 
     private fun showDistrict() {
         if (districtJSONArray == null) {
-            getDistrictData()
+            farmerViewModel.getDistrictData(this, languageToLoad)
         } else {
             AppUtility.getInstance().showListDialogIndex(
                 districtJSONArray,
@@ -611,15 +601,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 1 && jSONObject != null) {
-            val response =
-                ResponseModel(
-                    jSONObject
-                )
-            if (response.status) {
-                districtJSONArray = response.getdataArray()
-            } else {
-                UIToastMessage.show(this, response.response)
-            }
+
         }
 
         if (i == 2) {

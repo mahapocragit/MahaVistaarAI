@@ -80,6 +80,7 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
         binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.marketprice)
         binding.tvSourceInformation.text = getString(R.string.source_info_market)
         binding.textViewMarket.text = getString(R.string.farmer_select_market)
+        setupObservers()
         setConfiguration()
         binding.recyclerViewMarketPriceList.setHasFixedSize(true)
         val myLayoutManager = LinearLayoutManager(this)
@@ -127,7 +128,8 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
             AppSettings.getInstance().getValue(this, AppConstants.uTALUKA, AppConstants.uTALUKA)
         districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
         talukaID = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
-        getDistrictData()
+
+        farmerViewModel.getDistrictData(this, languageToLoad)
         fetchMarketPriceAndName()
     }
 
@@ -212,6 +214,38 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
             }
         }
 
+        farmerViewModel.districtIdResponse.observe(this){ response->
+            if (response!=null){
+                val jSONObject = JSONObject(response.toString())
+                val response =
+                    ResponseModel(
+                        jSONObject
+                    )
+
+                if (response.status) {
+                    districtJSONArray = response.getdataArray()
+                    districtJSONArray?.let {
+                        for (j in 0 until it.length()) {
+                            val districtObject = it.getJSONObject(j)
+                            val id = districtObject.getInt("code")
+                            val name = districtObject.getString("name")
+
+                            // Check if the current id matches districtID
+                            if (id == districtID) {
+                                // Set the text in textViewDistrict if a match is found
+                                binding.textViewDistrict.text = name
+                                break // No need to continue looping once the matching district is found
+                            }
+                        }
+                    } ?: run {
+                        Log.e("TAGGER", "districtJSONArray could not be cast to JSONArray")
+                    }
+                } else {
+                    Toast.makeText(this, "Data Not Found", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
         // Handle errors
         farmerViewModel.error.observe(this) {
             ProgressHelper.disableProgressDialog()
@@ -247,7 +281,7 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
 
     private fun showDistrict() {
         if (districtJSONArray == null) {
-            getDistrictData()
+            farmerViewModel.getDistrictData(this, languageToLoad)
         } else {
             AppUtility.getInstance().showListDialogIndex(
                 districtJSONArray,
@@ -258,30 +292,6 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
                 this,
                 this
             )
-        }
-    }
-
-    private fun getDistrictData() {
-        val jsonObject = JSONObject()
-        try {
-
-            jsonObject.put("lang", languageToLoad)
-
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api =
-                AppInventorApi(
-                    this,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(this).getkMSG_WAIT(),
-                    true
-                )
-            val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(ApiService::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getDistrictList(requestBody)
-            api.postRequest(responseCall, this, 1)
-        } catch (e: JSONException) {
-            e.printStackTrace()
         }
     }
 
@@ -369,34 +379,6 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
 
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
-        if (i == 1 && jSONObject != null) {
-            val response =
-                ResponseModel(
-                    jSONObject
-                )
-
-            if (response.status) {
-                districtJSONArray = response.getdataArray()
-                districtJSONArray?.let {
-                    for (j in 0 until it.length()) {
-                        val districtObject = it.getJSONObject(j)
-                        val id = districtObject.getInt("code")
-                        val name = districtObject.getString("name")
-
-                        // Check if the current id matches districtID
-                        if (id == districtID) {
-                            // Set the text in textViewDistrict if a match is found
-                            binding.textViewDistrict.text = name
-                            break // No need to continue looping once the matching district is found
-                        }
-                    }
-                } ?: run {
-                    Log.e("TAGGER", "districtJSONArray could not be cast to JSONArray")
-                }
-            } else {
-                Toast.makeText(this, "Data Not Found", Toast.LENGTH_LONG).show()
-            }
-        }
 
         if (i == 2 && jSONObject != null) {
             val response =

@@ -203,10 +203,10 @@ interface ApiService {
     ): Call<JsonObject>
 
     @POST(ApiConstants.kWareHouseDetails)
-    fun getWareHouseDetails(@Body params: RequestBody): Call<JsonObject>
+    suspend fun getWareHouseDetails(@Body params: RequestBody): JsonObject
 
     @POST(ApiConstants.kGetDistrictList)
-    fun getDistrictList(@Body params: RequestBody): Call<JsonObject>
+    suspend fun getDistrictList(@Body params: RequestBody): JsonObject
 
     @POST(ApiConstants.kGetMarketAndMarketName)
     fun getMarketAndMarketName(@Body params: RequestBody): Call<JsonObject>

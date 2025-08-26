@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
@@ -18,10 +19,13 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONException
 import org.json.JSONObject
+import retrofit2.Call
 import retrofit2.Retrofit
 import java.io.IOException
 import java.net.SocketException
@@ -104,6 +108,11 @@ class FarmerViewModel : ViewModel() {
     val updateFCMTokenResponse: LiveData<JsonObject> = _updateFCMTokenResponse
     private val _checkFCMTokenResponse = MutableLiveData<JsonObject>()
     val checkFCMTokenResponse: LiveData<JsonObject> = _checkFCMTokenResponse
+
+    private val _warehouseDetailsResponse = MutableLiveData<JsonObject>()
+    val warehouseDetailsResponse: LiveData<JsonObject> = _warehouseDetailsResponse
+    private val _districtIdResponse = MutableLiveData<JsonObject>()
+    val districtIdResponse: LiveData<JsonObject> = _districtIdResponse
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -768,6 +777,7 @@ class FarmerViewModel : ViewModel() {
                 ProgressHelper.disableProgressDialog()
                 _getNotificationResponse.value = response
             } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
@@ -795,6 +805,7 @@ class FarmerViewModel : ViewModel() {
                 ProgressHelper.disableProgressDialog()
                 _getNotificationDetailedResponse.value = response
             } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
@@ -822,6 +833,7 @@ class FarmerViewModel : ViewModel() {
                 ProgressHelper.disableProgressDialog()
                 _updateNotificationStatusResponse.value = response
             } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
@@ -852,6 +864,7 @@ class FarmerViewModel : ViewModel() {
                     _updateFCMTokenResponse.value = response
                 }
             } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
@@ -876,6 +889,62 @@ class FarmerViewModel : ViewModel() {
                 ProgressHelper.disableProgressDialog()
                 _checkFCMTokenResponse.value = response
             } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun fetchWarehouseData(context: Context, districtID: Int, languageToLoad: String) {
+        ProgressHelper.showProgressDialog(context)
+        viewModelScope.launch {
+            try {
+                val jsonObject = JSONObject()
+                jsonObject.put("api_key", APIKeys.SSO_PROD)
+                jsonObject.put("district_code", districtID)
+                jsonObject.put("lang", languageToLoad)
+
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.getWareHouseDetails(requestBody)
+                ProgressHelper.disableProgressDialog()
+                _warehouseDetailsResponse.value = response
+            } catch (e: JSONException) {
+                ProgressHelper.disableProgressDialog()
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getDistrictData(context: Context, languageToLoad: String){
+        ProgressHelper.showProgressDialog(context)
+        viewModelScope.launch {
+            try {
+                val jsonObject = JSONObject()
+                jsonObject.put("lang", languageToLoad)
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val retrofit: Retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.getDistrictList(requestBody)
+                ProgressHelper.disableProgressDialog()
+                _districtIdResponse.value = response
+            } catch (e: JSONException) {
+                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."

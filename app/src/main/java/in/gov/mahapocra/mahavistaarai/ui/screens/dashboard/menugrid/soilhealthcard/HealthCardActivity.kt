@@ -21,7 +21,6 @@ import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
-import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityHealthCardBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
@@ -96,7 +95,8 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
             onBackPressedDispatcher.onBackPressed()
         }
 
-        getDistrictData()
+        setUpObservers()
+        farmerViewModel.getDistrictData(this, languageToLoad)
 
 
         binding.textViewDist.setOnClickListener {
@@ -147,6 +147,24 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
         }
     }
 
+    private fun setUpObservers() {
+        farmerViewModel.districtIdResponse.observe(this){
+            if (it != null) {
+                val jSONObject = JSONObject(it.toString())
+                val response =
+                    ResponseModel(
+                        jSONObject
+                    )
+                if (response.status) {
+                    districtJSONArray = response.getdataArray()
+                    farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
+                } else {
+                    UIToastMessage.show(this, response.response)
+                }
+            }
+        }
+    }
+
     private fun fetchData(surveyNumber: Int) {
         val api = AppInventorApi(
             this, AppEnvironment.GIS.baseUrl, "",
@@ -184,18 +202,6 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
     }
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
-        if (i == 1 && jSONObject != null) {
-            val response =
-                ResponseModel(
-                    jSONObject
-                )
-            if (response.status) {
-                districtJSONArray = response.getdataArray()
-                farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
-            } else {
-                UIToastMessage.show(this, response.response)
-            }
-        }
 
         if (i == 3 && jSONObject != null) {
             val farmerJsonArray = jSONObject.optJSONArray("data")
@@ -238,7 +244,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
 
     private fun showDistrict() {
         if (districtJSONArray == null) {
-            getDistrictData()
+            farmerViewModel.getDistrictData(this, languageToLoad)
         } else {
             AppUtility.getInstance().showListDialogIndex(
                 districtJSONArray,
@@ -294,31 +300,6 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
                     this,
                     this
                 )
-        }
-    }
-
-    private fun getDistrictData() {
-        val jsonObject = JSONObject()
-        try {
-            // jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
-            jsonObject.put("lang", languageToLoad)
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api =
-                AppInventorApi(
-                    this,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(this).getkMSG_WAIT(),
-                    true
-                )
-            CoroutineScope(Dispatchers.IO).launch {
-                val retrofit: Retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getDistrictList(requestBody)
-                api.postRequest(responseCall, this@HealthCardActivity, 1)
-            }
-        } catch (e: JSONException) {
-            e.printStackTrace()
         }
     }
 
