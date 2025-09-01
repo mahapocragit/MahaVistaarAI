@@ -282,4 +282,7 @@ interface ApiService {
     @POST("expertscornerServices/articles-list")
     suspend fun getAllArticles(@Body params: RequestBody): JsonObject
 
+    @POST("shcServices/fetch_soil_health_card_single")
+    suspend fun fetchSoilHealthCard(@Body params: RequestBody): JsonObject
+
 }

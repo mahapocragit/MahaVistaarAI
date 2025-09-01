@@ -12,7 +12,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import org.json.JSONArray
 import org.json.JSONObject
 
-class SoilHealthCardAdapter(private val farmerJsonArray: JSONArray?) :
+class SoilHealthCardAdapter(private val soilHealthCardArrayJsonArray: JSONArray?) :
     RecyclerView.Adapter<SoilHealthCardAdapter.FarmerViewHolder>() {
 
     class FarmerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -38,43 +38,33 @@ class SoilHealthCardAdapter(private val farmerJsonArray: JSONArray?) :
     }
 
     override fun onBindViewHolder(holder: FarmerViewHolder, position: Int) {
-        farmerJsonArray?.let {
-            val farmerObject: JSONObject = it.getJSONObject(position)
-            val npkUnfiltered = farmerObject.optJSONObject("soil_params")
-            val nitrogen = npkUnfiltered.getString("n")
-            val phosphorus = npkUnfiltered.getString("p")
-            val potassium = npkUnfiltered.getString("k")
-            val electricalConductivity = npkUnfiltered.getString("ec")
-            val organicCarbon = npkUnfiltered.getString("oc")
-            val potentialOfHydrogen = npkUnfiltered.getString("ph")
-            mapNPKByColors(
-                nitrogen,
-                phosphorus,
-                potassium,
-                electricalConductivity,
-                organicCarbon,
-                potentialOfHydrogen,
-                holder
-            )
-            holder.farmerName.text = farmerObject.optString("farmer_name", "N/A")
-            holder.farmSize.text = "${farmerObject.optString("farmsize", "0")} acres"
-            holder.shcNo.text = "${farmerObject.optString("shc_no", "N/A")}"
-            holder.surveyNo.text = "${farmerObject.optInt("survey_number", 0)}"
+        val context = holder.itemView.context
+        soilHealthCardArrayJsonArray?.let {
+            val templateJson: JSONObject = it.getJSONObject(position)
+            val farmerObject = templateJson.optJSONObject("farmer")
+            val plotObject = templateJson.optJSONObject("plot")
+//            val npkUnfiltered = farmerObject.optJSONObject("soil_params")
+//            val nitrogen = npkUnfiltered.getString("n")
+//            val phosphorus = npkUnfiltered.getString("p")
+//            val potassium = npkUnfiltered.getString("k")
+//            val electricalConductivity = npkUnfiltered.getString("ec")
+//            val organicCarbon = npkUnfiltered.getString("oc")
+//            val potentialOfHydrogen = npkUnfiltered.getString("ph")
+//            mapNPKByColors(
+//                nitrogen,
+//                phosphorus,
+//                potassium,
+//                electricalConductivity,
+//                organicCarbon,
+//                potentialOfHydrogen,
+//                holder
+//            )
+            holder.farmerName.text = farmerObject?.optString("name", "N/A")
+            holder.farmSize.text = "${plotObject?.optString("area", "0")} acres"
+            holder.shcNo.text = "${templateJson.optString("computedID", "N/A")}"
+            holder.surveyNo.text = "${plotObject?.optInt("surveyNo", 0)}"
             holder.soilHealthReportLinearLayout.setOnClickListener {
-                holder.soilHealthReportLinearLayout.context.startActivity(
-                    Intent(
-                        holder.farmerName.context,
-                        PdfWebViewActivity::class.java
-                    ).apply {
-                        putExtra(
-                            "pdf_url",
-                            farmerObject.optString(
-                                "url",
-                                "https://s3.object.webwerksvmx.com/ffsauditlogs/gis-data/gis-data/SHC/531379.pdf"
-                            )
-                        )
-                        putExtra("shcNumber", farmerObject.optString("shc_no", "N/A"))
-                    })
+                context.startActivity(Intent(context, PdfWebViewActivity::class.java))
             }
         }
     }
@@ -157,6 +147,6 @@ class SoilHealthCardAdapter(private val farmerJsonArray: JSONArray?) :
         }
     }
 
-    override fun getItemCount(): Int = farmerJsonArray?.length() ?: 0
+    override fun getItemCount(): Int = soilHealthCardArrayJsonArray?.length() ?: 0
 }
 

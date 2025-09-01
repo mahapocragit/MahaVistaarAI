@@ -20,147 +20,24 @@
             android:id="@+id/relativeLayoutToolbar"
             layout="@layout/layout_toolbar" />
 
-        <RelativeLayout
+        <EditText
+            android:id="@+id/mobileNoEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/height5"
-            android:elevation="8dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textViewDist"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/drop_down"
-                android:gravity="start|center"
-                android:hint="@string/farmer_select_district"
-                android:paddingStart="@dimen/padding20"
-                android:paddingEnd="@dimen/padding20"
-
-                android:textColor="@color/heading"
-                android:textColorHint="@color/text_black"
-                android:textSize="@dimen/text14"
-                android:textStyle="normal" />
-
-            <ImageView
-                android:id="@+id/imageviewDist"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/padding30"
-                android:layout_marginRight="@dimen/padding30"
-                android:contentDescription="@string/app_name"
-                app:srcCompat="@drawable/ic_expand_more_black_24dp"
-                app:tint="@color/gray"
-                tools:ignore="VectorDrawableCompat" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/height5"
-            android:elevation="8dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textViewTaluka"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/drop_down"
-                android:gravity="start|center"
-                android:hint="@string/farmer_select_taluka"
-                android:paddingStart="@dimen/padding20"
-                android:paddingEnd="@dimen/padding20"
-                android:textColor="@color/heading"
-                android:textColorHint="@color/text_black"
-                android:textSize="@dimen/text14"
-                android:textStyle="normal" />
-
-            <ImageView
-                android:id="@+id/imageviewTaluka"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/padding30"
-                android:layout_marginRight="@dimen/padding30"
-                android:contentDescription="@string/app_name"
-                app:srcCompat="@drawable/ic_expand_more_black_24dp"
-                app:tint="@color/gray"
-                tools:ignore="VectorDrawableCompat" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="8dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textViewVillage"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/drop_down"
-                android:gravity="start|center"
-                android:hint="@string/farmer_select_village"
-                android:paddingStart="@dimen/padding20"
-                android:paddingEnd="@dimen/padding20"
-                android:textColor="@color/heading"
-                android:textColorHint="@color/text_black"
-                android:textSize="@dimen/text14"
-                android:textStyle="normal" />
-
-            <ImageView
-                android:id="@+id/imageviewVillage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/padding30"
-                android:layout_marginRight="@dimen/padding30"
-                android:contentDescription="@string/app_name"
-                app:srcCompat="@drawable/ic_expand_more_black_24dp"
-                app:tint="@color/gray"
-                tools:ignore="VectorDrawableCompat" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:elevation="8dp"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/edtSurveyNo"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/drop_down"
-                android:gravity="start|center"
-                android:hint="@string/enter_survey_number"
-                android:inputType="number"
-                android:paddingHorizontal="@dimen/padding20"
-                android:textColor="@color/heading"
-                android:textColorHint="@color/text_black"
-                android:textSize="@dimen/text14"
-                android:textStyle="normal" />
-        </RelativeLayout>
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/drop_down"
+            android:gravity="start|center"
+            android:hint="@string/mobile_no"
+            android:inputType="number"
+            android:maxLength="10"
+            android:minHeight="@dimen/_40sdp"
+            android:paddingHorizontal="@dimen/padding20"
+            android:text="9356738043"
+            android:textColor="@color/heading"
+            android:textColorHint="@color/text_black"
+            android:textSize="@dimen/text14"
+            android:textStyle="normal" />
 
         <TextView
             android:id="@+id/submitButton"
@@ -257,7 +134,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/farmerRecyclerView"
+        android:id="@+id/healthCardRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

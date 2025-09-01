@@ -114,6 +114,9 @@ class FarmerViewModel : ViewModel() {
     private val _districtIdResponse = MutableLiveData<JsonObject>()
     val districtIdResponse: LiveData<JsonObject> = _districtIdResponse
 
+    private val _soilHealthCardDetailsResponse = MutableLiveData<JsonObject>()
+    val soilHealthCardDetailsResponse: LiveData<JsonObject> = _soilHealthCardDetailsResponse
+
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
@@ -943,6 +946,33 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.getDistrictList(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _districtIdResponse.value = response
+            } catch (e: JSONException) {
+                ProgressHelper.disableProgressDialog()
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun fetchSoilHealthCardDetails(context: Context, mobile: String){
+        ProgressHelper.showProgressDialog(context)
+        viewModelScope.launch {
+            try {
+                val jsonObject = JSONObject().apply {
+                    put("mobile", mobile)
+                }
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val retrofit: Retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.fetchSoilHealthCard(requestBody)
+                ProgressHelper.disableProgressDialog()
+                _soilHealthCardDetailsResponse.value = response
             } catch (e: JSONException) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
