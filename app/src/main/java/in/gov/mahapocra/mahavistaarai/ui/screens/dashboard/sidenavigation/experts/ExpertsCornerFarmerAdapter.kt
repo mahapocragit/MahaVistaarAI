@@ -6,16 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.util.DateHelper.formatDate
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import org.json.JSONArray
 import org.json.JSONObject
 
-class ExpertsCornerAdminAdapter(private val posts: JSONArray) :
-    RecyclerView.Adapter<ExpertsCornerAdminAdapter.ViewHolder>() {
+class ExpertsCornerFarmerAdapter(private val posts: JSONArray) :
+    RecyclerView.Adapter<ExpertsCornerFarmerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -33,30 +31,25 @@ class ExpertsCornerAdminAdapter(private val posts: JSONArray) :
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val context = view.context
         private val titleTextView: TextView = view.findViewById(R.id.textView3)
         private val descriptionTextView: TextView = view.findViewById(R.id.textView19)
         private val redirectTextView: TextView = view.findViewById(R.id.redirectTextView)
         private val statusTextView: TextView = view.findViewById(R.id.statusTextView)
         private val expertsNameTextView: TextView = view.findViewById(R.id.expertsNameTextView)
-        private val dateTextView: TextView = view.findViewById(R.id.dateTextView)
         private val remarkText: TextView = view.findViewById(R.id.remarkText)
+        private val dateTextView: TextView = view.findViewById(R.id.dateTextView)
+
         fun bind(postObject: JSONObject) {
-            val farmersName =
-                AppSettings.getInstance().getValue(context, AppConstants.uName, AppConstants.uName)
+            val expertsName = postObject.optString("expert_name", "No Name")
             val title = postObject.optString("title", "No Title")
             val description = postObject.optString("description", "No Description")
             val fileUrl = postObject.optString("file_url", "No Description")
-            val statusLabel = postObject.optString("status_label", "No Description")
             val date = postObject.optString("created_at", "")
-            val remark = postObject.optString("remark", "No Remark")
-            Log.d("TAGGER", "bind: $remark")
+            expertsNameTextView.text = expertsName
             titleTextView.text = title
             descriptionTextView.text = description
-            statusTextView.text = statusLabel
-            remarkText.visibility = if (remark != "null") View.VISIBLE else View.GONE
-            remarkText.text = remark
-            expertsNameTextView.text = farmersName
+            statusTextView.visibility = View.GONE
+            remarkText.visibility = View.GONE
             if (date!="") {
                 dateTextView.text = formatDate(date)
             }else{

@@ -387,35 +387,30 @@ object LocalCustom {
         return MultipartBody.Part.createFormData(partName, file.name, requestFile)
     }
 
-    fun openFile(context: Context, fileUrl: String) {
-        val uri = Uri.parse(fileUrl)
+    fun downloadFile(context: Context, fileUrl: String) {
+        try {
+            val uri = Uri.parse(fileUrl)
 
-        when {
-            fileUrl.endsWith(".pdf", ignoreCase = true) -> {
-                // PDFs can be shown in WebView or PDF viewer
-                val intent = Intent(Intent.ACTION_VIEW)
-                intent.setDataAndType(uri, "application/pdf")
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                context.startActivity(intent)
-            }
+            // Guess filename from URL + headers
+            val fileName = URLUtil.guessFileName(fileUrl, null, null)
 
-            fileUrl.endsWith(".docx", ignoreCase = true) ||
-                    fileUrl.endsWith(".doc", ignoreCase = true) -> {
-                // DOC/DOCX via Google Docs Viewer in WebView
-                val webView = WebView(context)
-                webView.settings.javaScriptEnabled = true
-                webView.loadUrl("https://docs.google.com/viewer?url=$fileUrl&embedded=true")
+            val request = DownloadManager.Request(uri)
+            request.setTitle(fileName)
+            request.setDescription("Downloading file...")
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
+            request.setAllowedOverMetered(true)
+            request.setAllowedOverRoaming(true)
 
-                AlertDialog.Builder(context)
-                    .setView(webView)
-                    .setPositiveButton("Close", null)
-                    .show()
-            }
+            val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            downloadManager.enqueue(request)
 
-            else -> {
-                Toast.makeText(context, "Unsupported file format", Toast.LENGTH_SHORT).show()
-            }
+            Toast.makeText(context, "Downloading: $fileName", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(context, "Download failed: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
+
 
 }

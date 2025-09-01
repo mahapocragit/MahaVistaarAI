@@ -278,4 +278,8 @@ interface ApiService {
     @POST("expertscornerServices/get-users-articles")
     suspend fun getUserArticles(@Body params: RequestBody): JsonObject
 
+
+    @POST("expertscornerServices/articles-list")
+    suspend fun getAllArticles(@Body params: RequestBody): JsonObject
+
 }
