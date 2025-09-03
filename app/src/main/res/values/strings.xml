@@ -388,7 +388,7 @@
     <string name="maha_dbt_name">MahaDBT</string>
     <string name="farmerdetails">Farmer Details</string>
     <string name="soiltestresult">Soil test results</string>
-    <string name="fertiliserrecomendation">Fertilizer recommendation</string>
+    <string name="fertiliserrecomendation">Recommendation</string>
     <string name="viewsoilhealthreport">View Soil Health Card</string>
     <string name="select_language">Select Language</string>
     <string name="sop_not_available">Coming Soon</string>

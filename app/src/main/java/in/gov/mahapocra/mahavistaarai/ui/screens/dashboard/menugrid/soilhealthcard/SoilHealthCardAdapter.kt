@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getRatingImageResource
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -23,10 +24,6 @@ class SoilHealthCardAdapter(private val soilHealthCardArrayJsonArray: JSONArray?
         val nitrogenImageView: ImageView = itemView.findViewById(R.id.nitrogenImageView)
         val phosphorusImageView: ImageView = itemView.findViewById(R.id.phosphorusImageView)
         val potassiumImageView: ImageView = itemView.findViewById(R.id.potassiumImageView)
-
-        val ecImageView: ImageView = itemView.findViewById(R.id.ecImageView)
-        val ocImageView: ImageView = itemView.findViewById(R.id.ocImageView)
-        val phImageView: ImageView = itemView.findViewById(R.id.phImageView)
         val soilHealthReportLinearLayout: LinearLayout =
             itemView.findViewById(R.id.soilHealthReportLinearLayout)
     }
@@ -42,108 +39,50 @@ class SoilHealthCardAdapter(private val soilHealthCardArrayJsonArray: JSONArray?
         soilHealthCardArrayJsonArray?.let {
             val templateJson: JSONObject = it.getJSONObject(position)
             val farmerObject = templateJson.optJSONObject("farmer")
+            val rdfValuesObject = templateJson.optJSONObject("rdfValues")
+            val parameterInfosArray = rdfValuesObject?.optJSONArray("parameterInfos")
+            for (position in 0 until parameterInfosArray!!.length()) {
+                val jsonObject = parameterInfosArray.optJSONObject(position)
+                val parameterKey = jsonObject?.optString("key")
+                val parameterRating = jsonObject?.optString("rating")
+                if (parameterKey == "n") {
+                    parameterRating?.let { rating ->
+                        holder.nitrogenImageView.setImageResource(
+                            getRatingImageResource(rating)
+                        )
+                    }
+                }
+                if (parameterKey == "p") {
+                    parameterRating?.let { rating ->
+                        holder.phosphorusImageView.setImageResource(
+                            getRatingImageResource(rating)
+                        )
+                    }
+                }
+                if (parameterKey == "k") {
+                    parameterRating?.let { rating ->
+                        holder.potassiumImageView.setImageResource(
+                            getRatingImageResource(rating)
+                        )
+                    }
+                }
+            }
             val plotObject = templateJson.optJSONObject("plot")
-//            val npkUnfiltered = farmerObject.optJSONObject("soil_params")
-//            val nitrogen = npkUnfiltered.getString("n")
-//            val phosphorus = npkUnfiltered.getString("p")
-//            val potassium = npkUnfiltered.getString("k")
-//            val electricalConductivity = npkUnfiltered.getString("ec")
-//            val organicCarbon = npkUnfiltered.getString("oc")
-//            val potentialOfHydrogen = npkUnfiltered.getString("ph")
-//            mapNPKByColors(
-//                nitrogen,
-//                phosphorus,
-//                potassium,
-//                electricalConductivity,
-//                organicCarbon,
-//                potentialOfHydrogen,
-//                holder
-//            )
             holder.farmerName.text = farmerObject?.optString("name", "N/A")
-            holder.farmSize.text = "${plotObject?.optString("area", "0")} acres"
+            holder.farmSize.text = buildString {
+                append(plotObject?.optString("area", "0"))
+                append(" acres")
+            }
             holder.shcNo.text = "${templateJson.optString("computedID", "N/A")}"
             holder.surveyNo.text = "${plotObject?.optInt("surveyNo", 0)}"
             holder.soilHealthReportLinearLayout.setOnClickListener {
-                context.startActivity(Intent(context, PdfWebViewActivity::class.java))
+                context.startActivity(
+                    Intent(
+                        context,
+                        PdfWebViewActivity::class.java
+                    ).putExtra("healthCardJson", templateJson.toString())
+                )
             }
-        }
-    }
-
-    private fun mapNPKByColors(
-        nitrogen: String,
-        phosphorus: String,
-        potassium: String,
-        electricalConductivity: String,
-        organicCarbon: String,
-        potentialOfHydrogen: String,
-        holder: FarmerViewHolder
-    ) {
-        val nitroDouble = nitrogen.toDoubleOrNull()
-        val phosDouble = phosphorus.toDoubleOrNull()
-        val potasDouble = potassium.toDoubleOrNull()
-        val electricalConductivityDouble = electricalConductivity.toDoubleOrNull()
-        val organicCarbonDouble = organicCarbon.toDoubleOrNull()
-        val potentialOfHydrogenDouble = potentialOfHydrogen.toDoubleOrNull()
-
-        // You can either assign default values or skip updates if the value is null
-        nitroDouble?.let {
-            holder.nitrogenImageView.setImageResource(
-                when {
-                    it < 280 -> R.drawable.ic_soil_health_card_high
-                    it in 280.0..560.0 -> R.drawable.ic_soil_health_card_low
-                    else -> R.drawable.ic_soil_health_card_mid
-                }
-            )
-        }
-
-        phosDouble?.let {
-            holder.phosphorusImageView.setImageResource(
-                when {
-                    it < 14 -> R.drawable.ic_soil_health_card_high
-                    it in 15.0..28.0 -> R.drawable.ic_soil_health_card_low
-                    else -> R.drawable.ic_soil_health_card_mid
-                }
-            )
-        }
-
-        potasDouble?.let {
-            holder.potassiumImageView.setImageResource(
-                when {
-                    it < 150 -> R.drawable.ic_soil_health_card_high
-                    it in 150.0..250.0 -> R.drawable.ic_soil_health_card_low
-                    else -> R.drawable.ic_soil_health_card_mid
-                }
-            )
-        }
-
-        electricalConductivityDouble?.let {
-            holder.ecImageView.setImageResource(
-                when {
-                    it < 2 -> R.drawable.ic_soil_health_card_high
-                    it in 2.0..4.0 -> R.drawable.ic_soil_health_card_low
-                    else -> R.drawable.ic_soil_health_card_mid
-                }
-            )
-        }
-
-        organicCarbonDouble?.let {
-            holder.ocImageView.setImageResource(
-                when {
-                    it < 0.4 -> R.drawable.ic_soil_health_card_high
-                    it in 0.4..0.8 -> R.drawable.ic_soil_health_card_low
-                    else -> R.drawable.ic_soil_health_card_mid
-                }
-            )
-        }
-
-        potentialOfHydrogenDouble?.let {
-            holder.phImageView.setImageResource(
-                when {
-                    it < 6.5 -> R.drawable.ic_soil_health_card_high
-                    it in 6.5..7.5 -> R.drawable.ic_soil_health_card_low
-                    else -> R.drawable.ic_soil_health_card_mid
-                }
-            )
         }
     }
 

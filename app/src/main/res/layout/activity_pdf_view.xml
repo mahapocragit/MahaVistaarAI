@@ -23,6 +23,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="@dimen/_18sdp"
+        android:visibility="gone"
         android:layout_marginBottom="@dimen/_18sdp"
         android:backgroundTint="@color/actionbar_color_figma"
         android:clickable="true"

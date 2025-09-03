@@ -3,7 +3,6 @@ package `in`.gov.mahapocra.mahavistaarai.util
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
@@ -14,7 +13,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.webkit.URLUtil
-import android.webkit.WebView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -412,5 +410,18 @@ object LocalCustom {
         }
     }
 
-
+    fun getRatingImageResource(rating: String): Int {
+        when (rating) {
+            "Low" -> return R.drawable.low_ic
+            "Very Low" -> return R.drawable.low_ic
+            "Deficient" -> return R.drawable.low_ic
+            "Normal" -> return R.drawable.medium_ic
+            "Moderately alkaline" -> return R.drawable.medium_ic
+            "Medium" -> return R.drawable.medium_ic
+            "Sufficient" -> return R.drawable.medium_ic
+            "High" -> return R.drawable.high_ic
+            "Very High" -> return R.drawable.high_ic
+        }
+        return R.drawable.high_ic
+    }
 }

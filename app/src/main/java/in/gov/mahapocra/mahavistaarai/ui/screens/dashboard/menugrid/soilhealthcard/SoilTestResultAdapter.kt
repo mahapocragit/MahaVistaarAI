@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getRatingImageResource
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -29,28 +30,14 @@ class SoilTestResultAdapter(private val jsonArray: JSONArray) : RecyclerView.Ada
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item: JSONObject = jsonArray.getJSONObject(position)
-        val testparamname = item.optString("testparamname") ?: ""
-        val testvalue = item.optString("testvalue") ?: ""
+        val testParameterName = item.optString("name") ?: ""
+        val testValue = item.optString("value") ?: ""
         val unit = item.optString("unit") ?: ""
         val rating = item.optString("rating") ?: ""
-        holder.testParameterTextView.text = testparamname
-        holder.valueTextView.text = testvalue
+        holder.testParameterTextView.text = testParameterName
+        holder.valueTextView.text = testValue
         holder.unitTextView.text = unit
         holder.ratingImageView.setImageResource(getRatingImageResource(rating))
     }
 
-    private fun getRatingImageResource(rating: String): Int {
-        when (rating){
-            "Low"->return R.drawable.ic_soil_health_card_high
-            "Very Low"->return R.drawable.ic_soil_health_card_high
-            "Deficient"->return R.drawable.ic_soil_health_card_high
-            "Normal"->return R.drawable.ic_soil_health_card_low
-            "Moderately alkaline"->return R.drawable.ic_soil_health_card_low
-            "High"->return R.drawable.ic_soil_health_card_mid
-            "Sufficient"->return R.drawable.ic_soil_health_card_mid
-            "Very High"->return R.drawable.ic_soil_health_card_mid
-            "Medium"->return R.drawable.ic_soil_health_card_low
-        }
-        return R.drawable.ic_soil_health_card_mid
-    }
 }

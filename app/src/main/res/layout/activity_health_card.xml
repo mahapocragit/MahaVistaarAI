@@ -20,24 +20,36 @@
             android:id="@+id/relativeLayoutToolbar"
             layout="@layout/layout_toolbar" />
 
-        <EditText
-            android:id="@+id/mobileNoEditText"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/mobileNoInputLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_10sdp"
             android:layout_marginTop="15dp"
-            android:background="@drawable/drop_down"
-            android:gravity="start|center"
             android:hint="@string/mobile_no"
-            android:inputType="number"
-            android:maxLength="10"
-            android:minHeight="@dimen/_40sdp"
-            android:paddingHorizontal="@dimen/padding20"
-            android:text="9356738043"
-            android:textColor="@color/heading"
-            android:textColorHint="@color/text_black"
-            android:textSize="@dimen/text14"
-            android:textStyle="normal" />
+            app:boxStrokeColor="@color/heading"
+            app:boxCornerRadiusTopStart="8dp"
+            app:boxCornerRadiusTopEnd="8dp"
+            app:boxCornerRadiusBottomStart="8dp"
+            app:boxCornerRadiusBottomEnd="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/mobileNoEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:maxLength="10"
+                android:text="9356738043"
+                android:textColor="@color/heading"
+                android:textColorHint="@color/text_black"
+                android:textSize="@dimen/text14"
+                android:textStyle="normal"
+                android:gravity="start|center_vertical"
+                android:paddingHorizontal="@dimen/padding20"
+                android:minHeight="@dimen/_40sdp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <TextView
             android:id="@+id/submitButton"
@@ -56,74 +68,70 @@
             android:textStyle="bold" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="@dimen/_10sdp"
-            android:layout_weight="1"
+            android:layout_gravity="end"
             android:orientation="horizontal"
-            android:paddingVertical="@dimen/_5sdp">
+            android:paddingVertical="@dimen/_8sdp">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="8"
+                    android:layout_width="@dimen/_14sdp"
+                    android:layout_height="@dimen/_14sdp"
                     android:padding="@dimen/_2sdp"
-                    android:src="@drawable/ic_soil_health_card_high" />
+                    android:layout_marginEnd="@dimen/_2sdp"
+                    android:src="@drawable/low_ic" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"
                     android:gravity="center_vertical"
                     android:text="@string/low_soil_value"
+                    android:layout_marginEnd="@dimen/_2sdp"
                     android:textSize="@dimen/_10sdp" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="8"
+                    android:layout_width="@dimen/_14sdp"
+                    android:layout_height="@dimen/_14sdp"
                     android:padding="@dimen/_2sdp"
-                    android:src="@drawable/ic_soil_health_card_low" />
+                    android:layout_marginEnd="@dimen/_2sdp"
+                    android:src="@drawable/medium_ic" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"
                     android:gravity="center_vertical"
                     android:text="@string/medium_soil_value"
+                    android:layout_marginEnd="@dimen/_2sdp"
                     android:textSize="@dimen/_10sdp" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="8"
+                    android:layout_width="@dimen/_14sdp"
+                    android:layout_height="@dimen/_14sdp"
                     android:padding="@dimen/_2sdp"
-                    android:src="@drawable/ic_soil_health_card_mid" />
+                    android:layout_marginEnd="@dimen/_2sdp"
+                    android:src="@drawable/high_ic" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"
                     android:gravity="center_vertical"
                     android:text="@string/high_soil_value"
                     android:textSize="@dimen/_10sdp" />

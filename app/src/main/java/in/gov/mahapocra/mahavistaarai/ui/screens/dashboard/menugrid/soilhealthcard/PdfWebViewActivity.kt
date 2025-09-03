@@ -2,14 +2,22 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealt
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityPdfViewBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.StringFormatter.extractCropObjects
+import org.json.JSONArray
+import org.json.JSONObject
 
 class PdfWebViewActivity : AppCompatActivity() {
 
@@ -33,6 +41,100 @@ class PdfWebViewActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
+        val healthCardJsonStr = intent.getStringExtra("healthCardJson")
+        val healthCardJson = healthCardJsonStr?.let { JSONObject(healthCardJsonStr) }
+        healthCardJson?.let { setUpUILayout(healthCardJson) }
+    }
+
+    private fun setUpUILayout(healthCardJson: JSONObject) {
+        val fertilizerCombinationJSONArray = JSONArray()
+        val farmerJson = healthCardJson.optJSONObject("farmer")
+        val plotJson = healthCardJson.optJSONObject("plot")
+        val villageJson = healthCardJson.optJSONObject("village")
+        val talukaJson = healthCardJson.optJSONObject("block")
+        val districtJson = healthCardJson.optJSONObject("district")
+        val rdfValuesJson = healthCardJson.optJSONObject("rdfValues")
+        val fertilizerRecommendationJson =
+            rdfValuesJson?.optJSONArray("fertilizerRecommendation_details")
+
+        val cropObjects =
+            fertilizerRecommendationJson?.let { extractCropObjects(it) } ?: emptyList()
+        val cropNames = cropObjects.map { it.optString("crop") } // only names for dropdown
+
+
+
+        binding.soilHealthCardLayout.addCropCardView.setOnClickListener {
+            if (cropNames.isNotEmpty()) {
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("Select Crop")
+
+                val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, cropNames)
+
+                builder.setAdapter(adapter) { _, which ->
+                    binding.soilHealthCardLayout.fymTextView.visibility = View.VISIBLE
+                    binding.soilHealthCardLayout.fymCardView.visibility = View.VISIBLE
+                    val selectedJson = cropObjects[which]   // ✅ full JSON object
+                    val selectedCrop = selectedJson.optString("crop")
+                    val fymValueText = selectedJson.optString("fym")
+                    val fymUnitText = selectedJson.optString("Fymunit")
+                    val fymText = "Field yard manure / Compost / Fertilizer \n($fymUnitText) - $fymValueText"
+                    binding.soilHealthCardLayout.fymTextView.text = fymText
+
+                    // Show crop name in UI
+                    binding.soilHealthCardLayout.addChangeCropTV.text = selectedCrop
+                    binding.soilHealthCardLayout.selectedCropTextView.text = selectedCrop
+                    // Print / log the full JSON object
+                    // ✅ Reset old data
+                    while (fertilizerCombinationJSONArray.length() > 0) {
+                        fertilizerCombinationJSONArray.remove(0)
+                    }
+
+                    // Wrap combOne and combTwo with keys
+                    val combOneWrapper = JSONObject().apply {
+                        put("combination1", selectedJson.optJSONArray("combOne"))
+                    }
+
+                    val combTwoWrapper = JSONObject().apply {
+                        put("combination2", selectedJson.optJSONArray("combTwo"))
+                    }
+
+                    // Add to parent array
+                    fertilizerCombinationJSONArray.put(combOneWrapper)
+                    fertilizerCombinationJSONArray.put(combTwoWrapper)
+
+                    // ✅ Update recycler
+                    binding.soilHealthCardLayout.fertilizerCombinationRecyclerView.layoutManager =
+                        LinearLayoutManager(this)
+                    binding.soilHealthCardLayout.fertilizerCombinationRecyclerView.adapter =
+                        FertilizerCombinationAdapter(fertilizerCombinationJSONArray)
+                }
+                builder.show()
+            } else {
+                Toast.makeText(this, "No crops available", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+        val parameterInfosJson = rdfValuesJson?.optJSONArray("parameterInfos")
+        binding.soilHealthCardLayout.farmerName.text = farmerJson?.optString("name")
+        binding.soilHealthCardLayout.shcNo.text = healthCardJson.optString("computedID")
+        binding.soilHealthCardLayout.surveyNumberTextView.text = plotJson?.optString("surveyNo")
+        binding.soilHealthCardLayout.farmSizeTextView.text = buildString {
+            append(plotJson?.optDouble("area").toString())
+            append(" acres")
+        }
+        binding.soilHealthCardLayout.villageTextView.text = villageJson?.optString("name")
+        binding.soilHealthCardLayout.talukaTextView.text = talukaJson?.optString("name")
+        binding.soilHealthCardLayout.districtTextView.text = districtJson?.optString("name")
+
+        binding.soilHealthCardLayout.soilTestResultRecyclerView.layoutManager =
+            LinearLayoutManager(this)
+        binding.soilHealthCardLayout.soilTestResultRecyclerView.adapter =
+            parameterInfosJson?.let {
+                SoilTestResultAdapter(
+                    parameterInfosJson
+                )
+            }
     }
 
     override fun attachBaseContext(newBase: Context) {
