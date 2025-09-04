@@ -51,9 +51,6 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
         binding.toolbar.textViewHeaderTitle.text = "Experts Corner"
-        binding.toolbar.textViewHeaderTitle.setOnClickListener {
-            startActivity(Intent(this, ExpertsCornerFarmerActivity::class.java))
-        }
         observeResponse()
         expertsViewModel.getCategories()
         expertsViewModel.getUserArticles(this)
