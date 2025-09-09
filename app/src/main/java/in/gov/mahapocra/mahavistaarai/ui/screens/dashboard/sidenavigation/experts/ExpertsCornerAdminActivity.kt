@@ -104,28 +104,41 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
             val titleText = binding.titleEditText.text.toString()
             val descriptionText = binding.descriptionTextView.text.toString()
             if (titleText.isNotEmpty()) {
-                if (descriptionText.isNotEmpty()) {
-                    if (selectedFileUri != null) {
-                        val file = selectedFileUri?.let {
-                            UriFileHelper.uriToFilePart(
-                                it,
-                                "file",
-                                contentResolver
-                            )
+                if (selectedCategoryId != 0) {
+                    if (selectedSubCategoryId != 0) {
+                        if (descriptionText.isNotEmpty()) {
+                            if (selectedFileUri != null) {
+                                val file = selectedFileUri?.let {
+                                    UriFileHelper.uriToFilePart(
+                                        it,
+                                        "file",
+                                        contentResolver
+                                    )
+                                }
+                                selectedFileUri?.let {
+                                    expertsViewModel.uploadArticle(
+                                        this,
+                                        file!!,
+                                        titleText,
+                                        descriptionText,
+                                        selectedCategoryId.toString(),
+                                        selectedSubCategoryId.toString()
+                                    )
+                                }
+                            } else {
+                                Toast.makeText(this, "Please select a file", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        } else {
+                            Toast.makeText(this, "Please enter description", Toast.LENGTH_SHORT)
+                                .show()
                         }
-                        selectedFileUri?.let {
-                            expertsViewModel.uploadArticle(
-                                this,
-                                file!!,
-                                titleText,
-                                descriptionText,
-                                selectedCategoryId.toString(),
-                                selectedSubCategoryId.toString()
-                            )
-                        }
+                    } else {
+                        Toast.makeText(this, "Please select Sub Category", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 } else {
-                    Toast.makeText(this, "Please enter description", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Please select Category", Toast.LENGTH_SHORT).show()
                 }
             } else {
                 Toast.makeText(this, "Please enter title", Toast.LENGTH_SHORT).show()
@@ -139,6 +152,12 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
                     "application/vnd.openxmlformats-officedocument.wordprocessingml.document" // .docx
                 )
             )
+        }
+        binding.deleteImageView.setOnClickListener {
+            selectedFileUri = null
+            Toast.makeText(this, "File Deleted", Toast.LENGTH_SHORT).show()
+            binding.selectedFileNameTextView.text = "No File Selected"
+            binding.deleteImageView.visibility = View.GONE
         }
     }
 
@@ -165,21 +184,21 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
         }
         expertsViewModel.getUserArticlesResponse.observe(this) { response ->
             Log.d("TAGGER", "observeResponse getUserArticles: $response")
-            if (response!=null){
+            if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 val jsonArray = jSONObject.optJSONArray("data") ?: JSONArray()
                 val adapter = ExpertsCornerAdminAdapter(jsonArray)
                 binding.expertsCornerAdminRecycler.adapter = adapter
             }
         }
-        expertsViewModel.uploadArticleResponse.observe(this) {response ->
-            if (response!=null){
+        expertsViewModel.uploadArticleResponse.observe(this) { response ->
+            if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 val status = jSONObject.optInt("status")
                 val responseMessage = jSONObject.optString("response")
-                if (status==200){
+                if (status == 200) {
                     Toast.makeText(this, responseMessage, Toast.LENGTH_SHORT).show()
-                }else{
+                } else {
                     Toast.makeText(this, responseMessage, Toast.LENGTH_SHORT).show()
                 }
             }
@@ -235,6 +254,7 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
     private val pickFileLauncher =
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
             if (uri != null) {
+                binding.deleteImageView.visibility = View.VISIBLE
                 selectedFileUri = uri
                 val fileName = getFileName(uri)
                 binding.selectedFileNameTextView.text = fileName

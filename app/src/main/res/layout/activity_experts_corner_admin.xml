@@ -191,6 +191,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:minHeight="@dimen/_40sdp"
+                android:gravity="center_vertical"
                 android:background="@drawable/dashed_box"
                 android:layout_marginHorizontal="@dimen/_14sdp"
                 android:orientation="horizontal">
@@ -200,18 +202,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/_30sdp"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:gravity="center"
                     android:text="No File Selected" />
 
                 <ImageView
-                    android:id="@+id/imageView42"
+                    android:id="@+id/deleteImageView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/_30sdp"
                     android:padding="@dimen/_7sdp"
                     android:visibility="gone"
-                    android:layout_weight="9"
+                    android:layout_weight="8"
+                    app:tint="@color/red"
                     app:srcCompat="@drawable/delete_icon" />
             </LinearLayout>
 
