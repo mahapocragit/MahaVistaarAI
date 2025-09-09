@@ -1,21 +1,23 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.core.content.ContextCompat
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityCostCalculatorDashboardBinding
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityCropCostCalculationBinding
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 
 class CropCostCalculationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCropCostCalculationBinding
+    private var isIncomeSelected: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,5 +42,71 @@ class CropCostCalculationActivity : AppCompatActivity() {
                 )
             }
         })
+
+        setUpListeners()
+    }
+
+    private fun setUpListeners() {
+        binding.addExpenseButton.setOnClickListener {
+            // Inflate your custom view
+            val dialogView = layoutInflater.inflate(R.layout.dialog_add_expense_layout, null)
+
+            val dialog = AlertDialog.Builder(this)
+                .setView(dialogView)
+                .create()
+
+            val incomeToggle = dialogView.findViewById<TextView>(R.id.incomeToggleButton)
+            val expenseToggle = dialogView.findViewById<TextView>(R.id.expenseToggleButton)
+            val cancelText = dialogView.findViewById<TextView>(R.id.cancelText)
+
+            val incomeLayout = dialogView.findViewById<LinearLayout>(R.id.incomeLinearLayout)
+            val expenseLayout = dialogView.findViewById<LinearLayout>(R.id.expenseLinearLayout)
+
+            incomeToggle.setOnClickListener {
+                isIncomeSelected = true
+                incomeLayout.visibility = View.VISIBLE
+                expenseLayout.visibility = View.GONE
+                incomeToggle.apply {
+                    background = ContextCompat.getDrawable(
+                        this@CropCostCalculationActivity,
+                        R.drawable.shape_left
+                    )
+                    setTextColor(Color.WHITE)
+                }
+                expenseToggle.apply {
+                    background = ContextCompat.getDrawable(
+                        this@CropCostCalculationActivity,
+                        R.drawable.shape_right
+                    )
+                    setTextColor(Color.BLACK)
+                }
+            }
+
+            expenseToggle.setOnClickListener {
+                isIncomeSelected = false
+                incomeLayout.visibility = View.GONE
+                expenseLayout.visibility = View.VISIBLE
+                expenseToggle.apply {
+                    background = ContextCompat.getDrawable(
+                        this@CropCostCalculationActivity,
+                        R.drawable.shape_right_green
+                    )
+                    setTextColor(Color.WHITE)
+                }
+                incomeToggle.apply {
+                    background = ContextCompat.getDrawable(
+                        this@CropCostCalculationActivity,
+                        R.drawable.shape_left_white
+                    )
+                    setTextColor(Color.BLACK)
+                }
+            }
+
+            cancelText.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.show()
+        }
     }
 }
