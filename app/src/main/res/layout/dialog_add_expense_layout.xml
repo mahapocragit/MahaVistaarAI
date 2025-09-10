@@ -127,14 +127,14 @@
                         android:text="Yield" />
 
                     <EditText
-                        android:id="@+id/titleEditText5"
+                        android:id="@+id/yieldText"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_48sdp"
                         android:layout_margin="@dimen/_1sdp"
                         android:background="@drawable/login_edit_bg"
-                        android:gravity="start|center"
-                        android:hint="Enter Title"
-                        android:inputType="text"
+                        android:gravity="end|center"
+                        android:hint="0"
+                        android:inputType="number"
                         android:paddingHorizontal="@dimen/padding20"
                         android:textColor="@color/heading"
                         android:textColorHint="@color/text_black"
@@ -155,14 +155,14 @@
                         android:text="Price per kilo (₹)" />
 
                     <EditText
-                        android:id="@+id/titleEditText6"
+                        android:id="@+id/pricePerUnitText"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_48sdp"
                         android:layout_margin="@dimen/_1sdp"
                         android:background="@drawable/login_edit_bg"
-                        android:gravity="start|center"
+                        android:gravity="end|center"
                         android:hint="0"
-                        android:inputType="text"
+                        android:inputType="number"
                         android:paddingHorizontal="@dimen/padding20"
                         android:textColor="@color/heading"
                         android:textColorHint="@color/text_black"
@@ -172,7 +172,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/textView53"
+                android:id="@+id/totalPriceTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"
@@ -188,25 +188,26 @@
             android:visibility="gone">
 
             <LinearLayout
+                android:id="@+id/categoryExpenseLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:minHeight="@dimen/_48sdp"
-                android:gravity="center_vertical"
                 android:background="@drawable/login_edit_bg"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/_48sdp"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textView54"
+                    android:id="@+id/categoryNameTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingStart="@dimen/_10sdp"
                     android:layout_weight="2"
+                    android:paddingStart="@dimen/_10sdp"
                     android:text="Category" />
 
                 <ImageView
                     android:id="@+id/imageView42"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_15sdp"
+                    android:layout_height="@dimen/_14sdp"
                     android:layout_weight="8"
                     app:srcCompat="@drawable/down_arrow_figma" />
             </LinearLayout>
@@ -288,7 +289,7 @@
                 android:text="Cancel" />
 
             <TextView
-                android:id="@+id/textView55"
+                android:id="@+id/submitText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/actionbar_color_figma"

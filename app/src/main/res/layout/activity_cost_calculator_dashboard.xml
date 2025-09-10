@@ -46,7 +46,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textView46"
+                android:id="@+id/cropTotalProfitTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -126,7 +126,7 @@
                 </LinearLayout>
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/cropInfoCardView"
+                    android:id="@+id/addCropCardView"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_40sdp"
                     android:layout_gravity="center_vertical"
@@ -165,7 +165,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_6sdp"
                             android:layout_weight="1"
-                            android:text="Cotton"
+                            android:text="@string/add_Crop"
                             android:textColor="@color/font_color_figma"
                             android:textSize="@dimen/_10sdp"
                             android:textStyle="bold" />
@@ -176,7 +176,7 @@
                             android:layout_height="@dimen/_20sdp"
                             android:layout_marginEnd="@dimen/_6sdp"
                             android:padding="@dimen/_2sdp"
-                            app:srcCompat="@drawable/down_arrow_figma"
+                            app:srcCompat="@drawable/baseline_add_24"
                             app:tint="@color/arrow_color_figma" />
 
                     </LinearLayout>

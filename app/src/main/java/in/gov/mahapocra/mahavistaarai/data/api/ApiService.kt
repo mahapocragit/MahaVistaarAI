@@ -282,4 +282,23 @@ interface ApiService {
     @POST("expertscornerServices/articles-list")
     suspend fun getAllArticles(@Body params: RequestBody): JsonObject
 
+    @POST("shcServices/fetch_soil_health_card_single")
+    suspend fun fetchSoilHealthCard(@Body params: RequestBody): JsonObject
+
+    @GET("/costofcultivationServices/get-expense-categories")
+    suspend fun fetchExpenseCategories(): JsonObject
+
+    @POST("/costofcultivationServices/add-crop")
+    suspend fun addCropForCropCalculation(@Body params: RequestBody): JsonObject
+
+
+    @POST("/costofcultivationServices/get-crops-profits")
+    suspend fun getTotalCostTransactions(@Body params: RequestBody): JsonObject
+
+    @POST("/costofcultivationServices/get-transactions")
+    suspend fun getCropCostTransactions(@Body params: RequestBody): JsonObject
+
+    @POST("/costofcultivationServices/add-transactions")
+    suspend fun addCropCostTransactions(@Body params: RequestBody): JsonObject
+
 }

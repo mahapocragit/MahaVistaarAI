@@ -78,13 +78,13 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
             val jsonDataArray = jSONObject.getJSONArray("data")
             var adapter =
                 CropCategoriesAdapter(this, jsonDataArray, "TitleVideosDetailsAdpter", this)
-            val str = intent.getStringExtra("NO_NEED_TO_ADD_SOWING_DATE")
+            val str = intent.getStringExtra("callerActivity")
             if (str != null) {
                 adapter =
                     CropCategoriesAdapter(
                         this,
                         jsonDataArray,
-                        "NO_NEED_TO_ADD_SOWING_DATE",
+                        "costCalculator",
                         this
                     )
             }
