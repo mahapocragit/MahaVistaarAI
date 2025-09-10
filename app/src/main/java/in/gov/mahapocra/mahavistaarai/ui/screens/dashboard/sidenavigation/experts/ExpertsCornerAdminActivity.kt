@@ -1,6 +1,5 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.experts
 
-import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
