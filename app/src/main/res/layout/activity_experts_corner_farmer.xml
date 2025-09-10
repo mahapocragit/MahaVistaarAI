@@ -21,8 +21,8 @@
         android:id="@+id/linearLayout18"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
         android:layout_marginTop="@dimen/_40sdp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,8 +32,8 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_26sdp"
             android:layout_gravity="center"
-            android:gravity="center_vertical"
             android:layout_marginHorizontal="@dimen/_10sdp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -55,17 +55,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    app:tint="@color/black"
                     android:rotation="90"
-                    app:srcCompat="@drawable/baseline_arrow_right_24" />
+                    app:srcCompat="@drawable/baseline_arrow_right_24"
+                    app:tint="@color/black" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/subCategoryLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <TextView
@@ -78,18 +78,18 @@
                     android:id="@+id/imageView36"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:tint="@color/black"
                     android:rotation="90"
-                    app:srcCompat="@drawable/baseline_arrow_right_24" />
+                    app:srcCompat="@drawable/baseline_arrow_right_24"
+                    app:tint="@color/black" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/sortLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:background="@drawable/background_for_chat_request"
                 android:layout_weight="1"
+                android:background="@drawable/background_for_chat_request"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <TextView
@@ -102,9 +102,9 @@
                     android:id="@+id/imageView39"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:tint="@color/black"
                     android:rotation="90"
-                    app:srcCompat="@drawable/baseline_arrow_right_24" />
+                    app:srcCompat="@drawable/baseline_arrow_right_24"
+                    app:tint="@color/black" />
             </LinearLayout>
         </LinearLayout>
 
@@ -113,4 +113,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/createArticleButton"
+        android:layout_width="@dimen/_120sdp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_14sdp"
+        android:backgroundTint="@color/actionbar_color_figma"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="Create Article"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:cornerRadius="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout18"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

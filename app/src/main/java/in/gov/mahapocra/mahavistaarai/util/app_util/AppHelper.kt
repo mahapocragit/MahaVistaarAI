@@ -47,7 +47,7 @@ class AppHelper private constructor() {
 
                 jsonArray.put(profileObject)
                 jsonArray.put(expertsObject)
-                jsonArray.put(newsObject)
+//                jsonArray.put(newsObject)
                 jsonArray.put(costCalculatorObject)
                 jsonArray.put(partnerObject)
                 jsonArray.put(aboutObject)
@@ -99,7 +99,7 @@ class AppHelper private constructor() {
 
                 jsonArray.put(profileObject)
                 jsonArray.put(expertsObject)
-                jsonArray.put(newsObject)
+//                jsonArray.put(newsObject)
                 jsonArray.put(costCalculatorObject)
                 jsonArray.put(partnerObject)
                 jsonArray.put(aboutObject)
@@ -147,7 +147,7 @@ class AppHelper private constructor() {
 
                 jsonArray.put(profileObject)
                 jsonArray.put(expertsObject)
-                jsonArray.put(newsObject)
+//                jsonArray.put(newsObject)
                 jsonArray.put(costCalculatorObject)
                 jsonArray.put(creditObject)
                 jsonArray.put(aboutObject)
@@ -193,7 +193,7 @@ class AppHelper private constructor() {
 
                 jsonArray.put(profileObject)
                 jsonArray.put(expertsObject)
-                jsonArray.put(newsObject)
+//                jsonArray.put(newsObject)
                 jsonArray.put(costCalculatorObject)
                 jsonArray.put(creditObject)
                 jsonArray.put(aboutObject)

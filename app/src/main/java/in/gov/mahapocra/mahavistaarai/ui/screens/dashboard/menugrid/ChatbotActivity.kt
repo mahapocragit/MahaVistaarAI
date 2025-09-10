@@ -142,10 +142,27 @@ class ChatbotActivity : AppCompatActivity() {
                 handler: SslErrorHandler?,
                 error: SslError?
             ) {
+                Clarity.sendCustomEvent("WEBVIEW_STOPPED")
                 handler?.cancel()
             }
         }
         binding.webView.loadUrl(chatBotUrl)
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        Clarity.sendCustomEvent("WEBVIEW_RESUMED")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Clarity.sendCustomEvent("WEBVIEW_PAUSED")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Clarity.sendCustomEvent("WEBVIEW_CLOSED")
     }
 
     override fun onRequestPermissionsResult(

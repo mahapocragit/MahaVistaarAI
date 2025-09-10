@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.experts
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -117,6 +118,9 @@ class ExpertsCornerFarmerActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "No categories loaded", Toast.LENGTH_SHORT).show()
             }
+        }
+        binding.createArticleButton.setOnClickListener {
+            startActivity(Intent(this, ExpertsCornerAdminActivity::class.java))
         }
     }
 
