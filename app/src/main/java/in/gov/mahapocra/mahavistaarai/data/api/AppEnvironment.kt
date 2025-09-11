@@ -10,5 +10,6 @@ class AppEnvironment(val baseUrl: String?) {
         val GIS: AppEnvironment = AppEnvironment("https://gis.mahapocra.gov.in/")
         val PANI_FOUNDATION: AppEnvironment = AppEnvironment("https://ianm-preprod.wadhwaniai.org/")
         val VISTAAR: AppEnvironment = AppEnvironment("https://vistaar.maharashtra.gov.in/")
+        val BOT_URL: AppEnvironment = AppEnvironment("https://prodaskvistaar.mahapocra.gov.in/?token=")
     }
 }

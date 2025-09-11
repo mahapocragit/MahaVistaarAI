@@ -129,7 +129,12 @@ class CostCalculatorViewModel : ViewModel() {
         }
     }
 
-    fun getCropSpecificTransactions(context: Context, cropId: Int, season: Int = 1, year: Int = 2025) {
+    fun getCropSpecificTransactions(
+        context: Context,
+        cropId: Int,
+        season: Int = 1,
+        year: Int = 2025
+    ) {
         viewModelScope.launch {
             try {
                 ProgressHelper.showProgressDialog(context)
@@ -159,21 +164,43 @@ class CostCalculatorViewModel : ViewModel() {
         }
     }
 
-    fun addCropSpecificTransactions(context: Context, cropId: Int, type: String, categoryId: Int =1) {
+    fun addCropSpecificTransactions(
+        context: Context,
+        cropId: Int,
+        date: String,
+        type: String,
+        categoryId: Int = 1,
+        transactionName: String,
+        priceTotal: Int,
+        yield: Int = 0,
+        pricePerUnit: Int = 0
+    ) {
         viewModelScope.launch {
             try {
                 ProgressHelper.showProgressDialog(context)
-                val jsonObject = JSONObject().apply {
-                    put("crop_id", cropId)
-                    put("date", "2025-06-23")
-                    put("type", type)
-                    put("category", categoryId)
-                    put("transaction_name", "sell")
-                    put("price", 40)
-                    put("yield", 4)
-                    put("price_per_unit", 10)
-                    put("unit", "kg")
+                val jsonObject = JSONObject()
+                if (type == "income") {
+                    jsonObject.apply {
+                        put("crop_id", cropId)
+                        put("date", date)
+                        put("type", type)
+                        put("transaction_name", transactionName)
+                        put("price", priceTotal)
+                        put("yield", yield)
+                        put("price_per_unit", pricePerUnit)
+                        put("unit", "kg")
+                    }
+                } else {
+                    jsonObject.apply {
+                        put("crop_id", cropId)
+                        put("date", date)
+                        put("type", type)
+                        put("category", categoryId)
+                        put("transaction_name", transactionName)
+                        put("price", priceTotal)
+                    }
                 }
+
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit: Retrofit =
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)

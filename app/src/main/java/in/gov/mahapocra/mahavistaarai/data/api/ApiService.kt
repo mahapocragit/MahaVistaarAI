@@ -301,4 +301,7 @@ interface ApiService {
     @POST("/costofcultivationServices/add-transactions")
     suspend fun addCropCostTransactions(@Body params: RequestBody): JsonObject
 
+    @POST("/costofcultivationServices/get-transactions")
+    suspend fun getCropSpecificTransactions(@Body params: RequestBody): JsonObject
+
 }
