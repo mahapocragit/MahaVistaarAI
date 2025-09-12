@@ -8,8 +8,8 @@
         android:id="@+id/linearLayout21"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:layout_margin="@dimen/_10sdp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -73,7 +73,7 @@
                 android:id="@+id/textView44"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Income Name" />
+                android:text="Income Name (Optional)" />
 
             <EditText
                 android:id="@+id/incomeNameEditText"
@@ -138,20 +138,55 @@
                         android:layout_height="wrap_content"
                         android:text="Yield" />
 
-                    <EditText
-                        android:id="@+id/yieldText"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_48sdp"
-                        android:layout_margin="@dimen/_1sdp"
                         android:background="@drawable/login_edit_bg"
-                        android:gravity="end|center"
-                        android:hint="0"
-                        android:inputType="number"
-                        android:paddingHorizontal="@dimen/padding20"
-                        android:textColor="@color/heading"
-                        android:textColorHint="@color/text_black"
-                        android:textSize="@dimen/text14"
-                        android:textStyle="normal" />
+                        android:orientation="horizontal"
+                        android:paddingEnd="@dimen/_5sdp">
+
+                        <EditText
+                            android:id="@+id/yieldText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/_10sdp"
+                            android:layout_weight="3"
+                            android:background="@color/transparent"
+                            android:ems="10"
+                            android:hint="0"
+                            android:inputType="number"
+                            android:textColor="@color/heading"
+                            android:textColorHint="@color/text_black"
+                            android:textStyle="normal" />
+
+                        <LinearLayout
+                            android:id="@+id/unitSelectionLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/unitText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="4"
+                                android:gravity="end"
+                                android:paddingEnd="@dimen/_4sdp"
+                                android:text="kg" />
+
+                            <ImageView
+                                android:id="@+id/imageView46"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="6"
+                                android:padding="@dimen/_2sdp"
+                                app:srcCompat="@drawable/down_arrow_figma" />
+                        </LinearLayout>
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -229,7 +264,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"
-                android:text="Expense Name" />
+                android:text="Expense Name (Optional)" />
 
             <EditText
                 android:id="@+id/expenseNameEditText"
@@ -289,7 +324,7 @@
                 android:background="@drawable/login_edit_bg"
                 android:gravity="start|center"
                 android:hint="0"
-                android:inputType="text"
+                android:inputType="number"
                 android:paddingHorizontal="@dimen/padding20"
                 android:textColor="@color/heading"
                 android:textColorHint="@color/text_black"
@@ -309,19 +344,19 @@
                 android:id="@+id/cancelText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
+                android:text="Cancel"
                 android:textSize="@dimen/_14sdp"
-                android:text="Cancel" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/submitText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/actionbar_color_figma"
                 android:layout_marginStart="@dimen/_10sdp"
-                android:textStyle="bold"
+                android:text="Submit"
+                android:textColor="@color/actionbar_color_figma"
                 android:textSize="@dimen/_14sdp"
-                android:text="Submit" />
+                android:textStyle="bold" />
         </LinearLayout>
 
     </LinearLayout>

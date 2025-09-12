@@ -173,7 +173,8 @@ class CostCalculatorViewModel : ViewModel() {
         transactionName: String,
         priceTotal: Int,
         yield: Int = 0,
-        pricePerUnit: Int = 0
+        pricePerUnit: Int = 0,
+        unit:String = "kg"
     ) {
         viewModelScope.launch {
             try {
@@ -188,7 +189,7 @@ class CostCalculatorViewModel : ViewModel() {
                         put("price", priceTotal)
                         put("yield", yield)
                         put("price_per_unit", pricePerUnit)
-                        put("unit", "kg")
+                        put("unit", unit)
                     }
                 } else {
                     jsonObject.apply {

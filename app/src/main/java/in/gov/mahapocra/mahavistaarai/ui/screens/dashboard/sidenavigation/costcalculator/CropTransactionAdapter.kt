@@ -24,22 +24,22 @@ class CropTransactionAdapter(private val jsonArray: JSONArray) :
         val transactionDate = cropObj.getString("date")
         val transactionAmount = cropObj.getString("price")
         val transactionName = cropObj.getString("name")
-        holder.transactionNameTextView.text = transactionName
         holder.transactionDateTextView.text = transactionDate
         if (transactionType == "income") {
             holder.transactionAmountTextView.setTextColor("#22C55E".toColorInt())
-            if (transactionCategory==null || transactionCategory == "null" || transactionCategory == "") {
-                holder.transactionTypeTextView.text = "Income"
-            }else{
-                holder.transactionTypeTextView.text = transactionCategory
-            }
-        }
-        else {
+            holder.transactionTypeTextView.text = transactionName
+            holder.transactionNameTextView.visibility = View.GONE
+        } else {
             holder.transactionAmountTextView.setTextColor("#EF4444".toColorInt())
-            if (transactionCategory==null || transactionCategory == "null" || transactionCategory == "") {
+            if (transactionCategory == null || transactionCategory == "null" || transactionCategory == "") {
                 holder.transactionTypeTextView.text = "Expense"
-            }else{
+            } else {
                 holder.transactionTypeTextView.text = transactionCategory
+                if (transactionName.isEmpty()) {
+                    holder.transactionNameTextView.visibility = View.GONE
+                }else{
+                    holder.transactionNameTextView.text = transactionName
+                }
             }
         }
         holder.transactionAmountTextView.text = "₹$transactionAmount"

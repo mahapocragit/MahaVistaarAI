@@ -8,11 +8,13 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ListView
+import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -38,6 +40,7 @@ import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import androidx.core.view.get
 
 class CropCostCalculationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCropCostCalculationBinding
@@ -150,6 +153,7 @@ class CropCostCalculationActivity : AppCompatActivity() {
                 .create()
 
             val incomeToggle = dialogView.findViewById<TextView>(R.id.incomeToggleButton)
+            val unitText = dialogView.findViewById<TextView>(R.id.unitText)
             val expenseToggle = dialogView.findViewById<TextView>(R.id.expenseToggleButton)
             val submitText = dialogView.findViewById<TextView>(R.id.submitText)
             val cancelText = dialogView.findViewById<TextView>(R.id.cancelText)
@@ -168,6 +172,8 @@ class CropCostCalculationActivity : AppCompatActivity() {
                 dialogView.findViewById<LinearLayout>(R.id.incomeDateLinearLayout)
             val expenseDateLinearLayout =
                 dialogView.findViewById<LinearLayout>(R.id.expenseDateLinearLayout)
+            val unitSelectionLayout =
+                dialogView.findViewById<LinearLayout>(R.id.unitSelectionLayout)
 
             yieldText.addTextChangedListener { editable ->
                 yieldAmount = editable?.toString()?.toIntOrNull() ?: 0
@@ -177,6 +183,24 @@ class CropCostCalculationActivity : AppCompatActivity() {
                     append("Total Price: ₹")
                     append(totalAmount)
                 }
+            }
+
+            unitSelectionLayout.setOnClickListener {
+                val popupMenu = PopupMenu(this, unitSelectionLayout)
+                popupMenu.menu.add("Quintal")
+                popupMenu.menu.add("Kilogram")
+                popupMenu.menu.add("Ton")
+
+                popupMenu.setOnMenuItemClickListener { item: MenuItem ->
+                    when (item) {
+                        popupMenu.menu[0] -> unitText.text = "q"
+                        popupMenu.menu[1] -> unitText.text = "kg"
+                        popupMenu.menu[2] -> unitText.text = "t"
+                    }
+                    true
+                }
+
+                popupMenu.show()
             }
 
             incomeCalendarDateTextView.text = getTodayDate()
@@ -206,8 +230,11 @@ class CropCostCalculationActivity : AppCompatActivity() {
             submitText.setOnClickListener {
                 val transactionType = if (isIncomeSelected) "income" else "expense"
                 if (transactionType == "income") {
-                    val transactionName = incomeNameEditText.text.toString()
-                    if (transactionName == "" || yieldAmount == 0 || pricePerUnit == 0) {
+                    var transactionName = incomeNameEditText.text.toString()
+                    if (transactionName.isEmpty()) {
+                        transactionName = "Income"
+                    }
+                    if (yieldAmount == 0 || pricePerUnit == 0) {
                         Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT)
                             .show()
                         return@setOnClickListener
@@ -221,13 +248,15 @@ class CropCostCalculationActivity : AppCompatActivity() {
                             transactionName,
                             totalAmount,
                             yieldAmount,
-                            pricePerUnit
+                            pricePerUnit,
+                            unitText.text.toString()
                         )
                     }
                 } else {
                     val transactionName = expenseNameEditText.text.toString()
-                    val price = priceEditText.text.toString()
-                    if (categoryId == 0 || transactionName == "" || price.toInt() == 0) {
+                    val price =
+                        if (priceEditText.text.toString() == "null" || priceEditText.text.toString() == "") "0" else priceEditText.text.toString()
+                    if (categoryId == 0 || price.toInt() == 0) {
                         Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT)
                             .show()
                         return@setOnClickListener
