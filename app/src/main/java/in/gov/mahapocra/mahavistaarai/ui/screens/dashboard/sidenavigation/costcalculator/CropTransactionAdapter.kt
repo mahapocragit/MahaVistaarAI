@@ -2,7 +2,9 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.mahavistaarai.R
 import org.json.JSONArray
@@ -26,10 +28,12 @@ class CropTransactionAdapter(private val jsonArray: JSONArray) :
         val transactionName = cropObj.getString("name")
         holder.transactionDateTextView.text = transactionDate
         if (transactionType == "income") {
+            holder.cropTransactionImage.setImageDrawable(ContextCompat.getDrawable(holder.itemView.context, R.drawable.income_icon))
             holder.transactionAmountTextView.setTextColor("#22C55E".toColorInt())
             holder.transactionTypeTextView.text = transactionName
             holder.transactionNameTextView.visibility = View.GONE
         } else {
+            holder.cropTransactionImage.setImageDrawable(ContextCompat.getDrawable(holder.itemView.context, R.drawable.expense_icon))
             holder.transactionAmountTextView.setTextColor("#EF4444".toColorInt())
             if (transactionCategory == null || transactionCategory == "null" || transactionCategory == "") {
                 holder.transactionTypeTextView.text = "Expense"
@@ -53,6 +57,7 @@ class CropTransactionAdapter(private val jsonArray: JSONArray) :
         val transactionTypeTextView: TextView = itemView.findViewById(R.id.transactionTypeTextView)
         val transactionNameTextView: TextView = itemView.findViewById(R.id.transactionNameTextView)
         val transactionDateTextView: TextView = itemView.findViewById(R.id.transactionDateTextView)
+        val cropTransactionImage: ImageView = itemView.findViewById(R.id.cropTransactionImage)
         val transactionAmountTextView: TextView =
             itemView.findViewById(R.id.transactionAmountTextView)
     }

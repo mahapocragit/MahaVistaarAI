@@ -25,7 +25,7 @@
             android:padding="@dimen/_5sdp">
 
             <ImageView
-                android:id="@+id/imageView43"
+                android:id="@+id/cropTransactionImage"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_20sdp"
                 android:layout_gravity="center_vertical"
