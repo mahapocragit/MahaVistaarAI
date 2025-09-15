@@ -688,6 +688,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     val villageId = data.optInt("VillageCode", 0)
                     val villageName = data.optString("VillageName", "")
                     val agristack_id = data.optString("farmer_id", "")
+                    val farmerId = data.optString("farmer_id")
+                    val consent = data.optBoolean("consent")
                     farmerViewModel.getCropSapAdvisory(
                         this,
                         villageId
@@ -727,6 +729,15 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     navUserName.text = ApUtil.getCamelCaseStreing(userName).ifEmpty { userName }
                     navUserPhone.text = userNumber
                     farmerViewModel.fetchWeatherDetails(this, talukaId, languageToLoad)
+                    if (farmerId!="null" && farmerId != null){
+                        if (!consent) {
+                            showDialogForConsent()
+                        }else{
+                            Log.d("TAGGER", "observeResponse: consent is given")
+                        }
+                    }else{
+                        Log.d("TAGGER", "observeResponse: $consent farmer id null")
+                    }
                 }
             } catch (e: Exception) {
                 Log.e("userDetailsObserver", "Exception: ${e.localizedMessage}")
@@ -770,6 +781,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 }
             }
         }
+    }
+
+    private fun showDialogForConsent() {
+
     }
 
     private fun updateNotificationCount(unreadNotificationsCount: Int) {
