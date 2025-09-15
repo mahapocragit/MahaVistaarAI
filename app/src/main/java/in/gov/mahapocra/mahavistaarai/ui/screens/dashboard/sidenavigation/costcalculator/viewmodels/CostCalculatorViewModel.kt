@@ -105,6 +105,7 @@ class CostCalculatorViewModel : ViewModel() {
     }
 
     fun getTotalCostTransactions(context: Context, season: Int = 1, year: Int = 2025) {
+        ProgressHelper.showProgressDialog(context)
         viewModelScope.launch {
             try {
                 val farmerId =
@@ -119,8 +120,10 @@ class CostCalculatorViewModel : ViewModel() {
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getTotalCostTransactions(requestBody)
+                ProgressHelper.disableProgressDialog()
                 _getTotalCostTransactionsResponse.value = response
             } catch (e: JSONException) {
+                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
