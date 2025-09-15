@@ -10,9 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.CropCostCalculationActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.OnDeleteClick
 import org.json.JSONArray
 
-class CostCalculatorAdapter(private val jsonArray: JSONArray) :
+class CostCalculatorAdapter(private val jsonArray: JSONArray, private val onDeleteClick: OnDeleteClick) :
     RecyclerView.Adapter<CostCalculatorAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -46,6 +47,10 @@ class CostCalculatorAdapter(private val jsonArray: JSONArray) :
             intent.putExtra("crop_image", imageUrl)
             context.startActivity(intent)
         }
+
+        holder.deleteImageView.setOnClickListener {
+           onDeleteClick.onDeleteClick(cropId)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -56,6 +61,7 @@ class CostCalculatorAdapter(private val jsonArray: JSONArray) :
         val cropName: TextView = itemView.findViewById(R.id.cropNameTextView)
         val cropTotal: TextView = itemView.findViewById(R.id.cropTotalTextView)
         val cropImage: ImageView = itemView.findViewById(R.id.cropImageView)
+        val deleteImageView: ImageView = itemView.findViewById(R.id.deleteImageView)
         val selectedCropLinearLayout: LinearLayout =
             itemView.findViewById(R.id.selectedCropCalculationLinearLayout)
     }

@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,7 +30,7 @@ import java.util.Calendar
 class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
     DatePickerRequestListener {
     private lateinit var languageToLoad: String
-    private lateinit var viewModel: FarmerViewModel
+    private val viewModel: FarmerViewModel by viewModels()
     private lateinit var textViewHeaderTitle: TextView
     private lateinit var imageMenuShow: ImageView
     private lateinit var imgBackArrow: ImageView
@@ -49,7 +50,6 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
         setContentView(binding.root)
         uiResponsive(binding.root)
 
-        viewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
         imgBackArrow = findViewById(R.id.imgBackArrow)
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
         imageMenuShow = findViewById(R.id.imageMenushow)
@@ -73,7 +73,6 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
 
     private fun fetchCropInfo() {
         viewModel.cropCategoryResponse.observe(this) {
-            ProgressHelper.disableProgressDialog()
             val jSONObject = JSONObject(it.toString())
             val jsonDataArray = jSONObject.getJSONArray("data")
             var adapter =

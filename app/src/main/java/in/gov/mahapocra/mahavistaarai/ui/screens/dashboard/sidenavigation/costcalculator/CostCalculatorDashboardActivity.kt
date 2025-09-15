@@ -24,7 +24,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.cost
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import org.json.JSONObject
 
-class CostCalculatorDashboardActivity : AppCompatActivity() {
+class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
 
     private lateinit var binding: ActivityCostCalculatorDashboardBinding
     private val costCalculatorViewModel: CostCalculatorViewModel by viewModels()
@@ -77,6 +77,7 @@ class CostCalculatorDashboardActivity : AppCompatActivity() {
                         season = 2
                         costCalculatorViewModel.getTotalCostTransactions(this, season, currentYear)
                     }
+
                     popupMenu.menu[1] -> {
                         binding.seasonText.text = "Season: Kharif"
                         season = 1
@@ -98,15 +99,29 @@ class CostCalculatorDashboardActivity : AppCompatActivity() {
                 when (item) {
                     popupMenu.menu[0] -> {
                         binding.yearTextView.text = "Year: $item"
-                        costCalculatorViewModel.getTotalCostTransactions(this, season, item.toString().toInt())
+                        costCalculatorViewModel.getTotalCostTransactions(
+                            this,
+                            season,
+                            item.toString().toInt()
+                        )
                     }
+
                     popupMenu.menu[1] -> {
                         binding.yearTextView.text = "Year: $item"
-                        costCalculatorViewModel.getTotalCostTransactions(this, season, item.toString().toInt())
+                        costCalculatorViewModel.getTotalCostTransactions(
+                            this,
+                            season,
+                            item.toString().toInt()
+                        )
                     }
+
                     popupMenu.menu[2] -> {
                         binding.yearTextView.text = "Year: $item"
-                        costCalculatorViewModel.getTotalCostTransactions(this, season, item.toString().toInt())
+                        costCalculatorViewModel.getTotalCostTransactions(
+                            this,
+                            season,
+                            item.toString().toInt()
+                        )
                     }
                 }
                 true
@@ -121,7 +136,8 @@ class CostCalculatorDashboardActivity : AppCompatActivity() {
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 if (jSONObject.optInt("status") == 200) {
-                    Toast.makeText(this, "Crop added successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Crop Added successfully", Toast.LENGTH_SHORT).show()
+                    costCalculatorViewModel.getTotalCostTransactions(this, season, currentYear)
                 } else {
                     Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_SHORT)
                         .show()
@@ -136,7 +152,20 @@ class CostCalculatorDashboardActivity : AppCompatActivity() {
                     val total = jSONObject.optInt("total")
                     binding.cropTotalProfitTextView.text = "₹$total"
                     val jsonArray = jSONObject.optJSONArray("data")
-                    binding.recyclerView.adapter = CostCalculatorAdapter(jsonArray)
+                    binding.recyclerView.adapter = CostCalculatorAdapter(jsonArray, this)
+                } else {
+                    Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        }
+
+        costCalculatorViewModel.deleteCropResponse.observe(this) { response ->
+            if (response != null) {
+                val jSONObject = JSONObject(response.toString())
+                if (jSONObject.optInt("status") == 200) {
+                    Toast.makeText(this, "Crop Deleted successfully", Toast.LENGTH_SHORT).show()
+                    costCalculatorViewModel.getTotalCostTransactions(this, season, currentYear)
                 } else {
                     Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_SHORT)
                         .show()
@@ -146,7 +175,6 @@ class CostCalculatorDashboardActivity : AppCompatActivity() {
     }
 
     private fun setUpListeners() {
-
         try {
             val cropId = intent.getIntExtra("id", 0)
             if (cropId != 0) {
@@ -164,5 +192,9 @@ class CostCalculatorDashboardActivity : AppCompatActivity() {
                 )
             )
         }
+    }
+
+    override fun onDeleteClick(cropId: Int) {
+        costCalculatorViewModel.deleteCrop(this, cropId)
     }
 }

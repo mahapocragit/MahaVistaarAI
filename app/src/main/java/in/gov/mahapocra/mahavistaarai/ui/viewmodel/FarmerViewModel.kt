@@ -236,6 +236,7 @@ class FarmerViewModel : ViewModel() {
 
     fun getCropCategoriesAndCropDetails(context: Context, languageToLoad: String) {
         viewModelScope.launch {
+            ProgressHelper.showProgressDialog(context)
             try {
                 val jsonObject = JSONObject().apply {
                     put("api_key", APIKeys.SSO_PROD)
@@ -248,11 +249,12 @@ class FarmerViewModel : ViewModel() {
 
                 // Suspend call
                 val response = apiRequest.getCropCategoryWise(requestBody)
-
+                ProgressHelper.disableProgressDialog()
                 // Handle the response (success case)
                 _cropCategoryResponse.value = response // ← use appropriate LiveData
 
             } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."

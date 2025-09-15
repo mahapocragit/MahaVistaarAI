@@ -41,6 +41,10 @@ class CostCalculatorViewModel : ViewModel() {
     val addCropSpecificTransactionsResponse: MutableLiveData<JsonObject> =
         _addCropSpecificTransactionsResponse
 
+    private var _deleteCropResponse = MutableLiveData<JsonObject>()
+    val deleteCropResponse: MutableLiveData<JsonObject> =
+        _deleteCropResponse
+
     private var _error = MutableLiveData<String>()
     val error: MutableLiveData<String> = _error
 
@@ -221,6 +225,36 @@ class CostCalculatorViewModel : ViewModel() {
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
+    }
+
+    fun deleteCrop(context: Context, cropId: Int){
+
+        viewModelScope.launch {
+            try {
+                ProgressHelper.showProgressDialog(context)
+                val jsonObject = JSONObject().apply {
+                    put("crop_id", cropId)
+                }
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.deleteCrop(requestBody)
+                ProgressHelper.disableProgressDialog()
+                _deleteCropResponse.value = response
+            }catch (e: JSONException) {
+                ProgressHelper.disableProgressDialog()
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+
     }
 
 }
