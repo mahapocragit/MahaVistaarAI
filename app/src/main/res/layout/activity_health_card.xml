@@ -40,7 +40,6 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:maxLength="10"
-                android:text="9356738043"
                 android:textColor="@color/heading"
                 android:textColorHint="@color/text_black"
                 android:textSize="@dimen/text14"

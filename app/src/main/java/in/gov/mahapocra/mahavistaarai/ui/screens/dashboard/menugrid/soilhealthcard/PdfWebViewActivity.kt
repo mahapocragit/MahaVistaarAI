@@ -1,7 +1,10 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard
 
+import android.app.DownloadManager
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
@@ -11,8 +14,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityPdfViewBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.downloadFile
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.StringFormatter.extractCropObjects
@@ -23,6 +28,7 @@ class PdfWebViewActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPdfViewBinding
     private lateinit var languageToLoad: String
+    private var soilHealthCardId = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +50,49 @@ class PdfWebViewActivity : AppCompatActivity() {
         val healthCardJsonStr = intent.getStringExtra("healthCardJson")
         val healthCardJson = healthCardJsonStr?.let { JSONObject(healthCardJsonStr) }
         healthCardJson?.let { setUpUILayout(healthCardJson) }
+        binding.downloadButton.setOnClickListener {
+            if (soilHealthCardId == ""){
+                Toast.makeText(this, "No soil health card available", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            val healthCardUrl = buildString {
+                append(AppEnvironment.FARMER.baseUrl)
+                append("shcServices/download_health_card/")
+                append(soilHealthCardId)
+            }
+            downloadPdf(healthCardUrl)
+        }
+    }
+
+    private fun downloadPdf(url: String) {
+        Log.d("TAGGER", "downloadPdf: $url")
+        try {
+            val request = DownloadManager.Request(Uri.parse(url))
+
+            // Add browser user-agent header if needed
+            request.addRequestHeader(
+                "User-Agent",
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+            )
+
+            request.setTitle("Soil Health Card")
+            request.setDescription("Downloading PDF…")
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            request.setAllowedNetworkTypes(
+                DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE
+            )
+
+            val fileName = "SoilHealthCard_${System.currentTimeMillis()}.pdf"
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
+
+            val downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            downloadManager.enqueue(request)
+
+            Toast.makeText(this, "Download started…", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(this, "Download failed: ${e.message}", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun setUpUILayout(healthCardJson: JSONObject) {
@@ -117,6 +166,7 @@ class PdfWebViewActivity : AppCompatActivity() {
 
         val parameterInfosJson = rdfValuesJson?.optJSONArray("parameterInfos")
         binding.soilHealthCardLayout.farmerName.text = farmerJson?.optString("name")
+        soilHealthCardId = healthCardJson.optString("id")
         binding.soilHealthCardLayout.shcNo.text = healthCardJson.optString("computedID")
         binding.soilHealthCardLayout.surveyNumberTextView.text = plotJson?.optString("surveyNo")
         binding.soilHealthCardLayout.farmSizeTextView.text = buildString {

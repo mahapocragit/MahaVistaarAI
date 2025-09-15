@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -38,19 +39,41 @@ class HealthCardActivity : AppCompatActivity() {
         setContentView(binding.root)
         uiResponsive(binding.root)
 
-        binding.relativeLayoutToolbar.textViewHeaderTitle.text = getString(R.string.soil_health_card)
+        binding.relativeLayoutToolbar.textViewHeaderTitle.text =
+            getString(R.string.soil_health_card)
         binding.relativeLayoutToolbar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutToolbar.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
         observeResponse()
-        binding.submitButton.setOnClickListener {
-            val mobileNo = binding.mobileNoEditText.text.toString()
+        val mobileNo =
+            AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
+        binding.mobileNoEditText.setText(mobileNo)
+        if (mobileNo != null && mobileNo != "USER_MOBILE") {
             farmerViewModel.fetchSoilHealthCardDetails(this, mobileNo)
+        } else {
+            binding.noDataFoundImageView.visibility = View.VISIBLE
+            binding.noDataFoundText.visibility = View.VISIBLE
+            binding.healthCardRecyclerView.visibility = View.GONE
         }
 
-        val isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
+        binding.submitButton.setOnClickListener {
+            if (mobileNo != null && mobileNo != "USER_MOBILE") {
+                farmerViewModel.fetchSoilHealthCardDetails(
+                    this,
+                    binding.mobileNoEditText.text.toString()
+                )
+            } else {
+                binding.noDataFoundImageView.visibility = View.VISIBLE
+                binding.noDataFoundText.visibility = View.VISIBLE
+                binding.healthCardRecyclerView.visibility = View.GONE
+                Toast.makeText(this, "No data found", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        val isGuest =
+            AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
         binding.chatbotIcon.setOnClickListener {
             if (!isGuest) {
                 startActivity(Intent(this, ChatbotActivity::class.java))
@@ -73,15 +96,27 @@ class HealthCardActivity : AppCompatActivity() {
     }
 
     private fun observeResponse() {
-        farmerViewModel.soilHealthCardDetailsResponse.observe(this){
-            if (it!=null){
+        farmerViewModel.soilHealthCardDetailsResponse.observe(this) {
+            if (it != null) {
                 val jSONObject = JSONObject(it.toString())
                 val status = jSONObject.optInt("status")
-                if (status == 200){
+                if (status == 200) {
+                    binding.noDataFoundImageView.visibility = View.GONE
+                    binding.noDataFoundText.visibility = View.GONE
+                    binding.healthCardRecyclerView.visibility = View.VISIBLE
                     val soilHealthCardArray = jSONObject.optJSONArray("shc")
                     binding.healthCardRecyclerView.layoutManager = LinearLayoutManager(this)
-                    binding.healthCardRecyclerView.adapter = SoilHealthCardAdapter(soilHealthCardArray)
+                    binding.healthCardRecyclerView.adapter =
+                        SoilHealthCardAdapter(soilHealthCardArray)
+                } else {
+                    binding.noDataFoundImageView.visibility = View.VISIBLE
+                    binding.noDataFoundText.visibility = View.VISIBLE
+                    binding.healthCardRecyclerView.visibility = View.GONE
                 }
+            } else {
+                binding.noDataFoundImageView.visibility = View.VISIBLE
+                binding.noDataFoundText.visibility = View.VISIBLE
+                binding.healthCardRecyclerView.visibility = View.GONE
             }
         }
     }

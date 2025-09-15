@@ -675,8 +675,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             try {
                 val jsonObject = JSONObject(response.toString())
                 if (jsonObject.optInt("status") == 200) {
+                    Log.d("TAGGER", "observeResponse: $response")
                     val data = jsonObject.optJSONObject("data") ?: return@observe
-
                     val name = data.optString("Name", "")
                     val mobNo = data.optString("MobileNo", "")
                     val emailId = data.optString("EmailId", "")
