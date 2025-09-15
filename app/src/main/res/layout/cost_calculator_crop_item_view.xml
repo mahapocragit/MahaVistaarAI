@@ -21,7 +21,7 @@
             android:orientation="horizontal">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imageView43"
+                android:id="@+id/cropImageView"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_margin="@dimen/_5sdp"
@@ -37,7 +37,7 @@
                 android:textSize="@dimen/_12sdp" />
 
             <TextView
-                android:id="@+id/textView49"
+                android:id="@+id/cropTotalTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

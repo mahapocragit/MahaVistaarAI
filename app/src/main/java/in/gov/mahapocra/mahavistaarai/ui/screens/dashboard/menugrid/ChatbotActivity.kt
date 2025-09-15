@@ -20,12 +20,19 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import com.microsoft.clarity.Clarity
 import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityChatbotBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MahavistaarViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import okhttp3.Dispatcher
+import org.json.JSONObject
 
 class ChatbotActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChatbotBinding
@@ -54,15 +61,25 @@ class ChatbotActivity : AppCompatActivity() {
 
         ProgressHelper.showProgressDialog(this)
         mahavistaarViewModel.requestUrlForChatBot(this)
-        mahavistaarViewModel.responseUrlForChatBot.observe(this) {
-            ProgressHelper.disableProgressDialog()
-            if (it != null && this@ChatbotActivity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
-                binding.webView.visibility = View.VISIBLE
-                binding.noInternetAvailableLayout.visibility = View.GONE
-                val url = it.get("url")?.asString.orEmpty()
-                Clarity.sendCustomEvent("WEBVIEW_OPENED")
-                loadWebView(url)
-            } else {
+        mahavistaarViewModel.responseUrlForChatBot.observe(this) { response->
+            if (response!=null) {
+                val jSONObject = JSONObject(response.toString())
+                val status = jSONObject.optString("status")
+                if (status == "success") {
+                    Clarity.sendCustomEvent("WEBVIEW_OPENED")
+                    val jwtToken = jSONObject.optString("token").trim()
+                    val chatBotUrl = "${AppEnvironment.BOT_URL.baseUrl}$jwtToken"
+                    binding.webView.visibility = View.VISIBLE
+                    binding.noInternetAvailableLayout.visibility = View.GONE
+                    loadWebView(chatBotUrl)
+                } else {
+                    ProgressHelper.disableProgressDialog()
+                    Clarity.sendCustomEvent("WEBVIEW_STOPPED")
+                    binding.webView.visibility = View.GONE
+                    binding.noInternetAvailableLayout.visibility = View.VISIBLE
+                }
+            }else{
+                ProgressHelper.disableProgressDialog()
                 Clarity.sendCustomEvent("WEBVIEW_STOPPED")
                 binding.webView.visibility = View.GONE
                 binding.noInternetAvailableLayout.visibility = View.VISIBLE
@@ -146,7 +163,13 @@ class ChatbotActivity : AppCompatActivity() {
                 handler?.cancel()
             }
         }
-        binding.webView.loadUrl(chatBotUrl)
+        CoroutineScope(Dispatchers.IO).launch {
+            delay(1000)
+            runOnUiThread {
+                ProgressHelper.disableProgressDialog()
+                binding.webView.loadUrl(chatBotUrl)
+            }
+        }
     }
 
 

@@ -21,6 +21,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.Fertilizer
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.SOPActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.CostCalculatorDashboardActivity
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
@@ -87,39 +88,57 @@ class CropStageDetailsAdapter(
                     intent.putExtra("mUrl", jsonObject.optString("image"))
                     intent.putExtra("mName", jsonObject.optString("name"))
                     context?.startActivity(intent)
-                }else if (source.equals(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD)) {
+                } else if (source.equals(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD)) {
                     val intent = Intent(context, AdvisoryCropActivity::class.java)
                     intent.putExtra("id", jsonObject.optInt("id"))
                     intent.putExtra("wotr_crop_id", jsonObject.optInt("wotr_crop_id"))
                     intent.putExtra("mUrl", jsonObject.optString("image"))
                     intent.putExtra("mName", jsonObject.optString("name"))
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        intent.putExtra("sowingDate", LocalCustom.getSowingDateInDayMonthYearFormat(jsonObject.optString("sowing_date")))
+                        intent.putExtra(
+                            "sowingDate",
+                            LocalCustom.getSowingDateInDayMonthYearFormat(jsonObject.optString("sowing_date"))
+                        )
                     }
                     intent.putExtra("editCrop", "NoEditCrop")
                     context?.startActivity(intent)
-                }else if (source.equals(AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD)) {
+                } else if (source.equals(AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD)) {
                     val intent = Intent(context, FertilizerCalculatorActivity::class.java)
                     intent.putExtra("id", jsonObject.optInt("id"))
                     intent.putExtra("wotr_crop_id", jsonObject.optInt("wotr_crop_id"))
                     intent.putExtra("mUrl", jsonObject.optString("image"))
                     intent.putExtra("mName", jsonObject.optString("name"))
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        intent.putExtra("sowingDate", LocalCustom.getSowingDateInDayMonthYearFormat(jsonObject.optString("sowing_date")))
+                        intent.putExtra(
+                            "sowingDate",
+                            LocalCustom.getSowingDateInDayMonthYearFormat(jsonObject.optString("sowing_date"))
+                        )
                     }
                     intent.putExtra("editCrop", "NoEditCrop")
                     context?.startActivity(intent)
-                }else if (source.equals(AppConstants.SOP_FROM_DASHBOARD)) {
+                } else if (source.equals(AppConstants.SOP_FROM_DASHBOARD)) {
                     val intent = Intent(context, SOPActivity::class.java)
                     intent.putExtra("id", jsonObject.optInt("id"))
                     intent.putExtra("wotr_crop_id", jsonObject.optInt("wotr_crop_id"))
                     intent.putExtra("mUrl", jsonObject.optString("image"))
                     intent.putExtra("mName", jsonObject.optString("name"))
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        intent.putExtra("sowingDate", LocalCustom.getSowingDateWithYear(jsonObject.optString("sowing_date")))
+                        intent.putExtra(
+                            "sowingDate",
+                            LocalCustom.getSowingDateWithYear(jsonObject.optString("sowing_date"))
+                        )
                     }
                     intent.putExtra("editCrop", "NoEditCrop")
                     context?.startActivity(intent)
+                } else if (callerActivity == "costCalculator") {
+                    context?.startActivity(
+                        Intent(
+                            context,
+                            CostCalculatorDashboardActivity::class.java
+                        ).apply {
+                            putExtra("id", jsonObject.optInt("id"))
+                        }
+                    )
                 } else {
                     listener.onMultiRecyclerViewItemClick(1, JSONObject().apply {
                         put("id", jsonObject.optInt("id"))

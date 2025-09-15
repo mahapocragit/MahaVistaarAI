@@ -95,7 +95,7 @@
                             android:background="@drawable/shape_round_gray">
 
                             <ImageView
-                                android:id="@+id/imageView6"
+                                android:id="@+id/cropImageView"
                                 android:layout_width="0dp"
                                 android:layout_height="0dp"
                                 android:padding="@dimen/_8sdp"
@@ -161,7 +161,7 @@
                         android:text="Kharif Maize Total Profit" />
 
                     <TextView
-                        android:id="@+id/textView50"
+                        android:id="@+id/totalProfitTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -190,11 +190,12 @@
                         android:orientation="horizontal">
 
                         <ImageView
+                            android:id="@+id/expenseIcon"
                             android:layout_width="@dimen/_20sdp"
                             android:layout_height="@dimen/_20sdp"
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="@dimen/_20sdp"
-                            app:srcCompat="@drawable/expense_ic" />
+                            app:srcCompat="@drawable/up_icon" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -210,6 +211,7 @@
                                 android:text="Expenses" />
 
                             <TextView
+                                android:id="@+id/expenseTextView"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="26000"
@@ -230,7 +232,7 @@
                             android:layout_height="@dimen/_20sdp"
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="@dimen/_20sdp"
-                            app:srcCompat="@drawable/income_ic" />
+                            app:srcCompat="@drawable/down_ic" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -246,6 +248,7 @@
                                 android:text="Income" />
 
                             <TextView
+                                android:id="@+id/incomeTextView"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="27000"
@@ -291,13 +294,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_5sdp"
                 android:gravity="center_vertical"
-                android:text="All transactions (This Month)"
+                android:text="All Transactions"
                 android:textSize="@dimen/_12sdp" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/cropTransactionRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            tools:listitem="@layout/crop_transaction_item_view"/>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
