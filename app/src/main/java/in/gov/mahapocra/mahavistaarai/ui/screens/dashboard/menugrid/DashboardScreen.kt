@@ -432,7 +432,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         })
     }
 
-    fun observeResponse(){
+    fun observeResponse() {
 
         farmerViewModel.error.observe(this) {
             LocalCustom.createSnackbar(binding.root, it)
@@ -674,6 +674,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
             try {
                 val jsonObject = JSONObject(response.toString())
+                Log.d("TAGGER", "observeResponse: $jsonObject")
                 if (jsonObject.optInt("status") == 200) {
                     val data = jsonObject.optJSONObject("data") ?: return@observe
 
@@ -729,13 +730,13 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     navUserName.text = ApUtil.getCamelCaseStreing(userName).ifEmpty { userName }
                     navUserPhone.text = userNumber
                     farmerViewModel.fetchWeatherDetails(this, talukaId, languageToLoad)
-                    if (farmerId!="null" && farmerId != null){
+                    if (farmerId != "null" && farmerId != null) {
                         if (!consent) {
                             showDialogForConsent()
-                        }else{
+                        } else {
                             Log.d("TAGGER", "observeResponse: consent is given")
                         }
-                    }else{
+                    } else {
                         Log.d("TAGGER", "observeResponse: $consent farmer id null")
                     }
                 }
@@ -781,10 +782,53 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 }
             }
         }
+
+        farmerViewModel.consentResponse.observe(this) { response ->
+            if (response != null) {
+                val jsonObject = JSONObject(response.toString())
+                val status = jsonObject.optInt("status")
+                if (status == 200) {
+                    Toast.makeText(this, "Consent has been submitted!!!", Toast.LENGTH_SHORT).show()
+                } else {
+                    val responseText = jsonObject.optString("response")
+                    Toast.makeText(this, responseText, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     private fun showDialogForConsent() {
 
+        val dialogLayout = LayoutInflater.from(this)
+            .inflate(R.layout.dialog_consent_layout, null)
+
+        val consentDialog = AlertDialog.Builder(this)
+            .setView(dialogLayout)
+            .setCancelable(false)
+            .create()
+
+        // ✅ get the view from the dialog layout, not the activity
+        val acceptText = dialogLayout.findViewById<TextView>(R.id.acceptText)
+        val declineText = dialogLayout.findViewById<TextView>(R.id.declineText)
+        acceptText.setOnClickListener {
+            farmerViewModel.updateConsent(this, true)
+            consentDialog.dismiss() // optionally close the dialog
+        }
+        declineText.setOnClickListener {
+            val confirmationDialog =
+                AlertDialog.Builder(this).setTitle("Confirmation")
+                    .setMessage("You will be logged out of the app as you have declined the consent. Do you want to continue?")
+                    .setPositiveButton("Confirm") { dialog, _ ->
+                        farmerViewModel.updateConsent(this, false)
+                        logoutFromApp()
+                        dialog.dismiss()
+                        consentDialog.dismiss()
+                    }.setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+            confirmationDialog.show() // optionally close the dialog
+        }
+        consentDialog.show()
     }
 
     private fun updateNotificationCount(unreadNotificationsCount: Int) {
