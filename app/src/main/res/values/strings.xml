@@ -443,4 +443,10 @@
     <string name="no_notification_right_now">No notification Right Now!!</string>
     <string name="detailed_notifications">Detailed Notification</string>
     <string name="cost_calculator">Cost Calculator</string>
+    <string name="consent_one">I acknowledge that my data may be used as per the consent already provided under systems (Agristack in Maharashtra, MahaDBT) for e-KYC, eligibility determination, benefit delivery, and integration of agriculture-related services.</string>
+    <string name="consent_two">I hereby provide my consent for sharing my personal details with the Department of Agriculture, Government of Maharashtra, for receiving personalized advisories and services.</string>
+    <string name="consent_three">I allow the Department of Agriculture, Government of Maharashtra, to share my data with other Government Agencies/Departments for providing relevant service delivery and monitoring.</string>
+    <string name="consent_four">I understand that I have the right to withdraw my consent at any time, though such withdrawal may affect the services I receive.</string>
+    <string name="consent_five">I understand that my data will be stored securely, and efforts will be made to protect it from unauthorized access or misuse.</string>
+    <string name="consent_for_mahavistaar">Consent for MahaVISTAAR</string>
 </resources>

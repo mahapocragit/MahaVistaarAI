@@ -10,6 +10,7 @@ import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
@@ -19,6 +20,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.firebase.messaging.FirebaseMessaging
@@ -37,6 +39,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityRegistrationBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -44,6 +47,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.isStrongPassword
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.toSHA512
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SessionManager
@@ -152,7 +156,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             }
         }
 
-        farmerViewModel.districtIdResponse.observe(this){
+        farmerViewModel.districtIdResponse.observe(this) {
             if (it != null) {
                 val jSONObject = JSONObject(it.toString())
                 val response =
@@ -163,6 +167,55 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                     districtJSONArray = response.getdataArray()
                 } else {
                     UIToastMessage.show(this, response.response)
+                }
+            }
+        }
+        farmerViewModel.updateFCMTokenResponse.observe(this) {
+            Log.d("TAGGER", "logoutFromApp: $it")
+            if (it != null) {
+                val jsonObject = JSONObject(it.toString())
+                val response = jsonObject.optString("response")
+                if (response == "FCM Cleared") {
+                    AppSettings.getInstance().setValue(this, AppConstants.uName, AppConstants.uName)
+                    AppSettings.getInstance()
+                        .setValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
+                    AppSettings.getInstance()
+                        .setValue(this, AppConstants.uEmail, AppConstants.uEmail)
+                    AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, 0)
+                    AppSettings.getInstance().setValue(this, AppConstants.uDIST, AppConstants.uDIST)
+                    AppSettings.getInstance().setIntValue(this, AppConstants.uDISTId, 0)
+                    AppSettings.getInstance()
+                        .setValue(this, AppConstants.uTALUKA, AppConstants.uTALUKA)
+                    AppSettings.getInstance().setIntValue(this, AppConstants.uTALUKAID, 0)
+                    AppSettings.getInstance()
+                        .setValue(this, AppConstants.uVILLAGE, AppConstants.uVILLAGE)
+                    AppSettings.getInstance().setIntValue(this, AppConstants.uVILLAGEID, 0)
+                    AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null)
+                    AppUtility.getInstance().clearAppSharedPrefData(this, AppConstants.kSHARED_PREF)
+                    AppSettings.getInstance()
+                        .setBooleanValue(this, AppConstants.userDataSaved, false)
+                    val intent = Intent(this@Registration, SplashScreenActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    Log.d("TAGGER", "logoutFromApp: $response")
+                }
+            }
+        }
+
+        farmerViewModel.consentResponse.observe(this) { response ->
+            if (response != null) {
+                val jsonObject = JSONObject(response.toString())
+                val status = jsonObject.optInt("status")
+                if (status == 200) {
+                    Toast.makeText(this, "Consent has been submitted!!!", Toast.LENGTH_SHORT).show()
+                } else {
+                    val responseText = jsonObject.optString("response")
+                    Toast.makeText(this, responseText, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -194,6 +247,12 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
             val rawValue = AppSettings.getInstance().getSavedValue(this, AppConstants.AGRISTACKID)
             agristackId = if (rawValue.isNullOrEmpty() || rawValue == "null") "" else rawValue
+            if (agristackId != "") {
+                binding.consentLayout.visibility = View.VISIBLE
+                binding.consentLayout.setOnClickListener {
+                    showDialogForConsent()
+                }
+            }
             binding.passwordEditText.visibility = View.GONE
             binding.passwordErrorTextView.visibility = View.GONE
             binding.confirmPasswordEditText.visibility = View.GONE
@@ -763,9 +822,56 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 // Enable and reset button appearance
                 resendOTP.isEnabled = true
                 resendOTP.text = resources.getString(R.string.Resend_OTP)
-                resendOTP.setBackgroundColor(ContextCompat.getColor(this@Registration, R.color.status_green))
+                resendOTP.setBackgroundColor(
+                    ContextCompat.getColor(
+                        this@Registration,
+                        R.color.status_green
+                    )
+                )
                 resendOTP.setTextColor(ContextCompat.getColor(this@Registration, R.color.white))
             }
         }.start()
+    }
+
+    private fun showDialogForConsent() {
+
+        val dialogLayout = LayoutInflater.from(this)
+            .inflate(R.layout.dialog_consent_layout, null)
+
+        val consentDialog = AlertDialog.Builder(this)
+            .setView(dialogLayout)
+            .setCancelable(false)
+            .create()
+
+        // ✅ get the view from the dialog layout, not the activity
+        val acceptText = dialogLayout.findViewById<TextView>(R.id.acceptText)
+        val declineText = dialogLayout.findViewById<TextView>(R.id.declineText)
+        acceptText.setOnClickListener {
+            farmerViewModel.updateConsent(this, true)
+            consentDialog.dismiss() // optionally close the dialog
+        }
+        declineText.setOnClickListener {
+            val confirmationDialog =
+                AlertDialog.Builder(this).setTitle("Confirmation")
+                    .setMessage("You will be logged out of the app as you have declined the consent. Do you want to continue?")
+                    .setPositiveButton("Confirm") { dialog, _ ->
+                        farmerViewModel.updateConsent(this, false)
+                        logoutFromApp()
+                        dialog.dismiss()
+                        consentDialog.dismiss()
+                    }.setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+            confirmationDialog.show() // optionally close the dialog
+        }
+        consentDialog.show()
+    }
+
+    private fun logoutFromApp() {
+        if (NetworkUtils.isInternetAvailable(this)) {
+            farmerViewModel.updateFCMToken(this, "NA")
+        } else {
+            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+        }
     }
 }

@@ -22,7 +22,7 @@
             android:textSize="@dimen/_14sdp"
             android:textColor="@color/font_color_figma"
             android:textStyle="bold"
-            android:text="Consent for MahaVISTAAR" />
+            android:text="@string/consent_for_mahavistaar" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -49,7 +49,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="I acknowledge that my data may be used as per the consent already provided under systems (Agristack in Maharashtra, MahaDBT) for e-KYC, eligibility determination, benefit delivery, and integration of agriculture-related services." />
+                        android:text="@string/consent_one" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -69,7 +69,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="I hereby provide my consent for sharing my personal details with the Department of Agriculture, Government of Maharashtra, for receiving personalized advisories and services." />
+                        android:text="@string/consent_two" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -89,7 +89,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="I allow the Department of Agriculture, Government of Maharashtra, to share my data with other Government Agencies/Departments for providing relevant service delivery and monitoring." />
+                        android:text="@string/consent_three" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -109,7 +109,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="I understand that I have the right to withdraw my consent at any time, though such withdrawal may affect the services I receive." />
+                        android:text="@string/consent_four" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -129,7 +129,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="I understand that my data will be stored securely, and efforts will be made to protect it from unauthorized access or misuse." />
+                        android:text="@string/consent_five" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
