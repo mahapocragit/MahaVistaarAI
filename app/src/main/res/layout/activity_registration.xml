@@ -379,13 +379,14 @@
                     android:id="@+id/consentLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/_15sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
                     android:background="@drawable/crop_category_card_background"
                     android:gravity="center_vertical"
-                    android:layout_marginTop="@dimen/_2sdp"
                     android:minHeight="@dimen/_30sdp"
-                    android:layout_marginHorizontal="@dimen/_15sdp"
                     android:orientation="horizontal"
-                    android:paddingStart="@dimen/_10sdp">
+                    android:paddingStart="@dimen/_10sdp"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/textView49"
