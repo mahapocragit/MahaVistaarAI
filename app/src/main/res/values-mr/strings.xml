@@ -440,6 +440,7 @@
     <string name="etl_crop_advisory">पिकांच्या कीड व रोगावरील तज्ञांचा सल्ला</string>
     <string name="click_here_to_view_full_advisory">पूर्ण सल्ला पाहण्यासाठी येथे क्लिक करा.</string>
     <string name="date_etl">दि.: </string>
+    <string name="cost_calculator">Cost Calculator</string>
     <string name="no_notification_right_now">सध्या कोणतीही सूचना नाही!!</string>
     <string name="detailed_notifications">अधिसूचना</string>
     <string name="consent_one">मी मान्य करतो की माझा डेटा ई-केवायसी, पात्रतेची निश्चिती, लाभांचे वितरण, आणि कृषी-संबंधित सेवांच्या एकत्रीकरणासाठी सिस्टीम्स (महाराष्ट्रामधील ॲग्रीस्टॅक, महाडीबीटी) अंतर्गत आधीच दिलेल्या संमतीनुसार वापरला जाऊ शकतो.</string>
@@ -448,4 +449,9 @@
     <string name="consent_four">मी हे समजून घेतो की मला माझी संमती कोणत्याही वेळी मागे घेण्याचा अधिकार आहे, जरी अशा माघारीमुळे मला मिळणाऱ्या सेवांवर परिणाम होऊ शकतो.</string>
     <string name="consent_five">मी समजतो की माझा डेटा सुरक्षितपणे संग्रहित केला जाईल आणि अनधिकृत प्रवेश किंवा गैरवापरापासून त्याचे संरक्षण करण्यासाठी प्रयत्न केले जातील.</string>
     <string name="consent_for_mahavistaar">महाविस्तार-AI साठी संमती</string>
+    <string name="accept">मान्य आहे</string>
+    <string name="decline">अमान्य आहे</string>
+    <string name="confirm">निश्चित करा</string>
+    <string name="cancel">रद्द करा</string>
+    <string name="withdraw_consent">संमती मागे घ्या</string>
 </resources>

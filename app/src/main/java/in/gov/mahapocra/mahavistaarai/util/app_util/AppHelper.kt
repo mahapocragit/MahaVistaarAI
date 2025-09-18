@@ -46,9 +46,9 @@ class AppHelper private constructor() {
                 logoutObject.put("icon", "logout")
 
                 jsonArray.put(profileObject)
-                jsonArray.put(expertsObject)
+//                jsonArray.put(expertsObject)
 //                jsonArray.put(newsObject)
-                jsonArray.put(costCalculatorObject)
+//                jsonArray.put(costCalculatorObject)
                 jsonArray.put(partnerObject)
                 jsonArray.put(aboutObject)
                 jsonArray.put(logoutObject)
@@ -98,9 +98,9 @@ class AppHelper private constructor() {
                 logoutObject.put("icon", "logout")
 
                 jsonArray.put(profileObject)
-                jsonArray.put(expertsObject)
+//                jsonArray.put(expertsObject)
 //                jsonArray.put(newsObject)
-                jsonArray.put(costCalculatorObject)
+//                jsonArray.put(costCalculatorObject)
                 jsonArray.put(partnerObject)
                 jsonArray.put(aboutObject)
                 jsonArray.put(logoutObject)
@@ -146,9 +146,9 @@ class AppHelper private constructor() {
                 profileObject.put("icon", "myprofile")
 
                 jsonArray.put(profileObject)
-                jsonArray.put(expertsObject)
+//                jsonArray.put(expertsObject)
 //                jsonArray.put(newsObject)
-                jsonArray.put(costCalculatorObject)
+//                jsonArray.put(costCalculatorObject)
                 jsonArray.put(creditObject)
                 jsonArray.put(aboutObject)
             } catch (e: JSONException) {
@@ -192,9 +192,9 @@ class AppHelper private constructor() {
                 profileObject.put("icon", "myprofile")
 
                 jsonArray.put(profileObject)
-                jsonArray.put(expertsObject)
+//                jsonArray.put(expertsObject)
 //                jsonArray.put(newsObject)
-                jsonArray.put(costCalculatorObject)
+//                jsonArray.put(costCalculatorObject)
                 jsonArray.put(creditObject)
                 jsonArray.put(aboutObject)
             } catch (e: JSONException) {

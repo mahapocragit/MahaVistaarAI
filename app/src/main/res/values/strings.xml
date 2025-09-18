@@ -39,7 +39,7 @@
     <string name="add_Crop">Add Crop</string>
     <string name="change_Crop">Change Crop</string>
     <string name="no_crops_added">No Crops Added</string>
-    <string name="see_less">See Less</string>
+    <string name="see_less">see less</string>
     <string name="selected_crop">Selected Crop</string>
 
     <string name="good_morning">Good Morning, </string>
@@ -252,7 +252,7 @@
     <string name="Pests_n_diseases_by_stage">Pests and Diseases by Stage</string>
     <string name="different_stages_text">All Pests and Diseases that might appear in your crop at different stages</string>
     <string name="stages_text">All Pests and Diseases that might appear in your crop at this stage</string>
-    <string name="see_more">See More</string>
+    <string name="see_more">see more</string>
     <string name="symptoms">Symptoms</string>
     <string name="preventive_measure">Preventive Measures</string>
     <string name="control_measures">Control Measures</string>
@@ -449,4 +449,9 @@
     <string name="consent_four">I understand that I have the right to withdraw my consent at any time, though such withdrawal may affect the services I receive.</string>
     <string name="consent_five">I understand that my data will be stored securely, and efforts will be made to protect it from unauthorized access or misuse.</string>
     <string name="consent_for_mahavistaar">Consent for MahaVISTAAR</string>
+    <string name="accept">Accept</string>
+    <string name="decline">Decline</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="withdraw_consent">Withdraw Consent</string>
 </resources>

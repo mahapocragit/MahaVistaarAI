@@ -8,10 +8,19 @@ import android.graphics.Color
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
+import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
+import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.DetailedNotificationActivity
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class FBaseMessagingService : FirebaseMessagingService() {
 
@@ -88,8 +97,20 @@ class FBaseMessagingService : FirebaseMessagingService() {
     }
 
     override fun onNewToken(token: String) {
-        Log.d(tag, "New token: $token")
-        // You can send this token to your server if needed
+        val farmerId = AppSettings.getInstance()
+            .getIntValue(applicationContext, AppConstants.fREGISTER_ID, 0)
+
+        // Do network call in coroutine
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val apiRequest = retrofit.create(ApiService::class.java)
+                apiRequest.updateFCMToken(farmerId, token)
+                Log.d(tag, "FCM token updated successfully")
+            } catch (e: Exception) {
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
     }
 }
 

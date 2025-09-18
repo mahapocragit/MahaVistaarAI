@@ -816,14 +816,14 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
         declineText.setOnClickListener {
             val confirmationDialog =
-                AlertDialog.Builder(this).setTitle("Confirmation")
+                AlertDialog.Builder(this).setTitle(R.string.withdraw_consent)
                     .setMessage("You will be logged out of the app as you have declined the consent. Do you want to continue?")
-                    .setPositiveButton("Confirm") { dialog, _ ->
+                    .setPositiveButton(R.string.confirm) { dialog, _ ->
                         farmerViewModel.updateConsent(this, false)
                         logoutFromApp()
                         dialog.dismiss()
                         consentDialog.dismiss()
-                    }.setNegativeButton("Cancel") { dialog, _ ->
+                    }.setNegativeButton(R.string.cancel) { dialog, _ ->
                         dialog.dismiss()
                     }
             confirmationDialog.show() // optionally close the dialog

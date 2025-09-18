@@ -72,7 +72,7 @@ class StageAdvisoryDetailAdaptr(
             val readMore: String = context!!.getString(R.string.read_more)
             val finalString = textData + readMore
             val   sb = SpannableStringBuilder(finalString)
-            val fcs = ForegroundColorSpan(Color.rgb(0, 125, 255))
+            val fcs = ForegroundColorSpan(Color.rgb(100, 116, 139))
             val   bss = StyleSpan(Typeface.BOLD)
             sb.setSpan(fcs, 52, 61, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
             sb.setSpan(bss, 52, 61, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
@@ -84,7 +84,7 @@ class StageAdvisoryDetailAdaptr(
             val textView = TextView(context)
             textView.text = HtmlCompat.fromHtml(datas, HtmlCompat.FROM_HTML_MODE_LEGACY)
             textView.textSize = 16f
-            textView.setPadding(16, 16, 16, 16)
+            textView.setPadding(70, 16, 32, 16)
             textView.autoLinkMask = Linkify.WEB_URLS
             textView.movementMethod = LinkMovementMethod.getInstance()
 
