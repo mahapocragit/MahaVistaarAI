@@ -113,6 +113,8 @@ class FarmerViewModel : ViewModel() {
     val warehouseDetailsResponse: LiveData<JsonObject> = _warehouseDetailsResponse
     private val _districtIdResponse = MutableLiveData<JsonObject>()
     val districtIdResponse: LiveData<JsonObject> = _districtIdResponse
+    private val _consentResponse = MutableLiveData<JsonObject>()
+    val consentResponse: LiveData<JsonObject> = _consentResponse
 
     private val _soilHealthCardDetailsResponse = MutableLiveData<JsonObject>()
     val soilHealthCardDetailsResponse: LiveData<JsonObject> = _soilHealthCardDetailsResponse
@@ -239,6 +241,7 @@ class FarmerViewModel : ViewModel() {
 
     fun getCropCategoriesAndCropDetails(context: Context, languageToLoad: String) {
         viewModelScope.launch {
+            ProgressHelper.showProgressDialog(context)
             try {
                 val jsonObject = JSONObject().apply {
                     put("api_key", APIKeys.SSO_PROD)
@@ -251,11 +254,12 @@ class FarmerViewModel : ViewModel() {
 
                 // Suspend call
                 val response = apiRequest.getCropCategoryWise(requestBody)
-
+                ProgressHelper.disableProgressDialog()
                 // Handle the response (success case)
                 _cropCategoryResponse.value = response // ← use appropriate LiveData
 
             } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
@@ -946,6 +950,30 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.getDistrictList(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _districtIdResponse.value = response
+            } catch (e: JSONException) {
+                ProgressHelper.disableProgressDialog()
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun updateConsent(context: Context, consentValue: Boolean) {
+        ProgressHelper.showProgressDialog(context)
+        val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+        viewModelScope.launch {
+            try {
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val api = retrofit.create(ApiService::class.java)
+                val response = api.updateConsent(farmerId, consentValue)
+                ProgressHelper.disableProgressDialog()
+                _consentResponse.value = response
             } catch (e: JSONException) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {

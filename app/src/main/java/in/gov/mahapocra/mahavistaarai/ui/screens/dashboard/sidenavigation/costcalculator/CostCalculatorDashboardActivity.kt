@@ -21,15 +21,17 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityCostCalculatorDashbo
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.viewmodels.CostCalculatorViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import org.json.JSONObject
 
-class CostCalculatorDashboardActivity : AppCompatActivity() {
+class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
 
     private lateinit var binding: ActivityCostCalculatorDashboardBinding
     private val costCalculatorViewModel: CostCalculatorViewModel by viewModels()
     private var season = 1
     private var currentYear = 0
+    private var currentYearForTransaction = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,11 +62,18 @@ class CostCalculatorDashboardActivity : AppCompatActivity() {
         } else {
             2025
         }
+        setUpObservers()
+
+        currentYearForTransaction = AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION")
+        if (currentYearForTransaction!=0){
+            binding.yearTextView.text = "Year: $currentYearForTransaction"
+            costCalculatorViewModel.getTotalCostTransactions(this, season, currentYearForTransaction)
+        }else{
+            costCalculatorViewModel.getTotalCostTransactions(this, season, currentYear)
+        }
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        setUpObservers()
         setUpListeners()
-        costCalculatorViewModel.getTotalCostTransactions(this, season, currentYear)
         binding.seasonLayout.setOnClickListener {
             val popupMenu = PopupMenu(this, binding.seasonLayout)
             popupMenu.menu.add("Rabbi")
@@ -77,6 +86,7 @@ class CostCalculatorDashboardActivity : AppCompatActivity() {
                         season = 2
                         costCalculatorViewModel.getTotalCostTransactions(this, season, currentYear)
                     }
+
                     popupMenu.menu[1] -> {
                         binding.seasonText.text = "Season: Kharif"
                         season = 1
@@ -98,15 +108,32 @@ class CostCalculatorDashboardActivity : AppCompatActivity() {
                 when (item) {
                     popupMenu.menu[0] -> {
                         binding.yearTextView.text = "Year: $item"
-                        costCalculatorViewModel.getTotalCostTransactions(this, season, item.toString().toInt())
+                        AppPreferenceManager(this).saveInt("CURRENT_YEAR_FOR_TRANSACTION", item.toString().toInt())
+                        costCalculatorViewModel.getTotalCostTransactions(
+                            this,
+                            season,
+                            item.toString().toInt()
+                        )
                     }
+
                     popupMenu.menu[1] -> {
                         binding.yearTextView.text = "Year: $item"
-                        costCalculatorViewModel.getTotalCostTransactions(this, season, item.toString().toInt())
+                        AppPreferenceManager(this).saveInt("CURRENT_YEAR_FOR_TRANSACTION", item.toString().toInt())
+                        costCalculatorViewModel.getTotalCostTransactions(
+                            this,
+                            season,
+                            item.toString().toInt()
+                        )
                     }
+
                     popupMenu.menu[2] -> {
                         binding.yearTextView.text = "Year: $item"
-                        costCalculatorViewModel.getTotalCostTransactions(this, season, item.toString().toInt())
+                        AppPreferenceManager(this).saveInt("CURRENT_YEAR_FOR_TRANSACTION", item.toString().toInt())
+                        costCalculatorViewModel.getTotalCostTransactions(
+                            this,
+                            season,
+                            item.toString().toInt()
+                        )
                     }
                 }
                 true
@@ -116,12 +143,28 @@ class CostCalculatorDashboardActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (currentYearForTransaction!=0){
+            binding.yearTextView.text = "Year: $currentYearForTransaction"
+            costCalculatorViewModel.getTotalCostTransactions(this, season, currentYearForTransaction)
+        }else{
+            costCalculatorViewModel.getTotalCostTransactions(this, season, currentYear)
+        }
+    }
+
     private fun setUpObservers() {
         costCalculatorViewModel.addCropForCalculationResponse.observe(this) { response ->
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 if (jSONObject.optInt("status") == 200) {
-                    Toast.makeText(this, "Crop added successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Crop Added successfully", Toast.LENGTH_SHORT).show()
+                    if (currentYearForTransaction!=0){
+                        binding.yearTextView.text = "Year: $currentYearForTransaction"
+                        costCalculatorViewModel.getTotalCostTransactions(this, season, currentYearForTransaction)
+                    }else{
+                        costCalculatorViewModel.getTotalCostTransactions(this, season, currentYear)
+                    }
                 } else {
                     Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_SHORT)
                         .show()
@@ -136,7 +179,25 @@ class CostCalculatorDashboardActivity : AppCompatActivity() {
                     val total = jSONObject.optInt("total")
                     binding.cropTotalProfitTextView.text = "₹$total"
                     val jsonArray = jSONObject.optJSONArray("data")
-                    binding.recyclerView.adapter = CostCalculatorAdapter(jsonArray)
+                    binding.recyclerView.adapter = CostCalculatorAdapter(jsonArray, this)
+                } else {
+                    Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        }
+
+        costCalculatorViewModel.deleteCropResponse.observe(this) { response ->
+            if (response != null) {
+                val jSONObject = JSONObject(response.toString())
+                if (jSONObject.optInt("status") == 200) {
+                    Toast.makeText(this, "Crop Deleted successfully", Toast.LENGTH_SHORT).show()
+                    if (currentYearForTransaction!=0){
+                        binding.yearTextView.text = "Year: $currentYearForTransaction"
+                        costCalculatorViewModel.getTotalCostTransactions(this, season, currentYearForTransaction)
+                    }else{
+                        costCalculatorViewModel.getTotalCostTransactions(this, season, currentYear)
+                    }
                 } else {
                     Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_SHORT)
                         .show()
@@ -146,11 +207,22 @@ class CostCalculatorDashboardActivity : AppCompatActivity() {
     }
 
     private fun setUpListeners() {
-
         try {
             val cropId = intent.getIntExtra("id", 0)
+            val currentYearForTransaction = AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION")
             if (cropId != 0) {
-                costCalculatorViewModel.addCropForCropCalculation(this, cropId = cropId)
+                if (currentYearForTransaction!=0) {
+                    costCalculatorViewModel.addCropForCropCalculation(
+                        this,
+                        cropId = cropId,
+                        year = currentYearForTransaction
+                    )
+                }else{
+                    costCalculatorViewModel.addCropForCropCalculation(
+                        this,
+                        cropId = cropId
+                    )
+                }
             }
         } catch (e: Exception) {
             Log.d("TAGGER", "setUpListeners: ${e.message}")
@@ -164,5 +236,9 @@ class CostCalculatorDashboardActivity : AppCompatActivity() {
                 )
             )
         }
+    }
+
+    override fun onDeleteClick(cropId: Int) {
+        costCalculatorViewModel.deleteCrop(this, cropId)
     }
 }
