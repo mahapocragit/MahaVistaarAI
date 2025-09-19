@@ -489,6 +489,7 @@ class FarmerViewModel : ViewModel() {
 
     fun fetchMarketList(context: Context, languageToLoad: String, districtCode: Int) {
         viewModelScope.launch {
+            ProgressHelper.showProgressDialog(context)
             try {
                 val jsonObject = JSONObject()
                 jsonObject.put("lang", languageToLoad)
@@ -500,8 +501,10 @@ class FarmerViewModel : ViewModel() {
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getMarketList(requestBody)
+                ProgressHelper.disableProgressDialog()
                 _responseMarkerList.value = response
             } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."

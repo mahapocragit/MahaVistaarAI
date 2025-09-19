@@ -393,7 +393,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/_1sdp"
-                        android:text="@string/consent_profile_text_1" />
+                        android:text="@string/consent_profile_text_1"
+                        android:textSize="@dimen/_10sdp" />
 
                     <TextView
                         android:id="@+id/textView50"
@@ -401,6 +402,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/_1sdp"
                         android:text="@string/consent_profile_text_2"
+                        android:textSize="@dimen/_10sdp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -408,7 +410,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/consent_profile_text_3"
-                        android:textColor="@color/darkblue" />
+                        android:textColor="@color/darkblue"
+                        android:textSize="@dimen/_10sdp" />
 
                 </LinearLayout>
 

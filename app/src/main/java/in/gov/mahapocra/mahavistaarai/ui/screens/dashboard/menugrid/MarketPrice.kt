@@ -144,43 +144,12 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
         binding.textViewDistrict.setOnClickListener {
             showDistrict()
         }
-        setupObservers()
         binding.textViewMarket.setOnClickListener {
             binding.calenderLayout.visibility = View.GONE
             binding.tvMarketDate.text = ""
             marketPreceDate = ""
             farmerViewModel.fetchMarketList(this, languageToLoad, districtID)
             ProgressHelper.showProgressDialog(this)
-        }
-    }
-
-    private fun getMarkets() {
-        farmerViewModel.responseMarkerList.observe(this) {
-            ProgressHelper.disableProgressDialog()
-            if (it != null) {
-                val jSONObject = JSONObject(it.toString())
-                val response =
-                    ResponseModel(
-                        jSONObject
-                    )
-
-                if (response.status) {
-                    marketJSONArray = response.getdataArray()
-                    AppUtility.getInstance().showListDialogMarketIndex(
-                        marketJSONArray,
-                        3,
-                        getString(R.string.farmer_select_market),
-                        "apmc_name",
-                        this,
-                        this
-                    )
-                } else {
-                    Toast.makeText(this, "Data Not Found", Toast.LENGTH_LONG).show()
-                }
-            }
-        }
-        farmerViewModel.error.observe(this) {
-            ProgressHelper.disableProgressDialog()
         }
     }
 
@@ -348,7 +317,6 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
             talukaID = s1!!.toInt()
             if (s != null) {
                 talukaName = s
-                getMarkets()
             }
 
             binding.textViewMarket.text = ""
