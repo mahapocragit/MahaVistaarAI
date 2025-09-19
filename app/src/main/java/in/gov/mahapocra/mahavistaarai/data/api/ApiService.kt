@@ -218,7 +218,7 @@ interface ApiService {
     fun getNewsList(@Body params: RequestBody): Call<JsonObject>
 
     @POST(ApiConstants.kGetmarketsPriceDetails)
-    fun getmarketPriceDetails(@Body params: RequestBody): Call<JsonObject>
+    suspend fun getMarketPriceDetails(@Body params: RequestBody): JsonObject
 
     @POST(ApiConstants.DELETE_FERTILIZER_FROM_SAVED)
     fun deleteFertilizerFromSavedList(@Body params: RequestBody): Call<JsonObject>

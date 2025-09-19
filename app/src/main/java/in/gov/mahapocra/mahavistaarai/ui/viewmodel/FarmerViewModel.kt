@@ -116,6 +116,8 @@ class FarmerViewModel : ViewModel() {
     val districtIdResponse: LiveData<JsonObject> = _districtIdResponse
     private val _consentResponse = MutableLiveData<JsonObject>()
     val consentResponse: LiveData<JsonObject> = _consentResponse
+    private val _getMarketPriceDetailsResponse = MutableLiveData<JsonObject>()
+    val getMarketPriceDetailsResponse: LiveData<JsonObject> = _getMarketPriceDetailsResponse
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -977,6 +979,35 @@ class FarmerViewModel : ViewModel() {
                 val response = api.updateConsent(farmerId, consentValue)
                 ProgressHelper.disableProgressDialog()
                 _consentResponse.value = response
+            } catch (e: JSONException) {
+                ProgressHelper.disableProgressDialog()
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getMarketPriceDetails(context: Context, mandiId: Int, language: String) {
+        ProgressHelper.showProgressDialog(context)
+        viewModelScope.launch {
+            try {
+                val jsonObject = JSONObject().apply {
+                    put("api_key", APIKeys.SSO_PROD)
+                    put("apmc_id", mandiId)
+                    put("lang", language)
+                }
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val api = retrofit.create(ApiService::class.java)
+                val response = api.getMarketPriceDetails(requestBody)
+                ProgressHelper.disableProgressDialog()
+                _getMarketPriceDetailsResponse.value = response
             } catch (e: JSONException) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {

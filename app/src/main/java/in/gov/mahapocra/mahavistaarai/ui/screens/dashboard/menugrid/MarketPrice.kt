@@ -81,12 +81,12 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
         binding.tvSourceInformation.text = getString(R.string.source_info_market)
         binding.textViewMarket.text = getString(R.string.farmer_select_market)
         setupObservers()
-        setConfiguration()
         binding.recyclerViewMarketPriceList.setHasFixedSize(true)
         val myLayoutManager = LinearLayoutManager(this)
         myLayoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.recyclerViewMarketPriceList.setLayoutManager(myLayoutManager)
         onClick()
+        setConfiguration()
 
         binding.searchEditText.setOnClickListener {
             marketPriceDetailsJSONArray?.let { extractUniqueCommNames(it) }?.let {
@@ -99,7 +99,8 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
                 }
             }
         }
-        val isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
+        val isGuest =
+            AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
         binding.chatbotIcon.setOnClickListener {
             if (!isGuest) {
                 startActivity(Intent(this, ChatbotActivity::class.java))
@@ -183,8 +184,8 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
             }
         }
 
-        farmerViewModel.districtIdResponse.observe(this){ response->
-            if (response!=null){
+        farmerViewModel.districtIdResponse.observe(this) { response ->
+            if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 val response =
                     ResponseModel(
@@ -215,36 +216,85 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
             }
         }
 
+        farmerViewModel.getMarketPriceDetailsResponse.observe(this) { response ->
+            if (response!=null){
+                val jSONObject = JSONObject(response.toString())
+                    val response =
+                        ResponseModel(
+                            jSONObject
+                        )
+                    if (response.status) {
+                        val simpleDateFormat = SimpleDateFormat("dd-MM-yyyy")
+                        marketPreceDate = simpleDateFormat.format(Date())
+                        cDate = SimpleDateFormat("dd-MM-yyyy").parse(marketPreceDate)
+                        marketPriceDetailsJSONArray = response.getdataArray()
+
+                        // tvMarketDate.text = marketPreceDate
+                        if (marketPriceDetailsJSONArray !== null) {
+                            binding.tvMarketDetails.visibility = View.VISIBLE
+                            if (marketName == null) {
+                                binding.tvMarketDetails.text = (buildString {
+                                    append(districtName)
+                                    append(", ")
+                                    append(resources.getString(R.string.market_c_price))
+                                })
+                            } else {
+                                binding.tvMarketDetails.text = (buildString {
+                                    append(districtName)
+                                    append(", ")
+                                    append(marketName)
+                                    append(" ")
+                                    append(resources.getString(R.string.market_c_price))
+                                })
+                            }
+                            marketPriceAdapter =
+                                MarketPriceAdapter(
+                                    this,
+                                    marketPriceDetailsJSONArray
+                                )
+                            binding.recyclerViewMarketPriceList.setLayoutManager(
+                                LinearLayoutManager(
+                                    this,
+                                    LinearLayoutManager.VERTICAL,
+                                    false
+                                )
+                            )
+                            binding.recyclerViewMarketPriceList.adapter = marketPriceAdapter
+                            marketPriceAdapter.notifyDataSetChanged()
+                        } else {
+                            binding.tvMarketDetails.visibility = View.VISIBLE
+                            if (marketName == null) {
+                                binding.tvMarketDetails.text = (buildString {
+                                    append(districtName)
+                                    append(", ")
+                                    append(resources.getString(R.string.market_c_price))
+                                })
+
+                            } else {
+                                binding.tvMarketDetails.text = (buildString {
+                                    append(districtName)
+                                    append(", ")
+                                    append(marketName)
+                                    append(" ")
+                                    append(resources.getString(R.string.market_c_price))
+                                })
+                            }
+                            Toast.makeText(
+                                this,
+                                "Data Not Available on $marketPreceDate for $marketName",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    } else {
+                        Toast.makeText(this, "Data Not Found", Toast.LENGTH_LONG).show()
+                    }
+            }
+        }
+
         // Handle errors
         farmerViewModel.error.observe(this) {
             ProgressHelper.disableProgressDialog()
             Toast.makeText(this, "Error fetching data", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun getMarketPriceDetails(apmcId: Int) {
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put("api_key", APIKeys.SSO_PROD)
-            jsonObject.put("apmc_id", apmcId)
-            if (languageToLoad == "mr") {
-                jsonObject.put("lang", languageToLoad)
-            }
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api =
-                AppInventorApi(
-                    this,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(this).getkMSG_WAIT(),
-                    true
-                )
-            val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(ApiService::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getmarketPriceDetails(requestBody)
-            api.postRequest(responseCall, this, 4)
-        } catch (e: JSONException) {
-            e.printStackTrace()
         }
     }
 
@@ -331,7 +381,7 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
                 marketName = s.toString()
                 marketPreceDate = binding.tvMarketDate.text.toString()
                 val apmcID = JSONObject(s1).optInt("apmc_id")
-                getMarketPriceDetails(apmcID)
+                farmerViewModel.getMarketPriceDetails(this, apmcID, languageToLoad)
             }
             binding.textViewMarket.text = s
         }
@@ -356,63 +406,6 @@ class MarketPrice : AppCompatActivity(), ApiCallbackCode,
 
             if (response.status) {
                 talukaJSONArray = response.getdataArray()
-            } else {
-                Toast.makeText(this, "Data Not Found", Toast.LENGTH_LONG).show()
-            }
-        }
-
-        if (i == 4 && jSONObject != null) {
-            val response =
-                ResponseModel(
-                    jSONObject
-                )
-            if (response.status) {
-//                binding.calenderLayout.visibility = View.VISIBLE
-                val simpleDateFormat = SimpleDateFormat("dd-MM-yyyy")
-                marketPreceDate = simpleDateFormat.format(Date())
-                cDate = SimpleDateFormat("dd-MM-yyyy").parse(marketPreceDate)
-                marketPriceDetailsJSONArray = response.getdataArray()
-
-                // tvMarketDate.text = marketPreceDate
-                if (marketPriceDetailsJSONArray !== null) {
-                    binding.tvMarketDetails.visibility = View.VISIBLE
-                    if (marketName == null) {
-                        binding.tvMarketDetails.text = (districtName
-                                + ", " + resources.getString(R.string.market_c_price))
-                    } else {
-                        binding.tvMarketDetails.text = (districtName + ", "
-                                + marketName + " " + resources.getString(R.string.market_c_price))
-                    }
-                    marketPriceAdapter =
-                        MarketPriceAdapter(
-                            this,
-                            marketPriceDetailsJSONArray
-                        )
-                    binding.recyclerViewMarketPriceList.setLayoutManager(
-                        LinearLayoutManager(
-                            this,
-                            LinearLayoutManager.VERTICAL,
-                            false
-                        )
-                    )
-                    binding.recyclerViewMarketPriceList.adapter = marketPriceAdapter
-                    marketPriceAdapter.notifyDataSetChanged()
-                } else {
-                    binding.tvMarketDetails.visibility = View.VISIBLE
-                    if (marketName == null) {
-                        binding.tvMarketDetails.text = (districtName
-                                + ", " + resources.getString(R.string.market_c_price))
-
-                    } else {
-                        binding.tvMarketDetails.text = (districtName + ", "
-                                + marketName + " " + resources.getString(R.string.market_c_price))
-                    }
-                    Toast.makeText(
-                        this,
-                        "Data Not Available on $marketPreceDate for $marketName",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
             } else {
                 Toast.makeText(this, "Data Not Found", Toast.LENGTH_LONG).show()
             }
