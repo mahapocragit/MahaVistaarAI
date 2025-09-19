@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/status_colored_background"
-    tools:context=".ui.screens.dashboard.menugrid.MarketPrice">
+    tools:context=".ui.screens.dashboard.menugrid.marketprice.MarketPrice">
 
     <LinearLayout
         android:id="@+id/linearLayout12"

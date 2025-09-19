@@ -138,7 +138,7 @@
             android:name=".ui.screens.authentication.ForgetPassword"
             android:exported="false" />
         <activity
-            android:name=".ui.screens.dashboard.menugrid.MarketPrice"
+            android:name=".ui.screens.dashboard.menugrid.marketprice.MarketPrice"
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.menugrid.dbt.pocra.PocraDbtSchemes"

@@ -209,7 +209,7 @@ interface ApiService {
     suspend fun getDistrictList(@Body params: RequestBody): JsonObject
 
     @POST(ApiConstants.kGetMarketAndMarketName)
-    fun getMarketAndMarketName(@Body params: RequestBody): Call<JsonObject>
+    suspend fun getMarketAndMarketName(@Body params: RequestBody): JsonObject
 
     @POST(ApiConstants.kGetVillageList)
     fun kGetVillageList(@Body params: RequestBody): Call<JsonObject>

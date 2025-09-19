@@ -253,9 +253,9 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                     showDialogForConsent()
                 }
             }
-            binding.passwordEditText.visibility = View.GONE
+            binding.passwordTIL.visibility = View.GONE
             binding.passwordErrorTextView.visibility = View.GONE
-            binding.confirmPasswordEditText.visibility = View.GONE
+            binding.confirmPasswordTIL.visibility = View.GONE
             binding.nameEditText.setText(userName)
             binding.mobNoEditText.setText(registerMob)
             binding.emailId.setText(emailid)

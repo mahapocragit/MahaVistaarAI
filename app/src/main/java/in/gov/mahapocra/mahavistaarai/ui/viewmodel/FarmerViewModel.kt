@@ -71,9 +71,6 @@ class FarmerViewModel : ViewModel() {
     private val _fetchLocationDataFromCoordinates = MutableLiveData<JsonObject>()
     val fetchLocationDataFromCoordinates: LiveData<JsonObject> = _fetchLocationDataFromCoordinates
 
-    private val _responseMarkerList = MutableLiveData<JsonObject>()
-    val responseMarkerList: LiveData<JsonObject> = _responseMarkerList
-
     private val _compareOtpResponse = MutableLiveData<JsonObject>()
     val compareOtpResponse: LiveData<JsonObject> = _compareOtpResponse
 
@@ -94,30 +91,37 @@ class FarmerViewModel : ViewModel() {
 
     private val _getCropStagesResponse = MutableLiveData<JsonObject>()
     val getCropStagesResponse: LiveData<JsonObject> = _getCropStagesResponse
+
     private val _getPestDiseaseDetailsResponse = MutableLiveData<JSONObject>()
     val getPestDiseaseDetailsResponse: LiveData<JSONObject> = _getPestDiseaseDetailsResponse
+
     private val _getCropSapAdvisoryResponse = MutableLiveData<JsonObject>()
     val getCropSapAdvisoryResponse: LiveData<JsonObject> = _getCropSapAdvisoryResponse
 
     private val _getNotificationResponse = MutableLiveData<JsonObject>()
     val getNotificationResponse: LiveData<JsonObject> = _getNotificationResponse
+
     private val _getNotificationDetailedResponse = MutableLiveData<JsonObject>()
     val getNotificationDetailedResponse: LiveData<JsonObject> = _getNotificationDetailedResponse
+
     private val _updateNotificationStatusResponse = MutableLiveData<JsonObject>()
     val updateNotificationStatusResponse: LiveData<JsonObject> = _updateNotificationStatusResponse
+
     private val _updateFCMTokenResponse = MutableLiveData<JsonObject>()
     val updateFCMTokenResponse: LiveData<JsonObject> = _updateFCMTokenResponse
+
     private val _checkFCMTokenResponse = MutableLiveData<JsonObject>()
     val checkFCMTokenResponse: LiveData<JsonObject> = _checkFCMTokenResponse
 
     private val _warehouseDetailsResponse = MutableLiveData<JsonObject>()
     val warehouseDetailsResponse: LiveData<JsonObject> = _warehouseDetailsResponse
+
     private val _districtIdResponse = MutableLiveData<JsonObject>()
     val districtIdResponse: LiveData<JsonObject> = _districtIdResponse
+
     private val _consentResponse = MutableLiveData<JsonObject>()
     val consentResponse: LiveData<JsonObject> = _consentResponse
-    private val _getMarketPriceDetailsResponse = MutableLiveData<JsonObject>()
-    val getMarketPriceDetailsResponse: LiveData<JsonObject> = _getMarketPriceDetailsResponse
+
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -489,35 +493,6 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun fetchMarketList(context: Context, languageToLoad: String, districtCode: Int) {
-        viewModelScope.launch {
-            ProgressHelper.showProgressDialog(context)
-            try {
-                val jsonObject = JSONObject()
-                jsonObject.put("lang", languageToLoad)
-                jsonObject.put("api_key", APIKeys.SSO_PROD)
-                jsonObject.put("district_code", districtCode)
-
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
-                val response = apiRequest.getMarketList(requestBody)
-                ProgressHelper.disableProgressDialog()
-                _responseMarkerList.value = response
-            } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
-                val message = when (e) {
-                    is SocketTimeoutException -> "Request timed out. Please try again."
-                    is SocketException -> "Connection lost. Please check your internet."
-                    is IOException -> "Network error occurred."
-                    else -> e.localizedMessage ?: "Unknown error"
-                }
-                _error.value = message
-                FirebaseCrashlytics.getInstance().recordException(e)
-            }
-        }
-    }
 
     fun compareOtp(context: Context, mobile: String, enteredOTP: String) {
         viewModelScope.launch {
@@ -979,35 +954,6 @@ class FarmerViewModel : ViewModel() {
                 val response = api.updateConsent(farmerId, consentValue)
                 ProgressHelper.disableProgressDialog()
                 _consentResponse.value = response
-            } catch (e: JSONException) {
-                ProgressHelper.disableProgressDialog()
-                val message = when (e) {
-                    is SocketTimeoutException -> "Request timed out. Please try again."
-                    is SocketException -> "Connection lost. Please check your internet."
-                    is IOException -> "Network error occurred."
-                    else -> e.localizedMessage ?: "Unknown error"
-                }
-                _error.value = message
-                FirebaseCrashlytics.getInstance().recordException(e)
-            }
-        }
-    }
-
-    fun getMarketPriceDetails(context: Context, mandiId: Int, language: String) {
-        ProgressHelper.showProgressDialog(context)
-        viewModelScope.launch {
-            try {
-                val jsonObject = JSONObject().apply {
-                    put("api_key", APIKeys.SSO_PROD)
-                    put("apmc_id", mandiId)
-                    put("lang", language)
-                }
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val api = retrofit.create(ApiService::class.java)
-                val response = api.getMarketPriceDetails(requestBody)
-                ProgressHelper.disableProgressDialog()
-                _getMarketPriceDetailsResponse.value = response
             } catch (e: JSONException) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
