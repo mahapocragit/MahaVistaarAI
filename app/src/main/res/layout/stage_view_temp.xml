@@ -44,15 +44,17 @@
         android:id="@+id/seeMoreTextView"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/_20sdp"
-        android:paddingHorizontal="@dimen/_2sdp"
+        android:layout_marginStart="3dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/background_for_chat_request"
         android:gravity="center"
+        android:paddingHorizontal="@dimen/_5sdp"
         android:text="@string/see_more"
         android:textColor="@color/blue_light"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/titleTextView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/titleTextView"
         app:layout_constraintTop_toTopOf="@+id/titleTextView" />
 
     <androidx.recyclerview.widget.RecyclerView
