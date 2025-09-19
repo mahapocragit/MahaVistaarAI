@@ -459,4 +459,13 @@
     <string name="consent_profile_text_1">To </string>
     <string name="consent_profile_text_2">Withdraw Consent, </string>
     <string name="consent_profile_text_3">Click here</string>
+    <string name="consent_accepted">Consent has been accepted</string>
+    <string name="consent_withdrawn">Consent has been withdrawn</string>
+    <string name="consent_declined">Consent has been declined</string>
+
+
+    <string name="captcha_empty_err">Please enter the CAPTCHA</string>
+    <string name="captcha_validate_err">CAPTCHA must be exactly 6 characters</string>
+    <string name="captcha_success">CAPTCHA verified successfully</string>
+    <string name="captcha_invalid">Incorrect CAPTCHA. Please try again</string>
 </resources>

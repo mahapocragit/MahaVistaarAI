@@ -67,7 +67,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     private lateinit var binding: ActivityRegistrationBinding
 
     private var isUserLoggedIn: Boolean = false
-
+    private var consentMessage: String? = null
     private lateinit var userName: String
     private lateinit var mob: String
     private lateinit var registerMob: String
@@ -212,7 +212,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 val jsonObject = JSONObject(response.toString())
                 val status = jsonObject.optInt("status")
                 if (status == 200) {
-                    Toast.makeText(this, "Consent has been submitted!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, consentMessage?:"Consent Submitted", Toast.LENGTH_SHORT).show()
                 } else {
                     val responseText = jsonObject.optString("response")
                     Toast.makeText(this, responseText, Toast.LENGTH_SHORT).show()
@@ -839,6 +839,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             AlertDialog.Builder(this).setTitle(R.string.withdraw_consent)
                 .setMessage(R.string.withdraw_consent_desc_withdraw)
                 .setPositiveButton(R.string.confirm) { dialog, _ ->
+                    consentMessage = ContextCompat.getString(this, R.string.consent_withdrawn)
                     farmerViewModel.updateConsent(this, false)
                     logoutFromApp()
                     dialog.dismiss()

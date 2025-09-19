@@ -73,8 +73,10 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
             costCalculatorViewModel.getTotalCostTransactions(this, season, currentYear)
         }
 
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
         setUpListeners()
+        binding.seasonText.text = if (currentSeasonForTransaction==1) "Season: Kharif" else "Season: Rabbi"
+
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.seasonLayout.setOnClickListener {
             val popupMenu = PopupMenu(this, binding.seasonLayout)
             popupMenu.menu.add("Rabbi")
@@ -213,7 +215,7 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
         try {
             val cropId = intent.getIntExtra("id", 0)
             val currentYearForTransaction = AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION")
-            val currentSeasonForTransaction = AppPreferenceManager(this).getInt("CURRENT_SEASON_FOR_TRANSACTION")
+            currentSeasonForTransaction = AppPreferenceManager(this).getInt("CURRENT_SEASON_FOR_TRANSACTION")
             if (cropId != 0) {
                 Log.d("TAGGER", "setUpListeners: currentSeasonForTransaction $currentSeasonForTransaction")
                 if (currentYearForTransaction!=0) {

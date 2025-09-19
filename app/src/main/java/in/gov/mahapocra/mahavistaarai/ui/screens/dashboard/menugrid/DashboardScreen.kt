@@ -93,6 +93,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
     private lateinit var binding: ActivityDashboardScreenBinding
     private lateinit var navUserName: TextView
+    private var consentMessage: String? = null
     private var districtCode: Int = 0
     private var villageCode: Int = 0
     private var isGuest: Boolean = false
@@ -788,7 +789,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 val jsonObject = JSONObject(response.toString())
                 val status = jsonObject.optInt("status")
                 if (status == 200) {
-                    Toast.makeText(this, "Consent has been submitted!!!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, consentMessage?:"Consent Submitted", Toast.LENGTH_SHORT).show()
                 } else {
                     val responseText = jsonObject.optString("response")
                     Toast.makeText(this, responseText, Toast.LENGTH_SHORT).show()
@@ -811,6 +812,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         val acceptText = dialogLayout.findViewById<TextView>(R.id.acceptText)
         val declineText = dialogLayout.findViewById<TextView>(R.id.declineText)
         acceptText.setOnClickListener {
+            consentMessage = ContextCompat.getString(this, R.string.consent_accepted)
             farmerViewModel.updateConsent(this, true)
             consentDialog.dismiss() // optionally close the dialog
         }
@@ -819,6 +821,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 AlertDialog.Builder(this).setTitle(R.string.withdraw_consent)
                     .setMessage(R.string.withdraw_consent_desc_decline)
                     .setPositiveButton(R.string.confirm) { dialog, _ ->
+                        consentMessage = ContextCompat.getString(this, R.string.consent_declined)
                         farmerViewModel.updateConsent(this, false)
                         logoutFromApp()
                         dialog.dismiss()

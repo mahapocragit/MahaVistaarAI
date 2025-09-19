@@ -460,4 +460,13 @@
     <string name="consent_profile_text_1">संमती </string>
     <string name="consent_profile_text_2">मागे घेण्यासाठी, </string>
     <string name="consent_profile_text_3">येथे क्लिक करा</string>
+    <string name="consent_accepted">संमती स्वीकारली आहे</string>
+    <string name="consent_withdrawn">संमती मागे घेण्यात आली आहे</string>
+    <string name="consent_declined">संमती नाकारली आहे</string>
+
+
+    <string name="captcha_empty_err">कृपया कॅप्चा भरा</string>
+    <string name="captcha_validate_err">कॅप्चा नक्की ६ अक्षरांचा असावा</string>
+    <string name="captcha_success">कॅप्चा यशस्वीपणे तपासला गेला.</string>
+    <string name="captcha_invalid">कॅप्चा चुकीचा आहे. कृपया पुन्हा प्रयत्न करा</string>
 </resources>

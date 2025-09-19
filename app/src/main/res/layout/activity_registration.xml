@@ -392,7 +392,7 @@
                         android:id="@+id/textView49"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/_1sdp"
+                        android:layout_marginEnd="@dimen/_2sdp"
                         android:text="@string/consent_profile_text_1"
                         android:textSize="@dimen/_10sdp" />
 
@@ -400,7 +400,7 @@
                         android:id="@+id/textView50"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/_1sdp"
+                        android:layout_marginEnd="@dimen/_2sdp"
                         android:text="@string/consent_profile_text_2"
                         android:textSize="@dimen/_10sdp"
                         android:textStyle="bold" />

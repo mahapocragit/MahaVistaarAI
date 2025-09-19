@@ -24,6 +24,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.snackbar.Snackbar
@@ -279,21 +280,21 @@ object LocalCustom {
 
                 when {
                     userInput.isEmpty() -> {
-                        inputField.error = "Please enter the CAPTCHA"
+                        inputField.error = ContextCompat.getString(context, R.string.captcha_empty_err)
                     }
 
                     userInput.length != 6 -> {
-                        inputField.error = "CAPTCHA must be exactly 6 characters"
+                        inputField.error = ContextCompat.getString(context, R.string.captcha_invalid)
                     }
 
                     userInput == captchaCode -> {
-                        Toast.makeText(context, "CAPTCHA Verified ✅", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, R.string.captcha_success, Toast.LENGTH_SHORT).show()
                         onResult(true)
                         dialog.dismiss()
                     }
 
                     else -> {
-                        Toast.makeText(context, "Incorrect CAPTCHA ❌", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, R.string.captcha_invalid, Toast.LENGTH_SHORT).show()
                         inputField.text?.clear()
                         inputField.requestFocus()
                     }
