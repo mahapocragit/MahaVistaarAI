@@ -212,7 +212,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 val jsonObject = JSONObject(response.toString())
                 val status = jsonObject.optInt("status")
                 if (status == 200) {
-                    Toast.makeText(this, "Consent has been submitted!!!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Consent has been submitted!", Toast.LENGTH_SHORT).show()
                 } else {
                     val responseText = jsonObject.optString("response")
                     Toast.makeText(this, responseText, Toast.LENGTH_SHORT).show()
@@ -837,7 +837,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
 
         val confirmationDialog =
             AlertDialog.Builder(this).setTitle(R.string.withdraw_consent)
-                .setMessage("You will be logged out of the app and won’t be able to access the app through login if you withdraw your consent. Do you wish to continue?")
+                .setMessage(R.string.withdraw_consent_desc_withdraw)
                 .setPositiveButton(R.string.confirm) { dialog, _ ->
                     farmerViewModel.updateConsent(this, false)
                     logoutFromApp()

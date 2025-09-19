@@ -454,4 +454,9 @@
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="withdraw_consent">Withdraw Consent</string>
+    <string name="withdraw_consent_desc_withdraw">If you withdraw the consent, then you will be logged out of the app for now. In future, if you wish to access the app through Farmer ID, kindly accept the consent. Do you wish to confirm?</string>
+    <string name="withdraw_consent_desc_decline">If you decline the consent, then you will be logged out of the app for now. In future, if you wish to access the app through Farmer ID, kindly accept the consent. Do you wish to confirm?</string>
+    <string name="consent_profile_text_1">To </string>
+    <string name="consent_profile_text_2">Withdraw Consent, </string>
+    <string name="consent_profile_text_3">Click here</string>
 </resources>

@@ -392,20 +392,22 @@
                         android:id="@+id/textView49"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="To " />
+                        android:layout_marginEnd="@dimen/_1sdp"
+                        android:text="@string/consent_profile_text_1" />
 
                     <TextView
                         android:id="@+id/textView50"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Withdraw Consent, "
+                        android:layout_marginEnd="@dimen/_1sdp"
+                        android:text="@string/consent_profile_text_2"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/textView53"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Click here"
+                        android:text="@string/consent_profile_text_3"
                         android:textColor="@color/darkblue" />
 
                 </LinearLayout>

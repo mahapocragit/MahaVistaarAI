@@ -32,6 +32,7 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
     private var season = 1
     private var currentYear = 0
     private var currentYearForTransaction = 0
+    private var currentSeasonForTransaction = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,12 +85,14 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
                     popupMenu.menu[0] -> {
                         binding.seasonText.text = "Season: Rabbi"
                         season = 2
+                        AppPreferenceManager(this).saveInt("CURRENT_SEASON_FOR_TRANSACTION", 2)
                         costCalculatorViewModel.getTotalCostTransactions(this, season, currentYear)
                     }
 
                     popupMenu.menu[1] -> {
                         binding.seasonText.text = "Season: Kharif"
                         season = 1
+                        AppPreferenceManager(this).saveInt("CURRENT_SEASON_FOR_TRANSACTION", 1)
                         costCalculatorViewModel.getTotalCostTransactions(this, season, currentYear)
                     }
                 }
@@ -210,17 +213,21 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
         try {
             val cropId = intent.getIntExtra("id", 0)
             val currentYearForTransaction = AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION")
+            val currentSeasonForTransaction = AppPreferenceManager(this).getInt("CURRENT_SEASON_FOR_TRANSACTION")
             if (cropId != 0) {
+                Log.d("TAGGER", "setUpListeners: currentSeasonForTransaction $currentSeasonForTransaction")
                 if (currentYearForTransaction!=0) {
                     costCalculatorViewModel.addCropForCropCalculation(
                         this,
                         cropId = cropId,
+                        season = currentSeasonForTransaction,
                         year = currentYearForTransaction
                     )
                 }else{
                     costCalculatorViewModel.addCropForCropCalculation(
                         this,
-                        cropId = cropId
+                        cropId = cropId,
+                        season = currentSeasonForTransaction
                     )
                 }
             }
