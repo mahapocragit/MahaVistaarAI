@@ -74,9 +74,9 @@ public class AppInventorApi {
 
     public Retrofit getRetrofitInstance() {
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
-        builder.readTimeout(30, TimeUnit.SECONDS);
-        builder.connectTimeout(30, TimeUnit.SECONDS);
-        builder.writeTimeout(30, TimeUnit.SECONDS);
+        builder.readTimeout(90, TimeUnit.SECONDS);
+        builder.connectTimeout(90, TimeUnit.SECONDS);
+        builder.writeTimeout(90, TimeUnit.SECONDS);
         builder.retryOnConnectionFailure(true);
         Gson gson = new GsonBuilder().setLenient().create();
         builder.addInterceptor(chain -> {
@@ -125,9 +125,9 @@ public class AppInventorApi {
             final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.connectTimeout(1, TimeUnit.MINUTES);
+            builder.connectTimeout(60, TimeUnit.SECONDS);
             builder.readTimeout(60, TimeUnit.SECONDS);
-            builder.writeTimeout(30, TimeUnit.SECONDS);
+            builder.writeTimeout(60, TimeUnit.SECONDS);
             builder.followRedirects(false);
             builder.addInterceptor(new NetworkConnectionInterceptor(context.getApplicationContext()));
 

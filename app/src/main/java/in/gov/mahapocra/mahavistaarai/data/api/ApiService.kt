@@ -154,10 +154,10 @@ interface ApiService {
     suspend fun checkFcmToken(@Header("userid") farmerId: Int): JsonObject
 
     @POST(ApiConstants.kOTPRequest)
-    fun getOTPRequest(
+    suspend fun getOTPRequest(
         @Header("MobileNo") mobileNo: String,
         @Body params: RequestBody
-    ): Call<JsonObject>
+    ): JsonObject
 
     @POST(ApiConstants.kOTPRegisterRequest)
     fun getOTPRegisterRequest(
@@ -173,18 +173,18 @@ interface ApiService {
     ): Call<JsonObject>
 
     @POST(ApiConstants.kUserLogin)
-    fun getUserLoginOTP(
+    suspend fun getUserLoginOTP(
         @Header("MobileNo") mobileNo: String,
         @Header("otp") enteredOTP: String,
         @Body params: RequestBody
-    ): Call<JsonObject>
+    ): JsonObject
 
     @POST(ApiConstants.kUserLogin)
-    fun getUserLoginPassword(
+    suspend fun getUserLoginPassword(
         @Header("MobileNo") mobileNo: String,
         @Header("Password") password: String,
         @Body params: RequestBody
-    ): Call<JsonObject>
+    ): JsonObject
 
     @POST(ApiConstants.kRefreshTokenLogin)
     fun getRefreshTokenLoginViaOTP(
