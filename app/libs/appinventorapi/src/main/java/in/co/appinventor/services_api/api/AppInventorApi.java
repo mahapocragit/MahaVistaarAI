@@ -22,7 +22,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-
 import in.co.appinventor.services_api.listener.ApiCallbackCode;
 import in.co.appinventor.services_api.util.Utility;
 import in.co.appinventor.services_api.widget.UIToastMessage;
@@ -125,9 +124,9 @@ public class AppInventorApi {
             final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.connectTimeout(60, TimeUnit.SECONDS);
-            builder.readTimeout(60, TimeUnit.SECONDS);
-            builder.writeTimeout(60, TimeUnit.SECONDS);
+            builder.connectTimeout(90, TimeUnit.SECONDS);
+            builder.readTimeout(90, TimeUnit.SECONDS);
+            builder.writeTimeout(90, TimeUnit.SECONDS);
             builder.followRedirects(false);
             builder.addInterceptor(new NetworkConnectionInterceptor(context.getApplicationContext()));
 
