@@ -19,6 +19,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.firebase.messaging.FirebaseMessaging
@@ -37,6 +38,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityRegistrationBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -44,6 +46,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.isStrongPassword
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.toSHA512
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SessionManager
@@ -61,6 +64,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     AlertListEventListener {
 
     private lateinit var binding: ActivityRegistrationBinding
+    private var consentMessage: String? = null
 
     private var isUserLoggedIn: Boolean = false
 
@@ -151,6 +155,43 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 }
             }
         }
+        farmerViewModel.updateFCMTokenResponse.observe(this) {
+            Log.d("TAGGER", "logoutFromApp: $it")
+            if (it != null) {
+                val jsonObject = JSONObject(it.toString())
+                val response = jsonObject.optString("response")
+                if (response == "FCM Cleared") {
+                    AppSettings.getInstance().setValue(this, AppConstants.uName, AppConstants.uName)
+                    AppSettings.getInstance()
+                        .setValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
+                    AppSettings.getInstance()
+                        .setValue(this, AppConstants.uEmail, AppConstants.uEmail)
+                    AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, 0)
+                    AppSettings.getInstance().setValue(this, AppConstants.uDIST, AppConstants.uDIST)
+                    AppSettings.getInstance().setIntValue(this, AppConstants.uDISTId, 0)
+                    AppSettings.getInstance()
+                        .setValue(this, AppConstants.uTALUKA, AppConstants.uTALUKA)
+                    AppSettings.getInstance().setIntValue(this, AppConstants.uTALUKAID, 0)
+                    AppSettings.getInstance()
+                        .setValue(this, AppConstants.uVILLAGE, AppConstants.uVILLAGE)
+                    AppSettings.getInstance().setIntValue(this, AppConstants.uVILLAGEID, 0)
+                    AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null)
+                    AppUtility.getInstance().clearAppSharedPrefData(this, AppConstants.kSHARED_PREF)
+                    AppSettings.getInstance()
+                        .setBooleanValue(this, AppConstants.userDataSaved, false)
+                    val intent = Intent(this@Registration, SplashScreenActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    Log.d("TAGGER", "logoutFromApp: $response")
+                }
+            }
+        }
+
     }
 
     private fun setConfiguration() {
@@ -179,6 +220,12 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
             val rawValue = AppSettings.getInstance().getSavedValue(this, AppConstants.AGRISTACKID)
             agristackId = if (rawValue.isNullOrEmpty() || rawValue == "null") "" else rawValue
+            if (agristackId != "") {
+                binding.consentLayout.visibility = View.VISIBLE
+                binding.consentLayout.setOnClickListener {
+                    showDialogForConsent()
+                }
+            }
             binding.passwordEditText.visibility = View.GONE
             binding.passwordErrorTextView.visibility = View.GONE
             binding.confirmPasswordEditText.visibility = View.GONE
@@ -786,4 +833,29 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             }
         }.start()
     }
+
+    private fun showDialogForConsent() {
+
+        val confirmationDialog =
+            AlertDialog.Builder(this).setTitle(R.string.withdraw_consent)
+                .setMessage(R.string.withdraw_consent_desc_withdraw)
+                .setPositiveButton(R.string.confirm) { dialog, _ ->
+                    consentMessage = ContextCompat.getString(this, R.string.consent_withdrawn)
+                    farmerViewModel.updateConsent(this, false)
+                    logoutFromApp()
+                    dialog.dismiss()
+                }.setNegativeButton(R.string.cancel) { dialog, _ ->
+                    dialog.dismiss()
+                }
+        confirmationDialog.show()
+    }
+
+    private fun logoutFromApp() {
+        if (NetworkUtils.isInternetAvailable(this)) {
+            farmerViewModel.updateFCMToken(this, "NA")
+        } else {
+            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+        }
+    }
+
 }

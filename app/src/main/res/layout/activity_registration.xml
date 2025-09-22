@@ -228,60 +228,10 @@
                     android:textColorHint="@color/text_black"
                     android:textSize="@dimen/text12" />
 
-
-                <!--        <com.google.android.material.textfield.TextInputLayout-->
-                <!--            android:layout_width="match_parent"-->
-                <!--            android:layout_height="wrap_content"-->
-                <!--            android:layout_marginLeft="@dimen/padding15"-->
-                <!--            android:layout_marginTop="@dimen/padding10"-->
-                <!--            android:layout_marginRight="@dimen/padding15"-->
-                <!--            android:textColorHint="@color/text_black"-->
-                <!--            app:hintTextAppearance="@style/TextLabel">-->
-
-                <!--            <EditText-->
-                <!--                android:id="@+id/mNameEditText"-->
-                <!--                android:layout_width="match_parent"-->
-                <!--                android:layout_height="70dp"-->
-                <!--                android:background="@drawable/login_edit_bg"-->
-                <!--                android:gravity="center|start"-->
-                <!--                android:hint="Enter Your Email ID"-->
-                <!--                android:inputType="text"-->
-                <!--                android:maxLines="1"-->
-                <!--                android:paddingStart="@dimen/padding20"-->
-                <!--                android:paddingEnd="@dimen/padding20" />-->
-
-                <!--        </com.google.android.material.textfield.TextInputLayout>-->
-
-                <!--        <TextView-->
-                <!--            android:layout_width="wrap_content"-->
-                <!--            android:layout_height="wrap_content"-->
-                <!--            android:layout_marginStart="@dimen/padding20"-->
-                <!--            android:layout_marginLeft="@dimen/padding20"-->
-                <!--            android:layout_marginTop="@dimen/padding10"-->
-                <!--            android:gravity="center|start"-->
-                <!--            android:hint="Are you a farmer ?"-->
-                <!--            android:maxLines="1"-->
-                <!--            android:textColor="@color/text_black"-->
-                <!--            android:textSize="@dimen/text16"-->
-                <!--            android:textStyle="bold" />-->
-
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
-                    <!--            <TextView-->
-                    <!--                android:layout_width="match_parent"-->
-                    <!--                android:layout_height="wrap_content"-->
-                    <!--                android:layout_marginTop="@dimen/padding10"-->
-                    <!--                android:gravity="start|center"-->
-                    <!--                android:paddingEnd="@dimen/padding20"-->
-                    <!--                android:paddingStart="@dimen/padding20"-->
-                    <!--                android:text="District"-->
-                    <!--                android:textColor="@color/heading"-->
-                    <!--                android:textSize="@dimen/text16"-->
-                    <!--                android:textStyle="bold" />-->
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -321,18 +271,6 @@
                             tools:ignore="VectorDrawableCompat" />
 
                     </RelativeLayout>
-
-                    <!--            <TextView-->
-                    <!--                android:layout_width="match_parent"-->
-                    <!--                android:layout_height="wrap_content"-->
-                    <!--                android:layout_marginTop="@dimen/padding10"-->
-                    <!--                android:gravity="start|center"-->
-                    <!--                android:paddingEnd="@dimen/padding20"-->
-                    <!--                android:paddingStart="@dimen/padding20"-->
-                    <!--                android:text="Taluka"-->
-                    <!--                android:textColor="@color/heading"-->
-                    <!--                android:textSize="@dimen/text16"-->
-                    <!--                android:textStyle="bold" />-->
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -436,6 +374,47 @@
                     android:paddingVertical="10dp"
                     android:textColorHint="@color/red"
                     android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/consentLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/_15sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:background="@drawable/crop_category_card_background"
+                    android:gravity="center_vertical"
+                    android:minHeight="@dimen/_30sdp"
+                    android:orientation="horizontal"
+                    android:paddingStart="@dimen/_10sdp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/textView49"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_2sdp"
+                        android:text="@string/consent_profile_text_1"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <TextView
+                        android:id="@+id/textView50"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_2sdp"
+                        android:text="@string/consent_profile_text_2"
+                        android:textSize="@dimen/_10sdp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView53"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/consent_profile_text_3"
+                        android:textColor="@color/darkblue"
+                        android:textSize="@dimen/_10sdp" />
+
+                </LinearLayout>
+
 
             </LinearLayout>
         </ScrollView>

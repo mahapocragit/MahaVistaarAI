@@ -278,4 +278,7 @@ interface ApiService {
     @POST("expertscornerServices/get-users-articles")
     suspend fun getUserArticles(@Body params: RequestBody): JsonObject
 
+    @POST("/authService/provideConsent")
+    suspend fun updateConsent(@Header("userid") farmerId: Int, @Header("consent") consentValue: Boolean) : JsonObject
+
 }

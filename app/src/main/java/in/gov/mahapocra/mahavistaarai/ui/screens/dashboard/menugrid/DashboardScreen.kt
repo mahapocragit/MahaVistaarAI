@@ -90,6 +90,7 @@ import java.util.Objects
 class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecyclerItemClickListener {
 
     private lateinit var binding: ActivityDashboardScreenBinding
+    private var consentMessage = ""
     private lateinit var navUserName: TextView
     private var districtCode: Int = 0
     private var villageCode: Int = 0
@@ -686,6 +687,9 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     val villageId = data.optInt("VillageCode", 0)
                     val villageName = data.optString("VillageName", "")
                     val agristack_id = data.optString("farmer_id", "")
+                    val farmerId = data.optString("farmer_id")
+                    val consent = data.optBoolean("consent")
+
                     farmerViewModel.getCropSapAdvisory(
                         this,
                         villageId
@@ -725,6 +729,15 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     navUserName.text = ApUtil.getCamelCaseStreing(userName).ifEmpty { userName }
                     navUserPhone.text = userNumber
                     farmerViewModel.fetchWeatherDetails(this, talukaId, languageToLoad)
+                    if (farmerId != "null" && farmerId != null) {
+                        if (!consent) {
+                            showDialogForConsent()
+                        } else {
+                            Log.d("TAGGER", "observeResponse: consent is given")
+                        }
+                    } else {
+                        Log.d("TAGGER", "observeResponse: $consent farmer id null")
+                    }
                 }
             } catch (e: Exception) {
                 Log.e("userDetailsObserver", "Exception: ${e.localizedMessage}")
@@ -769,6 +782,43 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             }
         }
     }
+
+    private fun showDialogForConsent() {
+
+        val dialogLayout = LayoutInflater.from(this)
+            .inflate(R.layout.dialog_consent_layout, null)
+
+        val consentDialog = AlertDialog.Builder(this)
+            .setView(dialogLayout)
+            .setCancelable(false)
+            .create()
+
+        // ✅ get the view from the dialog layout, not the activity
+        val acceptText = dialogLayout.findViewById<TextView>(R.id.acceptText)
+        val declineText = dialogLayout.findViewById<TextView>(R.id.declineText)
+        acceptText.setOnClickListener {
+            consentMessage = ContextCompat.getString(this, R.string.consent_accepted)
+            farmerViewModel.updateConsent(this, true)
+            consentDialog.dismiss() // optionally close the dialog
+        }
+        declineText.setOnClickListener {
+            val confirmationDialog =
+                AlertDialog.Builder(this).setTitle(R.string.withdraw_consent)
+                    .setMessage(R.string.withdraw_consent_desc_decline)
+                    .setPositiveButton(R.string.confirm) { dialog, _ ->
+                        consentMessage = ContextCompat.getString(this, R.string.consent_declined)
+                        farmerViewModel.updateConsent(this, false)
+                        logoutFromApp()
+                        dialog.dismiss()
+                        consentDialog.dismiss()
+                    }.setNegativeButton(R.string.cancel) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+            confirmationDialog.show() // optionally close the dialog
+        }
+        consentDialog.show()
+    }
+
 
     private fun updateNotificationCount(unreadNotificationsCount: Int) {
         if (unreadNotificationsCount > 0) {
@@ -1053,15 +1103,15 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         try {
             if (languageToLoad.equals("en", ignoreCase = true)) {
                 jsonArray = if (isGuest) {
-                    AppHelper.getInstance().getForGuestOption()
+                    AppHelper.instance.forGuestOption
                 } else {
-                    AppHelper.getInstance().getMenuOption()
+                    AppHelper.instance.menuOption
                 }
             } else if (languageToLoad.equals("mr", ignoreCase = true)) {
                 jsonArray = if (isGuest) {
-                    AppHelper.getInstance().getMenuOptionForGuestMarathi()
+                    AppHelper.instance.menuOptionForGuestMarathi
                 } else {
-                    AppHelper.getInstance().getMenuOptionMarathi()
+                    AppHelper.instance.menuOptionMarathi
                 }
             }
             val menuAdapter = jsonArray?.let { DrawerMenuAdapter(this, it) }
@@ -1071,6 +1121,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             e.printStackTrace()
         }
     }
+
 
 
     private fun setVersion() {
