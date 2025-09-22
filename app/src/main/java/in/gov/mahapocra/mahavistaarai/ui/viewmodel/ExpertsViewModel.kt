@@ -17,6 +17,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 import java.net.SocketException
@@ -126,6 +127,32 @@ class ExpertsViewModel : ViewModel() {
         }
     }
 
+    fun getSubCategories(selectedCategoryIdList: List<Int>) {
+        viewModelScope.launch {
+            try {
+                val jsonArray = JSONArray(selectedCategoryIdList)
+                val jsonObject = JSONObject().apply {
+                    put("category", jsonArray)
+                }
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.Companion.FARMER.baseUrl)
+                val apiService = retrofit.create(ApiService::class.java)
+                val response = apiService.getSubCategoriesForExpertCorner(requestBody)
+                _getSubCategoriesForExpertCorner.value = response
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
     fun getUserArticles(context: Context) {
         viewModelScope.launch {
             try {
@@ -155,24 +182,32 @@ class ExpertsViewModel : ViewModel() {
 
     fun getArticlesForFarmers(
         context: Context,
-        categoryId: Int = 0,
-        subCategoryId: Int = 0,
+        categoryIds: List<Int> = emptyList(),
+        subCategoryIds: List<Int> = emptyList(),
         sortBy: String = "expert_name"
     ) {
         viewModelScope.launch {
             ProgressHelper.showProgressDialog(context)
             try {
                 val jsonObject = JSONObject()
-                if (categoryId != 0) {
-                    jsonObject.put("category", categoryId)
+
+                if (categoryIds.isNotEmpty()) {
+                    val categoryArray = JSONArray()
+                    categoryIds.forEach { categoryArray.put(it) }
+                    jsonObject.put("category", categoryArray)
                 }
-                if (subCategoryId != 0) {
-                    jsonObject.put("subcategory", subCategoryId)
+
+                if (subCategoryIds.isNotEmpty()) {
+                    val subCategoryArray = JSONArray()
+                    subCategoryIds.forEach { subCategoryArray.put(it) }
+                    jsonObject.put("subcategory", subCategoryArray)
                 }
+
                 jsonObject.put("sortby", sortBy)
+
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.Companion.FARMER.baseUrl)
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiService = retrofit.create(ApiService::class.java)
                 val response = apiService.getAllArticles(requestBody)
                 ProgressHelper.disableProgressDialog()
