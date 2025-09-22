@@ -14,7 +14,6 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import kotlinx.coroutines.launch
-import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Retrofit
 import java.io.IOException
@@ -51,7 +50,7 @@ class MarketPriceViewModel : ViewModel() {
                 val response = api.getMarketAndMarketName(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _getMarketAndMarketNameResponse.value = response
-            } catch (e: JSONException) {
+            } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
@@ -110,7 +109,7 @@ class MarketPriceViewModel : ViewModel() {
                 val response = api.getMarketPriceDetails(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _getMarketPriceDetailsResponse.value = response
-            } catch (e: JSONException) {
+            } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."

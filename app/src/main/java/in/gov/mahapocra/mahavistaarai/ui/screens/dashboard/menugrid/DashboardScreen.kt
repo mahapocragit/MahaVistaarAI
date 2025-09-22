@@ -60,7 +60,6 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.Shetisha
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.AboutActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.CostCalculatorDashboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.CreditsActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.experts.ExpertsCornerAdminActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.experts.ExpertsCornerFarmerActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.news.NewsListActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
@@ -76,7 +75,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.ApUtil
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppHelper
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.SideNavMenuHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -1118,15 +1117,15 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         try {
             if (languageToLoad.equals("en", ignoreCase = true)) {
                 jsonArray = if (isGuest) {
-                    AppHelper.instance.forGuestOption
+                    SideNavMenuHelper.instance.forGuestOption
                 } else {
-                    AppHelper.instance.menuOption
+                    SideNavMenuHelper.instance.menuOption
                 }
             } else if (languageToLoad.equals("mr", ignoreCase = true)) {
                 jsonArray = if (isGuest) {
-                    AppHelper.instance.menuOptionForGuestMarathi
+                    SideNavMenuHelper.instance.menuOptionForGuestMarathi
                 } else {
-                    AppHelper.instance.menuOptionMarathi
+                    SideNavMenuHelper.instance.menuOptionMarathi
                 }
             }
             val menuAdapter = jsonArray?.let { DrawerMenuAdapter(this, it) }

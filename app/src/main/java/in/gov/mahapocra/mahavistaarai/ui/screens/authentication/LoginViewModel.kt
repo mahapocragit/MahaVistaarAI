@@ -8,15 +8,12 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.app_util.AppUtility
-import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import kotlinx.coroutines.launch
-import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.net.SocketException
@@ -47,7 +44,7 @@ class LoginViewModel : ViewModel(){
                 val response = api.getOTPRequest(mobileNo, requestBody)
                 ProgressHelper.disableProgressDialog()
                 _getOTPRequestResponse.value = response
-            } catch (e: JSONException) {
+            } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
@@ -75,7 +72,7 @@ class LoginViewModel : ViewModel(){
                 val response = api.getUserLoginOTP(mobileNo, otp, requestBody)
                 ProgressHelper.disableProgressDialog()
                 _getUserLoginOTPResponse.value = response
-            } catch (e: JSONException) {
+            } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
@@ -105,7 +102,7 @@ class LoginViewModel : ViewModel(){
                 val response = api.getUserLoginPassword(mobileNo, password, requestBody)
                 ProgressHelper.disableProgressDialog()
                 _getUserLoginPasswordResponse.value = response
-            } catch (e: JSONException) {
+            } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."

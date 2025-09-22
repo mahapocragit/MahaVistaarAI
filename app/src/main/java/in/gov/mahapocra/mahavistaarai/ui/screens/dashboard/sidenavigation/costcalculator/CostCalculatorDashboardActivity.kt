@@ -41,121 +41,32 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
         setContentView(binding.root)
         LocalCustom.uiResponsive(binding.root)
 
-        binding.toolbarLayout.imgBackArrow.visibility = View.VISIBLE
-        binding.toolbarLayout.imgBackArrow.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-        }
-        binding.toolbarLayout.textViewHeaderTitle.text = getString(R.string.cost_calculator)
+        setupToolbar()
+        setupBackPress()
 
-        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                startActivity(
-                    Intent(
-                        this@CostCalculatorDashboardActivity,
-                        DashboardScreen::class.java
-                    )
-                )
-            }
-        })
-
+        // Initialize class-level year/season from preferences
         currentYear = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Calendar.getInstance().get(Calendar.YEAR)
         } else {
             2025
         }
+
+        currentYearForTransaction = AppPreferenceManager(this)
+            .getInt("CURRENT_YEAR_FOR_TRANSACTION", currentYear)
+
+        currentSeasonForTransaction = AppPreferenceManager(this)
+            .getInt("CURRENT_SEASON_FOR_TRANSACTION", 1).takeIf { it != 0 } ?: 1
+
+        binding.seasonText.text = if (currentSeasonForTransaction == 1) "Season: Kharif" else "Season: Rabbi"
+        binding.yearTextView.text = "Year: $currentYearForTransaction"
+
         setUpObservers()
-
-        currentYearForTransaction = AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION")
-        if (currentYearForTransaction!=0){
-            binding.yearTextView.text = "Year: $currentYearForTransaction"
-            costCalculatorViewModel.getTotalCostTransactions(this, season, currentYearForTransaction)
-        }else{
-            costCalculatorViewModel.getTotalCostTransactions(this, season, currentYear)
-        }
-
         setUpListeners()
-        binding.seasonText.text = if (currentSeasonForTransaction==1) "Season: Kharif" else "Season: Rabbi"
+
+        // Hit API once on Activity start
+        getCurrentYearAllTransactions(currentSeasonForTransaction, currentYearForTransaction)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.seasonLayout.setOnClickListener {
-            val popupMenu = PopupMenu(this, binding.seasonLayout)
-            popupMenu.menu.add("Rabbi")
-            popupMenu.menu.add("Kharif")
-
-            popupMenu.setOnMenuItemClickListener { item: MenuItem ->
-                when (item) {
-                    popupMenu.menu[0] -> {
-                        binding.seasonText.text = "Season: Rabbi"
-                        season = 2
-                        AppPreferenceManager(this).saveInt("CURRENT_SEASON_FOR_TRANSACTION", 2)
-                        costCalculatorViewModel.getTotalCostTransactions(this, season, currentYear)
-                    }
-
-                    popupMenu.menu[1] -> {
-                        binding.seasonText.text = "Season: Kharif"
-                        season = 1
-                        AppPreferenceManager(this).saveInt("CURRENT_SEASON_FOR_TRANSACTION", 1)
-                        costCalculatorViewModel.getTotalCostTransactions(this, season, currentYear)
-                    }
-                }
-                true
-            }
-
-            popupMenu.show()
-        }
-        binding.yearLayout.setOnClickListener {
-            val popupMenu = PopupMenu(this, binding.yearLayout)
-            popupMenu.menu.add("${currentYear - 1}")
-            popupMenu.menu.add("$currentYear")
-            popupMenu.menu.add("${currentYear + 1}")
-
-            popupMenu.setOnMenuItemClickListener { item: MenuItem ->
-                when (item) {
-                    popupMenu.menu[0] -> {
-                        binding.yearTextView.text = "Year: $item"
-                        AppPreferenceManager(this).saveInt("CURRENT_YEAR_FOR_TRANSACTION", item.toString().toInt())
-                        costCalculatorViewModel.getTotalCostTransactions(
-                            this,
-                            season,
-                            item.toString().toInt()
-                        )
-                    }
-
-                    popupMenu.menu[1] -> {
-                        binding.yearTextView.text = "Year: $item"
-                        AppPreferenceManager(this).saveInt("CURRENT_YEAR_FOR_TRANSACTION", item.toString().toInt())
-                        costCalculatorViewModel.getTotalCostTransactions(
-                            this,
-                            season,
-                            item.toString().toInt()
-                        )
-                    }
-
-                    popupMenu.menu[2] -> {
-                        binding.yearTextView.text = "Year: $item"
-                        AppPreferenceManager(this).saveInt("CURRENT_YEAR_FOR_TRANSACTION", item.toString().toInt())
-                        costCalculatorViewModel.getTotalCostTransactions(
-                            this,
-                            season,
-                            item.toString().toInt()
-                        )
-                    }
-                }
-                true
-            }
-
-            popupMenu.show()
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (currentYearForTransaction!=0){
-            binding.yearTextView.text = "Year: $currentYearForTransaction"
-            costCalculatorViewModel.getTotalCostTransactions(this, season, currentYearForTransaction)
-        }else{
-            costCalculatorViewModel.getTotalCostTransactions(this, season, currentYear)
-        }
     }
 
     private fun setUpObservers() {
@@ -164,15 +75,23 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
                 val jSONObject = JSONObject(response.toString())
                 if (jSONObject.optInt("status") == 200) {
                     Toast.makeText(this, "Crop Added successfully", Toast.LENGTH_SHORT).show()
-                    if (currentYearForTransaction!=0){
-                        binding.yearTextView.text = "Year: $currentYearForTransaction"
-                        costCalculatorViewModel.getTotalCostTransactions(this, season, currentYearForTransaction)
-                    }else{
-                        costCalculatorViewModel.getTotalCostTransactions(this, season, currentYear)
-                    }
+                    // refresh transactions after adding crop
+                    getCurrentYearAllTransactions(currentSeasonForTransaction, currentYearForTransaction)
                 } else {
-                    Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        costCalculatorViewModel.deleteCropResponse.observe(this) { response ->
+            if (response != null) {
+                val jSONObject = JSONObject(response.toString())
+                if (jSONObject.optInt("status") == 200) {
+                    Toast.makeText(this, "Crop Deleted successfully", Toast.LENGTH_SHORT).show()
+                    // refresh transactions after deleting crop
+                    getCurrentYearAllTransactions(currentSeasonForTransaction, currentYearForTransaction)
+                } else {
+                    Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -197,11 +116,11 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
                 val jSONObject = JSONObject(response.toString())
                 if (jSONObject.optInt("status") == 200) {
                     Toast.makeText(this, "Crop Deleted successfully", Toast.LENGTH_SHORT).show()
-                    if (currentYearForTransaction!=0){
+                    if (currentYearForTransaction != 0) {
                         binding.yearTextView.text = "Year: $currentYearForTransaction"
-                        costCalculatorViewModel.getTotalCostTransactions(this, season, currentYearForTransaction)
-                    }else{
-                        costCalculatorViewModel.getTotalCostTransactions(this, season, currentYear)
+                        getCurrentYearAllTransactions(season, currentYearForTransaction)
+                    } else {
+                        getCurrentYearAllTransactions(season, currentYear)
                     }
                 } else {
                     Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_SHORT)
@@ -211,27 +130,37 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
         }
     }
 
+    private fun setupToolbar() {
+        binding.toolbarLayout.imgBackArrow.visibility = View.VISIBLE
+        binding.toolbarLayout.imgBackArrow.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+        binding.toolbarLayout.textViewHeaderTitle.text = getString(R.string.cost_calculator)
+    }
+
+    private fun setupBackPress() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                startActivity(
+                    Intent(
+                        this@CostCalculatorDashboardActivity,
+                        DashboardScreen::class.java
+                    )
+                )
+            }
+        })
+    }
+
     private fun setUpListeners() {
         try {
             val cropId = intent.getIntExtra("id", 0)
-            val currentYearForTransaction = AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION")
-            currentSeasonForTransaction = AppPreferenceManager(this).getInt("CURRENT_SEASON_FOR_TRANSACTION")
             if (cropId != 0) {
-                Log.d("TAGGER", "setUpListeners: currentSeasonForTransaction $currentSeasonForTransaction")
-                if (currentYearForTransaction!=0) {
-                    costCalculatorViewModel.addCropForCropCalculation(
-                        this,
-                        cropId = cropId,
-                        season = currentSeasonForTransaction,
-                        year = currentYearForTransaction
-                    )
-                }else{
-                    costCalculatorViewModel.addCropForCropCalculation(
-                        this,
-                        cropId = cropId,
-                        season = currentSeasonForTransaction
-                    )
-                }
+                costCalculatorViewModel.addCropForCropCalculation(
+                    this,
+                    cropId = cropId,
+                    season = currentSeasonForTransaction,
+                    year = currentYearForTransaction
+                )
             }
         } catch (e: Exception) {
             Log.d("TAGGER", "setUpListeners: ${e.message}")
@@ -245,6 +174,57 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
                 )
             )
         }
+
+        binding.yearLayout.setOnClickListener { showYearPopup() }
+        binding.seasonLayout.setOnClickListener { showSeasonPopup() }
+    }
+
+    fun getCurrentYearAllTransactions(selectedSeason:Int, selectedYear: Int){
+        costCalculatorViewModel.getTotalCostTransactions(
+            this,
+            selectedSeason,
+            selectedYear
+        )
+    }
+
+    private fun showYearPopup() {
+        val popupMenu = PopupMenu(this, binding.yearLayout)
+        popupMenu.menu.add("${currentYear - 1}")
+        popupMenu.menu.add("$currentYear")
+        popupMenu.menu.add("${currentYear + 1}")
+
+        popupMenu.setOnMenuItemClickListener { item: MenuItem ->
+            val selectedYear = item.title.toString().toInt()
+            binding.yearTextView.text = "Year: $selectedYear"
+            currentYearForTransaction = selectedYear
+            AppPreferenceManager(this).saveInt("CURRENT_YEAR_FOR_TRANSACTION", selectedYear)
+            getCurrentYearAllTransactions(currentSeasonForTransaction, selectedYear)
+            true
+        }
+        popupMenu.show()
+    }
+
+    private fun showSeasonPopup() {
+        val popupMenu = PopupMenu(this, binding.seasonLayout)
+        popupMenu.menu.add("Rabbi")
+        popupMenu.menu.add("Kharif")
+
+        popupMenu.setOnMenuItemClickListener { item: MenuItem ->
+            when (item.title.toString()) {
+                "Rabbi" -> {
+                    currentSeasonForTransaction = 2
+                    binding.seasonText.text = "Season: Rabbi"
+                }
+                "Kharif" -> {
+                    currentSeasonForTransaction = 1
+                    binding.seasonText.text = "Season: Kharif"
+                }
+            }
+            AppPreferenceManager(this).saveInt("CURRENT_SEASON_FOR_TRANSACTION", currentSeasonForTransaction)
+            getCurrentYearAllTransactions(currentSeasonForTransaction, currentYearForTransaction)
+            true
+        }
+        popupMenu.show()
     }
 
     override fun onDeleteClick(cropId: Int) {

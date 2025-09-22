@@ -35,8 +35,8 @@ class AppPreferenceManager(val context: Context) {
         editor.apply() // or editor.commit();
     }
 
-    fun getInt(key:String): Int {
-        return sharedPreferences.getInt(key, 0)
+    fun getInt(key:String, defaultValue: Int = 0): Int {
+        return sharedPreferences.getInt(key, defaultValue)
     }
 
     fun clearPreference(key: String) {

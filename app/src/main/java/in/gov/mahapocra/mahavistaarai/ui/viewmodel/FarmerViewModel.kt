@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
@@ -17,16 +16,12 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONException
 import org.json.JSONObject
-import retrofit2.Call
 import retrofit2.Retrofit
 import java.io.IOException
 import java.net.SocketException
@@ -903,7 +898,7 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.getWareHouseDetails(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _warehouseDetailsResponse.value = response
-            } catch (e: JSONException) {
+            } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
@@ -930,7 +925,7 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.getDistrictList(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _districtIdResponse.value = response
-            } catch (e: JSONException) {
+            } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
@@ -954,7 +949,7 @@ class FarmerViewModel : ViewModel() {
                 val response = api.updateConsent(farmerId, consentValue)
                 ProgressHelper.disableProgressDialog()
                 _consentResponse.value = response
-            } catch (e: JSONException) {
+            } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."

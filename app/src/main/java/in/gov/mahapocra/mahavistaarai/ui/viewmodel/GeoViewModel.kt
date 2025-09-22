@@ -41,7 +41,7 @@ class GeoViewModel : ViewModel() {
                 val response = apiRequest.getDistrictList(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _districtIdResponse.value = response
-            } catch (e: JSONException) {
+            } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."

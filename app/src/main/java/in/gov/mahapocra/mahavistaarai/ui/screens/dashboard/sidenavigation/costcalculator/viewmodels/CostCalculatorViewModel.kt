@@ -1,7 +1,11 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.viewmodels
 
 import android.content.Context
+import android.util.Log
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -14,7 +18,6 @@ import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import kotlinx.coroutines.launch
-import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Retrofit
 import java.io.IOException
@@ -56,7 +59,7 @@ class CostCalculatorViewModel : ViewModel() {
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.fetchExpenseCategories()
                 _expenseCategoryResponse.value = response
-            } catch (e: JSONException) {
+            } catch (e: Exception) {
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
@@ -91,7 +94,7 @@ class CostCalculatorViewModel : ViewModel() {
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.addCropForCropCalculation(requestBody)
                 _addCropForCalculationResponse.value = response
-            } catch (e: JSONException) {
+            } catch (e: Exception) {
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
@@ -105,6 +108,7 @@ class CostCalculatorViewModel : ViewModel() {
     }
 
     fun getTotalCostTransactions(context: Context, season: Int = 1, year: Int = 2025) {
+        Log.d("TAGGER", "getTotalCostTransactions tempSeason: $season")
         ProgressHelper.showProgressDialog(context)
         viewModelScope.launch {
             try {
@@ -122,7 +126,7 @@ class CostCalculatorViewModel : ViewModel() {
                 val response = apiRequest.getTotalCostTransactions(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _getTotalCostTransactionsResponse.value = response
-            } catch (e: JSONException) {
+            } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
@@ -157,7 +161,7 @@ class CostCalculatorViewModel : ViewModel() {
                 val response = apiRequest.getCropCostTransactions(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _getCropCostTransactionsResponse.value = response
-            } catch (e: JSONException) {
+            } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
@@ -216,7 +220,7 @@ class CostCalculatorViewModel : ViewModel() {
                 val response = apiRequest.addCropCostTransactions(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _addCropSpecificTransactionsResponse.value = response
-            } catch (e: JSONException) {
+            } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
@@ -245,7 +249,7 @@ class CostCalculatorViewModel : ViewModel() {
                 val response = apiRequest.deleteCrop(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _deleteCropResponse.value = response
-            }catch (e: JSONException) {
+            }catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
@@ -258,6 +262,15 @@ class CostCalculatorViewModel : ViewModel() {
             }
         }
 
+    }
+
+    fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
+        observe(lifecycleOwner, object : Observer<T> {
+            override fun onChanged(t: T) {
+                observer.onChanged(t)
+                removeObserver(this)
+            }
+        })
     }
 
 }

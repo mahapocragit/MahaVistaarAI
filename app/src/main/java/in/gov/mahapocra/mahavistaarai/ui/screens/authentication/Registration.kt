@@ -638,7 +638,11 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             dialog.dismiss()
             sendOTP()
         }
-        dialog.show()
+        runOnUiThread {
+            if (!isFinishing && !isDestroyed) {
+                dialog.show()
+            }
+        }
     }
 
     private fun userVerification() {
