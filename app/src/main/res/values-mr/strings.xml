@@ -469,4 +469,5 @@
     <string name="captcha_validate_err">कॅप्चा नक्की ६ अक्षरांचा असावा</string>
     <string name="captcha_success">कॅप्चा यशस्वीपणे तपासला गेला.</string>
     <string name="captcha_invalid">कॅप्चा चुकीचा आहे. कृपया पुन्हा प्रयत्न करा</string>
+    <string name="there_are_currently_no_posts">सध्या कोणतेही पोस्ट उपलब्ध नाहीत.</string>
 </resources>

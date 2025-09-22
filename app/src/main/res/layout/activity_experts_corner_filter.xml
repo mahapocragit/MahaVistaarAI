@@ -9,7 +9,9 @@
     tools:context=".ui.screens.dashboard.sidenavigation.experts.ExpertsCornerFilterActivity">
 
 
-    <include layout="@layout/layout_toolbar" />
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/layout_toolbar" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -88,6 +90,8 @@
                     android:id="@+id/applyButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:minWidth="@dimen/_100sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
                     android:backgroundTint="@color/actionbar_color_figma"
                     app:cornerRadius="@dimen/_10sdp"
                     android:text="Apply" />

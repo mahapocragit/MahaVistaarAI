@@ -48,6 +48,7 @@ class ExpertsViewModel : ViewModel() {
         subcategory: String
     ) {
         viewModelScope.launch {
+            ProgressHelper.showProgressDialog(context)
             try {
                 val farmerId =
                     AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
@@ -67,8 +68,10 @@ class ExpertsViewModel : ViewModel() {
                     subcategoryPart,
                     userPart
                 )
+                ProgressHelper.disableProgressDialog()
                 _uploadArticleResponse.value = response
             } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
@@ -81,15 +84,18 @@ class ExpertsViewModel : ViewModel() {
         }
     }
 
-    fun getCategories() {
+    fun getCategories(context: Context) {
         viewModelScope.launch {
+            ProgressHelper.showProgressDialog(context)
             try {
                 val retrofit =
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.Companion.FARMER.baseUrl)
                 val apiService = retrofit.create(ApiService::class.java)
                 val response = apiService.getCategoriesForExpertCorner()
+                ProgressHelper.disableProgressDialog()
                 _getCategoriesForExpertCorner.value = response
             } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."

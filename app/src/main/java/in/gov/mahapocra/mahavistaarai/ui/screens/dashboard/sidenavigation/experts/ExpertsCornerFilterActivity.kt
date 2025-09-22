@@ -34,9 +34,15 @@ class ExpertsCornerFilterActivity : AppCompatActivity() {
         setContentView(binding.root)
         LocalCustom.uiResponsive(binding.root)
 
+        binding.toolbar.imgBackArrow.visibility = View.VISIBLE
+        binding.toolbar.imgBackArrow.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+        binding.toolbar.textViewHeaderTitle.text = "Categories Filter"
+
         setUpObserver()
         setUpUI()
-        expertsViewModel.getCategories()
+        expertsViewModel.getCategories(this)
     }
 
     private fun setUpObserver() {
