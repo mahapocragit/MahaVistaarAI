@@ -53,13 +53,13 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.etl.AgriStackAdviso
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.DBTActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.marketprice.MarketPrice
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard.HealthCardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.AboutActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.CostCalculatorDashboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.CreditsActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.experts.ExpertsCornerAdminActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.experts.ExpertsCornerFarmerActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.news.NewsListActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
@@ -75,7 +75,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.ApUtil
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppHelper
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.SideNavMenuHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -93,6 +93,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
     private lateinit var binding: ActivityDashboardScreenBinding
     private lateinit var navUserName: TextView
+    private var consentMessage: String? = null
     private var districtCode: Int = 0
     private var villageCode: Int = 0
     private var isGuest: Boolean = false
@@ -788,7 +789,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 val jsonObject = JSONObject(response.toString())
                 val status = jsonObject.optInt("status")
                 if (status == 200) {
-                    Toast.makeText(this, "Consent has been submitted!!!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, consentMessage?:"Consent Submitted", Toast.LENGTH_SHORT).show()
                 } else {
                     val responseText = jsonObject.optString("response")
                     Toast.makeText(this, responseText, Toast.LENGTH_SHORT).show()
@@ -811,19 +812,21 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         val acceptText = dialogLayout.findViewById<TextView>(R.id.acceptText)
         val declineText = dialogLayout.findViewById<TextView>(R.id.declineText)
         acceptText.setOnClickListener {
+            consentMessage = ContextCompat.getString(this, R.string.consent_accepted)
             farmerViewModel.updateConsent(this, true)
             consentDialog.dismiss() // optionally close the dialog
         }
         declineText.setOnClickListener {
             val confirmationDialog =
-                AlertDialog.Builder(this).setTitle("Confirmation")
-                    .setMessage("You will be logged out of the app as you have declined the consent. Do you want to continue?")
-                    .setPositiveButton("Confirm") { dialog, _ ->
+                AlertDialog.Builder(this).setTitle(R.string.withdraw_consent)
+                    .setMessage(R.string.withdraw_consent_desc_decline)
+                    .setPositiveButton(R.string.confirm) { dialog, _ ->
+                        consentMessage = ContextCompat.getString(this, R.string.consent_declined)
                         farmerViewModel.updateConsent(this, false)
                         logoutFromApp()
                         dialog.dismiss()
                         consentDialog.dismiss()
-                    }.setNegativeButton("Cancel") { dialog, _ ->
+                    }.setNegativeButton(R.string.cancel) { dialog, _ ->
                         dialog.dismiss()
                     }
             confirmationDialog.show() // optionally close the dialog
@@ -1114,15 +1117,15 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         try {
             if (languageToLoad.equals("en", ignoreCase = true)) {
                 jsonArray = if (isGuest) {
-                    AppHelper.instance.forGuestOption
+                    SideNavMenuHelper.instance.forGuestOption
                 } else {
-                    AppHelper.instance.menuOption
+                    SideNavMenuHelper.instance.menuOption
                 }
             } else if (languageToLoad.equals("mr", ignoreCase = true)) {
                 jsonArray = if (isGuest) {
-                    AppHelper.instance.menuOptionForGuestMarathi
+                    SideNavMenuHelper.instance.menuOptionForGuestMarathi
                 } else {
-                    AppHelper.instance.menuOptionMarathi
+                    SideNavMenuHelper.instance.menuOptionMarathi
                 }
             }
             val menuAdapter = jsonArray?.let { DrawerMenuAdapter(this, it) }

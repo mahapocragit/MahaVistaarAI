@@ -185,22 +185,37 @@
                     android:textSize="@dimen/text12"
                     android:visibility="gone" />
 
-                <EditText
-                    android:id="@+id/passwordEditText"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/passwordTIL"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:background="@drawable/login_edit_bg"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_1sdp"
                     android:elevation="8dp"
-                    android:gravity="center|start"
-                    android:hint="@string/reg_pwd"
-                    android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:paddingStart="@dimen/padding20"
-                    android:paddingEnd="@dimen/padding20"
                     android:textColorHint="@color/text_black"
-                    android:textSize="@dimen/text12" />
+                    app:hintTextAppearance="@style/TextLabel"
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="@color/status_green">
+
+                    <EditText
+                        android:id="@+id/passwordEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:background="@drawable/login_edit_bg"
+                        android:gravity="center|start"
+                        android:hint="@string/reg_pwd"
+                        android:textSize="@dimen/_10sdp"
+                        android:layout_marginHorizontal="@dimen/_15sdp"
+                        android:inputType="textWebPassword"
+                        android:longClickable="false"
+                        android:maxLength="20"
+                        android:maxLines="1"
+                        android:paddingStart="@dimen/padding20"
+                        android:paddingEnd="@dimen/padding20"
+                        android:textAllCaps="false"
+                        android:textColor="@color/black"
+                        android:textIsSelectable="false" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:id="@+id/passwordErrorTextView"
@@ -211,22 +226,37 @@
                     android:textSize="@dimen/_9sdp"
                     android:visibility="gone" />
 
-                <EditText
-                    android:id="@+id/confirmPasswordEditText"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/confirmPasswordTIL"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:background="@drawable/login_edit_bg"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_1sdp"
                     android:elevation="8dp"
-                    android:gravity="center|start"
-                    android:hint="@string/confirm_password"
-                    android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:paddingStart="@dimen/padding20"
-                    android:paddingEnd="@dimen/padding20"
                     android:textColorHint="@color/text_black"
-                    android:textSize="@dimen/text12" />
+                    app:hintTextAppearance="@style/TextLabel"
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="@color/status_green">
+
+                    <EditText
+                        android:id="@+id/confirmPasswordEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:background="@drawable/login_edit_bg"
+                        android:gravity="center|start"
+                        android:hint="@string/confirm_password"
+                        android:textSize="@dimen/_10sdp"
+                        android:layout_marginHorizontal="@dimen/_15sdp"
+                        android:inputType="textWebPassword"
+                        android:longClickable="false"
+                        android:maxLength="20"
+                        android:maxLines="1"
+                        android:paddingStart="@dimen/padding20"
+                        android:paddingEnd="@dimen/padding20"
+                        android:textAllCaps="false"
+                        android:textColor="@color/black"
+                        android:textIsSelectable="false" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -392,21 +422,26 @@
                         android:id="@+id/textView49"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="To " />
+                        android:layout_marginEnd="@dimen/_2sdp"
+                        android:text="@string/consent_profile_text_1"
+                        android:textSize="@dimen/_10sdp" />
 
                     <TextView
                         android:id="@+id/textView50"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Withdraw Consent, "
+                        android:layout_marginEnd="@dimen/_2sdp"
+                        android:text="@string/consent_profile_text_2"
+                        android:textSize="@dimen/_10sdp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/textView53"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Click here"
-                        android:textColor="@color/darkblue" />
+                        android:text="@string/consent_profile_text_3"
+                        android:textColor="@color/darkblue"
+                        android:textSize="@dimen/_10sdp" />
 
                 </LinearLayout>
 

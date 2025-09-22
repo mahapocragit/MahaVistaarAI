@@ -39,7 +39,7 @@
     <string name="add_Crop">Add Crop</string>
     <string name="change_Crop">Change Crop</string>
     <string name="no_crops_added">No Crops Added</string>
-    <string name="see_less">See Less</string>
+    <string name="see_less">see less</string>
     <string name="selected_crop">Selected Crop</string>
 
     <string name="good_morning">Good Morning, </string>
@@ -252,7 +252,7 @@
     <string name="Pests_n_diseases_by_stage">Pests and Diseases by Stage</string>
     <string name="different_stages_text">All Pests and Diseases that might appear in your crop at different stages</string>
     <string name="stages_text">All Pests and Diseases that might appear in your crop at this stage</string>
-    <string name="see_more">See More</string>
+    <string name="see_more">see more</string>
     <string name="symptoms">Symptoms</string>
     <string name="preventive_measure">Preventive Measures</string>
     <string name="control_measures">Control Measures</string>
@@ -449,4 +449,24 @@
     <string name="consent_four">I understand that I have the right to withdraw my consent at any time, though such withdrawal may affect the services I receive.</string>
     <string name="consent_five">I understand that my data will be stored securely, and efforts will be made to protect it from unauthorized access or misuse.</string>
     <string name="consent_for_mahavistaar">Consent for MahaVISTAAR</string>
+    <string name="accept">Accept</string>
+    <string name="decline">Decline</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="withdraw_consent">Withdraw Consent</string>
+    <string name="withdraw_consent_desc_withdraw">If you withdraw the consent, then you will be logged out of the app for now. In future, if you wish to access the app through Farmer ID, kindly accept the consent. Do you wish to confirm?</string>
+    <string name="withdraw_consent_desc_decline">If you decline the consent, then you will be logged out of the app for now. In future, if you wish to access the app through Farmer ID, kindly accept the consent. Do you wish to confirm?</string>
+    <string name="consent_profile_text_1">To </string>
+    <string name="consent_profile_text_2">Withdraw Consent, </string>
+    <string name="consent_profile_text_3">Click here</string>
+    <string name="consent_accepted">Consent has been accepted</string>
+    <string name="consent_withdrawn">Consent has been withdrawn</string>
+    <string name="consent_declined">Consent has been declined</string>
+
+
+    <string name="captcha_empty_err">Please enter the CAPTCHA</string>
+    <string name="captcha_validate_err">CAPTCHA must be exactly 6 characters</string>
+    <string name="captcha_success">CAPTCHA verified successfully</string>
+    <string name="captcha_invalid">Incorrect CAPTCHA. Please try again</string>
+    <string name="there_are_currently_no_posts">There are currently no posts.</string>
 </resources>

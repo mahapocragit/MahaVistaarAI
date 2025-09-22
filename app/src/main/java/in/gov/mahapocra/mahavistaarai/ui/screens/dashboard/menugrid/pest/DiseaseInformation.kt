@@ -60,7 +60,6 @@ class DiseaseInformation : AppCompatActivity() {
 
         cropName = intent.getStringExtra("name").toString()
         id = intent.getIntExtra("id", 0)
-        textViewHeaderTitle.text = cropName
         observePestDiseaseDetails()
         farmerViewModel.showPestDiseaseDetails(this, id)
         mainCropName = AppSettings.getInstance()
@@ -85,7 +84,8 @@ class DiseaseInformation : AppCompatActivity() {
             setPreventControlMeasureWebView(curativeMeasures)
         }
 
-        binding.tvCropName.text = "$mainCropName "
+        textViewHeaderTitle.text = mainCropName
+        binding.tvCropName.text = cropName
     }
 
     private fun observePestDiseaseDetails() {

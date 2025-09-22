@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.experts
 
+import android.content.Context
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -51,7 +52,7 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
         }
         binding.toolbar.textViewHeaderTitle.text = "Experts Corner"
         observeResponse()
-        expertsViewModel.getCategories()
+        expertsViewModel.getCategories(this)
         expertsViewModel.getUserArticles(this)
         binding.expertsCornerAdminRecycler.layoutManager = LinearLayoutManager(this)
         binding.spinnerCategory.setOnClickListener {
@@ -65,6 +66,7 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
                         val selected = apiCategories[which]   // The actual Category object
                         binding.spinnerCategory.text = selected.name  // Show name in TextView
                         selectedCategoryId = selected.id          // You can store ID for API
+                        binding.spinnerSubcategories.text = ""
                         Log.d("SelectedID", "ID = $selectedCategoryId")
                         dialog.dismiss()
                     }
@@ -78,7 +80,7 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please select a category first", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            expertsViewModel.getSubCategories(selectedCategoryId)
+            expertsViewModel.getSubCategories(listOf(selectedCategoryId))
         }
 
         binding.addPostToggleButton.apply {
@@ -102,47 +104,49 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
         binding.submitButton.setOnClickListener {
             val titleText = binding.titleEditText.text.toString()
             val descriptionText = binding.descriptionTextView.text.toString()
-            if (titleText.isNotEmpty()) {
-                if (selectedCategoryId != 0) {
-                    if (selectedSubCategoryId != 0) {
-                        if (descriptionText.isNotEmpty()) {
-                            if (selectedFileUri != null) {
-                                val file = selectedFileUri?.let {
-                                    UriFileHelper.uriToFilePart(
-                                        it,
-                                        "file",
-                                        contentResolver
-                                    )
-                                }
-                                selectedFileUri?.let {
-                                    expertsViewModel.uploadArticle(
-                                        this,
-                                        file!!,
-                                        titleText,
-                                        descriptionText,
-                                        selectedCategoryId.toString(),
-                                        selectedSubCategoryId.toString()
-                                    )
-                                }
-                            } else {
-                                Toast.makeText(this, "Please select a file", Toast.LENGTH_SHORT)
-                                    .show()
-                            }
-                        } else {
-                            Toast.makeText(this, "Please enter description", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-                    } else {
-                        Toast.makeText(this, "Please select Sub Category", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                } else {
-                    Toast.makeText(this, "Please select Category", Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                Toast.makeText(this, "Please enter title", Toast.LENGTH_SHORT).show()
+
+            // Early returns for validations
+            if (titleText.isBlank()) {
+                toast("Please enter title")
+                return@setOnClickListener
             }
+
+            if (selectedCategoryId == 0) {
+                toast("Please select Category")
+                return@setOnClickListener
+            }
+
+            if (selectedSubCategoryId == 0) {
+                toast("Please select Sub Category")
+                return@setOnClickListener
+            }
+
+            if (descriptionText.isBlank()) {
+                toast("Please enter description")
+                return@setOnClickListener
+            }
+
+            if (selectedFileUri == null) {
+                toast("Please select a file")
+                return@setOnClickListener
+            }
+
+            // Now everything is valid → upload
+            val file = UriFileHelper.uriToFilePart(selectedFileUri!!, "file", contentResolver)
+
+            expertsViewModel.uploadArticle(
+                this,
+                file,
+                titleText,
+                descriptionText,
+                selectedCategoryId.toString(),
+                selectedSubCategoryId.toString()
+            )
         }
+
+        // Small helper for toast
+
+
         binding.uploadFileButton.setOnClickListener {
             pickFileLauncher.launch(
                 arrayOf(
@@ -158,6 +162,20 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
             binding.selectedFileNameTextView.text = "No File Selected"
             binding.deleteImageView.visibility = View.GONE
         }
+    }
+
+    fun toast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun resetView(){
+        binding.titleEditText.text.clear()
+        binding.spinnerCategory.text = ""
+        binding.spinnerSubcategories.text = ""
+        binding.selectedFileNameTextView.text = "No File Selected"
+        binding.descriptionTextView.text.clear()
+        selectedFileUri = null
+        binding.deleteImageView.visibility = View.GONE
     }
 
     private fun observeResponse() {
@@ -196,6 +214,25 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
                 val status = jSONObject.optInt("status")
                 val responseMessage = jSONObject.optString("response")
                 if (status == 200) {
+                    expertsViewModel.getUserArticles(this)
+                    binding.addPostLayout.visibility = View.GONE
+                    binding.myPostLayout.visibility = View.VISIBLE
+                    binding.addPostToggleButton.apply {
+                        background =
+                            ContextCompat.getDrawable(
+                                this@ExpertsCornerAdminActivity,
+                                R.drawable.shape_right
+                            )
+                        setTextColor(Color.BLACK)
+                    }
+                    binding.myPostToggleButton.apply {
+                        background = ContextCompat.getDrawable(
+                            this@ExpertsCornerAdminActivity,
+                            R.drawable.shape_left
+                        )
+                        setTextColor(Color.WHITE)
+                    }
+                    resetView()
                     Toast.makeText(this, responseMessage, Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, responseMessage, Toast.LENGTH_SHORT).show()

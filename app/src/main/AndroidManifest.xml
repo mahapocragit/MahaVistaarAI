@@ -26,6 +26,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FarmerApp">
         <activity
+            android:name=".ui.screens.dashboard.sidenavigation.experts.ExpertsCornerFilterActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.screens.dashboard.sidenavigation.costcalculator.CropCostCalculationActivity"
             android:exported="false" />
         <activity
@@ -138,7 +141,7 @@
             android:name=".ui.screens.authentication.ForgetPassword"
             android:exported="false" />
         <activity
-            android:name=".ui.screens.dashboard.menugrid.MarketPrice"
+            android:name=".ui.screens.dashboard.menugrid.marketprice.MarketPrice"
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.menugrid.dbt.pocra.PocraDbtSchemes"

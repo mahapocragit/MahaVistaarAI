@@ -36,7 +36,7 @@ class GisViewModel : ViewModel() {
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getSoilHealthCardDetailsFromSHCNumber(requestBody)
                 _shcInformationResponse.value = response
-            } catch (e: JSONException) {
+            } catch (e: Exception) {
                 e.printStackTrace()
                 _error.value = "JSON Error: ${e.localizedMessage}"
                 FirebaseCrashlytics.getInstance().recordException(e)

@@ -114,36 +114,12 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/_5sdp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingVertical="@dimen/_5sdp">
-
-            <ImageView
-                android:layout_width="@dimen/_18sdp"
-                android:layout_height="@dimen/_18sdp"
-                android:padding="@dimen/_3sdp"
-                app:srcCompat="@drawable/indicator_ic" />
-
-            <TextView
-                android:id="@+id/textView47"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_5sdp"
-                android:gravity="center_vertical"
-                android:text="Calculate profit"
-                android:textSize="@dimen/_12sdp" />
-        </LinearLayout>
-
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_5sdp"
-            android:backgroundTint="@color/card_background_color_figma"
-            app:cardCornerRadius="@dimen/_15sdp">
+            android:backgroundTint="#F8FAFC"
+            app:cardCornerRadius="@dimen/_10sdp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -162,7 +138,7 @@
                         android:id="@+id/textView7"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Your Crop"
+                        android:text="Calculate profit"
                         android:textColor="@color/font_color_figma"
                         android:textStyle="bold" />
 

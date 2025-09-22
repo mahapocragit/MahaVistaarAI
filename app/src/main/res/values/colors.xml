@@ -73,6 +73,8 @@
     <color name="notification_card_background">#E8FCEE</color>
 
     <color name="blue">#b2a1c7</color>
+    <color name="blue_light">#3B82F6</color>
+    <color name="gray_bar_light">#CBD5E1</color>
 
     <color name="stepview_line_done">@android:color/white</color>
     <color name="stepview_line_next">#26ffffff</color>

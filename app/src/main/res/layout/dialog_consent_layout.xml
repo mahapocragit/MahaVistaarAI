@@ -36,6 +36,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/_5sdp"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -43,12 +44,13 @@
                         android:layout_height="@dimen/_20sdp"
                         android:layout_weight="9"
                         android:padding="@dimen/_5sdp"
-                        app:srcCompat="@drawable/indicator_ic" />
+                        app:srcCompat="@drawable/tick_green_icon" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:textSize="@dimen/_10sdp"
                         android:text="@string/consent_one" />
                 </LinearLayout>
 
@@ -63,12 +65,13 @@
                         android:layout_height="@dimen/_20sdp"
                         android:layout_weight="9"
                         android:padding="@dimen/_5sdp"
-                        app:srcCompat="@drawable/indicator_ic" />
+                        app:srcCompat="@drawable/tick_green_icon" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:textSize="@dimen/_10sdp"
                         android:text="@string/consent_two" />
                 </LinearLayout>
 
@@ -83,12 +86,13 @@
                         android:layout_height="@dimen/_20sdp"
                         android:layout_weight="9"
                         android:padding="@dimen/_5sdp"
-                        app:srcCompat="@drawable/indicator_ic" />
+                        app:srcCompat="@drawable/tick_green_icon" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:textSize="@dimen/_10sdp"
                         android:text="@string/consent_three" />
                 </LinearLayout>
 
@@ -103,12 +107,13 @@
                         android:layout_height="@dimen/_20sdp"
                         android:layout_weight="9"
                         android:padding="@dimen/_5sdp"
-                        app:srcCompat="@drawable/indicator_ic" />
+                        app:srcCompat="@drawable/tick_green_icon" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:textSize="@dimen/_10sdp"
                         android:text="@string/consent_four" />
                 </LinearLayout>
 
@@ -123,12 +128,13 @@
                         android:layout_height="@dimen/_20sdp"
                         android:layout_weight="9"
                         android:padding="@dimen/_5sdp"
-                        app:srcCompat="@drawable/indicator_ic" />
+                        app:srcCompat="@drawable/tick_green_icon" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:textSize="@dimen/_10sdp"
                         android:text="@string/consent_five" />
                 </LinearLayout>
             </LinearLayout>
@@ -149,8 +155,9 @@
                 android:textColor="@color/font_color_figma"
                 android:textStyle="bold"
                 android:layout_weight="1"
+                android:textAllCaps="true"
                 android:layout_marginEnd="@dimen/_10sdp"
-                android:text="DECLINE" />
+                android:text="@string/decline" />
 
             <TextView
                 android:id="@+id/acceptText"
@@ -158,9 +165,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textSize="@dimen/_12sdp"
+                android:textAllCaps="true"
                 android:textColor="@color/actionbar_color_figma"
                 android:textStyle="bold"
-                android:text="ACCEPT" />
+                android:text="@string/accept" />
         </LinearLayout>
 
     </LinearLayout>

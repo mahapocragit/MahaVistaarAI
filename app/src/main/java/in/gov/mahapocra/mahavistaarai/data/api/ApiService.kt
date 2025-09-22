@@ -154,10 +154,10 @@ interface ApiService {
     suspend fun checkFcmToken(@Header("userid") farmerId: Int): JsonObject
 
     @POST(ApiConstants.kOTPRequest)
-    fun getOTPRequest(
+    suspend fun getOTPRequest(
         @Header("MobileNo") mobileNo: String,
         @Body params: RequestBody
-    ): Call<JsonObject>
+    ): JsonObject
 
     @POST(ApiConstants.kOTPRegisterRequest)
     fun getOTPRegisterRequest(
@@ -173,18 +173,18 @@ interface ApiService {
     ): Call<JsonObject>
 
     @POST(ApiConstants.kUserLogin)
-    fun getUserLoginOTP(
+    suspend fun getUserLoginOTP(
         @Header("MobileNo") mobileNo: String,
         @Header("otp") enteredOTP: String,
         @Body params: RequestBody
-    ): Call<JsonObject>
+    ): JsonObject
 
     @POST(ApiConstants.kUserLogin)
-    fun getUserLoginPassword(
+    suspend fun getUserLoginPassword(
         @Header("MobileNo") mobileNo: String,
         @Header("Password") password: String,
         @Body params: RequestBody
-    ): Call<JsonObject>
+    ): JsonObject
 
     @POST(ApiConstants.kRefreshTokenLogin)
     fun getRefreshTokenLoginViaOTP(
@@ -209,7 +209,7 @@ interface ApiService {
     suspend fun getDistrictList(@Body params: RequestBody): JsonObject
 
     @POST(ApiConstants.kGetMarketAndMarketName)
-    fun getMarketAndMarketName(@Body params: RequestBody): Call<JsonObject>
+    suspend fun getMarketAndMarketName(@Body params: RequestBody): JsonObject
 
     @POST(ApiConstants.kGetVillageList)
     fun kGetVillageList(@Body params: RequestBody): Call<JsonObject>
@@ -218,7 +218,7 @@ interface ApiService {
     fun getNewsList(@Body params: RequestBody): Call<JsonObject>
 
     @POST(ApiConstants.kGetmarketsPriceDetails)
-    fun getmarketPriceDetails(@Body params: RequestBody): Call<JsonObject>
+    suspend fun getMarketPriceDetails(@Body params: RequestBody): JsonObject
 
     @POST(ApiConstants.DELETE_FERTILIZER_FROM_SAVED)
     fun deleteFertilizerFromSavedList(@Body params: RequestBody): Call<JsonObject>

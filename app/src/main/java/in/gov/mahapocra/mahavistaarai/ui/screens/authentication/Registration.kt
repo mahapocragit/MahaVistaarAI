@@ -67,7 +67,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
     private lateinit var binding: ActivityRegistrationBinding
 
     private var isUserLoggedIn: Boolean = false
-
+    private var consentMessage: String? = null
     private lateinit var userName: String
     private lateinit var mob: String
     private lateinit var registerMob: String
@@ -212,7 +212,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 val jsonObject = JSONObject(response.toString())
                 val status = jsonObject.optInt("status")
                 if (status == 200) {
-                    Toast.makeText(this, "Consent has been submitted!!!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, consentMessage?:"Consent Submitted", Toast.LENGTH_SHORT).show()
                 } else {
                     val responseText = jsonObject.optString("response")
                     Toast.makeText(this, responseText, Toast.LENGTH_SHORT).show()
@@ -253,9 +253,9 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                     showDialogForConsent()
                 }
             }
-            binding.passwordEditText.visibility = View.GONE
+            binding.passwordTIL.visibility = View.GONE
             binding.passwordErrorTextView.visibility = View.GONE
-            binding.confirmPasswordEditText.visibility = View.GONE
+            binding.confirmPasswordTIL.visibility = View.GONE
             binding.nameEditText.setText(userName)
             binding.mobNoEditText.setText(registerMob)
             binding.emailId.setText(emailid)
@@ -638,7 +638,11 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             dialog.dismiss()
             sendOTP()
         }
-        dialog.show()
+        runOnUiThread {
+            if (!isFinishing && !isDestroyed) {
+                dialog.show()
+            }
+        }
     }
 
     private fun userVerification() {
@@ -835,36 +839,18 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
 
     private fun showDialogForConsent() {
 
-        val dialogLayout = LayoutInflater.from(this)
-            .inflate(R.layout.dialog_consent_layout, null)
-
-        val consentDialog = AlertDialog.Builder(this)
-            .setView(dialogLayout)
-            .setCancelable(false)
-            .create()
-
-        // ✅ get the view from the dialog layout, not the activity
-        val acceptText = dialogLayout.findViewById<TextView>(R.id.acceptText)
-        val declineText = dialogLayout.findViewById<TextView>(R.id.declineText)
-        acceptText.setOnClickListener {
-            farmerViewModel.updateConsent(this, true)
-            consentDialog.dismiss() // optionally close the dialog
-        }
-        declineText.setOnClickListener {
-            val confirmationDialog =
-                AlertDialog.Builder(this).setTitle("Confirmation")
-                    .setMessage("You will be logged out of the app as you have declined the consent. Do you want to continue?")
-                    .setPositiveButton("Confirm") { dialog, _ ->
-                        farmerViewModel.updateConsent(this, false)
-                        logoutFromApp()
-                        dialog.dismiss()
-                        consentDialog.dismiss()
-                    }.setNegativeButton("Cancel") { dialog, _ ->
-                        dialog.dismiss()
-                    }
-            confirmationDialog.show() // optionally close the dialog
-        }
-        consentDialog.show()
+        val confirmationDialog =
+            AlertDialog.Builder(this).setTitle(R.string.withdraw_consent)
+                .setMessage(R.string.withdraw_consent_desc_withdraw)
+                .setPositiveButton(R.string.confirm) { dialog, _ ->
+                    consentMessage = ContextCompat.getString(this, R.string.consent_withdrawn)
+                    farmerViewModel.updateConsent(this, false)
+                    logoutFromApp()
+                    dialog.dismiss()
+                }.setNegativeButton(R.string.cancel) { dialog, _ ->
+                    dialog.dismiss()
+                }
+        confirmationDialog.show()
     }
 
     private fun logoutFromApp() {
