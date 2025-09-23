@@ -34,7 +34,7 @@ class CostCalculatorAdapter(private val jsonArray: JSONArray, private val onDele
         val total = cropObj.getInt("total")
 
         holder.cropName.text = name
-        holder.cropTotal.text = "₹$total"
+        holder.cropTotal.text = if (total < 0) "-₹${-total}" else "₹$total"
 
         // Load image with Glide (make sure Glide is in dependencies)
         Glide.with(context)
