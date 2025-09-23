@@ -43,7 +43,7 @@ class LoginViewModel : ViewModel(){
                 val api = retrofit.create(ApiService::class.java)
                 val response = api.getOTPRequest(mobileNo, requestBody)
                 ProgressHelper.disableProgressDialog()
-                _getOTPRequestResponse.value = response
+//                _getOTPRequestResponse.value = response
             } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
@@ -71,7 +71,7 @@ class LoginViewModel : ViewModel(){
                 val api = retrofit.create(ApiService::class.java)
                 val response = api.getUserLoginOTP(mobileNo, otp, requestBody)
                 ProgressHelper.disableProgressDialog()
-                _getUserLoginOTPResponse.value = response
+//                _getUserLoginOTPResponse.value = response
             } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
@@ -101,7 +101,7 @@ class LoginViewModel : ViewModel(){
                 val api = retrofit.create(ApiService::class.java)
                 val response = api.getUserLoginPassword(mobileNo, password, requestBody)
                 ProgressHelper.disableProgressDialog()
-                _getUserLoginPasswordResponse.value = response
+//                _getUserLoginPasswordResponse.value = response
             } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {

@@ -16,6 +16,8 @@ import org.json.JSONArray
 class CostCalculatorAdapter(private val jsonArray: JSONArray, private val onDeleteClick: OnDeleteClick) :
     RecyclerView.Adapter<CostCalculatorAdapter.ViewHolder>() {
 
+    private var deleteEnabled: Boolean = false
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.cost_calculator_crop_item_view, parent, false)
@@ -48,6 +50,14 @@ class CostCalculatorAdapter(private val jsonArray: JSONArray, private val onDele
             context.startActivity(intent)
         }
 
+        if (deleteEnabled) {
+            holder.deleteImageView.visibility = View.VISIBLE
+            holder.arrowImageView.visibility = View.GONE
+        }else{
+            holder.arrowImageView.visibility = View.VISIBLE
+            holder.deleteImageView.visibility = View.GONE
+        }
+
         holder.deleteImageView.setOnClickListener {
            onDeleteClick.onDeleteClick(cropId)
         }
@@ -62,7 +72,13 @@ class CostCalculatorAdapter(private val jsonArray: JSONArray, private val onDele
         val cropTotal: TextView = itemView.findViewById(R.id.cropTotalTextView)
         val cropImage: ImageView = itemView.findViewById(R.id.cropImageView)
         val deleteImageView: ImageView = itemView.findViewById(R.id.deleteImageView)
+        val arrowImageView: ImageView = itemView.findViewById(R.id.arrowImageView)
         val selectedCropLinearLayout: LinearLayout =
             itemView.findViewById(R.id.selectedCropCalculationLinearLayout)
+    }
+
+    fun setDeleteEnabled(enabled: Boolean) {
+        deleteEnabled = enabled
+        notifyDataSetChanged() // Refresh the list so delete icons appear/disappear
     }
 }

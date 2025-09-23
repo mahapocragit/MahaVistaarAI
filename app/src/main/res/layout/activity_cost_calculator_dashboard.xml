@@ -164,7 +164,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_40sdp"
                     android:layout_gravity="center_vertical"
-                    android:layout_margin="@dimen/_10sdp"
+                    android:layout_margin="@dimen/_5sdp"
                     android:layout_weight="4"
                     app:cardCornerRadius="@dimen/_25sdp">
 
@@ -215,6 +215,16 @@
 
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
+
+                <ImageView
+                    android:id="@+id/toggleDeleteImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:layout_weight="8"
+                    app:tint="@color/font_color_figma"
+                    app:srcCompat="@drawable/delete_icon" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>

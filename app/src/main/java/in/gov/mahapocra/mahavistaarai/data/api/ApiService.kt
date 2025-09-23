@@ -154,10 +154,10 @@ interface ApiService {
     suspend fun checkFcmToken(@Header("userid") farmerId: Int): JsonObject
 
     @POST(ApiConstants.kOTPRequest)
-    suspend fun getOTPRequest(
+    fun getOTPRequest(
         @Header("MobileNo") mobileNo: String,
         @Body params: RequestBody
-    ): JsonObject
+    ): Call<JsonObject>
 
     @POST(ApiConstants.kOTPRegisterRequest)
     fun getOTPRegisterRequest(
@@ -173,18 +173,18 @@ interface ApiService {
     ): Call<JsonObject>
 
     @POST(ApiConstants.kUserLogin)
-    suspend fun getUserLoginOTP(
+    fun getUserLoginOTP(
         @Header("MobileNo") mobileNo: String,
         @Header("otp") enteredOTP: String,
         @Body params: RequestBody
-    ): JsonObject
+    ): Call<JsonObject>
 
     @POST(ApiConstants.kUserLogin)
-    suspend fun getUserLoginPassword(
+    fun getUserLoginPassword(
         @Header("MobileNo") mobileNo: String,
         @Header("Password") password: String,
         @Body params: RequestBody
-    ): JsonObject
+    ): Call<JsonObject>
 
     @POST(ApiConstants.kRefreshTokenLogin)
     fun getRefreshTokenLoginViaOTP(
@@ -305,6 +305,9 @@ interface ApiService {
     suspend fun deleteCrop(@Body params: RequestBody): JsonObject
 
     @POST("/authService/provideConsent")
-    suspend fun updateConsent(@Header("userid") farmerId: Int, @Header("consent") consentValue: Boolean) : JsonObject
+    suspend fun updateConsent(
+        @Header("userid") farmerId: Int,
+        @Header("consent") consentValue: Boolean
+    ): JsonObject
 
 }

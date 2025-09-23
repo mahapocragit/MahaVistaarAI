@@ -173,8 +173,8 @@
                 android:id="@+id/mobileLoginLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"

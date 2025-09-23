@@ -23,6 +23,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardS
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.viewmodels.CostCalculatorViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
+import org.json.JSONArray
 import org.json.JSONObject
 
 class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
@@ -33,6 +34,8 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
     private var currentYear = 0
     private var currentYearForTransaction = 0
     private var currentSeasonForTransaction = 1
+    private var isDeleteEnabled: Boolean = false
+    private var costCalculatorAdapter = CostCalculatorAdapter(JSONArray(), this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +70,16 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
         getCurrentYearAllTransactions(currentSeasonForTransaction, currentYearForTransaction)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.toggleDeleteImageView.setOnClickListener {
+            isDeleteEnabled = !isDeleteEnabled
+            if (isDeleteEnabled){
+                binding.toggleDeleteImageView.setImageResource(R.drawable.ic_cross)
+                costCalculatorAdapter.setDeleteEnabled(true)
+            }else{
+                binding.toggleDeleteImageView.setImageResource(R.drawable.delete_icon)
+                costCalculatorAdapter.setDeleteEnabled(false)
+            }
+        }
     }
 
     private fun setUpObservers() {
@@ -101,9 +114,10 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
                 val jSONObject = JSONObject(response.toString())
                 if (jSONObject.optInt("status") == 200) {
                     val total = jSONObject.optInt("total")
-                    binding.cropTotalProfitTextView.text = "₹$total"
+                    binding.cropTotalProfitTextView.text = if (total < 0) "-₹${-total}" else "₹$total"
                     val jsonArray = jSONObject.optJSONArray("data")
-                    binding.recyclerView.adapter = CostCalculatorAdapter(jsonArray, this)
+                    costCalculatorAdapter = CostCalculatorAdapter(jsonArray, this)
+                    binding.recyclerView.adapter = costCalculatorAdapter
                 } else {
                     Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_SHORT)
                         .show()

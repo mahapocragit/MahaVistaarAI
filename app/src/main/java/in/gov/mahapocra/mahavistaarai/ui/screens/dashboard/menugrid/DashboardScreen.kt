@@ -1,6 +1,8 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid
 
 import android.Manifest
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
@@ -179,6 +181,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 startActivity(weather)
             }
         }
+
+        pulse(binding.appBarMain.dashboardScreen.chatBubbleImageView)
 
         setConfiguration()
         this.window.setSoftInputMode(
@@ -1349,6 +1353,39 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
         val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
         super.attachBaseContext(updatedContext)
+    }
+
+    private fun pulse(view: View) {
+        // Shrink and move down
+        val shrinkDown = AnimatorSet().apply {
+            playTogether(
+                ObjectAnimator.ofFloat(view, "scaleX", 1f, 0.7f),
+                ObjectAnimator.ofFloat(view, "scaleY", 1f, 0.7f),
+                ObjectAnimator.ofFloat(view, "translationY", 0f, 50f) // move down 50px
+            )
+            duration = 600
+        }
+
+        // Expand and move up
+        val expandUp = AnimatorSet().apply {
+            playTogether(
+                ObjectAnimator.ofFloat(view, "scaleX", 0.7f, 1f),
+                ObjectAnimator.ofFloat(view, "scaleY", 0.7f, 1f),
+                ObjectAnimator.ofFloat(view, "translationY", 50f, 0f) // move back to original
+            )
+            duration = 600
+        }
+
+        val fullSet = AnimatorSet().apply {
+            playSequentially(shrinkDown, expandUp)
+            addListener(object : android.animation.AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: android.animation.Animator) {
+                    pulse(view) // Recursively continue the animation
+                }
+            })
+        }
+
+        fullSet.start()
     }
 
     private fun getTemperatureFromJSON(jsonObject: JSONObject): String {

@@ -4,10 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.model.Category
 import `in`.gov.mahapocra.mahavistaarai.data.model.SubCategory
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityExpertsCornerFilterBinding
@@ -86,12 +89,20 @@ class ExpertsCornerFilterActivity : AppCompatActivity() {
         binding.categoryTextView.setOnClickListener {
             binding.categoryRecyclerView.visibility = View.VISIBLE
             binding.subCategoryRecyclerView.visibility = View.GONE
+            binding.subCategoryTextView.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
+            binding.categoryTextView.setBackgroundColor(ContextCompat.getColor(this, R.color.transparent_green))
         }
 
         binding.subCategoryTextView.setOnClickListener {
             binding.subCategoryRecyclerView.visibility = View.VISIBLE
             binding.categoryRecyclerView.visibility = View.GONE
-            expertsViewModel.getSubCategories(selectedCategories)
+            if (selectedCategories.isNotEmpty()) {
+                binding.subCategoryTextView.setBackgroundColor(ContextCompat.getColor(this, R.color.transparent_green))
+                binding.categoryTextView.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
+                expertsViewModel.getSubCategories(selectedCategories)
+            }else{
+                Toast.makeText(this, "Please select a category first", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.applyButton.setOnClickListener {

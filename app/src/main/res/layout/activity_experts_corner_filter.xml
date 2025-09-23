@@ -31,6 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                android:background="@color/transparent_green"
                 android:minHeight="@dimen/_40sdp"
                 android:paddingStart="@dimen/_5sdp"
                 android:text="Categories"

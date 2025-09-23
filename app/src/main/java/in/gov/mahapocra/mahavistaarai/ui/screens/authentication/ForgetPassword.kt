@@ -39,11 +39,10 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
 
-class ForgetPassword : AppCompatActivity() {
+class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode {
 
     private lateinit var binding: ActivityForgetPasswordTempBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
-    private val loginViewModel: LoginViewModel by viewModels()
     private lateinit var mob: String
     private var userPass: String = ""
     private lateinit var dialog: Dialog
@@ -65,54 +64,7 @@ class ForgetPassword : AppCompatActivity() {
         binding = ActivityForgetPasswordTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
-        observeResponse()
         onClick()
-    }
-
-    private fun observeResponse() {
-        loginViewModel.getUserLoginPasswordResponse.observe(this) { response ->
-            if (response != null) {
-                val jSONObject = JSONObject(response.toString())
-                if (jSONObject.optInt("status") == 200) {
-                    val response: String = jSONObject.getString("response")
-                    Toast.makeText(this, response, Toast.LENGTH_LONG).show()
-                    addVerificationDialog()
-                }
-            }
-        }
-
-        loginViewModel.getOTPRequestResponse.observe(this) { response ->
-            if (response != null) {
-                val jSONObject = JSONObject(response.toString())
-                val response =
-                    ResponseModel(
-                        jSONObject
-                    )
-                if (response.getStatus()) {
-                    if (loginOption == 1) {
-                        val message: String = jSONObject.getString("Message")
-                        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-                        farmerRegistrationId = jSONObject.getInt("FAAPRegistrationID")
-                        addVerificationDialog()
-                    } else {
-                        val message: String = jSONObject.getString("Message")
-                        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-                        farmerRegistrationId = jSONObject.getInt("FAAPRegistrationID")
-                        AppSettings.getInstance()
-                            .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegistrationId)
-                        val intent = Intent(this, DashboardScreen::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(intent)
-                        finish()
-                    }
-                } else {
-                    val message: String = jSONObject.getString("Message")
-                    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-                }
-            }
-        }
     }
 
     private fun onClick() {
@@ -136,7 +88,26 @@ class ForgetPassword : AppCompatActivity() {
             binding.mobileEditText.error = resources.getString(R.string.login_mob_valid_err)
             binding.mobileEditText.requestFocus()
         } else {
-            loginViewModel.getOTPRequest(this, mob.trim { it <= ' ' })
+            val jsonObject = JSONObject()
+            try {
+                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api =
+                    AppInventorApi(
+                        this,
+                        AppEnvironment.FARMER.baseUrl,
+                        "",
+                        AppString(this).getkMSG_WAIT(),
+                        true
+                    )
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val responseCall: Call<JsonObject> =
+                    apiRequest.getOTPRequest(mob.trim { it <= ' ' }, requestBody)
+                api.postRequest(responseCall, this, 2)
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -145,7 +116,25 @@ class ForgetPassword : AppCompatActivity() {
             binding.mobileEditText.error = resources.getString(R.string.lgn_register_phone_error)
             binding.mobileEditText.requestFocus()
         } else {
-            loginViewModel.getUserLoginPassword(this, mobileNo, userPass)
+            val jsonObject = JSONObject()
+            try {
+                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val api =
+                    AppInventorApi(
+                        this,
+                        AppEnvironment.FARMER.baseUrl,
+                        "",
+                        AppString(this).getkMSG_WAIT(),
+                        true
+                    )
+                val retrofit: Retrofit = api.getRetrofitInstance()
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val responseCall: Call<JsonObject> = apiRequest.getUserLoginPassword(mobileNo.trim { it <= ' ' }, userPass, requestBody)
+                api.postRequest(responseCall, this, 3)
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -206,6 +195,57 @@ class ForgetPassword : AppCompatActivity() {
             userPass = ""
             userLoginAPI(mob, userPass)
         }
+    }
+
+    override fun onResponse(jSONObject: JSONObject?, i: Int) {
+        if (jSONObject != null) {
+            if (jSONObject.optInt("status") == 200) {
+                val response: String = jSONObject.getString("response")
+                Toast.makeText(this, response, Toast.LENGTH_LONG).show()
+                addVerificationDialog()
+            }
+        }
+        if (i == 3) {
+            if (jSONObject != null) {
+                DebugLog.getInstance().d("onResponse=$jSONObject")
+                val response =
+                    ResponseModel(
+                        jSONObject
+                    )
+                if (response.getStatus()) {
+                    if (loginOption == 1) {
+                        val message: String = jSONObject.getString("Message")
+                        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                        farmerRegistrationId = jSONObject.getInt("FAAPRegistrationID")
+                        addVerificationDialog()
+                    } else {
+                        val message: String = jSONObject.getString("Message")
+                        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                        farmerRegistrationId = jSONObject.getInt("FAAPRegistrationID")
+                        AppSettings.getInstance()
+                            .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegistrationId)
+                        val intent = Intent(this, DashboardScreen::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                        finish()
+                    }
+                } else {
+                    val message: String = jSONObject.getString("Message")
+                    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                }
+            }
+
+        }
+    }
+
+    override fun onFailure(th: Throwable?, i: Int) {
+        DebugLog.getInstance().d("onResponse=$th")
+    }
+
+    override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
+        DebugLog.getInstance().d("onResponse=$obj")
     }
 
     override fun attachBaseContext(newBase: Context) {
