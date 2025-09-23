@@ -13,8 +13,13 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.cost
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.OnDeleteClick
 import org.json.JSONArray
 
-class CostCalculatorAdapter(private val jsonArray: JSONArray, private val onDeleteClick: OnDeleteClick) :
+class CostCalculatorAdapter(
+    private val jsonArray: JSONArray,
+    private val onDeleteClick: OnDeleteClick
+) :
     RecyclerView.Adapter<CostCalculatorAdapter.ViewHolder>() {
+
+    private var deleteEnabled = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -32,7 +37,7 @@ class CostCalculatorAdapter(private val jsonArray: JSONArray, private val onDele
         val total = cropObj.getInt("total")
 
         holder.cropName.text = name
-        holder.cropTotal.text = "₹$total"
+        holder.cropTotal.text = if (total < 0) "-₹${-total}" else "₹$total"
 
         // Load image with Glide (make sure Glide is in dependencies)
         Glide.with(context)
@@ -48,8 +53,16 @@ class CostCalculatorAdapter(private val jsonArray: JSONArray, private val onDele
             context.startActivity(intent)
         }
 
+        if (deleteEnabled) {
+            holder.deleteImageView.visibility = View.VISIBLE
+            holder.arrowImageView.visibility = View.GONE
+        } else {
+            holder.arrowImageView.visibility = View.VISIBLE
+            holder.deleteImageView.visibility = View.GONE
+        }
+
         holder.deleteImageView.setOnClickListener {
-           onDeleteClick.onDeleteClick(cropId)
+            onDeleteClick.onDeleteClick(cropId)
         }
     }
 
@@ -62,7 +75,13 @@ class CostCalculatorAdapter(private val jsonArray: JSONArray, private val onDele
         val cropTotal: TextView = itemView.findViewById(R.id.cropTotalTextView)
         val cropImage: ImageView = itemView.findViewById(R.id.cropImageView)
         val deleteImageView: ImageView = itemView.findViewById(R.id.deleteImageView)
+        val arrowImageView: ImageView = itemView.findViewById(R.id.arrowImageView)
         val selectedCropLinearLayout: LinearLayout =
             itemView.findViewById(R.id.selectedCropCalculationLinearLayout)
+    }
+
+    fun setDeleteEnabled(enabled: Boolean) {
+        deleteEnabled = enabled
+        notifyDataSetChanged() // refresh UI
     }
 }

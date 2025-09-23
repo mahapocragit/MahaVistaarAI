@@ -46,9 +46,10 @@
                 android:textSize="@dimen/_12sdp" />
 
             <ImageView
-                android:id="@+id/imageView44"
+                android:id="@+id/arrowImageView"
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
                 android:src="@drawable/next"
                 app:tint="@color/arrow_color_figma" />
 
@@ -56,6 +57,7 @@
                 android:id="@+id/deleteImageView"
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
                 app:tint="@color/arrow_color_figma"
                 android:src="@drawable/delete_icon"
                  />

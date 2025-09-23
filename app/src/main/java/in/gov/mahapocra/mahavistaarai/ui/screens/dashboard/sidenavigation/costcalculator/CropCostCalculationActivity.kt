@@ -111,9 +111,9 @@ class CropCostCalculationActivity : AppCompatActivity() {
                 val expense = dataObject.getInt("expense")
                 val total = dataObject.getInt("total")
                 val cropTransactionArray = dataObject.optJSONArray("data")
-                binding.totalProfitTextView.text = "₹$total"
-                binding.incomeTextView.text = "₹$income"
-                binding.expenseTextView.text = "₹$expense"
+                binding.totalProfitTextView.text = if (total < 0) "-₹${-total}" else "₹$total"
+                binding.incomeTextView.text = if (income < 0) "-₹${-income}" else "₹$income"
+                binding.expenseTextView.text = if (expense < 0) "-₹${-expense}" else "₹$expense"
                 binding.cropTransactionRecyclerView.adapter =
                     CropTransactionAdapter(cropTransactionArray)
             }
