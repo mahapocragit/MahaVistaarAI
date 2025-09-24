@@ -18,6 +18,7 @@
 
         <!-- Content -->
         <LinearLayout
+            android:id="@+id/cropTransactionCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="@dimen/_60sdp"

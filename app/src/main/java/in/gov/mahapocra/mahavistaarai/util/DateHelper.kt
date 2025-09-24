@@ -28,4 +28,14 @@ object DateHelper {
             "" // return empty string if parsing fails
         }
     }
+
+    fun convertDateFormat(inputDate: String): String {
+        // Expected input: "2025-09-24"
+        val parts = inputDate.split("-")
+        if (parts.size != 3) return inputDate // fallback if invalid
+        val year = parts[0]
+        val month = parts[1]
+        val day = parts[2]
+        return "$day/$month/$year" // "24/09/2025"
+    }
 }

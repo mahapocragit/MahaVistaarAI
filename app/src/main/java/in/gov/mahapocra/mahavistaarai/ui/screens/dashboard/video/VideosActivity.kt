@@ -14,6 +14,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityVideosBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
@@ -47,6 +48,7 @@ class VideosActivity : AppCompatActivity() {
         ProgressHelper.showProgressDialog(this)
         farmerViewModel.getVideosForFarmer(this)
         getFarmerSelectedCrop()
+        AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
 
         val isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
         binding.chatbotIcon.setOnClickListener {

@@ -42,7 +42,7 @@ import java.util.Calendar
 import java.util.Locale
 import androidx.core.view.get
 
-class CropCostCalculationActivity : AppCompatActivity() {
+class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
     private lateinit var binding: ActivityCropCostCalculationBinding
     private var isIncomeSelected: Boolean = true
     private lateinit var languageToLoad: String
@@ -118,7 +118,7 @@ class CropCostCalculationActivity : AppCompatActivity() {
                     binding.notificationNotFoundLayout.visibility = View.GONE
                     binding.cropTransactionRecyclerView.visibility = View.VISIBLE
                     binding.cropTransactionRecyclerView.adapter =
-                        CropTransactionAdapter(cropTransactionArray)
+                        CropTransactionAdapter(cropTransactionArray, this)
                 } else {
                     binding.notificationNotFoundLayout.visibility = View.VISIBLE
                     binding.cropTransactionRecyclerView.visibility = View.GONE
@@ -127,6 +127,14 @@ class CropCostCalculationActivity : AppCompatActivity() {
         }
 
         costCalculatorViewModel.addCropSpecificTransactionsResponse.observe(this) { response ->
+            if (response != null) {
+                val jSONObject = JSONObject(response.toString())
+                Log.d("TAGGER", "setUpObservers: $jSONObject")
+                costCalculatorViewModel.getCropSpecificTransactions(this, cropId)
+            }
+        }
+
+        costCalculatorViewModel.deleteCropTransactionResponse.observe(this){ response ->
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 Log.d("TAGGER", "setUpObservers: $jSONObject")
@@ -405,5 +413,9 @@ class CropCostCalculationActivity : AppCompatActivity() {
         }
         val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
         super.attachBaseContext(updatedContext)
+    }
+
+    override fun onDeleteClick(cropId: Int) {
+        costCalculatorViewModel.deleteCropTransaction(this, cropId)
     }
 }

@@ -16,6 +16,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivitySopactivityBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.SOPAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
@@ -60,6 +61,7 @@ class SOPActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener {
 
         cropId?.let { farmerViewModel.fetchSOPDate(this, it) }
         ProgressHelper.showProgressDialog(this)
+        AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
 
         binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {
             val sharing = Intent(this, AddCropActivity::class.java)

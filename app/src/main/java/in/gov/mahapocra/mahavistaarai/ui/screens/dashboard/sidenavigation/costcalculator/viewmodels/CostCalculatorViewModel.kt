@@ -48,6 +48,10 @@ class CostCalculatorViewModel : ViewModel() {
     val deleteCropResponse: MutableLiveData<JsonObject> =
         _deleteCropResponse
 
+    private var _deleteCropTransactionResponse = MutableLiveData<JsonObject>()
+    val deleteCropTransactionResponse: MutableLiveData<JsonObject> =
+        _deleteCropTransactionResponse
+
     private var _error = MutableLiveData<String>()
     val error: MutableLiveData<String> = _error
 
@@ -249,6 +253,36 @@ class CostCalculatorViewModel : ViewModel() {
                 val response = apiRequest.deleteCrop(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _deleteCropResponse.value = response
+            }catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+
+    }
+
+    fun deleteCropTransaction(context: Context, transactionId: Int){
+
+        viewModelScope.launch {
+            try {
+                ProgressHelper.showProgressDialog(context)
+                val jsonObject = JSONObject().apply {
+                    put("transaction_id", transactionId)
+                }
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.deleteCropTransaction(requestBody)
+                ProgressHelper.disableProgressDialog()
+                _deleteCropTransactionResponse.value = response
             }catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {

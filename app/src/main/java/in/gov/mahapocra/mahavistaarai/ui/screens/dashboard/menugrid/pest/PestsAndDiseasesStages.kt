@@ -23,6 +23,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropAct
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
@@ -68,6 +69,8 @@ class PestsAndDiseasesStages : AppCompatActivity() {
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
             startActivity(Intent(this@PestsAndDiseasesStages, DashboardScreen::class.java))
         }
+
+        AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
 
         cropId = intent.getIntExtra("id", 0)
         wotrCropId = intent.getStringExtra("wotr_crop_id")
