@@ -241,7 +241,9 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
         popupMenu.show()
     }
 
-    override fun onDeleteClick(cropId: Int) {
-        costCalculatorViewModel.deleteCrop(this, cropId)
+    override fun onDeleteClick(cropId: Int, data: JSONObject) {
+        if (cropId!=0) {
+            costCalculatorViewModel.deleteCrop(this, cropId)
+        }
     }
 }

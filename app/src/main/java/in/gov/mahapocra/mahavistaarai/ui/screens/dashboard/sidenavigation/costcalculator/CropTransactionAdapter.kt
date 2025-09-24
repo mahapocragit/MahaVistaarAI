@@ -17,6 +17,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.DialogAddIncomeLayoutBinding
 import `in`.gov.mahapocra.mahavistaarai.databinding.EditExpenseLayoutBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.OnDeleteClick
 import `in`.gov.mahapocra.mahavistaarai.util.DateHelper.convertDateFormat
+import org.json.JSONObject
 
 class CropTransactionAdapter(
     private val jsonArray: JSONArray,
@@ -76,45 +77,7 @@ class CropTransactionAdapter(
             append(transactionAmount)
         }
         holder.cropTransactionCard.setOnClickListener {
-            if (transactionType == "income") {
-                //INCOME
-                val binding = DialogAddIncomeLayoutBinding.inflate(LayoutInflater.from(context))
-                val expenseDialog = AlertDialog.Builder(context).setView(binding.root)
-                val dialog = expenseDialog.create()
-                binding.cancelText.setOnClickListener {
-                    dialog.dismiss()
-                }
-                binding.deleteText.setOnClickListener {
-                    onDeleteClick.onDeleteClick(transactionId)
-                    dialog.dismiss()
-                }
-                binding.yieldText.setText(transactionYield)
-                binding.pricePerUnitText.setText(transactionPricePerUnit)
-                binding.totalPriceTextView.text = buildString {
-                    append("Total Price: ₹")
-                    append(transactionAmount)
-                }
-                binding.incomeCalendarDateTextView.text = convertDateFormat(transactionDate)
-                binding.incomeNameEditText.setText(transactionName)
-                dialog.show()
-            } else {
-                //EXPENSE
-                val binding = EditExpenseLayoutBinding.inflate(LayoutInflater.from(context))
-                val expenseDialog = AlertDialog.Builder(context).setView(binding.root)
-                val dialog = expenseDialog.create()
-                binding.cancelText.setOnClickListener {
-                    dialog.dismiss()
-                }
-                binding.categoryNameTextView.text = transactionCategory
-                binding.priceEditText2.setText(transactionAmount)
-                binding.expenseNameEditText2.setText(transactionName)
-                binding.expenseCalendarDateTextView.text = convertDateFormat(transactionDate)
-                binding.deleteText.setOnClickListener {
-                    onDeleteClick.onDeleteClick(transactionId)
-                    dialog.dismiss()
-                }
-                dialog.show()
-            }
+            onDeleteClick.onDeleteClick(0, cropObj)
         }
     }
 

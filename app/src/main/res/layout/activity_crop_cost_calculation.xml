@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_5sdp"
-            android:backgroundTint="@color/card_background_color_figma"
+            android:backgroundTint="@color/card_background_color_figma_dash"
             app:cardCornerRadius="@dimen/_15sdp">
 
             <LinearLayout
@@ -150,22 +150,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginHorizontal="@dimen/_5sdp"
                     android:orientation="horizontal"
                     android:padding="@dimen/_5sdp">
 
                     <TextView
-                        android:id="@+id/textView48"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/cropNameProfitTitle"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Kharif Maize Total Profit" />
+                        android:textSize="@dimen/_14sdp"
+                        android:layout_weight="4"
+                        android:text="" />
 
                     <TextView
                         android:id="@+id/totalProfitTextView"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="6"
                         android:gravity="end"
+                        android:textSize="@dimen/_14sdp"
                         android:text="₹1000"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -216,7 +219,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="26000"
                                 android:textColor="@color/red"
-                                android:textSize="@dimen/_14sdp"
+                                android:textSize="@dimen/_13sdp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </LinearLayout>
@@ -253,7 +256,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="27000"
                                 android:textColor="@color/light_green"
-                                android:textSize="@dimen/_14sdp"
+                                android:textSize="@dimen/_13sdp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </LinearLayout>

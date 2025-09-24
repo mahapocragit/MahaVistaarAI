@@ -8,6 +8,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.ArrayAdapter
@@ -41,6 +42,9 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import androidx.core.view.get
+import `in`.gov.mahapocra.mahavistaarai.databinding.DialogAddIncomeLayoutBinding
+import `in`.gov.mahapocra.mahavistaarai.databinding.EditExpenseLayoutBinding
+import `in`.gov.mahapocra.mahavistaarai.util.DateHelper.convertDateFormat
 
 class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
     private lateinit var binding: ActivityCropCostCalculationBinding
@@ -73,7 +77,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
         binding.toolbarLayout.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
-        binding.toolbarLayout.textViewHeaderTitle.text = "Kharif Maize Expenses"
+        binding.toolbarLayout.textViewHeaderTitle.text = "Expenses"
 
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -134,7 +138,15 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
             }
         }
 
-        costCalculatorViewModel.deleteCropTransactionResponse.observe(this){ response ->
+        costCalculatorViewModel.deleteCropTransactionResponse.observe(this) { response ->
+            if (response != null) {
+                val jSONObject = JSONObject(response.toString())
+                Log.d("TAGGER", "setUpObservers: $jSONObject")
+                costCalculatorViewModel.getCropSpecificTransactions(this, cropId)
+            }
+        }
+
+        costCalculatorViewModel.updateCropTransactionResponse.observe(this) { response ->
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 Log.d("TAGGER", "setUpObservers: $jSONObject")
@@ -148,12 +160,8 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
         try {
             cropId = intent.getIntExtra("crop_id", 0)
             val name = intent.getStringExtra("crop_name")
-            val imageUrl = intent.getStringExtra("crop_image")
             binding.cropNameTextView.text = name
-            Glide.with(this)
-                .load(imageUrl)
-                .placeholder(android.R.drawable.ic_menu_gallery) // fallback image
-                .into(binding.cropImageView)
+            binding.cropNameProfitTitle.text = "$name Profit"
             costCalculatorViewModel.getCropSpecificTransactions(this, cropId)
         } catch (e: Exception) {
             Log.d("TAGGER", "setUpListeners: ${e.message}")
@@ -415,7 +423,187 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
         super.attachBaseContext(updatedContext)
     }
 
-    override fun onDeleteClick(cropId: Int) {
-        costCalculatorViewModel.deleteCropTransaction(this, cropId)
+    override fun onDeleteClick(cropId: Int, data: JSONObject) {
+        if (cropId == 0) {
+            costCalculatorViewModel.getExpenseCategory()
+            val transactionId = data.optInt("id") // optInt returns 0 if not present
+            val transactionType = data.optString("type", "")
+            val transactionCropId = data.optInt("crop_id")
+            val transactionCategory = data.optString("category", "")
+            val transactionCategoryId = data.optString("category_id", "0").toIntOrNull() ?: 0
+            val transactionDate = data.optString("date", "")
+            val transactionAmount = data.optString("price", "0")
+            val transactionName = data.optString("name", "")
+            val transactionYield = data.optString("yield", "0")
+            val transactionPricePerUnit = data.optString("price_per_unit", "0")
+            val transactionPriceUnit = data.optString("unit", "")
+
+            // safely convert to Int
+            var transactionTotalAmount: Int = transactionAmount.toIntOrNull() ?: 0
+            var transactionYieldAmount: Int = transactionYield.toIntOrNull() ?: 0
+            var transactionPPUAmount: Int = transactionPricePerUnit.toIntOrNull() ?: 0
+
+            if (transactionType == "income") {
+                // INCOME dialog
+                val dialogAddIncomeLayoutBinding =
+                    DialogAddIncomeLayoutBinding.inflate(LayoutInflater.from(this))
+
+                val dialog = AlertDialog.Builder(this)
+                    .setView(dialogAddIncomeLayoutBinding.root) // ✅ correct
+                    .create()
+
+                dialogAddIncomeLayoutBinding.cancelText.setOnClickListener {
+                    dialog.dismiss()
+                }
+                dialogAddIncomeLayoutBinding.deleteText.setOnClickListener {
+                    costCalculatorViewModel.deleteCropTransaction(this, transactionId)
+                    dialog.dismiss()
+                }
+
+                dialogAddIncomeLayoutBinding.yieldText.setText(transactionYield)
+                dialogAddIncomeLayoutBinding.pricePerUnitText.setText(transactionPricePerUnit)
+                dialogAddIncomeLayoutBinding.totalPriceTextView.text =
+                    "Total Price: ₹$transactionAmount"
+                dialogAddIncomeLayoutBinding.incomeDateLinearLayout.setOnClickListener {
+                    showDatePicker(dialogAddIncomeLayoutBinding.incomeCalendarDateTextView)
+                }
+
+                dialogAddIncomeLayoutBinding.yieldText.addTextChangedListener { editable ->
+                    transactionYieldAmount = editable?.toString()?.toIntOrNull() ?: 0
+                    transactionTotalAmount = transactionYieldAmount * transactionPPUAmount
+                    Log.d("TAGGER", "yield changed: $transactionYieldAmount")
+                    dialogAddIncomeLayoutBinding.totalPriceTextView.text = "Total Price: ₹$transactionTotalAmount"
+                }
+
+                dialogAddIncomeLayoutBinding.pricePerUnitText.addTextChangedListener { editable ->
+                    transactionPPUAmount = editable?.toString()?.toIntOrNull() ?: 0
+                    transactionTotalAmount = transactionYieldAmount * transactionPPUAmount
+                    Log.d("TAGGER", "price per unit changed: $transactionPPUAmount")
+                    dialogAddIncomeLayoutBinding.totalPriceTextView.text = "Total Price: ₹$transactionTotalAmount"
+                }
+
+                dialogAddIncomeLayoutBinding.incomeCalendarDateTextView.text =
+                    convertDateFormat(transactionDate)
+                dialogAddIncomeLayoutBinding.incomeNameEditText.setText(transactionName)
+
+                dialogAddIncomeLayoutBinding.submitText.setOnClickListener {
+                    val dialogTransactionName =
+                        dialogAddIncomeLayoutBinding.incomeNameEditText.text.toString()
+
+                    val dialogDateText =
+                        dialogAddIncomeLayoutBinding.incomeCalendarDateTextView.text.toString()
+                    costCalculatorViewModel.updateCropTransaction(
+                        this,
+                        type = transactionType,
+                        cropId = transactionCropId,
+                        date = dialogDateText,
+                        transactionName = dialogTransactionName,
+                        priceTotal = transactionTotalAmount,
+                        yield = transactionYieldAmount,
+                        pricePerUnit = transactionPPUAmount,
+                        unit = transactionPriceUnit,
+                        transactionId = transactionId
+                    )
+                    dialog.dismiss()
+                }
+                dialog.show()
+
+            } else {
+                // EXPENSE dialog
+                val editExpenseLayoutBinding =
+                    EditExpenseLayoutBinding.inflate(LayoutInflater.from(this))
+
+                val dialog = AlertDialog.Builder(this)
+                    .setView(editExpenseLayoutBinding.root) // ✅ correct
+                    .create()
+
+                editExpenseLayoutBinding.cancelText.setOnClickListener {
+                    dialog.dismiss()
+                }
+                editExpenseLayoutBinding.categoryNameTextView.text = transactionCategory
+                editExpenseLayoutBinding.priceEditText2.setText(transactionAmount)
+                editExpenseLayoutBinding.expenseNameEditText2.setText(transactionName)
+                editExpenseLayoutBinding.expenseCalendarDateTextView.setOnClickListener {
+                    showDatePicker(editExpenseLayoutBinding.expenseCalendarDateTextView)
+                }
+                editExpenseLayoutBinding.expenseCalendarDateTextView.text =
+                    convertDateFormat(transactionDate)
+                editExpenseLayoutBinding.deleteText.setOnClickListener {
+                    costCalculatorViewModel.deleteCropTransaction(this, transactionId)
+                    dialog.dismiss()
+                }
+                editExpenseLayoutBinding.categoryExpenseLayout.setOnClickListener {
+                    val items = Array(jsonArray.length()) { i ->
+                        jsonArray.getJSONObject(i).getString("name")
+                    }
+
+                    // Create ListView programmatically
+                    val listView = ListView(this).apply {
+                        adapter =
+                            ArrayAdapter(
+                                this@CropCostCalculationActivity,
+                                android.R.layout.simple_list_item_1,
+                                items
+                            )
+                        dividerHeight = 1
+                    }
+
+                    // Build dialog with custom ListView
+                    val dialog = AlertDialog.Builder(this)
+                        .setTitle("Select Option")
+                        .setView(listView)
+                        .setNegativeButton("Cancel", null)
+                        .create()
+
+                    // Handle click
+                    listView.setOnItemClickListener { _, _, position, _ ->
+                        val selectedObj = jsonArray.getJSONObject(position)
+                        categoryId = selectedObj.getInt("id")
+                        val name = selectedObj.getString("name")
+                        editExpenseLayoutBinding.categoryNameTextView.text = name
+                        Toast.makeText(this, "ID: $categoryId, Name: $name", Toast.LENGTH_SHORT)
+                            .show()
+                        dialog.dismiss()
+                    }
+
+                    dialog.show()
+
+                    // Limit dialog height (shorter + scrollable)
+                    dialog.window?.setLayout(
+                        (resources.displayMetrics.widthPixels * 0.9).toInt(),
+                        (resources.displayMetrics.heightPixels * 0.5).toInt() // 50% of screen height
+                    )
+                }
+
+                editExpenseLayoutBinding.submitText.setOnClickListener {
+                    val dialogTransactionName =
+                        editExpenseLayoutBinding.expenseNameEditText2.text.toString()
+                    val dialogTransactionPrice =
+                        editExpenseLayoutBinding.priceEditText2.text.toString()
+                    val dialogDateText =
+                        editExpenseLayoutBinding.expenseCalendarDateTextView.text.toString()
+                    if (dialogTransactionPrice.isEmpty() || dialogTransactionPrice.isEmpty()) {
+                        Toast.makeText(this, "Price field shouldn't be Empty", Toast.LENGTH_SHORT)
+                            .show()
+                        return@setOnClickListener
+                    }
+                    val transactionCatId =
+                        if (categoryId == 0) transactionCategoryId else categoryId
+                    costCalculatorViewModel.updateCropTransaction(
+                        this,
+                        type = transactionType,
+                        cropId = transactionCropId,
+                        date = dialogDateText,
+                        categoryId = transactionCatId,
+                        transactionName = dialogTransactionName,
+                        priceTotal = dialogTransactionPrice.toInt(),
+                        transactionId = transactionId
+                    )
+                    dialog.dismiss()
+                }
+                dialog.show()
+            }
+        }
     }
+
 }

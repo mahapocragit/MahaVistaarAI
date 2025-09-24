@@ -52,6 +52,10 @@ class CostCalculatorViewModel : ViewModel() {
     val deleteCropTransactionResponse: MutableLiveData<JsonObject> =
         _deleteCropTransactionResponse
 
+    private var _updateCropTransactionResponse = MutableLiveData<JsonObject>()
+    val updateCropTransactionResponse: MutableLiveData<JsonObject> =
+        _updateCropTransactionResponse
+
     private var _error = MutableLiveData<String>()
     val error: MutableLiveData<String> = _error
 
@@ -189,7 +193,7 @@ class CostCalculatorViewModel : ViewModel() {
         priceTotal: Int,
         yield: Int = 0,
         pricePerUnit: Int = 0,
-        unit:String = "kg"
+        unit: String = "kg"
     ) {
         viewModelScope.launch {
             try {
@@ -238,7 +242,7 @@ class CostCalculatorViewModel : ViewModel() {
         }
     }
 
-    fun deleteCrop(context: Context, cropId: Int){
+    fun deleteCrop(context: Context, cropId: Int) {
 
         viewModelScope.launch {
             try {
@@ -253,7 +257,7 @@ class CostCalculatorViewModel : ViewModel() {
                 val response = apiRequest.deleteCrop(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _deleteCropResponse.value = response
-            }catch (e: Exception) {
+            } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
@@ -268,7 +272,7 @@ class CostCalculatorViewModel : ViewModel() {
 
     }
 
-    fun deleteCropTransaction(context: Context, transactionId: Int){
+    fun deleteCropTransaction(context: Context, transactionId: Int) {
 
         viewModelScope.launch {
             try {
@@ -283,7 +287,7 @@ class CostCalculatorViewModel : ViewModel() {
                 val response = apiRequest.deleteCropTransaction(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _deleteCropTransactionResponse.value = response
-            }catch (e: Exception) {
+            } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
@@ -298,13 +302,67 @@ class CostCalculatorViewModel : ViewModel() {
 
     }
 
-    fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
-        observe(lifecycleOwner, object : Observer<T> {
-            override fun onChanged(t: T) {
-                observer.onChanged(t)
-                removeObserver(this)
+    fun updateCropTransaction(
+        context: Context,
+        type: String,
+        cropId: Int,
+        date: String,
+        categoryId: Int = 1,
+        transactionName: String,
+        priceTotal: Int,
+        yield: Int = 0,
+        pricePerUnit: Int = 0,
+        unit: String = "kg",
+        transactionId: Int
+    ) {
+
+        viewModelScope.launch {
+            try {
+                ProgressHelper.showProgressDialog(context)
+                val jsonObject = JSONObject()
+                if (type == "income") {
+                    jsonObject.apply {
+                        put("crop_id", cropId)
+                        put("date", date)
+                        put("type", type)
+                        put("transaction_name", transactionName)
+                        put("price", priceTotal)
+                        put("yield", yield)
+                        put("price_per_unit", pricePerUnit)
+                        put("unit", unit)
+                        put("transaction_id", transactionId)
+                    }
+                } else {
+                    jsonObject.apply {
+                        put("crop_id", cropId)
+                        put("date", date)
+                        put("type", type)
+                        put("category", categoryId)
+                        put("transaction_name", transactionName)
+                        put("price", priceTotal)
+                        put("transaction_id", transactionId)
+                    }
+                }
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.updateCropTransaction(requestBody)
+                ProgressHelper.disableProgressDialog()
+                _updateCropTransactionResponse.value = response
+            } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
-        })
+        }
+
     }
 
 }

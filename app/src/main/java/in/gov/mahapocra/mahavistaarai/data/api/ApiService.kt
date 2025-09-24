@@ -307,6 +307,9 @@ interface ApiService {
     @POST("/costofcultivationServices/delete-transaction")
     suspend fun deleteCropTransaction(@Body params: RequestBody): JsonObject
 
+    @POST("/costofcultivationServices/update-transactions")
+    suspend fun updateCropTransaction(@Body params: RequestBody): JsonObject
+
     @POST("/authService/provideConsent")
     suspend fun updateConsent(
         @Header("userid") farmerId: Int,
