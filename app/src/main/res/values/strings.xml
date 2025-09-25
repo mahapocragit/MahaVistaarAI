@@ -469,4 +469,17 @@
     <string name="captcha_success">CAPTCHA verified successfully</string>
     <string name="captcha_invalid">Incorrect CAPTCHA. Please try again</string>
     <string name="there_are_currently_no_posts">There are currently no posts.</string>
+    <string name="price_rs">Price (₹)</string>
+    <string name="expense_date">Expense Date</string>
+    <string name="expense_name_optional">Expense Name (Optional)</string>
+    <string name="yield">Yield</string>
+    <string name="price_per_kilo">Price per kilo (₹)</string>
+    <string name="income_date">Income Date</string>
+    <string name="income_name_optional">Income Name (Optional)</string>
+    <string name="expenses">Expenses</string>
+    <string name="income">Income</string>
+    <string name="add_new_transaction">Add new transaction</string>
+    <string name="all_transactions">All Transactions</string>
+    <string name="estimated_total_profit">Estimated total profit</string>
+    <string name="calculate_profit">Calculate profit</string>
 </resources>

@@ -35,7 +35,7 @@
                 android:id="@+id/textView44"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Income Name (Optional)" />
+                android:text="@string/income_name_optional" />
 
             <EditText
                 android:id="@+id/incomeNameEditText"
@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"
-                android:text="Income Date" />
+                android:text="@string/income_date" />
 
             <LinearLayout
                 android:id="@+id/incomeDateLinearLayout"
@@ -99,7 +99,7 @@
                         android:id="@+id/textView51"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Yield" />
+                        android:text="@string/yield" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -164,7 +164,7 @@
                         android:id="@+id/textView52"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Price per kilo (₹)" />
+                        android:text="@string/price_per_kilo" />
 
                     <EditText
                         android:id="@+id/pricePerUnitText"
@@ -202,7 +202,7 @@
                     android:id="@+id/deleteText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Delete"
+                    android:text="@string/delete"
                     android:textColor="@color/rebranding_red"
                     android:textSize="@dimen/_14sdp"
                     android:textStyle="bold" />
@@ -218,7 +218,7 @@
                         android:id="@+id/cancelText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Cancel"
+                        android:text="@string/cancel"
                         android:textSize="@dimen/_14sdp"
                         android:textStyle="bold" />
 

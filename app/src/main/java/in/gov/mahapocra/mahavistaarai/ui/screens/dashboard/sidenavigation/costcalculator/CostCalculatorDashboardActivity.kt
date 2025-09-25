@@ -1,6 +1,7 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator
 
 import CostCalculatorAdapter
+import android.content.Context
 import android.content.Intent
 import android.icu.util.Calendar
 import android.os.Build
@@ -16,6 +17,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
+import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityCostCalculatorDashboardBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropActivity
@@ -23,6 +25,8 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardS
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.viewmodels.CostCalculatorViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -30,6 +34,7 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
 
     private lateinit var binding: ActivityCostCalculatorDashboardBinding
     private val costCalculatorViewModel: CostCalculatorViewModel by viewModels()
+    private lateinit var languageToLoad: String
     private var season = 1
     private var currentYear = 0
     private var currentYearForTransaction = 0
@@ -40,6 +45,11 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        languageToLoad = "mr"
+        if (AppSettings.getLanguage(this@CostCalculatorDashboardActivity).equals("1", ignoreCase = true)) {
+            languageToLoad = "en"
+        }
+        switchLanguage(this, languageToLoad)
         binding = ActivityCostCalculatorDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
         LocalCustom.uiResponsive(binding.root)
@@ -98,6 +108,14 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
 
         costCalculatorViewModel.deleteCropResponse.observe(this) { response ->
             if (response != null) {
+                isDeleteEnabled = !isDeleteEnabled
+                if (isDeleteEnabled){
+                    binding.toggleDeleteImageView.setImageResource(R.drawable.ic_cross)
+                    costCalculatorAdapter.setDeleteEnabled(true)
+                }else{
+                    binding.toggleDeleteImageView.setImageResource(R.drawable.delete_icon)
+                    costCalculatorAdapter.setDeleteEnabled(false)
+                }
                 val jSONObject = JSONObject(response.toString())
                 if (jSONObject.optInt("status") == 200) {
                     Toast.makeText(this, "Crop Deleted successfully", Toast.LENGTH_SHORT).show()
@@ -245,5 +263,15 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
         if (cropId!=0) {
             costCalculatorViewModel.deleteCrop(this, cropId)
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 }

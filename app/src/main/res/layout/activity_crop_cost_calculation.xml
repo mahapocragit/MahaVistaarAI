@@ -211,7 +211,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Expenses" />
+                                android:text="@string/expenses" />
 
                             <TextView
                                 android:id="@+id/expenseTextView"
@@ -248,7 +248,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Income" />
+                                android:text="@string/income" />
 
                             <TextView
                                 android:id="@+id/incomeTextView"
@@ -270,7 +270,7 @@
             android:layout_height="wrap_content"
             android:paddingVertical="@dimen/_10sdp"
             android:backgroundTint="@color/actionbar_color_figma"
-            android:text="Add new transaction"
+            android:text="@string/add_new_transaction"
             android:textAllCaps="false"
             app:cornerRadius="@dimen/_20sdp"
             android:layout_marginHorizontal="@dimen/_5sdp"
@@ -297,7 +297,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_5sdp"
                 android:gravity="center_vertical"
-                android:text="All Transactions"
+                android:text="@string/all_transactions"
                 android:textSize="@dimen/_12sdp" />
 
         </LinearLayout>

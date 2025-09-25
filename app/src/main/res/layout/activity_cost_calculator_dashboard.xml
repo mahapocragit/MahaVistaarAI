@@ -99,7 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Estimated total profit"
+                android:text="@string/estimated_total_profit"
                 android:textSize="@dimen/_14sdp"
                 android:textStyle="bold" />
 
@@ -138,7 +138,7 @@
                         android:id="@+id/textView7"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Calculate profit"
+                        android:text="@string/calculate_profit"
                         android:textColor="@color/font_color_figma"
                         android:textStyle="bold" />
 

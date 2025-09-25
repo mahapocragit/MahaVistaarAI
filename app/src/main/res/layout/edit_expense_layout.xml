@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_5sdp"
-            android:text="Expense Name (Optional)" />
+            android:text="@string/expense_name_optional" />
 
         <EditText
             android:id="@+id/expenseNameEditText2"
@@ -75,7 +75,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_5sdp"
-            android:text="Expense Date" />
+            android:text="@string/expense_date" />
 
         <LinearLayout
             android:id="@+id/expenseDateLinearLayout"
@@ -106,7 +106,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_5sdp"
-            android:text="Price (₹)" />
+            android:text="@string/price_rs" />
 
         <EditText
             android:id="@+id/priceEditText2"
@@ -132,7 +132,7 @@
                 android:id="@+id/deleteText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Delete"
+                android:text="@string/delete"
                 android:textColor="@color/rebranding_red"
                 android:textSize="@dimen/_14sdp"
                 android:textStyle="bold" />
@@ -148,7 +148,7 @@
                     android:id="@+id/cancelText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cancel"
+                    android:text="@string/cancel"
                     android:textSize="@dimen/_14sdp"
                     android:textStyle="bold" />
 

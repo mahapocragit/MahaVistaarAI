@@ -470,4 +470,17 @@
     <string name="captcha_success">कॅप्चा यशस्वीपणे तपासला गेला.</string>
     <string name="captcha_invalid">कॅप्चा चुकीचा आहे. कृपया पुन्हा प्रयत्न करा</string>
     <string name="there_are_currently_no_posts">सध्या कोणतेही पोस्ट उपलब्ध नाहीत.</string>
+    <string name="price_rs">किंमत (₹)</string>
+    <string name="expense_date">खर्चाची तारीख</string>
+    <string name="expense_name_optional">खर्चाचे नाव (पर्यायी)</string>
+    <string name="yield">उत्पन्न</string>
+    <string name="price_per_kilo">प्रति किलो किंमत (₹)</string>
+    <string name="income_date">उत्पन्नाची तारीख</string>
+    <string name="income_name_optional">उत्पन्नाचे नाव (पर्यायी)</string>
+    <string name="expenses">खर्च</string>
+    <string name="income">उत्पन्न</string>
+    <string name="add_new_transaction">नवीन व्यवहार जोडा</string>
+    <string name="all_transactions">सर्व व्यवहार</string>
+    <string name="estimated_total_profit">अंदाजे एकूण नफा</string>
+    <string name="calculate_profit">नफ्याची गणना करा</string>
 </resources>

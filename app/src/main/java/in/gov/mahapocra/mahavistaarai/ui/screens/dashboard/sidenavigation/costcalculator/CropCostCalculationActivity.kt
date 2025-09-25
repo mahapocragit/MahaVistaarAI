@@ -326,7 +326,11 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
 
             categoryExpenseLayout.setOnClickListener {
                 val items = Array(jsonArray.length()) { i ->
-                    jsonArray.getJSONObject(i).getString("name")
+                    if (languageToLoad == "en") {
+                        jsonArray.getJSONObject(i).getString("name")
+                    }else{
+                        jsonArray.getJSONObject(i).getString("name_mr")
+                    }
                 }
 
                 // Create ListView programmatically
@@ -344,14 +348,14 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                 val dialog = AlertDialog.Builder(this)
                     .setTitle("Select Option")
                     .setView(listView)
-                    .setNegativeButton("Cancel", null)
+                    .setNegativeButton(R.string.cancel, null)
                     .create()
 
                 // Handle click
                 listView.setOnItemClickListener { _, _, position, _ ->
                     val selectedObj = jsonArray.getJSONObject(position)
                     categoryId = selectedObj.getInt("id")
-                    val name = selectedObj.getString("name")
+                    val name = if (languageToLoad == "en")selectedObj.getString("name") else selectedObj.getString("name_mr")
                     categoryNameTextView.text = name
                     Toast.makeText(this, "ID: $categoryId, Name: $name", Toast.LENGTH_SHORT).show()
                     dialog.dismiss()
