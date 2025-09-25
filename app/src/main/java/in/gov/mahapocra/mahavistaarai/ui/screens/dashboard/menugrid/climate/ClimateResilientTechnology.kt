@@ -3,10 +3,12 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -28,7 +30,6 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
-import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import org.json.JSONArray
 import org.json.JSONObject
@@ -70,17 +71,16 @@ class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClick
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
-        if (NetworkUtils.isInternetAvailable(this)){
+        if (NetworkUtils.isInternetAvailable(this)) {
             farmerViewModel.climateResilientGroupList(this, languageToLoad)
-        }else{
+        } else {
             Snackbar.make(binding.root, "Internet not available", Snackbar.LENGTH_SHORT).show()
         }
 
         AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
 
-        ProgressHelper.showProgressDialog(this)
-        observeClimateResilientGroupList()
-        val isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
+        val isGuest =
+            AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
         binding.chatbotIcon.setOnClickListener {
             if (!isGuest) {
                 startActivity(Intent(this, ChatbotActivity::class.java))
@@ -100,6 +100,16 @@ class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClick
                     .show()
             }
         }
+
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val intent = Intent(this@ClimateResilientTechnology, DashboardScreen::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
+        })
     }
 
     private fun init() {
@@ -110,7 +120,6 @@ class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClick
 
     private fun observeClimateResilientGroupList() {
         farmerViewModel.getClimateResilientListResponse.observe(this) {
-            ProgressHelper.disableProgressDialog()
             if (it != null) {
                 val jSONObject = JSONObject(it.toString())
                 val response =
@@ -137,8 +146,8 @@ class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClick
                 }
             }
         }
-        farmerViewModel.error.observe(this){
-            ProgressHelper.disableProgressDialog()
+        farmerViewModel.error.observe(this) {
+            Log.d("TAGGER", "observeClimateResilientGroupList: $it")
         }
     }
 
@@ -159,15 +168,6 @@ class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClick
         b.putSerializable("GroupImagePath", groupImagePath)
         b.putSerializable("WebUrl", webUrl)
         intent.putExtras(b)
-        startActivity(intent)
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        val intent = Intent(this, DashboardScreen::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }
 

@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -31,16 +32,16 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
-import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.Date
 
-class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener, DatePickerRequestListener {
+class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
+    DatePickerRequestListener {
 
     private lateinit var binding: ActivityAdvisoryCropBinding
-    private lateinit var viewModel: FarmerViewModel
+    private val viewModel: FarmerViewModel by viewModels()
     private var cropAdvisoryDetailsJSONArray: JSONArray? = null
     private var cropAdvisoryJSONArray: JSONArray? = null
     var cropId: Int? = 0
@@ -65,7 +66,6 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         binding = ActivityAdvisoryCropBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
-        viewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
 
         binding.completedLabelTextView.text = getString(R.string.crop_stage_completed)
         binding.currentLabelTextView.text = getString(R.string.crop_stage_current)
@@ -80,6 +80,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
 
         AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
 
+        observeCropStagesAndAdvisory()
         binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {
             val sharing = Intent(this, AddCropActivity::class.java)
             AppPreferenceManager(this).saveString(
@@ -116,9 +117,9 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
             startActivity(Intent(this, DashboardScreen::class.java))
         }
-        observeCropStagesAndAdvisory()
         viewModel.getCropStagesAndAdvisory(this, cropId, sowingDate, languageToLoad)
-        val isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
+        val isGuest =
+            AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
         binding.chatbotIcon.setOnClickListener {
             if (!isGuest) {
                 startActivity(Intent(this, ChatbotActivity::class.java))
@@ -141,16 +142,11 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
     }
 
     private fun observeCropStagesAndAdvisory() {
-        ProgressHelper.showProgressDialog(this)
         viewModel.getCropStagesAndAdvisoryResponse.observe(this) {
             Log.d("TAGGER", "observeCropStagesAndAdvisory: $it")
-            ProgressHelper.disableProgressDialog()
             if (it != null) {
                 val jSONObject = JSONObject(it.toString())
-                val response =
-                    ResponseModel(
-                        jSONObject
-                    )
+                val response = ResponseModel(jSONObject)
                 if (response.status) {
                     if (jSONObject.getString("sowing_date").isNotEmpty()) {
                         binding.sowingInfoLayout.sowingDateTextView.text =
@@ -176,9 +172,8 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
                 }
             }
         }
-        viewModel.error.observe(this){
+        viewModel.error.observe(this) {
             Log.d("TAGGER", "error: $it")
-            ProgressHelper.disableProgressDialog()
             UIToastMessage.show(this, "Unable to fetch data")
         }
     }

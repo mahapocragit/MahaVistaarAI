@@ -596,8 +596,9 @@ class FarmerViewModel : ViewModel() {
     ) {
         val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
         viewModelScope.launch {
-            val jsonObject = JSONObject()
+            ProgressHelper.showProgressDialog(context)
             try {
+                val jsonObject = JSONObject()
                 jsonObject.put("crop_id", cropId)
                 jsonObject.put("farmer_id", farmerId)
                 jsonObject.put("sowing_date", sowingDate)
@@ -606,32 +607,12 @@ class FarmerViewModel : ViewModel() {
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit: Retrofit =
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                ProgressHelper.disableProgressDialog()
                 val apiRequest = retrofit.create(ApiService::class.java)
-
-                try {
-                    val response = apiRequest.getCropStagesAndAdvisory(requestBody)
-                    _getCropStagesAndAdvisoryResponse.value = response
-                } catch (e: Exception) {
-                    val message = when (e) {
-                        is SocketTimeoutException -> "Request timed out. Please try again."
-                        is SocketException -> "Connection lost. Please check your internet."
-                        is IOException -> "Network error occurred."
-                        else -> e.localizedMessage ?: "Unknown error"
-                    }
-                    _error.value = message
-                    FirebaseCrashlytics.getInstance().recordException(e)
-                }
-
+                val response = apiRequest.getCropStagesAndAdvisory(requestBody)
+                _getCropStagesAndAdvisoryResponse.value = response
             } catch (e: Exception) {
-                val message = when (e) {
-                    is SocketTimeoutException -> "Request timed out. Please try again."
-                    is SocketException -> "Connection lost. Please check your internet."
-                    is IOException -> "Network error occurred."
-                    else -> e.localizedMessage ?: "Unknown error"
-                }
-                _error.value = message
-                FirebaseCrashlytics.getInstance().recordException(e)
-            } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
@@ -646,8 +627,9 @@ class FarmerViewModel : ViewModel() {
 
     fun climateResilientGroupList(context: Context, languageToLoad: String) {
         viewModelScope.launch {
-            val jsonObject = JSONObject()
+            ProgressHelper.showProgressDialog(context)
             try {
+                val jsonObject = JSONObject()
                 jsonObject.put("api_key", ApiConstants.SSO_KEY)
                 jsonObject.put("lang", languageToLoad)
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
@@ -655,8 +637,10 @@ class FarmerViewModel : ViewModel() {
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getClimateResilientList(requestBody)
+                ProgressHelper.disableProgressDialog()
                 _getClimateResilientListResponse.value = response
             } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
@@ -671,8 +655,9 @@ class FarmerViewModel : ViewModel() {
 
     fun getCropStages(context: Context, cropId: Int?, language: String) {
         viewModelScope.launch {
-            val jsonObject = JSONObject()
+            ProgressHelper.showProgressDialog(context)
             try {
+                val jsonObject = JSONObject()
                 jsonObject.put("crop_id", cropId)
                 jsonObject.put("lang", language)
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
@@ -680,8 +665,10 @@ class FarmerViewModel : ViewModel() {
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getCropStages(requestBody)
+                ProgressHelper.disableProgressDialog()
                 _getCropStagesResponse.value = response
             } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."

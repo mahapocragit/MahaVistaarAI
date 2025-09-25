@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -127,12 +129,16 @@ class PestsAndDiseasesStages : AppCompatActivity() {
                     .show()
             }
         }
+
+        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                startActivity(Intent(this@PestsAndDiseasesStages, DashboardScreen::class.java))
+            }
+        })
     }
 
     private fun observeCropStages() {
-        ProgressHelper.showProgressDialog(this)
         farmerViewModel.getCropStagesResponse.observe(this) {
-            ProgressHelper.disableProgressDialog()
             if (it != null) {
                 val jSONObject = JSONObject(it.toString())
                 val response = ResponseModel(jSONObject)
@@ -146,14 +152,6 @@ class PestsAndDiseasesStages : AppCompatActivity() {
                 }
             }
         }
-        farmerViewModel.error.observe(this){
-            ProgressHelper.disableProgressDialog()
-        }
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        startActivity(Intent(this@PestsAndDiseasesStages, DashboardScreen::class.java))
     }
 
     override fun attachBaseContext(newBase: Context) {
