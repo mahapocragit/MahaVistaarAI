@@ -26,6 +26,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityHealthCardBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.RegistrationViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
@@ -45,6 +46,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
 
     private lateinit var languageToLoad: String
     private lateinit var binding: ActivityHealthCardBinding
+    private val registrationViewModel: RegistrationViewModel by viewModels()
     private lateinit var districtName: String
     private var districtID: Int = 0
     private lateinit var talukaName: String
@@ -126,7 +128,6 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
             }
         }
 
-        observeResponse()
         val isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
         binding.chatbotIcon.setOnClickListener {
             if (!isGuest) {
@@ -165,6 +166,34 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
                 }
             }
         }
+
+        farmerViewModel.talukaList.observe(this) {
+            if (it != null) {
+                val jSONObject = JSONObject(it.toString())
+                val response = ResponseModel(jSONObject)
+                if (response.status) {
+                    talukaJSONArray = response.getdataArray()
+                    registrationViewModel.getVillageList(this, languageToLoad, talukaID)
+                } else {
+                    UIToastMessage.show(this, response.response)
+                }
+            }
+        }
+
+        registrationViewModel.getVillageListResponse.observe(this){ response->
+            if (response!=null){
+                val jSONObject = JSONObject(response.toString())
+                val response =
+                    ResponseModel(
+                        jSONObject
+                    )
+                if (response.status) {
+                    villageJSONArray = response.getdataArray()
+                } else {
+                    UIToastMessage.show(this, response.response)
+                }
+            }
+        }
     }
 
     private fun fetchData(surveyNumber: Int) {
@@ -188,21 +217,6 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
         UIToastMessage.show(this, "Failed to load data. Please check your connection.")
     }
 
-    private fun observeResponse() {
-        farmerViewModel.talukaList.observe(this) {
-            if (it != null) {
-                val jSONObject = JSONObject(it.toString())
-                val response = ResponseModel(jSONObject)
-                if (response.status) {
-                    talukaJSONArray = response.getdataArray()
-                    getVillageAgainstTaluka()
-                } else {
-                    UIToastMessage.show(this, response.response)
-                }
-            }
-        }
-    }
-
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
 
         if (i == 3 && jSONObject != null) {
@@ -218,18 +232,6 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
                 binding.farmerRecyclerView.visibility = View.GONE
                 binding.noDataFoundText.visibility = View.VISIBLE
                 binding.noDataFoundImageView.visibility = View.VISIBLE
-            }
-        }
-
-        if (i == 5 && jSONObject != null) {
-            val response =
-                ResponseModel(
-                    jSONObject
-                )
-            if (response.status) {
-                villageJSONArray = response.getdataArray()
-            } else {
-                UIToastMessage.show(this, response.response)
             }
         }
     }
@@ -287,7 +289,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
     private fun showVillage() {
         if (villageJSONArray == null) {
             if (talukaID > 0) {
-                getVillageAgainstTaluka()
+                registrationViewModel.getVillageList(this, languageToLoad, talukaID)
             } else {
                 UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_taluka))
             }
@@ -302,32 +304,6 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
                     this,
                     this
                 )
-        }
-    }
-
-    private fun getVillageAgainstTaluka() {
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put("lang", languageToLoad)
-            jsonObject.put("taluka_code", talukaID)
-
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api = AppInventorApi(
-                this,
-                AppEnvironment.FARMER.baseUrl,
-                "",
-                AppString(this).getkMSG_WAIT(),
-                true
-            )
-
-            CoroutineScope(Dispatchers.IO).launch {
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(ApiService::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.kGetVillageList(requestBody)
-                api.postRequest(responseCall, this@HealthCardActivity, 5)
-            }
-        } catch (e: JSONException) {
-            e.printStackTrace()
         }
     }
 
@@ -368,7 +344,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
             binding.textViewTaluka.text = s
             villageJSONArray = null
             if (talukaID > 0) {
-                getVillageAgainstTaluka()
+                registrationViewModel.getVillageList(this, languageToLoad, talukaID)
             }
             villageID = 0
             binding.textViewVillage.text = ""

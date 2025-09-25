@@ -160,17 +160,17 @@ interface ApiService {
     ): Call<JsonObject>
 
     @POST(ApiConstants.kOTPRegisterRequest)
-    fun getOTPRegisterRequest(
+    suspend fun getOTPRegisterRequest(
         @Header("MobileNo") mobileNo: String,
         @Body params: RequestBody
-    ): Call<JsonObject>
+    ): JsonObject
 
     @POST(ApiConstants.kRegistrationRequest)
-    fun getRegistrationRequest(
+    suspend fun getRegistrationRequest(
         @Header("MobileNo") mobileNo: String,
         @Header("NewMobileNo") updatedMobileNo: String,
         @Body params: RequestBody
-    ): Call<JsonObject>
+    ): JsonObject
 
     @POST(ApiConstants.kUserLogin)
     fun getUserLoginOTP(
@@ -212,7 +212,7 @@ interface ApiService {
     suspend fun getMarketAndMarketName(@Body params: RequestBody): JsonObject
 
     @POST(ApiConstants.kGetVillageList)
-    fun kGetVillageList(@Body params: RequestBody): Call<JsonObject>
+    suspend fun getVillageList(@Body params: RequestBody): JsonObject
 
     @POST(ApiConstants.USER_News_LIST)
     fun getNewsList(@Body params: RequestBody): Call<JsonObject>
