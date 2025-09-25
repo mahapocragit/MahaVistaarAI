@@ -1,6 +1,8 @@
 package `in`.gov.mahapocra.mahavistaarai.util
 
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -30,12 +32,13 @@ object DateHelper {
     }
 
     fun convertDateFormat(inputDate: String): String {
-        // Expected input: "2025-09-24"
-        val parts = inputDate.split("-")
-        if (parts.size != 3) return inputDate // fallback if invalid
-        val year = parts[0]
-        val month = parts[1]
-        val day = parts[2]
-        return "$day/$month/$year" // "24/09/2025"
+        return try {
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+            val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+            val date: Date = inputFormat.parse(inputDate)!!
+            outputFormat.format(date)
+        } catch (e: Exception) {
+            "" // fallback if parsing fails
+        }
     }
 }

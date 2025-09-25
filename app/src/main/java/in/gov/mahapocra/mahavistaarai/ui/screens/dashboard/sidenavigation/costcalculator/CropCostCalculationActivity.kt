@@ -1,7 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator
 
 import CropTransactionAdapter
-import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
@@ -26,7 +25,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityCropCostCalculationBinding
@@ -42,6 +40,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import androidx.core.view.get
+import `in`.gov.mahapocra.mahavistaarai.databinding.DialogAddExpenseLayoutBinding
 import `in`.gov.mahapocra.mahavistaarai.databinding.DialogAddIncomeLayoutBinding
 import `in`.gov.mahapocra.mahavistaarai.databinding.EditExpenseLayoutBinding
 import `in`.gov.mahapocra.mahavistaarai.util.DateHelper.convertDateFormat
@@ -57,7 +56,8 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
     private var yieldAmount = 0
     private var totalAmount = 0
     private var pricePerUnit = 0
-
+    private var unitMultiplier = 1
+    private var calendarDateForUpdate = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -169,8 +169,9 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
 
         binding.addExpenseButton.setOnClickListener {
             // Inflate your custom view
+            val binding = DialogAddExpenseLayoutBinding.inflate(layoutInflater)
             val dialogView = layoutInflater.inflate(R.layout.dialog_add_expense_layout, null)
-
+            unitMultiplier = 1
             val dialog = AlertDialog.Builder(this)
                 .setView(dialogView)
                 .create()
@@ -200,12 +201,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
 
             yieldText.addTextChangedListener { editable ->
                 yieldAmount = editable?.toString()?.toIntOrNull() ?: 0
-                totalAmount = yieldAmount * pricePerUnit
-                Log.d("TAGGER", "setUpListeners: $yieldAmount")
-                totalPriceTextView.text = buildString {
-                    append("Total Price: ₹")
-                    append(totalAmount)
-                }
+                calculateTotal(yieldAmount, pricePerUnit, unitMultiplier, totalPriceTextView)
             }
 
             unitSelectionLayout.setOnClickListener {
@@ -216,9 +212,38 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
 
                 popupMenu.setOnMenuItemClickListener { item: MenuItem ->
                     when (item) {
-                        popupMenu.menu[0] -> unitText.text = "q"
-                        popupMenu.menu[1] -> unitText.text = "kg"
-                        popupMenu.menu[2] -> unitText.text = "t"
+                        popupMenu.menu[0] -> {
+                            unitText.text = "q"
+                            unitMultiplier = 100
+                            calculateTotal(
+                                yieldAmount,
+                                pricePerUnit,
+                                unitMultiplier,
+                                totalPriceTextView
+                            )
+                        }
+
+                        popupMenu.menu[1] -> {
+                            unitText.text = "kg"
+                            unitMultiplier = 1
+                            calculateTotal(
+                                yieldAmount,
+                                pricePerUnit,
+                                unitMultiplier,
+                                totalPriceTextView
+                            )
+                        }
+
+                        popupMenu.menu[2] -> {
+                            unitText.text = "t"
+                            unitMultiplier = 1000
+                            calculateTotal(
+                                yieldAmount,
+                                pricePerUnit,
+                                unitMultiplier,
+                                totalPriceTextView
+                            )
+                        }
                     }
                     true
                 }
@@ -237,12 +262,12 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
 
             pricePerUnitText.addTextChangedListener { editable ->
                 pricePerUnit = editable?.toString()?.toIntOrNull() ?: 0
-                Log.d("TAGGER", "setUpListeners: $pricePerUnit")
-                totalAmount = yieldAmount * pricePerUnit
-                totalPriceTextView.text = buildString {
-                    append("Total Price: ₹")
-                    append(totalAmount)
-                }
+                calculateTotal(
+                    yieldAmount,
+                    pricePerUnit,
+                    unitMultiplier,
+                    totalPriceTextView
+                )
             }
 
             val incomeLayout = dialogView.findViewById<LinearLayout>(R.id.incomeLinearLayout)
@@ -390,6 +415,20 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
         }
     }
 
+    private fun calculateTotal(
+        yieldAmount: Int,
+        pricePerUnit: Int,
+        unitMultiplier: Int,
+        totalPriceTextView: TextView
+    ) {
+        val total = yieldAmount * pricePerUnit * unitMultiplier
+        totalAmount = total
+        totalPriceTextView.text = buildString {
+            append("Total Price: ₹")
+            append(total)
+        }
+    }
+
     private fun showDatePicker(textView: TextView) {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
@@ -405,7 +444,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                 // Format as dd/MM/yyyy and day name
                 val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
                 val formattedDate = sdf.format(calendar.time)
-
+                calendarDateForUpdate = formattedDate
                 textView.text = formattedDate
             },
             year, month, day
@@ -425,6 +464,8 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
 
     override fun onDeleteClick(cropId: Int, data: JSONObject) {
         if (cropId == 0) {
+            unitMultiplier = 1
+            totalAmount = 0
             costCalculatorViewModel.getExpenseCategory()
             val transactionId = data.optInt("id") // optInt returns 0 if not present
             val transactionType = data.optString("type", "")
@@ -439,7 +480,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
             val transactionPriceUnit = data.optString("unit", "")
 
             // safely convert to Int
-            var transactionTotalAmount: Int = transactionAmount.toIntOrNull() ?: 0
+            totalAmount = transactionAmount.toIntOrNull() ?: 0
             var transactionYieldAmount: Int = transactionYield.toIntOrNull() ?: 0
             var transactionPPUAmount: Int = transactionPricePerUnit.toIntOrNull() ?: 0
 
@@ -468,18 +509,72 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                     showDatePicker(dialogAddIncomeLayoutBinding.incomeCalendarDateTextView)
                 }
 
+                dialogAddIncomeLayoutBinding.unitSelectionLayout.setOnClickListener {
+                    val popupMenu =
+                        PopupMenu(this, dialogAddIncomeLayoutBinding.unitSelectionLayout)
+                    popupMenu.menu.add("Quintal")
+                    popupMenu.menu.add("Kilogram")
+                    popupMenu.menu.add("Ton")
+
+                    popupMenu.setOnMenuItemClickListener { item: MenuItem ->
+                        when (item) {
+                            popupMenu.menu[0] -> {
+                                dialogAddIncomeLayoutBinding.unitText.text = "q"
+                                unitMultiplier = 100
+                                calculateTotal(
+                                    transactionYieldAmount,
+                                    transactionPPUAmount,
+                                    unitMultiplier,
+                                    dialogAddIncomeLayoutBinding.totalPriceTextView
+                                )
+                            }
+
+                            popupMenu.menu[1] -> {
+                                dialogAddIncomeLayoutBinding.unitText.text = "kg"
+                                unitMultiplier = 1
+                                calculateTotal(
+                                    transactionYieldAmount,
+                                    transactionPPUAmount,
+                                    unitMultiplier,
+                                    dialogAddIncomeLayoutBinding.totalPriceTextView
+                                )
+                            }
+
+                            popupMenu.menu[2] -> {
+                                dialogAddIncomeLayoutBinding.unitText.text = "t"
+                                unitMultiplier = 1000
+                                calculateTotal(
+                                    transactionYieldAmount,
+                                    transactionPPUAmount,
+                                    unitMultiplier,
+                                    dialogAddIncomeLayoutBinding.totalPriceTextView
+                                )
+                            }
+                        }
+                        true
+                    }
+
+                    popupMenu.show()
+                }
+
                 dialogAddIncomeLayoutBinding.yieldText.addTextChangedListener { editable ->
                     transactionYieldAmount = editable?.toString()?.toIntOrNull() ?: 0
-                    transactionTotalAmount = transactionYieldAmount * transactionPPUAmount
-                    Log.d("TAGGER", "yield changed: $transactionYieldAmount")
-                    dialogAddIncomeLayoutBinding.totalPriceTextView.text = "Total Price: ₹$transactionTotalAmount"
+                    calculateTotal(
+                        transactionYieldAmount,
+                        transactionPPUAmount,
+                        unitMultiplier,
+                        dialogAddIncomeLayoutBinding.totalPriceTextView
+                    )
                 }
 
                 dialogAddIncomeLayoutBinding.pricePerUnitText.addTextChangedListener { editable ->
                     transactionPPUAmount = editable?.toString()?.toIntOrNull() ?: 0
-                    transactionTotalAmount = transactionYieldAmount * transactionPPUAmount
-                    Log.d("TAGGER", "price per unit changed: $transactionPPUAmount")
-                    dialogAddIncomeLayoutBinding.totalPriceTextView.text = "Total Price: ₹$transactionTotalAmount"
+                    calculateTotal(
+                        transactionYieldAmount,
+                        transactionPPUAmount,
+                        unitMultiplier,
+                        dialogAddIncomeLayoutBinding.totalPriceTextView
+                    )
                 }
 
                 dialogAddIncomeLayoutBinding.incomeCalendarDateTextView.text =
@@ -498,7 +593,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                         cropId = transactionCropId,
                         date = dialogDateText,
                         transactionName = dialogTransactionName,
-                        priceTotal = transactionTotalAmount,
+                        priceTotal = totalAmount,
                         yield = transactionYieldAmount,
                         pricePerUnit = transactionPPUAmount,
                         unit = transactionPriceUnit,
@@ -578,11 +673,11 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                 editExpenseLayoutBinding.submitText.setOnClickListener {
                     val dialogTransactionName =
                         editExpenseLayoutBinding.expenseNameEditText2.text.toString()
-                    val dialogTransactionPrice =
+                    val totalAmount =
                         editExpenseLayoutBinding.priceEditText2.text.toString()
                     val dialogDateText =
                         editExpenseLayoutBinding.expenseCalendarDateTextView.text.toString()
-                    if (dialogTransactionPrice.isEmpty() || dialogTransactionPrice.isEmpty()) {
+                    if (totalAmount.isEmpty() || totalAmount.isEmpty()) {
                         Toast.makeText(this, "Price field shouldn't be Empty", Toast.LENGTH_SHORT)
                             .show()
                         return@setOnClickListener
@@ -596,7 +691,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                         date = dialogDateText,
                         categoryId = transactionCatId,
                         transactionName = dialogTransactionName,
-                        priceTotal = dialogTransactionPrice.toInt(),
+                        priceTotal = totalAmount.toInt(),
                         transactionId = transactionId
                     )
                     dialog.dismiss()

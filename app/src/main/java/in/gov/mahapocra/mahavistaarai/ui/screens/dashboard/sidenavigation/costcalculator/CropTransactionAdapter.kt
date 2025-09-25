@@ -16,6 +16,7 @@ import androidx.core.graphics.toColorInt
 import `in`.gov.mahapocra.mahavistaarai.databinding.DialogAddIncomeLayoutBinding
 import `in`.gov.mahapocra.mahavistaarai.databinding.EditExpenseLayoutBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.OnDeleteClick
+import `in`.gov.mahapocra.mahavistaarai.util.DateHelper
 import `in`.gov.mahapocra.mahavistaarai.util.DateHelper.convertDateFormat
 import org.json.JSONObject
 
@@ -42,7 +43,7 @@ class CropTransactionAdapter(
         val transactionName = cropObj.getString("name")
         val transactionYield = cropObj.getString("yield")
         val transactionPricePerUnit = cropObj.getString("price_per_unit")
-        holder.transactionDateTextView.text = transactionDate
+        holder.transactionDateTextView.text = DateHelper.convertDateFormat(transactionDate)
         if (transactionType == "income") {
             holder.cropTransactionImage.setImageDrawable(
                 ContextCompat.getDrawable(
