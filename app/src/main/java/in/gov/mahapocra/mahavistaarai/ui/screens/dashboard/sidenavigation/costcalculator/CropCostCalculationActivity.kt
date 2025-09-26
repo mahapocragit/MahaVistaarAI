@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -42,6 +43,7 @@ import androidx.core.view.get
 import `in`.gov.mahapocra.mahavistaarai.databinding.DialogAddExpenseLayoutBinding
 import `in`.gov.mahapocra.mahavistaarai.databinding.DialogAddIncomeLayoutBinding
 import `in`.gov.mahapocra.mahavistaarai.databinding.EditExpenseLayoutBinding
+import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.DateHelper.convertDateFormat
 
 class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
@@ -423,6 +425,79 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
 
             dialog.show()
         }
+
+        binding.cropInfoCardView.setOnClickListener {
+            val dataArrayStr = AppPreferenceManager(this).getString("CostCalculatorArrayData")
+            val dataJsonArray = JSONArray(dataArrayStr)
+            val items = Array(dataJsonArray.length()) { i ->
+                if (languageToLoad == "en")
+                    dataJsonArray.getJSONObject(i).getString("name")
+                else
+                    dataJsonArray.getJSONObject(i).getString("name_mr")
+            }
+
+            val adapter = ArrayAdapter(
+                this@CropCostCalculationActivity,
+                android.R.layout.simple_list_item_1,
+                items
+            )
+
+            // Create AlertDialog
+            val alertDialog = AlertDialog.Builder(this)
+                .setTitle(R.string.select_crop)
+                .setAdapter(adapter) { dialog, position ->
+                    val selectedObj = dataJsonArray.getJSONObject(position)
+                    val selectedCropId = selectedObj.optInt("crop_id")
+                    cropId = selectedCropId
+
+                    val selectedCropName = if (languageToLoad == "en")
+                        selectedObj.optString("name")
+                    else
+                        selectedObj.optString("name_mr")
+
+                    binding.cropNameProfitTitle.text = buildString {
+                        append(selectedCropName)
+                        append(" ")
+                        append(getString(R.string.crops_profit))
+                    }
+                    binding.cropNameTextView.text = selectedCropName
+                    costCalculatorViewModel.getCropSpecificTransactions(this, selectedCropId)
+                    dialog.dismiss()
+                }
+                .setNegativeButton(R.string.cancel, null)
+                .create()
+
+            alertDialog.setOnShowListener {
+                val listView = alertDialog.listView
+
+                // Add padding
+                val padding = (16 * resources.displayMetrics.density).toInt() // 16dp
+                listView.setPadding(padding, 0, padding, 0)
+                listView.clipToPadding = false
+
+                // Divider
+                listView.divider = ContextCompat.getDrawable(this, R.color.font_color_figma)
+                listView.dividerHeight = 2
+
+                // Restrict height if content is too large
+                val maxHeight = (200 * resources.displayMetrics.density).toInt() // 200dp
+                listView.measure(
+                    View.MeasureSpec.makeMeasureSpec(
+                        resources.displayMetrics.widthPixels, View.MeasureSpec.AT_MOST
+                    ),
+                    View.MeasureSpec.UNSPECIFIED
+                )
+
+                val height = if (listView.measuredHeight > maxHeight) maxHeight else ViewGroup.LayoutParams.WRAP_CONTENT
+                alertDialog.window?.setLayout(
+                    (resources.displayMetrics.widthPixels * 0.9).toInt(),
+                    height
+                )
+            }
+
+            alertDialog.show()
+        }
+
     }
 
     private fun calculateTotal(
