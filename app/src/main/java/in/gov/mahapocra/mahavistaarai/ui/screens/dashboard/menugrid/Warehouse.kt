@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -217,6 +218,12 @@ class Warehouse : AppCompatActivity(), AlertListEventListener, OnMultiRecyclerIt
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
+
+        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                startActivity(Intent(this@Warehouse, DashboardScreen::class.java))
+            }
+        })
 
         binding.textViewDistrict.setOnClickListener {
             showDistrict()

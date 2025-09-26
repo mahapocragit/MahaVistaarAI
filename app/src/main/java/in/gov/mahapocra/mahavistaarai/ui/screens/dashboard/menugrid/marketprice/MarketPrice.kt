@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -84,6 +85,12 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
         val myLayoutManager = LinearLayoutManager(this)
         myLayoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.recyclerViewMarketPriceList.setLayoutManager(myLayoutManager)
+
+        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                startActivity(Intent(this@MarketPrice, DashboardScreen::class.java))
+            }
+        })
         onClick()
         setConfiguration()
     }

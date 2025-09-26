@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -12,6 +13,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityShetishalaBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosDetailedActivity
 import `in`.gov.mahapocra.mahavistaarai.util.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -42,7 +44,15 @@ class ShetishalaActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
         binding.toolbar.textViewHeaderTitle.text = getString(R.string.shetishala)
+        binding.toolbar.imgBackArrow.setOnClickListener {
+            startActivity(Intent(this, DashboardScreen::class.java))
+        }
 
+        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                startActivity(Intent(this@ShetishalaActivity, DashboardScreen::class.java))
+            }
+        })
         binding.scheduleCardView.setOnClickListener {
             startActivity(
                 Intent(

@@ -10,6 +10,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +29,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityChcenterBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -78,6 +80,15 @@ class CHCenterActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
         binding.toolbar.textViewHeaderTitle.text = getString(R.string.chc_title)
+        binding.toolbar.imgBackArrow.setOnClickListener {
+            startActivity(Intent(this, DashboardScreen::class.java))
+        }
+
+        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                startActivity(Intent(this@CHCenterActivity, DashboardScreen::class.java))
+            }
+        })
         fetchDataForCHC()
         AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
         toggleView(true)
