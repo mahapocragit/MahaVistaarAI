@@ -476,10 +476,23 @@
     <string name="price_per_kilo">Price per kilo (₹)</string>
     <string name="income_date">Income Date</string>
     <string name="income_name_optional">Income Name (Optional)</string>
-    <string name="expenses">Expenses</string>
+    <string name="expenses">Expense</string>
     <string name="income">Income</string>
     <string name="add_new_transaction">Add new transaction</string>
     <string name="all_transactions">All Transactions</string>
     <string name="estimated_total_profit">Estimated total profit</string>
     <string name="calculate_profit">Calculate profit</string>
+    <string name="totalPrice">Total price</string>
+    <string name="submit">Submit</string>
+    <string name="total_price_0">Total Price: ₹0</string>
+    <string name="select_category">Category</string>
+    <string name="edit_expense">Edit Expense</string>
+    <string name="edit_income">Edit Income</string>
+    <string name="expense">Expenses</string>
+    <string name="rabbi">Rabbi</string>
+    <string name="kharif">Kharif</string>
+    <string name="year_text">Year: </string>
+    <string name="season_text">Season: </string>
+    <string name="season_kharif">Season: Kharif</string>
+    <string name="season_rabbi">Season: Rabbi</string>
 </resources>

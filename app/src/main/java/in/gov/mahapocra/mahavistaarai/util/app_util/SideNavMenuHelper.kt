@@ -89,7 +89,7 @@ class SideNavMenuHelper private constructor() {
 
                 val costCalculatorObject = JSONObject()
                 costCalculatorObject.put("id", 5)
-                costCalculatorObject.put("name", "Cost Calculator")
+                costCalculatorObject.put("name", "खर्च गणक")
                 costCalculatorObject.put("icon", "cost_calculator_ic")
 
                 val logoutObject = JSONObject()
@@ -183,7 +183,7 @@ class SideNavMenuHelper private constructor() {
 
                 val costCalculatorObject = JSONObject()
                 costCalculatorObject.put("id", 5)
-                costCalculatorObject.put("name", "Cost Calculator")
+                costCalculatorObject.put("name", "खर्च गणक")
                 costCalculatorObject.put("icon", "cost_calculator_ic")
 
                 val profileObject = JSONObject()

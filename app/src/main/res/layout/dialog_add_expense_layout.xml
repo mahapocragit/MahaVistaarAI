@@ -19,7 +19,7 @@
             android:id="@+id/textView43"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add new transaction"
+            android:text="@string/add_new_transaction"
             android:textSize="@dimen/_14sdp" />
 
         <LinearLayout
@@ -42,7 +42,7 @@
                 android:background="@drawable/shape_right"
                 android:elevation="5dp"
                 android:gravity="center"
-                android:text="Expense"
+                android:text="@string/expenses"
                 android:textStyle="bold" />
 
             <TextView
@@ -55,7 +55,7 @@
                 android:background="@drawable/shape_left"
                 android:elevation="5dp"
                 android:gravity="center"
-                android:text="Income"
+                android:text="@string/income"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 
@@ -73,7 +73,7 @@
                 android:id="@+id/textView44"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Income Name (Optional)" />
+                android:text="@string/income_name_optional" />
 
             <EditText
                 android:id="@+id/incomeNameEditText"
@@ -93,7 +93,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"
-                android:text="Income Date" />
+                android:text="@string/income_date" />
 
             <LinearLayout
                 android:id="@+id/incomeDateLinearLayout"
@@ -136,7 +136,7 @@
                         android:id="@+id/textView51"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Yield" />
+                        android:text="@string/yield" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -199,7 +199,7 @@
                         android:id="@+id/textView52"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Price per kilo (₹)" />
+                        android:text="@string/price_per_kilo" />
 
                     <EditText
                         android:id="@+id/pricePerUnitText"
@@ -224,7 +224,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:gravity="end"
-                android:text="Total Price: ₹0" />
+                android:text="@string/total_price_0" />
         </LinearLayout>
 
         <LinearLayout
@@ -249,7 +249,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:paddingStart="@dimen/_10sdp"
-                    android:text="Category" />
+                    android:text="@string/select_category" />
 
                 <ImageView
                     android:id="@+id/imageView42"
@@ -264,7 +264,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"
-                android:text="Expense Name (Optional)" />
+                android:text="@string/expense_name_optional" />
 
             <EditText
                 android:id="@+id/expenseNameEditText"
@@ -284,7 +284,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"
-                android:text="Expense Date" />
+                android:text="@string/expense_date" />
 
             <LinearLayout
                 android:id="@+id/expenseDateLinearLayout"
@@ -315,7 +315,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"
-                android:text="Price (₹)" />
+                android:text="@string/price_rs" />
 
             <EditText
                 android:id="@+id/priceEditText"
@@ -344,7 +344,7 @@
                 android:id="@+id/cancelText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cancel"
+                android:text="@string/cancel"
                 android:textSize="@dimen/_14sdp"
                 android:textStyle="bold" />
 
@@ -353,7 +353,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10sdp"
-                android:text="Submit"
+                android:text="@string/submit"
                 android:textColor="@color/actionbar_color_figma"
                 android:textSize="@dimen/_14sdp"
                 android:textStyle="bold" />

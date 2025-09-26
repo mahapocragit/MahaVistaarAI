@@ -77,7 +77,8 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
         binding.toolbarLayout.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
-        binding.toolbarLayout.textViewHeaderTitle.text = "Expenses"
+        binding.toolbarLayout.textViewHeaderTitle.text =
+            getString(R.string.expense)
 
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -328,7 +329,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                 val items = Array(jsonArray.length()) { i ->
                     if (languageToLoad == "en") {
                         jsonArray.getJSONObject(i).getString("name")
-                    }else{
+                    } else {
                         jsonArray.getJSONObject(i).getString("name_mr")
                     }
                 }
@@ -355,7 +356,10 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                 listView.setOnItemClickListener { _, _, position, _ ->
                     val selectedObj = jsonArray.getJSONObject(position)
                     categoryId = selectedObj.getInt("id")
-                    val name = if (languageToLoad == "en")selectedObj.getString("name") else selectedObj.getString("name_mr")
+                    val name =
+                        if (languageToLoad == "en") selectedObj.getString("name") else selectedObj.getString(
+                            "name_mr"
+                        )
                     categoryNameTextView.text = name
                     Toast.makeText(this, "ID: $categoryId, Name: $name", Toast.LENGTH_SHORT).show()
                     dialog.dismiss()
@@ -428,7 +432,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
         val total = yieldAmount * pricePerUnit * unitMultiplier
         totalAmount = total
         totalPriceTextView.text = buildString {
-            append("Total Price: ₹")
+            append("${getString(R.string.totalPrice)}: ₹")
             append(total)
         }
     }
@@ -507,8 +511,11 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
 
                 dialogAddIncomeLayoutBinding.yieldText.setText(transactionYield)
                 dialogAddIncomeLayoutBinding.pricePerUnitText.setText(transactionPricePerUnit)
-                dialogAddIncomeLayoutBinding.totalPriceTextView.text =
-                    "Total Price: ₹$transactionAmount"
+                dialogAddIncomeLayoutBinding.totalPriceTextView.text = buildString {
+                    append(getString(R.string.totalPrice))
+                    append(": ₹")
+                    append(transactionAmount)
+                }
                 dialogAddIncomeLayoutBinding.incomeDateLinearLayout.setOnClickListener {
                     showDatePicker(dialogAddIncomeLayoutBinding.incomeCalendarDateTextView)
                 }

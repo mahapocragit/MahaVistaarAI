@@ -20,7 +20,7 @@
             android:id="@+id/textView55"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Edit Expense"
+            android:text="@string/edit_expense"
             android:layout_marginBottom="@dimen/_10sdp"
             android:textSize="@dimen/_14sdp"
             android:textStyle="bold" />
@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:paddingStart="@dimen/_10sdp"
-                android:text="Category" />
+                android:text="@string/select_category" />
 
             <ImageView
                 android:id="@+id/imageView42"
@@ -157,7 +157,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_10sdp"
-                    android:text="Save"
+                    android:text="@string/submit"
                     android:textColor="@color/actionbar_color_figma"
                     android:textSize="@dimen/_14sdp"
                     android:textStyle="bold" />
