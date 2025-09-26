@@ -32,6 +32,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.microsoft.clarity.Clarity
@@ -158,6 +159,17 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
         appPreferenceManager = AppPreferenceManager(this)
         init()
+        lifecycleScope.launch {
+            delay(5000) // 5 seconds
+            binding.appBarMain.dashboardScreen.chatBubbleImageView.animate()
+                .alpha(0f)
+                .setDuration(500) // animation duration in ms
+                .withEndAction {
+                    binding.appBarMain.dashboardScreen.chatBubbleImageView.visibility = View.GONE
+                    binding.appBarMain.dashboardScreen.chatBubbleImageView.alpha = 1f // reset alpha in case you show it again
+                }
+                .start()
+        }
         FirebaseHelper(this)
         binding.appBarMain.dashboardScreen.deleteCropImageView.setOnClickListener {
             cropId = savedCropId
