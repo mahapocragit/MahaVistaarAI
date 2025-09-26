@@ -2,7 +2,6 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.exp
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -18,7 +17,6 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.ExpertsViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import org.json.JSONArray
 import org.json.JSONObject
-import kotlin.getValue
 
 class ExpertsCornerFilterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityExpertsCornerFilterBinding

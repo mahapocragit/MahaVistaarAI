@@ -13,7 +13,6 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import kotlinx.coroutines.launch
-import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Retrofit
 import java.io.IOException

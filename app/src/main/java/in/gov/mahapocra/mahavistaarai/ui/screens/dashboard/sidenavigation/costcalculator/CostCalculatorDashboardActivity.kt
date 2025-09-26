@@ -148,6 +148,15 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
                     binding.cropTotalProfitTextView.text =
                         if (total < 0) "-₹${-total}" else "₹$total"
                     val jsonArray = jSONObject.optJSONArray("data")
+                    if (jsonArray.length() == 0){
+                        binding.notificationNotFoundLayout.visibility = View.VISIBLE
+                        binding.recyclerView.visibility = View.GONE
+                        binding.toggleDeleteImageView.visibility = View.GONE
+                    }else{
+                        binding.notificationNotFoundLayout.visibility = View.GONE
+                        binding.recyclerView.visibility = View.VISIBLE
+                        binding.toggleDeleteImageView.visibility = View.VISIBLE
+                    }
                     AppPreferenceManager(this).saveString("CostCalculatorArrayData", jsonArray?.toString())
                     costCalculatorAdapter = CostCalculatorAdapter(jsonArray, languageToLoad,this)
                     binding.recyclerView.adapter = costCalculatorAdapter

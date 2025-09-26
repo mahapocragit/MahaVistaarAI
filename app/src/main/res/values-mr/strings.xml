@@ -498,4 +498,6 @@
     <string name="season_rabbi">हंगाम: रब्बी</string>
     <string name="crops_profit">पिकाचा नफा</string>
     <string name="select_option">पर्याय निवडा</string>
+    <string name="no_transactions_found">कोणतेही व्यवहार आढळले नाहीत</string>
+    <string name="add_crops_to_calculate_profit">नफा मोजण्यासाठी पिके जोडा</string>
 </resources>

@@ -3,7 +3,6 @@ package `in`.gov.mahapocra.mahavistaarai.util
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
@@ -14,7 +13,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.webkit.URLUtil
-import android.webkit.WebView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.FrameLayout

@@ -12,7 +12,6 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import kotlinx.coroutines.launch
-import org.json.JSONException
 import org.json.JSONObject
 
 class GisViewModel : ViewModel() {

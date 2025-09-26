@@ -23,13 +23,19 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.get
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityCropCostCalculationBinding
+import `in`.gov.mahapocra.mahavistaarai.databinding.DialogAddExpenseLayoutBinding
+import `in`.gov.mahapocra.mahavistaarai.databinding.DialogAddIncomeLayoutBinding
+import `in`.gov.mahapocra.mahavistaarai.databinding.EditExpenseLayoutBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.viewmodels.CostCalculatorViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.DateHelper.convertDate
+import `in`.gov.mahapocra.mahavistaarai.util.DateHelper.convertDateFormat
 import `in`.gov.mahapocra.mahavistaarai.util.DateHelper.getTodayDate
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -39,12 +45,6 @@ import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import androidx.core.view.get
-import `in`.gov.mahapocra.mahavistaarai.databinding.DialogAddExpenseLayoutBinding
-import `in`.gov.mahapocra.mahavistaarai.databinding.DialogAddIncomeLayoutBinding
-import `in`.gov.mahapocra.mahavistaarai.databinding.EditExpenseLayoutBinding
-import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
-import `in`.gov.mahapocra.mahavistaarai.util.DateHelper.convertDateFormat
 
 class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
     private lateinit var binding: ActivityCropCostCalculationBinding
@@ -136,7 +136,17 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 Log.d("TAGGER", "setUpObservers: $jSONObject")
-                costCalculatorViewModel.getCropSpecificTransactions(this, cropId)
+
+                val currentSelectedYear =
+                    AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION", 2025)
+                val currentSelectedSeason =
+                    AppPreferenceManager(this).getInt("CURRENT_SEASON_FOR_TRANSACTION", 1)
+                costCalculatorViewModel.getCropSpecificTransactions(
+                    this,
+                    cropId,
+                    season = currentSelectedSeason,
+                    year = currentSelectedYear
+                )
             }
         }
 
@@ -144,7 +154,16 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 Log.d("TAGGER", "setUpObservers: $jSONObject")
-                costCalculatorViewModel.getCropSpecificTransactions(this, cropId)
+                val currentSelectedYear =
+                    AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION", 2025)
+                val currentSelectedSeason =
+                    AppPreferenceManager(this).getInt("CURRENT_SEASON_FOR_TRANSACTION", 1)
+                costCalculatorViewModel.getCropSpecificTransactions(
+                    this,
+                    cropId,
+                    season = currentSelectedSeason,
+                    year = currentSelectedYear
+                )
             }
         }
 
@@ -152,7 +171,16 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 Log.d("TAGGER", "setUpObservers: $jSONObject")
-                costCalculatorViewModel.getCropSpecificTransactions(this, cropId)
+                val currentSelectedYear =
+                    AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION", 2025)
+                val currentSelectedSeason =
+                    AppPreferenceManager(this).getInt("CURRENT_SEASON_FOR_TRANSACTION", 1)
+                costCalculatorViewModel.getCropSpecificTransactions(
+                    this,
+                    cropId,
+                    season = currentSelectedSeason,
+                    year = currentSelectedYear
+                )
             }
         }
     }
@@ -168,7 +196,16 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                 append(" ")
                 append(getString(R.string.crops_profit))
             }
-            costCalculatorViewModel.getCropSpecificTransactions(this, cropId)
+            val currentSelectedYear =
+                AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION", 2025)
+            val currentSelectedSeason =
+                AppPreferenceManager(this).getInt("CURRENT_SEASON_FOR_TRANSACTION", 1)
+            costCalculatorViewModel.getCropSpecificTransactions(
+                this,
+                cropId,
+                season = currentSelectedSeason,
+                year = currentSelectedYear
+            )
         } catch (e: Exception) {
             Log.d("TAGGER", "setUpListeners: ${e.message}")
         }
@@ -461,7 +498,16 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                         append(getString(R.string.crops_profit))
                     }
                     binding.cropNameTextView.text = selectedCropName
-                    costCalculatorViewModel.getCropSpecificTransactions(this, selectedCropId)
+                    val currentSelectedYear =
+                        AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION", 2025)
+                    val currentSelectedSeason =
+                        AppPreferenceManager(this).getInt("CURRENT_SEASON_FOR_TRANSACTION", 1)
+                    costCalculatorViewModel.getCropSpecificTransactions(
+                        this,
+                        selectedCropId,
+                        season = currentSelectedSeason,
+                        year = currentSelectedYear
+                    )
                     dialog.dismiss()
                 }
                 .setNegativeButton(R.string.cancel, null)
@@ -488,7 +534,8 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                     View.MeasureSpec.UNSPECIFIED
                 )
 
-                val height = if (listView.measuredHeight > maxHeight) maxHeight else ViewGroup.LayoutParams.WRAP_CONTENT
+                val height =
+                    if (listView.measuredHeight > maxHeight) maxHeight else ViewGroup.LayoutParams.WRAP_CONTENT
                 alertDialog.window?.setLayout(
                     (resources.displayMetrics.widthPixels * 0.9).toInt(),
                     height
@@ -676,7 +723,11 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
 
                     val dialogDateText =
                         dialogAddIncomeLayoutBinding.incomeCalendarDateTextView.text.toString()
-                    Log.d("TAGGER", "submitText: $dialogDateText")
+                    if (totalAmount == 0) {
+                        Toast.makeText(this, "Price field shouldn't be Empty", Toast.LENGTH_SHORT)
+                            .show()
+                        return@setOnClickListener
+                    }
                     costCalculatorViewModel.updateCropTransaction(
                         this,
                         type = transactionType,
@@ -773,7 +824,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                         editExpenseLayoutBinding.priceEditText2.text.toString()
                     val dialogDateText =
                         editExpenseLayoutBinding.expenseCalendarDateTextView.text.toString()
-                    if (totalAmount.isEmpty() || totalAmount.isEmpty()) {
+                    if (totalAmount.isEmpty() || totalAmount.isEmpty() || totalAmount.toInt() == 0) {
                         Toast.makeText(this, "Price field shouldn't be Empty", Toast.LENGTH_SHORT)
                             .show()
                         return@setOnClickListener

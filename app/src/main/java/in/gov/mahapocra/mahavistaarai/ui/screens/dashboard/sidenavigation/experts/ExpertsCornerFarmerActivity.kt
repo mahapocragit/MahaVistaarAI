@@ -2,7 +2,6 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.exp
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -10,18 +9,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.model.Category
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityExpertsCornerFarmerBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.ExpertsViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
-import org.json.JSONArray
 import org.json.JSONObject
-import kotlin.getValue
 
 class ExpertsCornerFarmerActivity : AppCompatActivity() {
 

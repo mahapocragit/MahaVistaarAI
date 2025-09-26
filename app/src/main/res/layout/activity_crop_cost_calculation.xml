@@ -169,7 +169,7 @@
                         android:layout_weight="6"
                         android:gravity="end"
                         android:textSize="@dimen/_14sdp"
-                        android:text="₹1000"
+                        android:text="₹0"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -217,7 +217,7 @@
                                 android:id="@+id/expenseTextView"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="26000"
+                                android:text="0"
                                 android:textColor="@color/red"
                                 android:textSize="@dimen/_13sdp"
                                 android:textStyle="bold" />
@@ -254,7 +254,7 @@
                                 android:id="@+id/incomeTextView"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="27000"
+                                android:text="0"
                                 android:textColor="@color/light_green"
                                 android:textSize="@dimen/_13sdp"
                                 android:textStyle="bold" />
@@ -324,7 +324,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="No Transactions Found" />
+                android:text="@string/no_transactions_found" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
