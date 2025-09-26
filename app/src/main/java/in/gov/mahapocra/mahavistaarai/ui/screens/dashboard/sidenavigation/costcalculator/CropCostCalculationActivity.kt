@@ -1,6 +1,5 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator
 
-import CropTransactionAdapter
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
@@ -123,7 +122,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                     binding.notificationNotFoundLayout.visibility = View.GONE
                     binding.cropTransactionRecyclerView.visibility = View.VISIBLE
                     binding.cropTransactionRecyclerView.adapter =
-                        CropTransactionAdapter(cropTransactionArray, this)
+                        CropTransactionAdapter(cropTransactionArray, languageToLoad, this)
                 } else {
                     binding.notificationNotFoundLayout.visibility = View.VISIBLE
                     binding.cropTransactionRecyclerView.visibility = View.GONE
@@ -162,7 +161,11 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
             cropId = intent.getIntExtra("crop_id", 0)
             val name = intent.getStringExtra("crop_name")
             binding.cropNameTextView.text = name
-            binding.cropNameProfitTitle.text = "$name Profit"
+            binding.cropNameProfitTitle.text = buildString {
+                append(name)
+                append(" ")
+                append(getString(R.string.crops_profit))
+            }
             costCalculatorViewModel.getCropSpecificTransactions(this, cropId)
         } catch (e: Exception) {
             Log.d("TAGGER", "setUpListeners: ${e.message}")
@@ -170,7 +173,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
 
         binding.addExpenseButton.setOnClickListener {
             // Inflate your custom view
-            val binding = DialogAddExpenseLayoutBinding.inflate(layoutInflater)
+            DialogAddExpenseLayoutBinding.inflate(layoutInflater)
             val dialogView = layoutInflater.inflate(R.layout.dialog_add_expense_layout, null)
             unitMultiplier = 1
             val dialog = AlertDialog.Builder(this)
@@ -347,7 +350,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
 
                 // Build dialog with custom ListView
                 val dialog = AlertDialog.Builder(this)
-                    .setTitle("Select Option")
+                    .setTitle(R.string.select_option)
                     .setView(listView)
                     .setNegativeButton(R.string.cancel, null)
                     .create()
@@ -361,7 +364,6 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                             "name_mr"
                         )
                     categoryNameTextView.text = name
-                    Toast.makeText(this, "ID: $categoryId, Name: $name", Toast.LENGTH_SHORT).show()
                     dialog.dismiss()
                 }
 
@@ -479,6 +481,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
             val transactionType = data.optString("type", "")
             val transactionCropId = data.optInt("crop_id")
             val transactionCategory = data.optString("category", "")
+            val transactionCategoryMr = data.optString("category_mr", "")
             val transactionCategoryId = data.optString("category_id", "0").toIntOrNull() ?: 0
             val transactionDate = data.optString("date", "")
             val transactionAmount = data.optString("price", "0")
@@ -598,11 +601,12 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
 
                     val dialogDateText =
                         dialogAddIncomeLayoutBinding.incomeCalendarDateTextView.text.toString()
+                    Log.d("TAGGER", "submitText: $dialogDateText")
                     costCalculatorViewModel.updateCropTransaction(
                         this,
                         type = transactionType,
                         cropId = transactionCropId,
-                        date = dialogDateText,
+                        date = convertDate(dialogDateText),
                         transactionName = dialogTransactionName,
                         priceTotal = totalAmount,
                         yield = transactionYieldAmount,
@@ -626,7 +630,8 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                 editExpenseLayoutBinding.cancelText.setOnClickListener {
                     dialog.dismiss()
                 }
-                editExpenseLayoutBinding.categoryNameTextView.text = transactionCategory
+                editExpenseLayoutBinding.categoryNameTextView.text =
+                    if (languageToLoad == "en") transactionCategory else transactionCategoryMr
                 editExpenseLayoutBinding.priceEditText2.setText(transactionAmount)
                 editExpenseLayoutBinding.expenseNameEditText2.setText(transactionName)
                 editExpenseLayoutBinding.expenseCalendarDateTextView.setOnClickListener {
@@ -640,7 +645,11 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                 }
                 editExpenseLayoutBinding.categoryExpenseLayout.setOnClickListener {
                     val items = Array(jsonArray.length()) { i ->
-                        jsonArray.getJSONObject(i).getString("name")
+                        if (languageToLoad == "en") {
+                            jsonArray.getJSONObject(i).getString("name")
+                        } else {
+                            jsonArray.getJSONObject(i).getString("name_mr")
+                        }
                     }
 
                     // Create ListView programmatically
@@ -656,19 +665,20 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
 
                     // Build dialog with custom ListView
                     val dialog = AlertDialog.Builder(this)
-                        .setTitle("Select Option")
+                        .setTitle(R.string.select_option)
                         .setView(listView)
-                        .setNegativeButton("Cancel", null)
+                        .setNegativeButton(R.string.cancel, null)
                         .create()
 
                     // Handle click
                     listView.setOnItemClickListener { _, _, position, _ ->
                         val selectedObj = jsonArray.getJSONObject(position)
                         categoryId = selectedObj.getInt("id")
-                        val name = selectedObj.getString("name")
+                        val name =
+                            if (languageToLoad == "en") selectedObj.getString("name") else selectedObj.getString(
+                                "name_mr"
+                            )
                         editExpenseLayoutBinding.categoryNameTextView.text = name
-                        Toast.makeText(this, "ID: $categoryId, Name: $name", Toast.LENGTH_SHORT)
-                            .show()
                         dialog.dismiss()
                     }
 
@@ -699,7 +709,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                         this,
                         type = transactionType,
                         cropId = transactionCropId,
-                        date = dialogDateText,
+                        date = convertDate(dialogDateText),
                         categoryId = transactionCatId,
                         transactionName = dialogTransactionName,
                         priceTotal = totalAmount.toInt(),

@@ -1,3 +1,5 @@
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator
+
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -9,11 +11,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.CropCostCalculationActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.OnDeleteClick
 import org.json.JSONArray
 
-class CostCalculatorAdapter(private val jsonArray: JSONArray, private val onDeleteClick: OnDeleteClick) :
+class CostCalculatorAdapter(
+    private val jsonArray: JSONArray,
+    private val language: String,
+    private val onDeleteClick: OnDeleteClick
+) :
     RecyclerView.Adapter<CostCalculatorAdapter.ViewHolder>() {
 
     private var deleteEnabled: Boolean = false
@@ -29,7 +33,7 @@ class CostCalculatorAdapter(private val jsonArray: JSONArray, private val onDele
         val cropObj = jsonArray.getJSONObject(position)
 
         val cropId = cropObj.getInt("crop_id")
-        val name = cropObj.getString("name")
+        val name = if (language == "en") cropObj.getString("name") else cropObj.getString("name_mr")
         val imageUrl = cropObj.getString("image")
         val total = cropObj.getInt("total")
 
@@ -53,13 +57,13 @@ class CostCalculatorAdapter(private val jsonArray: JSONArray, private val onDele
         if (deleteEnabled) {
             holder.deleteImageView.visibility = View.VISIBLE
             holder.arrowImageView.visibility = View.GONE
-        }else{
+        } else {
             holder.arrowImageView.visibility = View.VISIBLE
             holder.deleteImageView.visibility = View.GONE
         }
 
         holder.deleteImageView.setOnClickListener {
-           onDeleteClick.onDeleteClick(cropId)
+            onDeleteClick.onDeleteClick(cropId)
         }
     }
 

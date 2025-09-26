@@ -1,27 +1,21 @@
-import android.app.AlertDialog
-import android.graphics.Color
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
-import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.mahavistaarai.R
-import org.json.JSONArray
-import androidx.core.graphics.toColorInt
-import `in`.gov.mahapocra.mahavistaarai.databinding.DialogAddIncomeLayoutBinding
-import `in`.gov.mahapocra.mahavistaarai.databinding.EditExpenseLayoutBinding
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.OnDeleteClick
-import `in`.gov.mahapocra.mahavistaarai.util.DateHelper
 import `in`.gov.mahapocra.mahavistaarai.util.DateHelper.convertDateFormat
-import org.json.JSONObject
+import org.json.JSONArray
 
 class CropTransactionAdapter(
     private val jsonArray: JSONArray,
+    private val language:String,
     private val onDeleteClick: OnDeleteClick
 ) :
     RecyclerView.Adapter<CropTransactionAdapter.ViewHolder>() {
@@ -33,17 +27,18 @@ class CropTransactionAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val context = holder.itemView.context
+        holder.itemView.context
         val cropObj = jsonArray.getJSONObject(position)
-        val transactionId = cropObj.getInt("id")
+        cropObj.getInt("id")
         val transactionType = cropObj.getString("type")
         val transactionCategory = cropObj.getString("category")
+        val transactionCategoryMr = cropObj.getString("category_mr")
         val transactionDate = cropObj.getString("date")
         val transactionAmount = cropObj.getString("price")
         val transactionName = cropObj.getString("name")
-        val transactionYield = cropObj.getString("yield")
-        val transactionPricePerUnit = cropObj.getString("price_per_unit")
-        holder.transactionDateTextView.text = DateHelper.convertDateFormat(transactionDate)
+        cropObj.getString("yield")
+        cropObj.getString("price_per_unit")
+        holder.transactionDateTextView.text = convertDateFormat(transactionDate)
         if (transactionType == "income") {
             holder.cropTransactionImage.setImageDrawable(
                 ContextCompat.getDrawable(
@@ -65,7 +60,7 @@ class CropTransactionAdapter(
             if (transactionCategory == null || transactionCategory == "null" || transactionCategory == "") {
                 holder.transactionTypeTextView.text = "Expense"
             } else {
-                holder.transactionTypeTextView.text = transactionCategory
+                holder.transactionTypeTextView.text = if(language.equals("en",ignoreCase = true))transactionCategory else transactionCategoryMr
                 if (transactionName.isEmpty()) {
                     holder.transactionNameTextView.visibility = View.GONE
                 } else {

@@ -126,7 +126,7 @@
                     <EditText
                         android:id="@+id/farmerIdEditText"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/height70"
+                        android:layout_height="@dimen/_60sdp"
                         android:background="@drawable/login_edit_bg"
                         android:digits="0987654321"
                         android:gravity="center|start"
@@ -138,7 +138,7 @@
                         android:paddingHorizontal="@dimen/padding5"
                         android:textColor="@color/black"
                         android:textIsSelectable="false"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/_10sdp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
@@ -186,7 +186,7 @@
                     <EditText
                         android:id="@+id/userIdEditText"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/height70"
+                        android:layout_height="@dimen/_60sdp"
                         android:background="@drawable/login_edit_bg"
                         android:digits="0987654321"
                         android:gravity="center|start"
@@ -198,7 +198,7 @@
                         android:paddingHorizontal="@dimen/padding5"
                         android:textColor="@color/black"
                         android:textIsSelectable="false"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/_10sdp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <RadioGroup
@@ -249,10 +249,11 @@
                     <EditText
                         android:id="@+id/passwordEditText"
                         android:layout_width="match_parent"
-                        android:layout_height="70dp"
+                        android:layout_height="@dimen/_60sdp"
                         android:background="@drawable/login_edit_bg"
                         android:gravity="center|start"
                         android:hint="@string/password"
+                        android:textSize="@dimen/_10sdp"
                         android:inputType="textWebPassword"
                         android:longClickable="false"
                         android:maxLength="20"

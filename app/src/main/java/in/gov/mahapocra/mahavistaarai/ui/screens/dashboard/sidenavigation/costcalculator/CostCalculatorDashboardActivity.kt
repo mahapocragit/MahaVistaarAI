@@ -1,6 +1,5 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator
 
-import CostCalculatorAdapter
 import android.content.Context
 import android.content.Intent
 import android.icu.util.Calendar
@@ -15,7 +14,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
@@ -40,7 +38,7 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
     private var currentYearForTransaction = 0
     private var currentSeasonForTransaction = 1
     private var isDeleteEnabled: Boolean = false
-    private var costCalculatorAdapter = CostCalculatorAdapter(JSONArray(), this)
+    private var costCalculatorAdapter = CostCalculatorAdapter(JSONArray(), "en", this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -150,7 +148,7 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
                     binding.cropTotalProfitTextView.text =
                         if (total < 0) "-₹${-total}" else "₹$total"
                     val jsonArray = jSONObject.optJSONArray("data")
-                    costCalculatorAdapter = CostCalculatorAdapter(jsonArray, this)
+                    costCalculatorAdapter = CostCalculatorAdapter(jsonArray, languageToLoad,this)
                     binding.recyclerView.adapter = costCalculatorAdapter
                 } else {
                     Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_SHORT)

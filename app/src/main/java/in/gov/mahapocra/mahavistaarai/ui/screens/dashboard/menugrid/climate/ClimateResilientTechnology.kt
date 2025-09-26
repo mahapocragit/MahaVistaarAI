@@ -44,7 +44,6 @@ class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClick
     private lateinit var languageToLoad: String
     private var resilientGrpWiseDetailsJSONArray: JSONArray? = null
     private lateinit var resilientCRAGroupJSONArray: JSONArray
-
     private var groupName: ArrayList<String> = ArrayList()
     private var groupImagePath: ArrayList<String> = ArrayList()
     private var webUrl: ArrayList<String> = ArrayList()
@@ -61,6 +60,7 @@ class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClick
         setContentView(binding.root)
         uiResponsive(binding.root)
         init()
+        observeClimateResilientGroupList()
         textViewHeaderTitle?.setText(R.string.climateTechnology)
         textViewHeaderTitle?.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
         imgBackArrow?.visibility = View.VISIBLE

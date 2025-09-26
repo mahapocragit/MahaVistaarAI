@@ -495,4 +495,6 @@
     <string name="season_text">Season: </string>
     <string name="season_kharif">Season: Kharif</string>
     <string name="season_rabbi">Season: Rabbi</string>
+    <string name="crops_profit">Profit</string>
+    <string name="select_option">Select Option</string>
 </resources>

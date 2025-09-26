@@ -55,8 +55,8 @@
 
     <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/imageView15"
-        android:layout_width="@dimen/_100sdp"
-        android:layout_height="@dimen/_100sdp"
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="@dimen/_80sdp"
         android:elevation="10dp"
         android:scaleType="fitCenter"
         android:src="@drawable/app_logo"
@@ -80,7 +80,8 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -104,7 +105,7 @@
                 <EditText
                     android:id="@+id/nameEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="@dimen/_50sdp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="20dp"
@@ -120,7 +121,7 @@
                     android:paddingEnd="@dimen/padding20"
                     android:textColor="@color/black"
                     android:textColorHint="@color/text_black"
-                    android:textSize="@dimen/text12" />
+                    android:textSize="@dimen/_10sdp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -131,7 +132,7 @@
                     <EditText
                         android:id="@+id/mobNoEditText"
                         android:layout_width="match_parent"
-                        android:layout_height="60dp"
+                        android:layout_height="@dimen/_50sdp"
                         android:layout_marginStart="10dp"
                         android:layout_weight="0.5"
                         android:background="@drawable/login_edit_bg"
@@ -146,7 +147,7 @@
                         android:paddingEnd="@dimen/padding20"
                         android:textColor="@color/black"
                         android:textColorHint="@color/text_black"
-                        android:textSize="@dimen/text12" />
+                        android:textSize="@dimen/_10sdp" />
 
                     <TextView
                         android:id="@+id/textViewVerify"
@@ -190,7 +191,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_1sdp"
-                    android:elevation="8dp"
+                    android:backgroundTint="@color/transparent"
                     android:textColorHint="@color/text_black"
                     app:hintTextAppearance="@style/TextLabel"
                     app:passwordToggleEnabled="true"
@@ -199,10 +200,11 @@
                     <EditText
                         android:id="@+id/passwordEditText"
                         android:layout_width="match_parent"
-                        android:layout_height="70dp"
+                        android:layout_height="@dimen/_50sdp"
                         android:background="@drawable/login_edit_bg"
                         android:gravity="center|start"
                         android:hint="@string/reg_pwd"
+                        android:elevation="8dp"
                         android:textSize="@dimen/_10sdp"
                         android:layout_marginHorizontal="@dimen/_15sdp"
                         android:inputType="textWebPassword"
@@ -231,7 +233,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_1sdp"
-                    android:elevation="8dp"
                     android:textColorHint="@color/text_black"
                     app:hintTextAppearance="@style/TextLabel"
                     app:passwordToggleEnabled="true"
@@ -240,7 +241,8 @@
                     <EditText
                         android:id="@+id/confirmPasswordEditText"
                         android:layout_width="match_parent"
-                        android:layout_height="70dp"
+                        android:layout_height="@dimen/_50sdp"
+                        android:elevation="8dp"
                         android:background="@drawable/login_edit_bg"
                         android:gravity="center|start"
                         android:hint="@string/confirm_password"
@@ -273,7 +275,7 @@
                         <TextView
                             android:id="@+id/textViewDist"
                             android:layout_width="match_parent"
-                            android:layout_height="60dp"
+                            android:layout_height="@dimen/_50sdp"
                             android:layout_marginHorizontal="20dp"
                             android:background="@drawable/login_edit_bg"
                             android:elevation="@dimen/_5sdp"
@@ -282,7 +284,7 @@
                             android:paddingHorizontal="@dimen/padding20"
                             android:textColor="@color/heading"
                             android:textColorHint="@color/text_black"
-                            android:textSize="@dimen/text14"
+                            android:textSize="@dimen/_10sdp"
                             android:textStyle="normal" />
 
                         <ImageView
@@ -312,7 +314,7 @@
                         <TextView
                             android:id="@+id/textViewTaluka"
                             android:layout_width="match_parent"
-                            android:layout_height="60dp"
+                            android:layout_height="@dimen/_50sdp"
                             android:layout_marginHorizontal="20dp"
                             android:background="@drawable/login_edit_bg"
                             android:elevation="@dimen/_5sdp"
@@ -321,7 +323,7 @@
                             android:paddingHorizontal="@dimen/padding20"
                             android:textColor="@color/heading"
                             android:textColorHint="@color/text_black"
-                            android:textSize="@dimen/text14"
+                            android:textSize="@dimen/_10sdp"
                             android:textStyle="normal" />
 
                         <ImageView
@@ -350,7 +352,7 @@
                         <TextView
                             android:id="@+id/textViewVillage"
                             android:layout_width="match_parent"
-                            android:layout_height="60dp"
+                            android:layout_height="@dimen/_50sdp"
                             android:layout_marginHorizontal="20dp"
                             android:background="@drawable/login_edit_bg"
                             android:elevation="@dimen/_5sdp"
@@ -359,7 +361,7 @@
                             android:paddingHorizontal="@dimen/padding20"
                             android:textColor="@color/heading"
                             android:textColorHint="@color/text_black"
-                            android:textSize="@dimen/text14"
+                            android:textSize="@dimen/_10sdp"
                             android:textStyle="normal" />
 
                         <ImageView
