@@ -1,0 +1,87 @@
+{
+  "project_info": {
+    "project_number": "573300977247",
+    "firebase_url": "https://pocra-eef95.firebaseio.com",
+    "project_id": "pocra-eef95",
+    "storage_bucket": "pocra-eef95.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:573300977247:android:dbf469fdbf847620",
+        "android_client_info": {
+          "package_name": "in.gov.krishi.maharashtra.pocra.ffs"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5PZW5j6Lk6V7DLvAfg5pjxFKPf_rc170"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:573300977247:android:b704a50e1a1558555bb5ea",
+        "android_client_info": {
+          "package_name": "in.gov.mahapocra.mahavistaarai"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5PZW5j6Lk6V7DLvAfg5pjxFKPf_rc170"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:573300977247:android:6cd119c317fdf8765bb5ea",
+        "android_client_info": {
+          "package_name": "in.gov.mahapocra.mahavistaarai.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5PZW5j6Lk6V7DLvAfg5pjxFKPf_rc170"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:573300977247:android:1f8c79a03f3ad9fe",
+        "android_client_info": {
+          "package_name": "in.gov.mahapocra.sma"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5PZW5j6Lk6V7DLvAfg5pjxFKPf_rc170"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

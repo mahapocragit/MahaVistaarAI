@@ -13,6 +13,7 @@ import com.microsoft.clarity.ClarityConfig
 import com.microsoft.clarity.models.LogLevel
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
@@ -37,7 +38,7 @@ class SplashScreenActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash_screen)
 
         val config = ClarityConfig(
-            projectId = "rqkkntubvb",
+            projectId = ApiConstants.clarityKey,
             logLevel = LogLevel.Verbose
         )
         Clarity.initialize(applicationContext, config)
