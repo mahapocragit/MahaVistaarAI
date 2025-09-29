@@ -316,4 +316,7 @@ interface ApiService {
         @Header("consent") consentValue: Boolean
     ): JsonObject
 
+    @POST("")
+    suspend fun getLeaderboardData(@Body params: RequestBody): JsonObject
+
 }

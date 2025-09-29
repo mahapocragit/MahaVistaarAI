@@ -2,8 +2,8 @@ package `in`.gov.mahapocra.mahavistaarai.data.api
 
 object ApiConstants {
     val SSO_KEY: String = APIKeys.SSO_PROD
-//    const val clarityKey: String = APIKeys.CLARITY_PROD
-    const val clarityKey: String = APIKeys.CLARITY_STAGE
+    const val clarityKey: String = APIKeys.CLARITY_PROD
+//    const val clarityKey: String = APIKeys.CLARITY_STAGE
     const val USER_News_LIST: String = "Shareddbtapi/OtherApp/GetNews"
     const val kOTPRequest: String = "authService/SendOTP"
     const val kOTPRegisterRequest: String = "authService/SendOTPRegistration"

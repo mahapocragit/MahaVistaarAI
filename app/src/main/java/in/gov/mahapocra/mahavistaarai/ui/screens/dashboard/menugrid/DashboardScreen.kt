@@ -60,6 +60,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealth
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.AboutActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.CreditsActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.leaderboard.LeaderboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.CostCalculatorDashboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.experts.ExpertsCornerFarmerActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.news.NewsListActivity
@@ -164,7 +165,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 .setDuration(500) // animation duration in ms
                 .withEndAction {
                     binding.appBarMain.dashboardScreen.chatBubbleImageView.visibility = View.GONE
-                    binding.appBarMain.dashboardScreen.chatBubbleImageView.alpha = 1f // reset alpha in case you show it again
+                    binding.appBarMain.dashboardScreen.chatBubbleImageView.alpha =
+                        1f // reset alpha in case you show it again
                 }
                 .start()
         }
@@ -804,7 +806,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 val jsonObject = JSONObject(response.toString())
                 val status = jsonObject.optInt("status")
                 if (status == 200) {
-                    Toast.makeText(this, consentMessage?:"Consent Submitted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, consentMessage ?: "Consent Submitted", Toast.LENGTH_SHORT)
+                        .show()
                 } else {
                     val responseText = jsonObject.optString("response")
                     Toast.makeText(this, responseText, Toast.LENGTH_SHORT).show()
@@ -1283,6 +1286,15 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 }
 
                 7 -> logoutFromApp()
+
+                8 -> {
+                    startActivity(
+                        Intent(
+                            this@DashboardScreen,
+                            LeaderboardActivity::class.java
+                        )
+                    )
+                }
             }
             val drawer = findViewById<DrawerLayout>(R.id.drawer_layout1)
             if (drawer.isDrawerOpen(GravityCompat.START)) {

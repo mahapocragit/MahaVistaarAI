@@ -26,6 +26,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FarmerApp">
         <activity
+            android:name=".ui.screens.dashboard.sidenavigation.leaderboard.LeaderboardActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.screens.dashboard.sidenavigation.experts.ExpertsCornerFilterActivity"
             android:exported="false" />
         <activity

@@ -40,6 +40,11 @@ class SideNavMenuHelper private constructor() {
                 costCalculatorObject.put("name", "Cost Calculator")
                 costCalculatorObject.put("icon", "cost_calculator_ic")
 
+                val leaderboardObject = JSONObject()
+                leaderboardObject.put("id", 8)
+                leaderboardObject.put("name", "Leaderboard")
+                leaderboardObject.put("icon", "leaderboard_icon")
+
                 val logoutObject = JSONObject()
                 logoutObject.put("id", 7)
                 logoutObject.put("name", "Logout")
@@ -48,6 +53,7 @@ class SideNavMenuHelper private constructor() {
                 jsonArray.put(profileObject)
 //                jsonArray.put(expertsObject)
 //                jsonArray.put(newsObject)
+                jsonArray.put(leaderboardObject)
                 jsonArray.put(costCalculatorObject)
                 jsonArray.put(partnerObject)
                 jsonArray.put(aboutObject)
@@ -92,6 +98,11 @@ class SideNavMenuHelper private constructor() {
                 costCalculatorObject.put("name", "खर्च गणक")
                 costCalculatorObject.put("icon", "cost_calculator_ic")
 
+                val leaderboardObject = JSONObject()
+                leaderboardObject.put("id", 8)
+                leaderboardObject.put("name", "Leaderboard")
+                leaderboardObject.put("icon", "leaderboard_icon")
+
                 val logoutObject = JSONObject()
                 logoutObject.put("id", 7)
                 logoutObject.put("name", "बाहेर पडा")
@@ -100,6 +111,7 @@ class SideNavMenuHelper private constructor() {
                 jsonArray.put(profileObject)
 //                jsonArray.put(expertsObject)
 //                jsonArray.put(newsObject)
+                jsonArray.put(leaderboardObject)
                 jsonArray.put(costCalculatorObject)
                 jsonArray.put(partnerObject)
                 jsonArray.put(aboutObject)
@@ -145,9 +157,15 @@ class SideNavMenuHelper private constructor() {
                 profileObject.put("name", "Login/Registration")
                 profileObject.put("icon", "myprofile")
 
+                val leaderboardObject = JSONObject()
+                leaderboardObject.put("id", 8)
+                leaderboardObject.put("name", "Leaderboard")
+                leaderboardObject.put("icon", "leaderboard_icon")
+
                 jsonArray.put(profileObject)
 //                jsonArray.put(expertsObject)
 //                jsonArray.put(newsObject)
+                jsonArray.put(leaderboardObject)
                 jsonArray.put(costCalculatorObject)
                 jsonArray.put(creditObject)
                 jsonArray.put(aboutObject)
@@ -191,9 +209,15 @@ class SideNavMenuHelper private constructor() {
                 profileObject.put("name", "लॉगइन/नोंदणी")
                 profileObject.put("icon", "myprofile")
 
+                val leaderboardObject = JSONObject()
+                leaderboardObject.put("id", 8)
+                leaderboardObject.put("name", "Leaderboard")
+                leaderboardObject.put("icon", "leaderboard_icon")
+
                 jsonArray.put(profileObject)
 //                jsonArray.put(expertsObject)
 //                jsonArray.put(newsObject)
+                jsonArray.put(leaderboardObject)
                 jsonArray.put(costCalculatorObject)
                 jsonArray.put(creditObject)
                 jsonArray.put(aboutObject)
