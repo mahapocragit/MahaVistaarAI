@@ -100,7 +100,7 @@ class SideNavMenuHelper private constructor() {
 
                 val leaderboardObject = JSONObject()
                 leaderboardObject.put("id", 8)
-                leaderboardObject.put("name", "Leaderboard")
+                leaderboardObject.put("name", "लीडरबोर्ड")
                 leaderboardObject.put("icon", "leaderboard_icon")
 
                 val logoutObject = JSONObject()
@@ -211,7 +211,7 @@ class SideNavMenuHelper private constructor() {
 
                 val leaderboardObject = JSONObject()
                 leaderboardObject.put("id", 8)
-                leaderboardObject.put("name", "Leaderboard")
+                leaderboardObject.put("name", "लीडरबोर्ड")
                 leaderboardObject.put("icon", "leaderboard_icon")
 
                 jsonArray.put(profileObject)

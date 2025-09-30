@@ -499,4 +499,6 @@
     <string name="select_option">Select Option</string>
     <string name="no_transactions_found">No Transactions Found</string>
     <string name="add_crops_to_calculate_profit">Add Crops to calculate profit</string>
+    <string name="leaderboard">Leaderboard</string>
+    <string name="state">State</string>
 </resources>

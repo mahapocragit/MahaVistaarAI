@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.leaderboard
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +11,7 @@ import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
+import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import retrofit2.Retrofit
@@ -24,19 +26,35 @@ class LeaderboardViewModel : ViewModel() {
     private var _error = MutableLiveData<String>()
     val error: MutableLiveData<String> = _error
 
-    fun getLeaderboardData(){
+    fun getLeaderboardData(context: Context, talukaCode: Int = 0, districtCode: Int = 0) {
         viewModelScope.launch {
+            ProgressHelper.showProgressDialog(context)
             try {
-                val jsonObject = JSONObject().apply {
-                    put("year", "year")
+                val jsonObject = JSONObject()
+                if (talukaCode!=0){
+                    jsonObject.apply {
+                        put("level", "taluka")
+                        put("code", talukaCode)//4201
+                    }
+                }else if (districtCode!=0){
+                    jsonObject.apply {
+                        put("level", "district")
+                        put("code", districtCode)//522
+                    }
+                }else{
+                    jsonObject.apply {
+                        put("level", "state")
+                    }
                 }
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit: Retrofit =
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getLeaderboardData(requestBody)
+                ProgressHelper.disableProgressDialog()
                 _getLeaderboardDataResponse.value = response
             } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."

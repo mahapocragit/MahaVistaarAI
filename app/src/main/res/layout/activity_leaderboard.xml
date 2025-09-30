@@ -8,36 +8,19 @@
     android:background="@drawable/gradient_leaderboard"
     tools:context=".ui.screens.dashboard.sidenavigation.leaderboard.LeaderboardActivity">
 
-    <ImageView
-        android:id="@+id/imageView44"
-        android:layout_width="@dimen/_16sdp"
-        android:layout_height="@dimen/_16sdp"
-        android:src="@drawable/crown_ic"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout27"
-        app:layout_constraintEnd_toEndOf="@+id/linearLayout27"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout27" />
-
-    <TextView
-        android:id="@+id/textView67"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Leaderboard"
-        android:textSize="@dimen/_18sdp"
-        android:textColor="@color/white"
-        android:layout_marginTop="@dimen/_20sdp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <include
+        android:id="@+id/toolbarLayout"
+        layout="@layout/layout_toolbar"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="@dimen/_280sdp"
         android:layout_height="@dimen/_40sdp"
+        android:layout_marginTop="@dimen/_40sdp"
         app:cardCornerRadius="@dimen/_30sdp"
-        android:layout_marginTop="@dimen/_10sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView67">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -51,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Taluka"
+                android:text="@string/taluka"
                 android:textColor="@color/actionbar_color_figma"
                 android:textSize="@dimen/_11sdp"
                 android:textStyle="bold" />
@@ -62,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="District"
+                android:text="@string/district"
                 android:textSize="@dimen/_11sdp" />
 
             <TextView
@@ -71,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="State"
+                android:text="@string/state"
                 android:textSize="@dimen/_11sdp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -79,10 +62,10 @@
     <ImageView
         android:id="@+id/imageView36"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_250sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView67"
+        app:layout_constraintTop_toTopOf="@+id/cardView"
         app:srcCompat="@drawable/leader_stage_ic" />
 
     <LinearLayout
@@ -90,6 +73,7 @@
         android:layout_height="0dp"
         android:background="@drawable/leaderboard_list_card_corner_background"
         android:orientation="vertical"
+        android:layout_marginHorizontal="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -105,9 +89,9 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_55sdp"
+        android:layout_marginTop="@dimen/_45sdp"
+        android:orientation="vertical"
         app:layout_constraintStart_toEndOf="@+id/linearLayout27"
         app:layout_constraintTop_toBottomOf="@+id/cardView">
 
@@ -115,22 +99,24 @@
             android:layout_width="@dimen/_45sdp"
             android:layout_height="@dimen/_46sdp"
             android:layout_margin="@dimen/_2sdp"
-            android:src="@drawable/third_leader_ic" />
+            android:src="@drawable/bronze_ic" />
 
         <TextView
+            android:id="@+id/thirdRankNameTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="TextView"
+            android:text="Amit"
             android:textColor="@color/white"
             android:textSize="@dimen/_11sdp"
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/thirdRankTalukaTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="TextView"
+            android:text="Nashik"
             android:textColor="@color/white"
             android:textSize="@dimen/_10sdp" />
     </LinearLayout>
@@ -138,9 +124,9 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="@dimen/_46sdp"
+        android:layout_marginTop="@dimen/_36sdp"
         android:layout_marginEnd="@dimen/_10sdp"
+        android:orientation="vertical"
         app:layout_constraintEnd_toStartOf="@+id/linearLayout27"
         app:layout_constraintTop_toBottomOf="@+id/cardView">
 
@@ -148,22 +134,24 @@
             android:layout_width="@dimen/_45sdp"
             android:layout_height="@dimen/_45sdp"
             android:layout_margin="@dimen/_2sdp"
-            android:src="@drawable/second_leader_ic" />
+            android:src="@drawable/silver_ic" />
 
         <TextView
+            android:id="@+id/secondRankNameTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="TextView"
+            android:text="Prashant"
             android:textColor="@color/white"
             android:textSize="@dimen/_11sdp"
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/secondRankTalukaTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="TextView"
+            android:text="Pune"
             android:textColor="@color/white"
             android:textSize="@dimen/_10sdp" />
     </LinearLayout>
@@ -182,24 +170,35 @@
             android:layout_width="@dimen/_45sdp"
             android:layout_height="@dimen/_45sdp"
             android:layout_margin="@dimen/_2sdp"
-            android:src="@drawable/first_leader_ic" />
+            android:src="@drawable/golden_ic" />
 
         <TextView
+            android:id="@+id/firstRankNameTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="TextView"
+            android:text="You"
             android:textColor="@color/white"
             android:textSize="@dimen/_11sdp"
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/firstRankTalukaTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="TextView"
+            android:text="Nagpur"
             android:textColor="@color/white"
             android:textSize="@dimen/_10sdp" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView44"
+        android:layout_width="@dimen/_16sdp"
+        android:layout_height="@dimen/_16sdp"
+        android:src="@drawable/crown_ic"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout27"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout27"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout27" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

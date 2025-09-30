@@ -291,6 +291,7 @@
                                     android:layout_marginStart="@dimen/_6sdp"
                                     android:layout_weight="1"
                                     android:text="@string/add_Crop"
+                                    android:textSize="@dimen/_10sdp"
                                     android:textColor="@color/font_color_figma"
                                     android:textStyle="bold" />
 

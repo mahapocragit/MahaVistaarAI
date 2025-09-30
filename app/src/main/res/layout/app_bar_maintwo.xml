@@ -54,18 +54,19 @@
 
             <TextView
                 android:id="@+id/notificationBadge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/_14sdp"
+                android:layout_height="@dimen/_14sdp"
                 android:layout_gravity="top|end"
                 android:background="@drawable/badge_background"
                 android:gravity="center"
                 android:minWidth="16dp"
-                android:padding="2dp"
+
+                android:padding="@dimen/_2sdp"
                 android:text="5"
                 android:textColor="@android:color/white"
-                android:textSize="10sp"
+                android:textSize="@dimen/_8sdp"
                 android:textStyle="bold"
-                android:visibility="gone" />
+                android:visibility="visible" />
         </FrameLayout>
     </androidx.appcompat.widget.Toolbar>
 
@@ -80,7 +81,7 @@
         android:background="#80000000"
         android:clickable="true"
         android:focusable="true"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

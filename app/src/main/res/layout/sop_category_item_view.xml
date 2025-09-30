@@ -30,7 +30,7 @@
                 android:textAllCaps="false"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/actionbar_color_figma"
-                android:textSize="15sp"
+                android:textSize="@dimen/_12sdp"
                 android:textStyle="bold" />
 
             <TextView
@@ -45,7 +45,7 @@
                 android:textAllCaps="false"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textSize="@dimen/_12sdp" />
 
             <ImageView
                 android:id="@+id/imageView12"

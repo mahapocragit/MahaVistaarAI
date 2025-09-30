@@ -6,11 +6,14 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.Window
 import android.view.WindowManager
@@ -144,6 +147,18 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             AppPreferenceManager(this).saveBoolean("show_overlay", false)
             binding.drawerLayout1.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         }
+
+        val leaderDialog = AlertDialog.Builder(this)
+            .setView(R.layout.leaderboard_dialog)
+            .create()
+
+        leaderDialog.show()
+        leaderDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+// Set width and height
+        leaderDialog.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,  // or a fixed width in pixels
+            resources.getDimensionPixelSize(R.dimen._310sdp) // 200dp height
+        )
 
         val shakeAnimation = AnimationUtils.loadAnimation(this, R.anim.shake)
         binding.appBarMain.dashboardScreen.imageView20.startAnimation(shakeAnimation)

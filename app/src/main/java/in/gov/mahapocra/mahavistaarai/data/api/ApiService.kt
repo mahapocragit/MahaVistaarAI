@@ -316,7 +316,7 @@ interface ApiService {
         @Header("consent") consentValue: Boolean
     ): JsonObject
 
-    @POST("")
+    @POST("chatbotService/get-top-user-list")
     suspend fun getLeaderboardData(@Body params: RequestBody): JsonObject
 
 }

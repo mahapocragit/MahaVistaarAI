@@ -18,19 +18,24 @@ class LeaderboardAdapter(private val items: JSONArray) : RecyclerView.Adapter<Le
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items.getJSONObject(position)
-        val name = item.optString("name")
-        val score = item.optInt("score")
-        holder.bind(name, score)
+        val name = item.optString("user_name")
+        val score = item.optInt("count")
+        val taluka = item.optString("taluka")
+        holder.bind(name, score, position, taluka)
     }
 
     override fun getItemCount(): Int = items.length()
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val personRankTextView: TextView = itemView.findViewById(R.id.personRankTextView)
         private val personNameTextView: TextView = itemView.findViewById(R.id.personNameTextView)
         private val personScoreTextView: TextView = itemView.findViewById(R.id.personScoreTextView)
+        private val personTalukaTextView: TextView = itemView.findViewById(R.id.personTalukaTextView)
 
-        fun bind(name: String, score: Int) {
+        fun bind(name: String, score: Int, position: Int, taluka: String) {
+            personRankTextView.text = (position.plus(1)).toString()
             personNameTextView.text = name
+            personTalukaTextView.text = taluka
             personScoreTextView.text = "$score Q"
         }
     }
