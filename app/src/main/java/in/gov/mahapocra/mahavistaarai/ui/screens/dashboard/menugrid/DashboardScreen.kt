@@ -43,10 +43,12 @@ import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListene
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.CropsCategName
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDashboardScreenBinding
+import `in`.gov.mahapocra.mahavistaarai.databinding.LeaderboardDialogBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropRecyclerSapAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DashboardAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DrawerMenuAdapter
@@ -66,6 +68,8 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.Cred
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.leaderboard.LeaderboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.CostCalculatorDashboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.experts.ExpertsCornerFarmerActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.leaderboard.LeaderboardAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.leaderboard.LeaderboardViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.news.NewsListActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
@@ -98,6 +102,8 @@ import java.util.Objects
 class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecyclerItemClickListener {
 
     private lateinit var binding: ActivityDashboardScreenBinding
+    private val farmerViewModel: FarmerViewModel by viewModels()
+    private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     private lateinit var navUserName: TextView
     private var consentMessage: String? = null
     private var districtCode: Int = 0
@@ -113,7 +119,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     private var savedCropWoTRId: String? = null
     private var savedCropImageUrl: String? = null
     private lateinit var appPreferenceManager: AppPreferenceManager
-    private val farmerViewModel: FarmerViewModel by viewModels()
     private var jsonArray: JSONArray? = null
     private var showToast = true
     private var etlAdvisoryJsonArray: JSONArray = JSONArray()
@@ -147,18 +152,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             AppPreferenceManager(this).saveBoolean("show_overlay", false)
             binding.drawerLayout1.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         }
-
-        val leaderDialog = AlertDialog.Builder(this)
-            .setView(R.layout.leaderboard_dialog)
-            .create()
-
-        leaderDialog.show()
-        leaderDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-// Set width and height
-        leaderDialog.window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,  // or a fixed width in pixels
-            resources.getDimensionPixelSize(R.dimen._310sdp) // 200dp height
-        )
 
         val shakeAnimation = AnimationUtils.loadAnimation(this, R.anim.shake)
         binding.appBarMain.dashboardScreen.imageView20.startAnimation(shakeAnimation)
@@ -305,7 +298,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             }
         }
 
-        appPreferenceManager.clearAll()
         dashboardGridItemsLayoutSetup()
         binding.appBarMain.imgLangChange.setOnClickListener { openChangeLangPopup() }
         binding.appBarMain.imgNotification.setOnClickListener {
@@ -463,6 +455,21 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 finishAffinity()
             }
         })
+
+        if (shouldShowDialog()) {
+            leaderboardViewModel.getLeaderboardData(context = this, "taluka")
+        }
+    }
+
+    private fun saveTodayAsShown() {
+        val today = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(Date())
+        appPreferenceManager.saveString(ApiConstants.KEY_LAST_SHOWN_DATE, today)
+    }
+
+    private fun shouldShowDialog(): Boolean {
+        val lastShownDate = appPreferenceManager.getString(ApiConstants.KEY_LAST_SHOWN_DATE)
+        val today = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(Date())
+        return lastShownDate != today
     }
 
     fun observeResponse() {
@@ -829,6 +836,75 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 }
             }
         }
+
+        leaderboardViewModel.getLeaderboardDataResponse.observe(this) { response ->
+            if (response != null) {
+                val jsonObject = JSONObject(response.toString())
+                val dataObject = jsonObject.getJSONObject("data")
+                //First Rank Holder
+                val firstRankObject = dataObject.getJSONObject("first")
+                val firstRankName = firstRankObject.optString("user_name")
+                val firstRankTaluka = firstRankObject.optString("taluka")
+                //Second Rank Holder
+                val secondRankObject = dataObject.getJSONObject("second")
+                val secondRankName = secondRankObject.optString("user_name")
+                val secondRankTaluka = firstRankObject.optString("taluka")
+                //Third Rank Holder
+                val thirdRankObject = dataObject.getJSONObject("third")
+                val thirdRankName = thirdRankObject.optString("user_name")
+                val thirdRankTaluka = firstRankObject.optString("taluka")
+                //Toppers List
+                val leaderDialogBinding = LeaderboardDialogBinding.inflate(layoutInflater)
+                val leaderDialog = AlertDialog.Builder(this)
+                    .setView(leaderDialogBinding.root)
+                    .create()
+
+                leaderDialogBinding.cancelImageView.setOnClickListener {
+                    leaderDialog.dismiss()
+                }
+
+                leaderDialogBinding.leaderDialogCardLayout.setOnClickListener {
+                    startActivity(
+                        Intent(
+                            this,
+                            LeaderboardActivity::class.java
+                        )
+                    )
+                    leaderDialog.dismiss()
+                }
+
+                leaderDialog.setOnCancelListener {
+                    // Fired when dismissed by BACK press or outside touch
+                    saveTodayAsShown()
+                }
+
+                leaderDialog.setOnDismissListener {
+                    saveTodayAsShown()
+                }
+
+                leaderDialogBinding.firstRankNameTextView.text = formatName(firstRankName)
+                leaderDialogBinding.firstRankTalukaTextView.text = formatName(firstRankTaluka)
+
+                leaderDialogBinding.secondRankNameTextView.text = formatName(secondRankName)
+                leaderDialogBinding.secondRankTalukaTextView.text = formatName(secondRankTaluka)
+
+                leaderDialogBinding.thirdRankNameTextView.text = formatName(thirdRankName)
+                leaderDialogBinding.thirdRankTalukaTextView.text = formatName(thirdRankTaluka)
+
+                leaderDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                // Set width and height
+                leaderDialog.window?.setLayout(
+                    ViewGroup.LayoutParams.MATCH_PARENT,  // or a fixed width in pixels
+                    resources.getDimensionPixelSize(R.dimen._310sdp)
+                )
+                leaderDialog.show()
+            }
+        }
+    }
+
+    fun formatName(str: String): String {
+        val stringArr = str.split(" ")
+        return stringArr[0]
     }
 
     private fun showDialogForConsent() {
@@ -1323,6 +1399,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     private fun logoutFromApp() {
         if (NetworkUtils.isInternetAvailable(this)) {
             farmerViewModel.updateFCMToken(this, "NA")
+            appPreferenceManager.clearAll()
         } else {
             LocalCustom.createSnackbar(binding.root, "Internet not available!")
         }

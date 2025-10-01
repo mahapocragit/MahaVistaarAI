@@ -26,6 +26,7 @@ class LeaderboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLeaderboardBinding
     private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     var languageToLoad = "mr"
+    private var selectedValue = "taluka"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,28 +54,26 @@ class LeaderboardActivity : AppCompatActivity() {
                 //First Rank Holder
                 val firstRankObject = dataObject.getJSONObject("first")
                 val firstRankName = firstRankObject.optString("user_name")
-                val firstRankScore = firstRankObject.optInt("count")
                 val firstRankTaluka = firstRankObject.optString("taluka")
                 binding.firstRankNameTextView.text = formatName(firstRankName)
                 binding.firstRankTalukaTextView.text = formatName(firstRankTaluka)
                 //Second Rank Holder
                 val secondRankObject = dataObject.getJSONObject("second")
                 val secondRankName = secondRankObject.optString("user_name")
-                val secondRankScore = secondRankObject.optInt("count")
                 val secondRankTaluka = firstRankObject.optString("taluka")
                 binding.secondRankNameTextView.text = formatName(secondRankName)
                 binding.secondRankTalukaTextView.text = formatName(secondRankTaluka)
                 //Third Rank Holder
                 val thirdRankObject = dataObject.getJSONObject("third")
                 val thirdRankName = thirdRankObject.optString("user_name")
-                val thirdRankScore = thirdRankObject.optInt("count")
                 val thirdRankTaluka = firstRankObject.optString("taluka")
                 binding.thirdRankNameTextView.text = formatName(thirdRankName)
                 binding.thirdRankTalukaTextView.text = formatName(thirdRankTaluka)
                 //Toppers List
                 val toppersList = dataObject.optJSONArray("list")
+                Log.d("TAGGER", "observeViewModel: $toppersList")
                 binding.leaderboardRecyclerView.adapter =
-                    toppersList?.let { LeaderboardAdapter(toppersList) }
+                    toppersList?.let { LeaderboardAdapter(toppersList, selectedValue) }
             }
         }
     }
@@ -133,23 +132,22 @@ class LeaderboardActivity : AppCompatActivity() {
             taluka == 1 -> {
                 binding.talukaTextView.setTextColor(highlightColor)
                 binding.talukaTextView.setTypeface(customFont, Typeface.BOLD)
-                val talukaId =
-                    AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
-                leaderboardViewModel.getLeaderboardData(context = this, talukaCode = 4201)
+                selectedValue = "taluka"
+                leaderboardViewModel.getLeaderboardData(context = this, selectedValue)
             }
 
             district == 1 -> {
                 binding.districtTextView.setTextColor(highlightColor)
                 binding.districtTextView.setTypeface(customFont, Typeface.BOLD)
-                val districtId =
-                    AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
-                leaderboardViewModel.getLeaderboardData(context = this, districtCode = 522)
+                selectedValue = "district"
+                leaderboardViewModel.getLeaderboardData(context = this, selectedValue)
             }
 
             state == 1 -> {
                 binding.stateTextView.setTextColor(highlightColor)
                 binding.stateTextView.setTypeface(customFont, Typeface.BOLD)
-                leaderboardViewModel.getLeaderboardData(context = this)
+                selectedValue = "state"
+                leaderboardViewModel.getLeaderboardData(context = this, selectedValue)
             }
         }
     }

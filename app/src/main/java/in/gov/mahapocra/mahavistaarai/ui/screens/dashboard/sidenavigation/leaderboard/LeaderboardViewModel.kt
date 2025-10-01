@@ -8,10 +8,12 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.app_util.AppUtility
+import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import retrofit2.Retrofit
@@ -26,24 +28,36 @@ class LeaderboardViewModel : ViewModel() {
     private var _error = MutableLiveData<String>()
     val error: MutableLiveData<String> = _error
 
-    fun getLeaderboardData(context: Context, talukaCode: Int = 0, districtCode: Int = 0) {
+    fun getLeaderboardData(context: Context, selectedValue: String) {
         viewModelScope.launch {
             ProgressHelper.showProgressDialog(context)
             try {
+
+                val talukaId =
+                    AppSettings.getInstance().getIntValue(context, AppConstants.uTALUKAID, 0)
+                val districtId =
+                    AppSettings.getInstance().getIntValue(context, AppConstants.uDISTId, 0)
                 val jsonObject = JSONObject()
-                if (talukaCode!=0){
-                    jsonObject.apply {
-                        put("level", "taluka")
-                        put("code", talukaCode)//4201
+                when (selectedValue) {
+                    "taluka" -> {
+                        jsonObject.apply {
+                            put("level", "taluka")
+                            put("code", talukaId)//4201
+                        }
                     }
-                }else if (districtCode!=0){
-                    jsonObject.apply {
-                        put("level", "district")
-                        put("code", districtCode)//522
+
+                    "district" -> {
+                        jsonObject.apply {
+                            put("level", "district")
+                            put("code", districtId)//522
+                        }
                     }
-                }else{
-                    jsonObject.apply {
-                        put("level", "state")
+
+                    else -> {
+                        jsonObject.apply {
+                            put("level", "state")
+                            put("code", 0)
+                        }
                     }
                 }
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())

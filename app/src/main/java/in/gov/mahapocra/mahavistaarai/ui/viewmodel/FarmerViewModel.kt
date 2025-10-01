@@ -123,6 +123,7 @@ class FarmerViewModel : ViewModel() {
 
     fun saveFarmerSelectedCrop(context: Context, sowingDate: String, cropId: Int) {
         viewModelScope.launch {
+            ProgressHelper.showProgressDialog(context)
             try {
                 val jsonObject = JSONObject().apply {
                     put("api_key", APIKeys.SSO_PROD)
@@ -146,9 +147,11 @@ class FarmerViewModel : ViewModel() {
 
                 // Retrofit suspend call
                 val response = apiRequest.kSaveFarmerSelectedCrop(requestBody)
+                ProgressHelper.disableProgressDialog()
                 _saveFarmerSelectedCrop.value = response
 
             } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
@@ -607,9 +610,9 @@ class FarmerViewModel : ViewModel() {
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit: Retrofit =
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                ProgressHelper.disableProgressDialog()
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getCropStagesAndAdvisory(requestBody)
+                ProgressHelper.disableProgressDialog()
                 _getCropStagesAndAdvisoryResponse.value = response
             } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
