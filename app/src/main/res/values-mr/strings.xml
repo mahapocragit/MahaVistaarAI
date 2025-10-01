@@ -502,4 +502,8 @@
     <string name="add_crops_to_calculate_profit">नफा मोजण्यासाठी पिके जोडा</string>
     <string name="leaderboard">लीडरबोर्ड</string>
     <string name="state">राज्य</string>
+    <string name="leaderboard_duration">१५ सप्टेंबर २०२५ ते ३० सप्टेंबर २०२५ या कालावधीत चॅटबॉटमध्ये विचारलेल्या प्रश्नांच्या संख्येवर लीडरबोर्ड आधारित आहे.</string>
+    <string name="rank">श्रेणी</string>
+    <string name="name_amp_location">नाव आणि स्थान</string>
+    <string name="farmers_in_taluka">तालुक्यातील टॉप ३ शेतकरी</string>
 </resources>

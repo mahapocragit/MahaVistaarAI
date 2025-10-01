@@ -9,7 +9,7 @@
     </item>
 
     <!-- Colored status bar area -->
-    <item android:top="@dimen/_38sdp"> <!-- We'll override this dynamically -->
+    <item android:top="@dimen/_34sdp"> <!-- We'll override this dynamically -->
         <shape android:shape="rectangle">
             <solid android:color="@color/white" /> <!-- pink or your desired color -->
         </shape>

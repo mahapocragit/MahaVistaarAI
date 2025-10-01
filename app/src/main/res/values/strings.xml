@@ -501,4 +501,8 @@
     <string name="add_crops_to_calculate_profit">Add Crops to calculate profit</string>
     <string name="leaderboard">Leaderboard</string>
     <string name="state">State</string>
+    <string name="leaderboard_duration">Leaderboard is based on number of questions asked in the chatbot for the period 15 Sep 2025 to 30 Sep 2025</string>
+    <string name="rank">Rank</string>
+    <string name="name_amp_location"><![CDATA[Name & Location]]></string>
+    <string name="farmers_in_taluka">Farmers In Taluka</string>
 </resources>

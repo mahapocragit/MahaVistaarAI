@@ -149,7 +149,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/talukaTextView"
+                    android:id="@+id/topThreeTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -164,7 +164,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:gravity="center"
-                    android:text="Farmers In Taluka"
+                    android:text="@string/farmers_in_taluka"
                     android:textSize="@dimen/_11sdp" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>

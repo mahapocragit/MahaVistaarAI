@@ -6,9 +6,14 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.LinearLayout
+import android.widget.PopupWindow
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.TooltipCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -55,32 +60,73 @@ class LeaderboardActivity : AppCompatActivity() {
                 val firstRankObject = dataObject.getJSONObject("first")
                 val firstRankName = firstRankObject.optString("user_name")
                 val firstRankTaluka = firstRankObject.optString("taluka")
+                val firstRankDistrict = firstRankObject.optString("district")
+                val firstRankTalukaMr = firstRankObject.optString("taluka_mr")
+                val firstRankDistrictMr = firstRankObject.optString("district_mr")
                 binding.firstRankNameTextView.text = formatName(firstRankName)
-                binding.firstRankTalukaTextView.text = formatName(firstRankTaluka)
+                binding.firstRankTalukaTextView.text = when (selectedValue) {
+                    "taluka" -> formatLocation(if (languageToLoad == "en") firstRankTaluka else firstRankTalukaMr)
+                    "district" -> formatLocation(if (languageToLoad == "en") firstRankTaluka else firstRankTalukaMr)
+                    else -> formatLocation(if (languageToLoad == "en") firstRankDistrict else firstRankDistrictMr)
+                }
                 //Second Rank Holder
                 val secondRankObject = dataObject.getJSONObject("second")
                 val secondRankName = secondRankObject.optString("user_name")
                 val secondRankTaluka = firstRankObject.optString("taluka")
+                val secondRankDistrict = secondRankObject.optString("district")
+                val secondRankTalukaMr = firstRankObject.optString("taluka_mr")
+                val secondRankDistrictMr = secondRankObject.optString("district_mr")
                 binding.secondRankNameTextView.text = formatName(secondRankName)
-                binding.secondRankTalukaTextView.text = formatName(secondRankTaluka)
+                binding.secondRankTalukaTextView.text = when (selectedValue) {
+                    "taluka" -> formatLocation(if (languageToLoad == "en") secondRankTaluka else secondRankTalukaMr)
+                    "district" -> formatLocation(if (languageToLoad == "en") secondRankTaluka else secondRankTalukaMr)
+                    else -> formatLocation(if (languageToLoad == "en") secondRankDistrict else secondRankDistrictMr)
+                }
                 //Third Rank Holder
                 val thirdRankObject = dataObject.getJSONObject("third")
                 val thirdRankName = thirdRankObject.optString("user_name")
                 val thirdRankTaluka = firstRankObject.optString("taluka")
+                val thirdRankDistrict = thirdRankObject.optString("district")
+                val thirdRankTalukaMr = firstRankObject.optString("taluka_mr")
+                val thirdRankDistrictMr = thirdRankObject.optString("district_mr")
                 binding.thirdRankNameTextView.text = formatName(thirdRankName)
-                binding.thirdRankTalukaTextView.text = formatName(thirdRankTaluka)
+                binding.thirdRankTalukaTextView.text = when (selectedValue) {
+                    "taluka" -> formatLocation(if (languageToLoad == "en") thirdRankTaluka else thirdRankTalukaMr)
+                    "district" -> formatLocation(if (languageToLoad == "en") thirdRankTaluka else thirdRankTalukaMr)
+                    else -> formatLocation(if (languageToLoad == "en") thirdRankDistrict else thirdRankDistrictMr)
+                }
                 //Toppers List
                 val toppersList = dataObject.optJSONArray("list")
                 Log.d("TAGGER", "observeViewModel: $toppersList")
-                binding.leaderboardRecyclerView.adapter =
-                    toppersList?.let { LeaderboardAdapter(toppersList, selectedValue) }
+                if (toppersList?.length() == 0) {
+                    binding.notificationNotFoundLayout.visibility = View.VISIBLE
+                    binding.rankNameLocationTextView.visibility = View.GONE
+                    binding.leaderboardRecyclerView.visibility = View.GONE
+                } else {
+                    binding.notificationNotFoundLayout.visibility = View.GONE
+                    binding.rankNameLocationTextView.visibility = View.VISIBLE
+                    binding.leaderboardRecyclerView.visibility = View.VISIBLE
+                    binding.leaderboardRecyclerView.adapter = LeaderboardAdapter(toppersList, selectedValue)
+                }
             }
         }
     }
 
-    fun formatName(str:String):String{
-        val stringArr = str.split(" ")
-        return stringArr[0]
+    fun formatName(str: String): String {
+        val firstWord = str.split(" ")[0]   // take first word
+        return if (firstWord.length > 6) {
+            firstWord.substring(0, 6) + ".."
+        } else {
+            firstWord
+        }
+    }
+
+    fun formatLocation(str: String): String {
+        return if (str.length > 6) {
+            str.substring(0, 6) + ".."
+        } else {
+            str
+        }
     }
 
     private fun setUpViews() {
@@ -104,6 +150,25 @@ class LeaderboardActivity : AppCompatActivity() {
                 startActivity(Intent(this@LeaderboardActivity, DashboardScreen::class.java))
             }
         })
+
+        binding.toolbarLayout.imageViewFilterMenu.visibility = View.VISIBLE
+        binding.toolbarLayout.imageViewFilterMenu.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.info_ic))
+        binding.toolbarLayout.imageViewFilterMenu.setOnClickListener {view ->
+            val popupView = layoutInflater.inflate(R.layout.popup_info, null)
+
+            val popupWindow = PopupWindow(
+                popupView,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                true // focusable, allows dismiss on outside touch
+            )
+
+            popupWindow.elevation = 10f
+            popupWindow.isOutsideTouchable = true
+
+            // Show popup just below the info icon
+            popupWindow.showAsDropDown(view, 0, 0)
+        }
     }
 
     override fun attachBaseContext(newBase: Context) {

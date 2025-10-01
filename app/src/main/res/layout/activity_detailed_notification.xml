@@ -47,7 +47,7 @@
                         android:id="@+id/titleTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="TextView"
+                        android:text=""
                         android:textColor="@color/actionbar_color_figma"
                         android:textSize="@dimen/_11sdp"
                         android:textStyle="bold" />
@@ -56,7 +56,7 @@
                         android:id="@+id/shortDescriptionTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="TextView"
+                        android:text=""
                         android:textColor="@color/black"
                         android:textSize="@dimen/_11sdp" />
 
@@ -64,7 +64,7 @@
                         android:id="@+id/dateTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="TextView"
+                        android:text=""
                         android:textSize="@dimen/_11sdp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

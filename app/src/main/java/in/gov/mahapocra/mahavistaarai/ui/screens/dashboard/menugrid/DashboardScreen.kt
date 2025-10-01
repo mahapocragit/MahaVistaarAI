@@ -845,20 +845,27 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 val firstRankObject = dataObject.getJSONObject("first")
                 val firstRankName = firstRankObject.optString("user_name")
                 val firstRankTaluka = firstRankObject.optString("taluka")
+                val firstRankTalukaMr = firstRankObject.optString("taluka_mr")
                 //Second Rank Holder
                 val secondRankObject = dataObject.getJSONObject("second")
                 val secondRankName = secondRankObject.optString("user_name")
                 val secondRankTaluka = firstRankObject.optString("taluka")
+                val secondRankTalukaMr = firstRankObject.optString("taluka_mr")
                 //Third Rank Holder
                 val thirdRankObject = dataObject.getJSONObject("third")
                 val thirdRankName = thirdRankObject.optString("user_name")
                 val thirdRankTaluka = firstRankObject.optString("taluka")
+                val thirdRankTalukaMr = firstRankObject.optString("taluka_mr")
                 //Toppers List
                 val leaderDialogBinding = LeaderboardDialogBinding.inflate(layoutInflater)
                 val leaderDialog = AlertDialog.Builder(this)
                     .setView(leaderDialogBinding.root)
                     .create()
-
+                if (languageToLoad=="mr") {
+                    leaderDialogBinding.topThreeTextView.visibility = View.GONE
+                }else {
+                    leaderDialogBinding.topThreeTextView.visibility = View.VISIBLE
+                }
                 leaderDialogBinding.cancelImageView.setOnClickListener {
                     leaderDialog.dismiss()
                 }
@@ -883,13 +890,13 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 }
 
                 leaderDialogBinding.firstRankNameTextView.text = formatName(firstRankName)
-                leaderDialogBinding.firstRankTalukaTextView.text = formatName(firstRankTaluka)
+                leaderDialogBinding.firstRankTalukaTextView.text = formatName(if (languageToLoad == "en") firstRankTaluka else firstRankTalukaMr)
 
                 leaderDialogBinding.secondRankNameTextView.text = formatName(secondRankName)
-                leaderDialogBinding.secondRankTalukaTextView.text = formatName(secondRankTaluka)
+                leaderDialogBinding.secondRankTalukaTextView.text = formatName(if (languageToLoad == "en") secondRankTaluka else secondRankTalukaMr)
 
                 leaderDialogBinding.thirdRankNameTextView.text = formatName(thirdRankName)
-                leaderDialogBinding.thirdRankTalukaTextView.text = formatName(thirdRankTaluka)
+                leaderDialogBinding.thirdRankTalukaTextView.text = formatName(if (languageToLoad == "en") thirdRankTaluka else thirdRankTalukaMr)
 
                 leaderDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 // Set width and height
@@ -903,8 +910,12 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     }
 
     fun formatName(str: String): String {
-        val stringArr = str.split(" ")
-        return stringArr[0]
+        val firstWord = str.split(" ")[0]   // take first word
+        return if (firstWord.length > 6) {
+            firstWord.substring(0, 6) + ".."
+        } else {
+            firstWord
+        }
     }
 
     private fun showDialogForConsent() {

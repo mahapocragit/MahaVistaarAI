@@ -80,10 +80,38 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView36">
 
         <LinearLayout
+            android:id="@+id/notificationNotFoundLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_40sdp"
+            android:gravity="center"
+            android:visibility="gone"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_100sdp"
+                app:srcCompat="@drawable/ic_no_data_found" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Leaderboard is currently empty" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rankNameLocationTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10sdp"
             android:gravity="center"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <TextView
@@ -92,7 +120,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="6"
                 android:gravity="center"
-                android:text="Rank"
+                android:text="@string/rank"
+                android:textColor="@color/actionbar_color_figma"
                 android:textSize="@dimen/_11sdp"
                 android:textStyle="bold" />
 
@@ -106,8 +135,9 @@
                 android:id="@+id/personNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Name &amp; Location"
+                android:text="@string/name_amp_location"
                 android:layout_weight="2"
+                android:textColor="@color/actionbar_color_figma"
                 android:textSize="@dimen/_11sdp"
                 android:textStyle="bold" />
 
@@ -117,6 +147,7 @@
             android:id="@+id/leaderboardRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:visibility="gone"
             tools:listitem="@layout/leaderboard_item_view" />
     </LinearLayout>
 
@@ -133,24 +164,27 @@
             android:layout_width="@dimen/_45sdp"
             android:layout_height="@dimen/_46sdp"
             android:layout_margin="@dimen/_2sdp"
+            android:layout_gravity="center"
             android:src="@drawable/bronze_ic" />
 
         <TextView
             android:id="@+id/thirdRankNameTextView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:gravity="center"
-            android:text="Amit"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="@dimen/_11sdp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/thirdRankTalukaTextView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:gravity="center"
-            android:text="Nashik"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="@dimen/_10sdp" />
     </LinearLayout>
@@ -168,24 +202,27 @@
             android:layout_width="@dimen/_45sdp"
             android:layout_height="@dimen/_45sdp"
             android:layout_margin="@dimen/_2sdp"
+            android:layout_gravity="center"
             android:src="@drawable/silver_ic" />
 
         <TextView
             android:id="@+id/secondRankNameTextView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:gravity="center"
-            android:text="Prashant"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="@dimen/_11sdp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/secondRankTalukaTextView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:gravity="center"
-            android:text="Pune"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="@dimen/_10sdp" />
     </LinearLayout>
@@ -208,20 +245,22 @@
 
         <TextView
             android:id="@+id/firstRankNameTextView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:gravity="center"
-            android:text="You"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="@dimen/_11sdp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/firstRankTalukaTextView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:gravity="center"
-            android:text="Nagpur"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="@dimen/_10sdp" />
     </LinearLayout>

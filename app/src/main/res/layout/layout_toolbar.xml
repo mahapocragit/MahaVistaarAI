@@ -73,12 +73,13 @@
 
         <ImageView
             android:id="@+id/imageViewFilterMenu"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:padding="1dp"
+            app:tint="@color/white"
             android:visibility="gone"
             app:srcCompat="@drawable/filter"
             tools:ignore="VectorDrawableCompat" />

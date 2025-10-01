@@ -32,9 +32,10 @@
                 android:gravity="center"
                 android:text="4" />
 
-            <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/imageView13"
+            <ImageView
+                android:id="@+id/rankImageView"
                 android:layout_width="@dimen/_40sdp"
+                android:padding="@dimen/_2sdp"
                 android:layout_height="@dimen/_40sdp"
                 app:srcCompat="@drawable/user_dummy_ic" />
 
