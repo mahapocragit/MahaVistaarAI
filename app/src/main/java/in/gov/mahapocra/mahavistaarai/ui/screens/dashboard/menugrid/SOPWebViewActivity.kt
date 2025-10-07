@@ -16,6 +16,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityResilientWebUrlBindi
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.ScoreBubbleHelper
 
 class SOPWebViewActivity : AppCompatActivity() {
 
@@ -27,14 +28,15 @@ class SOPWebViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         // Load correct language
-        languageToLoad = if (AppSettings.getLanguage(this).equals("2", ignoreCase = true)) "mr" else "en"
+        languageToLoad =
+            if (AppSettings.getLanguage(this).equals("2", ignoreCase = true)) "mr" else "en"
         switchLanguage(this, languageToLoad)
 
         // Inflate layout
         binding = ActivityResilientWebUrlBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
-
+        ScoreBubbleHelper.showSnackbar(binding.root, "10 Points added")
         // Toolbar setup
         binding.layoutToolbar.textViewHeaderTitle.text = getString(R.string.sop_title)
         binding.layoutToolbar.imgBackArrow.visibility = View.VISIBLE
@@ -49,7 +51,7 @@ class SOPWebViewActivity : AppCompatActivity() {
         // Load URL
         intent.getStringExtra("webUrl")?.let { openWebView(it) }
 
-        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (climateWebView.canGoBack()) {
                     climateWebView.goBack()
@@ -88,7 +90,10 @@ class SOPWebViewActivity : AppCompatActivity() {
                 }
             }
 
-            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+            override fun shouldOverrideUrlLoading(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): Boolean {
                 return false
             }
         }

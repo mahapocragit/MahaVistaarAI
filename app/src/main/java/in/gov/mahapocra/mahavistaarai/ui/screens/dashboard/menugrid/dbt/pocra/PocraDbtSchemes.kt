@@ -19,6 +19,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
+import `in`.gov.mahapocra.mahavistaarai.util.ScoreBubbleHelper
 import org.json.JSONObject
 
 class PocraDbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
@@ -52,6 +53,7 @@ class PocraDbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
+        ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
 
         binding.applyForPocraTextView.setOnClickListener {
             Toast.makeText(this, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()

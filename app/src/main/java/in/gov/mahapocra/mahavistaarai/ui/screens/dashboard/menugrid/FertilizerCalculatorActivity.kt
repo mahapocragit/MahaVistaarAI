@@ -42,6 +42,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.ScoreBubbleHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.DeleteApi
@@ -62,7 +63,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
 
     private lateinit var binding: ActivityFertilizerCalculatorActivityBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
-    private var soilTestOption: Int = 1
+    private var soilTestOption: Int = 0
     private lateinit var languageToLoad: String
 
     private var villageID: Int = 0
@@ -163,8 +164,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
 
         villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
         binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.fertilizer_calculator)
-        binding.lnrSoilTestNo.visibility = View.GONE
-        binding.lnrNpkFetch.visibility = View.GONE
 
         binding.yesRadioButton.setOnClickListener {
             onRadioButtonClicked(it)
@@ -176,9 +175,8 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             resetEditTest()
         }
         binding.calculateTv.setOnClickListener {
+            ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
             validation()
-        }
-        binding.fetchNPKTv.setOnClickListener {
         }
         binding.selectedOptionTv.setOnClickListener {
             binding.selectedOptionTv.background = ContextCompat.getDrawable(
@@ -469,12 +467,10 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             val checked = view.isChecked
 
             // Check which radio button was clicked
-            when (view.getId()) {
+            when (view.id) {
                 R.id.yesRadioButton ->
                     if (checked) {
                         binding.lnrSoilTestYes.visibility = View.VISIBLE
-                        binding.lnrSoilTestNo.visibility = View.GONE
-                        binding.lnrNpkFetch.visibility = View.GONE
                         soilTestOption = 1
                         fertilizerOptionValue = null
                         binding.availableOptionTv.visibility = View.INVISIBLE
@@ -484,8 +480,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
 
                 R.id.noRadioButton ->
                     if (checked) {
-                        binding.lnrSoilTestNo.visibility = View.GONE
-                        binding.lnrNpkFetch.visibility = View.GONE
                         binding.lnrSoilTestYes.visibility = View.GONE
                         soilTestOption = 0
                         fertilizerOptionValue = null

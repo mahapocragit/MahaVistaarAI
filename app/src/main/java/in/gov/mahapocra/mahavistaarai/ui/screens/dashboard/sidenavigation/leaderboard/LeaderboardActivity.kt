@@ -22,6 +22,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLeaderboardBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
+import `in`.gov.mahapocra.mahavistaarai.util.ScoreBubbleHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import org.json.JSONArray
 import org.json.JSONObject
@@ -46,6 +47,7 @@ class LeaderboardActivity : AppCompatActivity() {
         binding = ActivityLeaderboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
         LocalCustom.uiResponsive(binding.root)
+        ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
 
         observeViewModel()
         setUpViews()

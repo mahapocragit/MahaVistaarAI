@@ -26,6 +26,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.ScoreBubbleHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -78,6 +79,7 @@ class Warehouse : AppCompatActivity(), AlertListEventListener, OnMultiRecyclerIt
         binding.tvWareHouseName.text = getString(R.string.warehouse_details)
         binding.tvTotalAvailableCapacity.text = getString(R.string.total_available_capacity)
         binding.tvRecordDate.text = getString(R.string.record_date)
+        ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
     }
 
     private fun init() {

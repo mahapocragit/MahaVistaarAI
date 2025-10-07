@@ -52,17 +52,14 @@ public class ClimateGridAdapter extends ArrayAdapter<ClimateGridModel> {
         loadImage(climateImage, image_url);
 
         if (activity.equalsIgnoreCase("PestAndDiseasesAdpater")) {
-            gridItem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(ClimateGridAdapter.this.getContext(), DiseaseInformation.class);
-                    //String Id = ClimateGridModel.getWebUrl();
-                    intent.putExtra("id", Integer.parseInt(ClimateGridModel.getWebUrl()));
-                    String currentString = ClimateGridModel.getClimate_name();
-                    String[] separated = currentString.split("\n");
-                    intent.putExtra("name", separated[1]);
-                    mContext.startActivity(intent);
-                }
+            gridItem.setOnClickListener(v -> {
+                Intent intent = new Intent(v.getContext(), DiseaseInformation.class);
+                //String Id = ClimateGridModel.getWebUrl();
+                intent.putExtra("id", Integer.parseInt(ClimateGridModel.getWebUrl()));
+                String currentString = ClimateGridModel.getClimate_name();
+                String[] separated = currentString.split("\n");
+                intent.putExtra("name", separated[1]);
+                mContext.startActivity(intent);
             });
         }
         return listitemView;

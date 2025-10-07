@@ -26,6 +26,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.ScoreBubbleHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -82,6 +83,7 @@ class WeatherActivity : AppCompatActivity() {
                 startActivity(Intent(this@WeatherActivity, DashboardScreen::class.java))
             }
         })
+        ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
         farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
         binding.tabLayout.visibility = View.GONE
         binding.viewPager.visibility = View.GONE

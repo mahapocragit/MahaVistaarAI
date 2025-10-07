@@ -27,6 +27,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.GeoViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
+import `in`.gov.mahapocra.mahavistaarai.util.ScoreBubbleHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -80,6 +81,7 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
                 }
                 .start()
         }
+        ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
         AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
         binding.recyclerViewMarketPriceList.setHasFixedSize(true)
         val myLayoutManager = LinearLayoutManager(this)

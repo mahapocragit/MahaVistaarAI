@@ -19,6 +19,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
+import `in`.gov.mahapocra.mahavistaarai.util.ScoreBubbleHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import org.json.JSONArray
 import org.json.JSONObject
@@ -57,6 +58,7 @@ class DiseaseInformation : AppCompatActivity() {
         imgBackArrow.setOnClickListener {
             finish()
         }
+        ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
 
         cropName = intent.getStringExtra("name").toString()
         id = intent.getIntExtra("id", 0)

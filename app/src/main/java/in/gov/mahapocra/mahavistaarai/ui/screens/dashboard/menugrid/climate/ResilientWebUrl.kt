@@ -17,6 +17,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
+import `in`.gov.mahapocra.mahavistaarai.util.ScoreBubbleHelper
 
 class ResilientWebUrl : AppCompatActivity() {
 
@@ -43,6 +44,7 @@ class ResilientWebUrl : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
+        ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
         climateWebView = findViewById(R.id.climateWebView)
         intent.getStringExtra("webUrl")?.let { openWebView(it) }
 

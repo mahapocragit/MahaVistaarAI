@@ -35,6 +35,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.ScoreBubbleHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import kotlinx.coroutines.delay
@@ -144,6 +145,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
             } else {
                 Toast.makeText(this, "Please select village", Toast.LENGTH_SHORT).show()
             }
+            ScoreBubbleHelper.showSnackbar(binding.root, "10 Points added")
         }
 
         val isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)

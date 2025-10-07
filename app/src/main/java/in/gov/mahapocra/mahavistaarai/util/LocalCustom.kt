@@ -264,7 +264,9 @@ object LocalCustom {
         val dialog = AlertDialog.Builder(context)
             .setTitle(context.getString(R.string.verify_captcha))
             .setView(dialogView)
-            .setPositiveButton(R.string.reg_submit, null)  // Override later
+            .setPositiveButton(R.string.reg_submit) { _, _ ->
+                onResult(true)
+            }  // Override later
             .setNegativeButton(R.string.cancel_it) { _, _ ->
                 onResult(false)
             }

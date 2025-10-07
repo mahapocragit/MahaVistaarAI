@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import `in`.gov.mahapocra.mahavistaarai.databinding.ItemVideosBinding
+import `in`.gov.mahapocra.mahavistaarai.util.ScoreBubbleHelper
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -18,6 +19,7 @@ class VideosAdapter(private val categoryArray:JSONArray) : RecyclerView.Adapter<
             val activityName = jsonObject.optString("name")
             binding.textView21.text = activityName
             binding.cardTrendingView.setOnClickListener {
+                ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
                 val videoUrl = jsonObject.optString("link")
                 val context = binding.root.context
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl))

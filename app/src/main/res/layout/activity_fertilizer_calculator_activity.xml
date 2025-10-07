@@ -229,7 +229,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:checked="true"
+                            android:checked="false"
                             android:text="@string/yes"
                             android:textColor="@color/black"
                             android:textStyle="bold" />
@@ -239,7 +239,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:checked="false"
+                            android:checked="true"
                             android:text="@string/no"
                             android:textColor="@color/black"
                             android:textStyle="bold" />
@@ -247,82 +247,10 @@
                     </RadioGroup>
 
                     <LinearLayout
-                        android:id="@+id/lnr_soil_test_no"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="visible">
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/height5"
-                            android:paddingBottom="@dimen/height5"
-                            android:text="@string/soil_test_report"
-                            android:textColor="@color/text_black_light"
-                            android:textSize="@dimen/_11sdp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/height5"
-                            android:text="@string/survey_number"
-                            android:textColor="@color/text_black_light"
-                            android:textSize="@dimen/_11sdp"
-                            android:textStyle="bold" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2"
-                            android:orientation="horizontal">
-
-                            <EditText
-                                android:id="@+id/edtSurveyNo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="60dp"
-                                android:layout_marginLeft="2dp"
-                                android:layout_marginRight="20dp"
-                                android:layout_weight="1.5"
-                                android:background="@drawable/login_edit_bg"
-                                android:digits="@string/numeric"
-                                android:elevation="8dp"
-                                android:gravity="center|start"
-                                android:inputType="number"
-                                android:maxLength="10"
-                                android:maxLines="1"
-                                android:paddingStart="@dimen/padding20"
-                                android:paddingEnd="@dimen/padding20"
-                                android:textColor="@color/black"
-                                android:textColorHint="@color/text_black"
-                                android:textSize="@dimen/text12" />
-
-                            <TextView
-                                android:id="@+id/fetchNPKTv"
-                                android:layout_width="100dp"
-                                android:layout_height="40dp"
-                                android:layout_marginLeft="2dp"
-                                android:layout_marginRight="@dimen/height20"
-                                android:layout_weight="0.5"
-                                android:background="@drawable/btn_bg"
-                                android:gravity="center"
-                                android:paddingLeft="5dp"
-                                android:text="@string/fetch_data"
-                                android:textColor="@color/white"
-                                android:textSize="@dimen/text14"
-                                android:textStyle="bold">
-
-                            </TextView>
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
                         android:id="@+id/lnr_soil_test_yes"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:visibility="gone"
                         android:orientation="vertical">
 
                         <TextView
@@ -565,149 +493,6 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/lnr_npk_fetch"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="@dimen/padding5"
-                        android:layout_marginRight="20dp"
-                        android:orientation="horizontal"
-                        android:visibility="visible"
-                        android:weightSum="3">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="40dp"
-                                android:layout_marginLeft="2dp"
-                                android:layout_weight="0.5"
-                                android:background="@drawable/btn_bg"
-                                android:gravity="center"
-                                android:text="N"
-                                android:textColor="@color/white"
-                                android:textSize="@dimen/text14"
-                                android:textStyle="bold">
-
-                            </TextView>
-
-                            <EditText
-                                android:id="@+id/edNitrogen1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="60dp"
-                                android:layout_weight="0.5"
-                                android:background="@drawable/login_edit_bg"
-                                android:clickable="false"
-                                android:digits="@string/numeric"
-                                android:elevation="8dp"
-                                android:gravity="center|start"
-                                android:hint=""
-                                android:inputType="number"
-                                android:maxLength="10"
-                                android:maxLines="1"
-                                android:paddingStart="@dimen/padding20"
-                                android:paddingEnd="@dimen/padding20"
-                                android:textColor="@color/black"
-                                android:textColorHint="@color/text_black"
-                                android:textSize="@dimen/text12" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="40dp"
-                                android:layout_marginLeft="2dp"
-                                android:layout_weight="0.5"
-                                android:background="@drawable/btn_bg"
-                                android:gravity="center"
-                                android:text="P"
-                                android:textColor="@color/white"
-                                android:textSize="@dimen/text14"
-                                android:textStyle="bold">
-
-                            </TextView>
-
-                            <EditText
-                                android:id="@+id/edPhosphorus1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="60dp"
-                                android:layout_weight="0.5"
-                                android:background="@drawable/login_edit_bg"
-                                android:clickable="false"
-                                android:digits="@string/numeric"
-                                android:elevation="8dp"
-                                android:gravity="center|start"
-                                android:hint=""
-                                android:inputType="number"
-                                android:maxLength="10"
-                                android:maxLines="1"
-                                android:paddingStart="@dimen/padding20"
-                                android:paddingEnd="@dimen/padding20"
-                                android:textColor="@color/black"
-                                android:textColorHint="@color/text_black"
-                                android:textSize="@dimen/text12" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="40dp"
-                                android:layout_marginLeft="2dp"
-                                android:layout_weight="0.5"
-                                android:background="@drawable/btn_bg"
-                                android:gravity="center"
-                                android:text="K"
-                                android:textColor="@color/white"
-                                android:textSize="@dimen/text14"
-                                android:textStyle="bold">
-
-                            </TextView>
-
-                            <EditText
-                                android:id="@+id/edPotassium1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="60dp"
-                                android:layout_weight="0.5"
-                                android:background="@drawable/login_edit_bg"
-                                android:clickable="false"
-                                android:digits="@string/numeric"
-                                android:elevation="8dp"
-                                android:gravity="center|start"
-                                android:hint=""
-                                android:inputType="number"
-                                android:maxLength="10"
-                                android:maxLines="1"
-                                android:paddingStart="@dimen/padding20"
-                                android:paddingEnd="@dimen/padding20"
-                                android:textColor="@color/black"
-                                android:textColorHint="@color/text_black"
-                                android:textSize="@dimen/text12" />
-
-                        </LinearLayout>
-
-
-                    </LinearLayout>
-
-                    <LinearLayout
                         android:id="@+id/linLayoutButton"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
@@ -751,7 +536,8 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/_5sdp"
                         android:layout_above="@+id/footer"
                         android:layout_gravity="end"
                         android:layout_margin="5dp"
@@ -785,7 +571,7 @@
                             android:text="@string/selected_option"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text16"
-                            android:visibility="visible" />
+                            android:visibility="gone" />
                     </LinearLayout>
 
                     <LinearLayout

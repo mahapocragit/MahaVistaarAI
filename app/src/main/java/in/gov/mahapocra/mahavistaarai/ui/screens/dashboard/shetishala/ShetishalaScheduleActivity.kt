@@ -18,6 +18,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
+import `in`.gov.mahapocra.mahavistaarai.util.ScoreBubbleHelper
 import org.json.JSONObject
 
 class ShetishalaScheduleActivity : AppCompatActivity() {
@@ -63,6 +64,7 @@ class ShetishalaScheduleActivity : AppCompatActivity() {
         farmerViewModel.error.observe(this) {
             ProgressHelper.disableProgressDialog()
         }
+        ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
     }
 
     private fun loadYoutubeUrl(url: String) {

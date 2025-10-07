@@ -36,6 +36,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
+import `in`.gov.mahapocra.mahavistaarai.util.ScoreBubbleHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -89,6 +90,7 @@ class CHCenterActivity : AppCompatActivity() {
                 startActivity(Intent(this@CHCenterActivity, DashboardScreen::class.java))
             }
         })
+        ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
         fetchDataForCHC()
         AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
         toggleView(true)

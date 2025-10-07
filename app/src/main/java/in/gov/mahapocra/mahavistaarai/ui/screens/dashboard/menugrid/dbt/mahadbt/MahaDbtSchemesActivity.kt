@@ -17,6 +17,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
+import `in`.gov.mahapocra.mahavistaarai.util.ScoreBubbleHelper
 import org.json.JSONObject
 
 class MahaDbtSchemesActivity : AppCompatActivity() {
@@ -48,6 +49,7 @@ class MahaDbtSchemesActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             startActivity(intent)
         }
+        ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
 
         dbtSchemesViewModel.getMahaDBTSchemes(this)
         ProgressHelper.showProgressDialog(this)
