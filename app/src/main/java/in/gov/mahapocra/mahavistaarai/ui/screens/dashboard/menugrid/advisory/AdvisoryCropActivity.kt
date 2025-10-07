@@ -94,7 +94,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         })
 
         AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
-        ScoreBubbleHelper.showSnackbar(binding.root, "10 Points added")
+        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
 
         observeCropStagesAndAdvisory()
         binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {

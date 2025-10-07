@@ -53,7 +53,7 @@ class PocraDbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
-        ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
+        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
 
         binding.applyForPocraTextView.setOnClickListener {
             Toast.makeText(this, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()

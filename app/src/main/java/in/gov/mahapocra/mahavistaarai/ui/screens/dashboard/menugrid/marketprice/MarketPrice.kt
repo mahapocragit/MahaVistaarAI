@@ -81,7 +81,7 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
                 }
                 .start()
         }
-        ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
+        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
         AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
         binding.recyclerViewMarketPriceList.setHasFixedSize(true)
         val myLayoutManager = LinearLayoutManager(this)

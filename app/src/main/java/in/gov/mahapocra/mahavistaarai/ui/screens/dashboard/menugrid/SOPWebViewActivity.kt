@@ -36,7 +36,7 @@ class SOPWebViewActivity : AppCompatActivity() {
         binding = ActivityResilientWebUrlBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
-        ScoreBubbleHelper.showSnackbar(binding.root, "10 Points added")
+        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
         // Toolbar setup
         binding.layoutToolbar.textViewHeaderTitle.text = getString(R.string.sop_title)
         binding.layoutToolbar.imgBackArrow.visibility = View.VISIBLE

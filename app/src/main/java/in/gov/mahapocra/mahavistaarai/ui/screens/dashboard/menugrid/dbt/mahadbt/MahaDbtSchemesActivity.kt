@@ -49,7 +49,7 @@ class MahaDbtSchemesActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             startActivity(intent)
         }
-        ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
+        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
 
         dbtSchemesViewModel.getMahaDBTSchemes(this)
         ProgressHelper.showProgressDialog(this)

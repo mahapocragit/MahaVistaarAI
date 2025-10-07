@@ -44,7 +44,7 @@ class ResilientWebUrl : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
+        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
         climateWebView = findViewById(R.id.climateWebView)
         intent.getStringExtra("webUrl")?.let { openWebView(it) }
 

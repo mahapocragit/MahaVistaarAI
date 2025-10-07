@@ -47,7 +47,7 @@ class LeaderboardActivity : AppCompatActivity() {
         binding = ActivityLeaderboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
         LocalCustom.uiResponsive(binding.root)
-        ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
+        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
 
         observeViewModel()
         setUpViews()

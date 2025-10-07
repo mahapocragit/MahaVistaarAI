@@ -64,7 +64,7 @@ class ShetishalaScheduleActivity : AppCompatActivity() {
         farmerViewModel.error.observe(this) {
             ProgressHelper.disableProgressDialog()
         }
-        ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
+        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
     }
 
     private fun loadYoutubeUrl(url: String) {

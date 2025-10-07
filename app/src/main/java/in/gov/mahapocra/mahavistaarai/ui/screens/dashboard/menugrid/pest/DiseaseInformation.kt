@@ -58,7 +58,7 @@ class DiseaseInformation : AppCompatActivity() {
         imgBackArrow.setOnClickListener {
             finish()
         }
-        ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
+        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
 
         cropName = intent.getStringExtra("name").toString()
         id = intent.getIntExtra("id", 0)

@@ -90,7 +90,7 @@ class CHCenterActivity : AppCompatActivity() {
                 startActivity(Intent(this@CHCenterActivity, DashboardScreen::class.java))
             }
         })
-        ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
+        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
         fetchDataForCHC()
         AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
         toggleView(true)

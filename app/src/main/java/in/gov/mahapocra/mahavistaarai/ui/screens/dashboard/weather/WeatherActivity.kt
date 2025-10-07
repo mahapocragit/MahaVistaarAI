@@ -83,7 +83,7 @@ class WeatherActivity : AppCompatActivity() {
                 startActivity(Intent(this@WeatherActivity, DashboardScreen::class.java))
             }
         })
-        ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
+        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
         farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
         binding.tabLayout.visibility = View.GONE
         binding.viewPager.visibility = View.GONE

@@ -175,7 +175,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             resetEditTest()
         }
         binding.calculateTv.setOnClickListener {
-            ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
+            ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
             validation()
         }
         binding.selectedOptionTv.setOnClickListener {

@@ -19,7 +19,7 @@ class ShetishalaVideosAdapter(private val categoryArray:JSONArray, val languageT
             val activityName = if (languageToLoad == "en")jsonObject.optString("crop_name") else jsonObject.optString("crop_name_mr")
             binding.textView21.text = activityName
             binding.cardTrendingView.setOnClickListener {
-                ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
+                ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
                 val videoUrl = jsonObject.optString("link")
                 val context = binding.root.context
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl))

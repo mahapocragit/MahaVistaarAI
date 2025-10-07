@@ -145,7 +145,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
             } else {
                 Toast.makeText(this, "Please select village", Toast.LENGTH_SHORT).show()
             }
-            ScoreBubbleHelper.showSnackbar(binding.root, "10 Points added")
+            ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
         }
 
         val isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)

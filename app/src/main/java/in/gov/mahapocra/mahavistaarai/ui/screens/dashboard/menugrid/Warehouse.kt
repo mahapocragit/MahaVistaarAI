@@ -79,7 +79,7 @@ class Warehouse : AppCompatActivity(), AlertListEventListener, OnMultiRecyclerIt
         binding.tvWareHouseName.text = getString(R.string.warehouse_details)
         binding.tvTotalAvailableCapacity.text = getString(R.string.total_available_capacity)
         binding.tvRecordDate.text = getString(R.string.record_date)
-        ScoreBubbleHelper.showSnackbar(binding.root, "10 Points Added")
+        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
     }
 
     private fun init() {
