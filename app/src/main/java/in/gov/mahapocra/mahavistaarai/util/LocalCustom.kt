@@ -1,10 +1,14 @@
 package `in`.gov.mahapocra.mahavistaarai.util
 
+import android.Manifest
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.health.connect.datatypes.ExerciseRoute
+import android.location.Location
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -22,6 +26,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -33,11 +38,15 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.json.JSONArray
 import java.io.File
+import java.net.NetworkInterface
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Collections
 import java.util.Date
 import java.util.Locale
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 object LocalCustom {
     fun configureLocale(baseContext: Context, languageToLoad: String): Context {
@@ -310,6 +319,45 @@ object LocalCustom {
         val md = MessageDigest.getInstance("SHA-512")
         val digest = md.digest(bytes)
         return digest.joinToString("") { "%02x".format(it) }
+    }
+
+    @OptIn(ExperimentalEncodingApi::class)
+    fun encodeToBase64(input: String): String {
+        return Base64.encode(input.encodeToByteArray())
+    }
+
+    fun getMobileOrWifiIp(): String? {
+        try {
+            val interfaces = NetworkInterface.getNetworkInterfaces()
+            for (intf in Collections.list(interfaces)) {
+                for (addr in Collections.list(intf.inetAddresses)) {
+                    if (!addr.isLoopbackAddress && addr.hostAddress.indexOf(':') < 0) {
+                        return addr.hostAddress
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+    fun getLocationUsingLocationManager(context: Context): Location? {
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val providers = locationManager.getProviders(true)
+
+        for (provider in providers.reversed()) {
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return null
+            }
+            val location = locationManager.getLastKnownLocation(provider)
+            if (location != null) {
+                return location
+            }
+        }
+        return null
     }
 
     fun convertDateFormat(dateStr: String): String {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -13,6 +14,8 @@
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="29" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
 
     <application
         android:name=".application.MyApplication"
@@ -25,6 +28,9 @@
         android:roundIcon="@mipmap/ic_launcher_store_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FarmerApp">
+        <activity
+            android:name=".ui.screens.dashboard.menugrid.dbt.DBTDashboard"
+            android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.sidenavigation.leaderboard.LeaderboardActivity"
             android:exported="false" />
