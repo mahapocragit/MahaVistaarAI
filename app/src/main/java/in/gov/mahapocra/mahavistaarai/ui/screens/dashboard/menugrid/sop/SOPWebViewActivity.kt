@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.sop
 
 import android.content.Context
 import android.graphics.Bitmap

@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.sop
 
 import android.content.Context
 import android.content.Intent
@@ -16,6 +16,9 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivitySopactivityBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.SOPAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager

@@ -77,10 +77,10 @@
             android:name=".ui.screens.dashboard.video.VideosActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.screens.dashboard.menugrid.SOPActivity"
+            android:name=".ui.screens.dashboard.menugrid.sop.SOPActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.screens.dashboard.menugrid.SOPWebViewActivity"
+            android:name=".ui.screens.dashboard.menugrid.sop.SOPWebViewActivity"
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.sidenavigation.AboutActivity"
