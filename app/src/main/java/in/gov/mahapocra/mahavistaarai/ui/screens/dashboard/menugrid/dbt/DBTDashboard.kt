@@ -6,6 +6,7 @@ import android.location.Location
 import android.location.LocationProvider
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
@@ -16,11 +17,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDbtdashboardBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.encodeToBase64
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getLocationUsingLocationManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getMobileOrWifiIp
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 
 class DBTDashboard : AppCompatActivity() {
 
@@ -51,7 +54,13 @@ class DBTDashboard : AppCompatActivity() {
 
 
         setUpViews()
-        loadWebView(encodeToBase64("79335694125"))
+        val agristackId = AppSettings.getInstance().getValue(this, AppConstants.AGRISTACKID, "")
+        Log.d("TAGGER", "loadWebView: $agristackId")
+        if (agristackId!="" || agristackId !=null || agristackId != "null") {
+            loadWebView(encodeToBase64(agristackId))
+        }else{
+            loadWebView("")
+        }
     }
 
     private fun setUpViews() {
@@ -67,10 +76,14 @@ class DBTDashboard : AppCompatActivity() {
         val location = getLocationUsingLocationManager(this)
         val lat = location?.latitude
         val long = location?.longitude
-        val url = "https://uat-dbt.mahapocra.gov.in:8006/MahavistaarLoginAuth" +
-                "?farmerid=$encrypterFarmerId" +
-                "&ip=${getMobileOrWifiIp()}" +
-                "&details=Chrome_Windows10, latitude=$lat, longitude=$long"
+        val urlForLoadWeb = if (encrypterFarmerId.isEmpty()){
+            "https://uat-dbt.mahapocra.gov.in:8006/MahavistaarLoginAuth"
+        }else{
+            "https://uat-dbt.mahapocra.gov.in:8006/MahavistaarLoginAuth" +
+                    "?farmerid=$encrypterFarmerId" +
+                    "&ip=${getMobileOrWifiIp()}" +
+                    "&details=Chrome_Windows10, latitude=$lat, longitude=$long"
+        }
 
         val webSettings = binding.webView.settings
         webSettings.javaScriptEnabled = true
@@ -100,7 +113,7 @@ class DBTDashboard : AppCompatActivity() {
             }
         }
 
-        binding.webView.loadUrl(url)
+        binding.webView.loadUrl(urlForLoadWeb)
     }
 
 

@@ -51,7 +51,7 @@ class SideNavMenuHelper private constructor() {
                 logoutObject.put("icon", "logout")
 
                 jsonArray.put(profileObject)
-//                jsonArray.put(expertsObject)
+                jsonArray.put(expertsObject)
 //                jsonArray.put(newsObject)
                 jsonArray.put(leaderboardObject)
                 jsonArray.put(costCalculatorObject)
@@ -109,7 +109,7 @@ class SideNavMenuHelper private constructor() {
                 logoutObject.put("icon", "logout")
 
                 jsonArray.put(profileObject)
-//                jsonArray.put(expertsObject)
+                jsonArray.put(expertsObject)
 //                jsonArray.put(newsObject)
                 jsonArray.put(leaderboardObject)
                 jsonArray.put(costCalculatorObject)
@@ -163,7 +163,7 @@ class SideNavMenuHelper private constructor() {
                 leaderboardObject.put("icon", "leaderboard_icon")
 
                 jsonArray.put(profileObject)
-//                jsonArray.put(expertsObject)
+                jsonArray.put(expertsObject)
 //                jsonArray.put(newsObject)
                 jsonArray.put(leaderboardObject)
                 jsonArray.put(costCalculatorObject)
@@ -215,7 +215,7 @@ class SideNavMenuHelper private constructor() {
                 leaderboardObject.put("icon", "leaderboard_icon")
 
                 jsonArray.put(profileObject)
-//                jsonArray.put(expertsObject)
+                jsonArray.put(expertsObject)
 //                jsonArray.put(newsObject)
                 jsonArray.put(leaderboardObject)
                 jsonArray.put(costCalculatorObject)

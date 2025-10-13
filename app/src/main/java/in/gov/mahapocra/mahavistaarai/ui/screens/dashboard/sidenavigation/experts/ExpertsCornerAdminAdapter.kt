@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import `in`.co.appinventor.services_api.settings.AppSettings
@@ -41,6 +42,8 @@ class ExpertsCornerAdminAdapter(private val posts: JSONArray) :
         private val expertsNameTextView: TextView = view.findViewById(R.id.expertsNameTextView)
         private val dateTextView: TextView = view.findViewById(R.id.dateTextView)
         private val remarkText: TextView = view.findViewById(R.id.remarkText)
+        private val deleteButton: ImageView = view.findViewById(R.id.deleteButton)
+
         fun bind(postObject: JSONObject) {
             val farmersName =
                 AppSettings.getInstance().getValue(context, AppConstants.uName, AppConstants.uName)
@@ -57,13 +60,16 @@ class ExpertsCornerAdminAdapter(private val posts: JSONArray) :
             remarkText.visibility = if (remark != "null") View.VISIBLE else View.GONE
             remarkText.text = remark
             expertsNameTextView.text = farmersName
-            if (date!="") {
+            if (date != "") {
                 dateTextView.text = formatDate(date)
-            }else{
+            } else {
                 dateTextView.visibility = View.GONE
             }
             redirectTextView.setOnClickListener {
                 LocalCustom.downloadFile(redirectTextView.context, fileUrl)
+            }
+            deleteButton.setOnClickListener {
+                
             }
         }
     }

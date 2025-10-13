@@ -52,7 +52,7 @@
                         android:id="@+id/expertsNameTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
+                        android:layout_weight="4"
                         android:text="Mahesh Purani"
                         android:textSize="@dimen/_11sdp" />
 
@@ -64,6 +64,13 @@
                         android:gravity="end"
                         android:paddingEnd="@dimen/_9sdp"
                         android:text="25 Mins Ago" />
+
+                    <ImageView
+                        android:id="@+id/deleteButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:tint="@color/font_color_figma"
+                        app:srcCompat="@drawable/delete_icon" />
                 </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
