@@ -50,30 +50,29 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 
 object LocalCustom {
     fun configureLocale(baseContext: Context, languageToLoad: String): Context {
-        val locale = Locale(languageToLoad)
+        val locale = Locale.forLanguageTag(languageToLoad)
         Locale.setDefault(locale)
 
         val config = Configuration(baseContext.resources.configuration)
 
-        when {
+        return when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.N -> {
                 config.setLocale(locale)
-                return baseContext.createConfigurationContext(config)
+                baseContext.createConfigurationContext(config)
             }
-
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 -> {
                 config.setLocale(locale)
-                return baseContext.createConfigurationContext(config)
+                baseContext.createConfigurationContext(config)
             }
-
             else -> {
-                // Deprecated, but fallback for older devices
+                @Suppress("DEPRECATION")
                 config.locale = locale
+                @Suppress("DEPRECATION")
                 baseContext.resources.updateConfiguration(
                     config,
                     baseContext.resources.displayMetrics
                 )
-                return baseContext
+                baseContext
             }
         }
     }
@@ -251,65 +250,6 @@ object LocalCustom {
                 return true
             }
         })
-
-        dialog.show()
-    }
-
-    fun showCaptchaDialog(context: Context, onResult: (Boolean) -> Unit) {
-        var captcha = CaptchaGenerator.generateCaptchaBitmap(300, 100)
-
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_captcha, null)
-        val imageView = dialogView.findViewById<ImageView>(R.id.captchaImage)
-        val inputField = dialogView.findViewById<EditText>(R.id.captchaInput)
-        val regenerateCaptchaTextView =
-            dialogView.findViewById<TextView>(R.id.regenerateCaptchaTextView)
-
-        imageView.setImageBitmap(captcha.bitmap)
-        regenerateCaptchaTextView.setOnClickListener {
-            captcha = CaptchaGenerator.generateCaptchaBitmap(300, 100)
-            imageView.setImageBitmap(captcha.bitmap)
-        }
-
-        val dialog = AlertDialog.Builder(context)
-            .setTitle(context.getString(R.string.verify_captcha))
-            .setView(dialogView)
-            .setPositiveButton(R.string.reg_submit) { _, _ ->
-                onResult(true)
-            }  // Override later
-            .setNegativeButton(R.string.cancel_it) { _, _ ->
-                onResult(false)
-            }
-            .create()
-
-        dialog.setOnShowListener {
-            val submitButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            submitButton.setOnClickListener {
-                val userInput = inputField.text.toString().trim().uppercase()
-                val captchaCode = captcha.code.uppercase()
-
-                when {
-                    userInput.isEmpty() -> {
-                        inputField.error = ContextCompat.getString(context, R.string.captcha_empty_err)
-                    }
-
-                    userInput.length != 6 -> {
-                        inputField.error = ContextCompat.getString(context, R.string.captcha_invalid)
-                    }
-
-                    userInput == captchaCode -> {
-                        Toast.makeText(context, R.string.captcha_success, Toast.LENGTH_SHORT).show()
-                        onResult(true)
-                        dialog.dismiss()
-                    }
-
-                    else -> {
-                        Toast.makeText(context, R.string.captcha_invalid, Toast.LENGTH_SHORT).show()
-                        inputField.text?.clear()
-                        inputField.requestFocus()
-                    }
-                }
-            }
-        }
 
         dialog.show()
     }

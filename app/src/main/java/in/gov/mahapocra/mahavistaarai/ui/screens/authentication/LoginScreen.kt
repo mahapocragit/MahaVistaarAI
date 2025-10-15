@@ -36,7 +36,6 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
-import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.showCaptchaDialog
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.toSHA512
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
@@ -81,16 +80,6 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         uiResponsive(binding.root)
         FirebaseHelper(this)
 
-        FirebaseMessaging.getInstance().token
-            .addOnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    return@addOnCompleteListener
-                }
-
-                // Get the actual token
-                val token = task.result
-            }
-
         binding.changeLanguageImageView.setOnClickListener {
             openChangeLangPopup()
         }
@@ -120,7 +109,6 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             binding.farmerIdOption.setTextColor(ContextCompat.getColor(this, R.color.black))
             binding.mobileLoginLayout.visibility = View.VISIBLE
             binding.farmerLoginLayout.visibility = View.GONE
-//            setPreventControlMeasureWebView(preventiveMeasures) //sets what happens
         }
         binding.farmerIdOption.setOnClickListener {
             binding.mobileNoOption.background =
@@ -133,7 +121,6 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             binding.farmerIdOption
             binding.mobileLoginLayout.visibility = View.GONE
             binding.farmerLoginLayout.visibility = View.VISIBLE
-//            setPreventControlMeasureWebView(preventiveMeasures) //sets what happens
         }
 
         farmerIdLayoutValidation()
@@ -145,13 +132,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             if (farmerId.length != 11 && farmerId.isEmpty()) {
                 UIToastMessage.show(this, "Please enter valid Farmer ID")
             } else {
-                showCaptchaDialog(this) {
-                    if (it) {
-                        farmerViewModel.farmerIdBasedLogin(this, farmerId)
-                    } else {
-                        UIToastMessage.show(this, "CAPTCHA verification Failed!!")
-                    }
-                }
+                farmerViewModel.farmerIdBasedLogin(this, farmerId)
             }
         }
 
@@ -204,18 +185,11 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     private fun authenticationOperations() {
         binding.signInButton.setOnClickListener {
             AppSettings.getInstance().setBooleanValue(this, AppConstants.IS_USER_GUEST, false)
-            showCaptchaDialog(this) {
-                if (it) {
-                    if (loginOption == PASSWORD_VERIFY) {
-                        userValidateAndLogin()
-                    } else {
-                        sendOTP()
-                    }
-                } else {
-                    UIToastMessage.show(this, "CAPTCHA verification Failed!!")
-                }
+            if (loginOption == PASSWORD_VERIFY) {
+                userValidateAndLogin()
+            } else {
+                sendOTP()
             }
-
         }
 
         binding.forgotPassword.setOnClickListener {
@@ -239,20 +213,11 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         }
 
         binding.guestModeCardView.setOnClickListener {
-            showCaptchaDialog(this) { verified ->
-                if (verified) {
-                    // CAPTCHA was successfully verified
-                    val userId = LocalCustom.generateRandom10DigitNumber()
-                    AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, userId)
-                    AppSettings.getInstance()
-                        .setBooleanValue(this, AppConstants.IS_USER_GUEST, true)
-                    startActivity(Intent(this, DashboardScreen::class.java))
-                    // Do something here
-                } else {
-                    // CAPTCHA failed or dialog canceled
-                    UIToastMessage.show(this, "CAPTCHA verification Failed!!")
-                }
-            }
+            val userId = LocalCustom.generateRandom10DigitNumber()
+            AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, userId)
+            AppSettings.getInstance()
+                .setBooleanValue(this, AppConstants.IS_USER_GUEST, true)
+            startActivity(Intent(this, DashboardScreen::class.java))
         }
     }
 
@@ -336,7 +301,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     )
                 val retrofit: Retrofit = api.getRetrofitInstance()
                 val apiRequest = retrofit.create(ApiService::class.java)
-                if (otp!=""){
+                if (otp != "") {
                     val responseCall: Call<JsonObject> =
                         apiRequest.getRefreshTokenLoginViaOTP(
                             mobileNo.trim { it <= ' ' },
@@ -345,7 +310,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                             requestBody
                         )
                     api.postRequest(responseCall, this, 4)
-                }else{
+                } else {
                     val responseCall: Call<JsonObject> =
                         apiRequest.getRefreshTokenLoginViaPassword(
                             mobileNo.trim { it <= ' ' },
@@ -391,7 +356,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
-            }else{
+            } else {
                 val jsonObject = JSONObject()
                 try {
                     jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
@@ -410,7 +375,11 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     val apiRequest = retrofit.create(ApiService::class.java)
                     Log.d("TAGGER", "callLoginAPI: true")
                     val responseCall: Call<JsonObject> =
-                        apiRequest.getUserLoginPassword(mobileNo.trim { it <= ' ' }, toSHA512(userPass), requestBody)
+                        apiRequest.getUserLoginPassword(
+                            mobileNo.trim { it <= ' ' },
+                            toSHA512(userPass),
+                            requestBody
+                        )
                     api.postRequest(responseCall, this, 2)
                 } catch (e: JSONException) {
                     e.printStackTrace()
@@ -438,7 +407,8 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(ApiService::class.java)
             Log.d("TAGGER", "callLoginAPIForFarmer: true")
-            val responseCall: Call<JsonObject> = apiRequest.getUserLoginOTP(agriStackMobile.trim { it <= ' ' },  otp,requestBody)
+            val responseCall: Call<JsonObject> =
+                apiRequest.getUserLoginOTP(agriStackMobile.trim { it <= ' ' }, otp, requestBody)
             api.postRequest(responseCall, this, 2)
         } catch (e: JSONException) {
             e.printStackTrace()
@@ -487,7 +457,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     addVerificationDialog()
                 } else if (jSONObject.optInt("status") == 201) {
                     Toast.makeText(this, R.string.mobile_otp_error_text, Toast.LENGTH_LONG).show()
-                }else if (jSONObject.optInt("status") == 429) {
+                } else if (jSONObject.optInt("status") == 429) {
                     Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_LONG).show()
                 }
             }
@@ -640,10 +610,10 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
         resendOTP.setOnClickListener {
             dialog.dismiss()
-            if (agriStackMobile.isNotEmpty()){
+            if (agriStackMobile.isNotEmpty()) {
                 val farmerId = binding.farmerIdEditText.text.toString()
                 farmerViewModel.farmerIdBasedLogin(this, farmerId)
-            }else{
+            } else {
                 userValidateAndLogin()
             }
         }
@@ -666,7 +636,12 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 // Enable and reset button appearance
                 resendOTP.isEnabled = true
                 resendOTP.text = resources.getString(R.string.Resend_OTP)
-                resendOTP.setBackgroundColor(ContextCompat.getColor(this@LoginScreen, R.color.status_green))
+                resendOTP.setBackgroundColor(
+                    ContextCompat.getColor(
+                        this@LoginScreen,
+                        R.color.status_green
+                    )
+                )
                 resendOTP.setTextColor(ContextCompat.getColor(this@LoginScreen, R.color.white))
             }
         }.start()

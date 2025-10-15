@@ -8,6 +8,8 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -64,7 +66,7 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
 
         imgBackArrow.visibility = View.VISIBLE
         imgBackArrow.setOnClickListener {
-            onBackPressed()
+            OnBackPressedDispatcher().onBackPressed()
         }
         viewModel.getCropCategoriesAndCropDetails(this, languageToLoad)
         ProgressHelper.showProgressDialog(this)
@@ -98,17 +100,29 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
         if (i == 1) {
             receivedJson = obj as JSONObject
+
             val calendar = Calendar.getInstance()
             val year = calendar.get(Calendar.YEAR)
             val month = calendar.get(Calendar.MONTH)
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-            val datePickerDialog = DatePickerDialog(this, { _, y, m, d ->
-                onDateSelected(1, d, m, y) // ✅ Manually invoke
-            }, year, month, day)
+            val datePickerDialog = DatePickerDialog(
+                this,
+                { _, y, m, d ->
+                    onDateSelected(1, d, m, y) // ✅ Manually invoke
+                },
+                year, month, day
+            )
 
             datePickerDialog.setTitle(getString(R.string.select_sowing_date))
-            datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
+
+            // ✅ Allow date up to 15 days from today
+            val maxDate = System.currentTimeMillis() + (15L * 24 * 60 * 60 * 1000)
+            datePickerDialog.datePicker.maxDate = maxDate
+
+            // (Optional) Set min date if needed, e.g., disallow past dates
+            // datePickerDialog.datePicker.minDate = System.currentTimeMillis()
+
             datePickerDialog.show()
         }
     }

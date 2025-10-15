@@ -12,6 +12,7 @@ import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -61,12 +62,26 @@ class DBTDashboard : AppCompatActivity() {
         }else{
             loadWebView("")
         }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (binding.webView.canGoBack()){
+                    binding.webView.goBack()
+                }else{
+                    startActivity(Intent(this@DBTDashboard, DBTActivity::class.java))
+                }
+            }
+        })
     }
 
     private fun setUpViews() {
         binding.layoutToolbar.imgBackArrow.visibility = View.VISIBLE
         binding.layoutToolbar.imgBackArrow.setOnClickListener {
-            startActivity(Intent(this, DBTActivity::class.java))
+            if (binding.webView.canGoBack()){
+                binding.webView.goBack()
+            }else{
+                startActivity(Intent(this@DBTDashboard, DBTActivity::class.java))
+            }
         }
         binding.layoutToolbar.textViewHeaderTitle.text = ""
     }

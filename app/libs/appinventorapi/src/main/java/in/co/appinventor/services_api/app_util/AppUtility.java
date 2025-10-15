@@ -546,10 +546,26 @@ public class AppUtility {
     public void showDisabledFutureDatePicker(Context context, Date date, final int requestCode, final DatePickerRequestListener callbackListener) {
         Locale locale = context.getResources().getConfiguration().locale;
         Locale.setDefault(locale);
-        Calendar calender = Calendar.getInstance();
-        Context context2 = context;
-        DatePickerDialog datePickerDialog1 = new DatePickerDialog(context2, (view, year, monthOfYear, dayOfMonth) -> callbackListener.onDateSelected(requestCode, dayOfMonth, monthOfYear + 1, year), calender.get(1), calender.get(2), calender.get(5));
-        datePickerDialog1.getDatePicker().setMaxDate(date.getTime());
+
+        Calendar calendar = Calendar.getInstance();
+
+        DatePickerDialog datePickerDialog1 = new DatePickerDialog(
+                context,
+                (view, year, monthOfYear, dayOfMonth) ->
+                        callbackListener.onDateSelected(requestCode, dayOfMonth, monthOfYear + 1, year),
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+        );
+
+        // ✅ Allow up to 15 days after today
+        Calendar maxCalendar = Calendar.getInstance();
+        maxCalendar.add(Calendar.DAY_OF_MONTH, 15);
+        datePickerDialog1.getDatePicker().setMaxDate(maxCalendar.getTimeInMillis());
+
+        // (Optional) Disallow past dates
+        // datePickerDialog1.getDatePicker().setMinDate(System.currentTimeMillis());
+
         datePickerDialog1.show();
     }
 

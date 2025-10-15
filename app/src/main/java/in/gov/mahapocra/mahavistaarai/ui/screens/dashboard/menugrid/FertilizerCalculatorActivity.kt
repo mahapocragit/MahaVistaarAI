@@ -769,12 +769,9 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         }
     }
 
-
     override fun onDateSelected(i: Int, day: Int, month: Int, year: Int) {
         if (i == 1) {
-            val formattedDay = String.format("%02d", day)
-            val formattedMonth = String.format("%02d", month)
-            sowingDate = "$formattedDay-$formattedMonth-$year"
+            sowingDate = "$day-$month-$year"
             cropId?.let { farmerViewModel.saveFarmerSelectedCrop(this, sowingDate!!, it) }
             farmerViewModel.saveFarmerSelectedCrop.observe(this) {
                 if (it != null) {
