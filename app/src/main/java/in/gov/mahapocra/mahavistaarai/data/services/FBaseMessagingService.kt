@@ -16,6 +16,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.DetailedNotificationActivity
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import kotlinx.coroutines.CoroutineScope
@@ -40,14 +41,21 @@ class FBaseMessagingService : FirebaseMessagingService() {
             val notificationId = remoteMessage.data["not_id"] ?: "0"
             val title = remoteMessage.data["title"] ?: "Notification"
             val body = remoteMessage.data["body"] ?: "You have a new message"
-            sendNotification(title, body, notificationId)
+            val page = remoteMessage.data["page"] ?: "You have a new message"
+            Log.d(tag, "onMessageReceived: $page")
+            sendNotification(title, body, page, notificationId)
         }
     }
 
-    private fun sendNotification(title: String, body: String, notificationId: String?) {
+    private fun sendNotification(title: String, body: String, page:String, notificationId: String?) {
         createNotificationChannelIfNeeded()
 
-        val targetIntent = Intent(this, DetailedNotificationActivity::class.java).apply {
+        val targetIntent = if (page=="chatbot") {
+            Intent(this, ChatbotActivity::class.java)
+        }else{
+            Intent(this, DetailedNotificationActivity::class.java)
+        }
+        targetIntent.apply {
             putExtra("ROUTE", "NOTIFICATION_TRAY")
             putExtra("id", notificationId?.toLong())
         }.apply {

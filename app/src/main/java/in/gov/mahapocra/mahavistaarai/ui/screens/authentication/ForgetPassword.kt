@@ -32,6 +32,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.OtpRateLimiter.provideValidEncryptedString
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONException
@@ -156,20 +157,23 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
 
         cancelButton.setOnClickListener { dialog.dismiss() }
         submitButton.setOnClickListener {
+            val timestamp = System.currentTimeMillis()
             val enteredOTP: String = receiveOTPEditText.text.toString()
             if (enteredOTP.isEmpty()) {
                 receiveOTPEditText.error = resources.getString(R.string.regist_otp_err)
                 receiveOTPEditText.requestFocus()
             } else {
-                farmerViewModel.compareOtp(this, binding.mobileEditText.text.toString(), enteredOTP)
+                farmerViewModel.compareOtp(this, timestamp,binding.mobileEditText.text.toString(), enteredOTP)
             }
             farmerViewModel.compareOtpResponse.observe(this) {
                 if (it != null) {
+                    val calculatedResponse = provideValidEncryptedString(timestamp)
                     val jSONObject = JSONObject(it.toString())
-                    if (jSONObject.optInt("status") == 200) {
+                    val response = jSONObject.optString("response")
+                    if (calculatedResponse == response) {
                         userVerification()
                     } else {
-                        UIToastMessage.show(this, getString(R.string.wrong_OTP))
+                        Toast.makeText(this, R.string.wrong_OTP, Toast.LENGTH_LONG).show()
                     }
                 }
             }

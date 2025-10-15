@@ -1,11 +1,14 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.viewmodel
 
 import android.content.Context
+import android.text.format.Time
 import android.util.Log
+import android.util.TimeUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.Timestamp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -26,6 +29,7 @@ import retrofit2.Retrofit
 import java.io.IOException
 import java.net.SocketException
 import java.net.SocketTimeoutException
+import java.util.Date
 
 class FarmerViewModel : ViewModel() {
 
@@ -492,7 +496,7 @@ class FarmerViewModel : ViewModel() {
     }
 
 
-    fun compareOtp(context: Context, mobile: String, enteredOTP: String) {
+    fun compareOtp(context: Context, timestamp: Long, mobile: String, enteredOTP: String) {
         viewModelScope.launch {
             val jsonObject = JSONObject()
             try {
@@ -502,7 +506,8 @@ class FarmerViewModel : ViewModel() {
                 val retrofit: Retrofit =
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
-                val response = apiRequest.compareOtp(mobile.trim { it <= ' ' }, requestBody)
+                val response =
+                    apiRequest.compareOtp(mobile.trim { it <= ' ' }, timestamp, requestBody)
                 _compareOtpResponse.value = response
             } catch (e: Exception) {
                 val message = when (e) {

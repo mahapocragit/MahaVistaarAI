@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -40,6 +41,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.toSHA512
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.OtpRateLimiter
+import `in`.gov.mahapocra.mahavistaarai.util.OtpRateLimiter.provideValidEncryptedString
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONException
@@ -64,6 +66,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     private val OTP_VERIFY = 1
     private var agriStackMobile = ""
     private var fcmToken = ""
+    private var timestamp: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -539,17 +542,19 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 receiveOTPEditText.error = resources.getString(R.string.regist_otp_err)
                 receiveOTPEditText.requestFocus()
             } else {
-                farmerViewModel.compareOtp(this, mobile, enteredOTP)
+                timestamp = System.currentTimeMillis()
+                farmerViewModel.compareOtp(this, timestamp, mobile, enteredOTP)
                 farmerViewModel.compareOtpResponse.observe(this) {
                     if (it != null) {
+                        val calculatedResponse = provideValidEncryptedString(timestamp)
                         val jSONObject = JSONObject(it.toString())
-                        if (jSONObject.optInt("status") == 200) {
+                        val response = jSONObject.optString("response")
+                        if (calculatedResponse != response) {
                             mobileNo = binding.userIdEditText.text.toString()
                             callRefreshTokenAPI(mobileNo, userPass, enteredOTP)
                             dialog.dismiss()
                         } else {
-                            UIToastMessage.show(this, getString(R.string.wrong_OTP))
-                            dialog.dismiss()
+                            Toast.makeText(this, "Invalid OTP", Toast.LENGTH_LONG).show()
                         }
                         dialog.dismiss()
                     }
@@ -590,16 +595,19 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 receiveOTPEditText.error = resources.getString(R.string.regist_otp_err)
                 receiveOTPEditText.requestFocus()
             } else {
-                farmerViewModel.compareOtp(this, agriStackMobile, enteredOTP)
+                timestamp = System.currentTimeMillis()
+                farmerViewModel.compareOtp(this, timestamp, agriStackMobile, enteredOTP)
                 farmerViewModel.compareOtpResponse.observe(this) {
                     if (it != null) {
+                        val calculatedResponse = provideValidEncryptedString(timestamp)
                         val jSONObject = JSONObject(it.toString())
-                        if (jSONObject.optInt("status") == 200) {
-                            callRefreshTokenAPI(agriStackMobile, userPass, enteredOTP)
+                        val response = jSONObject.optString("response")
+                        if (calculatedResponse == response) {
+                            mobileNo = binding.userIdEditText.text.toString()
+                            callRefreshTokenAPI(mobileNo, userPass, enteredOTP)
                             dialog.dismiss()
                         } else {
-                            UIToastMessage.show(this, getString(R.string.wrong_OTP))
-                            dialog.dismiss()
+                            Toast.makeText(this, "Invalid OTP", Toast.LENGTH_LONG).show()
                         }
                         dialog.dismiss()
                     }
