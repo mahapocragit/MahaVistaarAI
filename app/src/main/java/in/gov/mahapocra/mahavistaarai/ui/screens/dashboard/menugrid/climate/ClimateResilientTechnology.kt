@@ -1,10 +1,12 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
+import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -36,6 +38,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
+import kotlin.math.abs
 
 class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClickListener {
 
@@ -51,6 +54,7 @@ class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClick
     private var groupImagePath: ArrayList<String> = ArrayList()
     private var webUrl: ArrayList<String> = ArrayList()
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (AppSettings.getLanguage(this).equals("2", ignoreCase = true)) {
@@ -95,25 +99,70 @@ class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClick
 
         val isGuest =
             AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
-        binding.chatbotIcon.setOnClickListener {
-            if (!isGuest) {
-                startActivity(Intent(this, ChatbotActivity::class.java))
-            } else {
-                AlertDialog.Builder(this)
-                    .setMessage(R.string.bot_chat_login_redirect_mesage)
-                    .setPositiveButton(R.string.yes) { dialog, _ ->
-                        // Handle login action here
-                        startActivity(Intent(this, LoginScreen::class.java).apply {
-                            putExtra("from", "dashboard")
-                        })
-                        dialog.dismiss()
+        binding.chatbotIcon.setOnTouchListener(object : View.OnTouchListener {
+            private var dX = 0f
+            private var dY = 0f
+            private var startX = 0f
+            private var startY = 0f
+            private val CLICK_THRESHOLD = 20 // px movement allowed
+
+            override fun onTouch(v: View, event: MotionEvent): Boolean {
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        dX = v.x - event.rawX
+                        dY = v.y - event.rawY
+                        startX = event.rawX
+                        startY = event.rawY
                     }
-                    .setNegativeButton(R.string.no) { dialog, _ ->
-                        dialog.dismiss()
+
+                    MotionEvent.ACTION_MOVE -> {
+                        val parent = v.parent as View
+                        val newX = event.rawX + dX
+                        val newY = event.rawY + dY
+
+                        // calculate boundaries (you can adjust margin if needed)
+                        val margin = 32 // px margin from edges
+                        val maxX = parent.width - v.width - margin
+                        val maxY = parent.height - v.height - margin
+                        val minX = margin
+                        val minY = margin
+
+                        // constrain movement inside screen
+                        val boundedX = newX.coerceIn(minX.toFloat(), maxX.toFloat())
+                        val boundedY = newY.coerceIn(minY.toFloat(), maxY.toFloat())
+
+                        v.animate()
+                            .x(boundedX)
+                            .y(boundedY)
+                            .setDuration(0)
+                            .start()
                     }
-                    .show()
+
+                    MotionEvent.ACTION_UP -> {
+                        val diffX = abs(event.rawX - startX)
+                        val diffY = abs(event.rawY - startY)
+
+                        if (diffX < CLICK_THRESHOLD && diffY < CLICK_THRESHOLD) {
+                            if (!isGuest) {
+                                startActivity(Intent(this@ClimateResilientTechnology, ChatbotActivity::class.java))
+                            } else {
+                                AlertDialog.Builder(this@ClimateResilientTechnology)
+                                    .setMessage(R.string.bot_chat_login_redirect_mesage)
+                                    .setPositiveButton(R.string.yes) { dialog, _ ->
+                                        startActivity(Intent(this@ClimateResilientTechnology, LoginScreen::class.java).apply {
+                                            putExtra("from", "dashboard")
+                                        })
+                                        dialog.dismiss()
+                                    }
+                                    .setNegativeButton(R.string.no) { dialog, _ -> dialog.dismiss() }
+                                    .show()
+                            }
+                        }
+                    }
+                }
+                return true
             }
-        }
+        })
 
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {

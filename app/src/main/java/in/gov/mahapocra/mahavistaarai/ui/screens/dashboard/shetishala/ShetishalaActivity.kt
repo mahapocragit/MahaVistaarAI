@@ -1,8 +1,10 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
@@ -22,12 +24,14 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 class ShetishalaActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityShetishalaBinding
     private lateinit var languageToLoad: String
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         languageToLoad = "mr"
@@ -48,7 +52,7 @@ class ShetishalaActivity : AppCompatActivity() {
             startActivity(Intent(this, DashboardScreen::class.java))
         }
 
-        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 startActivity(Intent(this@ShetishalaActivity, DashboardScreen::class.java))
             }
@@ -82,26 +86,81 @@ class ShetishalaActivity : AppCompatActivity() {
                 }
                 .start()
         }
-        val isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
-        binding.chatbotIcon.setOnClickListener {
-            if (!isGuest) {
-                startActivity(Intent(this, ChatbotActivity::class.java))
-            } else {
-                AlertDialog.Builder(this)
-                    .setMessage(R.string.bot_chat_login_redirect_mesage)
-                    .setPositiveButton(R.string.yes) { dialog, _ ->
-                        // Handle login action here
-                        startActivity(Intent(this, LoginScreen::class.java).apply {
-                            putExtra("from", "dashboard")
-                        })
-                        dialog.dismiss()
+        val isGuest =
+            AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
+        binding.chatbotIcon.setOnTouchListener(object : View.OnTouchListener {
+            private var dX = 0f
+            private var dY = 0f
+            private var startX = 0f
+            private var startY = 0f
+            private val CLICK_THRESHOLD = 20 // px movement allowed
+
+            override fun onTouch(v: View, event: MotionEvent): Boolean {
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        dX = v.x - event.rawX
+                        dY = v.y - event.rawY
+                        startX = event.rawX
+                        startY = event.rawY
                     }
-                    .setNegativeButton(R.string.no) { dialog, _ ->
-                        dialog.dismiss()
+
+                    MotionEvent.ACTION_MOVE -> {
+                        val parent = v.parent as View
+                        val newX = event.rawX + dX
+                        val newY = event.rawY + dY
+
+                        // calculate boundaries (you can adjust margin if needed)
+                        val margin = 32 // px margin from edges
+                        val maxX = parent.width - v.width - margin
+                        val maxY = parent.height - v.height - margin
+                        val minX = margin
+                        val minY = margin
+
+                        // constrain movement inside screen
+                        val boundedX = newX.coerceIn(minX.toFloat(), maxX.toFloat())
+                        val boundedY = newY.coerceIn(minY.toFloat(), maxY.toFloat())
+
+                        v.animate()
+                            .x(boundedX)
+                            .y(boundedY)
+                            .setDuration(0)
+                            .start()
                     }
-                    .show()
+
+                    MotionEvent.ACTION_UP -> {
+                        val diffX = abs(event.rawX - startX)
+                        val diffY = abs(event.rawY - startY)
+
+                        if (diffX < CLICK_THRESHOLD && diffY < CLICK_THRESHOLD) {
+                            if (!isGuest) {
+                                startActivity(
+                                    Intent(
+                                        this@ShetishalaActivity,
+                                        ChatbotActivity::class.java
+                                    )
+                                )
+                            } else {
+                                AlertDialog.Builder(this@ShetishalaActivity)
+                                    .setMessage(R.string.bot_chat_login_redirect_mesage)
+                                    .setPositiveButton(R.string.yes) { dialog, _ ->
+                                        startActivity(
+                                            Intent(
+                                                this@ShetishalaActivity,
+                                                LoginScreen::class.java
+                                            ).apply {
+                                                putExtra("from", "dashboard")
+                                            })
+                                        dialog.dismiss()
+                                    }
+                                    .setNegativeButton(R.string.no) { dialog, _ -> dialog.dismiss() }
+                                    .show()
+                            }
+                        }
+                    }
+                }
+                return true
             }
-        }
+        })
     }
 
     override fun attachBaseContext(newBase: Context) {
