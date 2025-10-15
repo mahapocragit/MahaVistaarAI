@@ -50,16 +50,16 @@ import retrofit2.Retrofit
 class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
     private lateinit var binding: ActivityLoginScreenTempBinding
+    private var languageToLoad = "mr"
     private val farmerViewModel: FarmerViewModel by viewModels()
     private lateinit var refreshToken: String
     private lateinit var mobileNo: String
     private lateinit var dialog: Dialog
-    private var userPass = ""
-    var languageToLoad = "mr"
     private var farmerRegisteredID: Int = 0
-    private var loginOption: Int = 0
     private var mobile = ""
+    private var userPass = ""
     private var enteredOTP = ""
+    private var loginOption: Int = 1
     private val PASSWORD_VERIFY = 0
     private val OTP_VERIFY = 1
     private var agriStackMobile = ""
@@ -185,7 +185,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     private fun authenticationOperations() {
         binding.signInButton.setOnClickListener {
             AppSettings.getInstance().setBooleanValue(this, AppConstants.IS_USER_GUEST, false)
-            if (loginOption == PASSWORD_VERIFY) {
+            if (loginOption != OTP_VERIFY) {
                 userValidateAndLogin()
             } else {
                 sendOTP()

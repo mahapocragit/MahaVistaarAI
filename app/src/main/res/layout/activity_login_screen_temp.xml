@@ -211,27 +211,27 @@
                     android:visibility="visible">
 
                     <RadioButton
-                        android:id="@+id/radioButtonPwd"
+                        android:id="@+id/radioButtonOtp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:buttonTint="@color/actionbar_color_figma"
                         android:checked="true"
                         android:onClick="onRadioButtonClicked"
-                        android:tag="1"
-                        android:text="@string/password"
+                        android:tag="0"
+                        android:text="@string/otp"
                         android:textColor="@color/black" />
 
                     <RadioButton
-                        android:id="@+id/radioButtonOtp"
+                        android:id="@+id/radioButtonPwd"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:buttonTint="@color/actionbar_color_figma"
                         android:checked="false"
                         android:onClick="onRadioButtonClicked"
-                        android:tag="0"
-                        android:text="@string/otp"
+                        android:tag="1"
+                        android:text="@string/password"
                         android:textColor="@color/black" />
 
                 </RadioGroup>
@@ -242,6 +242,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_1sdp"
                     android:elevation="8dp"
+                    android:visibility="gone"
                     android:textColorHint="@color/text_black"
                     app:hintTextAppearance="@style/TextLabel"
                     app:passwordToggleEnabled="true"
@@ -254,7 +255,6 @@
                         android:background="@drawable/login_edit_bg"
                         android:gravity="center|start"
                         android:hint="@string/password"
-                        android:textSize="@dimen/_10sdp"
                         android:inputType="textWebPassword"
                         android:longClickable="false"
                         android:maxLength="20"
@@ -263,7 +263,8 @@
                         android:paddingEnd="@dimen/padding20"
                         android:textAllCaps="false"
                         android:textColor="@color/black"
-                        android:textIsSelectable="false" />
+                        android:textIsSelectable="false"
+                        android:textSize="@dimen/_10sdp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
