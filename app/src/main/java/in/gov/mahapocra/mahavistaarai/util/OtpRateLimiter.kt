@@ -58,7 +58,7 @@ object OtpRateLimiter {
     fun provideValidEncryptedString(timestamp: Long): String {
         val invalidString = "Invalid OTP"
         val encryptionStringInvalid = "$timestamp$invalidString"
-        val encryptedStringInvalid = "invalid: ${toSHA512(encryptionStringInvalid)}"
+        val encryptedStringInvalid = toSHA512(encryptionStringInvalid)
         return encryptedStringInvalid
     }
 }

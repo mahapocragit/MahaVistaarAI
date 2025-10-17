@@ -1,14 +1,11 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.viewmodel
 
 import android.content.Context
-import android.text.format.Time
 import android.util.Log
-import android.util.TimeUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.Timestamp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -29,7 +26,6 @@ import retrofit2.Retrofit
 import java.io.IOException
 import java.net.SocketException
 import java.net.SocketTimeoutException
-import java.util.Date
 
 class FarmerViewModel : ViewModel() {
 
@@ -570,6 +566,7 @@ class FarmerViewModel : ViewModel() {
 
     fun farmerIdBasedLogin(context: Context, agristackID: String) {
         viewModelScope.launch {
+            ProgressHelper.showProgressDialog(context)
             try {
                 val jsonObject = JSONObject().apply {
                     put("SecurityKey", APIKeys.SSO_PROD)
@@ -579,11 +576,12 @@ class FarmerViewModel : ViewModel() {
                 val apiRequest = retrofit.create(ApiService::class.java)
 
                 val response = apiRequest.farmerLoginBasedOnID(agristackID, requestBody)
-
+                ProgressHelper.disableProgressDialog()
                 // You can handle the result however you want, for example:
                 _agristackLoginResponse.value = response
 
             } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."

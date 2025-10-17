@@ -6,7 +6,6 @@ import android.app.DownloadManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.health.connect.datatypes.ExerciseRoute
 import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
@@ -18,16 +17,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.webkit.URLUtil
 import android.widget.ArrayAdapter
-import android.widget.EditText
 import android.widget.FrameLayout
-import android.widget.ImageView
 import android.widget.ListView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.snackbar.Snackbar

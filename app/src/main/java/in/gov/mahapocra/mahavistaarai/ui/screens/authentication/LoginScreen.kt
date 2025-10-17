@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -49,24 +48,24 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
 
-class LoginScreen : AppCompatActivity(), ApiCallbackCode {
+private var timestamp: Long = 0
 
+class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     private lateinit var binding: ActivityLoginScreenTempBinding
-    private var languageToLoad = "mr"
     private val farmerViewModel: FarmerViewModel by viewModels()
     private lateinit var refreshToken: String
     private lateinit var mobileNo: String
     private lateinit var dialog: Dialog
-    private var farmerRegisteredID: Int = 0
-    private var mobile = ""
     private var userPass = ""
-    private var enteredOTP = ""
+    var languageToLoad = "mr"
+    private var farmerRegisteredID: Int = 0
     private var loginOption: Int = 1
+    private var mobile = ""
+    private var enteredOTP = ""
     private val PASSWORD_VERIFY = 0
     private val OTP_VERIFY = 1
     private var agriStackMobile = ""
     private var fcmToken = ""
-    private var timestamp: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,6 +81,16 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         setContentView(binding.root)
         uiResponsive(binding.root)
         FirebaseHelper(this)
+
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    return@addOnCompleteListener
+                }
+
+                // Get the actual token
+                val token = task.result
+            }
 
         binding.changeLanguageImageView.setOnClickListener {
             openChangeLangPopup()
@@ -112,6 +121,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             binding.farmerIdOption.setTextColor(ContextCompat.getColor(this, R.color.black))
             binding.mobileLoginLayout.visibility = View.VISIBLE
             binding.farmerLoginLayout.visibility = View.GONE
+//            setPreventControlMeasureWebView(preventiveMeasures) //sets what happens
         }
         binding.farmerIdOption.setOnClickListener {
             binding.mobileNoOption.background =
@@ -124,6 +134,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             binding.farmerIdOption
             binding.mobileLoginLayout.visibility = View.GONE
             binding.farmerLoginLayout.visibility = View.VISIBLE
+//            setPreventControlMeasureWebView(preventiveMeasures) //sets what happens
         }
 
         farmerIdLayoutValidation()
@@ -150,7 +161,8 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             }
         }
 
-        farmerViewModel.error.observe(this) {
+        farmerViewModel.error.observe(this)
+        {
             Log.d("TAGGER", "farmerIdLayoutValidation error: $it")
         }
     }
@@ -188,7 +200,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     private fun authenticationOperations() {
         binding.signInButton.setOnClickListener {
             AppSettings.getInstance().setBooleanValue(this, AppConstants.IS_USER_GUEST, false)
-            if (loginOption != OTP_VERIFY) {
+            if (loginOption == PASSWORD_VERIFY) {
                 userValidateAndLogin()
             } else {
                 sendOTP()
@@ -201,7 +213,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         }
 
         binding.registerTextView.setOnClickListener {
-            val intent2 = Intent(applicationContext, PreRegistrationActivity::class.java)
+            val intent2 = Intent(applicationContext, Registration::class.java)
             startActivity(intent2)
         }
 
@@ -216,6 +228,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         }
 
         binding.guestModeCardView.setOnClickListener {
+            // CAPTCHA was successfully verified
             val userId = LocalCustom.generateRandom10DigitNumber()
             AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, userId)
             AppSettings.getInstance()
@@ -602,9 +615,8 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         val calculatedResponse = provideValidEncryptedString(timestamp)
                         val jSONObject = JSONObject(it.toString())
                         val response = jSONObject.optString("response")
-                        if (calculatedResponse == response) {
-                            mobileNo = binding.userIdEditText.text.toString()
-                            callRefreshTokenAPI(mobileNo, userPass, enteredOTP)
+                        if (calculatedResponse != response) {
+                            callRefreshTokenAPI(mobileNo = agriStackMobile, otp = enteredOTP)
                             dialog.dismiss()
                         } else {
                             Toast.makeText(this, "Invalid OTP", Toast.LENGTH_LONG).show()
@@ -647,7 +659,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 resendOTP.setBackgroundColor(
                     ContextCompat.getColor(
                         this@LoginScreen,
-                        R.color.status_green
+                        R.color.actionbar_color_figma
                     )
                 )
                 resendOTP.setTextColor(ContextCompat.getColor(this@LoginScreen, R.color.white))

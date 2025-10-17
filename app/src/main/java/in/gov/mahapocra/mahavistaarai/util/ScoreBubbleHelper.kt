@@ -1,17 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.util
 
-import android.graphics.Color
-import android.graphics.Typeface
-import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
-import android.widget.FrameLayout
-import android.widget.TextView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 object ScoreBubbleHelper {
 

@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Register"
+            android:text="@string/user_info_text_1"
             android:textColor="@color/white"
             android:textSize="@dimen/_22sdp"
             android:textStyle="bold" />
@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Your Account!"
+            android:text="@string/user_info_text_2"
             android:textColor="@color/white"
             android:textSize="@dimen/_22sdp"
             android:textStyle="bold" />
@@ -293,6 +293,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="end"
+                    android:textSize="@dimen/_12sdp"
+                    android:layout_marginHorizontal="@dimen/_16sdp"
+                    android:layout_marginVertical="@dimen/_5sdp"
                     android:textColor="@color/blue_light"
                     android:text="@string/change_or_reset_your_password" />
 

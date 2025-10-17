@@ -8,12 +8,9 @@ import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.PopupWindow
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.TooltipCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,8 +20,6 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLeaderboardBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.ScoreBubbleHelper
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
-import org.json.JSONArray
 import org.json.JSONObject
 
 class LeaderboardActivity : AppCompatActivity() {

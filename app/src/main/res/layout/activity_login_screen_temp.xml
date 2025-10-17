@@ -84,6 +84,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginVertical="5dp"
                     android:layout_marginStart="5dp"
+                    android:textSize="@dimen/_10sdp"
                     android:layout_weight="1"
                     android:background="@drawable/shape_right_green"
                     android:elevation="5dp"
@@ -98,6 +99,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginVertical="5dp"
                     android:layout_marginEnd="5dp"
+                    android:textSize="@dimen/_10sdp"
                     android:layout_weight="1"
                     android:background="@drawable/shape_left_white"
                     android:elevation="5dp"
@@ -113,8 +115,8 @@
                 android:id="@+id/farmerLoginLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="visible"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="visible">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/mobileTIL"
@@ -153,20 +155,20 @@
                     android:text="@string/sendOtp"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text16"
+                    android:textSize="@dimen/_10sdp"
                     app:cornerRadius="@dimen/_15sdp" />
 
                 <TextView
                     android:id="@+id/knowYourFarmerIdText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:visibility="gone"
-                    android:textColor="@color/red"
-                    android:layout_weight="1"
                     android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:text="@string/click_here_to_know_your_farmer_id"
+                    android:textColor="@color/red"
                     android:textSize="@dimen/_10sdp"
-                    android:text="@string/click_here_to_know_your_farmer_id" />
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -220,7 +222,8 @@
                         android:onClick="onRadioButtonClicked"
                         android:tag="0"
                         android:text="@string/otp"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_10sdp" />
 
                     <RadioButton
                         android:id="@+id/radioButtonPwd"
@@ -232,7 +235,8 @@
                         android:onClick="onRadioButtonClicked"
                         android:tag="1"
                         android:text="@string/password"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_10sdp" />
 
                 </RadioGroup>
 
@@ -242,8 +246,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_1sdp"
                     android:elevation="8dp"
-                    android:visibility="gone"
                     android:textColorHint="@color/text_black"
+                    android:visibility="gone"
                     app:hintTextAppearance="@style/TextLabel"
                     app:passwordToggleEnabled="true"
                     app:passwordToggleTint="@color/status_green">
@@ -276,7 +280,7 @@
                     android:gravity="end"
                     android:text="@string/forgot_password"
                     android:textColor="@color/darkblue"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/_10sdp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/signInButton"
@@ -286,17 +290,18 @@
                     android:layout_margin="@dimen/_1sdp"
                     android:backgroundTint="@color/actionbar_color_figma"
                     android:padding="@dimen/padding12"
-                    android:text="@string/login"
+                    android:text="@string/sendOtp"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text16"
+                    android:textSize="@dimen/_10sdp"
                     app:cornerRadius="@dimen/_15sdp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="end"
-                    android:text="@string/dont_have_an_account" />
+                    android:text="@string/dont_have_an_account"
+                    android:textSize="@dimen/_10sdp" />
 
                 <TextView
                     android:id="@+id/registerTextView"
@@ -305,6 +310,7 @@
                     android:gravity="end"
                     android:text="@string/create_new"
                     android:textColor="@color/actionbar_color_figma"
+                    android:textSize="@dimen/_11sdp"
                     android:textStyle="bold" />
             </LinearLayout>
 

@@ -31,14 +31,12 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityProfileScreenBinding
-import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityRegistrationBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.RegistrationViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
-import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.isStrongPassword
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.toSHA512
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
@@ -262,8 +260,6 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
         farmerRegisterID = intent.getIntExtra("FAAPRegistrationID", 0)
         if (farmerRegisterID > 0) {
             binding.submitButton.text = getString(R.string.update_profile_text)
-            binding.textView5.text = getString(R.string.user_info_text_1)
-            binding.textView6.text = getString(R.string.user_info_text_2)
             fAAPRegistrationID = farmerRegisterID.toString()
             mobileNumberStatus = true
             userName =

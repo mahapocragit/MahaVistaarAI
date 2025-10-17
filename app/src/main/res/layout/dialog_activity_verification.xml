@@ -22,7 +22,7 @@
         android:gravity="center"
         android:text="Enter OTP"
         android:textColor="@color/actionbar_color_figma"
-        android:textSize="@dimen/_14sdp"
+        android:textSize="@dimen/_11sdp"
         android:textStyle="bold" />
 
     <TextView
@@ -44,7 +44,7 @@
         android:maxLength="6"
         android:hint="______"
         android:textColor="@color/heading"
-        android:textSize="@dimen/_14sdp"
+        android:textSize="@dimen/_10sdp"
         android:textStyle="normal" />
     <LinearLayout
         android:layout_width="match_parent"
@@ -62,7 +62,7 @@
             android:text="@string/Resend_OTP"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="@dimen/text16" />
+            android:textSize="@dimen/_10sdp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/submitButton"
@@ -75,6 +75,6 @@
             android:text="@string/reg_verify"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="@dimen/text16" />
+            android:textSize="@dimen/_10sdp" />
     </LinearLayout>
 </LinearLayout>

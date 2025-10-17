@@ -20,14 +20,11 @@ import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
 import `in`.co.appinventor.services_api.settings.AppSettings
-import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
-import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityForgetPasswordTempBinding
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
@@ -185,40 +182,8 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
                 addVerificationDialog()
             }
         }
-        if (i == 3) {
-            if (jSONObject != null) {
-                DebugLog.getInstance().d("onResponse=$jSONObject")
-                val response =
-                    ResponseModel(
-                        jSONObject
-                    )
-                if (response.getStatus()) {
-                    if (loginOption == 1) {
-                        val message: String = jSONObject.getString("Message")
-                        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-                        farmerRegistrationId = jSONObject.getInt("FAAPRegistrationID")
-                        addVerificationDialog()
-                    } else {
-                        val message: String = jSONObject.getString("Message")
-                        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-                        farmerRegistrationId = jSONObject.getInt("FAAPRegistrationID")
-                        AppSettings.getInstance()
-                            .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegistrationId)
-                        val intent = Intent(this, DashboardScreen::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(intent)
-                        finish()
-                    }
-                } else {
-                    val message: String = jSONObject.getString("Message")
-                    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-                }
-            }
-
-        }
     }
+
 
     override fun onFailure(th: Throwable?, i: Int) {
         DebugLog.getInstance().d("onResponse=$th")

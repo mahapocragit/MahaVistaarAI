@@ -2,8 +2,6 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.location.Location
-import android.location.LocationProvider
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -88,13 +86,14 @@ class DBTDashboard : AppCompatActivity() {
 
     @SuppressLint("SetJavaScriptEnabled")
     fun loadWebView(encrypterFarmerId: String) {
+        val dbtUrl = "https://dbt-ndksp.mahapocra.gov.in"//https://uat-dbt.mahapocra.gov.in:8006
         val location = getLocationUsingLocationManager(this)
         val lat = location?.latitude
         val long = location?.longitude
         val urlForLoadWeb = if (encrypterFarmerId.isEmpty()){
-            "https://uat-dbt.mahapocra.gov.in:8006/MahavistaarLoginAuth"
+            "$dbtUrl/MahavistaarLoginAuth"
         }else{
-            "https://uat-dbt.mahapocra.gov.in:8006/MahavistaarLoginAuth" +
+            "$dbtUrl/MahavistaarLoginAuth" +
                     "?farmerid=$encrypterFarmerId" +
                     "&ip=${getMobileOrWifiIp()}" +
                     "&details=Chrome_Windows10, latitude=$lat, longitude=$long"
