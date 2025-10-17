@@ -1,6 +1,7 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.viewmodel
 
 import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -80,6 +81,7 @@ class RegistrationViewModel : ViewModel() {
                     updatedMobile,
                     requestBody
                 )
+//                Toast.makeText(context, response.toString(), Toast.LENGTH_LONG).show()
                 ProgressHelper.disableProgressDialog()
                 _getRegistrationResponse.value = response
             } catch (e: Exception) {
@@ -90,6 +92,7 @@ class RegistrationViewModel : ViewModel() {
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
+//                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
                 _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }

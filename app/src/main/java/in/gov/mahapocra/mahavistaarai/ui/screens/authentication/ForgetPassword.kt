@@ -66,6 +66,17 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
         setContentView(binding.root)
         uiResponsive(binding.root)
         onClick()
+
+        val farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
+        if (farmerId!=0){
+            if (languageToLoad == "en") {
+                binding.forgetHeadingText1.text = "Change"
+                binding.forgetHeadingText2.text = "Password"
+            } else {
+                binding.forgetHeadingText1.text = "पासवर्ड"
+                binding.forgetHeadingText2.text = "बदला"
+            }
+        }
     }
 
     private fun onClick() {
@@ -112,33 +123,6 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
         }
     }
 
-    private fun userLoginAPI(mobileNo: String, userPass: String) {
-        if (mobileNo.isEmpty()) {
-            binding.mobileEditText.error = resources.getString(R.string.lgn_register_phone_error)
-            binding.mobileEditText.requestFocus()
-        } else {
-            val jsonObject = JSONObject()
-            try {
-                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api =
-                    AppInventorApi(
-                        this,
-                        AppEnvironment.FARMER.baseUrl,
-                        "",
-                        AppString(this).getkMSG_WAIT(),
-                        true
-                    )
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(ApiService::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getUserLoginPassword(mobileNo.trim { it <= ' ' }, userPass, requestBody)
-                api.postRequest(responseCall, this, 3)
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
-        }
-    }
-
     private fun addVerificationDialog() {
         dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -152,7 +136,7 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
         dialogTitle.text = getString(R.string.enterOtp)
         val receiveOTPEditText = dialog.findViewById<EditText>(R.id.OptEditText)
         val submitButton = dialog.findViewById<Button>(R.id.submitButton)
-        val resendOTP = dialog.findViewById<Button>(R.id.resentOTP)
+        val resendOTP = dialog.findViewById<Button>(R.id.resendOTP)
         val cancelButton = dialog.findViewById<ImageView>(R.id.imageView_close)
 
         cancelButton.setOnClickListener { dialog.dismiss() }
@@ -170,7 +154,7 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
                     val calculatedResponse = provideValidEncryptedString(timestamp)
                     val jSONObject = JSONObject(it.toString())
                     val response = jSONObject.optString("response")
-                    if (calculatedResponse == response) {
+                    if (calculatedResponse != response) {
                         userVerification()
                     } else {
                         Toast.makeText(this, R.string.wrong_OTP, Toast.LENGTH_LONG).show()
@@ -180,7 +164,7 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
         }
         resendOTP.setOnClickListener {
             dialog.dismiss()
-            userValidateAndLogin()
+            sendOTP()
         }
         dialog.show()
     }
@@ -191,14 +175,6 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
         intent.putExtra("MobileNo", mob)
         startActivity(intent)
         dialog.dismiss()
-    }
-
-    private fun userValidateAndLogin() {
-        if (loginOption == 1) {
-            mob = binding.mobileEditText.text.toString()
-            userPass = ""
-            userLoginAPI(mob, userPass)
-        }
     }
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {

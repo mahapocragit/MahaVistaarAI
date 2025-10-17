@@ -53,6 +53,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropRecyclerSapAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DashboardAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DrawerMenuAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.ProfileScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.Registration
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.etl.AgriStackAdvisoryActivity
@@ -166,6 +167,15 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
         appPreferenceManager = AppPreferenceManager(this)
         init()
+
+        if (NetworkUtils.isInternetAvailable(this)) {
+            if (!AppPreferenceManager(this).getBoolean("FCM_VALIDATED")) {
+                farmerViewModel.validateFCMToken(this)
+            }
+        } else {
+            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+        }
+
         lifecycleScope.launch {
             delay(5000) // 5 seconds
             binding.appBarMain.dashboardScreen.chatBubbleImageView.animate()
@@ -442,14 +452,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             LocalCustom.createSnackbar(binding.root, "Internet not available!")
         }
 
-
-        if (NetworkUtils.isInternetAvailable(this)) {
-            if (!AppPreferenceManager(this).getBoolean("FCM_VALIDATED")) {
-                farmerViewModel.validateFCMToken(this)
-            }
-        } else {
-            LocalCustom.createSnackbar(binding.root, "Internet not available!")
-        }
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 finishAffinity()
@@ -481,7 +483,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
         farmerViewModel.checkFCMTokenResponse.observe(this) {
             if (it != null) {
-                AppPreferenceManager(this).saveBoolean("FCM_VALIDATED", true)
                 val jSONObject = JSONObject(it.toString())
                 val status = jSONObject.optInt("status")
                 if (status != 200) {
@@ -489,6 +490,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         Log.d("TAGGER", "onCreate checkFCMTokenResponse: $it \n $fcmToken")
                         farmerViewModel.updateFCMToken(this, fcmToken)
                     }
+                } else {
+                    AppPreferenceManager(this).saveBoolean("FCM_VALIDATED", true)
                 }
             }
         }
@@ -789,6 +792,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         farmerViewModel.updateFCMTokenResponse.observe(this) {
             Log.d("TAGGER", "logoutFromApp: $it")
             if (it != null) {
+                AppPreferenceManager(this).saveBoolean("FCM_VALIDATED", true)
                 val jsonObject = JSONObject(it.toString())
                 val response = jsonObject.optString("response")
                 if (response == "FCM Cleared") {
@@ -861,9 +865,9 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 val leaderDialog = AlertDialog.Builder(this)
                     .setView(leaderDialogBinding.root)
                     .create()
-                if (languageToLoad=="mr") {
+                if (languageToLoad == "mr") {
                     leaderDialogBinding.topThreeTextView.visibility = View.GONE
-                }else {
+                } else {
                     leaderDialogBinding.topThreeTextView.visibility = View.VISIBLE
                 }
                 leaderDialogBinding.cancelImageView.setOnClickListener {
@@ -890,13 +894,16 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 }
 
                 leaderDialogBinding.firstRankNameTextView.text = formatName(firstRankName)
-                leaderDialogBinding.firstRankTalukaTextView.text = formatName(if (languageToLoad == "en") firstRankTaluka else firstRankTalukaMr)
+                leaderDialogBinding.firstRankTalukaTextView.text =
+                    formatName(if (languageToLoad == "en") firstRankTaluka else firstRankTalukaMr)
 
                 leaderDialogBinding.secondRankNameTextView.text = formatName(secondRankName)
-                leaderDialogBinding.secondRankTalukaTextView.text = formatName(if (languageToLoad == "en") secondRankTaluka else secondRankTalukaMr)
+                leaderDialogBinding.secondRankTalukaTextView.text =
+                    formatName(if (languageToLoad == "en") secondRankTaluka else secondRankTalukaMr)
 
                 leaderDialogBinding.thirdRankNameTextView.text = formatName(thirdRankName)
-                leaderDialogBinding.thirdRankTalukaTextView.text = formatName(if (languageToLoad == "en") thirdRankTaluka else thirdRankTalukaMr)
+                leaderDialogBinding.thirdRankTalukaTextView.text =
+                    formatName(if (languageToLoad == "en") thirdRankTaluka else thirdRankTalukaMr)
 
                 leaderDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 // Set width and height
@@ -1328,7 +1335,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             val id = jsonObject.getInt("id")
             when (id) {
                 0 -> {
-                    val intent = Intent(this@DashboardScreen, Registration::class.java)
+                    val intent = Intent(this@DashboardScreen, ProfileScreen::class.java)
                     intent.putExtra("FAAPRegistrationID", farmerId)
                     startActivity(intent)
                 }

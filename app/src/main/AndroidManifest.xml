@@ -29,6 +29,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FarmerApp">
         <activity
+            android:name=".ui.screens.authentication.PreRegistrationActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.screens.dashboard.menugrid.dbt.DBTDashboard"
             android:exported="false" />
         <activity
@@ -188,6 +191,9 @@
             android:exported="false"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.screens.authentication.ProfileScreen"
+            android:exported="false" />
         <activity
             android:name=".ui.screens.authentication.Registration"
             android:exported="false" />

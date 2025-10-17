@@ -201,7 +201,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         }
 
         binding.registerTextView.setOnClickListener {
-            val intent2 = Intent(applicationContext, Registration::class.java)
+            val intent2 = Intent(applicationContext, PreRegistrationActivity::class.java)
             startActivity(intent2)
         }
 
@@ -531,7 +531,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         dialogTitle.text = resources.getString(R.string.enterOtp)
         val receiveOTPEditText = dialog.findViewById<EditText>(R.id.OptEditText)
         val submitButton = dialog.findViewById<Button>(R.id.submitButton)
-        val resendOTP = dialog.findViewById<Button>(R.id.resentOTP)
+        val resendOTP = dialog.findViewById<Button>(R.id.resendOTP)
         val cancelButton = dialog.findViewById<ImageView>(R.id.imageView_close)
         otpVerification(resendOTP)
         cancelButton.setOnClickListener { dialog.dismiss() }
@@ -584,7 +584,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         dialogTitle.text = resources.getString(R.string.enterOtp)
         val receiveOTPEditText = dialog.findViewById<EditText>(R.id.OptEditText)
         val submitButton = dialog.findViewById<Button>(R.id.submitButton)
-        val resendOTP = dialog.findViewById<Button>(R.id.resentOTP)
+        val resendOTP = dialog.findViewById<Button>(R.id.resendOTP)
         val cancelButton = dialog.findViewById<ImageView>(R.id.imageView_close)
         otpVerification(resendOTP)
         cancelButton.setOnClickListener { dialog.dismiss() }

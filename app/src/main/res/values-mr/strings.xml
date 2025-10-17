@@ -131,7 +131,7 @@
     <string name="Time">वेळ</string>
 
     <string name="name">नाव</string>
-    <string name="register">Register</string>
+    <string name="register">नोंदणी करा</string>
     <string name="forgot_password">पासवर्ड विसरलात?</string>
     <string name="change_password"> पासवर्ड बदला</string>
     <string name="name_error"> तुमचे नाव लिहा</string>
@@ -215,6 +215,7 @@
     <string name="reg_verify"> सत्यापित करा</string>
     <string name="reg_verified"> सत्यापित </string>
     <string name="reg_submit">प्रस्तुत करा</string>
+    <string name="reg_next">Next</string>
     <string name="reg_email">ईमेल आयडी टाका (ऐच्छिक)</string>
     <string name="market_term"> कालावधी </string>
     <string name="market_percentage"> अर्थसहाय्याची टक्केवारी </string>
@@ -506,4 +507,7 @@
     <string name="rank">श्रेणी</string>
     <string name="name_amp_location">नाव आणि स्थान</string>
     <string name="farmers_in_taluka">तालुक्यातील टॉप ३ शेतकरी</string>
+    <string name="change_or_reset_your_password">आपला पासवर्ड बदला किंवा रीसेट करा</string>
+    <string name="location_information">स्थानिक माहिती</string>
+    <string name="personal_information">वैयक्तिक माहिती</string>
 </resources>

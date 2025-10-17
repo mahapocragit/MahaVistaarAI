@@ -22,6 +22,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.google.firebase.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.listener.AlertListEventListener
@@ -29,6 +30,7 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
+import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityRegistrationBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
@@ -53,32 +55,21 @@ class Registration : AppCompatActivity(), AlertListEventListener {
     private lateinit var binding: ActivityRegistrationBinding
     private val registrationViewModel: RegistrationViewModel by viewModels()
     private var isUserLoggedIn: Boolean = false
-    private var consentMessage: String? = null
     private lateinit var userName: String
     private lateinit var mob: String
-    private lateinit var registerMob: String
-    private lateinit var pass: String
-    private lateinit var confirmPass: String
-    private lateinit var emailid: String
     private lateinit var districtName: String
     private var districtID: Int = 0
     private lateinit var talukaName: String
     private var talukaID: Int = 0
     private lateinit var villageName: String
     private var villageID: Int = 0
-    private var agristackId: String = ""
     private var fAAPRegistrationID: String = ""
     private var sessionManager: SessionManager? = null
 
     private var districtJSONArray: JSONArray? = null
     private var talukaJSONArray: JSONArray? = null
     private var villageJSONArray: JSONArray? = null
-
-    private lateinit var dialog: Dialog
-    private var mobileNumberStatus: Boolean = false
-    var farmerRegisterID: Int = 0
     private lateinit var languageToLoad: String
-
     private var versionName: String? = null
     private var token: String? = null
     private var machineId: String? = null
@@ -97,36 +88,18 @@ class Registration : AppCompatActivity(), AlertListEventListener {
         binding = ActivityRegistrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
+
+        userName = intent.getStringExtra("name").toString()
+        mob = intent.getStringExtra("mobile").toString()
+
         versionName = LocalCustom.getVersionName(this)
-        token = FirebaseMessaging.getInstance().token.toString()
+        FirebaseHelper(this).getFCMToken { fcmToken->
+            token = fcmToken
+        }
         sessionManager = SessionManager(this)
         setConfiguration()
         onclick()
         observeResponse()
-    }
-
-    private fun disableView() {
-        binding.nameEditText.isEnabled = false
-        binding.mobNoEditText.isEnabled = false
-        binding.textViewVerify.isEnabled = false
-        binding.passwordEditText.isEnabled = false
-        binding.confirmPasswordEditText.isEnabled = false
-        binding.textViewDist.isEnabled = false
-        binding.textViewTaluka.isEnabled = false
-        binding.textViewVillage.isEnabled = false
-        binding.submitButton.isEnabled = false
-    }
-
-    private fun enableView() {
-        binding.nameEditText.isEnabled = true
-        binding.mobNoEditText.isEnabled = true
-        binding.textViewVerify.isEnabled = true
-        binding.passwordEditText.isEnabled = true
-        binding.confirmPasswordEditText.isEnabled = true
-        binding.textViewDist.isEnabled = true
-        binding.textViewTaluka.isEnabled = true
-        binding.textViewVillage.isEnabled = true
-        binding.submitButton.isEnabled = true
     }
 
     private fun observeResponse() {
@@ -193,36 +166,6 @@ class Registration : AppCompatActivity(), AlertListEventListener {
             }
         }
 
-        farmerViewModel.consentResponse.observe(this) { response ->
-            if (response != null) {
-                val jsonObject = JSONObject(response.toString())
-                val status = jsonObject.optInt("status")
-                if (status == 200) {
-                    Toast.makeText(this, consentMessage ?: "Consent Submitted", Toast.LENGTH_SHORT)
-                        .show()
-                } else {
-                    val responseText = jsonObject.optString("response")
-                    Toast.makeText(this, responseText, Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-
-        registrationViewModel.getOTPRegisterResponse.observe(this) { response ->
-            if (response != null) {
-                val jSONObject = JSONObject(response.toString())
-                if (jSONObject.optInt("status") == 200) {
-                    Log.d("TAGGER", "onResponse: $jSONObject")
-                    val response: String = jSONObject.getString("response")
-                    Toast.makeText(this, response, Toast.LENGTH_LONG).show()
-                    addVerificationDialog()
-                } else if (jSONObject.optInt("status") == 201) {
-                    Toast.makeText(this, R.string.otp_error, Toast.LENGTH_LONG).show()
-                } else if (jSONObject.optInt("status") == 429) {
-                    Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_LONG).show()
-                }
-            }
-        }
-
         registrationViewModel.getRegistrationResponse.observe(this) { response ->
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
@@ -263,56 +206,8 @@ class Registration : AppCompatActivity(), AlertListEventListener {
     }
 
     private fun setConfiguration() {
-        farmerRegisterID = intent.getIntExtra("FAAPRegistrationID", 0)
-        if (farmerRegisterID > 0) {
-            binding.submitButton.text = getString(R.string.update_profile_text)
-            binding.textView5.text = getString(R.string.user_info_text_1)
-            binding.textView6.text = getString(R.string.user_info_text_2)
-            fAAPRegistrationID = farmerRegisterID.toString()
-            mobileNumberStatus = true
-            userName =
-                AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName)
-            registerMob = AppSettings.getInstance()
-                .getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
-            Log.d("TAGGER", "setConfiguration: $registerMob")
-            emailid =
-                AppSettings.getInstance().getValue(this, AppConstants.uEmail, AppConstants.uEmail)
-            districtName =
-                AppSettings.getInstance().getValue(this, AppConstants.uDIST, AppConstants.uDIST)
-            talukaName =
-                AppSettings.getInstance().getValue(this, AppConstants.uTALUKA, AppConstants.uTALUKA)
-            villageName = AppSettings.getInstance()
-                .getValue(this, AppConstants.uVILLAGE, AppConstants.uVILLAGE)
-            districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
-            talukaID = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
-            villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
-            val rawValue = AppSettings.getInstance().getSavedValue(this, AppConstants.AGRISTACKID)
-            agristackId = if (rawValue.isNullOrEmpty() || rawValue == "null") "" else rawValue
-            if (agristackId != "") {
-                binding.consentLayout.visibility = View.VISIBLE
-                binding.consentLayout.setOnClickListener {
-                    showDialogForConsent()
-                }
-            }
-            binding.passwordTIL.visibility = View.GONE
-            binding.passwordErrorTextView.visibility = View.GONE
-            binding.confirmPasswordTIL.visibility = View.GONE
-            binding.nameEditText.setText(userName)
-            binding.mobNoEditText.setText(registerMob)
-            binding.emailId.setText(emailid)
-            binding.textViewDist.text = districtName
-            binding.textViewTaluka.text = talukaName
-            binding.textViewVillage.text = villageName
-
-            if (agristackId != "") {
-                disableView()
-            } else {
-                enableView()
-            }
-        } else {
-            binding.textView5.text = getString(R.string.register_text_1)
-            binding.textView6.text = getString(R.string.register_text_2)
-        }
+        binding.textView5.text = getString(R.string.register_text_1)
+        binding.textView6.text = getString(R.string.register_text_2)
         farmerViewModel.getDistrictData(this, languageToLoad)
     }
 
@@ -326,39 +221,12 @@ class Registration : AppCompatActivity(), AlertListEventListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        binding.mobNoEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {
-                if (farmerRegisterID > 0) {
-                    mobileNumberStatus = false
-                }
-            }
-
-            override fun beforeTextChanged(
-                s: CharSequence, start: Int,
-                count: Int, after: Int
-            ) {
-            }
-
-            override fun onTextChanged(
-                s: CharSequence, start: Int,
-                before: Int, count: Int
-            ) {
-            }
-        })
         binding.submitButton.setOnClickListener {
             machineId = getMachineId()
-            if (farmerRegisterID > 0) {
-                isUserLoggedIn = true
-                userValidationAndUpdateProfile()
-            } else {
-                isUserLoggedIn = false
-                userValidationAndRegistration()
-            }
+            isUserLoggedIn = false
+            userValidationAndRegistration()
+        }
 
-        }
-        binding.textViewVerify.setOnClickListener {
-            sendOTP()
-        }
         binding.textViewDist.setOnClickListener {
             showDistrict()
         }
@@ -434,114 +302,19 @@ class Registration : AppCompatActivity(), AlertListEventListener {
         }
     }
 
-
-    private fun sendOTP() {
-        mob = binding.mobNoEditText.text.toString()
-        if (farmerRegisterID > 0 && mob != registerMob) {
-            mobileNumberStatus = false
-        }
-        if (mob.isEmpty()) {
-            binding.mobNoEditText.error = resources.getString(R.string.login_mob_err)
-            binding.mobNoEditText.requestFocus()
-        } else if (!AppUtility.getInstance().isValidPhoneNumber(mob)) {
-            binding.mobNoEditText.error = resources.getString(R.string.login_mob_valid_err)
-            binding.mobNoEditText.requestFocus()
-        } else {
-            registrationViewModel.getOTPRegisterRequest(this, mob.trim { it <= ' ' })
-        }
-    }
-
-    private fun userValidationAndUpdateProfile() {
-        userName = binding.nameEditText.text.toString()
-        mob = binding.mobNoEditText.text.toString()
-        emailid = binding.emailId.text.toString()
-
-        if (userName.isEmpty()) {
-            binding.nameEditText.error = resources.getString(R.string.name_error)
-            binding.nameEditText.requestFocus()
-        } else if (mob.isEmpty() && !AppUtility.getInstance().isValidPhoneNumber(mob)) {
-            binding.mobNoEditText.error = resources.getString(R.string.login_mob_valid_err)
-            binding.mobNoEditText.requestFocus()
-        } else if (!mobileNumberStatus) {
-            binding.mobNoEditText.error = resources.getString(R.string.regist_mob_verify_err)
-            binding.mobNoEditText.requestFocus()
-        } else if (districtID == 0) {
-            UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_district))
-        } else if (talukaID == 0) {
-            UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_taluka))
-        } else if (villageID == 0) {
-            UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_village))
-        } else {
-            val jsonObject = JSONObject()
-            try {
-                jsonObject.put("Name", userName)
-                jsonObject.put("EmailId", emailid)
-                jsonObject.put("DistrictName", districtName)
-                jsonObject.put("DistrictCode", districtID)
-                jsonObject.put("TalukaName", talukaName)
-                jsonObject.put("TalukaCode", talukaID)
-                jsonObject.put("VillageName", villageName)
-                jsonObject.put("VillageCode", villageID)
-                jsonObject.put("Status", "Active")
-                jsonObject.put("version_number", versionName)
-                jsonObject.put("fcm_token", token)
-                jsonObject.put("device_id", machineId)
-                jsonObject.put("FAAPRegistrationID", fAAPRegistrationID)
-                jsonObject.put("Password", "")
-                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
-                registrationViewModel.getRegistrationRequest(
-                    this,
-                    registerMob,
-                    mob.trim { it <= ' ' },
-                    jsonObject
-                )
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
-        }
-    }
-
     private fun userValidationAndRegistration() {
-        userName = binding.nameEditText.text.toString()
-        mob = binding.mobNoEditText.text.toString()
-        pass = binding.passwordEditText.text.toString()
-        confirmPass = binding.confirmPasswordEditText.text.toString()
-        emailid = binding.emailId.text.toString()
 
-        if (userName.isEmpty()) {
-            binding.nameEditText.error = resources.getString(R.string.name_error)
-            binding.nameEditText.requestFocus()
-        } else if (mob.isEmpty()) {
-            binding.mobNoEditText.error = resources.getString(R.string.login_mob_valid_err)
-            binding.mobNoEditText.requestFocus()
-        } else if (!mobileNumberStatus) {
-            binding.mobNoEditText.error = resources.getString(R.string.regist_mob_verify_err)
-            binding.mobNoEditText.requestFocus()
-        } else if (pass.isEmpty()) {
-            binding.passwordEditText.error = resources.getString(R.string.password_error)
-            binding.passwordEditText.requestFocus()
-        } else if (confirmPass.isEmpty()) {
-            binding.confirmPasswordEditText.error =
-                resources.getString(R.string.conf_password_error)
-            binding.confirmPasswordEditText.requestFocus()
-        } else if (pass != confirmPass) {
-            binding.confirmPasswordEditText.error =
-                resources.getString(R.string.pass_equals_confirmpass)
-            binding.confirmPasswordEditText.requestFocus()
-        } else if (districtID == 0) {
+        if (districtID == 0) {
             UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_district))
         } else if (talukaID == 0) {
             UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_taluka))
         } else if (villageID == 0) {
             UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_village))
-        } else if (!isStrongPassword(binding.confirmPasswordEditText.text.toString())) {
-            binding.passwordErrorTextView.visibility = View.VISIBLE
-            UIToastMessage.show(this, resources.getString(R.string.weak_password))
         } else {
             val jsonObject = JSONObject()
             try {
                 jsonObject.put("Name", userName)
-                jsonObject.put("EmailId", emailid)
+//                jsonObject.put("EmailId", "")
                 jsonObject.put("DistrictName", districtName)
                 jsonObject.put("DistrictCode", districtID)
                 jsonObject.put("TalukaName", talukaName)
@@ -553,7 +326,7 @@ class Registration : AppCompatActivity(), AlertListEventListener {
                 jsonObject.put("fcm_token", token)
                 jsonObject.put("device_id", machineId)
                 jsonObject.put("FAAPRegistrationID", fAAPRegistrationID)
-                jsonObject.put("Password", toSHA512(pass))
+//                jsonObject.put("Password", "")
                 jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
                 registrationViewModel.getRegistrationRequest(
                     this, mob.trim { it <= ' ' },
@@ -562,88 +335,8 @@ class Registration : AppCompatActivity(), AlertListEventListener {
             } catch (e: JSONException) {
                 e.printStackTrace()
             }
+            Log.d("TAGGER", "userValidationAndRegistration: $jsonObject")
         }
-    }
-
-    private fun addVerificationDialog() {
-        var countDownTimer: CountDownTimer? = null
-        countDownTimer?.cancel()
-        dialog = Dialog(this)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(R.layout.dialog_activity_verification)
-        dialog.window!!.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-
-        val countdownTextview = dialog.findViewById<TextView>(R.id.countdownTextview)
-        countDownTimer = object : CountDownTimer(90000, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                val minutes = (millisUntilFinished / 1000) / 60
-                val seconds = (millisUntilFinished / 1000) % 60
-                countdownTextview.text = String.format("%02d:%02d", minutes, seconds)
-            }
-
-            override fun onFinish() {
-                countdownTextview.text = "00:00"
-            }
-        }
-        countDownTimer.start()
-
-        val dialogTitle = dialog.findViewById<TextView>(R.id.dialogTitle)
-        dialogTitle.text = "Enter OTP"
-
-        val receiveOTPEditText = dialog.findViewById<EditText>(R.id.OptEditText)
-        val submitButton = dialog.findViewById<Button>(R.id.submitButton)
-        val resendOTP = dialog.findViewById<Button>(R.id.resentOTP)
-        val cancelButton = dialog.findViewById<ImageView>(R.id.imageView_close)
-        otpVerification(resendOTP)
-        cancelButton.setOnClickListener { dialog.dismiss() }
-        submitButton.setOnClickListener {
-            val enteredOTP: String = receiveOTPEditText.text.toString()
-            if (enteredOTP.isEmpty()) {
-                receiveOTPEditText.error = resources.getString(R.string.regist_otp_err)
-                receiveOTPEditText.requestFocus()
-            } else {
-                farmerViewModel.compareOtpReg(
-                    this,
-                    binding.mobNoEditText.text.toString(),
-                    enteredOTP
-                )
-            }
-            farmerViewModel.compareOtpResponseReg.observe(this) {
-                if (it != null) {
-                    val jSONObject = JSONObject(it.toString())
-                    if (jSONObject.optInt("status") == 200) {
-                        userVerification()
-                    } else {
-                        dialog.dismiss()
-                        UIToastMessage.show(this, getString(R.string.wrong_OTP))
-                    }
-                }
-            }
-        }
-        resendOTP.setOnClickListener {
-            dialog.dismiss()
-            sendOTP()
-        }
-        runOnUiThread {
-            if (!isFinishing && !isDestroyed) {
-                dialog.show()
-            }
-        }
-    }
-
-    private fun userVerification() {
-        binding.textViewVerify.text = resources.getString(R.string.reg_verified)
-        binding.textViewVerify.setTextColor(Color.parseColor("#1d6b08"))
-        binding.textViewVerify.background =
-            ContextCompat.getDrawable(this, R.drawable.layout_button_background)
-        binding.mobNoEditText.isEnabled = false
-        mobileNumberStatus = true
-        sessionManager?.setLoggedIn(true)
-        dialog.dismiss()
     }
 
     override fun didSelectListItem(i: Int, s: String?, s1: String?) {
@@ -711,56 +404,5 @@ class Registration : AppCompatActivity(), AlertListEventListener {
         }
         val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
         super.attachBaseContext(updatedContext)
-    }
-
-    private fun otpVerification(resendOTP: Button) {
-        // Disable and gray out the button before starting timer
-        resendOTP.isEnabled = false
-        resendOTP.setBackgroundColor(ContextCompat.getColor(this, R.color.gray))
-        resendOTP.setTextColor(ContextCompat.getColor(this, R.color.white))
-
-        object : CountDownTimer(30000, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                resendOTP.text =
-                    resources.getString(R.string.Time) + ":" + millisUntilFinished / 1000
-            }
-
-            override fun onFinish() {
-                // Enable and reset button appearance
-                resendOTP.isEnabled = true
-                resendOTP.text = resources.getString(R.string.Resend_OTP)
-                resendOTP.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this@Registration,
-                        R.color.status_green
-                    )
-                )
-                resendOTP.setTextColor(ContextCompat.getColor(this@Registration, R.color.white))
-            }
-        }.start()
-    }
-
-    private fun showDialogForConsent() {
-
-        val confirmationDialog =
-            AlertDialog.Builder(this).setTitle(R.string.withdraw_consent)
-                .setMessage(R.string.withdraw_consent_desc_withdraw)
-                .setPositiveButton(R.string.confirm) { dialog, _ ->
-                    consentMessage = ContextCompat.getString(this, R.string.consent_withdrawn)
-                    farmerViewModel.updateConsent(this, false)
-                    logoutFromApp()
-                    dialog.dismiss()
-                }.setNegativeButton(R.string.cancel) { dialog, _ ->
-                    dialog.dismiss()
-                }
-        confirmationDialog.show()
-    }
-
-    private fun logoutFromApp() {
-        if (NetworkUtils.isInternetAvailable(this)) {
-            farmerViewModel.updateFCMToken(this, "NA")
-        } else {
-            LocalCustom.createSnackbar(binding.root, "Internet not available!")
-        }
     }
 }
