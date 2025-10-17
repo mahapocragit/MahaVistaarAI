@@ -2,7 +2,6 @@ package `in`.gov.mahapocra.mahavistaarai.data.api
 
 object ApiConstants {
     val SSO_KEY: String = APIKeys.SSO_PROD
-    const val clarityKey: String = APIKeys.CLARITY_PROD
     val KEY_LAST_SHOWN_DATE = "last_shown_date"
 //    const val clarityKey: String = APIKeys.CLARITY_STAGE
     const val USER_News_LIST: String = "Shareddbtapi/OtherApp/GetNews"

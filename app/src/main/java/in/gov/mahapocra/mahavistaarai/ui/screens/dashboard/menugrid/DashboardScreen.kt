@@ -2,6 +2,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid
 
 import android.Manifest
 import android.app.Dialog
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -841,56 +842,50 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
 
         leaderboardViewModel.getLeaderboardDataResponse.observe(this) { response ->
-            if (response != null) {
+            if (response == null) return@observe
+
+            try {
                 val jsonObject = JSONObject(response.toString())
-                val dataObject = jsonObject.getJSONObject("data")
-                //First Rank Holder
-                val firstRankObject = dataObject.getJSONObject("first")
-                val firstRankName = firstRankObject.optString("user_name")
-                val firstRankTaluka = firstRankObject.optString("taluka")
-                val firstRankTalukaMr = firstRankObject.optString("taluka_mr")
-                //Second Rank Holder
-                val secondRankObject = dataObject.getJSONObject("second")
-                val secondRankName = secondRankObject.optString("user_name")
-                val secondRankTaluka = firstRankObject.optString("taluka")
-                val secondRankTalukaMr = firstRankObject.optString("taluka_mr")
-                //Third Rank Holder
-                val thirdRankObject = dataObject.getJSONObject("third")
-                val thirdRankName = thirdRankObject.optString("user_name")
-                val thirdRankTaluka = firstRankObject.optString("taluka")
-                val thirdRankTalukaMr = firstRankObject.optString("taluka_mr")
-                //Toppers List
+                val dataObj = jsonObject.optJSONObject("data") ?: run {
+                    Log.e("Leaderboard", "'data' is missing or not an object")
+                    return@observe
+                }
+
+                // First Rank
+                val firstRankObject = dataObj.optJSONObject("first")
+                val firstRankName = firstRankObject?.optString("user_name").orEmpty()
+                val firstRankTaluka = firstRankObject?.optString("taluka").orEmpty()
+                val firstRankTalukaMr = firstRankObject?.optString("taluka_mr").orEmpty()
+
+                // Second Rank
+                val secondRankObject = dataObj.optJSONObject("second")
+                val secondRankName = secondRankObject?.optString("user_name").orEmpty()
+                val secondRankTaluka = secondRankObject?.optString("taluka").orEmpty()
+                val secondRankTalukaMr = secondRankObject?.optString("taluka_mr").orEmpty()
+
+                // Third Rank
+                val thirdRankObject = dataObj.optJSONObject("third")
+                val thirdRankName = thirdRankObject?.optString("user_name").orEmpty()
+                val thirdRankTaluka = thirdRankObject?.optString("taluka").orEmpty()
+                val thirdRankTalukaMr = thirdRankObject?.optString("taluka_mr").orEmpty()
+
+                // Inflate Dialog
                 val leaderDialogBinding = LeaderboardDialogBinding.inflate(layoutInflater)
                 val leaderDialog = AlertDialog.Builder(this)
                     .setView(leaderDialogBinding.root)
                     .create()
-                if (languageToLoad == "mr") {
-                    leaderDialogBinding.topThreeTextView.visibility = View.GONE
-                } else {
-                    leaderDialogBinding.topThreeTextView.visibility = View.VISIBLE
-                }
-                leaderDialogBinding.cancelImageView.setOnClickListener {
-                    leaderDialog.dismiss()
-                }
 
+                leaderDialogBinding.topThreeTextView.visibility =
+                    if (languageToLoad == "mr") View.GONE else View.VISIBLE
+
+                leaderDialogBinding.cancelImageView.setOnClickListener { leaderDialog.dismiss() }
                 leaderDialogBinding.leaderDialogCardLayout.setOnClickListener {
-                    startActivity(
-                        Intent(
-                            this,
-                            LeaderboardActivity::class.java
-                        )
-                    )
+                    startActivity(Intent(this, LeaderboardActivity::class.java))
                     leaderDialog.dismiss()
                 }
 
-                leaderDialog.setOnCancelListener {
-                    // Fired when dismissed by BACK press or outside touch
-                    saveTodayAsShown()
-                }
-
-                leaderDialog.setOnDismissListener {
-                    saveTodayAsShown()
-                }
+                leaderDialog.setOnCancelListener { saveTodayAsShown() }
+                leaderDialog.setOnDismissListener { saveTodayAsShown() }
 
                 leaderDialogBinding.firstRankNameTextView.text = formatName(firstRankName)
                 leaderDialogBinding.firstRankTalukaTextView.text =
@@ -905,12 +900,14 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     formatName(if (languageToLoad == "en") thirdRankTaluka else thirdRankTalukaMr)
 
                 leaderDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                // Set width and height
                 leaderDialog.window?.setLayout(
-                    ViewGroup.LayoutParams.MATCH_PARENT,  // or a fixed width in pixels
+                    ViewGroup.LayoutParams.MATCH_PARENT,
                     resources.getDimensionPixelSize(R.dimen._310sdp)
                 )
-                leaderDialog.show()
+                leaderDialog?.show()
+
+            } catch (e: Exception) {
+                Log.d(TAG, "observeResponse: ${e.message}")
             }
         }
     }
