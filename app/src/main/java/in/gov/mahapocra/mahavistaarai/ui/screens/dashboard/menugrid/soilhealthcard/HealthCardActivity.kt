@@ -75,26 +75,35 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
         setContentView(binding.root)
         uiResponsive(binding.root)
 
-        //Loading URL in webView
-        if (supportActionBar != null) {
-            supportActionBar!!.elevation = 0f
-            supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        }
+        setUpObservers()
+        setUpListeners()
 
-        districtName =
-            AppSettings.getInstance().getValue(this, AppConstants.uDIST, getString(R.string.farmer_select_district))
-        talukaName =
-            AppSettings.getInstance().getValue(this, AppConstants.uTALUKA, getString(R.string.farmer_select_taluka))
-        villageName = AppSettings.getInstance()
-            .getValue(this, AppConstants.uVILLAGE, getString(R.string.farmer_select_village))
+        districtName = getLocalizedValue(
+            AppConstants.uDISTMR,
+            AppConstants.uDIST,
+            getString(R.string.farmer_select_district)
+        )
+        talukaName = getLocalizedValue(
+            AppConstants.uTALUKAMR,
+            AppConstants.uTALUKA,
+            getString(R.string.farmer_select_taluka)
+        )
+        villageName = getLocalizedValue(
+            AppConstants.uVILLAGEMR,
+            AppConstants.uVILLAGE,
+            getString(R.string.farmer_select_village)
+        )
 
         districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
         talukaID = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
         villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
 
-        binding.textViewDist.text = if (districtName == "USER_DIST") getString(R.string.farmer_select_district) else districtName
-        binding.textViewTaluka.text = if (talukaName == "USER_TALUKA") getString(R.string.farmer_select_taluka) else talukaName
-        binding.textViewVillage.text = if (villageName == "uVILLAGE") getString(R.string.farmer_select_village) else villageName
+        binding.textViewDist.text =
+            if (districtName == "USER_DIST") getString(R.string.farmer_select_district) else districtName
+        binding.textViewTaluka.text =
+            if (talukaName == "USER_TALUKA") getString(R.string.farmer_select_taluka) else talukaName
+        binding.textViewVillage.text =
+            if (villageName == "uVILLAGE") getString(R.string.farmer_select_village) else villageName
 
         binding.relativeLayoutToolbar.textViewHeaderTitle.text =
             getString(R.string.soil_health_card)
@@ -103,13 +112,12 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
             startActivity(Intent(this, DashboardScreen::class.java))
         }
 
-        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 startActivity(Intent(this@HealthCardActivity, DashboardScreen::class.java))
             }
         })
 
-        setUpObservers()
         AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
         lifecycleScope.launch {
             delay(5000) // 5 seconds
@@ -123,35 +131,15 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
                 .start()
         }
         farmerViewModel.getDistrictData(this, languageToLoad)
+    }
 
+    private fun getLocalizedValue(mrKey: String, enKey: String, default: String): String {
+        val key = if (languageToLoad == "mr") mrKey else enKey
+        return AppSettings.getInstance().getValue(this, key, default)
+    }
 
-        binding.textViewDist.setOnClickListener {
-            showDistrict()
-        }
-
-        binding.textViewTaluka.setOnClickListener {
-            showTaluka()
-        }
-
-        binding.textViewVillage.setOnClickListener {
-            showVillage()
-        }
-
-        binding.submitButton.setOnClickListener {
-            val surveyNo = binding.edtSurveyNo.text.toString()
-            if (villageID != null) {
-                if (surveyNo.isNotEmpty()) {
-                    fetchData(surveyNo.toInt())
-                } else {
-                    Toast.makeText(this, "Please select survey number", Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                Toast.makeText(this, "Please select village", Toast.LENGTH_SHORT).show()
-            }
-            ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
-        }
-
-        val isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setUpListeners() {
         binding.chatbotIcon.setOnTouchListener(object : View.OnTouchListener {
             private var dX = 0f
             private var dY = 0f
@@ -196,15 +184,29 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
                         val diffY = abs(event.rawY - startY)
 
                         if (diffX < CLICK_THRESHOLD && diffY < CLICK_THRESHOLD) {
-                            if (!isGuest) {
-                                startActivity(Intent(this@HealthCardActivity, ChatbotActivity::class.java))
+                            if (!AppSettings.getInstance().getBooleanValue(
+                                    this@HealthCardActivity,
+                                    AppConstants.IS_USER_GUEST,
+                                    false
+                                )
+                            ) {
+                                startActivity(
+                                    Intent(
+                                        this@HealthCardActivity,
+                                        ChatbotActivity::class.java
+                                    )
+                                )
                             } else {
                                 AlertDialog.Builder(this@HealthCardActivity)
                                     .setMessage(R.string.bot_chat_login_redirect_mesage)
                                     .setPositiveButton(R.string.yes) { dialog, _ ->
-                                        startActivity(Intent(this@HealthCardActivity, LoginScreen::class.java).apply {
-                                            putExtra("from", "dashboard")
-                                        })
+                                        startActivity(
+                                            Intent(
+                                                this@HealthCardActivity,
+                                                LoginScreen::class.java
+                                            ).apply {
+                                                putExtra("from", "dashboard")
+                                            })
                                         dialog.dismiss()
                                     }
                                     .setNegativeButton(R.string.no) { dialog, _ -> dialog.dismiss() }
@@ -216,10 +218,36 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
                 return true
             }
         })
+
+        binding.textViewDist.setOnClickListener {
+            showDistrict()
+        }
+
+        binding.textViewTaluka.setOnClickListener {
+            showTaluka()
+        }
+
+        binding.textViewVillage.setOnClickListener {
+            showVillage()
+        }
+
+        binding.submitButton.setOnClickListener {
+            val surveyNo = binding.edtSurveyNo.text.toString()
+            if (villageID != null) {
+                if (surveyNo.isNotEmpty()) {
+                    fetchData(surveyNo.toInt())
+                } else {
+                    Toast.makeText(this, "Please select survey number", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, "Please select village", Toast.LENGTH_SHORT).show()
+            }
+            ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
+        }
     }
 
     private fun setUpObservers() {
-        farmerViewModel.districtIdResponse.observe(this){
+        farmerViewModel.districtIdResponse.observe(this) {
             if (it != null) {
                 val jSONObject = JSONObject(it.toString())
                 val response =
@@ -248,8 +276,8 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
             }
         }
 
-        registrationViewModel.getVillageListResponse.observe(this){ response->
-            if (response!=null){
+        registrationViewModel.getVillageListResponse.observe(this) { response ->
+            if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 val response =
                     ResponseModel(

@@ -20,12 +20,15 @@ public interface AppConstants {
     String uMobileNo = "USER_MOBILE";
     String uEmail = "USER_EMAIL";
     String uDIST = "USER_DIST";
+    String uDISTMR = "USER_DIST_MR";
     String uDISTId = "uDISTId";
     String uTALUKA = "USER_TALUKA";
+    String uTALUKAMR = "USER_TALUKA_MR";
     String uTALUKAID = "uTALUKAID";
 
     String kFarmerCrop ="kFarmerCrop";
     String uVILLAGE = "uVILLAGE";
+    String uVILLAGEMR = "uVILLAGE_MR";
     String uVILLAGEID = "uVILLAGEID";
 
     String kSHARED_PREF = "pocra_krishi_farmerApp";

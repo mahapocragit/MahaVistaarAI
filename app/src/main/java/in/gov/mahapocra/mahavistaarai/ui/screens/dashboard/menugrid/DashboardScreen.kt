@@ -138,84 +138,32 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             layoutInflater
         )
         setContentView(binding.root)
+        askForPermissions()
         observeResponse()
-//        val showOverlay = AppPreferenceManager(this).getBoolean("show_overlay")
-//        if (showOverlay) {
-//            binding.drawerLayout1.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-//            binding.appBarMain.overlayView.visibility = View.VISIBLE
-//        } else {
-//            binding.drawerLayout1.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-//            binding.appBarMain.overlayView.visibility = View.GONE
-//        }
-//        binding.appBarMain.overlayView.setOnClickListener {
-//            binding.appBarMain.overlayView.visibility = View.GONE
-//            binding.appBarMain.overlayImage.visibility = View.GONE
-//            AppPreferenceManager(this).saveBoolean("show_overlay", false)
-//            binding.drawerLayout1.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-//        }
-
-        val shakeAnimation = AnimationUtils.loadAnimation(this, R.anim.shake)
-        binding.appBarMain.dashboardScreen.imageView20.startAnimation(shakeAnimation)
-
-        CoroutineScope(Dispatchers.Main).launch {
-            delay(3000)
-            binding.appBarMain.dashboardScreen.imageView20.clearAnimation()
-        }
+        setUpListeners()
+        FirebaseHelper(this)
 
         binding.appBarMain.dashboardScreen.progressBar.visibility = View.VISIBLE
         binding.appBarMain.dashboardScreen.temperatureTextView.visibility = View.GONE
         isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
         appPreferenceManager = AppPreferenceManager(this)
-        init()
 
         if (NetworkUtils.isInternetAvailable(this)) {
-            if (!AppPreferenceManager(this).getBoolean("FCM_VALIDATED")) {
+            if (!appPreferenceManager.getBoolean("FCM_VALIDATED")) {
                 farmerViewModel.validateFCMToken(this)
             }
         } else {
             LocalCustom.createSnackbar(binding.root, "Internet not available!")
         }
 
-        lifecycleScope.launch {
-            delay(5000) // 5 seconds
-            binding.appBarMain.dashboardScreen.chatBubbleImageView.animate()
-                .alpha(0f)
-                .setDuration(500) // animation duration in ms
-                .withEndAction {
-                    binding.appBarMain.dashboardScreen.chatBubbleImageView.visibility = View.GONE
-                    binding.appBarMain.dashboardScreen.chatBubbleImageView.alpha =
-                        1f // reset alpha in case you show it again
-                }
-                .start()
-        }
-        FirebaseHelper(this)
-        binding.appBarMain.dashboardScreen.deleteCropImageView.setOnClickListener {
-            cropId = savedCropId
-            deleteDialog()
-        }
         if (NetworkUtils.isInternetAvailable(this)) {
-            farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
+            farmerViewModel.fetchWeatherDetails(this, languageToLoad)
         } else {
             LocalCustom.createSnackbar(binding.root, "Internet not available!")
         }
         binding.appBarMain.dashboardScreen.greetingsTextView.text = greetingMessage
         binding.appBarMain.dashboardScreen.timestampTextView.text = formattedTimestamp
-        binding.appBarMain.dashboardScreen.temperatureLayout.setOnClickListener {
-            val tempTXT = binding.appBarMain.dashboardScreen.temperatureTextView.text
-            if (tempTXT == "22°C") {
-                Toast.makeText(this, "Weather isn't updated Currently", Toast.LENGTH_SHORT).show()
-            } else {
-                val weather = Intent(
-                    this@DashboardScreen,
-                    WeatherActivity::class.java
-                )
-                startActivity(weather)
-            }
-        }
 
-        shrinkToCenter(binding.appBarMain.dashboardScreen.chatBubbleImageView)
-
-        setConfiguration()
         this.window.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         )
@@ -236,22 +184,14 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         toggle.isDrawerSlideAnimationEnabled = true
 
         drawer.addDrawerListener(object : DrawerLayout.DrawerListener {
-            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-                // Called when the drawer is sliding
-            }
-
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
             override fun onDrawerOpened(drawerView: View) {
                 // 👉 Drawer is fully opened
                 Clarity.sendCustomEvent("SIDEBAR_BUTTON_CLICKED")
             }
 
-            override fun onDrawerClosed(drawerView: View) {
-                // 👉 Drawer is fully closed
-            }
-
-            override fun onDrawerStateChanged(newState: Int) {
-                // Called when drawer state changes (idle, dragging, settling)
-            }
+            override fun onDrawerClosed(drawerView: View) {}
+            override fun onDrawerStateChanged(newState: Int) {}
         })
 
         // Set Data
@@ -270,7 +210,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             navUserPhone.text = userNumber
         }
 
-        // navigationView.setNavigationItemSelectedListener(this);
         binding.appBarMain.dashboardScreen.gridViewDashboard.columnWidth =
             GridView.STRETCH_COLUMN_WIDTH
         if (languageToLoad.equals("en", ignoreCase = true)) {
@@ -282,33 +221,67 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 this, arrayCategoryMarathi, arrayCategoryImg, "single_item_grid"
             )
         }
-
-        binding.appBarMain.dashboardScreen.imageView20.setOnClickListener {
-            Clarity.sendCustomEvent("VISTAAR_AI_BUTTON_CLICKED")
-            if (NetworkUtils.isInternetAvailable(this)) {
-                if (!isGuest) {
-                    startActivity(Intent(this, ChatbotActivity::class.java))
-                } else {
-                    AlertDialog.Builder(this)
-                        .setMessage(R.string.bot_chat_login_redirect_mesage)
-                        .setPositiveButton(R.string.yes) { dialog, _ ->
-                            // Handle login action here
-                            startActivity(Intent(this, LoginScreen::class.java).apply {
-                                putExtra("from", "dashboard")
-                            })
-                            dialog.dismiss()
-                        }
-                        .setNegativeButton(R.string.no) { dialog, _ ->
-                            dialog.dismiss()
-                        }
-                        .show()
-                }
-            } else {
-                LocalCustom.createSnackbar(binding.root, "Internet not available!")
-            }
+        setVersion()
+        if (NetworkUtils.isInternetAvailable(this)) {
+            farmerViewModel.getFarmerSelectedCrop(this, languageToLoad)
+        } else {
+            LocalCustom.createSnackbar(binding.root, "Internet not available!")
         }
 
+        val animation = AnimationUtils.loadAnimation(this, R.anim.blink)
+        binding.appBarMain.dashboardScreen.etlWarningLayout.animation = animation
+
+        if (NetworkUtils.isInternetAvailable(this)) {
+            farmerViewModel.getNotificationList(this)
+        } else {
+            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+        }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                finishAffinity()
+            }
+        })
+
+        if (shouldShowDialog()) {
+            leaderboardViewModel.getLeaderboardData(context = this, "taluka")
+        }
+    }
+
+    private fun shakeAnimationChatbot() {
+        val shakeAnimation = AnimationUtils.loadAnimation(this, R.anim.shake)
+        binding.appBarMain.dashboardScreen.chatbotIcon.startAnimation(shakeAnimation)
+
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(3000)
+            binding.appBarMain.dashboardScreen.chatbotIcon.clearAnimation()
+        }
+    }
+
+    private fun bubbleAnimationChatbot() {
+        lifecycleScope.launch {
+            delay(5000) // 5 seconds
+            binding.appBarMain.dashboardScreen.chatBubbleImageView.animate()
+                .alpha(0f)
+                .setDuration(500) // animation duration in ms
+                .withEndAction {
+                    binding.appBarMain.dashboardScreen.chatBubbleImageView.visibility = View.GONE
+                    binding.appBarMain.dashboardScreen.chatBubbleImageView.alpha =
+                        1f // reset alpha in case you show it again
+                }
+                .start()
+        }
+        shrinkToCenter(binding.appBarMain.dashboardScreen.chatBubbleImageView)
+    }
+
+    private fun setUpListeners() {
+
+        init()
+        setUpDrawerMenu()
         dashboardGridItemsLayoutSetup()
+        shakeAnimationChatbot()
+        bubbleAnimationChatbot()
+
         binding.appBarMain.imgLangChange.setOnClickListener { openChangeLangPopup() }
         binding.appBarMain.imgNotification.setOnClickListener {
             val intent = Intent(
@@ -335,11 +308,18 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             appPreferenceManager.clearPreference(AppConstants.ACTION_FROM_DASHBOARD)
             startActivity(intent)
         }
-        setVersion()
-        if (NetworkUtils.isInternetAvailable(this)) {
-            farmerViewModel.getFarmerSelectedCrop(this, languageToLoad)
-        } else {
-            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+
+        binding.appBarMain.dashboardScreen.temperatureLayout.setOnClickListener {
+            val tempTXT = binding.appBarMain.dashboardScreen.temperatureTextView.text
+            if (tempTXT == "22°C") {
+                Toast.makeText(this, "Weather isn't updated Currently", Toast.LENGTH_SHORT).show()
+            } else {
+                val weather = Intent(
+                    this@DashboardScreen,
+                    WeatherActivity::class.java
+                )
+                startActivity(weather)
+            }
         }
 
         binding.appBarMain.dashboardScreen.customNavBottom.navHome.setOnClickListener {
@@ -351,6 +331,32 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 )
             )
         }
+
+        binding.appBarMain.dashboardScreen.chatbotIcon.setOnClickListener {
+            Clarity.sendCustomEvent("VISTAAR_AI_BUTTON_CLICKED")
+            if (NetworkUtils.isInternetAvailable(this)) {
+                if (!isGuest) {
+                    startActivity(Intent(this, ChatbotActivity::class.java))
+                } else {
+                    AlertDialog.Builder(this)
+                        .setMessage(R.string.bot_chat_login_redirect_mesage)
+                        .setPositiveButton(R.string.yes) { dialog, _ ->
+                            // Handle login action here
+                            startActivity(Intent(this, LoginScreen::class.java).apply {
+                                putExtra("from", "dashboard")
+                            })
+                            dialog.dismiss()
+                        }
+                        .setNegativeButton(R.string.no) { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        .show()
+                }
+            } else {
+                LocalCustom.createSnackbar(binding.root, "Internet not available!")
+            }
+        }
+
         binding.appBarMain.dashboardScreen.customNavBottom.navChc.setOnClickListener {
             Clarity.sendCustomEvent("CHC_BUTTON_CLICKED")
             if (NetworkUtils.isInternetAvailable(this)) {
@@ -364,6 +370,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 LocalCustom.createSnackbar(binding.root, "Internet not available!")
             }
         }
+
         binding.appBarMain.dashboardScreen.customNavBottom.navVideos.setOnClickListener {
             Clarity.sendCustomEvent("VIDEOS_BUTTON_CLICKED")
             if (NetworkUtils.isInternetAvailable(this)) {
@@ -377,6 +384,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 LocalCustom.createSnackbar(binding.root, "Internet not available!")
             }
         }
+
         binding.appBarMain.dashboardScreen.customNavBottom.navDbt.setOnClickListener {
             Clarity.sendCustomEvent("DBT_BUTTON_CLICKED")
             if (NetworkUtils.isInternetAvailable(this)) {
@@ -390,9 +398,12 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 LocalCustom.createSnackbar(binding.root, "Internet not available!")
             }
         }
-        askForPermissions()
-        val animation = AnimationUtils.loadAnimation(this, R.anim.blink)
-        binding.appBarMain.dashboardScreen.etlWarningLayout.animation = animation
+
+        binding.appBarMain.dashboardScreen.deleteCropImageView.setOnClickListener {
+            cropId = savedCropId
+            deleteDialog()
+        }
+
         binding.appBarMain.dashboardScreen.etlWarningLayout.setOnClickListener {
             val inflater = LayoutInflater.from(this)
             val dialogView = inflater.inflate(R.layout.etl_crossed_dialog, null)
@@ -437,29 +448,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 }
             })
 
-
-
             dialog.show()
             closeIcon.setOnClickListener {
                 dialog.dismiss()
             }
-        }
-
-
-        if (NetworkUtils.isInternetAvailable(this)) {
-            farmerViewModel.getNotificationList(this)
-        } else {
-            LocalCustom.createSnackbar(binding.root, "Internet not available!")
-        }
-
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                finishAffinity()
-            }
-        })
-
-        if (shouldShowDialog()) {
-            leaderboardViewModel.getLeaderboardData(context = this, "taluka")
         }
     }
 
@@ -474,7 +466,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         return lastShownDate != today
     }
 
-    fun observeResponse() {
+    private fun observeResponse() {
 
         farmerViewModel.error.observe(this) {
             LocalCustom.createSnackbar(binding.root, it)
@@ -621,10 +613,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 } else {
                     UIToastMessage.show(this, cropResponse.getResponse())
                 }
-
-                // Fetch taluka data next
-                farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
-
             } catch (e: Exception) {
                 Log.e("fetchReceivingData", "Exception: ${e.localizedMessage}")
             }
@@ -655,31 +643,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 }
             } catch (e: Exception) {
                 Log.e("deleteSelectedCrop", "Exception: ${e.localizedMessage}")
-            }
-        }
-
-        // Observe taluka list
-        farmerViewModel.talukaList.observe(this) { response ->
-            response ?: return@observe
-
-            try {
-                val jsonObject = JSONObject(response.toString())
-                val talukaArray = jsonObject.optJSONArray("data")
-                val talukaID =
-                    AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
-
-                for (i in 0 until talukaArray!!.length()) {
-                    val talukaItem = talukaArray.getJSONObject(i)
-                    if (talukaItem.optInt("code") == talukaID) {
-                        binding.appBarMain.dashboardScreen.weatherTalukaTV.text =
-                            talukaItem.optString("name")
-                    }
-                }
-
-                farmerViewModel.fetchWeatherDetails(this, talukaID, languageToLoad)
-
-            } catch (e: Exception) {
-                Log.e("talukaListObserver", "Exception: ${e.localizedMessage}")
             }
         }
 
@@ -726,11 +689,14 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     val emailId = data.optString("EmailId", "")
                     val ffaReg = data.optInt("FAAPRegistrationID", -1)
                     val distName = data.optString("DistrictName", "")
+                    val distNameMr = data.optString("DistrictNameMr", "")
                     val distId = data.optInt("DistrictCode", 0)
                     val talukaName = data.optString("TalukaName", "")
+                    val talukaNameMr = data.optString("TalukaNameMr", "")
                     val talukaId = data.optInt("TalukaCode", 0)
                     val villageId = data.optInt("VillageCode", 0)
                     val villageName = data.optString("VillageName", "")
+                    val villageNameMr = data.optString("VillageNameMr", "")
                     val agristack_id = data.optString("farmer_id", "")
                     val farmerId = data.optString("farmer_id")
                     val consent = data.optBoolean("consent")
@@ -740,7 +706,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     ) //TODO: static village code 537820
                     districtCode = distId
                     villageCode = talukaId
-
+                    binding.appBarMain.dashboardScreen.weatherTalukaTV.text =
+                        if (languageToLoad == "mr") talukaNameMr else talukaName
                     AppSettings.getInstance().apply {
                         setValue(this@DashboardScreen, AppConstants.uName, name)
                         setValue(this@DashboardScreen, AppConstants.uMobileNo, mobNo)
@@ -751,10 +718,13 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                             ffaReg
                         )
                         setValue(this@DashboardScreen, AppConstants.uDIST, distName)
+                        setValue(this@DashboardScreen, AppConstants.uDISTMR, distNameMr)
                         setIntValue(this@DashboardScreen, AppConstants.uDISTId, distId)
                         setValue(this@DashboardScreen, AppConstants.uTALUKA, talukaName)
+                        setValue(this@DashboardScreen, AppConstants.uTALUKAMR, talukaNameMr)
                         setIntValue(this@DashboardScreen, AppConstants.uTALUKAID, talukaId)
                         setValue(this@DashboardScreen, AppConstants.uVILLAGE, villageName)
+                        setValue(this@DashboardScreen, AppConstants.uVILLAGEMR, villageNameMr)
                         setIntValue(this@DashboardScreen, AppConstants.uVILLAGEID, villageId)
                         setBooleanValue(this@DashboardScreen, AppConstants.userDataSaved, true)
                         setValue(this@DashboardScreen, AppConstants.AGRISTACKID, agristack_id)
@@ -772,7 +742,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
                     navUserName.text = ApUtil.getCamelCaseStreing(userName).ifEmpty { userName }
                     navUserPhone.text = userNumber
-                    farmerViewModel.fetchWeatherDetails(this, talukaId, languageToLoad)
+                    farmerViewModel.fetchWeatherDetails(this, languageToLoad)
                     if (farmerId != "null" && farmerId != null) {
                         if (!consent) {
                             showDialogForConsent()
@@ -968,16 +938,11 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
     override fun onResume() {
         super.onResume()
-        val shakeAnimation = AnimationUtils.loadAnimation(this, R.anim.shake)
-        binding.appBarMain.dashboardScreen.imageView20.startAnimation(shakeAnimation)
+        shakeAnimationChatbot()
         if (NetworkUtils.isInternetAvailable(this)) {
             farmerViewModel.getNotificationList(this)
         } else {
             LocalCustom.createSnackbar(binding.root, "Internet not available!")
-        }
-        CoroutineScope(Dispatchers.Main).launch {
-            delay(3000)
-            binding.appBarMain.dashboardScreen.imageView20.clearAnimation()
         }
     }
 
@@ -1236,7 +1201,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
     }
 
-    private fun setConfiguration() {
+    private fun setUpDrawerMenu() {
         try {
             if (languageToLoad.equals("en", ignoreCase = true)) {
                 jsonArray = if (isGuest) {

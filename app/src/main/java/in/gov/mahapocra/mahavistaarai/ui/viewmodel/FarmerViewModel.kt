@@ -308,9 +308,11 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun fetchWeatherDetails(context: Context, talukaID: Int, languageToLoad: String) {
+    fun fetchWeatherDetails(context: Context, languageToLoad: String) {
         viewModelScope.launch {
             try {
+                val talukaID =
+                    AppSettings.getInstance().getIntValue(context, AppConstants.uTALUKAID, 0)
                 val jsonObject = JSONObject().apply {
                     put("taluka_code", talukaID)
                     put("lang", languageToLoad)

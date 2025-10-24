@@ -256,6 +256,11 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
         }
     }
 
+    private fun getLocalizedValue(mrKey: String, enKey: String, default: String): String {
+        val key = if (languageToLoad == "mr") mrKey else enKey
+        return AppSettings.getInstance().getValue(this, key, default)
+    }
+
     private fun setConfiguration() {
         farmerRegisterID = intent.getIntExtra("FAAPRegistrationID", 0)
         if (farmerRegisterID > 0) {
@@ -269,12 +274,21 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
             Log.d("TAGGER", "setConfiguration: $registerMob")
             emailid =
                 AppSettings.getInstance().getValue(this, AppConstants.uEmail, AppConstants.uEmail)
-            districtName =
-                AppSettings.getInstance().getValue(this, AppConstants.uDIST, AppConstants.uDIST)
-            talukaName =
-                AppSettings.getInstance().getValue(this, AppConstants.uTALUKA, AppConstants.uTALUKA)
-            villageName = AppSettings.getInstance()
-                .getValue(this, AppConstants.uVILLAGE, AppConstants.uVILLAGE)
+            districtName = getLocalizedValue(
+                AppConstants.uDISTMR,
+                AppConstants.uDIST,
+                getString(R.string.farmer_select_district)
+            )
+            talukaName = getLocalizedValue(
+                AppConstants.uTALUKAMR,
+                AppConstants.uTALUKA,
+                getString(R.string.farmer_select_taluka)
+            )
+            villageName = getLocalizedValue(
+                AppConstants.uVILLAGEMR,
+                AppConstants.uVILLAGE,
+                getString(R.string.farmer_select_village)
+            )
             districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
             talukaID = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
             villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)

@@ -204,34 +204,29 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             )
             validation()
         }
-
+        var isUpdating = false
         binding.edtAcre.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-            }
+            override fun afterTextChanged(s: Editable?) {}
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (!(s.contentEquals(""))) {
-                    val acreNo: Int = s.toString().toInt()
-                    if (acreNo > 99) {
-                        if (plotUnitCode == 3) {
-                            Toast.makeText(
-                                this@FertilizerCalculatorActivity,
-                                R.string.area_acre_exceed_warning,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else {
-                            Toast.makeText(
-                                this@FertilizerCalculatorActivity,
-                                R.string.area_hectare_exceed_warning,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                if (isUpdating) return  // Prevent recursive calls when setting text programmatically
 
-                        binding.edtAcre.setText("0")
-                    }
+                val acreNo = s?.toString()?.toIntOrNull() ?: return  // Safely convert to Int, skip if invalid
+
+                if (acreNo > 99) {
+                    val messageRes = if (plotUnitCode == 3)
+                        R.string.area_acre_exceed_warning
+                    else
+                        R.string.area_hectare_exceed_warning
+
+                    Toast.makeText(this@FertilizerCalculatorActivity, messageRes, Toast.LENGTH_SHORT).show()
+
+                    isUpdating = true
+                    binding.edtAcre.setText("0")
+                    binding.edtAcre.setSelection(binding.edtAcre.text.length)
+                    isUpdating = false
                 }
             }
         })

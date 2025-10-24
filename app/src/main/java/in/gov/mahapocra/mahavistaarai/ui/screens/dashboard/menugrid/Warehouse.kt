@@ -60,6 +60,7 @@ class Warehouse : AppCompatActivity(), AlertListEventListener, OnMultiRecyclerIt
         setContentView(binding.root)
         uiResponsive(binding.root)
         districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
+        setUpObserver()
         init()
         onClick()
         AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
@@ -89,7 +90,6 @@ class Warehouse : AppCompatActivity(), AlertListEventListener, OnMultiRecyclerIt
     private fun init() {
         binding.wareHousereport.setHasFixedSize(false)
         binding.wareHousereport.isNestedScrollingEnabled = true
-        setUpObserver()
         farmerViewModel.getDistrictData(this, languageToLoad)
         farmerViewModel.fetchWarehouseData(this, districtID, languageToLoad)
         val isGuest =

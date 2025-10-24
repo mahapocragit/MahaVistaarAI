@@ -101,14 +101,25 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
     }
 
     private fun setConfiguration() {
-        districtName =
-            AppSettings.getInstance().getValue(this, AppConstants.uDIST, AppConstants.uDIST)
-        talukaName =
-            AppSettings.getInstance().getValue(this, AppConstants.uTALUKA, AppConstants.uTALUKA)
+        districtName = getLocalizedValue(
+            AppConstants.uDISTMR,
+            AppConstants.uDIST,
+            getString(R.string.farmer_select_district)
+        )
+        talukaName = getLocalizedValue(
+            AppConstants.uTALUKAMR,
+            AppConstants.uTALUKA,
+            getString(R.string.farmer_select_taluka)
+        )
         districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
         talukaID = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
         geoViewModel.getDistrictData(this, languageToLoad)
         marketViewModel.getMarketAndMarketName(this@MarketPrice, districtID, languageToLoad)
+    }
+
+    private fun getLocalizedValue(mrKey: String, enKey: String, default: String): String {
+        val key = if (languageToLoad == "mr") mrKey else enKey
+        return AppSettings.getInstance().getValue(this, key, default)
     }
 
     @SuppressLint("ClickableViewAccessibility")
