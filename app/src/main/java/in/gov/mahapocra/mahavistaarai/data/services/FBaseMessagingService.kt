@@ -47,12 +47,17 @@ class FBaseMessagingService : FirebaseMessagingService() {
         }
     }
 
-    private fun sendNotification(title: String, body: String, page:String, notificationId: String?) {
+    private fun sendNotification(
+        title: String,
+        body: String,
+        page: String,
+        notificationId: String?
+    ) {
         createNotificationChannelIfNeeded()
 
-        val targetIntent = if (page=="chatbot") {
-            Intent(this, ChatbotActivity::class.java)
-        }else{
+        val targetIntent = if (page == "chatbot") {
+            Intent(this, ChatbotActivity::class.java).putExtra("id", notificationId?.toLong())
+        } else {
             Intent(this, DetailedNotificationActivity::class.java)
         }
         targetIntent.apply {

@@ -509,4 +509,8 @@
     <string name="change_or_reset_your_password">Change or reset your password</string>
     <string name="location_information">Location Information</string>
     <string name="personal_information">Personal Information</string>
+
+    <string name="error_saving_crop">Failed to save crop. Please try again.</string>
+    <string name="failed_to_load">Unable to load data. Please check your connection.</string>
+    <string name="error_loading_data">Something went wrong while loading data. Please try again.</string>
 </resources>

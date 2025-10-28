@@ -822,6 +822,34 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
+    fun updateNotificationStatusForChatbot(context: Context, notificationID: Long) {
+        ProgressHelper.showProgressDialog(context)
+        viewModelScope.launch {
+            val jsonObject = JSONObject().apply {
+                put("notification_id", notificationID)
+            }
+            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+            try {
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.updateNotificationStatusForChatbot(requestBody)
+                ProgressHelper.disableProgressDialog()
+                _updateNotificationStatusResponse.value = response
+            } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
     fun updateFCMToken(context: Context, fcmToken: String) {
         ProgressHelper.showProgressDialog(context)
         val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)

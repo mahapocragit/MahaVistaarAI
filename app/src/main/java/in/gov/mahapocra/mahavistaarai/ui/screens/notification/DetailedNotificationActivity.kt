@@ -197,7 +197,6 @@ class DetailedNotificationActivity : AppCompatActivity() {
         binding.redirectTextView.setOnClickListener { redirectToScreen(page) }
         farmerViewModel.updateNotificationStatus(this, notificationId)
         farmerViewModel.updateNotificationStatusResponse.observe(this) {
-
         }
     }
 

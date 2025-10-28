@@ -510,4 +510,8 @@
     <string name="change_or_reset_your_password">आपला पासवर्ड बदला किंवा रीसेट करा</string>
     <string name="location_information">स्थानिक माहिती</string>
     <string name="personal_information">वैयक्तिक माहिती</string>
+
+    <string name="error_saving_crop">पिक जतन करण्यात अयशस्वी. कृपया पुन्हा प्रयत्न करा.</string>
+    <string name="failed_to_load">माहिती लोड करण्यात अयशस्वी. कृपया आपले नेटवर्क तपासा.</string>
+    <string name="error_loading_data">माहिती लोड करताना काहीतरी चूक झाली. कृपया पुन्हा प्रयत्न करा.</string>
 </resources>

@@ -31,6 +31,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardS
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
+import `in`.gov.mahapocra.mahavistaarai.util.DateHelper.showDisabledFutureDatePicker
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
@@ -120,7 +121,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
 
         binding.sowingInfoLayout.editSowingDateIcon.setOnClickListener {
-            AppUtility.getInstance().showDisabledFutureDatePicker(
+            showDisabledFutureDatePicker(
                 this,
                 date,
                 1,

@@ -12,6 +12,7 @@ import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.datepicker.MaterialDatePicker
 import `in`.co.appinventor.services_api.listener.DatePickerRequestListener
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
@@ -23,136 +24,184 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.util.Calendar
 
 
-class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
-    DatePickerRequestListener {
-    private lateinit var languageToLoad: String
-    private val viewModel: FarmerViewModel by viewModels()
+class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener, DatePickerRequestListener {
+
+    private lateinit var binding: ActivityAddCropBinding
     private lateinit var textViewHeaderTitle: TextView
     private lateinit var imageMenuShow: ImageView
     private lateinit var imgBackArrow: ImageView
     private lateinit var receivedJson: JSONObject
+
+    private val viewModel: FarmerViewModel by viewModels()
+    private var languageToLoad: String = "mr"
     private var cropId: Int = 0
-    private lateinit var binding: ActivityAddCropBinding
+
+    private val uiScope = CoroutineScope(Dispatchers.Main + Job())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        languageToLoad = "mr"
-        if (AppSettings.getLanguage(this@AddCropActivity).equals("1", ignoreCase = true)) {
-            languageToLoad = "en"
-        }
+        // --- Language setup ---
+        languageToLoad = if (AppSettings.getLanguage(this).equals("1", ignoreCase = true)) "en" else "mr"
         switchLanguage(this, languageToLoad)
+
         binding = ActivityAddCropBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
 
+        setupToolbar()
+        setupRecyclerView()
+
+        // --- Load data in background ---
+        uiScope.launch {
+            ProgressHelper.showProgressDialog(this@AddCropActivity)
+            withContext(Dispatchers.IO) {
+                viewModel.getCropCategoriesAndCropDetails(this@AddCropActivity, languageToLoad)
+            }
+        }
+
+        observeCropData()
+    }
+
+    // -----------------------------
+    // 🧭 Toolbar Setup
+    // -----------------------------
+    private fun setupToolbar() {
         imgBackArrow = findViewById(R.id.imgBackArrow)
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
         imageMenuShow = findViewById(R.id.imageMenushow)
-        textViewHeaderTitle.setText(R.string.select_crop)
 
-        fetchCropInfo()
-        textViewHeaderTitle.text = getString(R.string.select_crop)
+        textViewHeaderTitle.setText(R.string.select_crop)
+        imgBackArrow.visibility = View.VISIBLE
+
+        imgBackArrow.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
 
         imageMenuShow.setOnClickListener {
-            val intent = Intent(this, DashboardScreen::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, DashboardScreen::class.java))
         }
-
-        imgBackArrow.visibility = View.VISIBLE
-        imgBackArrow.setOnClickListener {
-            OnBackPressedDispatcher().onBackPressed()
-        }
-        viewModel.getCropCategoriesAndCropDetails(this, languageToLoad)
-        ProgressHelper.showProgressDialog(this)
     }
 
-    private fun fetchCropInfo() {
-        viewModel.cropCategoryResponse.observe(this) {
-            val jSONObject = JSONObject(it.toString())
-            val jsonDataArray = jSONObject.getJSONArray("data")
-            var adapter =
-                CropCategoriesAdapter(this, jsonDataArray, "TitleVideosDetailsAdpter", this)
-            val str = intent.getStringExtra("callerActivity")
-            if (str != null) {
-                adapter =
-                    CropCategoriesAdapter(
-                        this,
-                        jsonDataArray,
-                        "costCalculator",
-                        this
-                    )
+    // -----------------------------
+    // ♻️ RecyclerView Setup
+    // -----------------------------
+    private fun setupRecyclerView() {
+        binding.mainRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.mainRecyclerView.setHasFixedSize(true)
+    }
+
+    // -----------------------------
+    // 🌾 Observe Crop Data
+    // -----------------------------
+    private fun observeCropData() {
+        viewModel.cropCategoryResponse.observe(this) { response ->
+            ProgressHelper.disableProgressDialog()
+
+            try {
+                val jsonObject = JSONObject(response.toString())
+                val jsonDataArray = jsonObject.getJSONArray("data")
+
+                // Determine adapter type based on intent
+                val adapterType = if (intent.getStringExtra("callerActivity") != null) {
+                    "costCalculator"
+                } else {
+                    "TitleVideosDetailsAdpter"
+                }
+
+                // Load adapter on background thread for large JSON
+                uiScope.launch(Dispatchers.Default) {
+                    val adapter = CropCategoriesAdapter(this@AddCropActivity, jsonDataArray, adapterType, this@AddCropActivity)
+                    withContext(Dispatchers.Main) {
+                        binding.mainRecyclerView.adapter = adapter
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(this, R.string.error_loading_data, Toast.LENGTH_SHORT).show()
             }
-            binding.mainRecyclerView.layoutManager = LinearLayoutManager(this)
-            binding.mainRecyclerView.hasFixedSize()
-            binding.mainRecyclerView.setAdapter(adapter)
         }
+
         viewModel.error.observe(this) {
             ProgressHelper.disableProgressDialog()
+            Toast.makeText(this, R.string.failed_to_load, Toast.LENGTH_SHORT).show()
         }
     }
 
+    // -----------------------------
+    // 🧩 Item Clicks
+    // -----------------------------
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
-        if (i == 1) {
-            receivedJson = obj as JSONObject
+        if (i == 1 && obj is JSONObject) {
+            receivedJson = obj
 
-            val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH)
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
+            val builder = MaterialDatePicker.Builder.datePicker()
+                .setTitleText(getString(R.string.select_sowing_date))
+                .setTheme(R.style.CustomMaterialDatePickerTheme) // 🎨 Apply your theme
+                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
 
-            val datePickerDialog = DatePickerDialog(
-                this,
-                { _, y, m, d ->
-                    onDateSelected(1, d, m, y) // ✅ Manually invoke
-                },
-                year, month, day
-            )
+            val datePicker = builder.build()
 
-            datePickerDialog.setTitle(getString(R.string.select_sowing_date))
+            datePicker.addOnPositiveButtonClickListener { selection ->
+                val calendar = Calendar.getInstance().apply { timeInMillis = selection }
+                val day = calendar.get(Calendar.DAY_OF_MONTH)
+                val month = calendar.get(Calendar.MONTH)
+                val year = calendar.get(Calendar.YEAR)
+                onDateSelected(1, day, month, year)
+            }
 
-            // ✅ Allow date up to 15 days from today
-            val maxDate = System.currentTimeMillis() + (15L * 24 * 60 * 60 * 1000)
-            datePickerDialog.datePicker.maxDate = maxDate
-
-            // (Optional) Set min date if needed, e.g., disallow past dates
-            // datePickerDialog.datePicker.minDate = System.currentTimeMillis()
-
-            datePickerDialog.show()
+            datePicker.show(supportFragmentManager, "DATE_PICKER")
         }
     }
 
+    // -----------------------------
+    // 📅 Date Picker Callback
+    // -----------------------------
     override fun onDateSelected(i: Int, day: Int, month: Int, year: Int) {
         if (i == 1) {
             val sowingDate = "$day-${month + 1}-$year"
             cropId = receivedJson.optInt("id")
+
+            ProgressHelper.showProgressDialog(this)
             viewModel.saveFarmerSelectedCrop(this, sowingDate, cropId)
-            viewModel.saveFarmerSelectedCrop.observe(this) {
-                if (it != null) {
-                    if (it.get("status").toString() == "200") {
-                        Toast.makeText(this, R.string.selected_crop_saved, Toast.LENGTH_SHORT)
-                            .show()
-                        startActivity(Intent(this, DashboardScreen::class.java).apply {
-                            putExtra("savedCropResponse", it.get("status").toString())
-                        })
-                    }
+
+            viewModel.saveFarmerSelectedCrop.observe(this) { response ->
+                ProgressHelper.disableProgressDialog()
+                val jsonObject = JSONObject(response.toString())
+                if (jsonObject.optString("status") == "200") {
+                    Toast.makeText(this, R.string.selected_crop_saved, Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, DashboardScreen::class.java).apply {
+                        putExtra("savedCropResponse", "200")
+                    })
+                } else {
+                    Toast.makeText(this, R.string.error_saving_crop, Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
+    // -----------------------------
+    // 🌍 Locale
+    // -----------------------------
     override fun attachBaseContext(newBase: Context) {
-        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
-            "en"
-        } else {
-            "mr"
-        }
-        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) "en" else "mr"
+        val updatedContext = configureLocale(newBase, languageToLoad)
         super.attachBaseContext(updatedContext)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        uiScope.cancel() // Cancel background coroutines to prevent leaks
+    }
 }

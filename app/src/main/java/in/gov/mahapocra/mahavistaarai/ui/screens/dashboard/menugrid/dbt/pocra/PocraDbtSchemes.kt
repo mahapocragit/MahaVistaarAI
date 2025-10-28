@@ -57,7 +57,6 @@ class PocraDbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
         ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
 
         binding.applyForPocraTextView.setOnClickListener {
-            Toast.makeText(this, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, DBTDashboard::class.java))
         }
 

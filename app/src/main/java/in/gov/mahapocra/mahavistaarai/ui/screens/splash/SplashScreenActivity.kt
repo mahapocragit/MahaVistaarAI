@@ -39,7 +39,7 @@ class SplashScreenActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash_screen)
 
         val config = ClarityConfig(
-            projectId = APIKeys.CLARITY_PROD,
+            projectId = APIKeys.CLARITY_STAGE,
             logLevel = LogLevel.Verbose
         )
         Clarity.initialize(applicationContext, config)
