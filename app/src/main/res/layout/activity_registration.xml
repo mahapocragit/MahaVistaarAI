@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Register"
+            android:text="@string/register_text_1"
             android:textColor="@color/white"
             android:textSize="@dimen/_22sdp"
             android:textStyle="bold" />
@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Your Account!"
+            android:text="@string/register_text_2"
             android:textColor="@color/white"
             android:textSize="@dimen/_22sdp"
             android:textStyle="bold" />

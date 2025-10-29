@@ -39,38 +39,24 @@ class SplashScreenActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash_screen)
 
         val config = ClarityConfig(
-            projectId = APIKeys.CLARITY_STAGE,
+            projectId = APIKeys.CLARITY_PROD,
             logLevel = LogLevel.Verbose
         )
         Clarity.initialize(applicationContext, config)
 
-        val isGuest =
-            AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
-        // Set Language Configuration
-        val languageToLoad = if (AppSettings.getLanguage(this) == "1") "en" else "mr"
-        Locale.setDefault(Locale(languageToLoad))
-        resources.updateConfiguration(
-            Configuration().apply { locale = Locale(languageToLoad) },
-            resources.displayMetrics
-        )
-
         appVersionText = findViewById(R.id.appVersionText)
         appVersionText.text = buildString {
-                append(getString(R.string.app_version))
-                append(" ")
-                append(LocalCustom.getVersionName(this@SplashScreenActivity))
-            }
+            append(getString(R.string.app_version))
+            append(" ")
+            append(LocalCustom.getVersionName(this@SplashScreenActivity))
+        }
         // Get Farmer ID
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
 
         // Navigate to the appropriate screen after delay
         Handler(Looper.getMainLooper()).postDelayed({
             val targetActivity = if (farmerId > 0) {
-                if (isGuest) {
-                    LoginScreen::class.java
-                } else {
-                    DashboardScreen::class.java
-                }
+                DashboardScreen::class.java
             } else {
                 LoginScreen::class.java
             }

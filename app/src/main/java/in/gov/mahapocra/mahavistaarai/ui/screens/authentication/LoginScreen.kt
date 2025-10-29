@@ -213,7 +213,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         }
 
         binding.registerTextView.setOnClickListener {
-            val intent2 = Intent(applicationContext, Registration::class.java)
+            val intent2 = Intent(applicationContext, PreRegistrationActivity::class.java)
             startActivity(intent2)
         }
 

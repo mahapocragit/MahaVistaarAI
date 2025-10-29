@@ -93,7 +93,7 @@ class DBTDashboard : AppCompatActivity() {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun loadWebView(encryptedFarmerId: String) {
-        val dbtUrl = "https://dbt-ndksp.mahapocra.gov.in" // or UAT if needed
+        val dbtUrl = "https://dbt-ndksp.mahapocra.gov.in"
         val location = getLocationUsingLocationManager(this)
         val lat = location?.latitude
         val long = location?.longitude
@@ -103,8 +103,7 @@ class DBTDashboard : AppCompatActivity() {
         } else {
             "$dbtUrl/MahavistaarLoginAuth" +
                     "?farmerid=$encryptedFarmerId" +
-                    "&ip=${getMobileOrWifiIp()}" +
-                    "&details=Chrome_Windows10, latitude=$lat, longitude=$long"
+                    "&details=Chrome_Windows10,latitude=$lat,longitude=$long"
         }
 
         val webSettings = binding.webView.settings
@@ -112,34 +111,36 @@ class DBTDashboard : AppCompatActivity() {
         webSettings.domStorageEnabled = true
         webSettings.javaScriptCanOpenWindowsAutomatically = true
         webSettings.setSupportMultipleWindows(true)
-        webSettings.allowFileAccess = true
-        webSettings.allowContentAccess = true
+        webSettings.allowFileAccess = false           // 🔒 disable local file access
+        webSettings.allowContentAccess = true         // ✅ needed for image/pdf uploads
+        webSettings.mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
         webSettings.useWideViewPort = true
         webSettings.loadWithOverviewMode = true
-        webSettings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
 
-        // ✅ Handle redirects, SSL, and errors
+        // ✅ Safe URL handling
         binding.webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-                view.loadUrl(request.url.toString())
-                return true
+                val url = request.url.toString()
+                return if (url.startsWith("https://dbt-ndksp.mahapocra.gov.in")) {
+                    false
+                } else {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                    true
+                }
             }
 
             override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
-                // ⚠️ In production, prompt the user instead of always proceeding
-                handler?.proceed()
-            }
-
-            override fun onPageFinished(view: WebView?, url: String?) {
-                super.onPageFinished(view, url)
-                Log.d("WebView", "Page Loaded: $url")
+                AlertDialog.Builder(view?.context)
+                    .setTitle("SSL Certificate Error")
+                    .setMessage("The connection is not secure. Do you want to continue?")
+                    .setPositiveButton("Continue") { _, _ -> handler?.proceed() }
+                    .setNegativeButton("Cancel") { _, _ -> handler?.cancel() }
+                    .show()
             }
         }
 
-        // ✅ Handle JS popups, confirms, new windows, file uploads
+        // ✅ Restrict file uploads to only images and PDFs
         binding.webView.webChromeClient = object : WebChromeClient() {
-
-            // --- File chooser for <input type="file"> ---
             override fun onShowFileChooser(
                 webView: WebView?,
                 filePathCallback: ValueCallback<Array<Uri>>?,
@@ -148,75 +149,18 @@ class DBTDashboard : AppCompatActivity() {
                 fileChooserCallback?.onReceiveValue(null)
                 fileChooserCallback = filePathCallback
 
-                val intent = try {
-                    fileChooserParams?.createIntent()
-                } catch (e: Exception) {
-                    fileChooserCallback = null
-                    return false
+                val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "*/*"
+                    putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/*", "application/pdf"))
                 }
-                intent?.let { fileChooserLauncher.launch(it) }
-                return true
-            }
 
-            // --- JavaScript alerts ---
-            override fun onJsAlert(
-                view: WebView?,
-                url: String?,
-                message: String?,
-                result: JsResult?
-            ): Boolean {
-                AlertDialog.Builder(view?.context)
-                    .setMessage(message)
-                    .setPositiveButton(android.R.string.ok) { _, _ -> result?.confirm() }
-                    .setCancelable(false)
-                    .create()
-                    .show()
-                return true
-            }
-
-            // --- JavaScript confirms ---
-            override fun onJsConfirm(
-                view: WebView?,
-                url: String?,
-                message: String?,
-                result: JsResult?
-            ): Boolean {
-                AlertDialog.Builder(view?.context)
-                    .setMessage(message)
-                    .setPositiveButton(android.R.string.ok) { _, _ -> result?.confirm() }
-                    .setNegativeButton(android.R.string.cancel) { _, _ -> result?.cancel() }
-                    .create()
-                    .show()
-                return true
-            }
-
-            // --- Handle new windows / popups (like OTP dialogs) ---
-            override fun onCreateWindow(
-                view: WebView?,
-                isDialog: Boolean,
-                isUserGesture: Boolean,
-                resultMsg: Message?
-            ): Boolean {
-                val newWebView = WebView(view!!.context)
-                val dialog = Dialog(view.context)
-                dialog.setContentView(newWebView)
-                dialog.show()
-
-                newWebView.settings.javaScriptEnabled = true
-                newWebView.settings.domStorageEnabled = true
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    newWebView.webViewClient = view.webViewClient
-                }
-                newWebView.webChromeClient = this
-
-                (resultMsg?.obj as WebView.WebViewTransport).webView = newWebView
-                resultMsg.sendToTarget()
-
+                val chooserIntent = Intent.createChooser(intent, "Select Image or PDF")
+                fileChooserLauncher.launch(chooserIntent)
                 return true
             }
         }
 
-        // ✅ Load the webpage
         binding.webView.loadUrl(urlForLoadWeb)
     }
 }
