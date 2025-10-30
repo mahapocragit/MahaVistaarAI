@@ -167,7 +167,9 @@
         <activity
             android:name=".ui.screens.notification.NotificationActivity"
             android:exported="false" />
-        <activity android:name=".ui.screens.authentication.LoginScreen" />
+        <activity
+            android:name=".ui.screens.authentication.LoginScreen"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <service
             android:name=".data.services.FBaseMessagingService"
