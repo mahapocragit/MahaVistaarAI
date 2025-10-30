@@ -604,7 +604,7 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
 
         val receiveOTPEditText = dialog.findViewById<EditText>(R.id.OptEditText)
         val submitButton = dialog.findViewById<Button>(R.id.submitButton)
-        val resendOTP = dialog.findViewById<Button>(R.id.resentOTP)
+        val resendOTP = dialog.findViewById<Button>(R.id.resendOTP)
         val cancelButton = dialog.findViewById<ImageView>(R.id.imageView_close)
         otpVerification(resendOTP)
         cancelButton.setOnClickListener { dialog.dismiss() }

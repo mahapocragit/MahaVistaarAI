@@ -66,7 +66,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/resentOTP"
+            android:id="@+id/resendOTP"
             android:layout_width="0dp"
             android:layout_height="@dimen/height55"
             android:layout_margin="@dimen/padding10"

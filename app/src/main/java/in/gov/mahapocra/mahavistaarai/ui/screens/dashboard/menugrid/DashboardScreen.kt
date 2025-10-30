@@ -153,7 +153,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
         appPreferenceManager = AppPreferenceManager(this)
         init()
-        FirebaseHelper(this)
         binding.appBarMain.dashboardScreen.deleteCropImageView.setOnClickListener {
             cropId = savedCropId
             deleteDialog()

@@ -81,6 +81,13 @@ interface ApiService {
         @Body params: RequestBody
     ): JsonObject
 
+    @POST(ApiConstants.kCompareOtp)
+    suspend fun compareOtp(
+        @Header("MobileNo") mobileNo: String,
+        @Header("timestamp") timestamp: Long,
+        @Body params: RequestBody
+    ): JsonObject
+
     @POST(ApiConstants.kCompareOtpReg)
     suspend fun compareOtpReg(
         @Header("MobileNo") mobileNo: String,

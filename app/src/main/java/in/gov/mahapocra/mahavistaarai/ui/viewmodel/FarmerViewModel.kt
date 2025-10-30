@@ -503,7 +503,7 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun compareOtp(context: Context, mobile: String, enteredOTP: String) {
+    fun compareOtp(context: Context, timestamp: Long, mobile: String, enteredOTP: String) {
         viewModelScope.launch {
             val jsonObject = JSONObject()
             try {
@@ -513,7 +513,8 @@ class FarmerViewModel : ViewModel() {
                 val retrofit: Retrofit =
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
-                val response = apiRequest.compareOtp(mobile.trim { it <= ' ' }, requestBody)
+                val response =
+                    apiRequest.compareOtp(mobile.trim { it <= ' ' }, timestamp, requestBody)
                 _compareOtpResponse.value = response
             } catch (e: Exception) {
                 val message = when (e) {
@@ -527,6 +528,7 @@ class FarmerViewModel : ViewModel() {
             }
         }
     }
+
 
     fun compareOtpReg(context: Context, mobile: String, enteredOTP: String) {
         viewModelScope.launch {
