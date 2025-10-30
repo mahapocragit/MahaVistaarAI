@@ -96,7 +96,7 @@
     <!-- Repeat similar blocks for other items -->
 
     <LinearLayout
-        android:id="@+id/nav_dbt"
+        android:id="@+id/nav_shetishala"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -107,7 +107,7 @@
             android:id="@+id/icon_search"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/dbt_ic" />
+            android:src="@drawable/icon_shetishala" />
 
         <TextView
             android:id="@+id/label_search"
@@ -116,7 +116,7 @@
             android:gravity="center"
             android:textColor="@color/black"
             android:textSize="12sp"
-            android:text="@string/dbt" />
+            android:text="@string/dshetishala" />
     </LinearLayout>
 
 </LinearLayout>

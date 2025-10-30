@@ -56,7 +56,7 @@ class PocraDbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
         }
         ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
 
-        binding.applyForPocraTextView.setOnClickListener {
+        binding.applyForNDKSPLinearLayout.setOnClickListener {
             startActivity(Intent(this, DBTDashboard::class.java))
         }
 

@@ -23,6 +23,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDbtdashboardBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.encodeToBase64
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getLocationUsingLocationManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getMobileOrWifiIp
+import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 
 class DBTDashboard : AppCompatActivity() {
@@ -44,9 +45,11 @@ class DBTDashboard : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         binding = ActivityDbtdashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        enableEdgeToEdge()
+        ProgressHelper.showProgressDialog(this)
+        setUpViews()
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -54,18 +57,16 @@ class DBTDashboard : AppCompatActivity() {
             insets
         }
 
-        setUpViews()
-
         val agristackId = AppSettings.getInstance().getValue(this, AppConstants.AGRISTACKID, "")
         Log.d("TAGGER", "loadWebView: $agristackId")
 
-        if (!agristackId.isNullOrEmpty() && agristackId != "null") {
-            loadWebView(encodeToBase64(agristackId))
-        } else {
-            loadWebView("")
-        }
+        val encodedId = if (!agristackId.isNullOrEmpty() && agristackId != "null") {
+            encodeToBase64(agristackId)
+        } else ""
 
-        // ✅ Handle back navigation properly
+        loadWebView(encodedId)
+
+        // ✅ Proper back navigation
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (binding.webView.canGoBack()) {
@@ -93,31 +94,41 @@ class DBTDashboard : AppCompatActivity() {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun loadWebView(encryptedFarmerId: String) {
-        val dbtUrl = "https://dbt-ndksp.mahapocra.gov.in"
+        val dbtUrl = "https://dbt-ndksp.mahapocra.gov.in/MahavistaarLoginAuth"
         val location = getLocationUsingLocationManager(this)
-        val lat = location?.latitude
-        val long = location?.longitude
+        val lat = location?.latitude ?: 0.0
+        val long = location?.longitude ?: 0.0
 
         val urlForLoadWeb = if (encryptedFarmerId.isEmpty()) {
-            "$dbtUrl/MahavistaarLoginAuth"
+            dbtUrl
         } else {
-            "$dbtUrl/MahavistaarLoginAuth" +
-                    "?farmerid=$encryptedFarmerId" +
-                    "&details=Chrome_Windows10,latitude=$lat,longitude=$long"
+            "$dbtUrl?farmerid=$encryptedFarmerId&details=Chrome_Windows10,latitude=$lat,longitude=$long"
         }
 
-        val webSettings = binding.webView.settings
-        webSettings.javaScriptEnabled = true
-        webSettings.domStorageEnabled = true
-        webSettings.javaScriptCanOpenWindowsAutomatically = true
-        webSettings.setSupportMultipleWindows(true)
-        webSettings.allowFileAccess = false           // 🔒 disable local file access
-        webSettings.allowContentAccess = true         // ✅ needed for image/pdf uploads
-        webSettings.mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
-        webSettings.useWideViewPort = true
-        webSettings.loadWithOverviewMode = true
+        with(binding.webView.settings) {
+            javaScriptEnabled = true
+            domStorageEnabled = true               // important for many modern sites
+            javaScriptCanOpenWindowsAutomatically = true
+            setSupportMultipleWindows(true)
+            allowFileAccess = false                // keep disabled for security
+            allowContentAccess = true
+            mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
+            useWideViewPort = true
+            loadWithOverviewMode = true
 
-        // ✅ Safe URL handling
+            // Use HTTP cache / default behavior
+            cacheMode = WebSettings.LOAD_DEFAULT
+
+            // databaseEnabled is rarely needed but harmless
+            databaseEnabled = true
+
+            // Do NOT call setAppCacheEnabled — it's deprecated/ignored
+        }
+
+        binding.webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+        binding.webView.scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
+
+        // ✅ Secure URL handling and progress display
         binding.webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
                 val url = request.url.toString()
@@ -127,6 +138,25 @@ class DBTDashboard : AppCompatActivity() {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
                     true
                 }
+            }
+
+            override fun onPageStarted(view: WebView?, url: String?, favicon: android.graphics.Bitmap?) {
+                super.onPageStarted(view, url, favicon)
+                ProgressHelper.showProgressDialog(this@DBTDashboard)
+            }
+
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+                ProgressHelper.disableProgressDialog()
+            }
+
+            override fun onReceivedError(
+                view: WebView?,
+                request: WebResourceRequest?,
+                error: WebResourceError?
+            ) {
+                ProgressHelper.disableProgressDialog()
+                super.onReceivedError(view, request, error)
             }
 
             override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
@@ -139,7 +169,7 @@ class DBTDashboard : AppCompatActivity() {
             }
         }
 
-        // ✅ Restrict file uploads to only images and PDFs
+        // ✅ Restrict file uploads to only images & PDFs
         binding.webView.webChromeClient = object : WebChromeClient() {
             override fun onShowFileChooser(
                 webView: WebView?,

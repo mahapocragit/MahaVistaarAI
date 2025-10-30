@@ -385,13 +385,13 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             }
         }
 
-        binding.appBarMain.dashboardScreen.customNavBottom.navDbt.setOnClickListener {
+        binding.appBarMain.dashboardScreen.customNavBottom.navShetishala.setOnClickListener {
             Clarity.sendCustomEvent("DBT_BUTTON_CLICKED")
             if (NetworkUtils.isInternetAvailable(this)) {
                 startActivity(
                     Intent(
                         this@DashboardScreen,
-                        DBTActivity::class.java
+                        ShetishalaActivity::class.java
                     )
                 )
             } else {
@@ -1169,7 +1169,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                             startActivity(
                                 Intent(
                                     this@DashboardScreen,
-                                    ShetishalaActivity::class.java
+                                    DBTActivity::class.java
                                 )
                             )
                         } else {
@@ -1401,7 +1401,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             "Climate Resilent Technology",
             "Pest and Diseases",
             "Market Price",
-            "Digital Shetishala",
+            "D.B.T.",
             "Warehouse"
         )
 
@@ -1413,7 +1413,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             "हवामानास अनुकूल शेती पद्धती",
             "कीड व रोग",
             "बाजारभाव",
-            "डिजिटल शेतीशाळा",
+            "डी.बी.टी.",
             "गोदाम"
         )
 
@@ -1425,7 +1425,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             R.drawable.ic_climateresilenttechnology,
             R.drawable.ic_pestsanddiseases,
             R.drawable.ic_marketprice,
-            R.drawable.ic_digitalfarmer,
+            R.drawable.icon_dbt,
             R.drawable.ic_warehouse
         )
 
