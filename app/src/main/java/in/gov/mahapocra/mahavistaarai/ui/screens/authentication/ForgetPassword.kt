@@ -44,8 +44,6 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
     private lateinit var mob: String
     private var userPass: String = ""
     private lateinit var dialog: Dialog
-    private var loginOption: Int = 0
-    private var farmerRegistrationId: Int = 0
     var languageToLoad: String = "mr"
 
     override fun onCreate(savedInstanceState: Bundle?) {

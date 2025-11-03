@@ -3,8 +3,11 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -69,6 +72,55 @@ class ConfirmPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode
             }
         }
         onClick()
+        binding.newPasswordEditText.addTextChangedListener(passwordWatcher)
+        binding.confirmPasswordEditText.addTextChangedListener(confirmPasswordWatcher)
+    }
+
+    private val passwordWatcher = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            val password = s.toString()
+            if (!isValidPassword(password)) {
+                binding.passwordErrorTextView.text =
+                    "Password must be 8+ chars, include uppercase, lowercase, number, and special character."
+                binding.passwordErrorTextView.visibility = TextView.VISIBLE
+            } else {
+                binding.passwordErrorTextView.visibility = TextView.GONE
+            }
+
+            // Also check if passwords match when typing
+            val confirmPassword = binding.confirmPasswordEditText.text.toString()
+            if (confirmPassword.isNotEmpty()) {
+                checkPasswordsMatch(password, confirmPassword)
+            }
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+    }
+
+    private val confirmPasswordWatcher = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            val password = binding.newPasswordEditText.text.toString()
+            val confirmPassword = s.toString()
+            checkPasswordsMatch(password, confirmPassword)
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+    }
+
+    private fun checkPasswordsMatch(password: String, confirmPassword: String) {
+        if (password != confirmPassword) {
+            binding.passwordTextInput.error = "Passwords do not match"
+        } else {
+            binding.passwordTextInput.error = null
+        }
+    }
+
+    private fun isValidPassword(password: String): Boolean {
+        val passwordPattern =
+            "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#\$%^&+=!]).{8,}\$"
+        return password.matches(passwordPattern.toRegex())
     }
 
     private fun onClick() {

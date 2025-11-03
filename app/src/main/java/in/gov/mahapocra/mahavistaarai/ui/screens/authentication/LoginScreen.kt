@@ -82,16 +82,6 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         uiResponsive(binding.root)
         FirebaseHelper(this)
 
-        FirebaseMessaging.getInstance().token
-            .addOnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    return@addOnCompleteListener
-                }
-
-                // Get the actual token
-                val token = task.result
-            }
-
         binding.changeLanguageImageView.setOnClickListener {
             openChangeLangPopup()
         }
@@ -121,7 +111,6 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             binding.farmerIdOption.setTextColor(ContextCompat.getColor(this, R.color.black))
             binding.mobileLoginLayout.visibility = View.VISIBLE
             binding.farmerLoginLayout.visibility = View.GONE
-//            setPreventControlMeasureWebView(preventiveMeasures) //sets what happens
         }
         binding.farmerIdOption.setOnClickListener {
             binding.mobileNoOption.background =
@@ -134,7 +123,6 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             binding.farmerIdOption
             binding.mobileLoginLayout.visibility = View.GONE
             binding.farmerLoginLayout.visibility = View.VISIBLE
-//            setPreventControlMeasureWebView(preventiveMeasures) //sets what happens
         }
 
         farmerIdLayoutValidation()
@@ -343,7 +331,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         }
     }
 
-    private fun callLoginAPI(strToken: String, otp: String = "") {
+    private fun callLoginAPI(strToken: String, otp: String) {
         if (mobileNo.isEmpty()) {
             binding.userIdEditText.error = resources.getString(R.string.lgn_register_phone_error)
             binding.userIdEditText.requestFocus()

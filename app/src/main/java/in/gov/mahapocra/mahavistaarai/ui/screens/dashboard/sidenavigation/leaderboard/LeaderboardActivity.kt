@@ -112,7 +112,7 @@ class LeaderboardActivity : AppCompatActivity() {
     fun formatName(str: String): String {
         val firstWord = str.split(" ")[0]   // take first word
         return if (firstWord.length > 6) {
-            firstWord.substring(0, 6) + ".."
+            firstWord.take(6) + ".."
         } else {
             firstWord
         }
@@ -120,7 +120,7 @@ class LeaderboardActivity : AppCompatActivity() {
 
     fun formatLocation(str: String): String {
         return if (str.length > 6) {
-            str.substring(0, 6) + ".."
+            str.take(6) + ".."
         } else {
             str
         }
