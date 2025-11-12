@@ -22,7 +22,7 @@
     <string name="climate_resilient_Newupdate">खरीप विशेष</string>
 
     <string name="apply_for_mahadbt">महाडीबीटीसाठी अर्ज करण्यासाठी</string>
-    <string name="apply_for_pocradbt">ना.दे.कृ.सं.प्र. (PoCRA) डीबीटी प्रणालीवर अर्ज करण्यासाठी</string>
+    <string name="apply_for_pocradbt">ना.दे.कृ.सं.प्र. डीबीटी प्रणालीवर अर्ज करण्यासाठी</string>
     <string name="click_here">येथे क्लिक करा</string>
 
     <string name="add_Crop">पीक निवडा</string>
@@ -202,16 +202,13 @@
     <string name="agromet">हवामान सल्ला</string>
     <string name="source_info_market">माहितीचा स्त्रोत- महाराष्ट्र राज्य कृषि पणन मंडळ</string>
     <string name="agromet_details">हलक्या स्वरुपात पाऊस पडण्याची शक्यता.  आकाश अंशतः स्वच्छ ते बहुतांश ढगाळ राहण्याची शक्यता.  हळुवार वारा असण्याची शक्यता.  तापमान १८.८ ते ३४.१ अंश से. दरम्यान असण्याची शक्यता.</string>
-
     <string name="farm_name">शेताचे नाव एंटर करा</string>
     <string name="save_farm">जतन करा</string>
-
-    <string name="poCRA_dBT_activity">डीबीटी- थेट लाभ हस्तांतरण</string>
+    <string name="poCRA_dBT_activity">ना.दे.कृ.सं.प्र. डीबीटी- थेट लाभ हस्तांतरण</string>
     <string name="eligibility_Criteria">पात्रता निकष</string>
     <string name="notes"> टिप </string>
     <string name="reg_name">तुमचे नाव लिहा</string>
     <string name="reg_mobno">मोबाईल नंबर टाका </string>
-    <string name="reg_pwd">पासवर्ड टाका</string>
     <string name="reg_verify"> सत्यापित करा</string>
     <string name="reg_verified"> सत्यापित </string>
     <string name="reg_submit">प्रस्तुत करा</string>
@@ -385,7 +382,7 @@
     <string name="medium_soil_value">मध्यम </string>
     <string name="high_soil_value">उच्च </string>
     <string name="videos">व्हिडिओ</string>
-    <string name="pocra_dbt_name">ना.दे.कृ.सं.प्र. (PoCRA)</string>
+    <string name="pocra_dbt_name">ना.दे.कृ.सं.प्र. डीबीटी</string>
     <string name="maha_dbt_name">महाडीबीटी (MahaDBT)</string>
     <string name="farmerdetails">शेतकरी तपशील</string>
     <string name="soiltestresult">माती चाचणी परिणाम</string>
@@ -515,4 +512,10 @@
     <string name="error_saving_crop">पिक जतन करण्यात अयशस्वी. कृपया पुन्हा प्रयत्न करा.</string>
     <string name="failed_to_load">माहिती लोड करण्यात अयशस्वी. कृपया आपले नेटवर्क तपासा.</string>
     <string name="error_loading_data">माहिती लोड करताना काहीतरी चूक झाली. कृपया पुन्हा प्रयत्न करा.</string>
+    <string name="points">गुण</string>
+
+    <string name="agristack_title">शेतकरी आयडी लिंक करा</string>
+    <string name="agristack_request">प्रिय शेतकरी बंधूंनो, महाविस्तार ॲपमध्ये आता तुम्ही तुमचा शेतकरी आयडी लिंक करू शकता! यामुळे तुमची माहिती आपोआप भरली जाईल आणि विविध योजना, मार्गदर्शन व सुविधा अधिक सुलभपणे मिळतील. \n👉 कृपया ‘शेतकरी आयडी लिंक करा’ या पर्यायावर क्लिक करा आणि आवश्यक माहिती भरून प्रक्रिया पूर्ण करा. आपला सहभागच आपल्या प्रगतीचा मार्ग आहे!</string>
+    <string name="btn_cancel">रद्द करा</string>
+    <string name="btn_link">लिंक करा</string>
 </resources>

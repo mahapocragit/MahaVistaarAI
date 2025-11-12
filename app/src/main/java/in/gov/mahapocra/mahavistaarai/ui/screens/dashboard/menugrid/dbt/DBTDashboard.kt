@@ -1,16 +1,20 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
 import android.net.http.SslError
-import android.os.Build
 import android.os.Bundle
-import android.os.Message
 import android.util.Log
 import android.view.View
-import android.webkit.*
+import android.webkit.SslErrorHandler
+import android.webkit.ValueCallback
+import android.webkit.WebChromeClient
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,7 +26,6 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDbtdashboardBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.encodeToBase64
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getLocationUsingLocationManager
-import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getMobileOrWifiIp
 import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 

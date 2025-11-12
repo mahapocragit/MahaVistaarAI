@@ -1,6 +1,7 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.leaderboard
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,51 +22,27 @@ import java.net.SocketException
 import java.net.SocketTimeoutException
 
 class LeaderboardViewModel : ViewModel() {
-    private var _getLeaderboardDataResponse = MutableLiveData<JsonObject>()
-    val getLeaderboardDataResponse: MutableLiveData<JsonObject> = _getLeaderboardDataResponse
+    private var _responseLeaderboardForAll = MutableLiveData<JsonObject>()
+    val responseLeaderboardForAll: MutableLiveData<JsonObject> = _responseLeaderboardForAll
 
     private var _error = MutableLiveData<String>()
     val error: MutableLiveData<String> = _error
 
-    fun getLeaderboardData(context: Context, selectedValue: String) {
+    fun getLeaderboardForAll(context: Context, token:String) {
         viewModelScope.launch {
-            ProgressHelper.showProgressDialog(context)
             try {
-
-                val talukaId =
-                    AppSettings.getInstance().getIntValue(context, AppConstants.uTALUKAID, 0)
-                val districtId =
-                    AppSettings.getInstance().getIntValue(context, AppConstants.uDISTId, 0)
-                val jsonObject = JSONObject()
-                when (selectedValue) {
-                    "taluka" -> {
-                        jsonObject.apply {
-                            put("level", "taluka")
-                            put("code", talukaId)//4201
-                        }
-                    }
-
-                    "district" -> {
-                        jsonObject.apply {
-                            put("level", "district")
-                            put("code", districtId)//522
-                        }
-                    }
-
-                    else -> {
-                        jsonObject.apply {
-                            put("level", "state")
-                            put("code", 0)
-                        }
-                    }
-                }
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                ProgressHelper.showProgressDialog(context)
+                val farmerId =
+                    AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
-                val response = apiRequest.getLeaderboardData(requestBody)
+                val response = apiRequest.getLeaderboardForAll(
+                    farmerId,
+                    token
+                )
                 ProgressHelper.disableProgressDialog()
-                _getLeaderboardDataResponse.value = response
+                _responseLeaderboardForAll.value = response
+                Log.d("TAGGER", "fetchDataFromNewLeaderboard: $response")
             } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {

@@ -2,25 +2,23 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid
 
 import android.Manifest
 import android.app.Dialog
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.Window
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
+import android.widget.Button
 import android.widget.GridView
 import android.widget.ImageView
 import android.widget.TextView
@@ -44,12 +42,10 @@ import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListene
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.CropsCategName
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDashboardScreenBinding
-import `in`.gov.mahapocra.mahavistaarai.databinding.LeaderboardDialogBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropRecyclerSapAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DashboardAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DrawerMenuAdapter
@@ -70,7 +66,6 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.Cred
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.CostCalculatorDashboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.experts.ExpertsCornerFarmerActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.leaderboard.LeaderboardActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.leaderboard.LeaderboardViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.news.NewsListActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
@@ -104,12 +99,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
     private lateinit var binding: ActivityDashboardScreenBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
-    private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     private lateinit var navUserName: TextView
     private var consentMessage: String? = null
     private var districtCode: Int = 0
     private var villageCode: Int = 0
-    private var isGuest: Boolean = false
     private lateinit var navUserPhone: TextView
     private lateinit var languageToLoad: String
     private var farmerId = 0
@@ -145,13 +138,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
         binding.appBarMain.dashboardScreen.progressBar.visibility = View.VISIBLE
         binding.appBarMain.dashboardScreen.temperatureTextView.visibility = View.GONE
-        isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
         appPreferenceManager = AppPreferenceManager(this)
 
         if (NetworkUtils.isInternetAvailable(this)) {
-            if (!appPreferenceManager.getBoolean("FCM_VALIDATED")) {
-                farmerViewModel.validateFCMToken(this)
-            }
+            farmerViewModel.validateFCMToken(this)
         } else {
             LocalCustom.createSnackbar(binding.root, "Internet not available!")
         }
@@ -199,8 +189,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName)
         val userNumber: String =
             AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
-        binding.appBarMain.dashboardScreen.userFullNameTextView.text =
-            if (isGuest) "Guest" else userName
         val hView = binding.navView.getHeaderView(0)
         navUserName = hView.findViewById(R.id.tv_farmerName)
         navUserPhone = hView.findViewById(R.id.tv_famerPhoneNumber)
@@ -242,10 +230,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 finishAffinity()
             }
         })
-
-        if (shouldShowDialog()) {
-            leaderboardViewModel.getLeaderboardData(context = this, "taluka")
-        }
     }
 
     private fun shakeAnimationChatbot() {
@@ -335,23 +319,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         binding.appBarMain.dashboardScreen.chatbotIcon.setOnClickListener {
             Clarity.sendCustomEvent("VISTAAR_AI_BUTTON_CLICKED")
             if (NetworkUtils.isInternetAvailable(this)) {
-                if (!isGuest) {
-                    startActivity(Intent(this, ChatbotActivity::class.java))
-                } else {
-                    AlertDialog.Builder(this)
-                        .setMessage(R.string.bot_chat_login_redirect_mesage)
-                        .setPositiveButton(R.string.yes) { dialog, _ ->
-                            // Handle login action here
-                            startActivity(Intent(this, LoginScreen::class.java).apply {
-                                putExtra("from", "dashboard")
-                            })
-                            dialog.dismiss()
-                        }
-                        .setNegativeButton(R.string.no) { dialog, _ ->
-                            dialog.dismiss()
-                        }
-                        .show()
-                }
+                startActivity(Intent(this, ChatbotActivity::class.java))
             } else {
                 LocalCustom.createSnackbar(binding.root, "Internet not available!")
             }
@@ -455,17 +423,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
     }
 
-    private fun saveTodayAsShown() {
-        val today = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(Date())
-        appPreferenceManager.saveString(ApiConstants.KEY_LAST_SHOWN_DATE, today)
-    }
-
-    private fun shouldShowDialog(): Boolean {
-        val lastShownDate = appPreferenceManager.getString(ApiConstants.KEY_LAST_SHOWN_DATE)
-        val today = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(Date())
-        return lastShownDate != today
-    }
-
     private fun observeResponse() {
 
         farmerViewModel.error.observe(this) {
@@ -479,7 +436,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 val status = jSONObject.optInt("status")
                 if (status != 200) {
                     FirebaseHelper(this).getFCMToken { fcmToken ->
-                        Log.d("TAGGER", "onCreate checkFCMTokenResponse: $it \n $fcmToken")
                         farmerViewModel.updateFCMToken(this, fcmToken)
                     }
                 } else {
@@ -698,7 +654,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     val villageName = data.optString("VillageName", "")
                     val villageNameMr = data.optString("VillageNameMr", "")
                     val agristack_id = data.optString("farmer_id", "")
-                    val farmerId = data.optString("farmer_id")
                     val consent = data.optBoolean("consent")
                     farmerViewModel.getCropSapAdvisory(
                         this,
@@ -730,9 +685,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         setValue(this@DashboardScreen, AppConstants.AGRISTACKID, agristack_id)
                     }
 
-                    binding.appBarMain.dashboardScreen.userFullNameTextView.text =
-                        if (isGuest) "Guest" else name
-
+                    binding.appBarMain.dashboardScreen.userFullNameTextView.text = name
                     val userName = AppSettings.getInstance().getValue(this, AppConstants.uName, "")
                     val userNumber =
                         AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, "")
@@ -743,13 +696,17 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     navUserName.text = ApUtil.getCamelCaseStreing(userName).ifEmpty { userName }
                     navUserPhone.text = userNumber
                     farmerViewModel.fetchWeatherDetails(this, languageToLoad)
-                    if (farmerId != "null" && farmerId != null) {
+                    if (agristack_id != "null" && farmerId != null) {
                         if (!consent) {
                             showDialogForConsent()
                         } else {
                             Log.d("TAGGER", "observeResponse: consent is given")
                         }
                     } else {
+                        val showDialog = appPreferenceManager.getBoolean("AGRISTACK_LOGIN_DIALOG")
+                        if (!showDialog) {
+                            showAgristackLinkingDialog()
+                        }
                         Log.d("TAGGER", "observeResponse: $consent farmer id null")
                     }
                 }
@@ -809,85 +766,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     Toast.makeText(this, responseText, Toast.LENGTH_SHORT).show()
                 }
             }
-        }
-
-        leaderboardViewModel.getLeaderboardDataResponse.observe(this) { response ->
-            if (response == null) return@observe
-
-            try {
-                val jsonObject = JSONObject(response.toString())
-                val dataObj = jsonObject.optJSONObject("data") ?: run {
-                    Log.e("Leaderboard", "'data' is missing or not an object")
-                    return@observe
-                }
-
-                // First Rank
-                val firstRankObject = dataObj.optJSONObject("first")
-                val firstRankName = firstRankObject?.optString("user_name").orEmpty()
-                val firstRankTaluka = firstRankObject?.optString("taluka").orEmpty()
-                val firstRankTalukaMr = firstRankObject?.optString("taluka_mr").orEmpty()
-
-                // Second Rank
-                val secondRankObject = dataObj.optJSONObject("second")
-                val secondRankName = secondRankObject?.optString("user_name").orEmpty()
-                val secondRankTaluka = secondRankObject?.optString("taluka").orEmpty()
-                val secondRankTalukaMr = secondRankObject?.optString("taluka_mr").orEmpty()
-
-                // Third Rank
-                val thirdRankObject = dataObj.optJSONObject("third")
-                val thirdRankName = thirdRankObject?.optString("user_name").orEmpty()
-                val thirdRankTaluka = thirdRankObject?.optString("taluka").orEmpty()
-                val thirdRankTalukaMr = thirdRankObject?.optString("taluka_mr").orEmpty()
-
-                // Inflate Dialog
-                val leaderDialogBinding = LeaderboardDialogBinding.inflate(layoutInflater)
-                val leaderDialog = AlertDialog.Builder(this)
-                    .setView(leaderDialogBinding.root)
-                    .create()
-
-                leaderDialogBinding.topThreeTextView.visibility =
-                    if (languageToLoad == "mr") View.GONE else View.VISIBLE
-
-                leaderDialogBinding.cancelImageView.setOnClickListener { leaderDialog.dismiss() }
-                leaderDialogBinding.leaderDialogCardLayout.setOnClickListener {
-                    startActivity(Intent(this, LeaderboardActivity::class.java))
-                    leaderDialog.dismiss()
-                }
-
-                leaderDialog.setOnCancelListener { saveTodayAsShown() }
-                leaderDialog.setOnDismissListener { saveTodayAsShown() }
-
-                leaderDialogBinding.firstRankNameTextView.text = formatName(firstRankName)
-                leaderDialogBinding.firstRankTalukaTextView.text =
-                    formatName(if (languageToLoad == "en") firstRankTaluka else firstRankTalukaMr)
-
-                leaderDialogBinding.secondRankNameTextView.text = formatName(secondRankName)
-                leaderDialogBinding.secondRankTalukaTextView.text =
-                    formatName(if (languageToLoad == "en") secondRankTaluka else secondRankTalukaMr)
-
-                leaderDialogBinding.thirdRankNameTextView.text = formatName(thirdRankName)
-                leaderDialogBinding.thirdRankTalukaTextView.text =
-                    formatName(if (languageToLoad == "en") thirdRankTaluka else thirdRankTalukaMr)
-
-                leaderDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                leaderDialog.window?.setLayout(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    resources.getDimensionPixelSize(R.dimen._310sdp)
-                )
-                leaderDialog?.show()
-
-            } catch (e: Exception) {
-                Log.d(TAG, "observeResponse: ${e.message}")
-            }
-        }
-    }
-
-    fun formatName(str: String): String {
-        val firstWord = str.split(" ")[0]   // take first word
-        return if (firstWord.length > 6) {
-            firstWord.substring(0, 6) + ".."
-        } else {
-            firstWord
         }
     }
 
@@ -1203,18 +1081,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
     private fun setUpDrawerMenu() {
         try {
-            if (languageToLoad.equals("en", ignoreCase = true)) {
-                jsonArray = if (isGuest) {
-                    SideNavMenuHelper.instance.forGuestOption
-                } else {
-                    SideNavMenuHelper.instance.menuOption
-                }
-            } else if (languageToLoad.equals("mr", ignoreCase = true)) {
-                jsonArray = if (isGuest) {
-                    SideNavMenuHelper.instance.menuOptionForGuestMarathi
-                } else {
-                    SideNavMenuHelper.instance.menuOptionMarathi
-                }
+            jsonArray = if (languageToLoad.equals("en", ignoreCase = true)) {
+                SideNavMenuHelper.instance.menuOption
+            } else {
+                SideNavMenuHelper.instance.menuOptionMarathi
             }
             val menuAdapter = jsonArray?.let { DrawerMenuAdapter(this, it) }
             binding.menuListView.adapter = menuAdapter
@@ -1223,7 +1093,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             e.printStackTrace()
         }
     }
-
 
     private fun setVersion() {
         val versionName = LocalCustom.getVersionName(this)
@@ -1455,5 +1324,28 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         val tempMax = temperatureObject.optString("max")
         val temperature = "$tempMin°C / $tempMax°C"
         return temperature
+    }
+
+    private fun showAgristackLinkingDialog() {
+        val context = ContextThemeWrapper(this, R.style.Theme_FarmerApp)
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.famer_id_login_dialog, null)
+        val agristackLoginDialog = AlertDialog.Builder(context)
+            .setView(dialogView)
+            .create()
+
+        val confirmButton = dialogView.findViewById<Button>(R.id.confirmButton)
+        val cancelButton = dialogView.findViewById<Button>(R.id.cancelButton)
+
+        confirmButton.setOnClickListener {
+            appPreferenceManager.saveBoolean("AGRISTACK_LOGIN_DIALOG", true)
+            startActivity(Intent(this, LoginScreen::class.java))
+            agristackLoginDialog.dismiss()
+        }
+
+        cancelButton.setOnClickListener {
+            agristackLoginDialog.dismiss()
+        }
+
+        agristackLoginDialog.show()
     }
 }

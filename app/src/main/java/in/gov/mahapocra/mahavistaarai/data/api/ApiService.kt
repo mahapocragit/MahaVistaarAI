@@ -320,7 +320,11 @@ interface ApiService {
         @Header("consent") consentValue: Boolean
     ): JsonObject
 
-    @POST("chatbotService/get-top-user-list")
-    suspend fun getLeaderboardData(@Body params: RequestBody): JsonObject
+    @POST("leaderboardService/get-leaderboard-data")
+    suspend fun getLeaderboardForAll(
+        @Header("userid") userId: Int,
+        @Header("jwt") token: String
+    ): JsonObject
+
 
 }

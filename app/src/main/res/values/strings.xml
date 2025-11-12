@@ -33,7 +33,7 @@
     <string name="climate_resilient_Newupdate">खरीप विशेष</string>
 
     <string name="apply_for_mahadbt">To apply for MahaDBT</string>
-    <string name="apply_for_pocradbt">To apply on NDKSP (PoCRA) DBT portal</string>
+    <string name="apply_for_pocradbt">To apply on NDKSP DBT portal</string>
     <string name="click_here">Click Here</string>
 
     <string name="add_Crop">Add Crop</string>
@@ -207,7 +207,7 @@
     <string name="source_info_market"> Information Source- Maharashtra State Agricultural Marketing Board</string>
     <string name="agromet_details">हलक्या स्वरुपात पाऊस पडण्याची शक्यता.  आकाश अंशतः स्वच्छ ते बहुतांश ढगाळ राहण्याची शक्यता.  हळुवार वारा असण्याची शक्यता.  तापमान १८.८ ते ३४.१ अंश से. दरम्यान असण्याची शक्यता.</string>
 
-    <string name="poCRA_dBT_activity">PoCRA DBT Activity</string>
+    <string name="poCRA_dBT_activity">NDKSP DBT Activity</string>
     <string name="eligibility_Criteria">Eligibility Criteria</string>
     <string name="notes">Notes</string>
 
@@ -385,7 +385,7 @@
     <string name="medium_soil_value">Medium</string>
     <string name="high_soil_value">High</string>
     <string name="videos">Videos</string>
-    <string name="pocra_dbt_name">NDKSP (PoCRA)</string>
+    <string name="pocra_dbt_name">NDKSP DBT</string>
     <string name="maha_dbt_name">MahaDBT</string>
     <string name="farmerdetails">Farmer Details</string>
     <string name="soiltestresult">Soil test results</string>
@@ -503,7 +503,7 @@
     <string name="add_crops_to_calculate_profit">Add Crops to calculate profit</string>
     <string name="leaderboard">Leaderboard</string>
     <string name="state">State</string>
-    <string name="leaderboard_duration">Leaderboard is based on number of questions asked in the chatbot for the period 15 Sep 2025 to 30 Sep 2025</string>
+    <string name="leaderboard_duration">The leaderboard is based on points earned from the number of questions asked on the chatbot in real-time.</string>
     <string name="rank">Rank</string>
     <string name="name_amp_location"><![CDATA[Name & Location]]></string>
     <string name="farmers_in_taluka">Farmers In Taluka</string>
@@ -514,4 +514,10 @@
     <string name="error_saving_crop">Failed to save crop. Please try again.</string>
     <string name="failed_to_load">Unable to load data. Please check your connection.</string>
     <string name="error_loading_data">Something went wrong while loading data. Please try again.</string>
+    <string name="points">Points</string>
+
+    <string name="agristack_title">Link Your Farmer ID</string>
+    <string name="agristack_request">Dear Farmer Friends, you can now link your Farmer ID in the MahaVistar app! This will automatically fill in your information and help you access various schemes, guidance, and services more easily. \n👉 Please click on the ‘Link Farmer ID’ option and complete the process by entering the required details. Your participation is the path to your progress!</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_link">Link Now</string>
 </resources>

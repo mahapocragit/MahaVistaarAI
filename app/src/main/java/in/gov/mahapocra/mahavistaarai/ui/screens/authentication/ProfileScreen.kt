@@ -22,13 +22,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.google.firebase.messaging.FirebaseMessaging
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.listener.AlertListEventListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
+import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityProfileScreenBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
@@ -38,7 +38,6 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.RegistrationViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
-import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.toSHA512
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
@@ -96,7 +95,7 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
         setContentView(binding.root)
         uiResponsive(binding.root)
         versionName = LocalCustom.getVersionName(this)
-        token = FirebaseMessaging.getInstance().token.toString()
+        FirebaseHelper(this).getFCMToken { token = it }
         sessionManager = SessionManager(this)
         setConfiguration()
         onclick()
@@ -358,11 +357,7 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
             if (farmerRegisterID > 0) {
                 isUserLoggedIn = true
                 userValidationAndUpdateProfile()
-            } else {
-                isUserLoggedIn = false
-                userValidationAndRegistration()
             }
-
         }
         binding.textViewVerify.setOnClickListener {
             sendOTP()
@@ -501,53 +496,6 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
                     registerMob,
                     mob.trim { it <= ' ' },
                     jsonObject
-                )
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    private fun userValidationAndRegistration() {
-        userName = binding.nameEditText.text.toString()
-        mob = binding.mobNoEditText.text.toString()
-
-        if (userName.isEmpty()) {
-            binding.nameEditText.error = resources.getString(R.string.name_error)
-            binding.nameEditText.requestFocus()
-        } else if (mob.isEmpty()) {
-            binding.mobNoEditText.error = resources.getString(R.string.login_mob_valid_err)
-            binding.mobNoEditText.requestFocus()
-        } else if (!mobileNumberStatus) {
-            binding.mobNoEditText.error = resources.getString(R.string.regist_mob_verify_err)
-            binding.mobNoEditText.requestFocus()
-        } else if (districtID == 0) {
-            UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_district))
-        } else if (talukaID == 0) {
-            UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_taluka))
-        } else if (villageID == 0) {
-            UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_village))
-        } else {
-            val jsonObject = JSONObject()
-            try {
-                jsonObject.put("Name", userName)
-                jsonObject.put("EmailId", emailid)
-                jsonObject.put("DistrictName", districtName)
-                jsonObject.put("DistrictCode", districtID)
-                jsonObject.put("TalukaName", talukaName)
-                jsonObject.put("TalukaCode", talukaID)
-                jsonObject.put("VillageName", villageName)
-                jsonObject.put("VillageCode", villageID)
-                jsonObject.put("Status", "Active")
-                jsonObject.put("version_number", versionName)
-                jsonObject.put("fcm_token", token)
-                jsonObject.put("device_id", machineId)
-                jsonObject.put("FAAPRegistrationID", fAAPRegistrationID)
-                jsonObject.put("Password", toSHA512(pass))
-                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
-                registrationViewModel.getRegistrationRequest(
-                    this, mob.trim { it <= ' ' },
-                    mob.trim { it <= ' ' }, jsonObject
                 )
             } catch (e: JSONException) {
                 e.printStackTrace()

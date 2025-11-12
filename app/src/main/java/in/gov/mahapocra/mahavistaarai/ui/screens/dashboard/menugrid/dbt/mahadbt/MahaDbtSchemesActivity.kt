@@ -44,7 +44,7 @@ class MahaDbtSchemesActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        binding.applyForMahaDBTTextView.setOnClickListener {
+        binding.applyForMahaDBTLinearLayout.setOnClickListener {
             val url = "https://mahadbt.maharashtra.gov.in/farmer/login/login"
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             startActivity(intent)

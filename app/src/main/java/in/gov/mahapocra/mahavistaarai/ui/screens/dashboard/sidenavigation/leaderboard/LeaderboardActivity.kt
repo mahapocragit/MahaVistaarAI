@@ -18,16 +18,24 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLeaderboardBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MahavistaarViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
+import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.ScoreBubbleHelper
+import org.json.JSONArray
 import org.json.JSONObject
 
 class LeaderboardActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLeaderboardBinding
     private val leaderboardViewModel: LeaderboardViewModel by viewModels()
+    private val mahavistaarViewModel: MahavistaarViewModel by viewModels()
+    private var talukaJsonArray = JSONArray()
+    private var districtJsonArray = JSONArray()
+    private var stateJsonArray = JSONArray()
     var languageToLoad = "mr"
     private var selectedValue = "taluka"
+    private var token: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,69 +51,73 @@ class LeaderboardActivity : AppCompatActivity() {
         setContentView(binding.root)
         LocalCustom.uiResponsive(binding.root)
         ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
-
+        ProgressHelper.showProgressDialog(this)
         observeViewModel()
+        mahavistaarViewModel.requestUrlForChatBot(this)
         setUpViews()
     }
 
     private fun observeViewModel() {
-        leaderboardViewModel.getLeaderboardDataResponse.observe(this) { response ->
+        mahavistaarViewModel.responseUrlForChatBot.observe(this) { response ->
             if (response != null) {
-                val jsonObject = JSONObject(response.toString())
-                val dataObject = jsonObject.getJSONObject("data")
-                //First Rank Holder
-                val firstRankObject = dataObject.getJSONObject("first")
-                val firstRankName = firstRankObject.optString("user_name")
-                val firstRankTaluka = firstRankObject.optString("taluka")
-                val firstRankDistrict = firstRankObject.optString("district")
-                val firstRankTalukaMr = firstRankObject.optString("taluka_mr")
-                val firstRankDistrictMr = firstRankObject.optString("district_mr")
-                binding.firstRankNameTextView.text = formatName(firstRankName)
-                binding.firstRankTalukaTextView.text = when (selectedValue) {
-                    "taluka" -> formatLocation(if (languageToLoad == "en") firstRankTaluka else firstRankTalukaMr)
-                    "district" -> formatLocation(if (languageToLoad == "en") firstRankTaluka else firstRankTalukaMr)
-                    else -> formatLocation(if (languageToLoad == "en") firstRankDistrict else firstRankDistrictMr)
-                }
-                //Second Rank Holder
-                val secondRankObject = dataObject.getJSONObject("second")
-                val secondRankName = secondRankObject.optString("user_name")
-                val secondRankTaluka = firstRankObject.optString("taluka")
-                val secondRankDistrict = secondRankObject.optString("district")
-                val secondRankTalukaMr = firstRankObject.optString("taluka_mr")
-                val secondRankDistrictMr = secondRankObject.optString("district_mr")
-                binding.secondRankNameTextView.text = formatName(secondRankName)
-                binding.secondRankTalukaTextView.text = when (selectedValue) {
-                    "taluka" -> formatLocation(if (languageToLoad == "en") secondRankTaluka else secondRankTalukaMr)
-                    "district" -> formatLocation(if (languageToLoad == "en") secondRankTaluka else secondRankTalukaMr)
-                    else -> formatLocation(if (languageToLoad == "en") secondRankDistrict else secondRankDistrictMr)
-                }
-                //Third Rank Holder
-                val thirdRankObject = dataObject.getJSONObject("third")
-                val thirdRankName = thirdRankObject.optString("user_name")
-                val thirdRankTaluka = firstRankObject.optString("taluka")
-                val thirdRankDistrict = thirdRankObject.optString("district")
-                val thirdRankTalukaMr = firstRankObject.optString("taluka_mr")
-                val thirdRankDistrictMr = thirdRankObject.optString("district_mr")
-                binding.thirdRankNameTextView.text = formatName(thirdRankName)
-                binding.thirdRankTalukaTextView.text = when (selectedValue) {
-                    "taluka" -> formatLocation(if (languageToLoad == "en") thirdRankTaluka else thirdRankTalukaMr)
-                    "district" -> formatLocation(if (languageToLoad == "en") thirdRankTaluka else thirdRankTalukaMr)
-                    else -> formatLocation(if (languageToLoad == "en") thirdRankDistrict else thirdRankDistrictMr)
-                }
-                //Toppers List
-                val toppersList = dataObject.optJSONArray("list")
-                Log.d("TAGGER", "observeViewModel: $toppersList")
-                if (toppersList?.length() == 0) {
-                    binding.notificationNotFoundLayout.visibility = View.VISIBLE
-                    binding.rankNameLocationTextView.visibility = View.GONE
-                    binding.leaderboardRecyclerView.visibility = View.GONE
-                } else {
-                    binding.notificationNotFoundLayout.visibility = View.GONE
-                    binding.rankNameLocationTextView.visibility = View.VISIBLE
-                    binding.leaderboardRecyclerView.visibility = View.VISIBLE
-                    binding.leaderboardRecyclerView.adapter = LeaderboardAdapter(toppersList, selectedValue)
+                val json = JSONObject(response.toString())
+                val status = json.optString("status")
+                if (status.equals("success", ignoreCase = true)) {
+                    token = json.optString("token").trim()
+                    leaderboardViewModel.getLeaderboardForAll(this, token)
                 }
             }
+        }
+
+        leaderboardViewModel.responseLeaderboardForAll.observe(this) { response ->
+            if (response != null) {
+                val json = JSONObject(response.toString())
+                val dataJson = json.optJSONObject("data")
+                talukaJsonArray = dataJson.optJSONArray("talukaList")
+                districtJsonArray = dataJson.optJSONArray("districtList")
+                stateJsonArray = dataJson.optJSONArray("stateList")
+                enableDisableViews(talukaJsonArray)
+            }
+        }
+    }
+
+    private fun enableDisableViews(dataJsonArray: JSONArray) {
+        Log.d("TAGGER", "enableDisableViews: $dataJsonArray")
+        if (dataJsonArray.length() > 0) {
+            formatToppers(dataJsonArray)
+            binding.rankNameLocationTextView.visibility = View.VISIBLE
+            binding.leaderboardRecyclerView.visibility = View.VISIBLE
+            binding.notificationNotFoundLayout.visibility = View.GONE
+            binding.leaderboardRecyclerView.adapter =
+                LeaderboardNewAdapter(dataJsonArray, selectedValue)
+        } else {
+            binding.notificationNotFoundLayout.visibility = View.VISIBLE
+            binding.rankNameLocationTextView.visibility = View.GONE
+            binding.leaderboardRecyclerView.visibility = View.GONE
+        }
+    }
+
+    fun formatToppers(dataJsonArray: JSONArray) {
+        val rankBindings = listOf(
+            Pair(binding.firstRankNameTextView, binding.firstRankTalukaTextView),
+            Pair(binding.secondRankNameTextView, binding.secondRankTalukaTextView),
+            Pair(binding.thirdRankNameTextView, binding.thirdRankTalukaTextView)
+        )
+
+        for (i in 0 until minOf(3, dataJsonArray.length())) {
+            val topperJson = dataJsonArray[i] as JSONObject
+            val username = topperJson.optString("username").trim().split(" ")[0]
+            val taluka = topperJson.optString("taluka")
+            val district = topperJson.optString("district")
+
+            val (nameView, talukaView) = rankBindings[i]
+            nameView.text = formatName(username)
+            talukaView.text = formatLocation(
+                when (selectedValue) {
+                    "taluka", "district" -> taluka
+                    else -> district
+                }
+            )
         }
     }
 
@@ -149,8 +161,13 @@ class LeaderboardActivity : AppCompatActivity() {
         })
 
         binding.toolbarLayout.imageViewFilterMenu.visibility = View.VISIBLE
-        binding.toolbarLayout.imageViewFilterMenu.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.info_ic))
-        binding.toolbarLayout.imageViewFilterMenu.setOnClickListener {view ->
+        binding.toolbarLayout.imageViewFilterMenu.setImageDrawable(
+            ContextCompat.getDrawable(
+                this,
+                R.drawable.info_ic
+            )
+        )
+        binding.toolbarLayout.imageViewFilterMenu.setOnClickListener { view ->
             val popupView = layoutInflater.inflate(R.layout.popup_info, null)
 
             val popupWindow = PopupWindow(
@@ -195,21 +212,21 @@ class LeaderboardActivity : AppCompatActivity() {
                 binding.talukaTextView.setTextColor(highlightColor)
                 binding.talukaTextView.setTypeface(customFont, Typeface.BOLD)
                 selectedValue = "taluka"
-                leaderboardViewModel.getLeaderboardData(context = this, selectedValue)
+                enableDisableViews(talukaJsonArray)
             }
 
             district == 1 -> {
                 binding.districtTextView.setTextColor(highlightColor)
                 binding.districtTextView.setTypeface(customFont, Typeface.BOLD)
                 selectedValue = "district"
-                leaderboardViewModel.getLeaderboardData(context = this, selectedValue)
+                enableDisableViews(districtJsonArray)
             }
 
             state == 1 -> {
                 binding.stateTextView.setTextColor(highlightColor)
                 binding.stateTextView.setTypeface(customFont, Typeface.BOLD)
                 selectedValue = "state"
-                leaderboardViewModel.getLeaderboardData(context = this, selectedValue)
+                enableDisableViews(stateJsonArray)
             }
         }
     }

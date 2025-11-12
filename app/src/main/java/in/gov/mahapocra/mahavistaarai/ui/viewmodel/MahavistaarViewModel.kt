@@ -13,9 +13,13 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
+import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.io.IOException
+import java.net.SocketException
+import java.net.SocketTimeoutException
 
 class MahavistaarViewModel : ViewModel(){
 
@@ -32,6 +36,7 @@ class MahavistaarViewModel : ViewModel(){
 
         viewModelScope.launch {
             try {
+                ProgressHelper.showProgressDialog(context)
                 val jsonObject = JSONObject().apply {
                     put("mobile", mobileNumber)
                     put("name", username)
@@ -45,11 +50,19 @@ class MahavistaarViewModel : ViewModel(){
                 // Retrofit suspend call
                 Clarity.sendCustomEvent("JWT_SESSION_START")
                 val response = apiRequest.requestForChatBotURL(requestBody)
+                ProgressHelper.disableProgressDialog()
                 _responseUrlForChatBot.value = response
 
-            } catch (e: Exception) {
+            }catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
                 Clarity.sendCustomEvent("JWT_SESSION_STOPPED")
-                _error.value = e.localizedMessage ?: "Unknown error"
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }

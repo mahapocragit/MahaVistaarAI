@@ -164,8 +164,8 @@ class Registration : AppCompatActivity(), AlertListEventListener {
                     startActivity(intent)
                     finish()
                 } else {
-                    val message: String = jSONObject.getString("Message")
-                    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                    val response: String = jSONObject.getString("response")?:"Registration failed"
+                    Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -296,7 +296,6 @@ class Registration : AppCompatActivity(), AlertListEventListener {
             val jsonObject = JSONObject()
             try {
                 jsonObject.put("Name", userName)
-//                jsonObject.put("EmailId", "")
                 jsonObject.put("DistrictName", districtName)
                 jsonObject.put("DistrictCode", districtID)
                 jsonObject.put("TalukaName", talukaName)
@@ -308,7 +307,6 @@ class Registration : AppCompatActivity(), AlertListEventListener {
                 jsonObject.put("fcm_token", token)
                 jsonObject.put("device_id", machineId)
                 jsonObject.put("FAAPRegistrationID", fAAPRegistrationID)
-//                jsonObject.put("Password", "")
                 jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
                 registrationViewModel.getRegistrationRequest(
                     this, mob.trim { it <= ' ' },

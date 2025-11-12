@@ -86,8 +86,8 @@
             android:layout_marginHorizontal="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_40sdp"
             android:gravity="center"
-            android:visibility="gone"
             android:orientation="vertical"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -111,8 +111,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10sdp"
             android:gravity="center"
-            android:visibility="gone"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/personRankTextView"
@@ -126,17 +126,23 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/imageView13"
-                android:layout_width="@dimen/_40sdp"
-                android:layout_height="@dimen/_10sdp"
-                app:srcCompat="@drawable/user_dummy_ic" />
-
-            <TextView
                 android:id="@+id/personNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="center"
                 android:text="@string/name_amp_location"
-                android:layout_weight="2"
+                android:textColor="@color/actionbar_color_figma"
+                android:textSize="@dimen/_11sdp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/personNameTextView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="6"
+                android:text="@string/points"
+                android:paddingStart="@dimen/_10sdp"
                 android:textColor="@color/actionbar_color_figma"
                 android:textSize="@dimen/_11sdp"
                 android:textStyle="bold" />

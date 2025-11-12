@@ -7,13 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
-import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 import retrofit2.Retrofit
+import java.io.IOException
+import java.net.SocketException
+import java.net.SocketTimeoutException
 
 class DbtSchemesViewModel : ViewModel() {
 
@@ -23,26 +24,27 @@ class DbtSchemesViewModel : ViewModel() {
     private val _responseUrlMahaDbtSchemes = MutableLiveData<JsonObject>()
     val responseUrlMahaDbtSchemes: LiveData<JsonObject> = _responseUrlMahaDbtSchemes
 
-    private val _retrieveFarmerToken = MutableLiveData<JsonObject>()
-    val retrieveFarmerToken: LiveData<JsonObject> = _retrieveFarmerToken
-
-    private val _retrieveFarmerData = MutableLiveData<JsonObject>()
-    val retrieveFarmerData: LiveData<JsonObject> = _retrieveFarmerData
-
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
     fun getDBTSchemes(context: Context) {
         viewModelScope.launch {
             try {
-                val retrofit: Retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.UAT_DBT.baseUrl)
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.LIVE_DBT.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 // Retrofit suspend call
                 val response = apiRequest.getDBTSchemes()
                 _responseUrlDbtSchemes.value = response
 
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Unknown error"
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -51,54 +53,24 @@ class DbtSchemesViewModel : ViewModel() {
     fun getMahaDBTSchemes(context: Context) {
         viewModelScope.launch {
             try {
-                val retrofit: Retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.UAT_DBT.baseUrl)
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.LIVE_DBT.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 // Retrofit suspend call
                 val response = apiRequest.getMahaDBTSchemes()
                 _responseUrlMahaDbtSchemes.value = response
 
             } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Unknown error"
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
 
-    fun retrieveFarmerTokenFromID(context: Context, farmerId:String) {
-        viewModelScope.launch {
-            try {
-                val jsonObject = JSONObject()
-                jsonObject.put("FarmerID", farmerId)
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit: Retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.UAT_DBT.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
-                // Retrofit suspend call
-                val response = apiRequest.retrieveFarmerToken(requestBody)
-                _retrieveFarmerToken.value = response
-
-            } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Unknown error"
-                FirebaseCrashlytics.getInstance().recordException(e)
-            }
-        }
-    }
-
-    fun retrieveFarmerDataFromToken(context: Context, correlationId:String) {
-        viewModelScope.launch {
-            try {
-                val jsonObject = JSONObject()
-                jsonObject.put("CorrelationId", correlationId)
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit: Retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.UAT_DBT.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
-                // Retrofit suspend call
-                val response = apiRequest.retrieveFarmerData(requestBody)
-                _retrieveFarmerData.value = response
-
-            } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Unknown error"
-                FirebaseCrashlytics.getInstance().recordException(e)
-            }
-        }
-    }
 }
