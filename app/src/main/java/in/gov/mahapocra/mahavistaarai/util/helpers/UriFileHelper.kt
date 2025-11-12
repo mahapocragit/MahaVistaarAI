@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.mahavistaarai.util
+package `in`.gov.mahapocra.mahavistaarai.util.helpers
 
 import android.content.ContentResolver
 import android.net.Uri

@@ -16,7 +16,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityResilientWebUrlBindi
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
-import `in`.gov.mahapocra.mahavistaarai.util.ScoreBubbleHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 
 class SOPWebViewActivity : AppCompatActivity() {
 

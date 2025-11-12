@@ -18,8 +18,8 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.DbtSchemesViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
-import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
-import `in`.gov.mahapocra.mahavistaarai.util.ScoreBubbleHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONObject
 
 class PocraDbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {

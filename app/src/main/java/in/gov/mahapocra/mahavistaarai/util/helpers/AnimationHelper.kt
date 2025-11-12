@@ -1,5 +1,7 @@
-package `in`.gov.mahapocra.mahavistaarai.util
+package `in`.gov.mahapocra.mahavistaarai.util.helpers
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.view.View
@@ -31,8 +33,8 @@ object AnimationHelper {
 
         val fullSet = AnimatorSet().apply {
             playSequentially(shrinkToCenter, expandToTopLeft)
-            addListener(object : android.animation.AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: android.animation.Animator) {
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
                     shrinkLeftToCenter(view) // Loop forever
                 }
             })
@@ -63,8 +65,8 @@ object AnimationHelper {
 
         val fullSet = AnimatorSet().apply {
             playSequentially(shrinkDown, expandUp)
-            addListener(object : android.animation.AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: android.animation.Animator) {
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
                     shrinkToCenter(view) // Recursively continue the animation
                 }
             })

@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import `in`.gov.mahapocra.mahavistaarai.databinding.ItemVideosBinding
-import `in`.gov.mahapocra.mahavistaarai.util.ScoreBubbleHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONArray
 import org.json.JSONObject
 

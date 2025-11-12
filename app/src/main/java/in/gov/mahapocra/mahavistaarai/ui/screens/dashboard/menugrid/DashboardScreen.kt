@@ -72,7 +72,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActi
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.NotificationActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
-import `in`.gov.mahapocra.mahavistaarai.util.AnimationHelper.shrinkToCenter
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper.shrinkToCenter
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -704,7 +704,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         }
                     } else {
                         val showDialog = appPreferenceManager.getBoolean("AGRISTACK_LOGIN_DIALOG")
-                        if (!showDialog) {
+                        if (showDialog) {
                             showAgristackLinkingDialog()
                         }
                         Log.d("TAGGER", "observeResponse: $consent farmer id null")

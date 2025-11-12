@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.mahavistaarai.util
+package `in`.gov.mahapocra.mahavistaarai.util.helpers
 
 import android.app.Activity
 import android.app.ProgressDialog
