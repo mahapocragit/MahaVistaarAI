@@ -49,6 +49,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDashboardScreenBindi
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropRecyclerSapAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DashboardAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DrawerMenuAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.AuthenticateFarmerIdActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.ProfileScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
@@ -1338,7 +1339,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
         confirmButton.setOnClickListener {
             appPreferenceManager.saveBoolean("AGRISTACK_LOGIN_DIALOG", true)
-            startActivity(Intent(this, LoginScreen::class.java))
+            startActivity(Intent(this, AuthenticateFarmerIdActivity::class.java))
             agristackLoginDialog.dismiss()
         }
 

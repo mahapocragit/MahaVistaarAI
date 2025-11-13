@@ -48,13 +48,12 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
 
-private var timestamp: Long = 0
-
 class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     private lateinit var binding: ActivityLoginScreenTempBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
     private lateinit var refreshToken: String
     private lateinit var mobileNo: String
+    private var timestamp: Long = 0
     private lateinit var dialog: Dialog
     private var userPass = ""
     var languageToLoad = "mr"

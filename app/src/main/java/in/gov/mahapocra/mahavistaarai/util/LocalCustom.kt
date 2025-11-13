@@ -326,10 +326,19 @@ object LocalCustom {
     }
 
     fun uiResponsive(view: View) {
-        // Handle insets manually
+        val startPadding = view.paddingStart
+        val topPadding = view.paddingTop
+        val endPadding = view.paddingEnd
+        val bottomPadding = view.paddingBottom
+
         ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(
+                bars.left + startPadding,
+                bars.top + topPadding,
+                bars.right + endPadding,
+                bars.bottom + bottomPadding
+            )
             insets
         }
     }

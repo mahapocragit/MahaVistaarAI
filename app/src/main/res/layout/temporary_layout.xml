@@ -30,7 +30,7 @@
                 android:id="@+id/timestamp_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="13 February 2025 | 14:00"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="@dimen/_11sdp" />
 
@@ -64,7 +64,7 @@
                 android:id="@+id/weatherTalukaTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Mumbai"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="@dimen/_12sdp" />
 
@@ -144,7 +144,7 @@
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_weight="4"
                     android:gravity="center_vertical"
-                    android:text="Lorem Ipsum"
+                    android:text=""
                     android:textSize="@dimen/_12sdp" />
             </LinearLayout>
 

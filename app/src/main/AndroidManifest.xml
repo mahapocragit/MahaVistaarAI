@@ -29,6 +29,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FarmerApp">
         <activity
+            android:name=".ui.screens.authentication.FarmerDetailsConfirmationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.screens.authentication.AuthenticateFarmerIdActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.screens.authentication.PreRegistrationActivity"
             android:exported="false" />
         <activity
