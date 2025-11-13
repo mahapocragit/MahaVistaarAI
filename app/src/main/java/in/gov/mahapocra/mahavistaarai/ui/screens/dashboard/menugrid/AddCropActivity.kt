@@ -109,19 +109,18 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener, D
             try {
                 val jsonObject = JSONObject(response.toString())
                 val jsonDataArray = jsonObject.getJSONArray("data")
-
-                // Determine adapter type based on intent
-                val adapterType = if (intent.getStringExtra("callerActivity") != null) {
-                    "costCalculator"
-                } else {
-                    "TitleVideosDetailsAdpter"
-                }
-
-                // Load adapter on background thread for large JSON
-                uiScope.launch(Dispatchers.Default) {
-                    val adapter = CropCategoriesAdapter(this@AddCropActivity, jsonDataArray, adapterType, this@AddCropActivity)
-                    withContext(Dispatchers.Main) {
-                        binding.mainRecyclerView.adapter = adapter
+                val callerActivityString = intent.getStringExtra("callerActivity")
+                if (callerActivityString!=null) {
+                    uiScope.launch(Dispatchers.Default) {
+                        val adapter = CropCategoriesAdapter(
+                            this@AddCropActivity,
+                            jsonDataArray,
+                            callerActivityString,
+                            this@AddCropActivity
+                        )
+                        withContext(Dispatchers.Main) {
+                            binding.mainRecyclerView.adapter = adapter
+                        }
                     }
                 }
             } catch (e: Exception) {

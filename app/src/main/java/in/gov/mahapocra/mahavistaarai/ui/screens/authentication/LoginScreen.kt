@@ -30,7 +30,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
-import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLoginScreenTempBinding
+import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLoginScreenBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
@@ -49,7 +49,7 @@ import retrofit2.Call
 import retrofit2.Retrofit
 
 class LoginScreen : AppCompatActivity(), ApiCallbackCode {
-    private lateinit var binding: ActivityLoginScreenTempBinding
+    private lateinit var binding: ActivityLoginScreenBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
     private lateinit var refreshToken: String
     private lateinit var mobileNo: String
@@ -76,7 +76,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             languageToLoad = "en"
         }
         switchLanguage(this, languageToLoad)
-        binding = ActivityLoginScreenTempBinding.inflate(layoutInflater)
+        binding = ActivityLoginScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
         FirebaseHelper(this)
