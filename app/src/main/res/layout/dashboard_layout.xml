@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/_48sdp"
-    tools:showIn="@layout/app_bar_maintwo">
+    tools:showIn="@layout/app_bar_main">
 
     <LinearLayout
         android:id="@+id/temperatureLayout"
@@ -184,10 +184,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_marginEnd="@dimen/_10sdp"
-                            android:paddingVertical="@dimen/_6sdp"
+                            android:gravity="center_vertical"
                             android:orientation="horizontal"
-                            android:visibility="gone"
-                            android:gravity="center_vertical"> <!-- Optional background -->
+                            android:paddingVertical="@dimen/_6sdp"
+                            android:visibility="gone"> <!-- Optional background -->
 
                             <!-- Image with circular background -->
                             <FrameLayout
@@ -199,10 +199,10 @@
                                     android:id="@+id/savedCropNameImageView"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    app:civ_border_width="@dimen/_1sdp"
-                                    app:civ_border_color="#CBD5E1"
                                     android:scaleType="centerCrop"
-                                    android:src="@drawable/trigo" />
+                                    android:src="@drawable/trigo"
+                                    app:civ_border_color="#CBD5E1"
+                                    app:civ_border_width="@dimen/_1sdp" />
                             </FrameLayout>
 
                             <!-- Crop name with wrapping text -->
@@ -213,12 +213,12 @@
                                 android:layout_marginStart="@dimen/_8sdp"
                                 android:layout_marginEnd="@dimen/_8sdp"
                                 android:layout_weight="1"
-                                android:maxLines="2"
                                 android:ellipsize="end"
+                                android:maxLines="2"
                                 android:text="Crop Name"
                                 android:textColor="@color/font_color_figma"
-                                android:textStyle="bold"
-                                android:textSize="@dimen/_10sdp" />
+                                android:textSize="@dimen/_10sdp"
+                                android:textStyle="bold" />
 
                             <!-- Change button -->
                             <TextView
@@ -226,12 +226,12 @@
                                 android:layout_width="@dimen/_60sdp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="@dimen/_4sdp"
-                                android:textColor="@color/white"
                                 android:background="@drawable/background_for_chat_request_green"
                                 android:gravity="center"
-                                android:textSize="@dimen/_10sdp"
                                 android:paddingVertical="@dimen/_6sdp"
-                                android:text="@string/change" />
+                                android:text="@string/change"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_10sdp" />
 
                             <!-- Delete button -->
                             <TextView
@@ -239,12 +239,12 @@
                                 android:layout_width="@dimen/_60sdp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="@dimen/_4sdp"
-                                android:textColor="@color/red"
                                 android:background="@drawable/background_for_delete_request"
                                 android:gravity="center"
-                                android:textSize="@dimen/_10sdp"
                                 android:paddingVertical="@dimen/_6sdp"
-                                android:text="@string/delete" />
+                                android:text="@string/delete"
+                                android:textColor="@color/red"
+                                android:textSize="@dimen/_10sdp" />
 
                         </LinearLayout>
 

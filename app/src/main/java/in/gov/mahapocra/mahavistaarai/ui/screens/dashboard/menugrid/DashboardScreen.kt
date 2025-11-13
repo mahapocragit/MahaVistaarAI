@@ -705,7 +705,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         }
                     } else {
                         val showDialog = appPreferenceManager.getBoolean("AGRISTACK_LOGIN_DIALOG")
-                        if (showDialog) {
+                        if (!showDialog) {
                             showAgristackLinkingDialog()
                         }
                         Log.d("TAGGER", "observeResponse: $consent farmer id null")
