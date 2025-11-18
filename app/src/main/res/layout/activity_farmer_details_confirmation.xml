@@ -86,7 +86,7 @@
                     android:textSize="@dimen/_11sdp" />
 
                 <EditText
-                    android:id="@+id/editTextText"
+                    android:id="@+id/usernameET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="false"
@@ -107,7 +107,7 @@
                     android:textSize="@dimen/_11sdp" />
 
                 <EditText
-                    android:id="@+id/editTextText2"
+                    android:id="@+id/mobileET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="false"
@@ -128,7 +128,7 @@
                     android:textSize="@dimen/_11sdp" />
 
                 <EditText
-                    android:id="@+id/editTextText3"
+                    android:id="@+id/districtET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="false"
@@ -149,7 +149,7 @@
                     android:textSize="@dimen/_11sdp" />
 
                 <EditText
-                    android:id="@+id/editTextText4"
+                    android:id="@+id/talukaET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="false"
@@ -170,7 +170,7 @@
                     android:textSize="@dimen/_11sdp" />
 
                 <EditText
-                    android:id="@+id/editTextText5"
+                    android:id="@+id/villageET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="false"

@@ -48,12 +48,13 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
 
+private var timestamp: Long = 0
+
 class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     private lateinit var binding: ActivityLoginScreenBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
     private lateinit var refreshToken: String
     private lateinit var mobileNo: String
-    private var timestamp: Long = 0
     private lateinit var dialog: Dialog
     private var userPass = ""
     var languageToLoad = "mr"
@@ -461,6 +462,8 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 } else if (jSONObject.optInt("status") == 201) {
                     Toast.makeText(this, R.string.mobile_otp_error_text, Toast.LENGTH_LONG).show()
                 } else if (jSONObject.optInt("status") == 429) {
+                    Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_LONG).show()
+                } else{
                     Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_LONG).show()
                 }
             }

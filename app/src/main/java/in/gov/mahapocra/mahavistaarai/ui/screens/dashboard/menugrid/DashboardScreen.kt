@@ -708,6 +708,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         if (!showDialog) {
                             showAgristackLinkingDialog()
                         }
+                        showAgristackLinkingDialog()
                         Log.d("TAGGER", "observeResponse: $consent farmer id null")
                     }
                 }
@@ -1338,12 +1339,12 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         val cancelButton = dialogView.findViewById<Button>(R.id.cancelButton)
 
         confirmButton.setOnClickListener {
-            appPreferenceManager.saveBoolean("AGRISTACK_LOGIN_DIALOG", true)
             startActivity(Intent(this, AuthenticateFarmerIdActivity::class.java))
             agristackLoginDialog.dismiss()
         }
 
         cancelButton.setOnClickListener {
+            appPreferenceManager.saveBoolean("AGRISTACK_LOGIN_DIALOG", true)
             agristackLoginDialog.dismiss()
         }
 

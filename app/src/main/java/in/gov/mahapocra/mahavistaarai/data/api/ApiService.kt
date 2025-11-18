@@ -326,5 +326,20 @@ interface ApiService {
         @Header("jwt") token: String
     ): JsonObject
 
+    @POST("authService/update_farmer_id_send_otp")
+    suspend fun sendOtpToFarmerId(
+        @Header("FarmerID") farmerID: String,
+        @Header("userid") userId: Int,
+        @Body params: RequestBody
+    ): JsonObject
+
+    @POST("authService/farmer_id_compare_otp")
+    suspend fun compareOtpToFarmerId(
+        @Header("FarmerID") farmerID: String,
+        @Header("userid") userId: Int,
+        @Header("otp") otp: String,
+        @Body params: RequestBody
+    ): JsonObject
+
 
 }

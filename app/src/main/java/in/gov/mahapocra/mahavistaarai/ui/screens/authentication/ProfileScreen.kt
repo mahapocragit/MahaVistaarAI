@@ -55,8 +55,6 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
     private lateinit var userName: String
     private lateinit var mob: String
     private lateinit var registerMob: String
-    private lateinit var pass: String
-    private lateinit var confirmPass: String
     private lateinit var emailid: String
     private lateinit var districtName: String
     private var districtID: Int = 0

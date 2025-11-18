@@ -109,7 +109,12 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener, D
             try {
                 val jsonObject = JSONObject(response.toString())
                 val jsonDataArray = jsonObject.getJSONArray("data")
-                val callerActivityString = intent.getStringExtra("callerActivity")
+                val callerActivityString = if (intent.getStringExtra("callerActivity") != null) {
+                    "costCalculator"
+                } else {
+                    "TitleVideosDetailsAdpter"
+                }
+
                 if (callerActivityString!=null) {
                     uiScope.launch(Dispatchers.Default) {
                         val adapter = CropCategoriesAdapter(
