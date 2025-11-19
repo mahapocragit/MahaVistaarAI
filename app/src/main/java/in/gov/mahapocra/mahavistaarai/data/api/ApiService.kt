@@ -341,5 +341,15 @@ interface ApiService {
         @Body params: RequestBody
     ): JsonObject
 
+    @POST("authService/update_farmer_id")
+    suspend fun updateFarmerDetailsById(
+        @Header("FarmerID") farmerID: String,
+        @Header("userid") userId: Int,
+        @Header("name") name: String,
+        @Header("mobile") mobile: String,
+        @Header("villageCode") villageCode: String,
+        @Body params: RequestBody
+    ): JsonObject
+
 
 }

@@ -91,6 +91,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -131,6 +132,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         binding = ActivityDashboardScreenBinding.inflate(
             layoutInflater
         )
+        appPreferenceManager = AppPreferenceManager(this)
         setContentView(binding.root)
         askForPermissions()
         observeResponse()
@@ -139,7 +141,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
         binding.appBarMain.dashboardScreen.progressBar.visibility = View.VISIBLE
         binding.appBarMain.dashboardScreen.temperatureTextView.visibility = View.GONE
-        appPreferenceManager = AppPreferenceManager(this)
 
         if (NetworkUtils.isInternetAvailable(this)) {
             farmerViewModel.validateFCMToken(this)
@@ -262,6 +263,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     private fun setUpListeners() {
 
         init()
+        val today = LocalDate.now().toString()
+        appPreferenceManager.saveString("AGRISTACK_LAST_DATE", today)
         setUpDrawerMenu()
         dashboardGridItemsLayoutSetup()
         shakeAnimationChatbot()
@@ -704,11 +707,16 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                             Log.d("TAGGER", "observeResponse: consent is given")
                         }
                     } else {
+                        val lastDate = appPreferenceManager.getString("AGRISTACK_LAST_DATE")
+                        val today = LocalDate.now().toString()
+                        if (lastDate != today) {
+                            // New day → reset flag
+                            appPreferenceManager.saveBoolean("AGRISTACK_LOGIN_DIALOG", false)
+                        }
                         val showDialog = appPreferenceManager.getBoolean("AGRISTACK_LOGIN_DIALOG")
                         if (!showDialog) {
                             showAgristackLinkingDialog()
                         }
-                        showAgristackLinkingDialog()
                         Log.d("TAGGER", "observeResponse: $consent farmer id null")
                     }
                 }

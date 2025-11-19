@@ -12,6 +12,8 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +21,7 @@ import androidx.core.content.ContextCompat
 import `in`.co.appinventor.services_api.helper.JsonObject
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityAuthenticateFarmerIdBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.OtpRateLimiter.provideValidEncryptedString
 import org.json.JSONObject
@@ -44,16 +47,22 @@ class AuthenticateFarmerIdActivity : AppCompatActivity() {
     private fun setUpListeners() {
         binding.sendFarmerIdOTPButton.setOnClickListener {
             farmerId = binding.farmerIdEditText.text.toString()
-            if (farmerId.length == 0) {
+            if (farmerId.isEmpty()) {
                 binding.farmerIdEditText.error = "Please enter valid Farmer ID"
                 return@setOnClickListener
             }
             loginViewModel.sendOtpToFarmerId(this, farmerId)
-            addVerificationDialog()
         }
+
         binding.backPressIcon.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+            startActivity(Intent(this, DashboardScreen::class.java))
         }
+
+        OnBackPressedDispatcher().addCallback(object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                startActivity(Intent(this@AuthenticateFarmerIdActivity, DashboardScreen::class.java))
+            }
+        })
     }
 
     private fun observeResponse() {
@@ -64,11 +73,13 @@ class AuthenticateFarmerIdActivity : AppCompatActivity() {
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 val status = jSONObject.optInt("status")
+                val response = jSONObject.optString("response")
                 if (status == 200) {
                     userDataJson = jSONObject.optJSONObject("data")
-                    Toast.makeText(this, "OTP sent successfully", Toast.LENGTH_SHORT).show()
+                    addVerificationDialog()
+                    Toast.makeText(this, response, Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(this, "Invalid Farmer ID", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, response, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -78,15 +89,17 @@ class AuthenticateFarmerIdActivity : AppCompatActivity() {
                 val jSONObject = JSONObject(response.toString())
                 Log.d("TAGGER", "observe compareOtpToFarmerIdResponse: $jSONObject")
                 val status = jSONObject.optInt("status")
+                val response = jSONObject.optString("response")
                 if (status == 200) {
+                    Toast.makeText(this, response, Toast.LENGTH_SHORT).show()
                     startActivity(
-                        Intent(this, FarmerDetailsConfirmationActivity::class.java).putExtra(
-                            "farmerFetchedData",
-                            userDataJson.toString()
-                        )
+                        Intent(this, FarmerDetailsConfirmationActivity::class.java).apply {
+                            putExtra("farmerId", farmerId)
+                            putExtra("farmerFetchedData", userDataJson.toString())
+                        }
                     )
                 } else {
-                    Toast.makeText(this, "Invalid OTP", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, response, Toast.LENGTH_SHORT).show()
                 }
             }
         }

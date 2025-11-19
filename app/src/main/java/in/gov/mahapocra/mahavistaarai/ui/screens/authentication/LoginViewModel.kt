@@ -21,10 +21,7 @@ import java.io.IOException
 import java.net.SocketException
 import java.net.SocketTimeoutException
 
-class LoginViewModel : ViewModel(){
-
-    private val _getOTPRequestResponse = MutableLiveData<JsonObject>()
-    val getOTPRequestResponse: LiveData<JsonObject> = _getOTPRequestResponse
+class LoginViewModel : ViewModel() {
 
     private val _sendOtpToFarmerIdResponse = MutableLiveData<JsonObject>()
     val sendOtpToFarmerIdResponse: LiveData<JsonObject> = _sendOtpToFarmerIdResponse
@@ -32,103 +29,18 @@ class LoginViewModel : ViewModel(){
     private val _compareOtpToFarmerIdResponse = MutableLiveData<JsonObject>()
     val compareOtpToFarmerIdResponse: LiveData<JsonObject> = _compareOtpToFarmerIdResponse
 
-    private val _getUserLoginOTPResponse = MutableLiveData<JsonObject>()
-    val getUserLoginOTPResponse: LiveData<JsonObject> = _getUserLoginOTPResponse
-
-    private val _getUserLoginPasswordResponse = MutableLiveData<JsonObject>()
-    val getUserLoginPasswordResponse: LiveData<JsonObject> = _getUserLoginPasswordResponse
+    private val _updateFarmerDetailsByIdResponse = MutableLiveData<JsonObject>()
+    val updateFarmerDetailsByIdResponse: LiveData<JsonObject> = _updateFarmerDetailsByIdResponse
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
-    fun getOTPRequest(context: Context, mobileNo: String) {
-        ProgressHelper.showProgressDialog(context)
-        viewModelScope.launch {
-            try {
-                val jsonObject = JSONObject().put("SecurityKey", ApiConstants.SSO_KEY)
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val api = retrofit.create(ApiService::class.java)
-                val response = api.getOTPRequest(mobileNo, requestBody)
-                ProgressHelper.disableProgressDialog()
-//                _getOTPRequestResponse.value = response
-            } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
-                val message = when (e) {
-                    is SocketTimeoutException -> "Request timed out. Please try again."
-                    is SocketException -> "Connection lost. Please check your internet."
-                    is IOException -> "Network error occurred."
-                    else -> e.localizedMessage ?: "Unknown error"
-                }
-                _error.value = message
-                FirebaseCrashlytics.getInstance().recordException(e)
-            }
-        }
-    }
-
-    fun getUserLoginOTP(context: Context, mobileNo: String, otp: String, refreshToken: String) {
-        ProgressHelper.showProgressDialog(context)
-        viewModelScope.launch {
-            try {
-                val jsonObject = JSONObject().apply {
-                    put("SecurityKey", ApiConstants.SSO_KEY)
-                    put("refresh_token", refreshToken)
-                }
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val api = retrofit.create(ApiService::class.java)
-                val response = api.getUserLoginOTP(mobileNo, otp, requestBody)
-                ProgressHelper.disableProgressDialog()
-//                _getUserLoginOTPResponse.value = response
-            } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
-                val message = when (e) {
-                    is SocketTimeoutException -> "Request timed out. Please try again."
-                    is SocketException -> "Connection lost. Please check your internet."
-                    is IOException -> "Network error occurred."
-                    else -> e.localizedMessage ?: "Unknown error"
-                }
-                _error.value = message
-                FirebaseCrashlytics.getInstance().recordException(e)
-            }
-        }
-    }
-
-    fun getUserLoginPassword(context: Context, mobileNo: String, password: String, refreshToken: String = "") {
+    fun sendOtpToFarmerId(context: Context, farmerId: String) {
         viewModelScope.launch {
             ProgressHelper.showProgressDialog(context)
             try {
-                val jsonObject = JSONObject().apply {
-                    put("SecurityKey", ApiConstants.SSO_KEY)
-                    if (refreshToken!="") {
-                        put("refresh_token", refreshToken)
-                    }
-                }
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val api = retrofit.create(ApiService::class.java)
-                val response = api.getUserLoginPassword(mobileNo, password, requestBody)
-                ProgressHelper.disableProgressDialog()
-//                _getUserLoginPasswordResponse.value = response
-            } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
-                val message = when (e) {
-                    is SocketTimeoutException -> "Request timed out. Please try again."
-                    is SocketException -> "Connection lost. Please check your internet."
-                    is IOException -> "Network error occurred."
-                    else -> e.localizedMessage ?: "Unknown error"
-                }
-                _error.value = message
-                FirebaseCrashlytics.getInstance().recordException(e)
-            }
-        }
-    }
-
-    fun sendOtpToFarmerId(context: Context, farmerId: String){
-        viewModelScope.launch {
-            ProgressHelper.showProgressDialog(context)
-            try {
-                val userId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+                val userId =
+                    AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
                 val jsonObject = JSONObject().apply {
                     put("SecurityKey", ApiConstants.SSO_KEY)
                 }
@@ -137,7 +49,7 @@ class LoginViewModel : ViewModel(){
                 val api = retrofit.create(ApiService::class.java)
                 val response = api.sendOtpToFarmerId(farmerId, userId, requestBody)
                 _sendOtpToFarmerIdResponse.value = response
-            }catch (e: Exception) {
+            } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
@@ -151,11 +63,12 @@ class LoginViewModel : ViewModel(){
         }
     }
 
-    fun compareOtpToFarmerId(context: Context, farmerId: String, otp: String){
+    fun compareOtpToFarmerId(context: Context, farmerId: String, otp: String) {
         viewModelScope.launch {
             ProgressHelper.showProgressDialog(context)
             try {
-                val userId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+                val userId =
+                    AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
                 val jsonObject = JSONObject().apply {
                     put("SecurityKey", ApiConstants.SSO_KEY)
                 }
@@ -164,7 +77,48 @@ class LoginViewModel : ViewModel(){
                 val api = retrofit.create(ApiService::class.java)
                 val response = api.compareOtpToFarmerId(farmerId, userId, otp, requestBody)
                 _compareOtpToFarmerIdResponse.value = response
-            }catch (e: Exception) {
+            } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun updateFarmerDetailsById(
+        context: Context,
+        farmerId: String,
+        name: String,
+        mobile: String,
+        villageCode: String
+    ) {
+        viewModelScope.launch {
+            ProgressHelper.showProgressDialog(context)
+            try {
+                val userId =
+                    AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+                val jsonObject = JSONObject().apply {
+                    put("SecurityKey", ApiConstants.SSO_KEY)
+                }
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val api = retrofit.create(ApiService::class.java)
+                val response = api.updateFarmerDetailsById(
+                    farmerId,
+                    userId,
+                    name,
+                    mobile,
+                    villageCode,
+                    requestBody
+                )
+                _updateFarmerDetailsByIdResponse.value = response
+            } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."

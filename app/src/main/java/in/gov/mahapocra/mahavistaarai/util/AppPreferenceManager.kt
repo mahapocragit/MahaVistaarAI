@@ -26,7 +26,7 @@ class AppPreferenceManager(val context: Context) {
     }
 
     fun getString(key:String): String? {
-        return sharedPreferences.getString(key, "default_value")
+        return sharedPreferences.getString(key, "")
     }
 
     fun saveInt(key:String, value: Int) {
