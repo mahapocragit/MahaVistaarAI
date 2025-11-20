@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityMahaDbtSchemesBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.adapters.MahadbtSchemesAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.DbtSchemesViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage

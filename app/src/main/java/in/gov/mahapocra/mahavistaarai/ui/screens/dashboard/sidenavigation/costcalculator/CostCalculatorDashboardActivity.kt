@@ -18,9 +18,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityCostCalculatorDashboardBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CostCalculatorAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.viewmodels.CostCalculatorViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.CostCalculatorViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -158,7 +159,7 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
                         binding.toggleDeleteImageView.visibility = View.VISIBLE
                     }
                     AppPreferenceManager(this).saveString("CostCalculatorArrayData", jsonArray?.toString())
-                    costCalculatorAdapter = CostCalculatorAdapter(jsonArray, languageToLoad,this)
+                    costCalculatorAdapter = CostCalculatorAdapter(jsonArray, languageToLoad, this)
                     binding.recyclerView.adapter = costCalculatorAdapter
                 } else {
                     Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_SHORT)

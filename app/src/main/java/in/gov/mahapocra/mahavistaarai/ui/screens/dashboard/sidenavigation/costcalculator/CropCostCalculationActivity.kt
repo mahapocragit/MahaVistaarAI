@@ -32,7 +32,8 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityCropCostCalculationB
 import `in`.gov.mahapocra.mahavistaarai.databinding.DialogAddExpenseLayoutBinding
 import `in`.gov.mahapocra.mahavistaarai.databinding.DialogAddIncomeLayoutBinding
 import `in`.gov.mahapocra.mahavistaarai.databinding.EditExpenseLayoutBinding
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.viewmodels.CostCalculatorViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropTransactionAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.CostCalculatorViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.convertDate
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.convertDateFormat

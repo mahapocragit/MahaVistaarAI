@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.gov.mahapocra.mahavistaarai.databinding.FragmentForumSecondBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ForumAllAdapter
 
 
 class ForumSecondFragment : Fragment() {

@@ -12,6 +12,8 @@ import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListene
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDbtSchemesBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.adapters.FarmerDBTRecyclerAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.adapters.NRMrDBTRecyclerAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.DBTDashboard
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.DbtSchemesViewModel

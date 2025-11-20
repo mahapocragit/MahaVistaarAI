@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityPdfViewBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.adapters.FertilizerRecommendationAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.adapters.SoilTestResultAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.GisViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale

@@ -10,6 +10,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityForumBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ViewPagerAdapter
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 

@@ -263,8 +263,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     private fun setUpListeners() {
 
         init()
-        val today = LocalDate.now().toString()
-        appPreferenceManager.saveString("AGRISTACK_LAST_DATE", today)
         setUpDrawerMenu()
         dashboardGridItemsLayoutSetup()
         shakeAnimationChatbot()
@@ -708,16 +706,26 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         }
                     } else {
                         val lastDate = appPreferenceManager.getString("AGRISTACK_LAST_DATE")
-                        val today = LocalDate.now().toString()
+
+                        val today = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            LocalDate.now().toString()
+                        } else {
+                            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                            sdf.format(Date())
+                        }
+
                         if (lastDate != today) {
                             // New day → reset flag
                             appPreferenceManager.saveBoolean("AGRISTACK_LOGIN_DIALOG", false)
+
+                            // 🔥 IMPORTANT: update saved date
+                            appPreferenceManager.saveString("AGRISTACK_LAST_DATE", today)
                         }
+
                         val showDialog = appPreferenceManager.getBoolean("AGRISTACK_LOGIN_DIALOG")
                         if (!showDialog) {
                             showAgristackLinkingDialog()
                         }
-                        Log.d("TAGGER", "observeResponse: $consent farmer id null")
                     }
                 }
             } catch (e: Exception) {

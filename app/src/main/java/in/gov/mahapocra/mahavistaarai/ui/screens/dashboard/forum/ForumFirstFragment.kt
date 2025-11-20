@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import `in`.gov.mahapocra.mahavistaarai.databinding.FragmentForumFirstBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ForumTrendingAdapter
 
 class ForumFirstFragment : Fragment() {
 

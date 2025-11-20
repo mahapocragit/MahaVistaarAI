@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityForumViewBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ForumAllAdapter
 
 class ForumViewActivity : AppCompatActivity() {
 
