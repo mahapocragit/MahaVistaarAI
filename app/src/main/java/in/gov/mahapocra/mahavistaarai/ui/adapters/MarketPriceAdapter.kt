@@ -1,127 +1,104 @@
-package in.gov.mahapocra.mahavistaarai.ui.adapters;
+package `in`.gov.mahapocra.mahavistaarai.ui.adapters
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import `in`.gov.mahapocra.mahavistaarai.R
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
+import java.util.Locale
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+class MarketPriceAdapter(private val context: Context, private val mOriginalArray: JSONArray) :
+    RecyclerView.Adapter<MarketPriceAdapter.ViewHolder>() {
+    private var mFilteredArray: JSONArray
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-
-import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import in.gov.mahapocra.mahavistaarai.R;
-
-public class MarketPriceAdapter extends RecyclerView.Adapter<MarketPriceAdapter.ViewHolder> {
-
-    private Context mContext;
-    private JSONArray mOriginalArray;
-    private JSONArray mFilteredArray;
-
-    public MarketPriceAdapter(Context context, JSONArray jsonArray) {
-        this.mContext = context;
-        this.mOriginalArray = jsonArray;
-        this.mFilteredArray = new JSONArray();
-        for (int i = 0; i < jsonArray.length(); i++) {
+    init {
+        this.mFilteredArray = JSONArray()
+        for (i in 0..<mOriginalArray.length()) {
             try {
-                mFilteredArray.put(jsonArray.getJSONObject(i));
-            } catch (JSONException e) {
-                e.printStackTrace();
+                mFilteredArray.put(mOriginalArray.getJSONObject(i))
+            } catch (e: JSONException) {
+                e.printStackTrace()
             }
         }
     }
 
-    @NonNull
-    @Override
-    public MarketPriceAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.single_market_list, parent, false);
-        return new ViewHolder(view);
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(context).inflate(R.layout.single_market_list, parent, false)
+        return ViewHolder(view)
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         try {
-            viewHolder.onBind(mFilteredArray.getJSONObject(position));
-        } catch (JSONException e) {
-            e.printStackTrace();
+            viewHolder.onBind(context, mFilteredArray.getJSONObject(position))
+        } catch (e: JSONException) {
+            e.printStackTrace()
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return mFilteredArray.length();
+    override fun getItemCount(): Int {
+        return mFilteredArray.length()
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+        private val tvCropName: TextView = v.findViewById(R.id.tv_crop_name)
+        private val tvCropDate: TextView = v.findViewById(R.id.tv_crop_date)
+        private val tvMaxValue: TextView = v.findViewById(R.id.tvMaxValue)
+        private val tvAvgValue: TextView = v.findViewById(R.id.tvAvgValue)
+        private val tvMinValue: TextView = v.findViewById(R.id.tvMinValue)
+        private val unitForQuantity: TextView = v.findViewById(R.id.unitForQuantity)
+        private val marketPriceImageView: ImageView = v.findViewById(R.id.marketPriceImageView)
 
-        private TextView tv_crop_name;
-        private TextView tv_crop_date;
-        private TextView tvMaxValue;
-        private TextView tvAvgValue;
-        private TextView tvMinValue;
-        private TextView unitForQuantity;
-        private ImageView marketPriceImageView;
-
-        public ViewHolder(@NonNull @NotNull View v) {
-            super(v);
-            tv_crop_name = v.findViewById(R.id.tv_crop_name);
-            tv_crop_date = v.findViewById(R.id.tv_crop_date);
-            tvMaxValue = v.findViewById(R.id.tvMaxValue);
-            tvAvgValue = v.findViewById(R.id.tvAvgValue);
-            tvMinValue = v.findViewById(R.id.tvMinValue);
-            unitForQuantity = v.findViewById(R.id.unitForQuantity);
-            marketPriceImageView = v.findViewById(R.id.marketPriceImageView);
-        }
-
-        public void onBind(JSONObject jsonObject) throws JSONException {
-            String commCropName = jsonObject.getString("comm_name");
-            String variableCropName = jsonObject.getString("variety_name");
-            tv_crop_name.setText(commCropName + " (" + variableCropName + ")");
-            tv_crop_date.setText(jsonObject.getString("date"));
-            tvMaxValue.setText(jsonObject.getString("max_price"));
-            tvAvgValue.setText(jsonObject.getString("avg_price"));
-            tvMinValue.setText(jsonObject.getString("min_price"));
-            unitForQuantity.setText(String.format(" %s", jsonObject.getString("unit")));
-            String imageUrl = jsonObject.getString("img_url");
+        @Throws(JSONException::class)
+        fun onBind(context: Context, jsonObject: JSONObject) {
+            val commCropName = jsonObject.getString("comm_name")
+            val variableCropName = jsonObject.getString("variety_name")
+            tvCropName.text = "$commCropName ($variableCropName)"
+            tvCropDate.text = jsonObject.getString("date")
+            tvMaxValue.text = jsonObject.getString("max_price")
+            tvAvgValue.text = jsonObject.getString("avg_price")
+            tvMinValue.text = jsonObject.getString("min_price")
+            unitForQuantity.text = String.format(" %s", jsonObject.getString("unit"))
+            val imageUrl = jsonObject.getString("img_url")
             if (imageUrl != null && !imageUrl.isEmpty()) {
-                Glide.with(mContext)
-                        .load(imageUrl)
-                        .transform(new RoundedCorners(30))
-                        .into(marketPriceImageView);
+                Glide.with(context)
+                    .load(imageUrl)
+                    .transform(RoundedCorners(30))
+                    .into(marketPriceImageView)
             } else {
-                Glide.with(mContext)
-                        .load(R.drawable.marketimage)
-                        .transform(new RoundedCorners(30))
-                        .into(marketPriceImageView);
+                Glide.with(context)
+                    .load(R.drawable.marketimage)
+                    .transform(RoundedCorners(30))
+                    .into(marketPriceImageView)
             }
         }
     }
 
-    public void filter(String query) {
-        mFilteredArray = new JSONArray();
-        if (query == null || query.trim().isEmpty()) {
-            mFilteredArray = mOriginalArray;
+    fun filter(query: String?) {
+        var query = query
+        mFilteredArray = JSONArray()
+        if (query == null || query.trim { it <= ' ' }.isEmpty()) {
+            mFilteredArray = mOriginalArray
         } else {
-            query = query.toLowerCase();
-            for (int i = 0; i < mOriginalArray.length(); i++) {
+            query = query.lowercase(Locale.getDefault())
+            for (i in 0..<mOriginalArray.length()) {
                 try {
-                    JSONObject obj = mOriginalArray.getJSONObject(i);
-                    if (obj.getString("comm_name").toLowerCase().contains(query)) {
-                        mFilteredArray.put(obj);
+                    val obj = mOriginalArray.getJSONObject(i)
+                    if (obj.getString("comm_name").lowercase(Locale.getDefault()).contains(query)) {
+                        mFilteredArray.put(obj)
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                } catch (e: JSONException) {
+                    e.printStackTrace()
                 }
             }
         }
-        notifyDataSetChanged();
+        notifyDataSetChanged()
     }
 }

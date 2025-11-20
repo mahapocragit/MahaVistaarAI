@@ -60,21 +60,22 @@ class FertilizersRecyclerAdapter (
         for (i in 0 until (fertilizerCalculatedValue?.length() ?: 0)) {
             holder.optionTv.text = context?.getResources()?.getString(R.string.Option) + " ${position+1}"
             val adaptorDbtActivityGrp =
-                BbtActivityGrpAdapter(
-                    context,
-                    this,
-                    if (availableOption == "fertilizerSelectedValue"){
-                        holder.deleteOptionImageView.visibility = View.VISIBLE
-                        holder.saveOptionImageView.visibility = View.GONE
-                        (fertilizerCalculatedValue?.get(position) as JSONObject).getJSONArray("option")
-                    }else{
-                        holder.deleteOptionImageView.visibility = View.GONE
-                        holder.saveOptionImageView.visibility = View.VISIBLE
-                        (fertilizerCalculatedValue?.get(position) as JSONObject).getJSONArray("Option")
-                    }
-                    ,
-                    "OptonRclAdapter"
-                )
+                context?.let {
+                    BbtActivityGrpAdapter(
+                        it,
+                        this,
+                        if (availableOption == "fertilizerSelectedValue"){
+                            holder.deleteOptionImageView.visibility = View.VISIBLE
+                            holder.saveOptionImageView.visibility = View.GONE
+                            (fertilizerCalculatedValue?.get(position) as JSONObject).getJSONArray("option")
+                        }else{
+                            holder.deleteOptionImageView.visibility = View.GONE
+                            holder.saveOptionImageView.visibility = View.VISIBLE
+                            (fertilizerCalculatedValue?.get(position) as JSONObject).getJSONArray("Option")
+                        },
+                        "OptonRclAdapter"
+                    )
+                }
             holder.fertilizerDateRcl.setLayoutManager(
                 LinearLayoutManager(
                     context,
@@ -83,7 +84,7 @@ class FertilizersRecyclerAdapter (
                 )
             )
             holder.fertilizerDateRcl.setAdapter(adaptorDbtActivityGrp)
-            adaptorDbtActivityGrp.notifyDataSetChanged()
+            adaptorDbtActivityGrp?.notifyDataSetChanged()
            }
 
         holder.mainLinearLayout.setOnClickListener {

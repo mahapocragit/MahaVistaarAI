@@ -48,7 +48,7 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
     private val geoViewModel: GeoViewModel by viewModels()
     private var districtJSONArray: JSONArray? = null
     private var marketJSONArray: JSONArray? = null
-    private var marketPriceDetailsJSONArray: JSONArray? = null
+    private var marketPriceDetailsJSONArray: JSONArray = JSONArray()
     private lateinit var districtName: String
     private var districtID: Int = 0
     private lateinit var talukaName: String
@@ -92,7 +92,7 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
         myLayoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.recyclerViewMarketPriceList.setLayoutManager(myLayoutManager)
 
-        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 startActivity(Intent(this@MarketPrice, DashboardScreen::class.java))
             }
@@ -126,7 +126,8 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
     @SuppressLint("ClickableViewAccessibility")
     private fun onClick() {
 
-        val isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
+        val isGuest =
+            AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
 
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
             val intent = Intent(this, DashboardScreen::class.java)
@@ -147,7 +148,7 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
         }
 
         binding.searchEditText.setOnClickListener {
-            marketPriceDetailsJSONArray?.let { LocalCustom.extractUniqueCommNames(it) }?.let {
+            marketPriceDetailsJSONArray.let { LocalCustom.extractUniqueCommNames(it) }.let {
                 LocalCustom.showCommNameDialog(
                     this,
                     it
@@ -207,9 +208,13 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
                                 AlertDialog.Builder(this@MarketPrice)
                                     .setMessage(R.string.bot_chat_login_redirect_mesage)
                                     .setPositiveButton(R.string.yes) { dialog, _ ->
-                                        startActivity(Intent(this@MarketPrice, LoginScreen::class.java).apply {
-                                            putExtra("from", "dashboard")
-                                        })
+                                        startActivity(
+                                            Intent(
+                                                this@MarketPrice,
+                                                LoginScreen::class.java
+                                            ).apply {
+                                                putExtra("from", "dashboard")
+                                            })
                                         dialog.dismiss()
                                     }
                                     .setNegativeButton(R.string.no) { dialog, _ -> dialog.dismiss() }
@@ -299,61 +304,36 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
                     marketPriceDetailsJSONArray = response.getdataArray()
 
                     // tvMarketDate.text = marketPreceDate
-                    if (marketPriceDetailsJSONArray !== null) {
-                        binding.tvMarketDetails.visibility = View.VISIBLE
-                        if (marketName == null) {
-                            binding.tvMarketDetails.text = (buildString {
-                                append(districtName)
-                                append(", ")
-                                append(resources.getString(R.string.market_c_price))
-                            })
-                        } else {
-                            binding.tvMarketDetails.text = (buildString {
-                                append(districtName)
-                                append(", ")
-                                append(marketName)
-                                append(" ")
-                                append(resources.getString(R.string.market_c_price))
-                            })
-                        }
-                        marketPriceAdapter =
-                            MarketPriceAdapter(
-                                this,
-                                marketPriceDetailsJSONArray
-                            )
-                        binding.recyclerViewMarketPriceList.setLayoutManager(
-                            LinearLayoutManager(
-                                this,
-                                LinearLayoutManager.VERTICAL,
-                                false
-                            )
-                        )
-                        binding.recyclerViewMarketPriceList.adapter = marketPriceAdapter
-                        marketPriceAdapter.notifyDataSetChanged()
+                    binding.tvMarketDetails.visibility = View.VISIBLE
+                    if (marketName == null) {
+                        binding.tvMarketDetails.text = (buildString {
+                            append(districtName)
+                            append(", ")
+                            append(resources.getString(R.string.market_c_price))
+                        })
                     } else {
-                        binding.tvMarketDetails.visibility = View.VISIBLE
-                        if (marketName == null) {
-                            binding.tvMarketDetails.text = (buildString {
-                                append(districtName)
-                                append(", ")
-                                append(resources.getString(R.string.market_c_price))
-                            })
-
-                        } else {
-                            binding.tvMarketDetails.text = (buildString {
-                                append(districtName)
-                                append(", ")
-                                append(marketName)
-                                append(" ")
-                                append(resources.getString(R.string.market_c_price))
-                            })
-                        }
-                        Toast.makeText(
-                            this,
-                            "Data Not Available on $marketPriceDate for $marketName",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        binding.tvMarketDetails.text = (buildString {
+                            append(districtName)
+                            append(", ")
+                            append(marketName)
+                            append(" ")
+                            append(resources.getString(R.string.market_c_price))
+                        })
                     }
+                    marketPriceAdapter =
+                        MarketPriceAdapter(
+                            this,
+                            marketPriceDetailsJSONArray
+                        )
+                    binding.recyclerViewMarketPriceList.setLayoutManager(
+                        LinearLayoutManager(
+                            this,
+                            LinearLayoutManager.VERTICAL,
+                            false
+                        )
+                    )
+                    binding.recyclerViewMarketPriceList.adapter = marketPriceAdapter
+                    marketPriceAdapter.notifyDataSetChanged()
                 } else {
                     Toast.makeText(this, "Data Not Found", Toast.LENGTH_LONG).show()
                 }
@@ -374,43 +354,37 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
                     val obj = JSONObject(marketPriceAndMarketName)
                     marketPriceDetailsJSONArray =
                         AppUtility.getInstance().sanitizeArrayJSONObj(obj, "details")
-                    if (marketPriceDetailsJSONArray !== null) {
-                        binding.tvMarketDetails.visibility = View.VISIBLE
-                        if (marketName == null) {
-                            binding.tvMarketDetails.text =
-                                districtName + ", " + resources.getString(R.string.market_c_price)
-                        } else {
-                            binding.tvMarketDetails.text =
-                                (resources.getString(R.string.market_state)
-                                        + "" + resources.getString(R.string.market_c_price))
+                    binding.tvMarketDetails.visibility = View.VISIBLE
+                    if (marketName == null) {
+                        binding.tvMarketDetails.text = buildString {
+                            append(districtName)
+                            append(", ")
+                            append(resources.getString(R.string.market_c_price))
                         }
-                        marketPriceAdapter =
-                            MarketPriceAdapter(
-                                this,
-                                marketPriceDetailsJSONArray
-                            )
-                        binding.recyclerViewMarketPriceList.setLayoutManager(
-                            LinearLayoutManager(
-                                this,
-                                LinearLayoutManager.VERTICAL,
-                                false
-                            )
-                        )
-                        binding.recyclerViewMarketPriceList.adapter = marketPriceAdapter
-                        marketPriceAdapter.notifyDataSetChanged()
-
-                        marketJSONArray =
-                            AppUtility.getInstance().sanitizeArrayJSONObj(obj, "markets")
                     } else {
-                        binding.tvMarketDetails.visibility = View.VISIBLE
-                        binding.tvMarketDetails.text =
-                            districtName + ", " + marketName + " " + resources.getString(R.string.market_c_price)
-                        Toast.makeText(
-                            this,
-                            "Data Not Available on $marketPriceDate for $marketName",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        binding.tvMarketDetails.text = buildString {
+                            append(resources.getString(R.string.market_state))
+                            append("")
+                            append(resources.getString(R.string.market_c_price))
+                        }
                     }
+                    marketPriceAdapter =
+                        MarketPriceAdapter(
+                            this,
+                            marketPriceDetailsJSONArray
+                        )
+                    binding.recyclerViewMarketPriceList.setLayoutManager(
+                        LinearLayoutManager(
+                            this,
+                            LinearLayoutManager.VERTICAL,
+                            false
+                        )
+                    )
+                    binding.recyclerViewMarketPriceList.adapter = marketPriceAdapter
+                    marketPriceAdapter.notifyDataSetChanged()
+
+                    marketJSONArray =
+                        AppUtility.getInstance().sanitizeArrayJSONObj(obj, "markets")
                 } else {
                     Toast.makeText(this, "Data Not Found", Toast.LENGTH_LONG).show()
                 }
@@ -450,11 +424,14 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
             if (districtID > 0) {
                 marketViewModel.getMarketAndMarketName(this@MarketPrice, districtID, languageToLoad)
             }
-            marketPriceDetailsJSONArray = null
+            marketPriceDetailsJSONArray = JSONArray()
             talukaID = 0
             binding.tvMarketDetails.visibility = View.VISIBLE
-            binding.tvMarketDetails.text =
-                ("$districtName, ${resources.getString(R.string.market_c_price)}")
+            binding.tvMarketDetails.text = buildString {
+                append(districtName)
+                append(", ")
+                append(resources.getString(R.string.market_c_price))
+            }
             binding.tvMarketDate.text = ""
             binding.tvMarketDate.hint = resources.getString(R.string.farmer_select_date)
             binding.tvMarketDate.setHintTextColor(Color.GRAY)

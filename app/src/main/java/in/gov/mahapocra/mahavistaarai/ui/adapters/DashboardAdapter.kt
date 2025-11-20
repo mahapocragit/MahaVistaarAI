@@ -1,56 +1,44 @@
-package in.gov.mahapocra.mahavistaarai.ui.adapters;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
+package `in`.gov.mahapocra.mahavistaarai.ui.adapters
 
-import in.gov.mahapocra.mahavistaarai.R;
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.BaseAdapter
+import android.widget.ImageView
+import android.widget.TextView
+import `in`.gov.mahapocra.mahavistaarai.R
 
-public class DashboardAdapter extends BaseAdapter {
-    private final Context context;
-    private final String[] mobileValues;
-    private final int[] mobileImg;
-    private final String gridItemType;
-
-    public DashboardAdapter(Context context, String[] mobileValues, int[] mobileImg,String gridItemType) {
-        this.context = context;
-        this.mobileValues = mobileValues;
-        this.mobileImg = mobileImg;
-        this.gridItemType = gridItemType;
-    }
-    public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View gridView;
+class DashboardAdapter(
+    private val context: Context,
+    private val mobileValues: Array<String>,
+    private val mobileImg: IntArray
+) : BaseAdapter() {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val gridView: View?
         if (convertView == null) {
-            gridView = inflater.inflate(R.layout.single_item_grid, parent, false);
-            final TextView textView = gridView.findViewById(R.id.grid_item_label);
-            textView.setText(mobileValues[position]);
-            ImageView imageView = gridView.findViewById(R.id.grid_item_image);
-            imageView.setImageResource(mobileImg[position]);
-            notifyDataSetChanged();
+            gridView = inflater.inflate(R.layout.single_item_grid, parent, false)
+            val textView = gridView.findViewById<TextView>(R.id.grid_item_label)
+            textView.text = mobileValues[position]
+            val imageView = gridView.findViewById<ImageView>(R.id.grid_item_image)
+            imageView.setImageResource(mobileImg[position])
+            notifyDataSetChanged()
         } else {
-            gridView = convertView;
+            gridView = convertView
         }
-        return gridView;
+        return gridView
     }
 
-    @Override
-    public int getCount() {
-        return mobileValues.length;
-
+    override fun getCount(): Int {
+        return mobileValues.size
     }
 
-    @Override
-    public Object getItem(int position) {
-        return null;
-
+    override fun getItem(position: Int): Any? {
+        return null
     }
 
-    @Override
-    public long getItemId(int position) {
-        return 0;
+    override fun getItemId(position: Int): Long {
+        return 0
     }
 }

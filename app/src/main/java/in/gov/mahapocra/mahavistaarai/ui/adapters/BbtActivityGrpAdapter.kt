@@ -1,143 +1,126 @@
-package in.gov.mahapocra.mahavistaarai.ui.adapters;
+package `in`.gov.mahapocra.mahavistaarai.ui.adapters
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
+import `in`.gov.mahapocra.mahavistaarai.R
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+class BbtActivityGrpAdapter(
+    private val context: Context,
+    private val listener: OnMultiRecyclerItemClickListener,
+    private val mJSONArray: JSONArray,
+    private val calledActivituy: String
+) : RecyclerView.Adapter<BbtActivityGrpAdapter.ViewHolder?>() {
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import in.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener;
-import in.gov.mahapocra.mahavistaarai.R;
-
-public class BbtActivityGrpAdapter extends RecyclerView.Adapter<BbtActivityGrpAdapter.ViewHolder> {
-
-    private OnMultiRecyclerItemClickListener listener;
-    private Context mContext;
-    private JSONArray mJSONArray;
-    private String calledActivituy;
-
-    public BbtActivityGrpAdapter(Context context, OnMultiRecyclerItemClickListener listener, JSONArray jsonArray, String calledActivituy) {
-        this.mContext = context;
-        this.mJSONArray = jsonArray;
-        this.listener = listener;
-        this.calledActivituy = calledActivituy;
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view =
+            LayoutInflater.from(context).inflate(R.layout.single_dbt_activity_list, parent, false)
+        return ViewHolder(view)
     }
 
-    @NonNull
-    @Override
-    public BbtActivityGrpAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.single_dbt_activity_list, parent, false);
-        return new ViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         try {
-            holder.setDvata(position, mJSONArray.getJSONObject(position), listener);
-        } catch (JSONException e) {
-            e.printStackTrace();
+            holder.setData(mJSONArray.getJSONObject(position), listener)
+        } catch (e: JSONException) {
+            e.printStackTrace()
         }
     }
 
-    @Override
-    public int getItemCount() {
-        if (mJSONArray != null) {
-            return mJSONArray.length();
-        } else {
-            return 0;
-        }
+    override fun getItemCount(): Int {
+        return mJSONArray.length()
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements OnMultiRecyclerItemClickListener {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        OnMultiRecyclerItemClickListener {
+        private val nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
+        private val data1Title: TextView = itemView.findViewById(R.id.data1_title)
+        private val data1Value: TextView = itemView.findViewById(R.id.data1_value)
+        private val data2Title: TextView = itemView.findViewById(R.id.data2_title)
+        private val data2Value: TextView = itemView.findViewById(R.id.data2_value)
+        private val data3Title: TextView = itemView.findViewById(R.id.data3_title)
+        private val data3Value: TextView = itemView.findViewById(R.id.data3_value)
+        private val data4Value: TextView = itemView.findViewById(R.id.data4_value)
+        private val mainLinearLayout: LinearLayout = itemView.findViewById(R.id.main_linr_layout)
 
-        private TextView nameTextView;
-        private TextView data1_title;
-        private TextView data1_value;
-        private TextView data2_title;
-        private TextView data2_value;
-        private TextView data3_title;
-        private TextView data3_value;
-        private TextView data4_value;
-        private LinearLayout main_linr_layout;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            nameTextView = itemView.findViewById(R.id.nameTextView);
-            data1_title = itemView.findViewById(R.id.data1_title);
-            data1_value = itemView.findViewById(R.id.data1_value);
-            data2_title = itemView.findViewById(R.id.data2_title);
-            data2_value = itemView.findViewById(R.id.data2_value);
-            data3_title = itemView.findViewById(R.id.data3_title);
-            data3_value = itemView.findViewById(R.id.data3_value);
-            data4_value = itemView.findViewById(R.id.data4_value);
-            main_linr_layout = itemView.findViewById(R.id.main_linr_layout);
-        }
-
-        public void setDvata(int position, JSONObject jsonObject, OnMultiRecyclerItemClickListener listener) {
+        fun setData(
+            jsonObject: JSONObject,
+            listener: OnMultiRecyclerItemClickListener
+        ) {
             try {
-                if (calledActivituy.equalsIgnoreCase("dbtSchemes")) {
-                    main_linr_layout.setVisibility(View.GONE);
-                    nameTextView.setText(jsonObject.getString("ActivityGroupName"));
-                } else if (calledActivituy.equalsIgnoreCase("OptonRclAdapter")) {
-                    main_linr_layout.setVisibility(View.VISIBLE);
+                if (calledActivituy.equals("dbtSchemes", ignoreCase = true)) {
+                    mainLinearLayout.visibility = View.GONE
+                    nameTextView.text = jsonObject.getString("ActivityGroupName")
+                } else if (calledActivituy.equals("OptonRclAdapter", ignoreCase = true)) {
+                    mainLinearLayout.visibility = View.VISIBLE
                     // nameTextView.setText(jsonObject.getString("sowing_date"));
-                    JSONArray mJSONArray = jsonObject.getJSONArray("fertilizer");
+                    val mJSONArray = jsonObject.getJSONArray("fertilizer")
                     // String total_Estimated_Cost =jsonObject.getString("total Estimated Cost");
-                    String cropAgeDays = "";
-                    String targetDate = "";
-                    int price = 0;
-                    for (int i = 0; i < mJSONArray.length(); i++) {
-                        String tittle = mJSONArray.getJSONObject(i).getString("FertilizerName");
-                        String quantity = mJSONArray.getJSONObject(i).getString("Quantity");
-                        int priceValue = mJSONArray.getJSONObject(i).getInt("Price");
-                        cropAgeDays = mJSONArray.getJSONObject(i).getString("CropAgeDays");
-                        targetDate = mJSONArray.getJSONObject(i).getString("TargetDate");
+                    var cropAgeDays = ""
+                    var targetDate = ""
+                    var price = 0
+                    for (i in 0..<mJSONArray.length()) {
+                        val tittle = mJSONArray.getJSONObject(i).getString("FertilizerName")
+                        val quantity = mJSONArray.getJSONObject(i).getString("Quantity")
+                        val priceValue = mJSONArray.getJSONObject(i).getInt("Price")
+                        cropAgeDays = mJSONArray.getJSONObject(i).getString("CropAgeDays")
+                        targetDate = mJSONArray.getJSONObject(i).getString("TargetDate")
 
-                        price = price + priceValue;
+                        price += priceValue
                         if (i == 0) {
-                            data1_title.setText(tittle);
-                            data1_value.setText(quantity);
+                            data1Title.text = tittle
+                            data1Value.text = quantity
                         }
                         if (i == 1) {
-                            data2_title.setText(tittle);
-                            data2_value.setText(quantity);
+                            data2Title.text = tittle
+                            data2Value.text = quantity
                         }
                         if (i == 2) {
-                            data3_title.setText(tittle);
-                            data3_value.setText(quantity);
+                            data3Title.text = tittle
+                            data3Value.text = quantity
                         }
                     }
-                    data4_value.setText("" + price);
-                    if (cropAgeDays.equalsIgnoreCase("0")) {
-                        nameTextView.setText(targetDate + " | " + mContext.getString(R.string.At_Sowing));
+                    data4Value.text = buildString {
+                        append("")
+                        append(price)
+                    }
+                    if (cropAgeDays.equals("0", ignoreCase = true)) {
+                        nameTextView.text = buildString {
+                            append(targetDate)
+                            append(" | ")
+                            append(context.getString(R.string.At_Sowing))
+                        }
                     } else {
-                        nameTextView.setText(targetDate + " | " + cropAgeDays + " " + mContext.getString(R.string.Days_After_Sowing));
+                        nameTextView.text = buildString {
+                            append("$targetDate | $cropAgeDays ")
+                            append(
+                                context.getString(
+                                    R.string.Days_After_Sowing
+                                )
+                            )
+                        }
                     }
                 } else {
-                    nameTextView.setText(jsonObject.getString("advisory"));
+                    nameTextView.text = jsonObject.getString("advisory")
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
+            } catch (e: JSONException) {
+                e.printStackTrace()
             }
-            itemView.setOnClickListener(v -> {
-                if (calledActivituy.equalsIgnoreCase("dbtSchemes")) {
-                    listener.onMultiRecyclerViewItemClick(2, jsonObject);
+            itemView.setOnClickListener {
+                if (calledActivituy.equals("dbtSchemes", ignoreCase = true)) {
+                    listener.onMultiRecyclerViewItemClick(2, jsonObject)
                 }
-            });
-
+            }
         }
 
-        @Override
-        public void onMultiRecyclerViewItemClick(int i, Object obj) {
-
+        override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
         }
     }
 }

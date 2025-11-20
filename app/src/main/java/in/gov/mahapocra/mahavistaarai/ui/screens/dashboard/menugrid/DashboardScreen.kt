@@ -203,13 +203,11 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         binding.appBarMain.dashboardScreen.gridViewDashboard.columnWidth =
             GridView.STRETCH_COLUMN_WIDTH
         if (languageToLoad.equals("en", ignoreCase = true)) {
-            binding.appBarMain.dashboardScreen.gridViewDashboard.adapter = DashboardAdapter(
-                this, arrayCategory, arrayCategoryImg, "single_item_grid"
-            )
+            binding.appBarMain.dashboardScreen.gridViewDashboard.adapter =
+                DashboardAdapter(this, arrayCategory, arrayCategoryImg)
         } else if (languageToLoad.equals("mr", ignoreCase = true)) {
-            binding.appBarMain.dashboardScreen.gridViewDashboard.adapter = DashboardAdapter(
-                this, arrayCategoryMarathi, arrayCategoryImg, "single_item_grid"
-            )
+            binding.appBarMain.dashboardScreen.gridViewDashboard.adapter =
+                DashboardAdapter(this, arrayCategoryMarathi, arrayCategoryImg)
         }
         setVersion()
         if (NetworkUtils.isInternetAvailable(this)) {
