@@ -520,4 +520,8 @@
     <string name="agristack_request">Dear Farmer Friends, you can now link your Farmer ID in the MahaVistar app! This will automatically fill in your information and help you access various schemes, guidance, and services more easily. \n👉 Please click on the ‘Link Farmer ID’ option and complete the process by entering the required details. Your participation is the path to your progress!</string>
     <string name="btn_cancel">Cancel</string>
     <string name="btn_link">Link Now</string>
+    <string name="overwrite_data">Overwrite Data?</string>
+    <string name="farmer_id_confirmation_desc">Your data will be overwritten with the data fetched from your Farmer ID. Do you want to continue?</string>
+    <string name="farmer_details_update_text_1">Update</string>
+    <string name="farmer_details_update_text_2">Farmer ID</string>
 </resources>

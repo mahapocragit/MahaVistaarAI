@@ -1,6 +1,7 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication
 
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -19,10 +20,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import `in`.co.appinventor.services_api.helper.JsonObject
+import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityAuthenticateFarmerIdBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LoginViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.OtpRateLimiter.provideValidEncryptedString
 import org.json.JSONObject
@@ -31,12 +35,19 @@ class AuthenticateFarmerIdActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAuthenticateFarmerIdBinding
     private val loginViewModel: LoginViewModel by viewModels()
+    var languageToLoad = "mr"
     private var farmerId = ""
     private lateinit var dialog: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        if (AppSettings.getLanguage(this@AuthenticateFarmerIdActivity)
+                .equals("1", ignoreCase = true)
+        ) {
+            languageToLoad = "en"
+        }
+        switchLanguage(this, languageToLoad)
         binding = ActivityAuthenticateFarmerIdBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
@@ -172,5 +183,15 @@ class AuthenticateFarmerIdActivity : AppCompatActivity() {
                 )
             }
         }.start()
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 }

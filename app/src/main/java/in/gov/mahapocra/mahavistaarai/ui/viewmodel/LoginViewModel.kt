@@ -45,9 +45,10 @@ class LoginViewModel : ViewModel() {
                     put("SecurityKey", ApiConstants.SSO_KEY)
                 }
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.Companion.FARMER.baseUrl)
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val api = retrofit.create(ApiService::class.java)
                 val response = api.sendOtpToFarmerId(farmerId, userId, requestBody)
+                ProgressHelper.disableProgressDialog()
                 _sendOtpToFarmerIdResponse.value = response
             } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
@@ -73,9 +74,10 @@ class LoginViewModel : ViewModel() {
                     put("SecurityKey", ApiConstants.SSO_KEY)
                 }
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.Companion.FARMER.baseUrl)
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val api = retrofit.create(ApiService::class.java)
                 val response = api.compareOtpToFarmerId(farmerId, userId, otp, requestBody)
+                ProgressHelper.disableProgressDialog()
                 _compareOtpToFarmerIdResponse.value = response
             } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
@@ -107,7 +109,7 @@ class LoginViewModel : ViewModel() {
                     put("SecurityKey", ApiConstants.SSO_KEY)
                 }
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.Companion.FARMER.baseUrl)
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val api = retrofit.create(ApiService::class.java)
                 val response = api.updateFarmerDetailsById(
                     farmerId,
@@ -117,6 +119,7 @@ class LoginViewModel : ViewModel() {
                     villageCode,
                     requestBody
                 )
+                ProgressHelper.disableProgressDialog()
                 _updateFarmerDetailsByIdResponse.value = response
             } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()

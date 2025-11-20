@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Update"
+            android:text="@string/farmer_details_update_text_1"
             android:textColor="@color/white"
             android:textSize="@dimen/_20sdp"
             android:textStyle="bold" />
@@ -46,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Farmer ID"
+            android:text="@string/farmer_details_update_text_2"
             android:textColor="@color/white"
             android:textSize="@dimen/_20sdp"
             android:textStyle="bold" />
@@ -85,7 +85,7 @@
                     android:gravity="center"
                     android:textSize="@dimen/_18sdp"
                     android:textColor="@color/font_color_figma"
-                    android:text="Enter your Farmer Id" />
+                    android:text="@string/enter_farmer_id" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/mobileTIL"

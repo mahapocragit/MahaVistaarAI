@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -10,11 +11,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityFarmerDetailsConfirmationBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LoginViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import org.json.JSONObject
 
@@ -23,11 +29,18 @@ class FarmerDetailsConfirmationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFarmerDetailsConfirmationBinding
     private val loginViewModel: LoginViewModel by viewModels()
     private lateinit var appPreferenceManager: AppPreferenceManager
+    var languageToLoad = "mr"
     private var token = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        if (AppSettings.getLanguage(this@FarmerDetailsConfirmationActivity)
+                .equals("1", ignoreCase = true)
+        ) {
+            languageToLoad = "en"
+        }
+        switchLanguage(this, languageToLoad)
         binding = ActivityFarmerDetailsConfirmationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
@@ -44,8 +57,6 @@ class FarmerDetailsConfirmationActivity : AppCompatActivity() {
         val farmerId = intent?.getStringExtra("farmerId").toString()
 
         val farmerData = JSONObject(farmerFetchedData)
-        Log.d("TAGGER", "setUpListeners: $farmerData")
-
         val userName = farmerData.optString("user_name")
         val mobile = farmerData.optString("mobile")
         val districtName = farmerData.optString("district_name")
@@ -60,23 +71,13 @@ class FarmerDetailsConfirmationActivity : AppCompatActivity() {
         binding.villageET.setText(villageName)
 
         binding.updateProfileDataButton.setOnClickListener {
-            val dialog = AlertDialog.Builder(this)
-                .setTitle("Overwrite Data?")
-                .setMessage("Your data will be overwritten with the data fetched from your Farmer ID. Do you want to continue?")
-                .setCancelable(false)
-                .setPositiveButton("Confirm") { _, _ ->
-                    // Hit API
-                    loginViewModel.updateFarmerDetailsById(
-                        this,
-                        farmerId,
-                        userName,
-                        mobile,
-                        villageCode
-                    )
-                }
-                .create()
-
-            dialog.show()
+            loginViewModel.updateFarmerDetailsById(
+                this,
+                farmerId,
+                userName,
+                mobile,
+                villageCode
+            )
         }
 
         binding.backPressIcon.setOnClickListener {
@@ -112,5 +113,15 @@ class FarmerDetailsConfirmationActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 }

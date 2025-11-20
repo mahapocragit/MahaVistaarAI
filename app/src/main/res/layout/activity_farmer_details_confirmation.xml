@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Update"
+            android:text="@string/farmer_details_update_text_1"
             android:textColor="@color/white"
             android:textSize="@dimen/_20sdp"
             android:textStyle="bold" />
@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Farmer ID"
+            android:text="@string/farmer_details_update_text_2"
             android:textColor="@color/white"
             android:textSize="@dimen/_20sdp"
             android:textStyle="bold" />
@@ -81,7 +81,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_2sdp"
-                    android:text="Name"
+                    android:text="@string/name"
                     android:textColor="@color/font_color_figma"
                     android:textSize="@dimen/_11sdp" />
 
@@ -102,7 +102,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_2sdp"
-                    android:text="Mobile"
+                    android:text="@string/mobile_no"
                     android:textColor="@color/font_color_figma"
                     android:textSize="@dimen/_11sdp" />
 
@@ -123,7 +123,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_2sdp"
-                    android:text="District"
+                    android:text="@string/district"
                     android:textColor="@color/font_color_figma"
                     android:textSize="@dimen/_11sdp" />
 
@@ -144,7 +144,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_2sdp"
-                    android:text="Taluka"
+                    android:text="@string/taluka"
                     android:textColor="@color/font_color_figma"
                     android:textSize="@dimen/_11sdp" />
 
@@ -165,7 +165,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_2sdp"
-                    android:text="Village"
+                    android:text="@string/village"
                     android:textColor="@color/font_color_figma"
                     android:textSize="@dimen/_11sdp" />
 
@@ -191,7 +191,7 @@
                     android:backgroundTint="@color/actionbar_color_figma"
                     android:minHeight="@dimen/_50sdp"
                     android:padding="@dimen/padding12"
-                    android:text="Update"
+                    android:text="@string/update_profile_text"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_10sdp"

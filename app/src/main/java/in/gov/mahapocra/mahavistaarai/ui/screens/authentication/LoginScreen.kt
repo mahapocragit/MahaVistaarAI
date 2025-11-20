@@ -70,7 +70,6 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        languageToLoad = "mr"
         if (AppSettings.getLanguage(this@LoginScreen)
                 .equals("1", ignoreCase = true)
         ) {
