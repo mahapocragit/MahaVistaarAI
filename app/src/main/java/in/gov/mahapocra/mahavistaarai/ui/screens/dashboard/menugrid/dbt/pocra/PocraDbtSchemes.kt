@@ -4,9 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
@@ -14,15 +13,18 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDbtSchemesBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.DBTDashboard
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.DbtSchemesViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
-import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONObject
 
 class PocraDbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
 
-    private lateinit var dbtSchemesViewModel: DbtSchemesViewModel
+    private val dbtSchemesViewModel: DbtSchemesViewModel by viewModels()
     private lateinit var binding: ActivityDbtSchemesBinding
     var languageToLoad: String = ""
 
@@ -37,8 +39,8 @@ class PocraDbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
         switchLanguage(this, languageToLoad)
         binding = ActivityDbtSchemesBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root)
 
-        dbtSchemesViewModel = ViewModelProvider(this)[DbtSchemesViewModel::class.java]
         dbtSchemesLists()
         ProgressHelper.showProgressDialog(this)
         dbtSchemesViewModel.getDBTSchemes(this)
@@ -51,9 +53,10 @@ class PocraDbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
+        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
 
-        binding.applyForPocraTextView.setOnClickListener {
-            Toast.makeText(this, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
+        binding.applyForNDKSPLinearLayout.setOnClickListener {
+            startActivity(Intent(this, DBTDashboard::class.java))
         }
 
         binding.farmerCardTV.setOnClickListener {

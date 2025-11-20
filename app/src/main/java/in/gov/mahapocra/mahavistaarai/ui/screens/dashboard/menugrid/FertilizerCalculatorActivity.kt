@@ -8,13 +8,17 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
@@ -27,21 +31,26 @@ import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListene
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
+import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityFertilizerCalculatorActivityBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.FertilizersRecyclerAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.showDisabledFutureDatePicker
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
-import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.logThis
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.DeleteApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
@@ -50,14 +59,14 @@ import retrofit2.Call
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.math.abs
 
 class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     OnMultiRecyclerItemClickListener, ApiCallbackCode, DatePickerRequestListener {
 
     private lateinit var binding: ActivityFertilizerCalculatorActivityBinding
-    private lateinit var viewModel: FarmerViewModel
-
-    private var soilTestOption: Int = 1
+    private val farmerViewModel: FarmerViewModel by viewModels()
+    private var soilTestOption: Int = 0
     private lateinit var languageToLoad: String
 
     private var villageID: Int = 0
@@ -67,6 +76,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     private var sowingDate: String? = null
     private var cropName: String? = null
     private lateinit var token: String
+    private var route: String = ""
     private var acrArea: String = ""
     private var gunthaArea: String = ""
     private var edtFYMValue: String = ""
@@ -79,6 +89,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     private var fertilizerOptionValue: JSONArray? = null
     private val date = Date()
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         languageToLoad = "mr"
@@ -90,15 +101,25 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         switchLanguage(this, languageToLoad)
         binding = ActivityFertilizerCalculatorActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
-
-
+        uiResponsive(binding.root)
 
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
             startActivity(Intent(this, DashboardScreen::class.java))
         }
 
+        AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
+        lifecycleScope.launch {
+            delay(5000) // 5 seconds
+            binding.bubbleIconImageView.animate()
+                .alpha(0f)
+                .setDuration(500) // animation duration in ms
+                .withEndAction {
+                    binding.bubbleIconImageView.visibility = View.GONE
+                    binding.bubbleIconImageView.alpha = 1f // reset alpha in case you show it again
+                }
+                .start()
+        }
         cropId = intent.getIntExtra("id", 0)
         cropName = intent.getStringExtra("mName")
         wotrCropId = intent.getIntExtra("wotr_crop_id", 0).toString()
@@ -137,7 +158,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         }
 
         binding.sowingInfoLayout.editSowingDateIcon.setOnClickListener {
-            AppUtility.getInstance().showDisabledFutureDatePicker(
+            showDisabledFutureDatePicker(
                 this,
                 date,
                 1,
@@ -147,8 +168,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
 
         villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
         binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.fertilizer_calculator)
-        binding.lnrSoilTestNo.visibility = View.GONE
-        binding.lnrNpkFetch.visibility = View.GONE
 
         binding.yesRadioButton.setOnClickListener {
             onRadioButtonClicked(it)
@@ -160,9 +179,8 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             resetEditTest()
         }
         binding.calculateTv.setOnClickListener {
+            ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
             validation()
-        }
-        binding.fetchNPKTv.setOnClickListener {
         }
         binding.selectedOptionTv.setOnClickListener {
             binding.selectedOptionTv.background = ContextCompat.getDrawable(
@@ -187,34 +205,29 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             )
             validation()
         }
-
+        var isUpdating = false
         binding.edtAcre.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-            }
+            override fun afterTextChanged(s: Editable?) {}
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (!(s.contentEquals(""))) {
-                    val acreNo: Int = s.toString().toInt()
-                    if (acreNo > 99) {
-                        if (plotUnitCode == 3) {
-                            Toast.makeText(
-                                this@FertilizerCalculatorActivity,
-                                R.string.area_acre_exceed_warning,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else {
-                            Toast.makeText(
-                                this@FertilizerCalculatorActivity,
-                                R.string.area_hectare_exceed_warning,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                if (isUpdating) return  // Prevent recursive calls when setting text programmatically
 
-                        binding.edtAcre.setText("0")
-                    }
+                val acreNo = s?.toString()?.toIntOrNull() ?: return  // Safely convert to Int, skip if invalid
+
+                if (acreNo > 99) {
+                    val messageRes = if (plotUnitCode == 3)
+                        R.string.area_acre_exceed_warning
+                    else
+                        R.string.area_hectare_exceed_warning
+
+                    Toast.makeText(this@FertilizerCalculatorActivity, messageRes, Toast.LENGTH_SHORT).show()
+
+                    isUpdating = true
+                    binding.edtAcre.setText("0")
+                    binding.edtAcre.setSelection(binding.edtAcre.text.length)
+                    isUpdating = false
                 }
             }
         })
@@ -241,6 +254,77 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             }
         })
         binding.sowingInfoLayout.cropNameTextView.text = cropName
+        val isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
+        binding.chatbotIcon.setOnTouchListener(object : View.OnTouchListener {
+            private var dX = 0f
+            private var dY = 0f
+            private var startX = 0f
+            private var startY = 0f
+            private val CLICK_THRESHOLD = 20 // px movement allowed
+
+            override fun onTouch(v: View, event: MotionEvent): Boolean {
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        dX = v.x - event.rawX
+                        dY = v.y - event.rawY
+                        startX = event.rawX
+                        startY = event.rawY
+                    }
+
+                    MotionEvent.ACTION_MOVE -> {
+                        val parent = v.parent as View
+                        val newX = event.rawX + dX
+                        val newY = event.rawY + dY
+
+                        // calculate boundaries (you can adjust margin if needed)
+                        val margin = 32 // px margin from edges
+                        val maxX = parent.width - v.width - margin
+                        val maxY = parent.height - v.height - margin
+                        val minX = margin
+                        val minY = margin
+
+                        // constrain movement inside screen
+                        val boundedX = newX.coerceIn(minX.toFloat(), maxX.toFloat())
+                        val boundedY = newY.coerceIn(minY.toFloat(), maxY.toFloat())
+
+                        v.animate()
+                            .x(boundedX)
+                            .y(boundedY)
+                            .setDuration(0)
+                            .start()
+                    }
+
+                    MotionEvent.ACTION_UP -> {
+                        val diffX = abs(event.rawX - startX)
+                        val diffY = abs(event.rawY - startY)
+
+                        if (diffX < CLICK_THRESHOLD && diffY < CLICK_THRESHOLD) {
+                            if (!isGuest) {
+                                startActivity(Intent(this@FertilizerCalculatorActivity, ChatbotActivity::class.java))
+                            } else {
+                                AlertDialog.Builder(this@FertilizerCalculatorActivity)
+                                    .setMessage(R.string.bot_chat_login_redirect_mesage)
+                                    .setPositiveButton(R.string.yes) { dialog, _ ->
+                                        startActivity(Intent(this@FertilizerCalculatorActivity, LoginScreen::class.java).apply {
+                                            putExtra("from", "dashboard")
+                                        })
+                                        dialog.dismiss()
+                                    }
+                                    .setNegativeButton(R.string.no) { dialog, _ -> dialog.dismiss() }
+                                    .show()
+                            }
+                        }
+                    }
+                }
+                return true
+            }
+        })
+
+        onBackPressedDispatcher.addCallback( object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                startActivity(Intent(this@FertilizerCalculatorActivity, DashboardScreen::class.java))
+            }
+        })
     }
 
     private fun settingUpTheViewsAsPerLanguage() {
@@ -248,11 +332,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         binding.plotSizeTitleTextView.text = getString(R.string.plot_size)
         binding.acreRadioButton.text = getString(R.string.acre)
         binding.radioButton2.text = getString(R.string.hectare)
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        startActivity(Intent(this, DashboardScreen::class.java))
     }
 
     private fun getSelectedSavedOption() {
@@ -271,7 +350,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     true
                 )
             CoroutineScope(Dispatchers.IO).launch {
-                val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
+                val apiRequest = api.getRetrofitInstance().create(ApiService::class.java)
                 val responseCall: Call<JsonObject> =
                     apiRequest.getFertilizerSavedFormula(requestBody)
                 api.postRequest(responseCall, this@FertilizerCalculatorActivity, 4)
@@ -383,7 +462,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     true
                 )
             CoroutineScope(Dispatchers.IO).launch {
-                val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
+                val apiRequest = api.getRetrofitInstance().create(ApiService::class.java)
                 val responseCall: Call<JsonObject> =
                     apiRequest.getTokenFromWotr("8470807282", "PMU%40PoCRA%232023")
                 api.postRequest(responseCall, this@FertilizerCalculatorActivity, 2)
@@ -412,19 +491,16 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                 )
 
             CoroutineScope(Dispatchers.IO).launch {
-                val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
+                val apiRequest = api.getRetrofitInstance().create(ApiService::class.java)
                 val responseCall: Call<JsonObject> = apiRequest.getFertilizerCalculatedData(
                     wotrCropId, finalSowingDate, soilTestOption.toString(),
                     nitrogenValue, phosphorusValue, potassiumValue,
                     villageID.toString(), edtFYMValue, "0",
                     totalAcrArea.toString(), plotUnitCode.toString(), token
                 )
-
-                logThis(responseCall.request().toString())
                 api.postRequest(responseCall, this@FertilizerCalculatorActivity, 1)
             }
         } catch (e: JSONException) {
-            logThis(e.toString())
             e.printStackTrace()
         }
     }
@@ -435,12 +511,10 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             val checked = view.isChecked
 
             // Check which radio button was clicked
-            when (view.getId()) {
+            when (view.id) {
                 R.id.yesRadioButton ->
                     if (checked) {
                         binding.lnrSoilTestYes.visibility = View.VISIBLE
-                        binding.lnrSoilTestNo.visibility = View.GONE
-                        binding.lnrNpkFetch.visibility = View.GONE
                         soilTestOption = 1
                         fertilizerOptionValue = null
                         binding.availableOptionTv.visibility = View.INVISIBLE
@@ -450,8 +524,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
 
                 R.id.noRadioButton ->
                     if (checked) {
-                        binding.lnrSoilTestNo.visibility = View.GONE
-                        binding.lnrNpkFetch.visibility = View.GONE
                         binding.lnrSoilTestYes.visibility = View.GONE
                         soilTestOption = 0
                         fertilizerOptionValue = null
@@ -658,7 +730,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                         true
                     )
                     CoroutineScope(Dispatchers.IO).launch {
-                        val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
+                        val apiRequest = api.getRetrofitInstance().create(ApiService::class.java)
                         val responseCall: Call<JsonObject> =
                             apiRequest.deleteFertilizerFromSavedList(requestBody)
                         api.postRequest(responseCall, this@FertilizerCalculatorActivity, 5)
@@ -728,7 +800,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             // Step 5: Make async network request using coroutine
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
+                    val apiRequest = api.getRetrofitInstance().create(ApiService::class.java)
                     val responseCall: Call<JsonObject> =
                         apiRequest.saveFertilizerFormula(requestBody)
                     api.postRequest(responseCall, this@FertilizerCalculatorActivity, 3)
@@ -741,14 +813,11 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         }
     }
 
-
     override fun onDateSelected(i: Int, day: Int, month: Int, year: Int) {
         if (i == 1) {
-            val formattedDay = String.format("%02d", day)
-            val formattedMonth = String.format("%02d", month)
-            sowingDate = "$formattedDay-$formattedMonth-$year"
-            cropId?.let { viewModel.saveFarmerSelectedCrop(this, sowingDate!!, it) }
-            viewModel.saveFarmerSelectedCrop.observe(this) {
+            sowingDate = "$day-$month-$year"
+            cropId?.let { farmerViewModel.saveFarmerSelectedCrop(this, sowingDate!!, it) }
+            farmerViewModel.saveFarmerSelectedCrop.observe(this) {
                 if (it != null) {
                     if (it.get("status").toString() == "200") {
                         binding.sowingInfoLayout.sowingDateTextView.text = sowingDate

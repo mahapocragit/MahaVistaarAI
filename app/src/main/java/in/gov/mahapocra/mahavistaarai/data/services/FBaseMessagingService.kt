@@ -2,69 +2,128 @@ package `in`.gov.mahapocra.mahavistaarai.data.services
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
-
+import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
+import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
+import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.DetailedNotificationActivity
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class FBaseMessagingService : FirebaseMessagingService() {
 
     private val channelId = "default_channel_id"
-    private val channelDescription = "Default Channel"
-    private var notificationManager: NotificationManager? = null
+    private val channelName = "Default Channel"
+    private val tag = "FBaseMessagingService"
+
+    private val notificationManager: NotificationManager by lazy {
+        getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+    }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        super.onMessageReceived(remoteMessage)
-        // Log the data payload if it exists
-        remoteMessage.data.isNotEmpty().let {
-            Log.d("firebaseMessage", "Message data payload: ${remoteMessage.data}")
-        }
+        // Log data payload
+        if (remoteMessage.data.isNotEmpty()) {
+            Log.d(tag, "Data payload: ${remoteMessage.data}")
 
-        // Handle notification payload
-        remoteMessage.notification?.let {
-            val title = it.title ?: "Notification"
-            val body = it.body ?: ""
-            sendNotification(title, body)
+            val notificationId = remoteMessage.data["not_id"] ?: "0"
+            val title = remoteMessage.data["title"] ?: "Notification"
+            val body = remoteMessage.data["body"] ?: "You have a new message"
+            val page = remoteMessage.data["page"] ?: "You have a new message"
+            Log.d(tag, "onMessageReceived: $page")
+            sendNotification(title, body, page, notificationId)
         }
     }
 
-    private fun sendNotification(title: String, body: String) {
-        if (notificationManager == null) {
-            notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+    private fun sendNotification(
+        title: String,
+        body: String,
+        page: String,
+        notificationId: String?
+    ) {
+        createNotificationChannelIfNeeded()
+
+        val targetIntent = if (page == "chatbot") {
+            Intent(this, ChatbotActivity::class.java).putExtra("id", notificationId?.toLong())
+        } else {
+            Intent(this, DetailedNotificationActivity::class.java)
+        }
+        targetIntent.apply {
+            putExtra("ROUTE", "NOTIFICATION_TRAY")
+            putExtra("id", notificationId?.toLong())
+        }.apply {
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 
-        // Create the Notification Channel for Android O and above
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            var notificationChannel = notificationManager?.getNotificationChannel(channelId)
-            if (notificationChannel == null) {
-                val importance = NotificationManager.IMPORTANCE_HIGH
-                notificationChannel = NotificationChannel(channelId, channelDescription, importance).apply {
-                    lightColor = Color.GREEN
-                    enableVibration(true)
-                }
-                notificationManager?.createNotificationChannel(notificationChannel)
-            }
-        }
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            targetIntent,
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+        )
 
-        // Build the notification
-        val notificationBuilder = NotificationCompat.Builder(this, channelId)
+        val bigTextStyle = NotificationCompat.BigTextStyle()
+            .bigText(body) // this is your full long message
+            .setBigContentTitle(title)
+            .setSummaryText("Tap to view")
+
+        val notification = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(R.drawable.app_icon_store) // your notification icon
             .setContentTitle(title)
-            .setContentText(body)
-            .setSmallIcon(R.drawable.app_icon_store) // Replace with your app's icon
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentText(body.take(40) + "...") // short preview
+            .setStyle(bigTextStyle) // this makes it expandable
             .setAutoCancel(true)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentIntent(pendingIntent)
+            .build()
 
-        // Show the notification
-        notificationManager?.notify(System.currentTimeMillis().toInt(), notificationBuilder.build())
+        notificationManager.notify(System.currentTimeMillis().toInt(), notification)
+    }
+
+    private fun createNotificationChannelIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+            notificationManager.getNotificationChannel(channelId) == null
+        ) {
+            val channel = NotificationChannel(
+                channelId,
+                channelName,
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                description = "Channel for FCM notifications"
+                enableVibration(true)
+                lightColor = Color.GREEN
+            }
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 
     override fun onNewToken(token: String) {
-        super.onNewToken(token)
-        Log.d("firebaseMessage", "New token: $token")
-        // You can send this token to your backend server if needed.
+        val farmerId = AppSettings.getInstance()
+            .getIntValue(applicationContext, AppConstants.fREGISTER_ID, 0)
+
+        // Do network call in coroutine
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val apiRequest = retrofit.create(ApiService::class.java)
+                apiRequest.updateFCMToken(farmerId, token)
+                Log.d(tag, "FCM token updated successfully")
+            } catch (e: Exception) {
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
     }
 }
+

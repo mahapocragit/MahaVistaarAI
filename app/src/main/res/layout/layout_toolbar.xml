@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/_40sdp"
     android:background="@color/actionbar_color_figma">
 
     <RelativeLayout
         android:id="@+id/relativeLayoutToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="48dp">
+        android:minHeight="@dimen/_38sdp">
 
         <ImageView
             android:id="@+id/imgBackArrow"
@@ -54,13 +54,13 @@
         <TextView
             android:id="@+id/textViewHeaderTitle"
             android:layout_width="wrap_content"
-            android:layout_height="45dp"
+            android:layout_height="@dimen/_40sdp"
             android:layout_centerHorizontal="true"
             android:gravity="center"
             android:text="Title"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="@dimen/_16sdp"
+            android:textSize="@dimen/_14sdp"
             android:textStyle="bold" />
 
         <TableRow
@@ -73,12 +73,13 @@
 
         <ImageView
             android:id="@+id/imageViewFilterMenu"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:padding="1dp"
+            app:tint="@color/white"
             android:visibility="gone"
             app:srcCompat="@drawable/filter"
             tools:ignore="VectorDrawableCompat" />

@@ -1,5 +1,7 @@
 package `in`.gov.mahapocra.mahavistaarai.util
 
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.toSHA512
+
 object OtpRateLimiter {
 
     private const val MAX_OTP_LIMIT = 5
@@ -51,5 +53,12 @@ object OtpRateLimiter {
         val currentTime = System.currentTimeMillis()
         val blockedUntil = otpRequestMap[mobileNumber]?.blockedUntil ?: 0
         return (blockedUntil - currentTime).coerceAtLeast(0L)
+    }
+
+    fun provideValidEncryptedString(timestamp: Long): String {
+        val invalidString = "Invalid OTP"
+        val encryptionStringInvalid = "$timestamp$invalidString"
+        val encryptedStringInvalid = toSHA512(encryptionStringInvalid)
+        return encryptedStringInvalid
     }
 }

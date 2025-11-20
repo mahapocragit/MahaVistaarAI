@@ -1,8 +1,10 @@
 package `in`.gov.mahapocra.mahavistaarai.data.helpers
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import com.google.firebase.database.DataSnapshot
@@ -10,6 +12,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.messaging.FirebaseMessaging
 
 class FirebaseHelper(private val context: Context) {
 
@@ -37,21 +40,37 @@ class FirebaseHelper(private val context: Context) {
     }
 
     private fun getCurrentAppVersion(): Int {
-        return context.packageManager
-            .getPackageInfo(context.packageName, 0)
-            .versionCode  // deprecated in API 28+, use versionCode for older, or versionName for newer
+        return try {
+            val pInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                pInfo.longVersionCode.toInt()
+            } else {
+                @Suppress("DEPRECATION")
+                pInfo.versionCode
+            }
+        } catch (e: Exception) {
+            1 // fallback
+        }
     }
 
     private fun showUpdateDialog() {
-        AlertDialog.Builder(context)
-            .setTitle("Update Available")
-            .setMessage("A new version of the app is available. Please update to continue.")
-            .setPositiveButton("Update") { dialog, _ ->
-                openPlayStore()
-                dialog.dismiss()
-            }
-            .setCancelable(false)
-            .show()
+        val activity = context as? Activity
+        if (activity == null || activity.isFinishing || activity.isDestroyed) {
+            Log.w("FirebaseHelper", "Cannot show dialog: invalid Activity context")
+            return
+        }
+
+        activity.runOnUiThread {
+            AlertDialog.Builder(activity)
+                .setTitle("Update Available")
+                .setMessage("A new version of the app is available. Please update to continue.")
+                .setPositiveButton("Update") { dialog, _ ->
+                    openPlayStore()
+                    dialog.dismiss()
+                }
+                .setCancelable(false)
+                .show()
+        }
     }
 
     private fun openPlayStore() {
@@ -69,6 +88,19 @@ class FirebaseHelper(private val context: Context) {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
             )
+        }
+    }
+
+    fun getFCMToken(callback: (String) -> Unit) {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result
+                Log.d("FCM Token", "Fetched token: $token")
+                callback(token)
+            } else {
+                Log.e("FCM Token", "Fetching token failed", task.exception)
+                callback("") // or handle error appropriately
+            }
         }
     }
 }

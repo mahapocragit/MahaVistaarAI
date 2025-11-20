@@ -1,13 +1,19 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
@@ -17,28 +23,34 @@ import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
+import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityHealthCardBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.RegistrationViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
-import retrofit2.Retrofit
+import kotlin.math.abs
 
 class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventListener {
 
     private lateinit var languageToLoad: String
     private lateinit var binding: ActivityHealthCardBinding
+    private val registrationViewModel: RegistrationViewModel by viewModels()
     private lateinit var districtName: String
     private var districtID: Int = 0
     private lateinit var talukaName: String
@@ -49,8 +61,9 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
     private var districtJSONArray: JSONArray? = null
     private var talukaJSONArray: JSONArray? = null
     private var villageJSONArray: JSONArray? = null
-    private lateinit var farmerViewModel: FarmerViewModel
+    private val farmerViewModel: FarmerViewModel by viewModels()
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         languageToLoad = "mr"
@@ -60,39 +73,151 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
         switchLanguage(this, languageToLoad)
         binding = ActivityHealthCardBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
+        uiResponsive(binding.root)
 
+        setUpObservers()
+        setUpListeners()
 
-        //Loading URL in webView
-        if (supportActionBar != null) {
-            supportActionBar!!.elevation = 0f
-            supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        }
-
-        districtName =
-            AppSettings.getInstance().getValue(this, AppConstants.uDIST, getString(R.string.farmer_select_district))
-        talukaName =
-            AppSettings.getInstance().getValue(this, AppConstants.uTALUKA, getString(R.string.farmer_select_taluka))
-        villageName = AppSettings.getInstance()
-            .getValue(this, AppConstants.uVILLAGE, getString(R.string.farmer_select_village))
+        districtName = getLocalizedValue(
+            AppConstants.uDISTMR,
+            AppConstants.uDIST,
+            getString(R.string.farmer_select_district)
+        )
+        talukaName = getLocalizedValue(
+            AppConstants.uTALUKAMR,
+            AppConstants.uTALUKA,
+            getString(R.string.farmer_select_taluka)
+        )
+        villageName = getLocalizedValue(
+            AppConstants.uVILLAGEMR,
+            AppConstants.uVILLAGE,
+            getString(R.string.farmer_select_village)
+        )
 
         districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
         talukaID = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
         villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
 
-        binding.textViewDist.text = if (districtName == "USER_DIST") getString(R.string.farmer_select_district) else districtName
-        binding.textViewTaluka.text = if (talukaName == "USER_TALUKA") getString(R.string.farmer_select_taluka) else talukaName
-        binding.textViewVillage.text = if (villageName == "uVILLAGE") getString(R.string.farmer_select_village) else villageName
+        binding.textViewDist.text =
+            if (districtName == "USER_DIST") getString(R.string.farmer_select_district) else districtName
+        binding.textViewTaluka.text =
+            if (talukaName == "USER_TALUKA") getString(R.string.farmer_select_taluka) else talukaName
+        binding.textViewVillage.text =
+            if (villageName == "uVILLAGE") getString(R.string.farmer_select_village) else villageName
 
         binding.relativeLayoutToolbar.textViewHeaderTitle.text =
             getString(R.string.soil_health_card)
         binding.relativeLayoutToolbar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutToolbar.imgBackArrow.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+            startActivity(Intent(this, DashboardScreen::class.java))
         }
 
-        getDistrictData()
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                startActivity(Intent(this@HealthCardActivity, DashboardScreen::class.java))
+            }
+        })
 
+        AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
+        lifecycleScope.launch {
+            delay(5000) // 5 seconds
+            binding.bubbleIconImageView.animate()
+                .alpha(0f)
+                .setDuration(500) // animation duration in ms
+                .withEndAction {
+                    binding.bubbleIconImageView.visibility = View.GONE
+                    binding.bubbleIconImageView.alpha = 1f // reset alpha in case you show it again
+                }
+                .start()
+        }
+        farmerViewModel.getDistrictData(this, languageToLoad)
+    }
+
+    private fun getLocalizedValue(mrKey: String, enKey: String, default: String): String {
+        val key = if (languageToLoad == "mr") mrKey else enKey
+        return AppSettings.getInstance().getValue(this, key, default)
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setUpListeners() {
+        binding.chatbotIcon.setOnTouchListener(object : View.OnTouchListener {
+            private var dX = 0f
+            private var dY = 0f
+            private var startX = 0f
+            private var startY = 0f
+            private val CLICK_THRESHOLD = 20 // px movement allowed
+
+            override fun onTouch(v: View, event: MotionEvent): Boolean {
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        dX = v.x - event.rawX
+                        dY = v.y - event.rawY
+                        startX = event.rawX
+                        startY = event.rawY
+                    }
+
+                    MotionEvent.ACTION_MOVE -> {
+                        val parent = v.parent as View
+                        val newX = event.rawX + dX
+                        val newY = event.rawY + dY
+
+                        // calculate boundaries (you can adjust margin if needed)
+                        val margin = 32 // px margin from edges
+                        val maxX = parent.width - v.width - margin
+                        val maxY = parent.height - v.height - margin
+                        val minX = margin
+                        val minY = margin
+
+                        // constrain movement inside screen
+                        val boundedX = newX.coerceIn(minX.toFloat(), maxX.toFloat())
+                        val boundedY = newY.coerceIn(minY.toFloat(), maxY.toFloat())
+
+                        v.animate()
+                            .x(boundedX)
+                            .y(boundedY)
+                            .setDuration(0)
+                            .start()
+                    }
+
+                    MotionEvent.ACTION_UP -> {
+                        val diffX = abs(event.rawX - startX)
+                        val diffY = abs(event.rawY - startY)
+
+                        if (diffX < CLICK_THRESHOLD && diffY < CLICK_THRESHOLD) {
+                            if (!AppSettings.getInstance().getBooleanValue(
+                                    this@HealthCardActivity,
+                                    AppConstants.IS_USER_GUEST,
+                                    false
+                                )
+                            ) {
+                                startActivity(
+                                    Intent(
+                                        this@HealthCardActivity,
+                                        ChatbotActivity::class.java
+                                    )
+                                )
+                            } else {
+                                AlertDialog.Builder(this@HealthCardActivity)
+                                    .setMessage(R.string.bot_chat_login_redirect_mesage)
+                                    .setPositiveButton(R.string.yes) { dialog, _ ->
+                                        startActivity(
+                                            Intent(
+                                                this@HealthCardActivity,
+                                                LoginScreen::class.java
+                                            ).apply {
+                                                putExtra("from", "dashboard")
+                                            })
+                                        dialog.dismiss()
+                                    }
+                                    .setNegativeButton(R.string.no) { dialog, _ -> dialog.dismiss() }
+                                    .show()
+                            }
+                        }
+                    }
+                }
+                return true
+            }
+        })
 
         binding.textViewDist.setOnClickListener {
             showDistrict()
@@ -117,39 +242,49 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
             } else {
                 Toast.makeText(this, "Please select village", Toast.LENGTH_SHORT).show()
             }
+            ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
+        }
+    }
+
+    private fun setUpObservers() {
+        farmerViewModel.districtIdResponse.observe(this) {
+            if (it != null) {
+                val jSONObject = JSONObject(it.toString())
+                val response =
+                    ResponseModel(
+                        jSONObject
+                    )
+                if (response.status) {
+                    districtJSONArray = response.getdataArray()
+                    farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
+                } else {
+                    UIToastMessage.show(this, response.response)
+                }
+            }
         }
 
-        observeResponse()
-    }
-
-    private fun fetchData(surveyNumber: Int) {
-        val api = AppInventorApi(
-            this, AppEnvironment.GIS.baseUrl, "",
-            AppString(this).getkMSG_WAIT(), true
-        )
-        val apiRequest = api.getRetrofitInstance().create(APIRequest::class.java)
-        val jsonObject = JSONObject()
-        jsonObject.put("vincode", villageID)
-        jsonObject.put("survey_number", surveyNumber)
-        val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-        val responseCall: Call<JsonObject> = apiRequest.fetchFarmerListForSHC(requestBody)
-        api.postRequest(responseCall, this, 3)
-    }
-
-    override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        Log.e("HealthCardActivity", "API call failed: ${th?.localizedMessage}", th)
-        // Optionally show a message to the user
-        UIToastMessage.show(this, "Failed to load data. Please check your connection.")
-    }
-
-    private fun observeResponse() {
         farmerViewModel.talukaList.observe(this) {
             if (it != null) {
                 val jSONObject = JSONObject(it.toString())
                 val response = ResponseModel(jSONObject)
                 if (response.status) {
                     talukaJSONArray = response.getdataArray()
-                    getVillageAgainstTaluka()
+                    registrationViewModel.getVillageList(this, languageToLoad, talukaID)
+                } else {
+                    UIToastMessage.show(this, response.response)
+                }
+            }
+        }
+
+        registrationViewModel.getVillageListResponse.observe(this) { response ->
+            if (response != null) {
+                val jSONObject = JSONObject(response.toString())
+                val response =
+                    ResponseModel(
+                        jSONObject
+                    )
+                if (response.status) {
+                    villageJSONArray = response.getdataArray()
                 } else {
                     UIToastMessage.show(this, response.response)
                 }
@@ -157,19 +292,28 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
         }
     }
 
-    override fun onResponse(jSONObject: JSONObject?, i: Int) {
-        if (i == 1 && jSONObject != null) {
-            val response =
-                ResponseModel(
-                    jSONObject
-                )
-            if (response.status) {
-                districtJSONArray = response.getdataArray()
-                farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
-            } else {
-                UIToastMessage.show(this, response.response)
-            }
+    private fun fetchData(surveyNumber: Int) {
+        val api = AppInventorApi(
+            this, AppEnvironment.GIS.baseUrl, "",
+            AppString(this).getkMSG_WAIT(), true
+        )
+        val apiRequest = api.getRetrofitInstance().create(ApiService::class.java)
+        val jsonObject = JSONObject().apply {
+            put("vincode", villageID)
+            put("survey_number", surveyNumber)
         }
+        val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+        val responseCall: Call<JsonObject> = apiRequest.fetchFarmerListForSHC(requestBody)
+        api.postRequest(responseCall, this, 3)
+    }
+
+    override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
+        Log.e("HealthCardActivity", "API $i call failed: ${th?.localizedMessage}", th)
+        // Optionally show a message to the user
+        UIToastMessage.show(this, "Failed to load data. Please check your connection.")
+    }
+
+    override fun onResponse(jSONObject: JSONObject?, i: Int) {
 
         if (i == 3 && jSONObject != null) {
             val farmerJsonArray = jSONObject.optJSONArray("data")
@@ -186,18 +330,6 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
                 binding.noDataFoundImageView.visibility = View.VISIBLE
             }
         }
-
-        if (i == 5 && jSONObject != null) {
-            val response =
-                ResponseModel(
-                    jSONObject
-                )
-            if (response.status) {
-                villageJSONArray = response.getdataArray()
-            } else {
-                UIToastMessage.show(this, response.response)
-            }
-        }
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -212,7 +344,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
 
     private fun showDistrict() {
         if (districtJSONArray == null) {
-            getDistrictData()
+            farmerViewModel.getDistrictData(this, languageToLoad)
         } else {
             AppUtility.getInstance().showListDialogIndex(
                 districtJSONArray,
@@ -253,7 +385,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
     private fun showVillage() {
         if (villageJSONArray == null) {
             if (talukaID > 0) {
-                getVillageAgainstTaluka()
+                registrationViewModel.getVillageList(this, languageToLoad, talukaID)
             } else {
                 UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_taluka))
             }
@@ -268,57 +400,6 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
                     this,
                     this
                 )
-        }
-    }
-
-    private fun getDistrictData() {
-        val jsonObject = JSONObject()
-        try {
-            // jsonObject.put("SecurityKey", APIServices.SSO_KEY)
-            jsonObject.put("lang", languageToLoad)
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api =
-                AppInventorApi(
-                    this,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(this).getkMSG_WAIT(),
-                    true
-                )
-            CoroutineScope(Dispatchers.IO).launch {
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getDistrictList(requestBody)
-                api.postRequest(responseCall, this@HealthCardActivity, 1)
-            }
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun getVillageAgainstTaluka() {
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put("lang", languageToLoad)
-            jsonObject.put("taluka_code", talukaID)
-
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api = AppInventorApi(
-                this,
-                AppEnvironment.FARMER.baseUrl,
-                "",
-                AppString(this).getkMSG_WAIT(),
-                true
-            )
-
-            CoroutineScope(Dispatchers.IO).launch {
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.kGetVillageList(requestBody)
-                api.postRequest(responseCall, this@HealthCardActivity, 5)
-            }
-        } catch (e: JSONException) {
-            e.printStackTrace()
         }
     }
 
@@ -359,7 +440,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
             binding.textViewTaluka.text = s
             villageJSONArray = null
             if (talukaID > 0) {
-                getVillageAgainstTaluka()
+                registrationViewModel.getVillageList(this, languageToLoad, talukaID)
             }
             villageID = 0
             binding.textViewVillage.text = ""

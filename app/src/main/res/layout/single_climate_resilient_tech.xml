@@ -24,14 +24,13 @@
                 android:id="@+id/nameTextView2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical|end"
+                android:gravity="center"
                 android:layout_weight="6"
                 android:text="sN"
                 android:textAllCaps="false"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/black"
-                android:textSize="15sp"
-                android:textStyle="bold" />
+                android:textSize="@dimen/_10sdp" />
 
             <TextView
                 android:id="@+id/nameTextView"
@@ -44,7 +43,7 @@
                 android:textAllCaps="false"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textSize="@dimen/_10sdp" />
 
             <ImageView
                 android:id="@+id/imageView12"

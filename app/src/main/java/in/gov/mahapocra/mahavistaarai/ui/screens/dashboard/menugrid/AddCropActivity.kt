@@ -1,6 +1,5 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid
 
-import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -8,149 +7,203 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.datepicker.MaterialDatePicker
 import `in`.co.appinventor.services_api.listener.DatePickerRequestListener
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityAddCropBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropCategoriesAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
-import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.logThis
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
-import `in`.gov.mahapocra.mahavistaarai.util.ProgressHelper
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.util.Calendar
-import java.util.Date
 
 
-class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
-    DatePickerRequestListener {
+class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener, DatePickerRequestListener {
 
-    private var mainCropCategoryRecycle: RecyclerView? = null
-    private lateinit var languageToLoad: String
-    private lateinit var viewModel: FarmerViewModel
+    private lateinit var binding: ActivityAddCropBinding
     private lateinit var textViewHeaderTitle: TextView
     private lateinit var imageMenuShow: ImageView
     private lateinit var imgBackArrow: ImageView
-    private var sowingDate: String = ""
     private lateinit var receivedJson: JSONObject
+
+    private val viewModel: FarmerViewModel by viewModels()
+    private var languageToLoad: String = "mr"
     private var cropId: Int = 0
-    private var date = Date()
+
+    private val uiScope = CoroutineScope(Dispatchers.Main + Job())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        languageToLoad = "mr"
-        if (AppSettings.getLanguage(this@AddCropActivity).equals("1", ignoreCase = true)) {
-            languageToLoad = "en"
-        }
+        // --- Language setup ---
+        languageToLoad = if (AppSettings.getLanguage(this).equals("1", ignoreCase = true)) "en" else "mr"
         switchLanguage(this, languageToLoad)
-        setContentView(R.layout.activity_add_crop)
 
+        binding = ActivityAddCropBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        uiResponsive(binding.root)
 
-        viewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
-        mainCropCategoryRecycle = findViewById(R.id.mainRecyclerView)
+        setupToolbar()
+        setupRecyclerView()
+
+        // --- Load data in background ---
+        uiScope.launch {
+            ProgressHelper.showProgressDialog(this@AddCropActivity)
+            withContext(Dispatchers.IO) {
+                viewModel.getCropCategoriesAndCropDetails(this@AddCropActivity, languageToLoad)
+            }
+        }
+
+        observeCropData()
+    }
+
+    // -----------------------------
+    // 🧭 Toolbar Setup
+    // -----------------------------
+    private fun setupToolbar() {
         imgBackArrow = findViewById(R.id.imgBackArrow)
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
         imageMenuShow = findViewById(R.id.imageMenushow)
+
         textViewHeaderTitle.setText(R.string.select_crop)
+        imgBackArrow.visibility = View.VISIBLE
 
-        fetchCropInfo()
-
-        if (languageToLoad != "mr") {
-            textViewHeaderTitle.text = "Select Crop"
-        } else {
-            textViewHeaderTitle.text = "पीक निवडा"
+        imgBackArrow.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
         }
 
         imageMenuShow.setOnClickListener {
-            val intent = Intent(this, DashboardScreen::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, DashboardScreen::class.java))
         }
-
-        imgBackArrow.visibility = View.VISIBLE
-        imgBackArrow.setOnClickListener {
-            onBackPressed()
-        }
-        viewModel.getCropCategoriesAndCropDetails(this, languageToLoad)
-        ProgressHelper.showProgressDialog(this)
     }
 
-    private fun fetchCropInfo() {
-        viewModel.cropCategoryResponse.observe(this){
+    // -----------------------------
+    // ♻️ RecyclerView Setup
+    // -----------------------------
+    private fun setupRecyclerView() {
+        binding.mainRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.mainRecyclerView.setHasFixedSize(true)
+    }
+
+    // -----------------------------
+    // 🌾 Observe Crop Data
+    // -----------------------------
+    private fun observeCropData() {
+        viewModel.cropCategoryResponse.observe(this) { response ->
             ProgressHelper.disableProgressDialog()
-            val jSONObject = JSONObject(it.toString())
-            val jsonDataArray = jSONObject.getJSONArray("data")
-            var adapter = CropCategoriesAdapter(this, jsonDataArray, "TitleVideosDetailsAdpter", this)
-            val str = intent.getStringExtra("NO_NEED_TO_ADD_SOWING_DATE")
-            if (str != null) {
-                adapter =
-                    CropCategoriesAdapter(
-                        this,
-                        jsonDataArray,
-                        "NO_NEED_TO_ADD_SOWING_DATE",
-                        this
-                    )
+
+            try {
+                val jsonObject = JSONObject(response.toString())
+                val jsonDataArray = jsonObject.getJSONArray("data")
+                val callerActivityString = if (intent.getStringExtra("callerActivity") != null) {
+                    "costCalculator"
+                } else {
+                    "TitleVideosDetailsAdpter"
+                }
+
+                if (callerActivityString!=null) {
+                    uiScope.launch(Dispatchers.Default) {
+                        val adapter = CropCategoriesAdapter(
+                            this@AddCropActivity,
+                            jsonDataArray,
+                            callerActivityString,
+                            this@AddCropActivity
+                        )
+                        withContext(Dispatchers.Main) {
+                            binding.mainRecyclerView.adapter = adapter
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(this, R.string.error_loading_data, Toast.LENGTH_SHORT).show()
             }
-            mainCropCategoryRecycle?.layoutManager = LinearLayoutManager(this)
-            mainCropCategoryRecycle?.hasFixedSize()
-            mainCropCategoryRecycle?.setAdapter(adapter)
         }
-        viewModel.error.observe(this){
+
+        viewModel.error.observe(this) {
             ProgressHelper.disableProgressDialog()
+            Toast.makeText(this, R.string.failed_to_load, Toast.LENGTH_SHORT).show()
         }
     }
 
+    // -----------------------------
+    // 🧩 Item Clicks
+    // -----------------------------
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
-        if (i == 1) {
-            receivedJson = obj as JSONObject
-            logThis(receivedJson.toString())
-            val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH)
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
+        if (i == 1 && obj is JSONObject) {
+            receivedJson = obj
 
-            val datePickerDialog = DatePickerDialog(this, { _, y, m, d ->
-                onDateSelected(1, d, m, y) // ✅ Manually invoke
-            }, year, month, day)
+            val builder = MaterialDatePicker.Builder.datePicker()
+                .setTitleText(getString(R.string.select_sowing_date))
+                .setTheme(R.style.CustomMaterialDatePickerTheme) // 🎨 Apply your theme
+                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
 
-            datePickerDialog.setTitle(getString(R.string.select_sowing_date))
-            datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
-            datePickerDialog.show()
+            val datePicker = builder.build()
+
+            datePicker.addOnPositiveButtonClickListener { selection ->
+                val calendar = Calendar.getInstance().apply { timeInMillis = selection }
+                val day = calendar.get(Calendar.DAY_OF_MONTH)
+                val month = calendar.get(Calendar.MONTH)
+                val year = calendar.get(Calendar.YEAR)
+                onDateSelected(1, day, month, year)
+            }
+
+            datePicker.show(supportFragmentManager, "DATE_PICKER")
         }
     }
 
+    // -----------------------------
+    // 📅 Date Picker Callback
+    // -----------------------------
     override fun onDateSelected(i: Int, day: Int, month: Int, year: Int) {
         if (i == 1) {
-            sowingDate = "$day-${month + 1}-$year"
-            logThis(sowingDate)
+            val sowingDate = "$day-${month + 1}-$year"
             cropId = receivedJson.optInt("id")
+
+            ProgressHelper.showProgressDialog(this)
             viewModel.saveFarmerSelectedCrop(this, sowingDate, cropId)
-            viewModel.saveFarmerSelectedCrop.observe(this) {
-                if (it != null) {
-                    if (it.get("status").toString() == "200") {
-                        Toast.makeText(this, R.string.selected_crop_saved, Toast.LENGTH_SHORT).show()
-                        startActivity(Intent(this, DashboardScreen::class.java).apply {
-                            putExtra("savedCropResponse", it.get("status").toString())
-                        })
-                    }
+
+            viewModel.saveFarmerSelectedCrop.observe(this) { response ->
+                ProgressHelper.disableProgressDialog()
+                val jsonObject = JSONObject(response.toString())
+                if (jsonObject.optString("status") == "200") {
+                    Toast.makeText(this, R.string.selected_crop_saved, Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, DashboardScreen::class.java).apply {
+                        putExtra("savedCropResponse", "200")
+                    })
+                } else {
+                    Toast.makeText(this, R.string.error_saving_crop, Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
+    // -----------------------------
+    // 🌍 Locale
+    // -----------------------------
     override fun attachBaseContext(newBase: Context) {
-        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
-            "en"
-        } else {
-            "mr"
-        }
-        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) "en" else "mr"
+        val updatedContext = configureLocale(newBase, languageToLoad)
         super.attachBaseContext(updatedContext)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        uiScope.cancel() // Cancel background coroutines to prevent leaks
+    }
 }

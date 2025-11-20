@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/status_colored_background"
     tools:context=".ui.screens.dashboard.shetishala.ShetishalaActivity">
 
     <include
@@ -28,7 +29,6 @@
             android:layout_height="match_parent"
             android:layout_marginHorizontal="@dimen/_10sdp"
             android:layout_marginVertical="@dimen/_5sdp"
-            android:backgroundTint="@color/actionbar_color_figma2"
             app:cardCornerRadius="@dimen/_10sdp">
 
             <LinearLayout
@@ -47,9 +47,9 @@
                         android:id="@+id/imageView28"
                         android:layout_width="@dimen/_24sdp"
                         android:layout_height="@dimen/_24sdp"
-                        app:tint="#64748B"
                         android:layout_marginStart="@dimen/_10sdp"
-                        app:srcCompat="@drawable/ic_table" />
+                        app:srcCompat="@drawable/schedules_icon"
+                        app:tint="#64748B" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -75,7 +75,6 @@
             android:layout_height="match_parent"
             android:layout_marginHorizontal="@dimen/_10sdp"
             android:layout_marginVertical="@dimen/_5sdp"
-            android:backgroundTint="@color/actionbar_color_figma2"
             app:cardCornerRadius="@dimen/_10sdp">
 
             <LinearLayout
@@ -96,7 +95,7 @@
                         android:layout_width="@dimen/_24sdp"
                         android:layout_height="@dimen/_24sdp"
                         android:layout_marginStart="@dimen/_10sdp"
-                        app:srcCompat="@drawable/video_ic" />
+                        app:srcCompat="@drawable/youtube_icon" />
 
                     <TextView
                         android:id="@+id/fpoCardTV"
@@ -118,4 +117,24 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/chatbotIcon"
+        android:layout_width="@dimen/_58sdp"
+        android:layout_height="@dimen/_58sdp"
+        android:layout_margin="@dimen/_10sdp"
+        android:padding="@dimen/_5sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/chatbot_icon" />
+
+    <ImageView
+        android:id="@+id/bubbleIconImageView"
+        android:layout_width="@dimen/_60sdp"
+        android:layout_height="@dimen/_60sdp"
+        android:layout_margin="@dimen/_25sdp"
+        app:layout_constraintBottom_toBottomOf="@+id/chatbotIcon"
+        app:layout_constraintEnd_toEndOf="@+id/chatbotIcon"
+        app:srcCompat="@drawable/corner_bubble" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

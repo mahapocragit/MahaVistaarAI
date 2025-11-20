@@ -2,7 +2,6 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.splash
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -13,13 +12,13 @@ import com.microsoft.clarity.ClarityConfig
 import com.microsoft.clarity.models.LogLevel
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
-import java.util.Locale
 
 class SplashScreenActivity : AppCompatActivity() {
 
@@ -37,35 +36,24 @@ class SplashScreenActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash_screen)
 
         val config = ClarityConfig(
-            projectId = "rqkkntubvb",
+            projectId = APIKeys.CLARITY_PROD,
             logLevel = LogLevel.Verbose
         )
         Clarity.initialize(applicationContext, config)
 
-        val isGuest =
-            AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
-        // Set Language Configuration
-        val languageToLoad = if (AppSettings.getLanguage(this) == "1") "en" else "mr"
-        Locale.setDefault(Locale(languageToLoad))
-        resources.updateConfiguration(
-            Configuration().apply { locale = Locale(languageToLoad) },
-            resources.displayMetrics
-        )
-
         appVersionText = findViewById(R.id.appVersionText)
-        appVersionText.text =
-            "${getString(R.string.app_version)} ${LocalCustom.getVersionName(this)}"
+        appVersionText.text = buildString {
+            append(getString(R.string.app_version))
+            append(" ")
+            append(LocalCustom.getVersionName(this@SplashScreenActivity))
+        }
         // Get Farmer ID
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
 
         // Navigate to the appropriate screen after delay
         Handler(Looper.getMainLooper()).postDelayed({
             val targetActivity = if (farmerId > 0) {
-                if (isGuest) {
-                    LoginScreen::class.java
-                } else {
-                    DashboardScreen::class.java
-                }
+                DashboardScreen::class.java
             } else {
                 LoginScreen::class.java
             }

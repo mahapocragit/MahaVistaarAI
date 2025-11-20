@@ -31,7 +31,7 @@ public class ClimateResilientTechnologyAdapter extends RecyclerView.Adapter<Clim
     @NonNull
     @Override
     public ClimateResilientTechnologyAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.single_climate_resilient_tech, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.sop_category_item_view, parent, false);
         return new ClimateResilientTechnologyAdapter.ViewHolder(view);
     }
 
@@ -63,7 +63,7 @@ public class ClimateResilientTechnologyAdapter extends RecyclerView.Adapter<Clim
         }
         public void setDvata(JSONObject jsonObject, OnMultiRecyclerItemClickListener listener) {
             try {
-                nameTextView2.setText(jsonObject.getString("MainGroupSRNo")+" - " );
+                nameTextView2.setText(jsonObject.getString("MainGroupSRNo"));
                 nameTextView.setText( jsonObject.getString("MainGroupName"));
             } catch (JSONException e) {
                 e.printStackTrace();

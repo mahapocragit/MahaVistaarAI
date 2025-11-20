@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/status_colored_background"
     tools:context=".ui.screens.dashboard.menugrid.pest.DiseaseInformation">
 
     <include
@@ -22,16 +23,18 @@
 
             <TextView
                 android:id="@+id/tvCropName"
-                android:layout_width="@dimen/_150sdp"
-                android:layout_height="@dimen/_23sdp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:background="@drawable/layout_round_button_background"
-                android:elevation="@dimen/_5sdp"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:textStyle="bold"
                 android:gravity="center"
+                android:textColor="@color/font_color_figma"
                 android:text="@string/Crop_name"
                 android:textAlignment="center"
-                android:textSize="@dimen/text14" />
+                android:textSize="@dimen/_12sdp" />
 
             <RelativeLayout
                 android:id="@+id/bannerLayout"

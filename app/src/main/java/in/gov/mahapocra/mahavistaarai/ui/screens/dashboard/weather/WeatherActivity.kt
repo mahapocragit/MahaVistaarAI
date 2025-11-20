@@ -1,23 +1,35 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityWeatherHomeTempBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.TemperatureAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -27,7 +39,7 @@ import java.util.Locale
 class WeatherActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWeatherHomeTempBinding
-    private lateinit var farmerViewModel: FarmerViewModel
+    private val farmerViewModel: FarmerViewModel by viewModels()
     private lateinit var recyclerAdapter: TemperatureAdapter
     private lateinit var jsonArrayForecast: JSONArray
     private lateinit var jsonArrayPrevious: JSONArray
@@ -42,17 +54,36 @@ class WeatherActivity : AppCompatActivity() {
         switchLanguage(this, languageToLoad)
         binding = ActivityWeatherHomeTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
+        uiResponsive(binding.root)
         binding.relativeLayoutTopBar.relativeLayoutToolbar.setBackgroundColor(
             ContextCompat.getColor(
                 this,
                 R.color.gradient_top_figma
             )
         )
+        AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
+        lifecycleScope.launch {
+            delay(5000) // 5 seconds
+            binding.bubbleIconImageView.animate()
+                .alpha(0f)
+                .setDuration(500) // animation duration in ms
+                .withEndAction {
+                    binding.bubbleIconImageView.visibility = View.GONE
+                    binding.bubbleIconImageView.alpha = 1f // reset alpha in case you show it again
+                }
+                .start()
+        }
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+            startActivity(Intent(this, DashboardScreen::class.java))
         }
+
+        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                startActivity(Intent(this@WeatherActivity, DashboardScreen::class.java))
+            }
+        })
+        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
         farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
         binding.tabLayout.visibility = View.GONE
         binding.viewPager.visibility = View.GONE
@@ -130,6 +161,26 @@ class WeatherActivity : AppCompatActivity() {
         setRecyclerViewUsingArray(jsonArrayForecast)
         recyclerAdapter.notifyDataSetChanged()
         fetchTalukaMasterData()
+        val isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
+        binding.chatbotIcon.setOnClickListener {
+            if (!isGuest) {
+                startActivity(Intent(this, ChatbotActivity::class.java))
+            } else {
+                AlertDialog.Builder(this)
+                    .setMessage(R.string.bot_chat_login_redirect_mesage)
+                    .setPositiveButton(R.string.yes) { dialog, _ ->
+                        // Handle login action here
+                        startActivity(Intent(this, LoginScreen::class.java).apply {
+                            putExtra("from", "dashboard")
+                        })
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton(R.string.no) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+            }
+        }
     }
 
     private fun setRecyclerViewUsingArray(jsonArray: JSONArray) {

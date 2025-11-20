@@ -6,19 +6,25 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.ContextThemeWrapper
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewTreeObserver
 import android.view.Window
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
-import android.view.animation.CycleInterpolator
-import android.view.animation.TranslateAnimation
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
+import android.widget.Button
 import android.widget.GridView
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -26,8 +32,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.messaging.FirebaseMessaging
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.microsoft.clarity.Clarity
 import com.squareup.picasso.Picasso
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
@@ -38,31 +46,43 @@ import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.CropsCategName
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDashboardScreenBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropRecyclerSapAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DashboardAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DrawerMenuAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.AuthenticateFarmerIdActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.Registration
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.ProfileScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.etl.AgriStackAdvisoryActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.DBTActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.marketprice.MarketPrice
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard.HealthCardActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.sop.SOPActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.AboutActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.CreditsActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.CostCalculatorDashboardActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.experts.ExpertsCornerFarmerActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.leaderboard.LeaderboardActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.news.NewsListActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.ComingSoonActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.NotificationActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper.shrinkToCenter
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getLatestAdvisoriesAsJsonArray
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.ApUtil
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppHelper
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.SideNavMenuHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -71,6 +91,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -79,10 +100,11 @@ import java.util.Objects
 class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecyclerItemClickListener {
 
     private lateinit var binding: ActivityDashboardScreenBinding
+    private val farmerViewModel: FarmerViewModel by viewModels()
     private lateinit var navUserName: TextView
+    private var consentMessage: String? = null
     private var districtCode: Int = 0
     private var villageCode: Int = 0
-    private var isGuest: Boolean = false
     private lateinit var navUserPhone: TextView
     private lateinit var languageToLoad: String
     private var farmerId = 0
@@ -93,9 +115,9 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     private var savedCropWoTRId: String? = null
     private var savedCropImageUrl: String? = null
     private lateinit var appPreferenceManager: AppPreferenceManager
-    private lateinit var farmerViewModel: FarmerViewModel
     private var jsonArray: JSONArray? = null
     private var showToast = true
+    private var etlAdvisoryJsonArray: JSONArray = JSONArray()
     private var selectedCropList: ArrayList<CropsCategName>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,63 +132,30 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         binding = ActivityDashboardScreenBinding.inflate(
             layoutInflater
         )
+        appPreferenceManager = AppPreferenceManager(this)
         setContentView(binding.root)
-
-
-        val showOverlay = AppPreferenceManager(this).getBoolean("show_overlay")
-        if (showOverlay) {
-            binding.drawerLayout1.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-            binding.appBarMain.overlayView.visibility = View.VISIBLE
-        } else {
-            binding.drawerLayout1.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-            binding.appBarMain.overlayView.visibility = View.GONE
-        }
-
-        binding.appBarMain.overlayView.setOnClickListener {
-            binding.appBarMain.overlayView.visibility = View.GONE
-            binding.appBarMain.overlayImage.visibility = View.GONE
-            AppPreferenceManager(this).saveBoolean("show_overlay", false)
-            binding.drawerLayout1.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-        }
-
-        val shakeAnimation = AnimationUtils.loadAnimation(this, R.anim.shake)
-        binding.appBarMain.dashboardScreen.imageView20.startAnimation(shakeAnimation)
-
-        CoroutineScope(Dispatchers.Main).launch {
-            delay(3000)
-            binding.appBarMain.dashboardScreen.imageView20.clearAnimation()
-        }
+        askForPermissions()
+        observeResponse()
+        setUpListeners()
+        FirebaseHelper(this)
 
         binding.appBarMain.dashboardScreen.progressBar.visibility = View.VISIBLE
         binding.appBarMain.dashboardScreen.temperatureTextView.visibility = View.GONE
-        isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
-        farmerViewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
-        fetchReceivingData()
-        appPreferenceManager = AppPreferenceManager(this)
-        init()
-        FirebaseHelper(this)
-        binding.appBarMain.dashboardScreen.deleteCropImageView.setOnClickListener {
-            cropId = savedCropId
-            deleteDialog()
-        }
-        farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
-        binding.appBarMain.dashboardScreen.greetingsTextView.text = greetingMessage
-        binding.appBarMain.dashboardScreen.timestampTextView.text = formattedTimestamp
-        binding.appBarMain.dashboardScreen.temperatureLayout.setOnClickListener {
-            val tempTXT = binding.appBarMain.dashboardScreen.temperatureTextView.text
-            if (tempTXT == "22°C") {
-                Toast.makeText(this, "Weather isn't updated Currently", Toast.LENGTH_SHORT).show()
-            } else {
-                val weather = Intent(
-                    this@DashboardScreen,
-                    WeatherActivity::class.java
-                )
-                startActivity(weather)
-            }
+
+        if (NetworkUtils.isInternetAvailable(this)) {
+            farmerViewModel.validateFCMToken(this)
+        } else {
+            LocalCustom.createSnackbar(binding.root, "Internet not available!")
         }
 
-        fetchFirebaseTokenFromServer()
-        setConfiguration()
+        if (NetworkUtils.isInternetAvailable(this)) {
+            farmerViewModel.fetchWeatherDetails(this, languageToLoad)
+        } else {
+            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+        }
+        binding.appBarMain.dashboardScreen.greetingsTextView.text = greetingMessage
+        binding.appBarMain.dashboardScreen.timestampTextView.text = formattedTimestamp
+
         this.window.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         )
@@ -186,13 +175,22 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         toggle.syncState()
         toggle.isDrawerSlideAnimationEnabled = true
 
+        drawer.addDrawerListener(object : DrawerLayout.DrawerListener {
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
+            override fun onDrawerOpened(drawerView: View) {
+                // 👉 Drawer is fully opened
+                Clarity.sendCustomEvent("SIDEBAR_BUTTON_CLICKED")
+            }
+
+            override fun onDrawerClosed(drawerView: View) {}
+            override fun onDrawerStateChanged(newState: Int) {}
+        })
+
         // Set Data
         val userName: String =
             AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName)
         val userNumber: String =
             AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
-        binding.appBarMain.dashboardScreen.userFullNameTextView.text =
-            if (isGuest) "Guest" else userName
         val hView = binding.navView.getHeaderView(0)
         navUserName = hView.findViewById(R.id.tv_farmerName)
         navUserPhone = hView.findViewById(R.id.tv_famerPhoneNumber)
@@ -202,7 +200,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             navUserPhone.text = userNumber
         }
 
-        // navigationView.setNavigationItemSelectedListener(this);
         binding.appBarMain.dashboardScreen.gridViewDashboard.columnWidth =
             GridView.STRETCH_COLUMN_WIDTH
         if (languageToLoad.equals("en", ignoreCase = true)) {
@@ -214,34 +211,70 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 this, arrayCategoryMarathi, arrayCategoryImg, "single_item_grid"
             )
         }
-
-        binding.appBarMain.dashboardScreen.imageView20.setOnClickListener {
-            if (!isGuest) {
-                startActivity(Intent(this, ChatbotActivity::class.java))
-            } else {
-                AlertDialog.Builder(this)
-                    .setMessage(R.string.bot_chat_login_redirect_mesage)
-                    .setPositiveButton(R.string.yes) { dialog, _ ->
-                        // Handle login action here
-                        startActivity(Intent(this, LoginScreen::class.java).apply {
-                            putExtra("from", "dashboard")
-                        })
-                        dialog.dismiss()
-                    }
-                    .setNegativeButton(R.string.no) { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    .show()
-            }
+        setVersion()
+        if (NetworkUtils.isInternetAvailable(this)) {
+            farmerViewModel.getFarmerSelectedCrop(this, languageToLoad)
+        } else {
+            LocalCustom.createSnackbar(binding.root, "Internet not available!")
         }
 
-        appPreferenceManager.clearAll()
+        val animation = AnimationUtils.loadAnimation(this, R.anim.blink)
+        binding.appBarMain.dashboardScreen.etlWarningLayout.animation = animation
+
+        if (NetworkUtils.isInternetAvailable(this)) {
+            farmerViewModel.getNotificationList(this)
+        } else {
+            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+        }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                finishAffinity()
+            }
+        })
+    }
+
+    private fun shakeAnimationChatbot() {
+        val shakeAnimation = AnimationUtils.loadAnimation(this, R.anim.shake)
+        binding.appBarMain.dashboardScreen.chatbotIcon.startAnimation(shakeAnimation)
+
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(3000)
+            binding.appBarMain.dashboardScreen.chatbotIcon.clearAnimation()
+        }
+    }
+
+    private fun bubbleAnimationChatbot() {
+        lifecycleScope.launch {
+            delay(5000) // 5 seconds
+            binding.appBarMain.dashboardScreen.chatBubbleImageView.animate()
+                .alpha(0f)
+                .setDuration(500) // animation duration in ms
+                .withEndAction {
+                    binding.appBarMain.dashboardScreen.chatBubbleImageView.visibility = View.GONE
+                    binding.appBarMain.dashboardScreen.chatBubbleImageView.alpha =
+                        1f // reset alpha in case you show it again
+                }
+                .start()
+        }
+        shrinkToCenter(binding.appBarMain.dashboardScreen.chatBubbleImageView)
+    }
+
+    private fun setUpListeners() {
+
+        init()
+        val today = LocalDate.now().toString()
+        appPreferenceManager.saveString("AGRISTACK_LAST_DATE", today)
+        setUpDrawerMenu()
         dashboardGridItemsLayoutSetup()
+        shakeAnimationChatbot()
+        bubbleAnimationChatbot()
+
         binding.appBarMain.imgLangChange.setOnClickListener { openChangeLangPopup() }
         binding.appBarMain.imgNotification.setOnClickListener {
             val intent = Intent(
                 this@DashboardScreen,
-                ComingSoonActivity::class.java
+                NotificationActivity::class.java
             )
             startActivity(intent)
         }
@@ -263,10 +296,22 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             appPreferenceManager.clearPreference(AppConstants.ACTION_FROM_DASHBOARD)
             startActivity(intent)
         }
-        setVersion()
-        farmerViewModel.getFarmerSelectedCrop(this, languageToLoad)
+
+        binding.appBarMain.dashboardScreen.temperatureLayout.setOnClickListener {
+            val tempTXT = binding.appBarMain.dashboardScreen.temperatureTextView.text
+            if (tempTXT == "22°C") {
+                Toast.makeText(this, "Weather isn't updated Currently", Toast.LENGTH_SHORT).show()
+            } else {
+                val weather = Intent(
+                    this@DashboardScreen,
+                    WeatherActivity::class.java
+                )
+                startActivity(weather)
+            }
+        }
 
         binding.appBarMain.dashboardScreen.customNavBottom.navHome.setOnClickListener {
+            Clarity.sendCustomEvent("HOME_BUTTON_CLICKED")
             startActivity(
                 Intent(
                     this@DashboardScreen,
@@ -274,107 +319,163 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 )
             )
         }
+
+        binding.appBarMain.dashboardScreen.chatbotIcon.setOnClickListener {
+            Clarity.sendCustomEvent("VISTAAR_AI_BUTTON_CLICKED")
+            if (NetworkUtils.isInternetAvailable(this)) {
+                startActivity(Intent(this, ChatbotActivity::class.java))
+            } else {
+                LocalCustom.createSnackbar(binding.root, "Internet not available!")
+            }
+        }
+
         binding.appBarMain.dashboardScreen.customNavBottom.navChc.setOnClickListener {
-            startActivity(
-                Intent(
-                    this@DashboardScreen,
-                    CHCenterActivity::class.java
+            Clarity.sendCustomEvent("CHC_BUTTON_CLICKED")
+            if (NetworkUtils.isInternetAvailable(this)) {
+                startActivity(
+                    Intent(
+                        this@DashboardScreen,
+                        CHCenterActivity::class.java
+                    )
                 )
-            )
+            } else {
+                LocalCustom.createSnackbar(binding.root, "Internet not available!")
+            }
         }
+
         binding.appBarMain.dashboardScreen.customNavBottom.navVideos.setOnClickListener {
-            startActivity(
-                Intent(
-                    this@DashboardScreen,
-                    VideosActivity::class.java
-                )
-            )
-        }
-        binding.appBarMain.dashboardScreen.customNavBottom.navDbt.setOnClickListener {
-            startActivity(
-                Intent(
-                    this@DashboardScreen,
-                    DBTActivity::class.java
-                )
-            )
-        }
-        askForLocationAndMicrophonePermission()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        val shakeAnimation = AnimationUtils.loadAnimation(this, R.anim.shake)
-        binding.appBarMain.dashboardScreen.imageView20.startAnimation(shakeAnimation)
-
-        CoroutineScope(Dispatchers.Main).launch {
-            delay(3000)
-            binding.appBarMain.dashboardScreen.imageView20.clearAnimation()
-        }
-    }
-
-    private fun askForLocationAndMicrophonePermission() {
-        val permissionsNeeded = mutableListOf<String>()
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            permissionsNeeded.add(Manifest.permission.RECORD_AUDIO)
-        }
-
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            permissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION)
-        }
-
-        if (permissionsNeeded.isNotEmpty()) {
-            ActivityCompat.requestPermissions(
-                this,
-                permissionsNeeded.toTypedArray(),
-                PERMISSION_REQUEST_CODE
-            )
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            for ((index, permission) in permissions.withIndex()) {
-                if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
-                    UIToastMessage.show(
+            Clarity.sendCustomEvent("VIDEOS_BUTTON_CLICKED")
+            if (NetworkUtils.isInternetAvailable(this)) {
+                startActivity(
+                    Intent(
                         this@DashboardScreen,
-                        "Access Permission Granted"
+                        VideosActivity::class.java
                     )
-                    // Perform the related action (e.g., accessing the camera) if needed
-                } else {
-                    UIToastMessage.show(
+                )
+            } else {
+                LocalCustom.createSnackbar(binding.root, "Internet not available!")
+            }
+        }
+
+        binding.appBarMain.dashboardScreen.customNavBottom.navShetishala.setOnClickListener {
+            Clarity.sendCustomEvent("DBT_BUTTON_CLICKED")
+            if (NetworkUtils.isInternetAvailable(this)) {
+                startActivity(
+                    Intent(
                         this@DashboardScreen,
-                        "Access Permission Denied"
+                        ShetishalaActivity::class.java
                     )
-                    // Optionally handle specific denied permission cases here
+                )
+            } else {
+                LocalCustom.createSnackbar(binding.root, "Internet not available!")
+            }
+        }
+
+        binding.appBarMain.dashboardScreen.deleteCropImageView.setOnClickListener {
+            cropId = savedCropId
+            deleteDialog()
+        }
+
+        binding.appBarMain.dashboardScreen.etlWarningLayout.setOnClickListener {
+            val inflater = LayoutInflater.from(this)
+            val dialogView = inflater.inflate(R.layout.etl_crossed_dialog, null)
+            val cropSapRecyclerView =
+                dialogView.findViewById<RecyclerView>(R.id.cropSapRecyclerView)
+            val redirectToETLAdvisoryTextView =
+                dialogView.findViewById<TextView>(R.id.redirectToETLAdvisoryTextView)
+            val cropRecyclerSapAdapter =
+                CropRecyclerSapAdapter(getLatestAdvisoriesAsJsonArray(etlAdvisoryJsonArray))
+            cropSapRecyclerView.apply {
+                hasFixedSize()
+                layoutManager = LinearLayoutManager(this@DashboardScreen)
+                Log.d("TAGGER", "onCreate: ${getLatestAdvisoriesAsJsonArray(etlAdvisoryJsonArray)}")
+                adapter = cropRecyclerSapAdapter
+            }
+
+            val dialog = AlertDialog.Builder(this)
+                .setView(dialogView)
+                .create()
+
+            val closeIcon = dialogView.findViewById<ImageView>(R.id.closeIcon)
+            redirectToETLAdvisoryTextView.setOnClickListener {
+                dialog.dismiss()
+                startActivity(Intent(this, AgriStackAdvisoryActivity::class.java))
+            }
+
+            cropSapRecyclerView.viewTreeObserver.addOnGlobalLayoutListener(object :
+                ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    cropSapRecyclerView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                    val itemCount = cropRecyclerSapAdapter.itemCount
+                    val visibleItems = minOf(itemCount, 3) // Show up to 3 items
+                    val itemView = cropSapRecyclerView.findViewHolderForAdapterPosition(0)?.itemView
+
+                    if (itemView != null) {
+                        val itemHeight = itemView.measuredHeight
+                        val maxHeight = itemHeight * visibleItems
+                        cropSapRecyclerView.layoutParams.height = maxHeight
+                        cropSapRecyclerView.requestLayout()
+                    }
                 }
+            })
+
+            dialog.show()
+            closeIcon.setOnClickListener {
+                dialog.dismiss()
             }
         }
     }
 
-    fun shakeButton(button: View) {
-        val shake = TranslateAnimation(0f, 10f, 0f, 0f).apply {
-            duration = 100           // 0.1 second per shake
-            interpolator = CycleInterpolator(30f) // total cycles: 30 (about 3 sec)
-        }
-        button.startAnimation(shake)
-    }
+    private fun observeResponse() {
 
-    private fun fetchReceivingData() {
-        // Observe selected crop response
+        farmerViewModel.error.observe(this) {
+            LocalCustom.createSnackbar(binding.root, it)
+            Log.d("TAGGER", "onCreate: $it")
+        }
+
+        farmerViewModel.checkFCMTokenResponse.observe(this) {
+            if (it != null) {
+                val jSONObject = JSONObject(it.toString())
+                val status = jSONObject.optInt("status")
+                if (status != 200) {
+                    FirebaseHelper(this).getFCMToken { fcmToken ->
+                        farmerViewModel.updateFCMToken(this, fcmToken)
+                    }
+                } else {
+                    AppPreferenceManager(this).saveBoolean("FCM_VALIDATED", true)
+                }
+            }
+        }
+
+        farmerViewModel.getNotificationResponse.observe(this) {
+            if (it != null) {
+                val jsonObject = JSONObject(it.toString())
+                val notificationJsonArray = jsonObject.getJSONArray("notifications")
+
+                var unreadCount = 0
+                for (i in 0 until notificationJsonArray.length()) {
+                    val notification = notificationJsonArray.getJSONObject(i)
+                    if (notification.optInt("is_read") == 0) {
+                        unreadCount++
+                    }
+                }
+                // Optionally update your badge view
+                updateNotificationCount(unreadCount)
+            }
+        }
+
+        farmerViewModel.getCropSapAdvisoryResponse.observe(this) {
+            if (it != null) {
+                val jsonObject = JSONObject(it.toString())
+                val jsonArray = jsonObject.optJSONArray("advisory")
+                if (jsonArray.length() != 0) {
+                    binding.appBarMain.dashboardScreen.etlWarningLayout.visibility = View.VISIBLE
+                    etlAdvisoryJsonArray = jsonArray
+                }
+            }
+        }
+
         farmerViewModel.getFarmerSelectedCrop.observe(this) { response ->
             response ?: return@observe
 
@@ -397,6 +498,21 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                             savedCropImageUrl = selectedCrop.getString("image")
                             savedCropSowingDate = selectedCrop.getString("sowing_date")
                             savedCropWoTRId = selectedCrop.getString("wotr_crop_id")
+
+                            AppPreferenceManager(this).saveInt("CROP_ID_SAVED", savedCropId)
+                            AppPreferenceManager(this).saveString("CROP_NAME_SAVED", savedCropName)
+                            AppPreferenceManager(this).saveString(
+                                "CROP_IMAGE_SAVED",
+                                savedCropImageUrl
+                            )
+                            AppPreferenceManager(this).saveString(
+                                "CROP_SOWING_DATE_SAVED",
+                                savedCropSowingDate
+                            )
+                            AppPreferenceManager(this).saveString(
+                                "CROP_WOTR_ID_SAVED",
+                                savedCropWoTRId
+                            )
 
                             binding.appBarMain.dashboardScreen.apply {
                                 addChangeCropTV.setText(R.string.change_Crop)
@@ -457,10 +573,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 } else {
                     UIToastMessage.show(this, cropResponse.getResponse())
                 }
-
-                // Fetch taluka data next
-                farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
-
             } catch (e: Exception) {
                 Log.e("fetchReceivingData", "Exception: ${e.localizedMessage}")
             }
@@ -480,37 +592,17 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null)
                     selectedCropList?.clear()
                     farmerViewModel.getFarmerSelectedCrop(this, languageToLoad)
-
+                    savedCropName = ""
+                    AppPreferenceManager(this).saveInt("CROP_ID_SAVED", 0)
+                    AppPreferenceManager(this).clearPreference("CROP_NAME_SAVED")
+                    AppPreferenceManager(this).clearPreference("CROP_IMAGE_SAVED")
+                    AppPreferenceManager(this).clearPreference("CROP_SOWING_DATE_SAVED")
+                    AppPreferenceManager(this).clearPreference("CROP_WOTR_ID_SAVED")
                 } else {
                     UIToastMessage.show(this, deleteResponse.getResponse())
                 }
             } catch (e: Exception) {
                 Log.e("deleteSelectedCrop", "Exception: ${e.localizedMessage}")
-            }
-        }
-
-        // Observe taluka list
-        farmerViewModel.talukaList.observe(this) { response ->
-            response ?: return@observe
-
-            try {
-                val jsonObject = JSONObject(response.toString())
-                val talukaArray = jsonObject.optJSONArray("data")
-                val talukaID =
-                    AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
-
-                for (i in 0 until talukaArray!!.length()) {
-                    val talukaItem = talukaArray.getJSONObject(i)
-                    if (talukaItem.optInt("code") == talukaID) {
-                        binding.appBarMain.dashboardScreen.weatherTalukaTV.text =
-                            talukaItem.optString("name")
-                    }
-                }
-
-                farmerViewModel.fetchWeatherDetails(this, talukaID, languageToLoad)
-
-            } catch (e: Exception) {
-                Log.e("talukaListObserver", "Exception: ${e.localizedMessage}")
             }
         }
 
@@ -548,6 +640,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
             try {
                 val jsonObject = JSONObject(response.toString())
+                Log.d("TAGGER", "observeResponse: $jsonObject")
                 if (jsonObject.optInt("status") == 200) {
                     val data = jsonObject.optJSONObject("data") ?: return@observe
 
@@ -556,16 +649,24 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     val emailId = data.optString("EmailId", "")
                     val ffaReg = data.optInt("FAAPRegistrationID", -1)
                     val distName = data.optString("DistrictName", "")
+                    val distNameMr = data.optString("DistrictNameMr", "")
                     val distId = data.optInt("DistrictCode", 0)
                     val talukaName = data.optString("TalukaName", "")
+                    val talukaNameMr = data.optString("TalukaNameMr", "")
                     val talukaId = data.optInt("TalukaCode", 0)
                     val villageId = data.optInt("VillageCode", 0)
                     val villageName = data.optString("VillageName", "")
+                    val villageNameMr = data.optString("VillageNameMr", "")
                     val agristack_id = data.optString("farmer_id", "")
-
+                    val consent = data.optBoolean("consent")
+                    farmerViewModel.getCropSapAdvisory(
+                        this,
+                        villageId
+                    ) //TODO: static village code 537820
                     districtCode = distId
                     villageCode = talukaId
-
+                    binding.appBarMain.dashboardScreen.weatherTalukaTV.text =
+                        if (languageToLoad == "mr") talukaNameMr else talukaName
                     AppSettings.getInstance().apply {
                         setValue(this@DashboardScreen, AppConstants.uName, name)
                         setValue(this@DashboardScreen, AppConstants.uMobileNo, mobNo)
@@ -576,18 +677,19 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                             ffaReg
                         )
                         setValue(this@DashboardScreen, AppConstants.uDIST, distName)
+                        setValue(this@DashboardScreen, AppConstants.uDISTMR, distNameMr)
                         setIntValue(this@DashboardScreen, AppConstants.uDISTId, distId)
                         setValue(this@DashboardScreen, AppConstants.uTALUKA, talukaName)
+                        setValue(this@DashboardScreen, AppConstants.uTALUKAMR, talukaNameMr)
                         setIntValue(this@DashboardScreen, AppConstants.uTALUKAID, talukaId)
                         setValue(this@DashboardScreen, AppConstants.uVILLAGE, villageName)
+                        setValue(this@DashboardScreen, AppConstants.uVILLAGEMR, villageNameMr)
                         setIntValue(this@DashboardScreen, AppConstants.uVILLAGEID, villageId)
                         setBooleanValue(this@DashboardScreen, AppConstants.userDataSaved, true)
                         setValue(this@DashboardScreen, AppConstants.AGRISTACKID, agristack_id)
                     }
 
-                    binding.appBarMain.dashboardScreen.userFullNameTextView.text =
-                        if (isGuest) "Guest" else name
-
+                    binding.appBarMain.dashboardScreen.userFullNameTextView.text = name
                     val userName = AppSettings.getInstance().getValue(this, AppConstants.uName, "")
                     val userNumber =
                         AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, "")
@@ -597,15 +699,200 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
                     navUserName.text = ApUtil.getCamelCaseStreing(userName).ifEmpty { userName }
                     navUserPhone.text = userNumber
-
-                    farmerViewModel.fetchWeatherDetails(this, talukaId, languageToLoad)
+                    farmerViewModel.fetchWeatherDetails(this, languageToLoad)
+                    if (agristack_id != "null" && farmerId != null) {
+                        if (!consent) {
+                            showDialogForConsent()
+                        } else {
+                            Log.d("TAGGER", "observeResponse: consent is given")
+                        }
+                    } else {
+                        val lastDate = appPreferenceManager.getString("AGRISTACK_LAST_DATE")
+                        val today = LocalDate.now().toString()
+                        if (lastDate != today) {
+                            // New day → reset flag
+                            appPreferenceManager.saveBoolean("AGRISTACK_LOGIN_DIALOG", false)
+                        }
+                        val showDialog = appPreferenceManager.getBoolean("AGRISTACK_LOGIN_DIALOG")
+                        if (!showDialog) {
+                            showAgristackLinkingDialog()
+                        }
+                        Log.d("TAGGER", "observeResponse: $consent farmer id null")
+                    }
                 }
             } catch (e: Exception) {
                 Log.e("userDetailsObserver", "Exception: ${e.localizedMessage}")
             }
         }
+
+
+        farmerViewModel.updateFCMTokenResponse.observe(this) {
+            Log.d("TAGGER", "logoutFromApp: $it")
+            if (it != null) {
+                AppPreferenceManager(this).saveBoolean("FCM_VALIDATED", true)
+                val jsonObject = JSONObject(it.toString())
+                val response = jsonObject.optString("response")
+                if (response == "FCM Cleared") {
+                    AppSettings.getInstance().setValue(this, AppConstants.uName, AppConstants.uName)
+                    AppSettings.getInstance()
+                        .setValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
+                    AppSettings.getInstance()
+                        .setValue(this, AppConstants.uEmail, AppConstants.uEmail)
+                    AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, 0)
+                    AppSettings.getInstance().setValue(this, AppConstants.uDIST, AppConstants.uDIST)
+                    AppSettings.getInstance().setIntValue(this, AppConstants.uDISTId, 0)
+                    AppSettings.getInstance()
+                        .setValue(this, AppConstants.uTALUKA, AppConstants.uTALUKA)
+                    AppSettings.getInstance().setIntValue(this, AppConstants.uTALUKAID, 0)
+                    AppSettings.getInstance()
+                        .setValue(this, AppConstants.uVILLAGE, AppConstants.uVILLAGE)
+                    AppSettings.getInstance().setIntValue(this, AppConstants.uVILLAGEID, 0)
+                    AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null)
+                    AppUtility.getInstance().clearAppSharedPrefData(this, AppConstants.kSHARED_PREF)
+                    AppSettings.getInstance()
+                        .setBooleanValue(this, AppConstants.userDataSaved, false)
+                    val intent = Intent(this@DashboardScreen, SplashScreenActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    Log.d("TAGGER", "logoutFromApp: $response")
+                }
+            }
+        }
+
+        farmerViewModel.consentResponse.observe(this) { response ->
+            if (response != null) {
+                val jsonObject = JSONObject(response.toString())
+                val status = jsonObject.optInt("status")
+                if (status == 200) {
+                    Toast.makeText(this, consentMessage ?: "Consent Submitted", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    val responseText = jsonObject.optString("response")
+                    Toast.makeText(this, responseText, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
+    private fun showDialogForConsent() {
+
+        val dialogLayout = LayoutInflater.from(this)
+            .inflate(R.layout.dialog_consent_layout, null)
+
+        val consentDialog = AlertDialog.Builder(this)
+            .setView(dialogLayout)
+            .setCancelable(false)
+            .create()
+
+        // ✅ get the view from the dialog layout, not the activity
+        val acceptText = dialogLayout.findViewById<TextView>(R.id.acceptText)
+        val declineText = dialogLayout.findViewById<TextView>(R.id.declineText)
+        acceptText.setOnClickListener {
+            consentMessage = ContextCompat.getString(this, R.string.consent_accepted)
+            farmerViewModel.updateConsent(this, true)
+            consentDialog.dismiss() // optionally close the dialog
+        }
+        declineText.setOnClickListener {
+            val confirmationDialog =
+                AlertDialog.Builder(this).setTitle(R.string.withdraw_consent)
+                    .setMessage(R.string.withdraw_consent_desc_decline)
+                    .setPositiveButton(R.string.confirm) { dialog, _ ->
+                        consentMessage = ContextCompat.getString(this, R.string.consent_declined)
+                        farmerViewModel.updateConsent(this, false)
+                        logoutFromApp()
+                        dialog.dismiss()
+                        consentDialog.dismiss()
+                    }.setNegativeButton(R.string.cancel) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+            confirmationDialog.show() // optionally close the dialog
+        }
+        consentDialog.show()
+    }
+
+    private fun updateNotificationCount(unreadNotificationsCount: Int) {
+        if (unreadNotificationsCount > 0) {
+            binding.appBarMain.notificationBadge.text = unreadNotificationsCount.toString()
+            binding.appBarMain.notificationBadge.visibility = View.VISIBLE
+        } else {
+            binding.appBarMain.notificationBadge.visibility = View.GONE
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        shakeAnimationChatbot()
+        if (NetworkUtils.isInternetAvailable(this)) {
+            farmerViewModel.getNotificationList(this)
+        } else {
+            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+        }
+    }
+
+    private fun askForPermissions() {
+        val permissionsNeeded = mutableListOf<String>()
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            permissionsNeeded.add(Manifest.permission.RECORD_AUDIO)
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            permissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+
+        // Only check POST_NOTIFICATIONS for Android 13 and above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                permissionsNeeded.add(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+
+        if (permissionsNeeded.isNotEmpty()) {
+            ActivityCompat.requestPermissions(
+                this,
+                permissionsNeeded.toTypedArray(),
+                PERMISSION_REQUEST_CODE
+            )
+        }
+    }
+
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            for ((index, permission) in permissions.withIndex()) {
+                if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
+                    UIToastMessage.show(
+                        this@DashboardScreen,
+                        "Access Permission Granted"
+                    )
+                    // Perform the related action (e.g., accessing the camera) if needed
+                } else {
+                    UIToastMessage.show(
+                        this@DashboardScreen,
+                        "Access Permission Denied"
+                    )
+                    // Optionally handle specific denied permission cases here
+                }
+            }
+        }
+    }
 
     private val greetingMessage: String
         get() {
@@ -635,155 +922,179 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         binding.appBarMain.dashboardScreen.gridViewDashboard.onItemClickListener =
             OnItemClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
                 when (position) {
-                    0 -> if (savedCropName.isEmpty()) {
-                        val sharing = Intent(this@DashboardScreen, AddCropActivity::class.java)
-                        appPreferenceManager.saveString(
-                            AppConstants.ACTION_FROM_DASHBOARD,
-                            AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD
-                        )
-                        startActivity(sharing)
-                    } else {
-                        val intent = Intent(this, AdvisoryCropActivity::class.java)
-                        intent.putExtra("id", savedCropId)
-                        intent.putExtra("wotr_crop_id", savedCropWoTRId)
-                        intent.putExtra("mUrl", savedCropImageUrl)
-                        intent.putExtra("sowingDate", savedCropSowingDate)
-                        intent.putExtra("mName", savedCropName)
-                        startActivity(intent)
+                    0 -> {
+                        if (NetworkUtils.isInternetAvailable(this)) {
+                            if (savedCropName.isEmpty()) {
+                                val sharing =
+                                    Intent(this@DashboardScreen, AddCropActivity::class.java)
+                                appPreferenceManager.saveString(
+                                    AppConstants.ACTION_FROM_DASHBOARD,
+                                    AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD
+                                )
+                                startActivity(sharing)
+                            } else {
+                                val intent = Intent(this, AdvisoryCropActivity::class.java)
+                                intent.putExtra("id", savedCropId)
+                                intent.putExtra("wotr_crop_id", savedCropWoTRId)
+                                intent.putExtra("mUrl", savedCropImageUrl)
+                                intent.putExtra("sowingDate", savedCropSowingDate)
+                                intent.putExtra("mName", savedCropName)
+                                startActivity(intent)
+                            }
+                        } else {
+                            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+                        }
+
                     }
 
                     1 -> {
-                        if (savedCropName.isEmpty()) {
-                            val sharing = Intent(this@DashboardScreen, AddCropActivity::class.java)
-                            appPreferenceManager.saveString(
-                                AppConstants.ACTION_FROM_DASHBOARD,
-                                AppConstants.SOP_FROM_DASHBOARD
-                            )
-                            startActivity(sharing)
+                        if (NetworkUtils.isInternetAvailable(this)) {
+                            if (savedCropName.isEmpty()) {
+                                val sharing =
+                                    Intent(this@DashboardScreen, AddCropActivity::class.java)
+                                appPreferenceManager.saveString(
+                                    AppConstants.ACTION_FROM_DASHBOARD,
+                                    AppConstants.SOP_FROM_DASHBOARD
+                                )
+                                startActivity(sharing)
+                            } else {
+                                val intent = Intent(this, SOPActivity::class.java)
+                                intent.putExtra("id", savedCropId)
+                                intent.putExtra("wotr_crop_id", savedCropWoTRId)
+                                intent.putExtra("mUrl", savedCropImageUrl)
+                                intent.putExtra("mName", savedCropName)
+                                startActivity(intent)
+                            }
                         } else {
-                            val intent = Intent(this, SOPActivity::class.java)
-                            intent.putExtra("id", savedCropId)
-                            intent.putExtra("wotr_crop_id", savedCropWoTRId)
-                            intent.putExtra("mUrl", savedCropImageUrl)
-                            intent.putExtra("mName", savedCropName)
-                            startActivity(intent)
+                            LocalCustom.createSnackbar(binding.root, "Internet not available!")
                         }
                     }
 
                     2 -> {
-                        val healthIntent = Intent(
-                            this@DashboardScreen,
-                            HealthCardActivity::class.java
-                        )
-                        startActivity(healthIntent)
+                        if (NetworkUtils.isInternetAvailable(this)) {
+                            val healthIntent = Intent(
+                                this@DashboardScreen,
+                                HealthCardActivity::class.java
+                            )
+                            startActivity(healthIntent)
+                        } else {
+                            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+                        }
                     }
 
-                    3 -> if (savedCropName.isEmpty()) {
-                        val comingSoonIntent = Intent(
-                            this@DashboardScreen,
-                            AddCropActivity::class.java
-                        )
-                        appPreferenceManager.saveString(
-                            AppConstants.ACTION_FROM_DASHBOARD,
-                            AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD
-                        )
-                        startActivity(comingSoonIntent)
-                    } else {
-                        val intent = Intent(this, FertilizerCalculatorActivity::class.java)
-                        intent.putExtra("id", savedCropId)
-                        intent.putExtra("wotr_crop_id", savedCropWoTRId?.toInt())
-                        intent.putExtra("mUrl", savedCropImageUrl)
-                        intent.putExtra("mName", savedCropName)
-                        intent.putExtra("sowingDate", savedCropSowingDate)
-                        startActivity(intent)
+                    3 -> {
+                        if (NetworkUtils.isInternetAvailable(this)) {
+                            if (savedCropName.isEmpty()) {
+                                val comingSoonIntent = Intent(
+                                    this@DashboardScreen,
+                                    AddCropActivity::class.java
+                                )
+                                appPreferenceManager.saveString(
+                                    AppConstants.ACTION_FROM_DASHBOARD,
+                                    AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD
+                                )
+                                startActivity(comingSoonIntent)
+                            } else {
+                                val intent = Intent(this, FertilizerCalculatorActivity::class.java)
+                                intent.putExtra("id", savedCropId)
+                                intent.putExtra("wotr_crop_id", savedCropWoTRId?.toInt())
+                                intent.putExtra("mUrl", savedCropImageUrl)
+                                intent.putExtra("mName", savedCropName)
+                                intent.putExtra("sowingDate", savedCropSowingDate)
+                                startActivity(intent)
+                            }
+                        } else {
+                            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+                        }
                     }
 
                     4 -> {
-                        val addPeople =
-                            Intent(this@DashboardScreen, ClimateResilientTechnology::class.java)
-                        startActivity(addPeople)
+                        if (NetworkUtils.isInternetAvailable(this)) {
+                            val addPeople =
+                                Intent(this@DashboardScreen, ClimateResilientTechnology::class.java)
+                            startActivity(addPeople)
+                        } else {
+                            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+                        }
+
                     }
 
-                    5 -> if (savedCropName.isEmpty()) {
-                        val sharing = Intent(this@DashboardScreen, AddCropActivity::class.java)
-                        appPreferenceManager.saveString(
-                            AppConstants.ACTION_FROM_DASHBOARD,
-                            AppConstants.PEST_AND_DISEASES_STAGES
-                        )
-                        startActivity(sharing)
-                    } else {
-                        val intent = Intent(this, PestsAndDiseasesStages::class.java)
-                        intent.putExtra("cropId", savedCropId)
-                        intent.putExtra("wotr_crop_id", savedCropWoTRId)
-                        intent.putExtra("sowingDate", savedCropSowingDate)
-                        intent.putExtra("mUrl", savedCropImageUrl)
-                        intent.putExtra("mName", savedCropName)
-                        startActivity(intent)
+                    5 -> {
+                        if (NetworkUtils.isInternetAvailable(this)) {
+                            if (savedCropName.isEmpty()) {
+                                val sharing =
+                                    Intent(this@DashboardScreen, AddCropActivity::class.java)
+                                appPreferenceManager.saveString(
+                                    AppConstants.ACTION_FROM_DASHBOARD,
+                                    AppConstants.PEST_AND_DISEASES_STAGES
+                                )
+                                startActivity(sharing)
+                            } else {
+                                val intent = Intent(this, PestsAndDiseasesStages::class.java)
+                                intent.putExtra("id", savedCropId)
+                                intent.putExtra("wotr_crop_id", savedCropWoTRId)
+                                intent.putExtra("sowingDate", savedCropSowingDate)
+                                intent.putExtra("mUrl", savedCropImageUrl)
+                                intent.putExtra("mName", savedCropName)
+                                startActivity(intent)
+                            }
+                        } else {
+                            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+                        }
                     }
 
                     6 -> {
-                        val marketIntent = Intent(this@DashboardScreen, MarketPrice::class.java)
-                        startActivity(marketIntent)
+                        if (NetworkUtils.isInternetAvailable(this)) {
+                            val marketIntent = Intent(this@DashboardScreen, MarketPrice::class.java)
+                            startActivity(marketIntent)
+                        } else {
+                            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+                        }
                     }
 
                     7 -> {
-                        startActivity(
-                            Intent(
-                                this@DashboardScreen,
-                                ShetishalaActivity::class.java
+                        if (NetworkUtils.isInternetAvailable(this)) {
+                            startActivity(
+                                Intent(
+                                    this@DashboardScreen,
+                                    DBTActivity::class.java
+                                )
                             )
-                        )
+                        } else {
+                            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+                        }
                     }
 
                     8 -> {
-                        val warehouseIntent = Intent(this@DashboardScreen, Warehouse::class.java)
-                        startActivity(warehouseIntent)
+                        if (NetworkUtils.isInternetAvailable(this)) {
+                            val warehouseIntent =
+                                Intent(this@DashboardScreen, Warehouse::class.java)
+                            startActivity(warehouseIntent)
+                        } else {
+                            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+                        }
                     }
-
-
                 }
             }
     }
-
-    private fun fetchFirebaseTokenFromServer() {
-        FirebaseMessaging.getInstance().token
-            .addOnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    Log.e("FCM", "Fetching FCM registration token failed", task.exception)
-                    return@addOnCompleteListener
-                }
-
-                val token = task.result
-                if (!token.isNullOrEmpty()) {
-                    appPreferenceManager.saveString("FCM_TOKEN", token)
-                } else {
-                    Log.w("FCM", "FCM token is null or empty")
-                }
-            }
-    }
-
 
     private fun init() {
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
         if (farmerId > 0) {
-            farmerViewModel.fetchUserInformation(this)
+            if (NetworkUtils.isInternetAvailable(this)) {
+                farmerViewModel.fetchUserInformation(this, farmerId)
+            } else {
+                LocalCustom.createSnackbar(binding.root, "Internet not available!")
+            }
         }
     }
 
-    private fun setConfiguration() {
+    private fun setUpDrawerMenu() {
         try {
-            if (languageToLoad.equals("en", ignoreCase = true)) {
-                jsonArray = if (isGuest) {
-                    AppHelper.getInstance().getForGuestOption()
-                } else {
-                    AppHelper.getInstance().getMenuOption()
-                }
-            } else if (languageToLoad.equals("mr", ignoreCase = true)) {
-                jsonArray = if (isGuest) {
-                    AppHelper.getInstance().getMenuOptionForGuestMarathi()
-                } else {
-                    AppHelper.getInstance().getMenuOptionMarathi()
-                }
+            jsonArray = if (languageToLoad.equals("en", ignoreCase = true)) {
+                SideNavMenuHelper.instance.menuOption
+            } else {
+                SideNavMenuHelper.instance.menuOptionMarathi
             }
             val menuAdapter = jsonArray?.let { DrawerMenuAdapter(this, it) }
             binding.menuListView.adapter = menuAdapter
@@ -792,7 +1103,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             e.printStackTrace()
         }
     }
-
 
     private fun setVersion() {
         val versionName = LocalCustom.getVersionName(this)
@@ -865,7 +1175,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             val id = jsonObject.getInt("id")
             when (id) {
                 0 -> {
-                    val intent = Intent(this@DashboardScreen, Registration::class.java)
+                    val intent = Intent(this@DashboardScreen, ProfileScreen::class.java)
                     intent.putExtra("FAAPRegistrationID", farmerId)
                     startActivity(intent)
                 }
@@ -881,12 +1191,36 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     UIToastMessage.show(this@DashboardScreen, "Please Login First...")
                 }
 
+                2 -> {
+                    val notificationIntent = Intent(
+                        this@DashboardScreen,
+                        ExpertsCornerFarmerActivity::class.java
+                    )
+                    startActivity(notificationIntent)
+                }
+
                 3 -> {
                     val notificationIntent = Intent(
                         this@DashboardScreen,
                         CreditsActivity::class.java
                     )
                     startActivity(notificationIntent)
+                }
+
+                4 -> {
+                    val notificationIntent = Intent(
+                        this@DashboardScreen,
+                        NewsListActivity::class.java
+                    )
+                    startActivity(notificationIntent)
+                }
+
+                5 -> {
+                    val costCalculatorIntent = Intent(
+                        this@DashboardScreen,
+                        CostCalculatorDashboardActivity::class.java
+                    )
+                    startActivity(costCalculatorIntent)
                 }
 
                 6 -> {
@@ -901,6 +1235,15 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 }
 
                 7 -> logoutFromApp()
+
+                8 -> {
+                    startActivity(
+                        Intent(
+                            this@DashboardScreen,
+                            LeaderboardActivity::class.java
+                        )
+                    )
+                }
             }
             val drawer = findViewById<DrawerLayout>(R.id.drawer_layout1)
             if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -912,26 +1255,12 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     }
 
     private fun logoutFromApp() {
-        AppSettings.getInstance().setValue(this, AppConstants.uName, AppConstants.uName)
-        AppSettings.getInstance().setValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
-        AppSettings.getInstance().setValue(this, AppConstants.uEmail, AppConstants.uEmail)
-        AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, 0)
-        AppSettings.getInstance().setValue(this, AppConstants.uDIST, AppConstants.uDIST)
-        AppSettings.getInstance().setIntValue(this, AppConstants.uDISTId, 0)
-        AppSettings.getInstance().setValue(this, AppConstants.uTALUKA, AppConstants.uTALUKA)
-        AppSettings.getInstance().setIntValue(this, AppConstants.uTALUKAID, 0)
-        AppSettings.getInstance().setValue(this, AppConstants.uVILLAGE, AppConstants.uVILLAGE)
-        AppSettings.getInstance().setIntValue(this, AppConstants.uVILLAGEID, 0)
-        AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null)
-        AppUtility.getInstance().clearAppSharedPrefData(this, AppConstants.kSHARED_PREF)
-        AppSettings.getInstance().setBooleanValue(this, AppConstants.userDataSaved, false)
-        val intent = Intent(this@DashboardScreen, SplashScreenActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
-        finish()
+        if (NetworkUtils.isInternetAvailable(this)) {
+            farmerViewModel.updateFCMToken(this, "NA")
+            appPreferenceManager.clearAll()
+        } else {
+            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+        }
     }
 
     override fun onMultiRecyclerViewItemClick(i: Int, id: Any) {
@@ -939,11 +1268,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             cropId = (id as Int)
             farmerViewModel.deleteFarmerSelectedCrop(this, cropId)
         }
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finishAffinity()
     }
 
     companion object {
@@ -956,7 +1280,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             "Climate Resilent Technology",
             "Pest and Diseases",
             "Market Price",
-            "Digital Shetishala",
+            "D.B.T.",
             "Warehouse"
         )
 
@@ -968,7 +1292,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             "हवामानास अनुकूल शेती पद्धती",
             "कीड व रोग",
             "बाजारभाव",
-            "डिजिटल शेतीशाळा",
+            "डी.बी.टी.",
             "गोदाम"
         )
 
@@ -980,7 +1304,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             R.drawable.ic_climateresilenttechnology,
             R.drawable.ic_pestsanddiseases,
             R.drawable.ic_marketprice,
-            R.drawable.ic_digitalfarmer,
+            R.drawable.icon_dbt,
             R.drawable.ic_warehouse
         )
 
@@ -1010,5 +1334,28 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         val tempMax = temperatureObject.optString("max")
         val temperature = "$tempMin°C / $tempMax°C"
         return temperature
+    }
+
+    private fun showAgristackLinkingDialog() {
+        val context = ContextThemeWrapper(this, R.style.Theme_FarmerApp)
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.famer_id_login_dialog, null)
+        val agristackLoginDialog = AlertDialog.Builder(context)
+            .setView(dialogView)
+            .create()
+
+        val confirmButton = dialogView.findViewById<Button>(R.id.confirmButton)
+        val cancelButton = dialogView.findViewById<Button>(R.id.cancelButton)
+
+        confirmButton.setOnClickListener {
+            startActivity(Intent(this, AuthenticateFarmerIdActivity::class.java))
+            agristackLoginDialog.dismiss()
+        }
+
+        cancelButton.setOnClickListener {
+            appPreferenceManager.saveBoolean("AGRISTACK_LOGIN_DIALOG", true)
+            agristackLoginDialog.dismiss()
+        }
+
+        agristackLoginDialog.show()
     }
 }

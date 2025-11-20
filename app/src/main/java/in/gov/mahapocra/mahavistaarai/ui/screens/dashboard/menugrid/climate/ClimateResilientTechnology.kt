@@ -1,52 +1,60 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
+import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.JsonObject
-import `in`.co.appinventor.services_api.api.AppInventorApi
-import `in`.co.appinventor.services_api.app_util.AppUtility
-import `in`.co.appinventor.services_api.listener.ApiCallbackCode
-import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
+import com.google.android.material.snackbar.Snackbar
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
-import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
+import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityClimateResilintTechnologyBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ClimateResilientTechnologyAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Retrofit
+import kotlin.math.abs
 
-class ClimateResilientTechnology : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
-    OnMultiRecyclerItemClickListener {
+class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClickListener {
 
     private var climateResilientGroup: RecyclerView? = null
+    private lateinit var binding: ActivityClimateResilintTechnologyBinding
+    private val farmerViewModel: FarmerViewModel by viewModels()
     private var textViewHeaderTitle: TextView? = null
     private var imgBackArrow: ImageView? = null
     private lateinit var languageToLoad: String
     private var resilientGrpWiseDetailsJSONArray: JSONArray? = null
     private lateinit var resilientCRAGroupJSONArray: JSONArray
-
     private var groupName: ArrayList<String> = ArrayList()
     private var groupImagePath: ArrayList<String> = ArrayList()
     private var webUrl: ArrayList<String> = ArrayList()
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (AppSettings.getLanguage(this).equals("2", ignoreCase = true)) {
@@ -55,8 +63,22 @@ class ClimateResilientTechnology : AppCompatActivity(), ApiJSONObjCallback, ApiC
             languageToLoad = "en"
         }
         switchLanguage(this, languageToLoad)
-        setContentView(R.layout.activity_climate_resilint_technology)
+        binding = ActivityClimateResilintTechnologyBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        uiResponsive(binding.root)
         init()
+        lifecycleScope.launch {
+            delay(5000) // 5 seconds
+            binding.bubbleIconImageView.animate()
+                .alpha(0f)
+                .setDuration(500) // animation duration in ms
+                .withEndAction {
+                    binding.bubbleIconImageView.visibility = View.GONE
+                    binding.bubbleIconImageView.alpha = 1f // reset alpha in case you show it again
+                }
+                .start()
+        }
+        observeClimateResilientGroupList()
         textViewHeaderTitle?.setText(R.string.climateTechnology)
         textViewHeaderTitle?.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
         imgBackArrow?.visibility = View.VISIBLE
@@ -67,48 +89,102 @@ class ClimateResilientTechnology : AppCompatActivity(), ApiJSONObjCallback, ApiC
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
-        climateResilientGroupList()
+        if (NetworkUtils.isInternetAvailable(this)) {
+            farmerViewModel.climateResilientGroupList(this, languageToLoad)
+        } else {
+            Snackbar.make(binding.root, "Internet not available", Snackbar.LENGTH_SHORT).show()
+        }
+
+        AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
+
+        val isGuest =
+            AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
+        binding.chatbotIcon.setOnTouchListener(object : View.OnTouchListener {
+            private var dX = 0f
+            private var dY = 0f
+            private var startX = 0f
+            private var startY = 0f
+            private val CLICK_THRESHOLD = 20 // px movement allowed
+
+            override fun onTouch(v: View, event: MotionEvent): Boolean {
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        dX = v.x - event.rawX
+                        dY = v.y - event.rawY
+                        startX = event.rawX
+                        startY = event.rawY
+                    }
+
+                    MotionEvent.ACTION_MOVE -> {
+                        val parent = v.parent as View
+                        val newX = event.rawX + dX
+                        val newY = event.rawY + dY
+
+                        // calculate boundaries (you can adjust margin if needed)
+                        val margin = 32 // px margin from edges
+                        val maxX = parent.width - v.width - margin
+                        val maxY = parent.height - v.height - margin
+                        val minX = margin
+                        val minY = margin
+
+                        // constrain movement inside screen
+                        val boundedX = newX.coerceIn(minX.toFloat(), maxX.toFloat())
+                        val boundedY = newY.coerceIn(minY.toFloat(), maxY.toFloat())
+
+                        v.animate()
+                            .x(boundedX)
+                            .y(boundedY)
+                            .setDuration(0)
+                            .start()
+                    }
+
+                    MotionEvent.ACTION_UP -> {
+                        val diffX = abs(event.rawX - startX)
+                        val diffY = abs(event.rawY - startY)
+
+                        if (diffX < CLICK_THRESHOLD && diffY < CLICK_THRESHOLD) {
+                            if (!isGuest) {
+                                startActivity(Intent(this@ClimateResilientTechnology, ChatbotActivity::class.java))
+                            } else {
+                                AlertDialog.Builder(this@ClimateResilientTechnology)
+                                    .setMessage(R.string.bot_chat_login_redirect_mesage)
+                                    .setPositiveButton(R.string.yes) { dialog, _ ->
+                                        startActivity(Intent(this@ClimateResilientTechnology, LoginScreen::class.java).apply {
+                                            putExtra("from", "dashboard")
+                                        })
+                                        dialog.dismiss()
+                                    }
+                                    .setNegativeButton(R.string.no) { dialog, _ -> dialog.dismiss() }
+                                    .show()
+                            }
+                        }
+                    }
+                }
+                return true
+            }
+        })
+
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val intent = Intent(this@ClimateResilientTechnology, DashboardScreen::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
+        })
     }
 
     private fun init() {
-        climateResilientGroup = findViewById(R.id.climateResilint)
+        climateResilientGroup = findViewById(R.id.climateResilientRecyclerView)
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
         imgBackArrow = findViewById(R.id.imgBackArrow)
     }
 
-    private fun climateResilientGroupList() {
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put("api_key", APIServices.SSO_KEY)
-            jsonObject.put("lang", languageToLoad)
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api = AppInventorApi(
-                this,
-                AppEnvironment.FARMER.baseUrl,
-                "",
-                AppString(this).getkMSG_WAIT(),
-                true
-            )
-            val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getClimateResilientList(requestBody)
-            api.postRequest(responseCall, this, 2)
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
-    }
-
-    override fun onFailure(th: Throwable?, i: Int) {
-        th?.printStackTrace()
-    }
-
-    override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        th?.printStackTrace()
-    }
-
-    override fun onResponse(jSONObject: JSONObject?, i: Int) {
-        if (i == 2) {
-            if (jSONObject != null) {
+    private fun observeClimateResilientGroupList() {
+        farmerViewModel.getClimateResilientListResponse.observe(this) {
+            if (it != null) {
+                val jSONObject = JSONObject(it.toString())
                 val response =
                     ResponseModel(
                         jSONObject
@@ -133,6 +209,9 @@ class ClimateResilientTechnology : AppCompatActivity(), ApiJSONObjCallback, ApiC
                 }
             }
         }
+        farmerViewModel.error.observe(this) {
+            Log.d("TAGGER", "observeClimateResilientGroupList: $it")
+        }
     }
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
@@ -152,14 +231,6 @@ class ClimateResilientTechnology : AppCompatActivity(), ApiJSONObjCallback, ApiC
         b.putSerializable("GroupImagePath", groupImagePath)
         b.putSerializable("WebUrl", webUrl)
         intent.putExtras(b)
-        startActivity(intent)
-    }
-
-    override fun onBackPressed() {
-        val intent = Intent(this, DashboardScreen::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }
 

@@ -11,6 +11,7 @@ public interface AppConstants {
     String uName = "USER_NAME";
     String userDataSaved = "USER_DATA_SAVED";
     String AGRISTACKID = "AGRISTACK_ID";
+    String CONSENT = "CONSENT";
     String ACTION_FROM_DASHBOARD = "ACTION_FROM_DASHBOARD";
     String PEST_AND_DISEASES_FROM_DASHBOARD = "PEST_AND_DISEASES_FROM_DASHBOARD";
     String PEST_AND_DISEASES_STAGES = "PEST_AND_DISEASES_STAGES";
@@ -19,12 +20,15 @@ public interface AppConstants {
     String uMobileNo = "USER_MOBILE";
     String uEmail = "USER_EMAIL";
     String uDIST = "USER_DIST";
+    String uDISTMR = "USER_DIST_MR";
     String uDISTId = "uDISTId";
     String uTALUKA = "USER_TALUKA";
+    String uTALUKAMR = "USER_TALUKA_MR";
     String uTALUKAID = "uTALUKAID";
 
     String kFarmerCrop ="kFarmerCrop";
     String uVILLAGE = "uVILLAGE";
+    String uVILLAGEMR = "uVILLAGE_MR";
     String uVILLAGEID = "uVILLAGEID";
 
     String kSHARED_PREF = "pocra_krishi_farmerApp";

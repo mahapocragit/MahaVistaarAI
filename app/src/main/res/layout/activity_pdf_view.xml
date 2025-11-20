@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/status_colored_background">
 
     <include
         android:id="@+id/relativeLayoutTopBar"
@@ -10,9 +11,9 @@
 
     <include
         android:id="@+id/soilHealthCardLayout"
+        layout="@layout/soil_health_card_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        layout="@layout/soil_health_card_layout"
         android:layout_marginTop="@dimen/_40sdp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

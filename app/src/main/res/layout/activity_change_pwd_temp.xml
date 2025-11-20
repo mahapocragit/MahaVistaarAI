@@ -17,21 +17,21 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/forgetHeadingText1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Forgot"
+            android:text="@string/forgot_password_1"
             android:textColor="@color/white"
             android:textSize="@dimen/_22sdp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/forgetHeadingText2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Password ?"
+            android:text="@string/forgot_password_2"
             android:textColor="@color/white"
             android:textSize="@dimen/_22sdp"
             android:textStyle="bold" />

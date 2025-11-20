@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/status_colored_background"
     tools:context=".ui.screens.dashboard.menugrid.dbt.pocra.PocraSchemesDetailsActivity">
 
     <include
@@ -20,7 +21,7 @@
         android:id="@+id/scrollView2"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="@dimen/_40sdp"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -84,9 +85,9 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/actionbar_color_figma2"
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginVertical="@dimen/_5sdp"
+                android:backgroundTint="@color/actionbar_color_figma2"
                 app:cardCornerRadius="@dimen/_10sdp">
 
                 <LinearLayout
@@ -134,9 +135,9 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/actionbar_color_figma2"
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginVertical="@dimen/_5sdp"
+                android:backgroundTint="@color/actionbar_color_figma2"
                 app:cardCornerRadius="@dimen/_10sdp">
 
                 <LinearLayout

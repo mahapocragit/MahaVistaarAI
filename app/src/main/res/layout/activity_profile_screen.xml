@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/actionbar_color_figma"
+    android:orientation="vertical"
+    tools:context=".ui.screens.authentication.Registration">
+
+    <ImageView
+        android:id="@+id/backPressIcon"
+        android:layout_width="45dp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:padding="@dimen/_5sdp"
+        android:rotation="90"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/down_arrow_figma"
+        app:tint="@color/white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/imageView15"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/user_info_text_1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_22sdp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/user_info_text_2"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_22sdp"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/imageView15"
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="@dimen/_80sdp"
+        android:elevation="10dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/app_logo"
+        app:layout_constraintBottom_toTopOf="@+id/cardView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cardView2" />
+
+    <LinearLayout
+        android:id="@+id/cardView2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_150sdp"
+        android:orientation="vertical"
+        android:background="@drawable/leaderboard_list_card_corner_background"
+        android:minHeight="0dp"
+        app:cardCornerRadius="@dimen/_15sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_marginVertical="@dimen/_20sdp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/nameEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_50sdp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/login_edit_bg"
+                    android:digits="@string/name_validation"
+                    android:gravity="center|start"
+                    android:hint="@string/reg_name"
+                    android:inputType="text"
+                    android:maxLength="30"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/padding20"
+                    android:paddingEnd="@dimen/padding20"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/text_black"
+                    android:textSize="@dimen/_10sdp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/mobNoEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_50sdp"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/login_edit_bg"
+                        android:digits="@string/numeric"
+                        android:gravity="center|start"
+                        android:hint="@string/reg_mobno"
+                        android:inputType="number"
+                        android:maxLength="10"
+                        android:maxLines="1"
+                        android:paddingStart="@dimen/padding20"
+                        android:paddingEnd="@dimen/padding20"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/text_black"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <TextView
+                        android:id="@+id/textViewVerify"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/_5sdp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/layout_button_background_gray"
+                        android:gravity="center"
+                        android:text="@string/reg_verify"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_10sdp"
+                        android:textStyle="bold">
+
+                    </TextView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/height5"
+                        android:elevation="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textViewDist"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_50sdp"
+                            android:layout_marginHorizontal="20dp"
+                            android:background="@drawable/login_edit_bg"
+                            android:gravity="start|center"
+                            android:hint="@string/farmer_select_district"
+                            android:paddingHorizontal="@dimen/padding20"
+                            android:textColor="@color/heading"
+                            android:textColorHint="@color/text_black"
+                            android:textSize="@dimen/_10sdp"
+                            android:textStyle="normal" />
+
+                        <ImageView
+                            android:id="@+id/imageviewDist"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/padding30"
+                            android:layout_marginRight="@dimen/padding30"
+                            android:contentDescription="@string/app_name"
+                            android:elevation="@dimen/_5sdp"
+                            app:srcCompat="@drawable/ic_expand_more_black_24dp"
+                            app:tint="@color/gray"
+                            tools:ignore="VectorDrawableCompat" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/height5"
+                        android:elevation="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textViewTaluka"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_50sdp"
+                            android:layout_marginHorizontal="20dp"
+                            android:background="@drawable/login_edit_bg"
+                            android:gravity="start|center_vertical"
+                            android:hint="@string/farmer_select_taluka"
+                            android:paddingHorizontal="@dimen/padding20"
+                            android:textColor="@color/heading"
+                            android:textColorHint="@color/text_black"
+                            android:textSize="@dimen/_10sdp"
+                            android:textStyle="normal" />
+
+                        <ImageView
+                            android:id="@+id/imageviewTaluka"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/padding30"
+                            android:layout_marginRight="@dimen/padding30"
+                            android:contentDescription="@string/app_name"
+                            android:elevation="@dimen/_5sdp"
+                            app:srcCompat="@drawable/ic_expand_more_black_24dp"
+                            app:tint="@color/gray"
+                            tools:ignore="VectorDrawableCompat" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:elevation="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textViewVillage"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_50sdp"
+                            android:layout_marginHorizontal="20dp"
+                            android:background="@drawable/login_edit_bg"
+                            android:gravity="start|center"
+                            android:hint="@string/farmer_select_village"
+                            android:paddingHorizontal="@dimen/padding20"
+                            android:textColor="@color/heading"
+                            android:textColorHint="@color/text_black"
+                            android:textSize="@dimen/_10sdp"
+                            android:textStyle="normal" />
+
+                        <ImageView
+                            android:id="@+id/imageviewVillage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/padding30"
+                            android:layout_marginRight="@dimen/padding30"
+                            android:contentDescription="@string/app_name"
+                            android:elevation="@dimen/_5sdp"
+                            app:srcCompat="@drawable/ic_expand_more_black_24dp"
+                            app:tint="@color/gray"
+                            tools:ignore="VectorDrawableCompat" />
+
+                    </RelativeLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/submitButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginHorizontal="@dimen/_16sdp"
+                        android:backgroundTint="@color/actionbar_color_figma"
+                        android:padding="@dimen/padding12"
+                        android:text="@string/reg_submit"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text16"
+                        app:cornerRadius="@dimen/_15sdp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/passwordChangeText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:textSize="@dimen/_12sdp"
+                    android:layout_marginHorizontal="@dimen/_16sdp"
+                    android:layout_marginVertical="@dimen/_5sdp"
+                    android:textColor="@color/blue_light"
+                    android:text="@string/change_or_reset_your_password" />
+
+                <LinearLayout
+                    android:id="@+id/consentLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_15sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:background="@drawable/crop_category_card_background"
+                    android:gravity="center_vertical"
+                    android:minHeight="@dimen/_30sdp"
+                    android:orientation="horizontal"
+                    android:paddingStart="@dimen/_10sdp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/textView49"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_2sdp"
+                        android:text="@string/consent_profile_text_1"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <TextView
+                        android:id="@+id/textView50"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_2sdp"
+                        android:text="@string/consent_profile_text_2"
+                        android:textSize="@dimen/_10sdp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView53"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/consent_profile_text_3"
+                        android:textColor="@color/darkblue"
+                        android:textSize="@dimen/_10sdp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

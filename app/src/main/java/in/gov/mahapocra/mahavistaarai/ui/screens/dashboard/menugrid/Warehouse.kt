@@ -1,44 +1,47 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.JsonObject
-import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.listener.AlertListEventListener
-import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
-import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityWarehouseBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.WarehouseAvailabilityAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Retrofit
+import kotlin.math.abs
 
-class Warehouse : AppCompatActivity(), ApiCallbackCode,
-    AlertListEventListener, OnMultiRecyclerItemClickListener {
+class Warehouse : AppCompatActivity(), AlertListEventListener, OnMultiRecyclerItemClickListener {
     lateinit var binding: ActivityWarehouseBinding
 
     private var warehouseAvailabilityJSONArray: JSONArray? = null
     private var districtJSONArray: JSONArray? = null
-
+    private val farmerViewModel: FarmerViewModel by viewModels()
     private lateinit var districtName: String
     private var districtID: Int = 0
     private var talukaID: Int = 0
@@ -55,28 +58,207 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
         switchLanguage(this, languageToLoad)
         binding = ActivityWarehouseBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root)
         districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
+        setUpObserver()
         init()
         onClick()
+        AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
+        lifecycleScope.launch {
+            delay(5000) // 5 seconds
+            binding.bubbleIconImageView.animate()
+                .alpha(0f)
+                .setDuration(500) // animation duration in ms
+                .withEndAction {
+                    binding.bubbleIconImageView.visibility = View.GONE
+                    binding.bubbleIconImageView.alpha = 1f // reset alpha in case you show it again
+                }
+                .start()
+        }
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.tvSourceInformation.text = getString(R.string.source_info_market)
-        binding.relativeLayoutTopBar.textViewHeaderTitle.text =getString(R.string.wareHouse)
-        binding.textViewDistrict.text =getString(R.string.farmer_select_district)
+        binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.wareHouse)
+        binding.textViewDistrict.text = getString(R.string.farmer_select_district)
 
-        binding.tvWareHouseName.text =getString(R.string.warehouse_details)
-        binding.tvTotalAvailableCapacity.text =getString(R.string.total_available_capacity)
-        binding.tvRecordDate.text =getString(R.string.record_date)
+        binding.tvWareHouseName.text = getString(R.string.warehouse_details)
+        binding.tvTotalAvailableCapacity.text = getString(R.string.total_available_capacity)
+        binding.tvRecordDate.text = getString(R.string.record_date)
+        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun init() {
-        languageToLoad = "mr"
-        if (AppSettings.getLanguage(this@Warehouse).equals("1", ignoreCase = true)) {
-            languageToLoad = "en"
-        }
         binding.wareHousereport.setHasFixedSize(false)
         binding.wareHousereport.isNestedScrollingEnabled = true
-        getDistrictData()
-        wareHouseDetails()
+        farmerViewModel.getDistrictData(this, languageToLoad)
+        farmerViewModel.fetchWarehouseData(this, districtID, languageToLoad)
+        val isGuest =
+            AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
+        binding.chatbotIcon.setOnTouchListener(object : View.OnTouchListener {
+            private var dX = 0f
+            private var dY = 0f
+            private var startX = 0f
+            private var startY = 0f
+            private val CLICK_THRESHOLD = 20 // px movement allowed
+
+            override fun onTouch(v: View, event: MotionEvent): Boolean {
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        dX = v.x - event.rawX
+                        dY = v.y - event.rawY
+                        startX = event.rawX
+                        startY = event.rawY
+                    }
+
+                    MotionEvent.ACTION_MOVE -> {
+                        val parent = v.parent as View
+                        val newX = event.rawX + dX
+                        val newY = event.rawY + dY
+
+                        // calculate boundaries (you can adjust margin if needed)
+                        val margin = 32 // px margin from edges
+                        val maxX = parent.width - v.width - margin
+                        val maxY = parent.height - v.height - margin
+                        val minX = margin
+                        val minY = margin
+
+                        // constrain movement inside screen
+                        val boundedX = newX.coerceIn(minX.toFloat(), maxX.toFloat())
+                        val boundedY = newY.coerceIn(minY.toFloat(), maxY.toFloat())
+
+                        v.animate()
+                            .x(boundedX)
+                            .y(boundedY)
+                            .setDuration(0)
+                            .start()
+                    }
+
+                    MotionEvent.ACTION_UP -> {
+                        val diffX = abs(event.rawX - startX)
+                        val diffY = abs(event.rawY - startY)
+
+                        if (diffX < CLICK_THRESHOLD && diffY < CLICK_THRESHOLD) {
+                            if (!isGuest) {
+                                startActivity(Intent(this@Warehouse, ChatbotActivity::class.java))
+                            } else {
+                                AlertDialog.Builder(this@Warehouse)
+                                    .setMessage(R.string.bot_chat_login_redirect_mesage)
+                                    .setPositiveButton(R.string.yes) { dialog, _ ->
+                                        startActivity(Intent(this@Warehouse, LoginScreen::class.java).apply {
+                                            putExtra("from", "dashboard")
+                                        })
+                                        dialog.dismiss()
+                                    }
+                                    .setNegativeButton(R.string.no) { dialog, _ -> dialog.dismiss() }
+                                    .show()
+                            }
+                        }
+                    }
+                }
+                return true
+            }
+        })
+    }
+
+    private fun setUpObserver() {
+
+        farmerViewModel.districtIdResponse.observe(this) {
+            if (it != null) {
+                val jSONObject = JSONObject(it.toString())
+                val response =
+                    ResponseModel(
+                        jSONObject
+                    )
+
+                if (response.status) {
+                    districtJSONArray = response.getdataArray()
+                    districtJSONArray?.let {
+                        for (j in 0 until it.length()) {
+                            val districtObject = it.getJSONObject(j)
+                            val id = districtObject.getInt("code")
+                            val name = districtObject.getString("name")
+
+                            // Check if the current id matches districtID
+                            if (id == districtID) {
+                                // Set the text in textViewDistrict if a match is found
+                                binding.textViewDistrict.text = name
+                                break // No need to continue looping once the matching district is found
+                            }
+                        }
+                    } ?: run {
+                        Log.e("TAGGER", "districtJSONArray could not be cast to JSONArray")
+                    }
+                } else {
+                    UIToastMessage.show(this, response.response)
+                }
+            }
+        }
+
+        farmerViewModel.warehouseDetailsResponse.observe(this) {
+            if (it != null) {
+                val jSONObject = JSONObject(it.toString())
+                val response =
+                    ResponseModel(
+                        jSONObject
+                    )
+                if (response.status) {
+                    warehouseAvailabilityJSONArray = response.dataArrays
+                    if (warehouseAvailabilityJSONArray?.length() != 0) {
+                        binding.wareHousereport.visibility = View.VISIBLE
+                        binding.wareHouseEmptyTextView.visibility = View.GONE
+                        totalWareHouse = response.total_available_capacity()
+                        totalAvailableWareHouse = response.getTotalAvailableWareHouse()
+                        binding.textTotalWarehouse.text =
+                            buildString {
+                                append(resources.getString(R.string.total_warehouse))
+                                append(" ")
+                                append(totalWareHouse)
+                            }
+                        binding.textAvailableCapacity.text =
+                            buildString {
+                                append(resources.getString(R.string.total_available_capacity))
+                                append(" ")
+                                append(totalAvailableWareHouse)
+                                append(" ")
+                                append(
+                                    resources.getString(
+                                        R.string.tonnes
+                                    )
+                                )
+                            }
+                        if (warehouseAvailabilityJSONArray !== null) {
+                            if (warehouseAvailabilityJSONArray?.length()!! > 0) {
+                                val adaptorWaterBudgetReport =
+                                    WarehouseAvailabilityAdapter(
+                                        this,
+                                        this,
+                                        warehouseAvailabilityJSONArray
+                                    )
+                                binding.wareHousereport.setLayoutManager(
+                                    LinearLayoutManager(
+                                        this,
+                                        LinearLayoutManager.VERTICAL,
+                                        false
+                                    )
+                                )
+                                binding.wareHousereport.adapter = adaptorWaterBudgetReport
+                                adaptorWaterBudgetReport.notifyDataSetChanged()
+                            }
+                        } else {
+                            binding.wareHousereport.visibility = View.GONE
+                            binding.wareHouseEmptyTextView.visibility = View.VISIBLE
+                            resetValuesForWareHouse()
+                        }
+                    } else {
+                        binding.wareHousereport.visibility = View.GONE
+                        binding.wareHouseEmptyTextView.visibility = View.VISIBLE
+                        resetValuesForWareHouse()
+                    }
+                } else {
+                    UIToastMessage.show(this, response.response)
+                }
+            }
+        }
     }
 
     private fun onClick() {
@@ -88,6 +270,12 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
             startActivity(intent)
         }
 
+        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                startActivity(Intent(this@Warehouse, DashboardScreen::class.java))
+            }
+        })
+
         binding.textViewDistrict.setOnClickListener {
             showDistrict()
         }
@@ -96,7 +284,7 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
 
     private fun showDistrict() {
         if (districtJSONArray == null) {
-            getDistrictData()
+            farmerViewModel.getDistrictData(this, languageToLoad)
         } else {
             AppUtility.getInstance().showListDialogIndex(
                 districtJSONArray,
@@ -107,158 +295,6 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
                 this,
                 this
             )
-        }
-    }
-
-    private fun getDistrictData() {
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put("lang", languageToLoad)
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api =
-                AppInventorApi(
-                    this,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(this).getkMSG_WAIT(),
-                    true
-                )
-            val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getDistrictList(requestBody)
-            api.postRequest(responseCall, this, 1)
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun wareHouseDetails() {
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put("api_key", APIKeys.SSO_PROD)
-            jsonObject.put("district_code", districtID)
-            jsonObject.put("lang", languageToLoad)
-
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api =
-                AppInventorApi(
-                    this,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(this).getkMSG_WAIT(),
-                    true
-                )
-            val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getWareHouseDetails(requestBody)
-            api.postRequest(responseCall, this, 3)
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
-    }
-
-    override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        UIToastMessage.show(this, "Something went wrong. Please try again.")
-
-        // Handle UI fallback based on the index `i`, if needed
-        if (i == 3) {
-            binding.wareHousereport.visibility = View.GONE
-            binding.wareHouseEmptyTextView.visibility = View.VISIBLE
-            resetValuesForWareHouse()
-        }
-    }
-
-    override fun onResponse(jSONObject: JSONObject?, i: Int) {
-
-        if (i == 1 && jSONObject != null) {
-            val response =
-                ResponseModel(
-                    jSONObject
-                )
-
-            if (response.status) {
-                districtJSONArray = response.getdataArray()
-                districtJSONArray?.let {
-                    for (j in 0 until it.length()) {
-                        val districtObject = it.getJSONObject(j)
-                        val id = districtObject.getInt("code")
-                        val name = districtObject.getString("name")
-
-                        // Check if the current id matches districtID
-                        if (id == districtID) {
-                            // Set the text in textViewDistrict if a match is found
-                            binding.textViewDistrict.text = name
-                            break // No need to continue looping once the matching district is found
-                        }
-                    }
-                } ?: run {
-                    Log.e("TAGGER", "districtJSONArray could not be cast to JSONArray")
-                }
-            } else {
-                UIToastMessage.show(this, response.response)
-            }
-        }
-        if (i == 3 && jSONObject != null) {
-            val response =
-                ResponseModel(
-                    jSONObject
-                )
-            if (response.status) {
-                warehouseAvailabilityJSONArray = response.dataArrays
-                if (warehouseAvailabilityJSONArray?.length()!=0) {
-                    binding.wareHousereport.visibility = View.VISIBLE
-                    binding.wareHouseEmptyTextView.visibility = View.GONE
-                    totalWareHouse = response.total_available_capacity()
-                    totalAvailableWareHouse = response.getTotalAvailableWareHouse()
-                    binding.textTotalWarehouse.text =
-                        buildString {
-                            append(resources.getString(R.string.total_warehouse))
-                            append(" ")
-                            append(totalWareHouse)
-                        }
-                    binding.textAvailableCapacity.text =
-                        buildString {
-                            append(resources.getString(R.string.total_available_capacity))
-                            append(" ")
-                            append(totalAvailableWareHouse)
-                            append(" ")
-                            append(
-                                resources.getString(
-                                    R.string.tonnes
-                                )
-                            )
-                        }
-                    if (warehouseAvailabilityJSONArray !== null) {
-                        if (warehouseAvailabilityJSONArray?.length()!! > 0) {
-                            val adaptorWaterBudgetReport =
-                                WarehouseAvailabilityAdapter(
-                                    this,
-                                    this,
-                                    warehouseAvailabilityJSONArray
-                                )
-                            binding.wareHousereport.setLayoutManager(
-                                LinearLayoutManager(
-                                    this,
-                                    LinearLayoutManager.VERTICAL,
-                                    false
-                                )
-                            )
-                            binding.wareHousereport.adapter = adaptorWaterBudgetReport
-                            adaptorWaterBudgetReport.notifyDataSetChanged()
-                        }
-                    } else {
-                        binding.wareHousereport.visibility = View.GONE
-                        binding.wareHouseEmptyTextView.visibility = View.VISIBLE
-                        resetValuesForWareHouse()
-                    }
-                }else{
-                    binding.wareHousereport.visibility = View.GONE
-                    binding.wareHouseEmptyTextView.visibility = View.VISIBLE
-                    resetValuesForWareHouse()
-                }
-            } else {
-                UIToastMessage.show(this, response.response)
-            }
         }
     }
 
@@ -282,7 +318,7 @@ class Warehouse : AppCompatActivity(), ApiCallbackCode,
             districtID = s1!!.toInt()
             if (s != null) {
                 districtName = s
-                wareHouseDetails()
+                farmerViewModel.fetchWarehouseData(this, districtID, languageToLoad)
             }
             binding.textViewDistrict.text = s
             warehouseAvailabilityJSONArray = null

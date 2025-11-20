@@ -1,50 +1,53 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.JsonObject
-import `in`.co.appinventor.services_api.api.AppInventorApi
-import `in`.co.appinventor.services_api.app_util.AppUtility
-import `in`.co.appinventor.services_api.debug.DebugLog
-import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.listener.DatePickerRequestListener
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
-import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityAdvisoryCropBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.StageAdvisoryAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.StageAdvisoryDetailAdaptr
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.showDisabledFutureDatePicker
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Retrofit
 import java.util.Date
+import kotlin.math.abs
 
 class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
-    ApiCallbackCode, DatePickerRequestListener {
+    DatePickerRequestListener {
 
     private lateinit var binding: ActivityAdvisoryCropBinding
-    private lateinit var viewModel: FarmerViewModel
+    private val viewModel: FarmerViewModel by viewModels()
     private var cropAdvisoryDetailsJSONArray: JSONArray? = null
     private var cropAdvisoryJSONArray: JSONArray? = null
     var cropId: Int? = 0
@@ -55,8 +58,10 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
     private var mUrl: String? = null
     private lateinit var languageToLoad: String
     private var sowingDate: String = ""
+    private var route: String = ""
     private val date = Date()
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //setting up values for language
@@ -67,12 +72,33 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         switchLanguage(this, languageToLoad)
         binding = ActivityAdvisoryCropBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewModel = ViewModelProvider(this)[FarmerViewModel::class.java]
+        uiResponsive(binding.root)
 
         binding.completedLabelTextView.text = getString(R.string.crop_stage_completed)
         binding.currentLabelTextView.text = getString(R.string.crop_stage_current)
         binding.pendingLabelTextView.text = getString(R.string.crop_stage_pending)
+        lifecycleScope.launch {
+            delay(5000) // 5 seconds
+            binding.bubbleIconImageView.animate()
+                .alpha(0f)
+                .setDuration(500) // animation duration in ms
+                .withEndAction {
+                    binding.bubbleIconImageView.visibility = View.GONE
+                    binding.bubbleIconImageView.alpha = 1f // reset alpha in case you show it again
+                }
+                .start()
+        }
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                startActivity(Intent(this@AdvisoryCropActivity, DashboardScreen::class.java))
+                finish()
+            }
+        })
 
+        AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
+        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
+
+        observeCropStagesAndAdvisory()
         binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {
             val sharing = Intent(this, AddCropActivity::class.java)
             AppPreferenceManager(this).saveString(
@@ -89,11 +115,12 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         sowingDate = intent.getStringExtra("sowingDate").toString()
         wotrCropId = intent.getStringExtra("wotr_crop_id")
         mUrl = intent.getStringExtra("mUrl")
+        route = intent.getStringExtra("ROUTE").toString()
         villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
 
         binding.sowingInfoLayout.editSowingDateIcon.setOnClickListener {
-            AppUtility.getInstance().showDisabledFutureDatePicker(
+            showDisabledFutureDatePicker(
                 this,
                 date,
                 1,
@@ -108,53 +135,81 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
             startActivity(Intent(this, DashboardScreen::class.java))
         }
-        getCropStagesAndAdvisory()
+        viewModel.getCropStagesAndAdvisory(this, cropId, sowingDate, languageToLoad)
+        val isGuest =
+            AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
+        binding.chatbotIcon.setOnTouchListener(object : View.OnTouchListener {
+            private var dX = 0f
+            private var dY = 0f
+            private var startX = 0f
+            private var startY = 0f
+            private val CLICK_THRESHOLD = 20 // px movement allowed
+
+            override fun onTouch(v: View, event: MotionEvent): Boolean {
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        dX = v.x - event.rawX
+                        dY = v.y - event.rawY
+                        startX = event.rawX
+                        startY = event.rawY
+                    }
+
+                    MotionEvent.ACTION_MOVE -> {
+                        val parent = v.parent as View
+                        val newX = event.rawX + dX
+                        val newY = event.rawY + dY
+
+                        // calculate boundaries (you can adjust margin if needed)
+                        val margin = 32 // px margin from edges
+                        val maxX = parent.width - v.width - margin
+                        val maxY = parent.height - v.height - margin
+                        val minX = margin
+                        val minY = margin
+
+                        // constrain movement inside screen
+                        val boundedX = newX.coerceIn(minX.toFloat(), maxX.toFloat())
+                        val boundedY = newY.coerceIn(minY.toFloat(), maxY.toFloat())
+
+                        v.animate()
+                            .x(boundedX)
+                            .y(boundedY)
+                            .setDuration(0)
+                            .start()
+                    }
+
+                    MotionEvent.ACTION_UP -> {
+                        val diffX = abs(event.rawX - startX)
+                        val diffY = abs(event.rawY - startY)
+
+                        if (diffX < CLICK_THRESHOLD && diffY < CLICK_THRESHOLD) {
+                            if (!isGuest) {
+                                startActivity(Intent(this@AdvisoryCropActivity, ChatbotActivity::class.java))
+                            } else {
+                                AlertDialog.Builder(this@AdvisoryCropActivity)
+                                    .setMessage(R.string.bot_chat_login_redirect_mesage)
+                                    .setPositiveButton(R.string.yes) { dialog, _ ->
+                                        startActivity(Intent(this@AdvisoryCropActivity, LoginScreen::class.java).apply {
+                                            putExtra("from", "dashboard")
+                                        })
+                                        dialog.dismiss()
+                                    }
+                                    .setNegativeButton(R.string.no) { dialog, _ -> dialog.dismiss() }
+                                    .show()
+                            }
+                        }
+                    }
+                }
+                return true
+            }
+        })
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        startActivity(Intent(this, DashboardScreen::class.java))
-    }
-
-
-
-    private fun getCropStagesAndAdvisory() {
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put("crop_id", cropId)
-            jsonObject.put("farmer_id", farmerId)
-            jsonObject.put("sowing_date", sowingDate)
-            jsonObject.put("lang", languageToLoad)
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api =
-                AppInventorApi(
-                    this,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(this).getkMSG_WAIT(),
-                    true
-                )
-            val retrofit: Retrofit = api.retrofitInstance
-            val apiRequest = retrofit.create(APIRequest::class.java)
-            val responseCall: Call<JsonObject> = apiRequest.getCropStagesAndAdvisory(requestBody)
-            api.postRequest(responseCall, this, 1)
-        } catch (e: JSONException) {
-            DebugLog.getInstance().d("JSONException=$e")
-            e.printStackTrace()
-        }
-    }
-
-    override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        Log.d("TAG", "onFailure: ${th.toString()}")
-    }
-
-    override fun onResponse(jSONObject: JSONObject?, i: Int) {
-        if (i == 1) {
-            if (jSONObject != null) {
-                val response =
-                    ResponseModel(
-                        jSONObject
-                    )
+    private fun observeCropStagesAndAdvisory() {
+        viewModel.getCropStagesAndAdvisoryResponse.observe(this) {
+            Log.d("TAGGER", "observeCropStagesAndAdvisory: $it")
+            if (it != null) {
+                val jSONObject = JSONObject(it.toString())
+                val response = ResponseModel(jSONObject)
                 if (response.status) {
                     if (jSONObject.getString("sowing_date").isNotEmpty()) {
                         binding.sowingInfoLayout.sowingDateTextView.text =
@@ -171,7 +226,6 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
                         if (currentStagePos != -1) {
                             binding.cropStagesRecyclerView.post {
                                 binding.cropStagesRecyclerView.scrollToPosition(currentStagePos)
-                                // or use smoothScrollToPosition(currentStagePos) for animated scroll
                             }
                         }
                         stagesAdvisoryAdapter.notifyDataSetChanged()
@@ -180,6 +234,10 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
                     UIToastMessage.show(this, response.response)
                 }
             }
+        }
+        viewModel.error.observe(this) {
+            Log.d("TAGGER", "error: $it")
+            UIToastMessage.show(this, "Unable to fetch data")
         }
     }
 
@@ -216,7 +274,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
             viewModel.saveFarmerSelectedCrop.observe(this) {
                 if (it != null) {
                     if (it.get("status").toString() == "200") {
-                        getCropStagesAndAdvisory()
+                        viewModel.getCropStagesAndAdvisory(this, cropId, sowingDate, languageToLoad)
                     }
                 }
             }

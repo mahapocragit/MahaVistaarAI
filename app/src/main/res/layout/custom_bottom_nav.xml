@@ -4,9 +4,9 @@
     android:id="@+id/custom_bottom_nav"
     android:layout_width="match_parent"
     android:layout_height="@dimen/_48sdp"
+    android:layout_marginTop="@dimen/_4sdp"
     android:background="@drawable/bottom_nav_notch"
     android:elevation="8dp"
-    android:layout_marginTop="@dimen/_4sdp"
     android:gravity="center"
     android:orientation="horizontal"
     android:padding="4dp">
@@ -20,10 +20,10 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            app:tint="@color/actionbar_color_figma"
-            android:src="@drawable/home_ic" />
+            android:layout_width="@dimen/_18sdp"
+            android:layout_height="@dimen/_18sdp"
+            android:src="@drawable/home_ic"
+            app:tint="@color/actionbar_color_figma" />
 
         <TextView
             android:layout_width="match_parent"
@@ -31,7 +31,7 @@
             android:gravity="center"
             android:text="@string/home_bottom"
             android:textColor="@color/actionbar_color_figma"
-            android:textSize="12sp" />
+            android:textSize="@dimen/_8sdp" />
     </LinearLayout>
 
     <LinearLayout
@@ -43,8 +43,8 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/_18sdp"
+            android:layout_height="@dimen/_18sdp"
             android:src="@drawable/chc_ic" />
 
         <TextView
@@ -53,7 +53,7 @@
             android:gravity="center"
             android:text="@string/chc_bottom"
             android:textColor="@color/black"
-            android:textSize="12sp" />
+            android:textSize="@dimen/_8sdp" />
     </LinearLayout>
 
     <LinearLayout
@@ -61,9 +61,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:visibility="invisible"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="invisible">
 
         <ImageView
             android:layout_width="match_parent"
@@ -80,8 +80,8 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/_18sdp"
+            android:layout_height="@dimen/_18sdp"
             android:src="@drawable/video_ic" />
 
         <TextView
@@ -90,13 +90,13 @@
             android:gravity="center"
             android:text="@string/videos_bottom"
             android:textColor="@color/black"
-            android:textSize="12sp" />
+            android:textSize="@dimen/_8sdp" />
     </LinearLayout>
 
     <!-- Repeat similar blocks for other items -->
 
     <LinearLayout
-        android:id="@+id/nav_dbt"
+        android:id="@+id/nav_shetishala"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -105,18 +105,18 @@
 
         <ImageView
             android:id="@+id/icon_search"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/dbt_ic" />
+            android:layout_width="@dimen/_18sdp"
+            android:layout_height="@dimen/_18sdp"
+            android:src="@drawable/icon_shetishala" />
 
         <TextView
             android:id="@+id/label_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:text="@string/dshetishala"
             android:textColor="@color/black"
-            android:textSize="12sp"
-            android:text="@string/dbt" />
+            android:textSize="@dimen/_8sdp" />
     </LinearLayout>
 
 </LinearLayout>

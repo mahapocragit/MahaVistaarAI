@@ -8,13 +8,16 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.GridView
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.model.ClimateGridModel
+import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityClimateDetailsGridBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ClimateGridAdapter
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 
 class ClimateDetailsGrid : AppCompatActivity() {
     private var gridView: GridView? = null
@@ -26,6 +29,7 @@ class ClimateDetailsGrid : AppCompatActivity() {
     private var groupImagePath: ArrayList<String> = ArrayList()
     private var webUrl: ArrayList<String> = ArrayList()
     private lateinit var languageToLoad: String
+    private lateinit var binding: ActivityClimateDetailsGridBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +38,9 @@ class ClimateDetailsGrid : AppCompatActivity() {
             languageToLoad = "en"
         }
         switchLanguage(this, languageToLoad)
-        setContentView(R.layout.activity_climate_details_grid)
+        binding = ActivityClimateDetailsGridBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        uiResponsive(binding.root)
         init()
         textViewHeaderTitle?.setText(R.string.climate_resilient_technology)
         val b = intent.extras
@@ -65,19 +71,25 @@ class ClimateDetailsGrid : AppCompatActivity() {
             val intent = Intent(this, ClimateResilientTechnology::class.java)
             startActivity(intent)
         }
+
+        backPressedMethod()
+    }
+
+    private fun backPressedMethod() {
+        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                climateModelArrayList.clear()
+                val intent = Intent(this@ClimateDetailsGrid, ClimateResilientTechnology::class.java)
+                startActivity(intent)
+                finish()
+            }
+        })
     }
 
     fun init() {
         gridView = findViewById<View>(R.id.gridViewJobs) as GridView
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
         imgBackArrow = findViewById(R.id.imgBackArrow)
-    }
-
-    override fun onBackPressed() {
-        climateModelArrayList.clear()
-        val intent = Intent(this, ClimateResilientTechnology::class.java)
-        startActivity(intent)
-        finish()
     }
 
     override fun attachBaseContext(newBase: Context) {

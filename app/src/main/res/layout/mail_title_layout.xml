@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView"
+        android:background="#F8FAFC"
         android:layout_marginHorizontal="@dimen/_10sdp"
         android:textSize="@dimen/_12sdp"
         android:textColor="@color/black" />
@@ -23,7 +24,6 @@
         android:layout_marginBottom="@dimen/_2sdp"
         android:layout_marginTop="@dimen/_1sdp"
         app:cardCornerRadius="@dimen/_5sdp"
-        android:background="@drawable/crop_category_card_background"
         android:layout_marginHorizontal="@dimen/_10sdp">
 
         <androidx.recyclerview.widget.RecyclerView

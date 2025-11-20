@@ -1,57 +1,73 @@
 package `in`.gov.mahapocra.mahavistaarai.util
 
+import android.Manifest
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
-import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.location.Location
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.webkit.URLUtil
 import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.ImageView
+import android.widget.FrameLayout
 import android.widget.ListView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
+import androidx.core.app.ActivityCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.snackbar.Snackbar
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import org.json.JSONArray
+import java.io.File
+import java.net.NetworkInterface
+import java.security.MessageDigest
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Collections
+import java.util.Date
 import java.util.Locale
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 object LocalCustom {
     fun configureLocale(baseContext: Context, languageToLoad: String): Context {
-        val locale = Locale(languageToLoad)
+        val locale = Locale.forLanguageTag(languageToLoad)
         Locale.setDefault(locale)
 
         val config = Configuration(baseContext.resources.configuration)
 
-        when {
+        return when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.N -> {
                 config.setLocale(locale)
-                return baseContext.createConfigurationContext(config)
+                baseContext.createConfigurationContext(config)
             }
-
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 -> {
                 config.setLocale(locale)
-                return baseContext.createConfigurationContext(config)
+                baseContext.createConfigurationContext(config)
             }
-
             else -> {
-                // Deprecated, but fallback for older devices
+                @Suppress("DEPRECATION")
                 config.locale = locale
+                @Suppress("DEPRECATION")
                 baseContext.resources.updateConfiguration(
                     config,
                     baseContext.resources.displayMetrics
                 )
-                return baseContext
+                baseContext
             }
         }
     }
@@ -88,14 +104,13 @@ object LocalCustom {
     }
 
     fun getVersionName(context: Context): String {
-        var packageInfo: PackageInfo? = null
-        try {
-            packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+        return try {
+            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+            packageInfo.versionName ?: "unknown"
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
+            "unknown"
         }
-        val versionName = packageInfo!!.versionName
-        return versionName
     }
 
     fun getSowingDateWithYear(sowingDateUnfiltered: String): String {
@@ -167,11 +182,6 @@ object LocalCustom {
         return formattedDate
     }
 
-
-    fun logThis(message: String) {
-        Log.d("TAGGER", "logThis: $message")
-    }
-
     fun isStrongPassword(password: String): Boolean {
         val minLength = 8
         val specialChars = "!@#\$%^&*()_+=|<>?{}\\[\\]~-"
@@ -239,61 +249,161 @@ object LocalCustom {
         dialog.show()
     }
 
-    fun showCaptchaDialog(context: Context, onResult: (Boolean) -> Unit) {
-        var captcha = CaptchaGenerator.generateCaptchaBitmap(300, 100)
+    fun toSHA512(input: String): String {
+        val bytes = input.toByteArray()
+        val md = MessageDigest.getInstance("SHA-512")
+        val digest = md.digest(bytes)
+        return digest.joinToString("") { "%02x".format(it) }
+    }
 
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_captcha, null)
-        val imageView = dialogView.findViewById<ImageView>(R.id.captchaImage)
-        val inputField = dialogView.findViewById<EditText>(R.id.captchaInput)
-        val regenerateCaptchaTextView =
-            dialogView.findViewById<TextView>(R.id.regenerateCaptchaTextView)
+    @OptIn(ExperimentalEncodingApi::class)
+    fun encodeToBase64(input: String): String {
+        return Base64.encode(input.encodeToByteArray())
+    }
 
-        imageView.setImageBitmap(captcha.bitmap)
-        regenerateCaptchaTextView.setOnClickListener {
-            captcha = CaptchaGenerator.generateCaptchaBitmap(300, 100)
-            imageView.setImageBitmap(captcha.bitmap)
-        }
-
-        val dialog = AlertDialog.Builder(context)
-            .setTitle(context.getString(R.string.verify_captcha))
-            .setView(dialogView)
-            .setPositiveButton(R.string.reg_submit, null)  // Override later
-            .setNegativeButton(R.string.cancel_it) { _, _ ->
-                onResult(false)
-            }
-            .create()
-
-        dialog.setOnShowListener {
-            val submitButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            submitButton.setOnClickListener {
-                val userInput = inputField.text.toString().trim().uppercase()
-                val captchaCode = captcha.code.uppercase()
-
-                when {
-                    userInput.isEmpty() -> {
-                        inputField.error = "Please enter the CAPTCHA"
-                    }
-
-                    userInput.length != 6 -> {
-                        inputField.error = "CAPTCHA must be exactly 6 characters"
-                    }
-
-                    userInput == captchaCode -> {
-                        Toast.makeText(context, "CAPTCHA Verified ✅", Toast.LENGTH_SHORT).show()
-                        onResult(true)
-                        dialog.dismiss()
-                    }
-
-                    else -> {
-                        Toast.makeText(context, "Incorrect CAPTCHA ❌", Toast.LENGTH_SHORT).show()
-                        inputField.text?.clear()
-                        inputField.requestFocus()
+    fun getMobileOrWifiIp(): String? {
+        try {
+            val interfaces = NetworkInterface.getNetworkInterfaces()
+            for (intf in Collections.list(interfaces)) {
+                for (addr in Collections.list(intf.inetAddresses)) {
+                    if (!addr.isLoopbackAddress && addr.hostAddress.indexOf(':') < 0) {
+                        return addr.hostAddress
                     }
                 }
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+    fun getLocationUsingLocationManager(context: Context): Location? {
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val providers = locationManager.getProviders(true)
+
+        for (provider in providers.reversed()) {
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return null
+            }
+            val location = locationManager.getLastKnownLocation(provider)
+            if (location != null) {
+                return location
+            }
+        }
+        return null
+    }
+
+    fun convertDateFormat(dateStr: String): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+        val date = inputFormat.parse(dateStr)
+        return outputFormat.format(date!!)
+    }
+
+    fun getLatestAdvisoriesAsJsonArray(advisoryArray: JSONArray): JSONArray {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+
+        // Step 1: Find the latest date
+        val latestDate = (0 until advisoryArray.length()).maxOfOrNull {
+            dateFormat.parse(
+                advisoryArray.getJSONObject(it).getString("cropsap_advisory_date")
+            )
         }
 
-        dialog.show()
+        // Step 2: Filter advisories with the latest date and collect into a new JSONArray
+        val filteredArray = JSONArray()
+        for (i in 0 until advisoryArray.length()) {
+            val obj = advisoryArray.getJSONObject(i)
+            val objDate = dateFormat.parse(obj.getString("cropsap_advisory_date"))
+            if (objDate == latestDate) {
+                filteredArray.put(obj)
+            }
+        }
+
+        return filteredArray
     }
+
+    fun uiResponsive(view: View) {
+        val startPadding = view.paddingStart
+        val topPadding = view.paddingTop
+        val endPadding = view.paddingEnd
+        val bottomPadding = view.paddingBottom
+
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(
+                bars.left + startPadding,
+                bars.top + topPadding,
+                bars.right + endPadding,
+                bars.bottom + bottomPadding
+            )
+            insets
+        }
+    }
+
+    fun createSnackbar(view: View, message: String) {
+        val snackbar = Snackbar.make(view, message, Snackbar.LENGTH_SHORT)
+
+        val view = snackbar.view
+        val params = view.layoutParams as FrameLayout.LayoutParams
+        params.gravity = Gravity.BOTTOM // or Gravity.CENTER
+        params.setMargins(24, 0, 24, 200) // left, top, right, bottom
+        view.layoutParams = params
+        snackbar.show()
+    }
+
+    fun getCurrentDate(): String {
+        return SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH).format(
+            Date()
+        )
+    }
+
+    fun getSevenDaysBeforeDate(): String {
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_YEAR, -7) // Go back 7 days
+        return SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH).format(calendar.time)
+    }
+
+    fun createPartFromString(value: String): RequestBody {
+        return RequestBody.create("text/plain".toMediaTypeOrNull(), value)
+    }
+
+    fun prepareFilePart(context: Context, partName: String, fileUri: Uri): MultipartBody.Part {
+        val file =
+            File(fileUri.path!!) // If you have URI from storage, you may need a proper file copy
+        val requestFile = RequestBody.create(
+            context.contentResolver.getType(fileUri)?.toMediaTypeOrNull(),
+            file
+        )
+        return MultipartBody.Part.createFormData(partName, file.name, requestFile)
+    }
+
+    fun downloadFile(context: Context, fileUrl: String) {
+        try {
+            val uri = Uri.parse(fileUrl)
+
+            // Guess filename from URL + headers
+            val fileName = URLUtil.guessFileName(fileUrl, null, null)
+
+            val request = DownloadManager.Request(uri)
+            request.setTitle(fileName)
+            request.setDescription("Downloading file...")
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
+            request.setAllowedOverMetered(true)
+            request.setAllowedOverRoaming(true)
+
+            val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            downloadManager.enqueue(request)
+
+            Toast.makeText(context, "Downloading: $fileName", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(context, "Download failed: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+    }
+
 
 }

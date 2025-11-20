@@ -5,16 +5,21 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="29" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="29" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
 
     <application
         android:name=".application.MyApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher_store"
         android:label="@string/app_name"
         android:localeConfig="@xml/locales_config"
@@ -23,6 +28,42 @@
         android:roundIcon="@mipmap/ic_launcher_store_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FarmerApp">
+        <activity
+            android:name=".ui.screens.authentication.FarmerDetailsConfirmationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.screens.authentication.AuthenticateFarmerIdActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.screens.authentication.PreRegistrationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.screens.dashboard.menugrid.dbt.DBTDashboard"
+            android:exported="false" />
+        <activity
+            android:name=".ui.screens.dashboard.sidenavigation.leaderboard.LeaderboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.screens.dashboard.sidenavigation.experts.ExpertsCornerFilterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.screens.dashboard.sidenavigation.costcalculator.CropCostCalculationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.screens.dashboard.sidenavigation.costcalculator.CostCalculatorDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.screens.dashboard.sidenavigation.experts.ExpertsCornerFarmerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.screens.dashboard.sidenavigation.experts.ExpertsCornerAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.screens.notification.DetailedNotificationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.screens.dashboard.etl.AgriStackAdvisoryActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.shetishala.ShetishalaScheduleActivity"
             android:exported="false" />
@@ -51,10 +92,10 @@
             android:name=".ui.screens.dashboard.video.VideosActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.screens.dashboard.menugrid.SOPActivity"
+            android:name=".ui.screens.dashboard.menugrid.sop.SOPActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.screens.dashboard.menugrid.SOPWebViewActivity"
+            android:name=".ui.screens.dashboard.menugrid.sop.SOPWebViewActivity"
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.sidenavigation.AboutActivity"
@@ -118,7 +159,7 @@
             android:name=".ui.screens.authentication.ForgetPassword"
             android:exported="false" />
         <activity
-            android:name=".ui.screens.dashboard.menugrid.MarketPrice"
+            android:name=".ui.screens.dashboard.menugrid.marketprice.MarketPrice"
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.menugrid.dbt.pocra.PocraDbtSchemes"
@@ -130,9 +171,11 @@
             android:name=".ui.screens.dashboard.menugrid.Warehouse"
             android:exported="false" />
         <activity
-            android:name=".ui.screens.notification.ComingSoonActivity"
+            android:name=".ui.screens.notification.NotificationActivity"
             android:exported="false" />
-        <activity android:name=".ui.screens.authentication.LoginScreen" />
+        <activity
+            android:name=".ui.screens.authentication.LoginScreen"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <service
             android:name=".data.services.FBaseMessagingService"
@@ -157,6 +200,9 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".ui.screens.authentication.ProfileScreen"
+            android:exported="false" />
+        <activity
             android:name=".ui.screens.authentication.Registration"
             android:exported="false" />
 
@@ -169,6 +215,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="default_channel" />
     </application>
 
 </manifest>

@@ -3,8 +3,11 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -16,14 +19,18 @@ import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIRequest
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIServices
+import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
+import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityChangePwdTempBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.isStrongPassword
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.toSHA512
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONException
 import org.json.JSONObject
@@ -51,9 +58,69 @@ class ConfirmPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode
         switchLanguage(this, languageToLoad)
         binding = ActivityChangePwdTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.root)
 
         userMobileNo = intent.getStringExtra("MobileNo").toString()
+        val farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
+        if (farmerId!=0){
+            if (languageToLoad == "en") {
+                binding.forgetHeadingText1.text = "Change"
+                binding.forgetHeadingText2.text = "Password"
+            } else {
+                binding.forgetHeadingText1.text = "पासवर्ड"
+                binding.forgetHeadingText2.text = "बदला"
+            }
+        }
         onClick()
+        binding.newPasswordEditText.addTextChangedListener(passwordWatcher)
+        binding.confirmPasswordEditText.addTextChangedListener(confirmPasswordWatcher)
+    }
+
+    private val passwordWatcher = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            val password = s.toString()
+            if (!isValidPassword(password)) {
+                binding.passwordErrorTextView.text =
+                    "Password must be 8+ chars, include uppercase, lowercase, number, and special character."
+                binding.passwordErrorTextView.visibility = TextView.VISIBLE
+            } else {
+                binding.passwordErrorTextView.visibility = TextView.GONE
+            }
+
+            // Also check if passwords match when typing
+            val confirmPassword = binding.confirmPasswordEditText.text.toString()
+            if (confirmPassword.isNotEmpty()) {
+                checkPasswordsMatch(password, confirmPassword)
+            }
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+    }
+
+    private val confirmPasswordWatcher = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            val password = binding.newPasswordEditText.text.toString()
+            val confirmPassword = s.toString()
+            checkPasswordsMatch(password, confirmPassword)
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+    }
+
+    private fun checkPasswordsMatch(password: String, confirmPassword: String) {
+        if (password != confirmPassword) {
+            binding.passwordTextInput.error = "Passwords do not match"
+        } else {
+            binding.passwordTextInput.error = null
+        }
+    }
+
+    private fun isValidPassword(password: String): Boolean {
+        val passwordPattern =
+            "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#\$%^&+=!]).{8,}\$"
+        return password.matches(passwordPattern.toRegex())
     }
 
     private fun onClick() {
@@ -85,9 +152,9 @@ class ConfirmPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode
         } else {
             val jsonObject = JSONObject()
             try {
-                jsonObject.put("SecurityKey", APIServices.SSO_KEY)
+                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
                 jsonObject.put("MobileNo", userMobileNo.trim { it <= ' ' })
-                jsonObject.put("Password", newPwd)
+                jsonObject.put("Password", toSHA512(newPwd))
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val api = AppInventorApi(
@@ -98,7 +165,7 @@ class ConfirmPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode
                     true
                 )
                 val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(APIRequest::class.java)
+                val apiRequest = retrofit.create(ApiService::class.java)
                 val responseCall: Call<JsonObject> = apiRequest.getNewPassword(requestBody)
                 api.postRequest(responseCall, this, 1)
             } catch (e: JSONException) {
@@ -132,7 +199,12 @@ class ConfirmPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode
                 if (response.getStatus()) {
                     val notificationCountValue: String = jSONObject.getString("response")
                     Toast.makeText(this, notificationCountValue, Toast.LENGTH_LONG).show();
-                    val intent = Intent(this, LoginScreen::class.java)
+                    val farmerId =
+                        AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
+                    var intent = Intent(this, LoginScreen::class.java)
+                    if (farmerId != 0) {
+                        intent = Intent(this, DashboardScreen::class.java)
+                    }
                     startActivity(intent)
                 } else {
                     val notificationCountValue: String = jSONObject.getString("response")

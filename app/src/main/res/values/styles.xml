@@ -68,4 +68,36 @@
         <item name="android:fontFamily">@font/poppins_regular_font</item>
         <item name="fontFamily">@font/poppins_regular_font</item>
     </style>
+
+    <style name="CustomMaterialDatePickerTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <!-- 🎨 Primary color for selection and header -->
+        <item name="colorPrimary">@color/actionbar_color_figma</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+
+        <!-- 📅 Background and header -->
+        <item name="materialCalendarStyle">@style/CustomCalendarStyle</item>
+        <item name="materialCalendarHeaderTitle">@style/CustomCalendarHeaderTitle</item>
+
+        <!-- ✨ Animation and surface color (optional) -->
+        <item name="android:windowAnimationStyle">@style/CalendarAnimation</item>
+        <item name="colorSurface">@android:color/white</item>
+    </style>
+
+    <!-- Smaller date cell radius, compact look -->
+    <style name="CustomCalendarStyle" parent="Widget.MaterialComponents.MaterialCalendar">
+        <item name="android:radius">12dp</item>
+    </style>
+
+    <!-- 🏷️ Header title customization -->
+    <style name="CustomCalendarHeaderTitle" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textSize">20sp</item> <!-- ⬆️ Increased title size -->
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!-- Optional fade animation -->
+    <style name="CalendarAnimation">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
 </resources>
