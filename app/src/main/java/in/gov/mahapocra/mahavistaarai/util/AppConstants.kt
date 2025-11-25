@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.mahavistaarai.util.app_util
+package `in`.gov.mahapocra.mahavistaarai.util
 
 object AppConstants {
     const val TAG = "MAHAVISTAAR_AI_TAG"
@@ -28,4 +28,16 @@ object AppConstants {
     const val kSHARED_PREF: String = "pocra_krishi_farmerApp"
     const val tmpCROPNAME: String = "tmpCROPNAME"
     const val WEATHER_RESPONSE: String = "WEATHER_RESPONSE"
+
+    //Constants for point system
+    const val CROP_ADVISORY_POINT = 1
+    const val SOP_POINT = 2
+    const val SOIL_HEALTH_CARD_POINT = 3
+    const val FERTILIZER_CALCULATOR_POINT = 4
+    const val CLIMATE_RESILIENT_POINT = 5
+    const val PEST_AND_DISEASE_POINT = 6
+    const val MARKET_PRICE_POINT = 7
+    const val SHETISHALA_POINT = 8
+    const val WAREHOUSE_POINT = 9
+    const val WEATHER_POINT = 10
 }

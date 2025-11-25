@@ -16,8 +16,8 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

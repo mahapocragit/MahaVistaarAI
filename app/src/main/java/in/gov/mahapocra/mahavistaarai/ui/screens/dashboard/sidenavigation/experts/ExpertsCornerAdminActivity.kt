@@ -21,7 +21,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.Category
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityExpertsCornerAdminBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ExpertsCornerAdminAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.ExpertsViewModel
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.UriFileHelper
 import org.json.JSONArray
 import org.json.JSONObject

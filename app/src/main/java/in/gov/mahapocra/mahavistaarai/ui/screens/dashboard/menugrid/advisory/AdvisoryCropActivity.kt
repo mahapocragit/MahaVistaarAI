@@ -28,14 +28,16 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropAct
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.showDisabledFutureDatePicker
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.CROP_ADVISORY_POINT
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -49,6 +51,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
 
     private lateinit var binding: ActivityAdvisoryCropBinding
     private val viewModel: FarmerViewModel by viewModels()
+    private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     private var cropAdvisoryDetailsJSONArray: JSONArray? = null
     private var cropAdvisoryJSONArray: JSONArray? = null
     var cropId: Int? = 0
@@ -97,9 +100,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         })
 
         AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
-        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
-
-        observeCropStagesAndAdvisory()
+        observeResponse()
         binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {
             val sharing = Intent(this, AddCropActivity::class.java)
             AppPreferenceManager(this).saveString(
@@ -205,7 +206,18 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         })
     }
 
-    private fun observeCropStagesAndAdvisory() {
+    private fun observeResponse() {
+
+        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
+            if (response!=null){
+                val jSONObject = JSONObject(response.toString())
+                val status = jSONObject.optInt("status")
+                if (status==200){
+                    ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
+                }
+            }
+        }
+
         viewModel.getCropStagesAndAdvisoryResponse.observe(this) {
             Log.d(TAG, "observeCropStagesAndAdvisory: $it")
             if (it != null) {
@@ -262,6 +274,9 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         }
         if (i == 2) {
             binding.relativeLayoutTopBar.relativeLayoutToolbar.visibility = View.GONE
+        }
+        if (i==3){
+            leaderboardViewModel.updateUserPoints(this, CROP_ADVISORY_POINT)
         }
     }
 

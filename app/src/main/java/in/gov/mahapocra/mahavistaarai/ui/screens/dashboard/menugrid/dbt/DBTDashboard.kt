@@ -26,8 +26,8 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDbtdashboardBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.encodeToBase64
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getLocationUsingLocationManager
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 
 class DBTDashboard : AppCompatActivity() {

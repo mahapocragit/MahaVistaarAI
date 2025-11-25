@@ -32,8 +32,8 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONArray

@@ -24,7 +24,7 @@ import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -90,7 +90,7 @@ class StageAdvisoryDetailAdapter(
                 .setView(textView)
                 .setNegativeButton(context.getString(R.string.okay)) { dialog, _ -> dialog.dismiss() }
                 .show()
-            Log.d(TAG, "onBindViewHolder: expanded")
+            listener.onMultiRecyclerViewItemClick(3, advisoryJsonDetails)
         }
 
         try {

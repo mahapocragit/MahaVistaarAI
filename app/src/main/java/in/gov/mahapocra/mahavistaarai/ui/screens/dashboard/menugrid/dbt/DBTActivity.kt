@@ -22,7 +22,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.abs

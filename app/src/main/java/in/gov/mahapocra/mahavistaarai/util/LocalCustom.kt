@@ -28,7 +28,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.snackbar.Snackbar
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

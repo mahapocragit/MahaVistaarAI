@@ -29,7 +29,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.OtpRateLimiter.provideValidEncryptedString
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import org.json.JSONObject
 
 class AuthenticateFarmerIdActivity : AppCompatActivity() {

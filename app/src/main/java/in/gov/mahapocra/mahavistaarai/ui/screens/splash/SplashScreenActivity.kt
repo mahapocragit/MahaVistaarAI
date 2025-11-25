@@ -18,7 +18,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardS
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 
 class SplashScreenActivity : AppCompatActivity() {
 

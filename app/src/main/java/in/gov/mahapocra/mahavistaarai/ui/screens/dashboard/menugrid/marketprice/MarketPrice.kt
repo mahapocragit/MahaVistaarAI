@@ -29,8 +29,8 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.GeoViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MarketPriceViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import kotlinx.coroutines.delay

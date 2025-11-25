@@ -27,7 +27,8 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.WEATHER_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -86,7 +87,7 @@ class WeatherActivity : AppCompatActivity() {
             }
         })
 
-        leaderboardViewModel.updateUserPoints(this, 10)
+        leaderboardViewModel.updateUserPoints(this, WEATHER_POINT)
         farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
         binding.tabLayout.visibility = View.GONE
         binding.viewPager.visibility = View.GONE

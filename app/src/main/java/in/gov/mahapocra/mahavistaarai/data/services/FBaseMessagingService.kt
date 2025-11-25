@@ -18,7 +18,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.DetailedNotificationActivity
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -81,8 +81,8 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getLatestAdvisoriesAsJs
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.ApUtil
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SideNavMenuHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

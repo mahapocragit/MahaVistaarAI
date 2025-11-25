@@ -41,7 +41,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.getTodayDate
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat

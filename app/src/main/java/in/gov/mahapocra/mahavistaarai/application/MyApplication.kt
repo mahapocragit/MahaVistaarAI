@@ -9,7 +9,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import org.osmdroid.config.Configuration
 import java.io.File
 
