@@ -22,7 +22,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityAdvisoryCropBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.StageAdvisoryAdapter
-import `in`.gov.mahapocra.mahavistaarai.ui.adapters.StageAdvisoryDetailAdaptr
+import `in`.gov.mahapocra.mahavistaarai.ui.adapters.StageAdvisoryDetailAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
@@ -34,8 +34,9 @@ import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.showDisabledFutu
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
-import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONArray
@@ -206,7 +207,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
 
     private fun observeCropStagesAndAdvisory() {
         viewModel.getCropStagesAndAdvisoryResponse.observe(this) {
-            Log.d("TAGGER", "observeCropStagesAndAdvisory: $it")
+            Log.d(TAG, "observeCropStagesAndAdvisory: $it")
             if (it != null) {
                 val jSONObject = JSONObject(it.toString())
                 val response = ResponseModel(jSONObject)
@@ -236,7 +237,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
             }
         }
         viewModel.error.observe(this) {
-            Log.d("TAGGER", "error: $it")
+            Log.d(TAG, "error: $it")
             UIToastMessage.show(this, "Unable to fetch data")
         }
     }
@@ -252,13 +253,10 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
                     Toast.LENGTH_SHORT
                 ).show()
             }
-            val stageAdvisoryDetailAdapter = StageAdvisoryDetailAdaptr(
+            val stageAdvisoryDetailAdapter = StageAdvisoryDetailAdapter(
                 this,
                 this,
-                cropAdvisoryJSONArray as JSONArray,
-                languageToLoad,
-                cropId.toString(),
-                villageID.toString()
+                cropAdvisoryJSONArray as JSONArray
             )
             stageAdvisoryDetailAdapter.notifyDataSetChanged()
         }

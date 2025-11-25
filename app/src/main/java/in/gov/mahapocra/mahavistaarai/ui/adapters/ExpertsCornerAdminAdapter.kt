@@ -12,6 +12,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.formatDate
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -53,7 +54,7 @@ class ExpertsCornerAdminAdapter(private val posts: JSONArray) :
             val statusLabel = postObject.optString("status_label", "No Description")
             val date = postObject.optString("created_at", "")
             val remark = postObject.optString("remark", "No Remark")
-            Log.d("TAGGER", "bind: $remark")
+            Log.d(TAG, "bind: $remark")
             titleTextView.text = title
             descriptionTextView.text = description
             statusTextView.text = statusLabel

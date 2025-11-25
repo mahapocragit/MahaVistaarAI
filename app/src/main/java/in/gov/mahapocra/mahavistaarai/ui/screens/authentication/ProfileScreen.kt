@@ -41,6 +41,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SessionManager
 import org.json.JSONArray
 import org.json.JSONException
@@ -148,7 +149,7 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
             }
         }
         farmerViewModel.updateFCMTokenResponse.observe(this) {
-            Log.d("TAGGER", "logoutFromApp: $it")
+            Log.d(TAG, "logoutFromApp: $it")
             if (it != null) {
                 val jsonObject = JSONObject(it.toString())
                 val response = jsonObject.optString("response")
@@ -179,7 +180,7 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
                     startActivity(intent)
                     finish()
                 } else {
-                    Log.d("TAGGER", "logoutFromApp: $response")
+                    Log.d(TAG, "logoutFromApp: $response")
                 }
             }
         }
@@ -202,7 +203,7 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 if (jSONObject.optInt("status") == 200) {
-                    Log.d("TAGGER", "onResponse: $jSONObject")
+                    Log.d(TAG, "onResponse: $jSONObject")
                     val response: String = jSONObject.getString("response")
                     Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                     addVerificationDialog()
@@ -268,7 +269,7 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
                 AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName)
             registerMob = AppSettings.getInstance()
                 .getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
-            Log.d("TAGGER", "setConfiguration: $registerMob")
+            Log.d(TAG, "setConfiguration: $registerMob")
             emailid =
                 AppSettings.getInstance().getValue(this, AppConstants.uEmail, AppConstants.uEmail)
             districtName = getLocalizedValue(

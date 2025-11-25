@@ -13,6 +13,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -35,7 +36,7 @@ class LeaderboardViewModel : ViewModel() {
                 ProgressHelper.showProgressDialog(context)
                 val farmerId =
                     AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.Companion.FARMER.baseUrl)
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getLeaderboardForAll(
                     farmerId,
@@ -43,7 +44,7 @@ class LeaderboardViewModel : ViewModel() {
                 )
                 ProgressHelper.disableProgressDialog()
                 _responseLeaderboardForAll.value = response
-                Log.d("TAGGER", "fetchDataFromNewLeaderboard: $response")
+                Log.d(TAG, "fetchDataFromNewLeaderboard: $response")
             } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
@@ -69,12 +70,12 @@ class LeaderboardViewModel : ViewModel() {
                     put("page_id", screen)
                 }
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.Companion.FARMER.baseUrl)
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.updateUserPoints(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _responseUpdateUserPoints.value = response
-                Log.d("TAGGER", "fetchDataFromNewLeaderboard: $response")
+                Log.d(TAG, "fetchDataFromNewLeaderboard: $response")
             } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {

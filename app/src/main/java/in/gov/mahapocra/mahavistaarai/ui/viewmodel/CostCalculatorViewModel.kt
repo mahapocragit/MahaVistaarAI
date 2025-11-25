@@ -13,6 +13,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -113,7 +114,7 @@ class CostCalculatorViewModel : ViewModel() {
     }
 
     fun getTotalCostTransactions(context: Context, season: Int = 1, year: Int = 2025) {
-        Log.d("TAGGER", "getTotalCostTransactions tempSeason: $season")
+        Log.d(TAG, "getTotalCostTransactions tempSeason: $season")
         ProgressHelper.showProgressDialog(context)
         viewModelScope.launch {
             try {

@@ -33,6 +33,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -69,7 +70,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
             farmerViewModel.getNotificationDetails(this, id)
             farmerViewModel.getNotificationDetailedResponse.observe(this) {
                 if (it != null) {
-                    Log.d("TAGGER", "onCreate: $it")
+                    Log.d(TAG, "onCreate: $it")
                     val jsonObject = JSONObject(it.toString())
                     val notificationObject = jsonObject.optJSONObject("notifications")
                     setUpPageContent(notificationObject, id)
@@ -82,10 +83,10 @@ class DetailedNotificationActivity : AppCompatActivity() {
             farmerViewModel.getNotificationDetailedResponse.observe(this) {
                 if (it != null) {
                     val jsonObject = JSONObject(it.toString())
-                    Log.d("TAGGER", "getNotificationDetails: $jsonObject")
+                    Log.d(TAG, "getNotificationDetails: $jsonObject")
                     val notificationObject = jsonObject.optJSONObject("notifications")
                     val flatCropId = notificationObject?.optInt("crop")
-                    Log.d("TAGGER", "onCreate: $flatCropId")
+                    Log.d(TAG, "onCreate: $flatCropId")
                     setUpPageContent(notificationObject, id)
                     fetchCropList(flatCropId)
                 }
@@ -97,7 +98,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
-            Log.d("TAGGER", "onCreate relativeLayoutTopBar: $it")
+            Log.d(TAG, "onCreate relativeLayoutTopBar: $it")
         }
     }
 
@@ -133,7 +134,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
                     val jsonObject = flatCropsJsonArray.getJSONObject(i)
                     val id = jsonObject.optInt("id")
                     if (id == flatCropId) {
-                        Log.d("TAGGER", "checkCropIdAndFetchJson: $jsonObject")
+                        Log.d(TAG, "checkCropIdAndFetchJson: $jsonObject")
                         cropId = jsonObject.optInt("id")
                         cropName = jsonObject.optString("name")
                         sowingDate = jsonObject.optString("sowing_date")
@@ -176,7 +177,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
         }
         val shortDescription = jsonObject.optString("body")
         val url = jsonObject.optString("url") ?: ""
-        Log.d("TAGGER", "setUpPageContent: $url")
+        Log.d(TAG, "setUpPageContent: $url")
         val notificationDate =
             LocalCustom.convertDateFormat(jsonObject.optString("notification_date"))
         val redirectionText = jsonObject.optString("redirection_text")
@@ -233,7 +234,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
     }
 
     private fun checkAndRedirect(targetClass: Class<*>): Intent {
-        Log.d("TAGGER", "checkAndRedirect: $cropId")
+        Log.d(TAG, "checkAndRedirect: $cropId")
         val sowingDateFormat = if (
             (targetClass == FertilizerCalculatorActivity::class.java || targetClass == AdvisoryCropActivity::class.java)
             && isShortDateFormat(sowingDate)

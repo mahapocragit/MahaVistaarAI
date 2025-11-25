@@ -26,6 +26,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -224,7 +225,7 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
                 )
             }
         } catch (e: Exception) {
-            Log.d("TAGGER", "setUpListeners: ${e.message}")
+            Log.d(TAG, "setUpListeners: ${e.message}")
         }
 
         binding.addCropCardView.setOnClickListener {

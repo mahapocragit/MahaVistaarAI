@@ -26,8 +26,9 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDbtdashboardBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.encodeToBase64
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getLocationUsingLocationManager
-import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 
 class DBTDashboard : AppCompatActivity() {
 
@@ -61,7 +62,7 @@ class DBTDashboard : AppCompatActivity() {
         }
 
         val agristackId = AppSettings.getInstance().getValue(this, AppConstants.AGRISTACKID, "")
-        Log.d("TAGGER", "loadWebView: $agristackId")
+        Log.d(TAG, "loadWebView: $agristackId")
 
         val encodedId = if (!agristackId.isNullOrEmpty() && agristackId != "null") {
             encodeToBase64(agristackId)

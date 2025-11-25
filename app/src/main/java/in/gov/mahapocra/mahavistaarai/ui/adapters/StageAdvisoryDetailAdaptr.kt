@@ -10,6 +10,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.text.util.Linkify
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,18 +24,16 @@ import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
 import org.json.JSONArray
 import org.json.JSONObject
 
 
-class StageAdvisoryDetailAdaptr(
+class StageAdvisoryDetailAdapter(
     private var context: Context,
     private var listener: OnMultiRecyclerItemClickListener,
-    private var cropAdvisoryDetailsJSONArray: JSONArray,
-    private var languageToLoad: String,
-    private var cropId: String,
-    private var villageID: String
-) : RecyclerView.Adapter<StageAdvisoryDetailAdaptr.ViewHolder>() {
+    private var cropAdvisoryDetailsJSONArray: JSONArray
+) : RecyclerView.Adapter<StageAdvisoryDetailAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -53,36 +52,34 @@ class StageAdvisoryDetailAdaptr(
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val cropSapadvisoryTv: TextView = itemView.findViewById(R.id.cropSapadvisoryTv)
-        val onFeedback: TextView = itemView.findViewById(R.id.onFeedback)
-        val crop_image: ImageView = itemView.findViewById(R.id.crop_image)
+        val cropAdvisoryTextView: TextView = itemView.findViewById(R.id.cropSapadvisoryTv)
+        val cropImage: ImageView = itemView.findViewById(R.id.crop_image)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val advisoryJsonDetails: JSONObject =
             cropAdvisoryDetailsJSONArray.get(position) as JSONObject
-       // val num = advisoryJsonDetails.getString("num")
         val img = advisoryJsonDetails.getString("img")
-        val datas: String = advisoryJsonDetails.getString("data")
-        val id: String = advisoryJsonDetails.getString("id")
-        val data =  removeHtml(datas)
+        val dataString: String = advisoryJsonDetails.getString("data")
+        advisoryJsonDetails.getString("id")
+        val data =  removeHtml(dataString)
 
-        if (data?.length!! > 50) {
-            val textData = data.substring(0, 49)
-            val readMore: String = context!!.getString(R.string.read_more)
+        if (data.length > 50) {
+            val textData = data.take(49)
+            val readMore: String = context.getString(R.string.read_more)
             val finalString = textData + readMore
             val   sb = SpannableStringBuilder(finalString)
             val fcs = ForegroundColorSpan(Color.rgb(100, 116, 139))
             val   bss = StyleSpan(Typeface.BOLD)
             sb.setSpan(fcs, 52, 61, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
             sb.setSpan(bss, 52, 61, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            holder.cropSapadvisoryTv.text = sb
+            holder.cropAdvisoryTextView.text = sb
         } else {
-            holder.cropSapadvisoryTv.text = data
+            holder.cropAdvisoryTextView.text = data
         }
-        holder.cropSapadvisoryTv.setOnClickListener {
+        holder.cropAdvisoryTextView.setOnClickListener {
             val textView = TextView(context)
-            textView.text = HtmlCompat.fromHtml(datas, HtmlCompat.FROM_HTML_MODE_LEGACY)
+            textView.text = HtmlCompat.fromHtml(dataString, HtmlCompat.FROM_HTML_MODE_LEGACY)
             textView.textSize = 16f
             textView.setPadding(70, 16, 32, 16)
             textView.autoLinkMask = Linkify.WEB_URLS
@@ -93,6 +90,7 @@ class StageAdvisoryDetailAdaptr(
                 .setView(textView)
                 .setNegativeButton(context.getString(R.string.okay)) { dialog, _ -> dialog.dismiss() }
                 .show()
+            Log.d(TAG, "onBindViewHolder: expanded")
         }
 
         try {
@@ -103,15 +101,13 @@ class StageAdvisoryDetailAdaptr(
                 .networkPolicy(NetworkPolicy.NO_CACHE, NetworkPolicy.NO_STORE)
                 .resize(450, 450)
                 .centerCrop()
-                .into(holder.crop_image)
+                .into(holder.cropImage)
         } catch (ex: Exception) {
             ex.toString()
         }
     }
 
-    private fun removeHtml( original:String): String? {
-        if (original == null)
-            return null
+    private fun removeHtml( original:String): String {
         return android.text.Html.fromHtml(original).toString()
     }
 }

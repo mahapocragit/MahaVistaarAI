@@ -21,6 +21,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.Category
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityExpertsCornerAdminBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ExpertsCornerAdminAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.ExpertsViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.UriFileHelper
 import org.json.JSONArray
 import org.json.JSONObject
@@ -180,7 +181,7 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
 
     private fun observeResponse() {
         expertsViewModel.getCategoriesForExpertCorner.observe(this) { response ->
-            Log.d("TAGGER", "observeResponse cat: $response")
+            Log.d(TAG, "observeResponse cat: $response")
             if (response != null) {
                 val jsonObject = JSONObject(response.toString())
                 val dataArray = jsonObject.optJSONArray("data")
@@ -188,7 +189,7 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
             }
         }
         expertsViewModel.getSubCategoriesForExpertCorner.observe(this) { response ->
-            Log.d("TAGGER", "observeResponse sub cat: $response")
+            Log.d(TAG, "observeResponse sub cat: $response")
             if (response != null) {
                 val jsonObject = JSONObject(response.toString())
                 val dataArray = jsonObject.optJSONArray("data")
@@ -200,7 +201,7 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
 
         }
         expertsViewModel.getUserArticlesResponse.observe(this) { response ->
-            Log.d("TAGGER", "observeResponse getUserArticles: $response")
+            Log.d(TAG, "observeResponse getUserArticles: $response")
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 val jsonArray = jSONObject.optJSONArray("data") ?: JSONArray()
@@ -240,7 +241,7 @@ class ExpertsCornerAdminActivity : AppCompatActivity() {
             }
         }
         expertsViewModel.error.observe(this) {
-            Log.d("TAGGER", "observeResponse fail: $it")
+            Log.d(TAG, "observeResponse fail: $it")
             Toast.makeText(this, "$it Successfully", Toast.LENGTH_SHORT).show()
         }
     }

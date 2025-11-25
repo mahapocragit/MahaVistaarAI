@@ -42,7 +42,6 @@ class StageAdvisoryAdapter(
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
         val seeMoreTextView: TextView = itemView.findViewById(R.id.seeMoreTextView)
-        val stepLine: View = itemView.findViewById(R.id.stepLine)
         val stage: RelativeLayout = itemView.findViewById(R.id.stage)
         val cropStagesInfoRecyclerView: RecyclerView =
             itemView.findViewById(R.id.cropStagesInfoRecyclerView)
@@ -53,7 +52,7 @@ class StageAdvisoryAdapter(
             cropAdvisoryDetailsJSONArray?.get(position) as JSONObject
         val cropAdvisoryJSONArray = advisoryJsonDetails.getJSONArray("advisory")
         val sAdapter =
-            StageAdvisoryDetailAdaptr(holder.stage.context, listener, cropAdvisoryJSONArray, "mr", "", "")
+            StageAdvisoryDetailAdapter(holder.stage.context, listener, cropAdvisoryJSONArray)
         holder.cropStagesInfoRecyclerView.layoutManager = LinearLayoutManager(
             context,
             LinearLayoutManager.VERTICAL,

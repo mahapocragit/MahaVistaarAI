@@ -28,6 +28,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.snackbar.Snackbar
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -133,17 +134,17 @@ object LocalCustom {
                         String.format(Locale.US, "%02d-%02d-%04d", day, month, adjustedYear)
                 } catch (e: Exception) {
                     Log.e(
-                        "TAGGER",
+                        TAG,
                         "Invalid number format in sowing date: $sowingDateUnfiltered",
                         e
                     )
                     formattedDate = ""
                 }
             } else {
-                Log.e("TAGGER", "Invalid date format: $sowingDateUnfiltered")
+                Log.e(TAG, "Invalid date format: $sowingDateUnfiltered")
             }
         } else {
-            Log.e("TAGGER", "Unsupported date format: $sowingDateUnfiltered")
+            Log.e(TAG, "Unsupported date format: $sowingDateUnfiltered")
         }
 
         return formattedDate
@@ -166,17 +167,17 @@ object LocalCustom {
                         String.format(Locale.US, "%02d-%02d-%04d", day, month, adjustedYear)
                 } catch (e: Exception) {
                     Log.e(
-                        "TAGGER",
+                        TAG,
                         "Invalid number format in sowing date: $sowingDateUnfiltered",
                         e
                     )
                     formattedDate = ""
                 }
             } else {
-                Log.e("TAGGER", "Invalid date format: $sowingDateUnfiltered")
+                Log.e(TAG, "Invalid date format: $sowingDateUnfiltered")
             }
         } else {
-            Log.e("TAGGER", "Unsupported date format: $sowingDateUnfiltered")
+            Log.e(TAG, "Unsupported date format: $sowingDateUnfiltered")
         }
 
         return formattedDate

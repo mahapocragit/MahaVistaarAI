@@ -1,49 +1,31 @@
-package in.gov.mahapocra.mahavistaarai.util.app_util;
+package `in`.gov.mahapocra.mahavistaarai.util.app_util
 
-public interface AppConstants {
-
-    String kAPP_BUILD_VERSION = "kAPP_BUILD_VERSION";
-    String fREGISTER_ID = "fREGISTER_ID";
-    String IS_USER_GUEST = "IS_USER_GUEST";
-
-    int CAMERA_PERMISSION_REQUEST_CODE = 100;
-
-    String uName = "USER_NAME";
-    String userDataSaved = "USER_DATA_SAVED";
-    String AGRISTACKID = "AGRISTACK_ID";
-    String CONSENT = "CONSENT";
-    String ACTION_FROM_DASHBOARD = "ACTION_FROM_DASHBOARD";
-    String PEST_AND_DISEASES_FROM_DASHBOARD = "PEST_AND_DISEASES_FROM_DASHBOARD";
-    String PEST_AND_DISEASES_STAGES = "PEST_AND_DISEASES_STAGES";
-    String FERTILIZER_CALCULATOR_FROM_DASHBOARD = "FERTILIZER_CALCULATOR_FROM_DASHBOARD";
-    String SOP_FROM_DASHBOARD = "SOP_FROM_DASHBOARD";
-    String uMobileNo = "USER_MOBILE";
-    String uEmail = "USER_EMAIL";
-    String uDIST = "USER_DIST";
-    String uDISTMR = "USER_DIST_MR";
-    String uDISTId = "uDISTId";
-    String uTALUKA = "USER_TALUKA";
-    String uTALUKAMR = "USER_TALUKA_MR";
-    String uTALUKAID = "uTALUKAID";
-
-    String kFarmerCrop ="kFarmerCrop";
-    String uVILLAGE = "uVILLAGE";
-    String uVILLAGEMR = "uVILLAGE_MR";
-    String uVILLAGEID = "uVILLAGEID";
-
-    String kSHARED_PREF = "pocra_krishi_farmerApp";
-
-    public static final String kS_COORDINATOR   = "kS_COORDINATOR";
-    public static final String kS_CO_COORDINATOR = "kS_CO_COORDINATOR";
-
-    public static final String kMSG = "Please Wait...";
-
-    String kTOKEN = "kTOKEN";
-
-    String tmpCROPID = "tmpCROPID";
-    String tmpWOTRID = "tmpWOTRID";
-    String tmpSOWINGDATE = "tmpSOWINGDATE";
-    String tmpMURL = "tmpMURL";
-    String tmpCROPNAME = "tmpCROPNAME";
-    String WEATHER_RESPONSE = "WEATHER_RESPONSE";
+object AppConstants {
+    const val TAG = "MAHAVISTAAR_AI_TAG"
+    const val kAPP_BUILD_VERSION: String = "kAPP_BUILD_VERSION"
+    const val fREGISTER_ID: String = "fREGISTER_ID"
+    const val IS_USER_GUEST: String = "IS_USER_GUEST"
+    const val uName: String = "USER_NAME"
+    const val userDataSaved: String = "USER_DATA_SAVED"
+    const val AGRISTACKID: String = "AGRISTACK_ID"
+    const val ACTION_FROM_DASHBOARD: String = "ACTION_FROM_DASHBOARD"
+    const val PEST_AND_DISEASES_FROM_DASHBOARD: String = "PEST_AND_DISEASES_FROM_DASHBOARD"
+    const val PEST_AND_DISEASES_STAGES: String = "PEST_AND_DISEASES_STAGES"
+    const val FERTILIZER_CALCULATOR_FROM_DASHBOARD: String = "FERTILIZER_CALCULATOR_FROM_DASHBOARD"
+    const val SOP_FROM_DASHBOARD: String = "SOP_FROM_DASHBOARD"
+    const val uMobileNo: String = "USER_MOBILE"
+    const val uEmail: String = "USER_EMAIL"
+    const val uDIST: String = "USER_DIST"
+    const val uDISTMR: String = "USER_DIST_MR"
+    const val uDISTId: String = "uDISTId"
+    const val uTALUKA: String = "USER_TALUKA"
+    const val uTALUKAMR: String = "USER_TALUKA_MR"
+    const val uTALUKAID: String = "uTALUKAID"
+    const val kFarmerCrop: String = "kFarmerCrop"
+    const val uVILLAGE: String = "uVILLAGE"
+    const val uVILLAGEMR: String = "uVILLAGE_MR"
+    const val uVILLAGEID: String = "uVILLAGEID"
+    const val kSHARED_PREF: String = "pocra_krishi_farmerApp"
+    const val tmpCROPNAME: String = "tmpCROPNAME"
+    const val WEATHER_RESPONSE: String = "WEATHER_RESPONSE"
 }

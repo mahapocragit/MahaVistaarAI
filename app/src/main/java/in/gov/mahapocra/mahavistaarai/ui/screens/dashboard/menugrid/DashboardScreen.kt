@@ -82,6 +82,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.ApUtil
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SideNavMenuHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -384,7 +385,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             cropSapRecyclerView.apply {
                 hasFixedSize()
                 layoutManager = LinearLayoutManager(this@DashboardScreen)
-                Log.d("TAGGER", "onCreate: ${getLatestAdvisoriesAsJsonArray(etlAdvisoryJsonArray)}")
+                Log.d(TAG, "onCreate: ${getLatestAdvisoriesAsJsonArray(etlAdvisoryJsonArray)}")
                 adapter = cropRecyclerSapAdapter
             }
 
@@ -427,7 +428,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
         farmerViewModel.error.observe(this) {
             LocalCustom.createSnackbar(binding.root, it)
-            Log.d("TAGGER", "onCreate: $it")
+            Log.d(TAG, "onCreate: $it")
         }
 
         farmerViewModel.checkFCMTokenResponse.observe(this) {
@@ -636,7 +637,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
             try {
                 val jsonObject = JSONObject(response.toString())
-                Log.d("TAGGER", "observeResponse: $jsonObject")
+                Log.d(TAG, "observeResponse: $jsonObject")
                 if (jsonObject.optInt("status") == 200) {
                     val data = jsonObject.optJSONObject("data") ?: return@observe
 
@@ -700,7 +701,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         if (!consent) {
                             showDialogForConsent()
                         } else {
-                            Log.d("TAGGER", "observeResponse: consent is given")
+                            Log.d(TAG, "observeResponse: consent is given")
                         }
                     } else {
                         val lastDate = appPreferenceManager.getString("AGRISTACK_LAST_DATE")
@@ -733,7 +734,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
 
         farmerViewModel.updateFCMTokenResponse.observe(this) {
-            Log.d("TAGGER", "logoutFromApp: $it")
+            Log.d(TAG, "logoutFromApp: $it")
             if (it != null) {
                 AppPreferenceManager(this).saveBoolean("FCM_VALIDATED", true)
                 val jsonObject = JSONObject(it.toString())
@@ -765,7 +766,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     startActivity(intent)
                     finish()
                 } else {
-                    Log.d("TAGGER", "logoutFromApp: $response")
+                    Log.d(TAG, "logoutFromApp: $response")
                 }
             }
         }

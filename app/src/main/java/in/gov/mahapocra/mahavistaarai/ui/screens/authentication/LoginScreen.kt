@@ -42,6 +42,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.OtpRateLimiter
 import `in`.gov.mahapocra.mahavistaarai.util.OtpRateLimiter.provideValidEncryptedString
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONException
 import org.json.JSONObject
@@ -138,7 +139,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         }
 
         farmerViewModel.agristackLoginResponse.observe(this) {
-            Log.d("TAGGER", "farmerIdLayoutValidation: $it")
+            Log.d(TAG, "farmerIdLayoutValidation: $it")
             if (it != null) {
                 val jsonObject = JSONObject(it.toString())
                 if (jsonObject.optInt("status") == 200) {
@@ -150,7 +151,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
         farmerViewModel.error.observe(this)
         {
-            Log.d("TAGGER", "farmerIdLayoutValidation error: $it")
+            Log.d(TAG, "farmerIdLayoutValidation error: $it")
         }
     }
 
@@ -352,7 +353,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         )
                     val retrofit: Retrofit = api.getRetrofitInstance()
                     val apiRequest = retrofit.create(ApiService::class.java)
-                    Log.d("TAGGER", "callLoginAPI: true")
+                    Log.d(TAG, "callLoginAPI: true")
                     val responseCall: Call<JsonObject> =
                         apiRequest.getUserLoginOTP(mobileNo.trim { it <= ' ' }, otp, requestBody)
                     api.postRequest(responseCall, this, 2)
@@ -376,7 +377,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         )
                     val retrofit: Retrofit = api.getRetrofitInstance()
                     val apiRequest = retrofit.create(ApiService::class.java)
-                    Log.d("TAGGER", "callLoginAPI: true")
+                    Log.d(TAG, "callLoginAPI: true")
                     val responseCall: Call<JsonObject> =
                         apiRequest.getUserLoginPassword(
                             mobileNo.trim { it <= ' ' },
@@ -409,7 +410,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 )
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(ApiService::class.java)
-            Log.d("TAGGER", "callLoginAPIForFarmer: true")
+            Log.d(TAG, "callLoginAPIForFarmer: true")
             val responseCall: Call<JsonObject> =
                 apiRequest.getUserLoginOTP(agriStackMobile.trim { it <= ' ' }, otp, requestBody)
             api.postRequest(responseCall, this, 2)
@@ -452,7 +453,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
         if (i == 1) {
-            Log.d("TAGGER", "onResponse: $jSONObject")
+            Log.d(TAG, "onResponse: $jSONObject")
             if (jSONObject != null) {
                 if (jSONObject.optInt("status") == 200) {
                     val response: String = jSONObject.getString("response")

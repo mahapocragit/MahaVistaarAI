@@ -20,6 +20,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
 import org.json.JSONObject
 
 class AgriStackAdvisoryActivity : AppCompatActivity() {
@@ -79,7 +80,7 @@ class AgriStackAdvisoryActivity : AppCompatActivity() {
             }
         }
         farmerViewModel.error.observe(this) {
-            Log.d("TAGGER", "onCreate: $it")
+            Log.d(TAG, "onCreate: $it")
         }
     }
 

@@ -34,6 +34,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONArray
@@ -210,7 +211,7 @@ class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClick
             }
         }
         farmerViewModel.error.observe(this) {
-            Log.d("TAGGER", "observeClimateResilientGroupList: $it")
+            Log.d(TAG, "observeClimateResilientGroupList: $it")
         }
     }
 

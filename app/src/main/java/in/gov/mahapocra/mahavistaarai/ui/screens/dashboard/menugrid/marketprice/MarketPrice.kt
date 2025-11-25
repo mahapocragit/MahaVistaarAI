@@ -29,9 +29,10 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.GeoViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MarketPriceViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONArray
@@ -282,7 +283,7 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
                             }
                         }
                     } ?: run {
-                        Log.e("TAGGER", "districtJSONArray could not be cast to JSONArray")
+                        Log.e(TAG, "districtJSONArray could not be cast to JSONArray")
                     }
                 } else {
                     Toast.makeText(this, "Data Not Found", Toast.LENGTH_LONG).show()

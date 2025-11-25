@@ -41,6 +41,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.getTodayDate
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -136,7 +137,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
         costCalculatorViewModel.addCropSpecificTransactionsResponse.observe(this) { response ->
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
-                Log.d("TAGGER", "setUpObservers: $jSONObject")
+                Log.d(TAG, "setUpObservers: $jSONObject")
 
                 val currentSelectedYear =
                     AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION", 2025)
@@ -154,7 +155,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
         costCalculatorViewModel.deleteCropTransactionResponse.observe(this) { response ->
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
-                Log.d("TAGGER", "setUpObservers: $jSONObject")
+                Log.d(TAG, "setUpObservers: $jSONObject")
                 val currentSelectedYear =
                     AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION", 2025)
                 val currentSelectedSeason =
@@ -171,7 +172,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
         costCalculatorViewModel.updateCropTransactionResponse.observe(this) { response ->
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
-                Log.d("TAGGER", "setUpObservers: $jSONObject")
+                Log.d(TAG, "setUpObservers: $jSONObject")
                 val currentSelectedYear =
                     AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION", 2025)
                 val currentSelectedSeason =
@@ -208,7 +209,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                 year = currentSelectedYear
             )
         } catch (e: Exception) {
-            Log.d("TAGGER", "setUpListeners: ${e.message}")
+            Log.d(TAG, "setUpListeners: ${e.message}")
         }
 
         binding.addExpenseButton.setOnClickListener {

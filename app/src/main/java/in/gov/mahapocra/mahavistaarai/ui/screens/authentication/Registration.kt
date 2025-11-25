@@ -27,6 +27,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SessionManager
 import org.json.JSONArray
 import org.json.JSONException
@@ -112,7 +113,7 @@ class Registration : AppCompatActivity(), AlertListEventListener {
             }
         }
         farmerViewModel.updateFCMTokenResponse.observe(this) {
-            Log.d("TAGGER", "logoutFromApp: $it")
+            Log.d(TAG, "logoutFromApp: $it")
             if (it != null) {
                 val jsonObject = JSONObject(it.toString())
                 val response = jsonObject.optString("response")
@@ -143,7 +144,7 @@ class Registration : AppCompatActivity(), AlertListEventListener {
                     startActivity(intent)
                     finish()
                 } else {
-                    Log.d("TAGGER", "logoutFromApp: $response")
+                    Log.d(TAG, "logoutFromApp: $response")
                 }
             }
         }
@@ -315,7 +316,7 @@ class Registration : AppCompatActivity(), AlertListEventListener {
             } catch (e: JSONException) {
                 e.printStackTrace()
             }
-            Log.d("TAGGER", "userValidationAndRegistration: $jsonObject")
+            Log.d(TAG, "userValidationAndRegistration: $jsonObject")
         }
     }
 

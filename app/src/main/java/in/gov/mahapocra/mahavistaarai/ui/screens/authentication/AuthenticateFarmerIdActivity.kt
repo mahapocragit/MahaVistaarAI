@@ -29,6 +29,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.OtpRateLimiter.provideValidEncryptedString
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppConstants.TAG
 import org.json.JSONObject
 
 class AuthenticateFarmerIdActivity : AppCompatActivity() {
@@ -99,7 +100,7 @@ class AuthenticateFarmerIdActivity : AppCompatActivity() {
         loginViewModel.compareOtpToFarmerIdResponse.observe(this) { response ->
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
-                Log.d("TAGGER", "observe compareOtpToFarmerIdResponse: $jSONObject")
+                Log.d(TAG, "observe compareOtpToFarmerIdResponse: $jSONObject")
                 val status = jSONObject.optInt("status")
                 val response = jSONObject.optString("response")
                 if (status == 200) {
