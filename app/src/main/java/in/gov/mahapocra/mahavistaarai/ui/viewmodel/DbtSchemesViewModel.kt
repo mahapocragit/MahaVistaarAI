@@ -31,7 +31,7 @@ class DbtSchemesViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.LIVE_DBT.baseUrl)
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.DBT_BASE_URL.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 // Retrofit suspend call
                 val response = apiRequest.getDBTSchemes()
@@ -54,7 +54,7 @@ class DbtSchemesViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.LIVE_DBT.baseUrl)
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.DBT_BASE_URL.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 // Retrofit suspend call
                 val response = apiRequest.getMahaDBTSchemes()

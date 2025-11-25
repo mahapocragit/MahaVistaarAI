@@ -23,6 +23,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
@@ -35,12 +37,12 @@
             android:id="@+id/textView27"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textStyle="bold"
             android:layout_marginTop="@dimen/_10sdp"
+            android:gravity="center"
+            android:text="@string/welcome_text"
             android:textColor="@color/white"
             android:textSize="@dimen/_22sdp"
-            android:text="@string/welcome_text" />
+            android:textStyle="bold" />
 
     </LinearLayout>
 

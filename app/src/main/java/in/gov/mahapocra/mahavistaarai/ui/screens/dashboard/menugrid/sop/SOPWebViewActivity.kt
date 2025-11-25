@@ -9,19 +9,24 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityResilientWebUrlBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.SOP_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
+import org.json.JSONObject
 
 class SOPWebViewActivity : AppCompatActivity() {
 
     private lateinit var climateWebView: WebView
     private lateinit var binding: ActivityResilientWebUrlBinding
+    private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     private lateinit var languageToLoad: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,14 +41,13 @@ class SOPWebViewActivity : AppCompatActivity() {
         binding = ActivityResilientWebUrlBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
-        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
         // Toolbar setup
         binding.layoutToolbar.textViewHeaderTitle.text = getString(R.string.sop_title)
         binding.layoutToolbar.imgBackArrow.visibility = View.VISIBLE
         binding.layoutToolbar.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
-
+        observeResponse()
         // WebView setup
         climateWebView = binding.climateWebView
         setupWebView()
@@ -60,6 +64,18 @@ class SOPWebViewActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    private fun observeResponse(){
+        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
+            if (response!=null){
+                val jSONObject = JSONObject(response.toString())
+                val status = jSONObject.optInt("status")
+                if (status==200){
+                    ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
+                }
+            }
+        }
     }
 
     private fun setupWebView() {
@@ -97,6 +113,8 @@ class SOPWebViewActivity : AppCompatActivity() {
                 return false
             }
         }
+
+        leaderboardViewModel.updateUserPoints(this, SOP_POINT)
     }
 
     private fun openWebView(url: String) {

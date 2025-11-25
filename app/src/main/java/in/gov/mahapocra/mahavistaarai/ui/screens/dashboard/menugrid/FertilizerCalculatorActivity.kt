@@ -38,16 +38,18 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityFertilizerCalculator
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.FertilizersRecyclerAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
-import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.FERTILIZER_CALCULATOR_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
-import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.showDisabledFutureDatePicker
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.DeleteApi
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.showDisabledFutureDatePicker
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -66,9 +68,9 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
 
     private lateinit var binding: ActivityFertilizerCalculatorActivityBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
+    private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     private var soilTestOption: Int = 0
     private lateinit var languageToLoad: String
-
     private var villageID: Int = 0
     private var cropId: Int? = 0
     private var wotrCropId: String? = null
@@ -76,7 +78,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     private var sowingDate: String? = null
     private var cropName: String? = null
     private lateinit var token: String
-    private var route: String = ""
     private var acrArea: String = ""
     private var gunthaArea: String = ""
     private var edtFYMValue: String = ""
@@ -102,7 +103,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         binding = ActivityFertilizerCalculatorActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
-
+        observeResponse()
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
             startActivity(Intent(this, DashboardScreen::class.java))
@@ -179,7 +180,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             resetEditTest()
         }
         binding.calculateTv.setOnClickListener {
-            ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
             validation()
         }
         binding.selectedOptionTv.setOnClickListener {
@@ -325,6 +325,18 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                 startActivity(Intent(this@FertilizerCalculatorActivity, DashboardScreen::class.java))
             }
         })
+    }
+
+    private fun observeResponse(){
+        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
+            if (response!=null){
+                val jSONObject = JSONObject(response.toString())
+                val status = jSONObject.optInt("status")
+                if (status==200){
+                    ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
+                }
+            }
+        }
     }
 
     private fun settingUpTheViewsAsPerLanguage() {
@@ -542,12 +554,12 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    @SuppressLint("SuspiciousIndentation")
     override fun onResponse(jSONObject: JSONObject?, code: Int) {
         try {
             if (jSONObject != null) {
                 when (code) {
                     1 -> {
+                        leaderboardViewModel.updateUserPoints(this, FERTILIZER_CALCULATOR_POINT)
                         binding.availableOptionTv.visibility = View.INVISIBLE
                         val simpleFertilizersArray: JSONArray =
                             jSONObject.getJSONArray("SimpleFertilizers")
