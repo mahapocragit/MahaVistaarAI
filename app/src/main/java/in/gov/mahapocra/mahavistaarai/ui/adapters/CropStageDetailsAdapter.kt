@@ -22,9 +22,9 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.A
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.sop.SOPActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.CostCalculatorDashboardActivity
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
