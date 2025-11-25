@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/status_colored_background"
-    tools:context=".ui.screens.dashboard.menugrid.soilhealthcard.HealthCardActivity">
+    tools:context=".ui.screens.dashboard.menugrid.soilhealthcard.SoilHealthCardActivity">
 
     <LinearLayout
         android:id="@+id/linearLayout2"

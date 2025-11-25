@@ -22,7 +22,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate.Cl
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.DBTActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.marketprice.MarketPrice
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard.HealthCardActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard.SoilHealthCardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.sop.SOPActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
@@ -208,7 +208,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
             "fertilizer" -> checkAndRedirect(FertilizerCalculatorActivity::class.java)
             "pestdisease" -> checkAndRedirect(PestsAndDiseasesStages::class.java)
             "weather" -> Intent(this, WeatherActivity::class.java)
-            "soilcard" -> Intent(this, HealthCardActivity::class.java)
+            "soilcard" -> Intent(this, SoilHealthCardActivity::class.java)
             "climatetech" -> Intent(this, ClimateResilientTechnology::class.java)
             "marketprice" -> Intent(this, MarketPrice::class.java)
             "shetishala" -> Intent(this, ShetishalaActivity::class.java)

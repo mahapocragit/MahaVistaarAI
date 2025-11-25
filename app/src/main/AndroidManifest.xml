@@ -124,7 +124,7 @@
             android:name=".ui.screens.dashboard.menugrid.dbt.pocra.PocraSchemesDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.screens.dashboard.menugrid.soilhealthcard.PdfWebViewActivity"
+            android:name=".ui.screens.dashboard.menugrid.soilhealthcard.DetailedSoilHealthCardActivity"
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.menugrid.ChatbotActivity"
@@ -165,7 +165,7 @@
             android:name=".ui.screens.dashboard.menugrid.dbt.pocra.PocraDbtSchemes"
             android:exported="false" />
         <activity
-            android:name=".ui.screens.dashboard.menugrid.soilhealthcard.HealthCardActivity"
+            android:name=".ui.screens.dashboard.menugrid.soilhealthcard.SoilHealthCardActivity"
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.menugrid.Warehouse"

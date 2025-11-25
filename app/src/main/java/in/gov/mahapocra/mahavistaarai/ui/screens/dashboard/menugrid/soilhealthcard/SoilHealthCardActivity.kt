@@ -47,7 +47,7 @@ import org.json.JSONObject
 import retrofit2.Call
 import kotlin.math.abs
 
-class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventListener {
+class SoilHealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventListener {
 
     private lateinit var languageToLoad: String
     private lateinit var binding: ActivityHealthCardBinding
@@ -68,7 +68,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         languageToLoad = "mr"
-        if (AppSettings.getLanguage(this@HealthCardActivity).equals("1", ignoreCase = true)) {
+        if (AppSettings.getLanguage(this@SoilHealthCardActivity).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
         switchLanguage(this, languageToLoad)
@@ -115,7 +115,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
 
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(Intent(this@HealthCardActivity, DashboardScreen::class.java))
+                startActivity(Intent(this@SoilHealthCardActivity, DashboardScreen::class.java))
             }
         })
 
@@ -186,24 +186,24 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
 
                         if (diffX < CLICK_THRESHOLD && diffY < CLICK_THRESHOLD) {
                             if (!AppSettings.getInstance().getBooleanValue(
-                                    this@HealthCardActivity,
+                                    this@SoilHealthCardActivity,
                                     AppConstants.IS_USER_GUEST,
                                     false
                                 )
                             ) {
                                 startActivity(
                                     Intent(
-                                        this@HealthCardActivity,
+                                        this@SoilHealthCardActivity,
                                         ChatbotActivity::class.java
                                     )
                                 )
                             } else {
-                                AlertDialog.Builder(this@HealthCardActivity)
+                                AlertDialog.Builder(this@SoilHealthCardActivity)
                                     .setMessage(R.string.bot_chat_login_redirect_mesage)
                                     .setPositiveButton(R.string.yes) { dialog, _ ->
                                         startActivity(
                                             Intent(
-                                                this@HealthCardActivity,
+                                                this@SoilHealthCardActivity,
                                                 LoginScreen::class.java
                                             ).apply {
                                                 putExtra("from", "dashboard")
@@ -243,7 +243,6 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
             } else {
                 Toast.makeText(this, "Please select village", Toast.LENGTH_SHORT).show()
             }
-            ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
         }
     }
 
@@ -309,7 +308,7 @@ class HealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEventL
     }
 
     override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        Log.e("HealthCardActivity", "API $i call failed: ${th?.localizedMessage}", th)
+        Log.e("SoilHealthCardActivity", "API $i call failed: ${th?.localizedMessage}", th)
         // Optionally show a message to the user
         UIToastMessage.show(this, "Failed to load data. Please check your connection.")
     }

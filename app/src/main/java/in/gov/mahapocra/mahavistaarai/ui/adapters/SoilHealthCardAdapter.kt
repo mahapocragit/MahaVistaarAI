@@ -9,7 +9,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard.PdfWebViewActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard.DetailedSoilHealthCardActivity
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -65,7 +65,7 @@ class SoilHealthCardAdapter(private val farmerJsonArray: JSONArray?) :
                 holder.soilHealthReportLinearLayout.context.startActivity(
                     Intent(
                         holder.farmerName.context,
-                        PdfWebViewActivity::class.java
+                        DetailedSoilHealthCardActivity::class.java
                     ).apply {
                         putExtra(
                             "pdf_url",

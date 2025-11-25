@@ -12,17 +12,22 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityPdfViewBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.FertilizerRecommendationAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.SoilTestResultAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.GisViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.SOIL_HEALTH_CARD_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
+import org.json.JSONArray
 import org.json.JSONObject
 
-class PdfWebViewActivity : AppCompatActivity() {
+class DetailedSoilHealthCardActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPdfViewBinding
     private val gisViewModel: GisViewModel by viewModels()
+    private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     private lateinit var soilTestResultAdapter: SoilTestResultAdapter
     private lateinit var fertilizerRecommendationAdapter: FertilizerRecommendationAdapter
     private lateinit var languageToLoad: String
@@ -30,7 +35,7 @@ class PdfWebViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         languageToLoad = "mr"
-        if (AppSettings.getLanguage(this@PdfWebViewActivity).equals("1", ignoreCase = true)) {
+        if (AppSettings.getLanguage(this@DetailedSoilHealthCardActivity).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
         switchLanguage(this, languageToLoad)
@@ -61,36 +66,55 @@ class PdfWebViewActivity : AppCompatActivity() {
     }
 
     private fun observeResponse() {
-        gisViewModel.shcInformationResponse.observe(this) {
-            ProgressHelper.disableProgressDialog()
-            if (it != null) {
-                val jsonObject = JSONObject(it.toString())
-                val basicInfo = jsonObject.getJSONArray("basic_info")[0] as JSONObject
-                binding.soilHealthCardLayout.farmerName.text = basicInfo.optString("farmer_name")
-                binding.soilHealthCardLayout.shcNo.text = basicInfo.optString("shc_no")
-                binding.soilHealthCardLayout.villageTextView.text = basicInfo.optString("village")
-                binding.soilHealthCardLayout.talukaTextView.text = basicInfo.optString("taluka")
-                binding.soilHealthCardLayout.districtTextView.text = basicInfo.optString("district")
 
-                val soilTestResultJson = jsonObject.getJSONArray("soil_test_result")
-                soilTestResultAdapter = SoilTestResultAdapter(soilTestResultJson)
-                binding.soilHealthCardLayout.soilTestResultRecyclerView.layoutManager =
-                    LinearLayoutManager(this)
-                binding.soilHealthCardLayout.soilTestResultRecyclerView.adapter =
-                    soilTestResultAdapter
-                soilTestResultAdapter.notifyDataSetChanged()
-
-                val fertilizerRecommendationJson =
-                    jsonObject.getJSONArray("fertilizer_recommendation")
-                fertilizerRecommendationAdapter =
-                    FertilizerRecommendationAdapter(fertilizerRecommendationJson)
-                binding.soilHealthCardLayout.fertilizerRecommendationRecyclerView.layoutManager =
-                    LinearLayoutManager(this)
-                binding.soilHealthCardLayout.fertilizerRecommendationRecyclerView.adapter =
-                    fertilizerRecommendationAdapter
-                fertilizerRecommendationAdapter.notifyDataSetChanged()
+        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
+            if (response!=null){
+                val jSONObject = JSONObject(response.toString())
+                val status = jSONObject.optInt("status")
+                if (status==200){
+                    ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
+                }
             }
         }
+
+        gisViewModel.shcInformationResponse.observe(this) { response ->
+            ProgressHelper.disableProgressDialog()
+            response ?: return@observe
+            try {
+                val jsonObject = JSONObject(response.toString())
+
+                val basicInfoArray = jsonObject.optJSONArray("basic_info")
+                val basicInfo = basicInfoArray?.optJSONObject(0)
+
+                basicInfo?.let {
+                    binding.soilHealthCardLayout.apply {
+                        farmerName.text = it.optString("farmer_name")
+                        shcNo.text = it.optString("shc_no")
+                        villageTextView.text = it.optString("village")
+                        talukaTextView.text = it.optString("taluka")
+                        districtTextView.text = it.optString("district")
+                    }
+                }
+
+                val soilTestResultJson = jsonObject.optJSONArray("soil_test_result") ?: JSONArray()
+                soilTestResultAdapter = SoilTestResultAdapter(soilTestResultJson)
+                binding.soilHealthCardLayout.soilTestResultRecyclerView.adapter =
+                    soilTestResultAdapter
+
+                val fertilizerRecommendationJson =
+                    jsonObject.optJSONArray("fertilizer_recommendation") ?: JSONArray()
+                fertilizerRecommendationAdapter =
+                    FertilizerRecommendationAdapter(fertilizerRecommendationJson)
+                binding.soilHealthCardLayout.fertilizerRecommendationRecyclerView.adapter =
+                    fertilizerRecommendationAdapter
+
+                leaderboardViewModel.updateUserPoints(this, SOIL_HEALTH_CARD_POINT)
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
 
         gisViewModel.error.observe(this) {
             ProgressHelper.disableProgressDialog()
