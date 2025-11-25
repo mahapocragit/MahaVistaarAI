@@ -31,6 +31,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import kotlinx.coroutines.delay
@@ -127,9 +128,6 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
     @SuppressLint("ClickableViewAccessibility")
     private fun onClick() {
 
-        val isGuest =
-            AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
-
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
             val intent = Intent(this, DashboardScreen::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -159,73 +157,8 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
                 }
             }
         }
-        binding.chatbotIcon.setOnTouchListener(object : View.OnTouchListener {
-            private var dX = 0f
-            private var dY = 0f
-            private var startX = 0f
-            private var startY = 0f
-            private val CLICK_THRESHOLD = 20 // px movement allowed
-
-            override fun onTouch(v: View, event: MotionEvent): Boolean {
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        dX = v.x - event.rawX
-                        dY = v.y - event.rawY
-                        startX = event.rawX
-                        startY = event.rawY
-                    }
-
-                    MotionEvent.ACTION_MOVE -> {
-                        val parent = v.parent as View
-                        val newX = event.rawX + dX
-                        val newY = event.rawY + dY
-
-                        // calculate boundaries (you can adjust margin if needed)
-                        val margin = 32 // px margin from edges
-                        val maxX = parent.width - v.width - margin
-                        val maxY = parent.height - v.height - margin
-                        val minX = margin
-                        val minY = margin
-
-                        // constrain movement inside screen
-                        val boundedX = newX.coerceIn(minX.toFloat(), maxX.toFloat())
-                        val boundedY = newY.coerceIn(minY.toFloat(), maxY.toFloat())
-
-                        v.animate()
-                            .x(boundedX)
-                            .y(boundedY)
-                            .setDuration(0)
-                            .start()
-                    }
-
-                    MotionEvent.ACTION_UP -> {
-                        val diffX = abs(event.rawX - startX)
-                        val diffY = abs(event.rawY - startY)
-
-                        if (diffX < CLICK_THRESHOLD && diffY < CLICK_THRESHOLD) {
-                            if (!isGuest) {
-                                startActivity(Intent(this@MarketPrice, ChatbotActivity::class.java))
-                            } else {
-                                AlertDialog.Builder(this@MarketPrice)
-                                    .setMessage(R.string.bot_chat_login_redirect_mesage)
-                                    .setPositiveButton(R.string.yes) { dialog, _ ->
-                                        startActivity(
-                                            Intent(
-                                                this@MarketPrice,
-                                                LoginScreen::class.java
-                                            ).apply {
-                                                putExtra("from", "dashboard")
-                                            })
-                                        dialog.dismiss()
-                                    }
-                                    .setNegativeButton(R.string.no) { dialog, _ -> dialog.dismiss() }
-                                    .show()
-                            }
-                        }
-                    }
-                }
-                return true
-            }
+        binding.chatbotIcon.setOnTouchListener(DraggableTouchListener {
+            startActivity(Intent(this, ChatbotActivity::class.java))
         })
     }
 

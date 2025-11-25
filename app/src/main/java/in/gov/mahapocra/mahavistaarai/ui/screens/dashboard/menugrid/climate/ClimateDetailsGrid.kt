@@ -4,10 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView.OnItemClickListener
-import android.widget.GridView
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import `in`.co.appinventor.services_api.settings.AppSettings
@@ -20,85 +16,82 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 
 class ClimateDetailsGrid : AppCompatActivity() {
-    private var gridView: GridView? = null
-    private var textViewHeaderTitle: TextView? = null
-    private var imgBackArrow: ImageView? = null
-    private val climateModelArrayList: ArrayList<ClimateGridModel> = ArrayList()
 
-    private var groupName: ArrayList<String> = ArrayList()
-    private var groupImagePath: ArrayList<String> = ArrayList()
-    private var webUrl: ArrayList<String> = ArrayList()
-    private lateinit var languageToLoad: String
     private lateinit var binding: ActivityClimateDetailsGridBinding
+    private val climateModelArrayList = ArrayList<ClimateGridModel>()
+    private var languageToLoad = "mr"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        languageToLoad = "mr"
-        if (AppSettings.getLanguage(this@ClimateDetailsGrid).equals("1", ignoreCase = true)) {
-            languageToLoad = "en"
-        }
-        switchLanguage(this, languageToLoad)
+
+        setupLanguage()
+
         binding = ActivityClimateDetailsGridBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        uiResponsive(binding.root)
-        init()
-        textViewHeaderTitle?.setText(R.string.climate_resilient_technology)
-        val b = intent.extras
-        b!!.getInt("craGroppLength")
-        groupName = b.getStringArrayList("GroupName") as ArrayList<String>
-        groupImagePath = b.getStringArrayList("GroupImagePath") as ArrayList<String>
-        webUrl = b.getStringArrayList("WebUrl") as ArrayList<String>
-        climateModelArrayList.clear()
-        for (i in 0 until groupName.size) {
-            val groupimagePath: String = groupImagePath[i]
-            val webUrl: String = webUrl[i]
-            climateModelArrayList.add(ClimateGridModel(groupName[i], groupimagePath, webUrl))
-        }
-        val adapter = ClimateGridAdapter(this, climateModelArrayList, "ClimateDetailsGrid")
-        gridView?.adapter = adapter
-        adapter.notifyDataSetChanged()
-        gridView!!.onItemClickListener =
-            OnItemClickListener { parents, view, position, ids ->
-                val url: String = webUrl[position]
-                val intent = Intent(this, ResilientWebUrl::class.java)
-                val b = Bundle()
-                b.putSerializable("webUrl", url)
-                intent.putExtras(b)
-                startActivity(intent)
-            }
-        imgBackArrow?.visibility = View.VISIBLE
-        imgBackArrow?.setOnClickListener {
-            val intent = Intent(this, ClimateResilientTechnology::class.java)
-            startActivity(intent)
-        }
 
-        backPressedMethod()
+        uiResponsive(binding.root)
+
+        binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.climate_resilient_technology)
+
+        setupGridData()
+        setupClicks()
+        setupBackPressed()
     }
 
-    private fun backPressedMethod() {
-        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+    private fun setupLanguage() {
+        languageToLoad = if (AppSettings.getLanguage(this).equals("1", true)) "en" else "mr"
+        switchLanguage(this, languageToLoad)
+    }
+
+    private fun setupGridData() {
+        val bundle = intent.extras ?: return
+
+        val groupNames = bundle.getStringArrayList("GroupName") ?: arrayListOf()
+        val imagePaths = bundle.getStringArrayList("GroupImagePath") ?: arrayListOf()
+        val webUrls = bundle.getStringArrayList("WebUrl") ?: arrayListOf()
+
+        climateModelArrayList.clear()
+
+        groupNames.indices.forEach { i ->
+            climateModelArrayList.add(
+                ClimateGridModel(
+                    groupNames[i],
+                    imagePaths.getOrNull(i) ?: "",
+                    webUrls.getOrNull(i) ?: ""
+                )
+            )
+        }
+
+        val adapter = ClimateGridAdapter(this, climateModelArrayList, "ClimateDetailsGrid")
+        binding.gridViewJobs.adapter = adapter
+    }
+
+    private fun setupClicks() {
+        binding.gridViewJobs.setOnItemClickListener { _, _, position, _ ->
+            val url = climateModelArrayList[position].webUrl
+            startActivity(
+                Intent(this, ResilientWebUrl::class.java).apply {
+                    putExtra("webUrl", url)
+                }
+            )
+        }
+
+        binding.relativeLayoutTopBar.imgBackArrow.apply {
+            visibility = View.VISIBLE
+            setOnClickListener { finish() }
+        }
+    }
+
+    private fun setupBackPressed() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                climateModelArrayList.clear()
-                val intent = Intent(this@ClimateDetailsGrid, ClimateResilientTechnology::class.java)
-                startActivity(intent)
                 finish()
             }
         })
     }
 
-    fun init() {
-        gridView = findViewById<View>(R.id.gridViewJobs) as GridView
-        textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
-        imgBackArrow = findViewById(R.id.imgBackArrow)
-    }
-
     override fun attachBaseContext(newBase: Context) {
-        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
-            "en"
-        } else {
-            "mr"
-        }
-        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
-        super.attachBaseContext(updatedContext)
+        val language = if (AppSettings.getLanguage(newBase).equals("1", true)) "en" else "mr"
+        super.attachBaseContext(configureLocale(newBase, language))
     }
 }

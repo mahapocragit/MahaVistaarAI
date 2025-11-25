@@ -35,6 +35,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONArray
@@ -43,206 +44,153 @@ import kotlin.math.abs
 
 class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClickListener {
 
-    private var climateResilientGroup: RecyclerView? = null
     private lateinit var binding: ActivityClimateResilintTechnologyBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
-    private var textViewHeaderTitle: TextView? = null
-    private var imgBackArrow: ImageView? = null
+
     private lateinit var languageToLoad: String
     private var resilientGrpWiseDetailsJSONArray: JSONArray? = null
-    private lateinit var resilientCRAGroupJSONArray: JSONArray
-    private var groupName: ArrayList<String> = ArrayList()
-    private var groupImagePath: ArrayList<String> = ArrayList()
-    private var webUrl: ArrayList<String> = ArrayList()
 
-    @SuppressLint("ClickableViewAccessibility")
+    private val groupName = arrayListOf<String>()
+    private val groupImagePath = arrayListOf<String>()
+    private val webUrl = arrayListOf<String>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (AppSettings.getLanguage(this).equals("2", ignoreCase = true)) {
-            languageToLoad = "mr"
-        } else {
-            languageToLoad = "en"
-        }
-        switchLanguage(this, languageToLoad)
+
+        setupLanguage()
+
         binding = ActivityClimateResilintTechnologyBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         uiResponsive(binding.root)
-        init()
-        lifecycleScope.launch {
-            delay(5000) // 5 seconds
-            binding.bubbleIconImageView.animate()
-                .alpha(0f)
-                .setDuration(500) // animation duration in ms
-                .withEndAction {
-                    binding.bubbleIconImageView.visibility = View.GONE
-                    binding.bubbleIconImageView.alpha = 1f // reset alpha in case you show it again
-                }
-                .start()
-        }
+        setupToolbar()
+        setupBubbleAnimation()
         observeClimateResilientGroupList()
-        textViewHeaderTitle?.setText(R.string.climateTechnology)
-        textViewHeaderTitle?.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
-        imgBackArrow?.visibility = View.VISIBLE
-        imgBackArrow?.setOnClickListener {
-            val intent = Intent(this, DashboardScreen::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-        }
+        setupChatbotDrag()
+
         if (NetworkUtils.isInternetAvailable(this)) {
             farmerViewModel.climateResilientGroupList(this, languageToLoad)
         } else {
             Snackbar.make(binding.root, "Internet not available", Snackbar.LENGTH_SHORT).show()
         }
 
-        AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
-
-        val isGuest =
-            AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
-        binding.chatbotIcon.setOnTouchListener(object : View.OnTouchListener {
-            private var dX = 0f
-            private var dY = 0f
-            private var startX = 0f
-            private var startY = 0f
-            private val CLICK_THRESHOLD = 20 // px movement allowed
-
-            override fun onTouch(v: View, event: MotionEvent): Boolean {
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        dX = v.x - event.rawX
-                        dY = v.y - event.rawY
-                        startX = event.rawX
-                        startY = event.rawY
-                    }
-
-                    MotionEvent.ACTION_MOVE -> {
-                        val parent = v.parent as View
-                        val newX = event.rawX + dX
-                        val newY = event.rawY + dY
-
-                        // calculate boundaries (you can adjust margin if needed)
-                        val margin = 32 // px margin from edges
-                        val maxX = parent.width - v.width - margin
-                        val maxY = parent.height - v.height - margin
-                        val minX = margin
-                        val minY = margin
-
-                        // constrain movement inside screen
-                        val boundedX = newX.coerceIn(minX.toFloat(), maxX.toFloat())
-                        val boundedY = newY.coerceIn(minY.toFloat(), maxY.toFloat())
-
-                        v.animate()
-                            .x(boundedX)
-                            .y(boundedY)
-                            .setDuration(0)
-                            .start()
-                    }
-
-                    MotionEvent.ACTION_UP -> {
-                        val diffX = abs(event.rawX - startX)
-                        val diffY = abs(event.rawY - startY)
-
-                        if (diffX < CLICK_THRESHOLD && diffY < CLICK_THRESHOLD) {
-                            if (!isGuest) {
-                                startActivity(Intent(this@ClimateResilientTechnology, ChatbotActivity::class.java))
-                            } else {
-                                AlertDialog.Builder(this@ClimateResilientTechnology)
-                                    .setMessage(R.string.bot_chat_login_redirect_mesage)
-                                    .setPositiveButton(R.string.yes) { dialog, _ ->
-                                        startActivity(Intent(this@ClimateResilientTechnology, LoginScreen::class.java).apply {
-                                            putExtra("from", "dashboard")
-                                        })
-                                        dialog.dismiss()
-                                    }
-                                    .setNegativeButton(R.string.no) { dialog, _ -> dialog.dismiss() }
-                                    .show()
-                            }
-                        }
-                    }
-                }
-                return true
-            }
-        })
-
-        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                val intent = Intent(this@ClimateResilientTechnology, DashboardScreen::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-            }
-        })
+        setupBackPressed()
     }
 
-    private fun init() {
-        climateResilientGroup = findViewById(R.id.climateResilientRecyclerView)
-        textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
-        imgBackArrow = findViewById(R.id.imgBackArrow)
+    private fun setupLanguage() {
+        languageToLoad = if (AppSettings.getLanguage(this).equals("2", true)) "mr" else "en"
+        switchLanguage(this, languageToLoad)
+    }
+
+    private fun setupToolbar() {
+        binding.relativeLayoutTopBar.textViewHeaderTitle.apply {
+            setText(R.string.climateTechnology)
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
+        }
+
+        binding.relativeLayoutTopBar.imgBackArrow.apply {
+            visibility = View.VISIBLE
+            setOnClickListener { navigateToDashboard() }
+        }
+    }
+
+    private fun setupBubbleAnimation() {
+        AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
+
+        lifecycleScope.launch {
+            delay(5000)
+            binding.bubbleIconImageView.animate()
+                .alpha(0f)
+                .setDuration(500)
+                .withEndAction {
+                    binding.bubbleIconImageView.visibility = View.GONE
+                    binding.bubbleIconImageView.alpha = 1f
+                }
+        }
     }
 
     private fun observeClimateResilientGroupList() {
-        farmerViewModel.getClimateResilientListResponse.observe(this) {
-            if (it != null) {
-                val jSONObject = JSONObject(it.toString())
-                val response =
-                    ResponseModel(
-                        jSONObject
-                    )
-                if (response.getStatus()) {
-                    resilientGrpWiseDetailsJSONArray = response.getResilientyGrpArray()
-                    val adaptorResilientTechnologyGrp =
-                        ClimateResilientTechnologyAdapter(
-                            this,
-                            this,
-                            resilientGrpWiseDetailsJSONArray
-                        )
-                    climateResilientGroup?.setLayoutManager(
-                        LinearLayoutManager(
-                            this,
-                            LinearLayoutManager.VERTICAL,
-                            false
-                        )
-                    )
-                    climateResilientGroup?.setAdapter(adaptorResilientTechnologyGrp)
-                    adaptorResilientTechnologyGrp.notifyDataSetChanged()
+        farmerViewModel.getClimateResilientListResponse.observe(this) { response ->
+            response ?: return@observe
+
+            val jsonObject = JSONObject(response.toString())
+            val responseModel = ResponseModel(jsonObject)
+
+            if (responseModel.getStatus()) {
+                resilientGrpWiseDetailsJSONArray = responseModel.getResilientyGrpArray()
+
+                val adapter = ClimateResilientTechnologyAdapter(
+                    this,
+                    this,
+                    resilientGrpWiseDetailsJSONArray
+                )
+
+                binding.climateResilientRecyclerView.apply {
+                    layoutManager = LinearLayoutManager(this@ClimateResilientTechnology)
+                    this.adapter = adapter
                 }
             }
         }
+
         farmerViewModel.error.observe(this) {
-            Log.d(TAG, "observeClimateResilientGroupList: $it")
+            Log.e(TAG, it)
         }
     }
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
+
+        groupName.clear()
+        groupImagePath.clear()
+        webUrl.clear()
+
         val jsonObject = obj as JSONObject
-        resilientCRAGroupJSONArray = jsonObject.getJSONArray("CRAGroups")
-        val craGroppLength: Int = resilientCRAGroupJSONArray.length()
-        for (i in 0 until craGroppLength) {
-            val userDetail = resilientCRAGroupJSONArray.getJSONObject(i)
-            groupName.add(userDetail.getString("GroupName"))
-            groupImagePath.add(userDetail.getString("groupimagepath"))
-            webUrl.add(userDetail.getString("WbUrl"))
+        val craGroups = jsonObject.getJSONArray("CRAGroups")
+
+        for (index in 0 until craGroups.length()) {
+            val item = craGroups.getJSONObject(index)
+
+            groupName.add(item.optString("GroupName"))
+            groupImagePath.add(item.optString("groupimagepath"))
+            webUrl.add(item.optString("WbUrl"))
         }
-        val intent = Intent(this, ClimateDetailsGrid::class.java)
-        val b = Bundle()
-        b.putSerializable("craGroppLength", craGroppLength)
-        b.putSerializable("GroupName", groupName)
-        b.putSerializable("GroupImagePath", groupImagePath)
-        b.putSerializable("WebUrl", webUrl)
-        intent.putExtras(b)
-        startActivity(intent)
+
+        startActivity(
+            Intent(this, ClimateDetailsGrid::class.java).apply {
+                putStringArrayListExtra("GroupName", groupName)
+                putStringArrayListExtra("GroupImagePath", groupImagePath)
+                putStringArrayListExtra("WebUrl", webUrl)
+            }
+        )
     }
 
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setupChatbotDrag() {
+        binding.chatbotIcon.setOnTouchListener(DraggableTouchListener {
+                startActivity(Intent(this, ChatbotActivity::class.java))
+            }
+        )
+    }
+
+    private fun navigateToDashboard() {
+        startActivity(
+            Intent(this, DashboardScreen::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            }
+        )
+    }
+
+    private fun setupBackPressed() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                navigateToDashboard()
+            }
+        })
+    }
 
     override fun attachBaseContext(newBase: Context) {
-        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
-            "en"
-        } else {
-            "mr"
-        }
-        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
-        super.attachBaseContext(updatedContext)
+        val language = if (AppSettings.getLanguage(newBase).equals("1", true)) "en" else "mr"
+        super.attachBaseContext(configureLocale(newBase, language))
     }
 }

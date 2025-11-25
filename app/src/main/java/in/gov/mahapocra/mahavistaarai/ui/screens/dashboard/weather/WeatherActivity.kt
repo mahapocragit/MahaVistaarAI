@@ -29,6 +29,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.WEATHER_POINT
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -165,26 +166,9 @@ class WeatherActivity : AppCompatActivity() {
         setRecyclerViewUsingArray(jsonArrayForecast)
         recyclerAdapter.notifyDataSetChanged()
         fetchTalukaMasterData()
-        val isGuest = AppSettings.getInstance().getBooleanValue(this, AppConstants.IS_USER_GUEST, false)
-        binding.chatbotIcon.setOnClickListener {
-            if (!isGuest) {
-                startActivity(Intent(this, ChatbotActivity::class.java))
-            } else {
-                AlertDialog.Builder(this)
-                    .setMessage(R.string.bot_chat_login_redirect_mesage)
-                    .setPositiveButton(R.string.yes) { dialog, _ ->
-                        // Handle login action here
-                        startActivity(Intent(this, LoginScreen::class.java).apply {
-                            putExtra("from", "dashboard")
-                        })
-                        dialog.dismiss()
-                    }
-                    .setNegativeButton(R.string.no) { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    .show()
-            }
-        }
+        binding.chatbotIcon.setOnTouchListener(DraggableTouchListener {
+            startActivity(Intent(this, ChatbotActivity::class.java))
+        })
     }
 
     private fun setRecyclerViewUsingArray(jsonArray: JSONArray) {
