@@ -2,6 +2,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,11 +16,13 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDiseaseInformationBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DiseasesInformationImgAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.PEST_AND_DISEASE_POINT
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
-import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONArray
 import org.json.JSONObject
@@ -29,6 +32,7 @@ class DiseaseInformation : AppCompatActivity() {
 
     private lateinit var binding: ActivityDiseaseInformationBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
+    private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     var id: Int = 0
     private lateinit var imgBackArrow: ImageView
     private lateinit var textViewHeaderTitle: TextView
@@ -51,18 +55,17 @@ class DiseaseInformation : AppCompatActivity() {
         binding = ActivityDiseaseInformationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
+
         textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
         imgBackArrow = findViewById(R.id.imgBackArrow)
-
         imgBackArrow.visibility = View.VISIBLE
         imgBackArrow.setOnClickListener {
             finish()
         }
-        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
 
+        observeResponse()
         cropName = intent.getStringExtra("name").toString()
         id = intent.getIntExtra("id", 0)
-        observePestDiseaseDetails()
         farmerViewModel.showPestDiseaseDetails(this, id)
         mainCropName = AppSettings.getInstance()
             .getValue(this, AppConstants.tmpCROPNAME, AppConstants.tmpCROPNAME)
@@ -90,15 +93,21 @@ class DiseaseInformation : AppCompatActivity() {
         binding.tvCropName.text = cropName
     }
 
-    private fun observePestDiseaseDetails() {
-        ProgressHelper.showProgressDialog(this)
+    private fun observeResponse() {
+
+        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
+            if (response!=null){
+                val jSONObject = JSONObject(response.toString())
+                val status = jSONObject.optInt("status")
+                if (status==200){
+                    ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
+                }
+            }
+        }
+
         farmerViewModel.getPestDiseaseDetailsResponse.observe(this) {
-            ProgressHelper.disableProgressDialog()
             if (it != null) {
-                val response =
-                    ResponseModel(
-                        it
-                    )
+                val response = ResponseModel(JSONObject(it.toString()))
                 if (response.getStatus()) {
                     binding.symptomsList.visibility = View.VISIBLE
                     pestAndDiseaseDetailsJson = response.getJSONObject()
@@ -120,13 +129,15 @@ class DiseaseInformation : AppCompatActivity() {
 
                     setPreventControlMeasureWebView(preventiveMeasures)
                     setSymptomsWebView(symptomDescriptionList)
+                    leaderboardViewModel.updateUserPoints(this, PEST_AND_DISEASE_POINT)
                 } else {
                     UIToastMessage.show(this, response.response)
                 }
             }
+
         }
-        farmerViewModel.error.observe(this){
-            ProgressHelper.disableProgressDialog()
+        farmerViewModel.error.observe(this) {
+            Log.d(TAG, "observeResponse: $it")
         }
     }
 

@@ -131,7 +131,7 @@ interface ApiService {
     suspend fun getCropStages(@Body params: RequestBody): JsonObject
 
     @POST(ApiConstants.kGetPestDiseaseDetails)
-    suspend fun getPestDiseaseDetails(@Body params: RequestBody): ResponseBody
+    suspend fun getPestDiseaseDetails(@Body params: RequestBody): JsonObject
 
     @POST(ApiConstants.GetCropSapAdvisory)
     suspend fun getCropSapAdvisory(@Body params: RequestBody): JsonObject

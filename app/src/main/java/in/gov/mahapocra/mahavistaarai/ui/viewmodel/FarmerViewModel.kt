@@ -88,8 +88,8 @@ class FarmerViewModel : ViewModel() {
     private val _getCropStagesResponse = MutableLiveData<JsonObject>()
     val getCropStagesResponse: LiveData<JsonObject> = _getCropStagesResponse
 
-    private val _getPestDiseaseDetailsResponse = MutableLiveData<JSONObject>()
-    val getPestDiseaseDetailsResponse: LiveData<JSONObject> = _getPestDiseaseDetailsResponse
+    private val _getPestDiseaseDetailsResponse = MutableLiveData<JsonObject>()
+    val getPestDiseaseDetailsResponse: LiveData<JsonObject> = _getPestDiseaseDetailsResponse
 
     private val _getCropSapAdvisoryResponse = MutableLiveData<JsonObject>()
     val getCropSapAdvisoryResponse: LiveData<JsonObject> = _getCropSapAdvisoryResponse
@@ -692,19 +692,18 @@ class FarmerViewModel : ViewModel() {
 
     fun showPestDiseaseDetails(context: Context, pestId: Int) {
         viewModelScope.launch {
-            val jsonObject = JSONObject()
+            ProgressHelper.showProgressDialog(context)
             try {
-                jsonObject.put("pdid", pestId)
+                val jsonObject = JSONObject().apply { put("pdid", pestId) }
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit: Retrofit =
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
-                val rawResponse = apiRequest.getPestDiseaseDetails(requestBody)
-                val jsonString = rawResponse.string()
-                val jsonObject =
-                    JSONObject(jsonString) // OR Gson().fromJson(jsonString, JsonObject::class.java)
-                _getPestDiseaseDetailsResponse.value = jsonObject
+                val response = apiRequest.getPestDiseaseDetails(requestBody)
+                ProgressHelper.disableProgressDialog()
+                _getPestDiseaseDetailsResponse.value = response
             } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
