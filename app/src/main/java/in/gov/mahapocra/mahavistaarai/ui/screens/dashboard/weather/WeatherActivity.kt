@@ -21,6 +21,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -40,6 +41,7 @@ class WeatherActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWeatherHomeTempBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
+    private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     private lateinit var recyclerAdapter: TemperatureAdapter
     private lateinit var jsonArrayForecast: JSONArray
     private lateinit var jsonArrayPrevious: JSONArray
@@ -83,7 +85,8 @@ class WeatherActivity : AppCompatActivity() {
                 startActivity(Intent(this@WeatherActivity, DashboardScreen::class.java))
             }
         })
-        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
+
+        leaderboardViewModel.updateUserPoints(this, 10)
         farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
         binding.tabLayout.visibility = View.GONE
         binding.viewPager.visibility = View.GONE
@@ -208,6 +211,16 @@ class WeatherActivity : AppCompatActivity() {
                     if (talukaID == talukaIDJson.optInt("code")) {
                         binding.weatherTalukaTV.text = talukaIDJson.optString("name")
                     }
+                }
+            }
+        }
+
+        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
+            if (response!=null){
+                val jSONObject = JSONObject(response.toString())
+                val status = jSONObject.optInt("status")
+                if (status==200){
+                    ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
                 }
             }
         }

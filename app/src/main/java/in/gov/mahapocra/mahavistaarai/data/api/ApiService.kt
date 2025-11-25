@@ -326,6 +326,9 @@ interface ApiService {
         @Header("jwt") token: String
     ): JsonObject
 
+    @POST("leaderboardService/update-per-page-points")
+    suspend fun updateUserPoints(@Body params: RequestBody): JsonObject
+
     @POST("authService/update_farmer_id_send_otp")
     suspend fun sendOtpToFarmerId(
         @Header("FarmerID") farmerID: String,
