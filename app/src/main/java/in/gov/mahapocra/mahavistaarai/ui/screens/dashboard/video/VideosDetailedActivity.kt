@@ -2,6 +2,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -12,16 +13,23 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityVideosDetailedBindin
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ShetishalaVideosAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.VideosAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.CROP_ADVISORY_POINT
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.VIDEOS_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONObject
 
-class VideosDetailedActivity : AppCompatActivity() {
+class VideosDetailedActivity : AppCompatActivity(), RecyclerItemClickListener {
 
     private lateinit var binding: ActivityVideosDetailedBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
+    private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     private lateinit var languageToLoad: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +44,7 @@ class VideosDetailedActivity : AppCompatActivity() {
         binding = ActivityVideosDetailedBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
-
+        observeResponse()
         binding.toolbar.textViewHeaderTitle.text = getString(R.string.videos_bottom)
         binding.toolbar.imgBackArrow.visibility = View.VISIBLE
         binding.toolbar.imgBackArrow.setOnClickListener {
@@ -51,30 +59,43 @@ class VideosDetailedActivity : AppCompatActivity() {
             binding.videosRecyclerView.hasFixedSize()
             binding.videosRecyclerView.adapter = videosJsonArray?.let {
                 VideosAdapter(
-                    it
+                    it, this
                 )
             }
         } else {
             farmerViewModel.getShetishalaVideos(this)
-            ProgressHelper.showProgressDialog(this)
-            farmerViewModel.shetishalaVideosResponse.observe(this) {
-                ProgressHelper.disableProgressDialog()
-                if (it != null) {
-                    val jsonObject = JSONObject(it.toString())
-                    val videosJsonArray = jsonObject.optJSONArray("data")
-                    binding.videosRecyclerView.layoutManager = GridLayoutManager(this, 2)
-                    binding.videosRecyclerView.hasFixedSize()
-                    binding.videosRecyclerView.adapter = videosJsonArray?.let { video ->
-                        ShetishalaVideosAdapter(
-                            video, languageToLoad
-                        )
-                    }
+        }
+    }
+
+    private fun observeResponse(){
+
+        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
+            if (response!=null){
+                val jSONObject = JSONObject(response.toString())
+                val status = jSONObject.optInt("status")
+                if (status==200){
+                    ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
                 }
             }
+        }
 
-            farmerViewModel.error.observe(this) {
-                ProgressHelper.disableProgressDialog()
+        farmerViewModel.shetishalaVideosResponse.observe(this) {
+            ProgressHelper.disableProgressDialog()
+            if (it != null) {
+                val jsonObject = JSONObject(it.toString())
+                val videosJsonArray = jsonObject.optJSONArray("data")
+                binding.videosRecyclerView.layoutManager = GridLayoutManager(this, 2)
+                binding.videosRecyclerView.hasFixedSize()
+                binding.videosRecyclerView.adapter = videosJsonArray?.let { video ->
+                    ShetishalaVideosAdapter(
+                        video, languageToLoad
+                    )
+                }
             }
+        }
+
+        farmerViewModel.error.observe(this) {
+            Log.d(TAG, "observeResponse: $it")
         }
     }
 
@@ -86,5 +107,11 @@ class VideosDetailedActivity : AppCompatActivity() {
         }
         val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
         super.attachBaseContext(updatedContext)
+    }
+
+    override fun onRecyclerItemClick(i: Int, obj: Any) {
+        if (i==1){
+            leaderboardViewModel.updateUserPoints(this, VIDEOS_POINT)
+        }
     }
 }

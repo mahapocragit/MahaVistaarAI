@@ -14,11 +14,12 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityMahaDbtSchemesBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.MahadbtSchemesAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.DbtSchemesViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.DBT_MAHA_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
-import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONObject
 
@@ -26,6 +27,7 @@ class MahaDbtSchemesActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMahaDbtSchemesBinding
     private lateinit var languageToLoad: String
+    private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     private val dbtSchemesViewModel: DbtSchemesViewModel by viewModels()
     private lateinit var mahadbtSchemesAdapter: MahadbtSchemesAdapter
 
@@ -39,6 +41,7 @@ class MahaDbtSchemesActivity : AppCompatActivity() {
         binding = ActivityMahaDbtSchemesBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
+        observeResponse()
 
         binding.layoutToolbar.textViewHeaderTitle.text = getString(R.string.maha_dbt_name)
         binding.layoutToolbar.imgBackArrow.visibility = View.VISIBLE
@@ -47,16 +50,26 @@ class MahaDbtSchemesActivity : AppCompatActivity() {
         }
 
         binding.applyForMahaDBTLinearLayout.setOnClickListener {
+            leaderboardViewModel.updateUserPoints(this, DBT_MAHA_POINT)
             val url = "https://mahadbt.maharashtra.gov.in/farmer/login/login"
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             startActivity(intent)
         }
-        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
-
         dbtSchemesViewModel.getMahaDBTSchemes(this)
-        ProgressHelper.showProgressDialog(this)
+    }
+
+    private fun observeResponse(){
+        leaderboardViewModel.responseUpdateUserPoints.observe(this) { response ->
+            if (response != null) {
+                val jSONObject = JSONObject(response.toString())
+                val status = jSONObject.optInt("status")
+                if (status == 200) {
+                    ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
+                }
+            }
+        }
+
         dbtSchemesViewModel.responseUrlMahaDbtSchemes.observe(this) {
-            ProgressHelper.disableProgressDialog()
             if (it != null) {
                 val jsonObject = JSONObject(it.toString())
                 val schemesJSONArray = jsonObject.optJSONArray("data")
@@ -65,8 +78,8 @@ class MahaDbtSchemesActivity : AppCompatActivity() {
                 binding.recyclerView.adapter = mahadbtSchemesAdapter
             }
         }
+
         dbtSchemesViewModel.error.observe(this) {
-            ProgressHelper.disableProgressDialog()
             Log.d(TAG, "error: $it")
         }
     }

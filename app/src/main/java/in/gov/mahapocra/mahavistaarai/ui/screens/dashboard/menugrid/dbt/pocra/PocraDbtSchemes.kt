@@ -3,6 +3,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.pocra
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -17,16 +18,19 @@ import `in`.gov.mahapocra.mahavistaarai.ui.adapters.NRMrDBTRecyclerAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.DBTDashboard
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.DbtSchemesViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.DBT_POCRA_POINT
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
-import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONObject
 
 class PocraDbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
 
     private val dbtSchemesViewModel: DbtSchemesViewModel by viewModels()
+    private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     private lateinit var binding: ActivityDbtSchemesBinding
     var languageToLoad: String = ""
 
@@ -43,8 +47,7 @@ class PocraDbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
         setContentView(binding.root)
         uiResponsive(binding.root)
 
-        dbtSchemesLists()
-        ProgressHelper.showProgressDialog(this)
+        observeResponse()
         dbtSchemesViewModel.getDBTSchemes(this)
         binding.relativeLayoutTopBar.imageMenushow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.dbtschema)
@@ -55,9 +58,9 @@ class PocraDbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
-        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
 
         binding.applyForNDKSPLinearLayout.setOnClickListener {
+            leaderboardViewModel.updateUserPoints(this, DBT_POCRA_POINT)
             startActivity(Intent(this, DBTDashboard::class.java))
         }
 
@@ -94,9 +97,19 @@ class PocraDbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
         }
     }
 
-    private fun dbtSchemesLists() {
+    private fun observeResponse() {
+
+        leaderboardViewModel.responseUpdateUserPoints.observe(this) { response ->
+            if (response != null) {
+                val jSONObject = JSONObject(response.toString())
+                val status = jSONObject.optInt("status")
+                if (status == 200) {
+                    ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
+                }
+            }
+        }
+
         dbtSchemesViewModel.responseUrlDbtSchemes.observe(this) {
-            ProgressHelper.disableProgressDialog()
             if (it != null) {
                 val jSONObject = JSONObject(it.toString())
                 val farmerDataJSONArray = jSONObject.optJSONArray("farmerData")
@@ -117,7 +130,7 @@ class PocraDbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
         }
 
         dbtSchemesViewModel.error.observe(this) {
-            ProgressHelper.disableProgressDialog()
+            Log.d(TAG, "observeResponse: $it")
         }
     }
 

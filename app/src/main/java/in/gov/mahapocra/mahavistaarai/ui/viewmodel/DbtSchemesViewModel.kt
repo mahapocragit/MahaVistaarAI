@@ -10,6 +10,7 @@ import com.google.gson.JsonObject
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import java.io.IOException
@@ -29,15 +30,18 @@ class DbtSchemesViewModel : ViewModel() {
 
     fun getDBTSchemes(context: Context) {
         viewModelScope.launch {
+            ProgressHelper.showProgressDialog(context)
             try {
                 val retrofit: Retrofit =
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.DBT_BASE_URL.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 // Retrofit suspend call
                 val response = apiRequest.getDBTSchemes()
+                ProgressHelper.disableProgressDialog()
                 _responseUrlDbtSchemes.value = response
 
             } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
@@ -52,15 +56,17 @@ class DbtSchemesViewModel : ViewModel() {
 
     fun getMahaDBTSchemes(context: Context) {
         viewModelScope.launch {
+            ProgressHelper.showProgressDialog(context)
             try {
                 val retrofit: Retrofit =
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.DBT_BASE_URL.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 // Retrofit suspend call
                 val response = apiRequest.getMahaDBTSchemes()
+                ProgressHelper.disableProgressDialog()
                 _responseUrlMahaDbtSchemes.value = response
-
             } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."

@@ -37,7 +37,16 @@ object AppConstants {
     const val CLIMATE_RESILIENT_POINT = 5
     const val PEST_AND_DISEASE_POINT = 6
     const val MARKET_PRICE_POINT = 7
-    const val SHETISHALA_POINT = 8
+    const val SHETISHALA_VIDEO_POINT = 8
     const val WAREHOUSE_POINT = 9
     const val WEATHER_POINT = 10
+    const val CUSTOM_HIRING_CENTRE_POINT = 11
+    const val DBT_POCRA_POINT = 12
+    const val VIDEOS_POINT = 13
+    const val COST_CALCULATOR_POINT = 14
+    const val SHETISHALA_YOUTUBE_URL_POINT = 15
+    const val SHETISHALA_MEETING_URL_POINT = 16
+    const val DBT_SCHEME_POINT = 17
+    const val DBT_MAHA_POINT = 18
+    const val CHATBOT_POINT = 19
 }

@@ -8,6 +8,7 @@ import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -30,12 +31,15 @@ import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CHCenterRecyclerAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.CROP_ADVISORY_POINT
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.CUSTOM_HIRING_CENTRE_POINT
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
-import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -50,6 +54,7 @@ class CHCenterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChcenterBinding
     private lateinit var adapter: CHCenterRecyclerAdapter
     private val farmerViewModel: FarmerViewModel by viewModels()
+    private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val LOCATION_PERMISSION_REQUEST = 1001
     private lateinit var languageToLoad: String
@@ -75,7 +80,6 @@ class CHCenterActivity : AppCompatActivity() {
         }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         checkLocationPermissions()
-        ProgressHelper.showProgressDialog(this)
         binding.toolbar.imgBackArrow.visibility = View.VISIBLE
         binding.toolbar.imgBackArrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
@@ -90,8 +94,7 @@ class CHCenterActivity : AppCompatActivity() {
                 startActivity(Intent(this@CHCenterActivity, DashboardScreen::class.java))
             }
         })
-        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
-        fetchDataForCHC()
+        observeResponse()
         AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
         toggleView(true)
         binding.listViewToggleButton.setOnClickListener { toggleView(true) }
@@ -156,9 +159,19 @@ class CHCenterActivity : AppCompatActivity() {
         }
     }
 
-    private fun fetchDataForCHC() {
+    private fun observeResponse() {
+
+        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
+            if (response!=null){
+                val jSONObject = JSONObject(response.toString())
+                val status = jSONObject.optInt("status")
+                if (status==200){
+                    ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
+                }
+            }
+        }
+
         farmerViewModel.chcCentersResponse.observe(this){
-            ProgressHelper.disableProgressDialog()
             if (it!=null){
                 val jSONObject = JSONObject(it.toString())
                 jSONObject.optJSONArray("data")?.let { data ->
@@ -197,12 +210,13 @@ class CHCenterActivity : AppCompatActivity() {
                             }
                         }
                     }
+                    leaderboardViewModel.updateUserPoints(this, CUSTOM_HIRING_CENTRE_POINT)
                 }
             }
         }
 
         farmerViewModel.error.observe(this){
-            ProgressHelper.disableProgressDialog()
+            Log.d(TAG, "observeResponse: $it")
         }
     }
 
@@ -278,7 +292,6 @@ class CHCenterActivity : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     private fun fetchLocation() {
-        ProgressHelper.showProgressDialog(this) // Optional: move here if tied to fetch
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             if (location != null) {
                 locationLat = location.latitude
@@ -292,7 +305,6 @@ class CHCenterActivity : AppCompatActivity() {
             // Either way, attempt to fetch data (you can decide to block this if location is null)
             farmerViewModel.fetchDataForCHC(this, locationLat, locationLong)
         }.addOnFailureListener {
-            ProgressHelper.disableProgressDialog()
             Toast.makeText(this, "Failed to get location", Toast.LENGTH_SHORT).show()
         }
     }

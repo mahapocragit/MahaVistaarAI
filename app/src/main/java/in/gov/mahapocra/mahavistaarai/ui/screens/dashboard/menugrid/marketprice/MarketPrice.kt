@@ -23,8 +23,11 @@ import `in`.gov.mahapocra.mahavistaarai.ui.adapters.MarketPriceAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.GeoViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MarketPriceViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.CROP_ADVISORY_POINT
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.MARKET_PRICE_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
@@ -43,6 +46,7 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
     private lateinit var marketPriceAdapter: MarketPriceAdapter
     private lateinit var binding: ActivityMarketPriceBinding
     private val marketViewModel: MarketPriceViewModel by viewModels()
+    private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     private val geoViewModel: GeoViewModel by viewModels()
     private var districtJSONArray: JSONArray? = null
     private var marketJSONArray: JSONArray? = null
@@ -150,6 +154,7 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
                 ) { selectedName ->
                     marketPriceAdapter.filter(selectedName)
                     binding.searchEditText.text = selectedName
+                    leaderboardViewModel.updateUserPoints(this, MARKET_PRICE_POINT)
                 }
             }
         }
@@ -159,6 +164,17 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
     }
 
     private fun setupObservers() {
+
+        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
+            if (response!=null){
+                val jSONObject = JSONObject(response.toString())
+                val status = jSONObject.optInt("status")
+                if (status==200){
+                    ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
+                }
+            }
+        }
+
         // Observe market list only once per lifecycle
         marketViewModel.responseMarketList.observe(this) { responseStr ->
             ProgressHelper.disableProgressDialog()
