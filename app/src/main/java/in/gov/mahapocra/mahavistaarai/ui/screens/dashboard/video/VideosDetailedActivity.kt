@@ -2,7 +2,6 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -10,18 +9,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityVideosDetailedBinding
-import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ShetishalaVideosAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.VideosAdapter
-import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.CROP_ADVISORY_POINT
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.VIDEOS_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
-import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONObject
 

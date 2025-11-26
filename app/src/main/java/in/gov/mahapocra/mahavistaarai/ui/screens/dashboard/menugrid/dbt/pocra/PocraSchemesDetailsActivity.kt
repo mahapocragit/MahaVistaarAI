@@ -3,6 +3,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.pocra
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -10,14 +11,18 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDbtSchemesDetailsBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.PocraSchemeDetailsRecyclerAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.DBT_SCHEME_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONObject
 
 class PocraSchemesDetailsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDbtSchemesDetailsBinding
+    private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     private var languageToLoad: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +39,8 @@ class PocraSchemesDetailsActivity : AppCompatActivity() {
         binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+
+        observeResponse()
 
         val data = intent.getStringExtra("FARMERDBTRESPONSE")
         val jsonData = JSONObject(data);
@@ -71,6 +78,20 @@ class PocraSchemesDetailsActivity : AppCompatActivity() {
         binding.eligibilityCriteriaRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.eligibilityCriteriaRecyclerView.adapter =
             PocraSchemeDetailsRecyclerAdapter(eligibilityCriteriaArray)
+
+        leaderboardViewModel.updateUserPoints(this, DBT_SCHEME_POINT)
+    }
+
+    private fun observeResponse() {
+        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
+            if (response!=null){
+                val jSONObject = JSONObject(response.toString())
+                val status = jSONObject.optInt("status")
+                if (status==200){
+                    ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
+                }
+            }
+        }
     }
 
     private fun openRecyclerView(recyclerView: RecyclerView) {

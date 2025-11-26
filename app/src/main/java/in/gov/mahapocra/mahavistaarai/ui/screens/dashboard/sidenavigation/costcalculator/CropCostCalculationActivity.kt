@@ -3,7 +3,6 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.cos
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,8 +10,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.PopupMenu
 import android.widget.TextView
@@ -34,6 +31,8 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.DialogAddIncomeLayoutBinding
 import `in`.gov.mahapocra.mahavistaarai.databinding.EditExpenseLayoutBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropTransactionAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.CostCalculatorViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.COST_CALCULATOR_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
@@ -42,6 +41,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.convertDate
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.convertDateFormat
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.getTodayDate
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -53,6 +53,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
     private var isIncomeSelected: Boolean = true
     private lateinit var languageToLoad: String
     private val costCalculatorViewModel: CostCalculatorViewModel by viewModels()
+    private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     private var jsonArray = JSONArray()
     private var categoryId = 0
     private var cropId = 0
@@ -101,6 +102,17 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
     }
 
     private fun setUpObservers() {
+
+        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
+            if (response!=null){
+                val jSONObject = JSONObject(response.toString())
+                val status = jSONObject.optInt("status")
+                if (status==200){
+                    ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
+                }
+            }
+        }
+
         costCalculatorViewModel.expenseCategoryResponse.observe(this) { response ->
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
@@ -136,9 +148,6 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
 
         costCalculatorViewModel.addCropSpecificTransactionsResponse.observe(this) { response ->
             if (response != null) {
-                val jSONObject = JSONObject(response.toString())
-                Log.d(TAG, "setUpObservers: $jSONObject")
-
                 val currentSelectedYear =
                     AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION", 2025)
                 val currentSelectedSeason =
@@ -149,6 +158,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                     season = currentSelectedSeason,
                     year = currentSelectedYear
                 )
+                leaderboardViewModel.updateUserPoints(this, COST_CALCULATOR_POINT)
             }
         }
 
@@ -213,127 +223,78 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
         }
 
         binding.addExpenseButton.setOnClickListener {
-            // Inflate your custom view
-            DialogAddExpenseLayoutBinding.inflate(layoutInflater)
-            val dialogView = layoutInflater.inflate(R.layout.dialog_add_expense_layout, null)
+
             unitMultiplier = 1
+
+            val dialogBinding = DialogAddExpenseLayoutBinding.inflate(layoutInflater)
+
             val dialog = AlertDialog.Builder(this)
-                .setView(dialogView)
+                .setView(dialogBinding.root)
                 .create()
 
-            val incomeToggle = dialogView.findViewById<TextView>(R.id.incomeToggleButton)
-            val unitText = dialogView.findViewById<TextView>(R.id.unitText)
-            val expenseToggle = dialogView.findViewById<TextView>(R.id.expenseToggleButton)
-            val submitText = dialogView.findViewById<TextView>(R.id.submitText)
-            val cancelText = dialogView.findViewById<TextView>(R.id.cancelText)
-            val totalPriceTextView = dialogView.findViewById<TextView>(R.id.totalPriceTextView)
-            val categoryNameTextView = dialogView.findViewById<TextView>(R.id.categoryNameTextView)
-            val incomeCalendarDateTextView =
-                dialogView.findViewById<TextView>(R.id.incomeCalendarDateTextView)
-            val expenseCalendarDateTextView =
-                dialogView.findViewById<TextView>(R.id.expenseCalendarDateTextView)
-            val incomeNameEditText = dialogView.findViewById<EditText>(R.id.incomeNameEditText)
-            val expenseNameEditText = dialogView.findViewById<EditText>(R.id.expenseNameEditText)
-            val priceEditText = dialogView.findViewById<EditText>(R.id.priceEditText)
-            val yieldText = dialogView.findViewById<EditText>(R.id.yieldText)
-            val pricePerUnitText = dialogView.findViewById<EditText>(R.id.pricePerUnitText)
-            val incomeDateLinearLayout =
-                dialogView.findViewById<LinearLayout>(R.id.incomeDateLinearLayout)
-            val expenseDateLinearLayout =
-                dialogView.findViewById<LinearLayout>(R.id.expenseDateLinearLayout)
-            val unitSelectionLayout =
-                dialogView.findViewById<LinearLayout>(R.id.unitSelectionLayout)
+            with(dialogBinding) {
 
-            yieldText.addTextChangedListener { editable ->
-                yieldAmount = editable?.toString()?.toIntOrNull() ?: 0
-                calculateTotal(yieldAmount, pricePerUnit, unitMultiplier, totalPriceTextView)
-            }
-
-            unitSelectionLayout.setOnClickListener {
-                val popupMenu = PopupMenu(this, unitSelectionLayout)
-                popupMenu.menu.add("Quintal")
-                popupMenu.menu.add("Kilogram")
-                popupMenu.menu.add("Ton")
-
-                popupMenu.setOnMenuItemClickListener { item: MenuItem ->
-                    when (item) {
-                        popupMenu.menu[0] -> {
-                            unitText.text = "q"
-                            unitMultiplier = 100
-                            calculateTotal(
-                                yieldAmount,
-                                pricePerUnit,
-                                unitMultiplier,
-                                totalPriceTextView
-                            )
-                        }
-
-                        popupMenu.menu[1] -> {
-                            unitText.text = "kg"
-                            unitMultiplier = 1
-                            calculateTotal(
-                                yieldAmount,
-                                pricePerUnit,
-                                unitMultiplier,
-                                totalPriceTextView
-                            )
-                        }
-
-                        popupMenu.menu[2] -> {
-                            unitText.text = "t"
-                            unitMultiplier = 1000
-                            calculateTotal(
-                                yieldAmount,
-                                pricePerUnit,
-                                unitMultiplier,
-                                totalPriceTextView
-                            )
-                        }
-                    }
-                    true
+                yieldText.addTextChangedListener {
+                    yieldAmount = it?.toString()?.toIntOrNull() ?: 0
+                    calculateTotal(yieldAmount, pricePerUnit, unitMultiplier, totalPriceTextView)
                 }
 
-                popupMenu.show()
-            }
+                pricePerUnitText.addTextChangedListener {
+                    pricePerUnit = it?.toString()?.toIntOrNull() ?: 0
+                    calculateTotal(yieldAmount, pricePerUnit, unitMultiplier, totalPriceTextView)
+                }
 
-            incomeCalendarDateTextView.text = getTodayDate()
-            expenseCalendarDateTextView.text = getTodayDate()
-            incomeDateLinearLayout.setOnClickListener { view ->
-                showDatePicker(incomeCalendarDateTextView)
-            }
-            expenseDateLinearLayout.setOnClickListener { view ->
-                showDatePicker(expenseCalendarDateTextView)
-            }
+                unitSelectionLayout.setOnClickListener {
+                    val popupMenu = PopupMenu(this@CropCostCalculationActivity, it)
+                    popupMenu.menu.add("Quintal")
+                    popupMenu.menu.add("Kilogram")
+                    popupMenu.menu.add("Ton")
 
-            pricePerUnitText.addTextChangedListener { editable ->
-                pricePerUnit = editable?.toString()?.toIntOrNull() ?: 0
-                calculateTotal(
-                    yieldAmount,
-                    pricePerUnit,
-                    unitMultiplier,
-                    totalPriceTextView
-                )
-            }
-
-            val incomeLayout = dialogView.findViewById<LinearLayout>(R.id.incomeLinearLayout)
-            val expenseLayout = dialogView.findViewById<LinearLayout>(R.id.expenseLinearLayout)
-            val categoryExpenseLayout =
-                dialogView.findViewById<LinearLayout>(R.id.categoryExpenseLayout)
-
-            submitText.setOnClickListener {
-                val transactionType = if (isIncomeSelected) "income" else "expense"
-                if (transactionType == "income") {
-                    var transactionName = incomeNameEditText.text.toString()
-                    if (transactionName.isEmpty()) {
-                        transactionName = "Income"
+                    popupMenu.setOnMenuItemClickListener { item ->
+                        when (item.title.toString()) {
+                            "Quintal" -> {
+                                unitText.text = "q"
+                                unitMultiplier = 100
+                            }
+                            "Kilogram" -> {
+                                unitText.text = "kg"
+                                unitMultiplier = 1
+                            }
+                            "Ton" -> {
+                                unitText.text = "t"
+                                unitMultiplier = 1000
+                            }
+                        }
+                        calculateTotal(yieldAmount, pricePerUnit, unitMultiplier, totalPriceTextView)
+                        true
                     }
-                    if (yieldAmount == 0 || pricePerUnit == 0) {
-                        Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT)
-                            .show()
-                        return@setOnClickListener
-                    } else {
+                    popupMenu.show()
+                }
+
+                incomeCalendarDateTextView.text = getTodayDate()
+                expenseCalendarDateTextView.text = getTodayDate()
+
+                incomeDateLinearLayout.setOnClickListener {
+                    showDatePicker(incomeCalendarDateTextView)
+                }
+
+                expenseDateLinearLayout.setOnClickListener {
+                    showDatePicker(expenseCalendarDateTextView)
+                }
+
+                submitText.setOnClickListener {
+                    val transactionType = if (isIncomeSelected) "income" else "expense"
+
+                    if (transactionType == "income") {
+                        var transactionName = incomeNameEditText.text.toString().ifEmpty { "Income" }
+
+                        if (yieldAmount == 0 || pricePerUnit == 0) {
+                            Toast.makeText(this@CropCostCalculationActivity, "Please fill all the fields", Toast.LENGTH_SHORT).show()
+                            return@setOnClickListener
+                        }
+
                         costCalculatorViewModel.addCropSpecificTransactions(
-                            this,
+                            this@CropCostCalculationActivity,
                             cropId,
                             convertDate(incomeCalendarDateTextView.text.toString()),
                             transactionType,
@@ -344,126 +305,88 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                             pricePerUnit,
                             unitText.text.toString()
                         )
-                    }
-                } else {
-                    val transactionName = expenseNameEditText.text.toString()
-                    val price =
-                        if (priceEditText.text.toString() == "null" || priceEditText.text.toString() == "") "0" else priceEditText.text.toString()
-                    if (categoryId == 0 || price.toInt() == 0) {
-                        Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT)
-                            .show()
-                        return@setOnClickListener
                     } else {
+                        val transactionName = expenseNameEditText.text.toString()
+                        val price = priceEditText.text.toString().toIntOrNull() ?: 0
+
+                        if (categoryId == 0 || price == 0) {
+                            Toast.makeText(this@CropCostCalculationActivity, "Please fill all the fields", Toast.LENGTH_SHORT).show()
+                            return@setOnClickListener
+                        }
+
                         costCalculatorViewModel.addCropSpecificTransactions(
-                            this,
+                            this@CropCostCalculationActivity,
                             cropId,
                             convertDate(expenseCalendarDateTextView.text.toString()),
                             transactionType,
                             categoryId,
                             transactionName,
-                            price.toInt()
+                            price
                         )
                     }
+
+                    dialog.dismiss()
                 }
 
-                dialog.dismiss()
-            }
-
-            categoryExpenseLayout.setOnClickListener {
-                val items = Array(jsonArray.length()) { i ->
-                    if (languageToLoad == "en") {
-                        jsonArray.getJSONObject(i).getString("name")
-                    } else {
-                        jsonArray.getJSONObject(i).getString("name_mr")
+                categoryExpenseLayout.setOnClickListener {
+                    val items = Array(jsonArray.length()) { i ->
+                        if (languageToLoad == "en")
+                            jsonArray.getJSONObject(i).getString("name")
+                        else
+                            jsonArray.getJSONObject(i).getString("name_mr")
                     }
-                }
 
-                // Create ListView programmatically
-                val listView = ListView(this).apply {
-                    adapter =
-                        ArrayAdapter(
+                    val listView = ListView(this@CropCostCalculationActivity).apply {
+                        adapter = ArrayAdapter(
                             this@CropCostCalculationActivity,
                             android.R.layout.simple_list_item_1,
                             items
                         )
-                    dividerHeight = 1
+                    }
+
+                    val categoryDialog = AlertDialog.Builder(this@CropCostCalculationActivity)
+                        .setTitle(R.string.select_option)
+                        .setView(listView)
+                        .setNegativeButton(R.string.cancel, null)
+                        .create()
+
+                    listView.setOnItemClickListener { _, _, position, _ ->
+                        val selectedObj = jsonArray.getJSONObject(position)
+                        categoryId = selectedObj.getInt("id")
+
+                        val name = if (languageToLoad == "en")
+                            selectedObj.getString("name")
+                        else
+                            selectedObj.getString("name_mr")
+
+                        categoryNameTextView.text = name
+                        categoryDialog.dismiss()
+                    }
+
+                    categoryDialog.show()
                 }
 
-                // Build dialog with custom ListView
-                val dialog = AlertDialog.Builder(this)
-                    .setTitle(R.string.select_option)
-                    .setView(listView)
-                    .setNegativeButton(R.string.cancel, null)
-                    .create()
+                dialogBinding.incomeToggleButton.setOnClickListener {
+                    isIncomeSelected = true
+                    incomeLinearLayout.visibility = View.VISIBLE
+                    expenseLinearLayout.visibility = View.GONE
+                }
 
-                // Handle click
-                listView.setOnItemClickListener { _, _, position, _ ->
-                    val selectedObj = jsonArray.getJSONObject(position)
-                    categoryId = selectedObj.getInt("id")
-                    val name =
-                        if (languageToLoad == "en") selectedObj.getString("name") else selectedObj.getString(
-                            "name_mr"
-                        )
-                    categoryNameTextView.text = name
+                dialogBinding.expenseToggleButton.setOnClickListener {
+                    costCalculatorViewModel.getExpenseCategory()
+                    isIncomeSelected = false
+                    incomeLinearLayout.visibility = View.GONE
+                    expenseLinearLayout.visibility = View.VISIBLE
+                }
+
+                cancelText.setOnClickListener {
                     dialog.dismiss()
                 }
-
-                dialog.show()
-
-                // Limit dialog height (shorter + scrollable)
-                dialog.window?.setLayout(
-                    (resources.displayMetrics.widthPixels * 0.9).toInt(),
-                    (resources.displayMetrics.heightPixels * 0.5).toInt() // 50% of screen height
-                )
-            }
-
-            incomeToggle.setOnClickListener {
-                isIncomeSelected = true
-                incomeLayout.visibility = View.VISIBLE
-                expenseLayout.visibility = View.GONE
-                incomeToggle.apply {
-                    background = ContextCompat.getDrawable(
-                        this@CropCostCalculationActivity,
-                        R.drawable.shape_left
-                    )
-                    setTextColor(Color.WHITE)
-                }
-                expenseToggle.apply {
-                    background = ContextCompat.getDrawable(
-                        this@CropCostCalculationActivity,
-                        R.drawable.shape_right
-                    )
-                    setTextColor(Color.BLACK)
-                }
-            }
-
-            expenseToggle.setOnClickListener {
-                costCalculatorViewModel.getExpenseCategory()
-                isIncomeSelected = false
-                incomeLayout.visibility = View.GONE
-                expenseLayout.visibility = View.VISIBLE
-                expenseToggle.apply {
-                    background = ContextCompat.getDrawable(
-                        this@CropCostCalculationActivity,
-                        R.drawable.shape_right_green
-                    )
-                    setTextColor(Color.WHITE)
-                }
-                incomeToggle.apply {
-                    background = ContextCompat.getDrawable(
-                        this@CropCostCalculationActivity,
-                        R.drawable.shape_left_white
-                    )
-                    setTextColor(Color.BLACK)
-                }
-            }
-
-            cancelText.setOnClickListener {
-                dialog.dismiss()
             }
 
             dialog.show()
         }
+
 
         binding.cropInfoCardView.setOnClickListener {
             val dataArrayStr = AppPreferenceManager(this).getString("CostCalculatorArrayData")

@@ -4,21 +4,27 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityMahaDbtSchemesDetailsBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.FarmerMahaDbtSchemeDetailsRecyclerAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.DBT_SCHEME_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONArray
 import org.json.JSONObject
+import kotlin.getValue
 
 class MahaDbtSchemesDetailsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMahaDbtSchemesDetailsBinding
+    private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     private var languageToLoad: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +43,7 @@ class MahaDbtSchemesDetailsActivity : AppCompatActivity() {
         binding.relativeLayoutTopBar.imageMenushow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
-
+        observeResponse()
         // Get and parse JSON data
         val data = intent.getStringExtra("FARMERDBTRESPONSE")
         val jsonData = JSONObject(data ?: "{}")
@@ -108,6 +114,19 @@ class MahaDbtSchemesDetailsActivity : AppCompatActivity() {
                 binding.eligibilityCriteriaRecyclerView,
                 binding.eligibilityCriteriaToggleImageView
             )
+        }
+        leaderboardViewModel.updateUserPoints(this, DBT_SCHEME_POINT)
+    }
+
+    private fun observeResponse() {
+        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
+            if (response!=null){
+                val jSONObject = JSONObject(response.toString())
+                val status = jSONObject.optInt("status")
+                if (status==200){
+                    ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
+                }
+            }
         }
     }
 

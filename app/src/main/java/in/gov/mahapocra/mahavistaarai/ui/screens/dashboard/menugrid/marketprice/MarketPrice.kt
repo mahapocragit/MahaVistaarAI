@@ -26,7 +26,6 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.GeoViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MarketPriceViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.CROP_ADVISORY_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.MARKET_PRICE_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom

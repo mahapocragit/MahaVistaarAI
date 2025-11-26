@@ -4,23 +4,17 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityShetishalaVideosBinding
-import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityVideosDetailedBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ShetishalaVideosAdapter
-import `in`.gov.mahapocra.mahavistaarai.ui.adapters.VideosAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.SHETISHALA_VIDEO_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.VIDEOS_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
@@ -28,7 +22,6 @@ import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONObject
-import kotlin.getValue
 
 class ShetishalaVideosActivity : AppCompatActivity(), RecyclerItemClickListener {
 

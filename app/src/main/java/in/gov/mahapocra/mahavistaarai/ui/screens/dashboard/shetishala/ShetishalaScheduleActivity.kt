@@ -1,6 +1,5 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala
 
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -17,7 +16,6 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityShetishalaScheduleBi
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ShetishalaScheduleAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.CROP_ADVISORY_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.SHETISHALA_MEETING_URL_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.SHETISHALA_YOUTUBE_URL_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
@@ -25,7 +23,6 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
-import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONObject
 

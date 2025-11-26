@@ -32,7 +32,6 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotAct
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.CROP_ADVISORY_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.CUSTOM_HIRING_CENTRE_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
