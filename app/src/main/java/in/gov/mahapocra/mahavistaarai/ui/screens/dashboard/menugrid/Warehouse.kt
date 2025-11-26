@@ -21,8 +21,10 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityWarehouseBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.WarehouseAvailabilityAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.WAREHOUSE_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
@@ -35,11 +37,12 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 class Warehouse : AppCompatActivity(), AlertListEventListener, OnMultiRecyclerItemClickListener {
-    lateinit var binding: ActivityWarehouseBinding
 
+    lateinit var binding: ActivityWarehouseBinding
     private var warehouseAvailabilityJSONArray: JSONArray? = null
     private var districtJSONArray: JSONArray? = null
     private val farmerViewModel: FarmerViewModel by viewModels()
+    private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     private lateinit var districtName: String
     private var districtID: Int = 0
     private var talukaID: Int = 0
@@ -81,7 +84,6 @@ class Warehouse : AppCompatActivity(), AlertListEventListener, OnMultiRecyclerIt
         binding.tvWareHouseName.text = getString(R.string.warehouse_details)
         binding.tvTotalAvailableCapacity.text = getString(R.string.total_available_capacity)
         binding.tvRecordDate.text = getString(R.string.record_date)
-        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -96,6 +98,16 @@ class Warehouse : AppCompatActivity(), AlertListEventListener, OnMultiRecyclerIt
     }
 
     private fun setUpObserver() {
+
+        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
+            if (response!=null){
+                val jSONObject = JSONObject(response.toString())
+                val status = jSONObject.optInt("status")
+                if (status==200){
+                    ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
+                }
+            }
+        }
 
         farmerViewModel.districtIdResponse.observe(this) {
             if (it != null) {
@@ -192,6 +204,7 @@ class Warehouse : AppCompatActivity(), AlertListEventListener, OnMultiRecyclerIt
                 } else {
                     UIToastMessage.show(this, response.response)
                 }
+                leaderboardViewModel.updateUserPoints(this, WAREHOUSE_POINT)
             }
         }
     }

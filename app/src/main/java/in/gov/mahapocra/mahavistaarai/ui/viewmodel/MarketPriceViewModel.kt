@@ -36,8 +36,8 @@ class MarketPriceViewModel : ViewModel() {
     val error: LiveData<String> = _error
 
     fun getMarketAndMarketName(context: Context, districtID: Int, language: String) {
-        ProgressHelper.showProgressDialog(context)
         viewModelScope.launch {
+            ProgressHelper.showProgressDialog(context)
             try {
                 val jsonObject = JSONObject().apply {
                     put("api_key", APIKeys.SSO_PROD)
@@ -45,7 +45,7 @@ class MarketPriceViewModel : ViewModel() {
                     put("lang", language)
                 }
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.Companion.FARMER.baseUrl)
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val api = retrofit.create(ApiService::class.java)
                 val response = api.getMarketAndMarketName(requestBody)
                 ProgressHelper.disableProgressDialog()
@@ -75,7 +75,7 @@ class MarketPriceViewModel : ViewModel() {
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.Companion.FARMER.baseUrl)
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getMarketList(requestBody)
                 ProgressHelper.disableProgressDialog()
@@ -95,8 +95,8 @@ class MarketPriceViewModel : ViewModel() {
     }
 
     fun getMarketPriceDetails(context: Context, mandiId: Int, language: String) {
-        ProgressHelper.showProgressDialog(context)
         viewModelScope.launch {
+            ProgressHelper.showProgressDialog(context)
             try {
                 val jsonObject = JSONObject().apply {
                     put("api_key", APIKeys.SSO_PROD)
@@ -104,7 +104,7 @@ class MarketPriceViewModel : ViewModel() {
                     put("lang", language)
                 }
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.Companion.FARMER.baseUrl)
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val api = retrofit.create(ApiService::class.java)
                 val response = api.getMarketPriceDetails(requestBody)
                 ProgressHelper.disableProgressDialog()
