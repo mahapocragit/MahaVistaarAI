@@ -393,12 +393,15 @@ class FarmerViewModel : ViewModel() {
 
     fun getDigitalShetishalaSchedule(context: Context) {
         viewModelScope.launch {
+            ProgressHelper.showProgressDialog(context)
             try {
                 val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getDigitalShetishalaSchedule()
+                ProgressHelper.disableProgressDialog()
                 _getDigitalShetishalaScheduleResponse.value = response
             } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."

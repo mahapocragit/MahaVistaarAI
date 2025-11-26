@@ -8,15 +8,15 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
 import org.json.JSONArray
 
-class ShetishalaScheduleAdapter(private val jsonArray: JSONArray) :
+class ShetishalaScheduleAdapter(private val jsonArray: JSONArray, private val listener: RecyclerItemClickListener) :
     RecyclerView.Adapter<ShetishalaScheduleAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val dayTextView: TextView = itemView.findViewById(R.id.dayTextView)
         val zoomRecyclerView: RecyclerView = itemView.findViewById(R.id.zoomRecyclerView)
-        val tableLinearLayout: LinearLayout = itemView.findViewById(R.id.tableLinearLayout)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,13 +32,7 @@ class ShetishalaScheduleAdapter(private val jsonArray: JSONArray) :
         val title = item.optString("day")
         holder.dayTextView.text = title
         holder.zoomRecyclerView.layoutManager = LinearLayoutManager(holder.dayTextView.context)
-        holder.zoomRecyclerView.adapter = ShetishalaScheduleMeetAdapter(title, item.optJSONArray("sessions"))
+        holder.zoomRecyclerView.adapter = ShetishalaScheduleMeetAdapter(title, item.optJSONArray("sessions"), listener)
         holder.zoomRecyclerView.setHasFixedSize(true)
-
-//        if (position%2==0) {
-//            holder.tableLinearLayout.setBackgroundColor(Color.parseColor("#A8931C"))
-//        }else{
-//            holder.tableLinearLayout.setBackgroundColor(Color.parseColor("#93A81C"))
-//        }
     }
 }

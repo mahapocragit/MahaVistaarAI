@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import androidx.activity.viewModels
@@ -15,17 +16,24 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityShetishalaScheduleBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ShetishalaScheduleAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.CROP_ADVISORY_POINT
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.SHETISHALA_MEETING_URL_POINT
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.SHETISHALA_YOUTUBE_URL_POINT
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONObject
 
-class ShetishalaScheduleActivity : AppCompatActivity() {
+class ShetishalaScheduleActivity : AppCompatActivity(), RecyclerItemClickListener {
 
     private lateinit var binding: ActivityShetishalaScheduleBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
+    private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     private lateinit var languageToLoad: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,30 +50,43 @@ class ShetishalaScheduleActivity : AppCompatActivity() {
         uiResponsive(binding.root)
 
         setUpToolbar()
+        observeResponse()
         binding.useYoutubeLayout.setOnClickListener {
+            leaderboardViewModel.updateUserPoints(this, SHETISHALA_YOUTUBE_URL_POINT)
             loadYoutubeUrl("https://www.youtube.com/@PaaniFoundation/live")
         }
         //setRecyclerView
         binding.shetishalaRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.shetishalaRecyclerView.setHasFixedSize(true)
         farmerViewModel.getDigitalShetishalaSchedule(this)
-        ProgressHelper.showProgressDialog(this)
+    }
+    
+    private fun observeResponse(){
+
+        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
+            if (response!=null){
+                val jSONObject = JSONObject(response.toString())
+                val status = jSONObject.optInt("status")
+                if (status==200){
+                    ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
+                }
+            }
+        }
+
         farmerViewModel.getDigitalShetishalaScheduleResponse.observe(this) {
-            ProgressHelper.disableProgressDialog()
             if (it != null) {
                 val jsonObject = JSONObject(it.toString())
                 val dataObject = jsonObject.optJSONObject("data")
                 val scheduleArray = dataObject.optJSONArray("schedule")
                 scheduleArray?.let { array ->
                     binding.shetishalaRecyclerView.adapter =
-                        ShetishalaScheduleAdapter(array)
+                        ShetishalaScheduleAdapter(array, this)
                 }
             }
         }
         farmerViewModel.error.observe(this) {
-            ProgressHelper.disableProgressDialog()
+            Log.d(TAG, "observeResponse: $it")
         }
-        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
     }
 
     private fun loadYoutubeUrl(url: String) {
@@ -73,8 +94,7 @@ class ShetishalaScheduleActivity : AppCompatActivity() {
         intent.setPackage("com.google.android.youtube")
         try {
             startActivity(intent)
-        } catch (e: ActivityNotFoundException) {
-            // Fallback to browser if YouTube app isn't installed
+        } catch (_: Exception) {
             val webIntent = Intent(Intent.ACTION_VIEW, url.toUri())
             startActivity(webIntent)
         }
@@ -97,5 +117,11 @@ class ShetishalaScheduleActivity : AppCompatActivity() {
         }
         val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
         super.attachBaseContext(updatedContext)
+    }
+
+    override fun onRecyclerItemClick(i: Int, obj: Any) {
+        if (i==1){
+            leaderboardViewModel.updateUserPoints(this, SHETISHALA_MEETING_URL_POINT)
+        }
     }
 }

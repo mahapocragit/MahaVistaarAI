@@ -29,6 +29,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FarmerApp">
         <activity
+            android:name=".ui.screens.dashboard.shetishala.ShetishalaVideosActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.screens.authentication.FarmerDetailsConfirmationActivity"
             android:exported="false" />
         <activity

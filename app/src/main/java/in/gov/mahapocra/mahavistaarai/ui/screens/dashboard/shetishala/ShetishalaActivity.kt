@@ -66,7 +66,7 @@ class ShetishalaActivity : AppCompatActivity() {
             startActivity(
                 Intent(
                     this@ShetishalaActivity,
-                    VideosDetailedActivity::class.java
+                    ShetishalaVideosActivity::class.java
                 )
             )
         }

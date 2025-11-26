@@ -6,18 +6,20 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.util.DayMatcher.isTodayMatchingMarathiDay
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
 import org.json.JSONArray
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class ShetishalaScheduleMeetAdapter(private val day: String, private val jsonArray: JSONArray) :
+class ShetishalaScheduleMeetAdapter(private val day: String, private val jsonArray: JSONArray, private val listener: RecyclerItemClickListener) :
     RecyclerView.Adapter<ShetishalaScheduleMeetAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -51,13 +53,9 @@ class ShetishalaScheduleMeetAdapter(private val day: String, private val jsonArr
 
         holder.zoomLinkTextView.setOnClickListener {
             if (isTodayMatchingMarathiDay(day)) {
-//                if (isUserTooEarly(time)) {
-//                    showTooEarlyDialog(holder.itemView.context) // this = Activity or Context
-//                } else {
-//                    // allow user to join the meeting
+                listener.onRecyclerItemClick(1, item)
                 val browserIntent = Intent(Intent.ACTION_VIEW, link.toUri())
                 holder.itemView.context.startActivity(browserIntent)
-//                }
             } else {
                 var zoomMeetingTemplateLabel = "ही बैठक आज उपलब्ध नाही. ती $day साठी निर्धारित आहे."
                 if (languageToLoad == "en") {
