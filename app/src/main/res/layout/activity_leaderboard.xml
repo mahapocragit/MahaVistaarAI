@@ -8,9 +8,45 @@
     android:background="@drawable/gradient_leaderboard"
     tools:context=".ui.screens.dashboard.sidenavigation.leaderboard.LeaderboardActivity">
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/userPointCardView"
+        android:layout_width="@dimen/_70sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        app:cardCornerRadius="@dimen/_20sdp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/cardView"
+        app:layout_constraintTop_toBottomOf="@+id/cardView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/_5sdp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="7"
+                android:padding="@dimen/_1sdp"
+                app:srcCompat="@drawable/ic_user" />
+
+            <TextView
+                android:id="@+id/userPointTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:text=""
+                android:textSize="@dimen/_11sdp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
     <include
         android:id="@+id/toolbarLayout"
-        layout="@layout/layout_toolbar"/>
+        layout="@layout/layout_toolbar" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -71,9 +107,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/_10sdp"
         android:background="@drawable/leaderboard_list_card_corner_background"
         android:orientation="vertical"
-        android:layout_marginHorizontal="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -141,8 +177,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="6"
-                android:text="@string/points"
                 android:paddingStart="@dimen/_10sdp"
+                android:text="@string/points"
                 android:textColor="@color/actionbar_color_figma"
                 android:textSize="@dimen/_11sdp"
                 android:textStyle="bold" />
@@ -169,8 +205,8 @@
         <ImageView
             android:layout_width="@dimen/_45sdp"
             android:layout_height="@dimen/_46sdp"
-            android:layout_margin="@dimen/_2sdp"
             android:layout_gravity="center"
+            android:layout_margin="@dimen/_2sdp"
             android:src="@drawable/bronze_ic" />
 
         <TextView
@@ -207,8 +243,8 @@
         <ImageView
             android:layout_width="@dimen/_45sdp"
             android:layout_height="@dimen/_45sdp"
-            android:layout_margin="@dimen/_2sdp"
             android:layout_gravity="center"
+            android:layout_margin="@dimen/_2sdp"
             android:src="@drawable/silver_ic" />
 
         <TextView

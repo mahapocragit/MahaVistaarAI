@@ -35,7 +35,7 @@ class LeaderboardNewAdapter(private val items: JSONArray, val selectedValue: Str
             itemView.findViewById(R.id.personTalukaTextView)
 
         fun bind(item: JSONObject, position: Int, selectedValue: String) {
-            val name = item.optString("username")
+            val name = item.optString("full_name")
             val taluka = item.optString("taluka")
             val district = item.optString("district")
             val recordCount = item.optInt("record_count")

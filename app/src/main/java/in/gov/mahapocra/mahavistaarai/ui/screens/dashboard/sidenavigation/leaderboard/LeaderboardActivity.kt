@@ -24,7 +24,6 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MahavistaarViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
-import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -53,7 +52,6 @@ class LeaderboardActivity : AppCompatActivity() {
         binding = ActivityLeaderboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
         LocalCustom.uiResponsive(binding.root)
-        ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
         ProgressHelper.showProgressDialog(this)
         observeViewModel()
         mahavistaarViewModel.requestUrlForChatBot(this)
@@ -75,6 +73,11 @@ class LeaderboardActivity : AppCompatActivity() {
         leaderboardViewModel.responseLeaderboardForAll.observe(this) { response ->
             if (response != null) {
                 val json = JSONObject(response.toString())
+                val userPoints = json.optInt("users_points")
+                if (userPoints.toString().isNotEmpty()) {
+                    binding.userPointCardView.visibility = View.VISIBLE
+                    binding.userPointTextView.text = userPoints.toString()
+                }
                 val dataJson = json.optJSONObject("data")
                 talukaJsonArray = dataJson.optJSONArray("talukaList")
                 districtJsonArray = dataJson.optJSONArray("districtList")
@@ -109,7 +112,7 @@ class LeaderboardActivity : AppCompatActivity() {
 
         for (i in 0 until minOf(3, dataJsonArray.length())) {
             val topperJson = dataJsonArray[i] as JSONObject
-            val username = topperJson.optString("username").trim().split(" ")[0]
+            val username = topperJson.optString("full_name").trim().split(" ")[0]
             val taluka = topperJson.optString("taluka")
             val district = topperJson.optString("district")
 
