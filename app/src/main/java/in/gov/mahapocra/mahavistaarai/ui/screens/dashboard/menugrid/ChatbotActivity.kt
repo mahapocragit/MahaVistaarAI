@@ -25,11 +25,15 @@ import `in`.co.appinventor.services_api.util.NetworkUtils.isNetworkAvailable
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityChatbotBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MahavistaarViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.CHATBOT_POINT
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.CROP_ADVISORY_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -41,6 +45,7 @@ class ChatbotActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChatbotBinding
     private val mahavistaarViewModel: MahavistaarViewModel by viewModels()
+    private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     private val farmerViewModel: FarmerViewModel by viewModels()
 
     private var languageToLoad = "mr"
@@ -49,11 +54,8 @@ class ChatbotActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // --- Language setup ---
         languageToLoad = if (AppSettings.getLanguage(this).equals("1", ignoreCase = true)) "en" else "mr"
         switchLanguage(this, languageToLoad)
-
         binding = ActivityChatbotBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
@@ -66,7 +68,11 @@ class ChatbotActivity : AppCompatActivity() {
         }
         binding.toolbar.textViewHeaderTitle.text = ""
 
-        // --- Load WebView faster ---
+        observeResponse()
+        setUpListeners()
+    }
+
+    private fun setUpListeners() {
         setupWebView()
 
         // --- Show progress dialog only if load takes time ---
@@ -81,15 +87,6 @@ class ChatbotActivity : AppCompatActivity() {
             val urlJob = async { mahavistaarViewModel.requestUrlForChatBot(this@ChatbotActivity) }
             permissionJob.await()
             urlJob.await()
-        }
-
-        // --- Observe API response ---
-        mahavistaarViewModel.responseUrlForChatBot.observe(this) { response ->
-            handleChatbotResponse(response)
-        }
-
-        mahavistaarViewModel.error.observe(this) {
-            onChatbotError()
         }
 
         // --- Retry button ---
@@ -168,8 +165,30 @@ class ChatbotActivity : AppCompatActivity() {
                     binding.noInternetAvailableLayout.visibility = View.GONE
                     binding.webView.visibility = View.VISIBLE
                     binding.webView.animate().alpha(1f).setDuration(250).start()
+                    leaderboardViewModel.updateUserPoints(this@ChatbotActivity, CHATBOT_POINT)
                 }
             }
+        }
+    }
+
+    private fun observeResponse(){
+        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
+            if (response!=null){
+                val jSONObject = JSONObject(response.toString())
+                val status = jSONObject.optInt("status")
+                if (status==200){
+                    ScoreBubbleHelper.showScoreBubble(binding.root, "+100🔥 Points Added")
+                }
+            }
+        }
+
+        // --- Observe API response ---
+        mahavistaarViewModel.responseUrlForChatBot.observe(this) { response ->
+            handleChatbotResponse(response)
+        }
+
+        mahavistaarViewModel.error.observe(this) {
+            onChatbotError()
         }
     }
 

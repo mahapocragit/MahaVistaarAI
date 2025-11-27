@@ -230,15 +230,22 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         })
 
         binding.edtGuntha.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-            }
+            override fun afterTextChanged(s: Editable?) {}
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (!(s.contentEquals(""))) {
-                    val acreNo: Int = s.toString().toInt()
+                val value = s?.toString()?.trim()
+
+                if (!value.isNullOrEmpty()) {
+                    val acreNo = value.toIntOrNull()
+
+                    if (acreNo == null) {
+                        binding.edtGuntha.setText("0")
+                        binding.edtGuntha.setSelection(binding.edtGuntha.text.length)
+                        return
+                    }
+
                     if (acreNo > 39) {
                         Toast.makeText(
                             this@FertilizerCalculatorActivity,
@@ -246,6 +253,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                             Toast.LENGTH_SHORT
                         ).show()
                         binding.edtGuntha.setText("0")
+                        binding.edtGuntha.setSelection(binding.edtGuntha.text.length)
                     }
                 }
             }

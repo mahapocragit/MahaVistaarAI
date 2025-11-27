@@ -30,7 +30,7 @@ class LeaderboardViewModel : ViewModel() {
     private var _error = MutableLiveData<String>()
     val error: MutableLiveData<String> = _error
 
-    fun getLeaderboardForAll(context: Context, token:String) {
+    fun getLeaderboardForAll(context: Context, token: String) {
         viewModelScope.launch {
             try {
                 ProgressHelper.showProgressDialog(context)
@@ -44,7 +44,6 @@ class LeaderboardViewModel : ViewModel() {
                 )
                 ProgressHelper.disableProgressDialog()
                 _responseLeaderboardForAll.value = response
-                Log.d(TAG, "fetchDataFromNewLeaderboard: $response")
             } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
@@ -59,12 +58,11 @@ class LeaderboardViewModel : ViewModel() {
         }
     }
 
-    fun updateUserPoints(context: Context, screen:Int) {
+    fun updateUserPoints(context: Context, screen: Int) {
         viewModelScope.launch {
             try {
-                ProgressHelper.showProgressDialog(context)
-                val farmerId =
-                    AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+                val farmerId = AppSettings.getInstance()
+                    .getIntValue(context, AppConstants.fREGISTER_ID, 0)
                 val jsonObject = JSONObject().apply {
                     put("user_id", farmerId)
                     put("page_id", screen)
@@ -73,11 +71,8 @@ class LeaderboardViewModel : ViewModel() {
                 val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.updateUserPoints(requestBody)
-                ProgressHelper.disableProgressDialog()
                 _responseUpdateUserPoints.value = response
-                Log.d(TAG, "fetchDataFromNewLeaderboard: $response")
             } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
