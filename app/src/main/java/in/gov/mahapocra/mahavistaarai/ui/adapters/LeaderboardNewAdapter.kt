@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.mahavistaarai.R
 import org.json.JSONArray
 import org.json.JSONObject
+import kotlin.text.ifEmpty
 
 class LeaderboardNewAdapter(private val items: JSONArray, val selectedValue: String) :
     RecyclerView.Adapter<LeaderboardNewAdapter.ViewHolder>() {
@@ -35,13 +36,15 @@ class LeaderboardNewAdapter(private val items: JSONArray, val selectedValue: Str
             itemView.findViewById(R.id.personTalukaTextView)
 
         fun bind(item: JSONObject, position: Int, selectedValue: String) {
-            val name = item.optString("full_name")
+            val userName = item.optString("full_name").ifEmpty {
+                item.optString("username")
+            }
             val taluka = item.optString("taluka")
             val district = item.optString("district")
             val recordCount = item.optInt("record_count")
 
             personRankTextView.text = (position.plus(1)).toString()
-            personNameTextView.text = name
+            personNameTextView.text = userName
             personScoreTextView.text = formatPoints(recordCount)
             personTalukaTextView.text = when (selectedValue) {
                 "taluka" -> taluka

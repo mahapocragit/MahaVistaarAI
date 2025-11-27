@@ -112,7 +112,10 @@ class LeaderboardActivity : AppCompatActivity() {
 
         for (i in 0 until minOf(3, dataJsonArray.length())) {
             val topperJson = dataJsonArray[i] as JSONObject
-            val username = topperJson.optString("full_name").trim().split(" ")[0]
+            val userName = topperJson.optString("full_name").ifEmpty {
+                topperJson.optString("username")
+            }
+            val username = userName.trim().split(" ")[0]
             val taluka = topperJson.optString("taluka")
             val district = topperJson.optString("district")
 
