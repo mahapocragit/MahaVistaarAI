@@ -36,6 +36,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.showDisabledFutureDatePicker
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -210,7 +211,9 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
             binding.relativeLayoutTopBar.relativeLayoutToolbar.visibility = View.GONE
         }
         if (i==3){
-            leaderboardViewModel.updateUserPoints(this, CROP_ADVISORY_POINT)
+            if (containsFarmerId(this)) {
+                leaderboardViewModel.updateUserPoints(this, CROP_ADVISORY_POINT)
+            }
         }
     }
 

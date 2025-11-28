@@ -16,6 +16,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.DBT_SCHEME_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONArray
 import org.json.JSONObject
@@ -115,15 +116,17 @@ class MahaDbtSchemesDetailsActivity : AppCompatActivity() {
                 binding.eligibilityCriteriaToggleImageView
             )
         }
-        leaderboardViewModel.updateUserPoints(this, DBT_SCHEME_POINT)
+        if (containsFarmerId(this)) {
+            leaderboardViewModel.updateUserPoints(this, DBT_SCHEME_POINT)
+        }
     }
 
     private fun observeResponse() {
-        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
-            if (response!=null){
+        leaderboardViewModel.responseUpdateUserPoints.observe(this) { response ->
+            if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 val status = jSONObject.optInt("status")
-                if (status==200){
+                if (status == 200) {
                     ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
                 }
             }

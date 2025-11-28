@@ -41,6 +41,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.convertDate
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.convertDateFormat
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.getTodayDate
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONArray
 import org.json.JSONObject
@@ -103,11 +104,11 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
 
     private fun setUpObservers() {
 
-        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
-            if (response!=null){
+        leaderboardViewModel.responseUpdateUserPoints.observe(this) { response ->
+            if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 val status = jSONObject.optInt("status")
-                if (status==200){
+                if (status == 200) {
                     ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
                 }
             }
@@ -158,7 +159,9 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                     season = currentSelectedSeason,
                     year = currentSelectedYear
                 )
-                leaderboardViewModel.updateUserPoints(this, COST_CALCULATOR_POINT)
+                if (containsFarmerId(this)) {
+                    leaderboardViewModel.updateUserPoints(this, COST_CALCULATOR_POINT)
+                }
             }
         }
 
@@ -256,16 +259,23 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                                 unitText.text = "q"
                                 unitMultiplier = 100
                             }
+
                             "Kilogram" -> {
                                 unitText.text = "kg"
                                 unitMultiplier = 1
                             }
+
                             "Ton" -> {
                                 unitText.text = "t"
                                 unitMultiplier = 1000
                             }
                         }
-                        calculateTotal(yieldAmount, pricePerUnit, unitMultiplier, totalPriceTextView)
+                        calculateTotal(
+                            yieldAmount,
+                            pricePerUnit,
+                            unitMultiplier,
+                            totalPriceTextView
+                        )
                         true
                     }
                     popupMenu.show()
@@ -286,10 +296,15 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                     val transactionType = if (isIncomeSelected) "income" else "expense"
 
                     if (transactionType == "income") {
-                        var transactionName = incomeNameEditText.text.toString().ifEmpty { "Income" }
+                        var transactionName =
+                            incomeNameEditText.text.toString().ifEmpty { "Income" }
 
                         if (yieldAmount == 0 || pricePerUnit == 0) {
-                            Toast.makeText(this@CropCostCalculationActivity, "Please fill all the fields", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@CropCostCalculationActivity,
+                                "Please fill all the fields",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             return@setOnClickListener
                         }
 
@@ -310,7 +325,11 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                         val price = priceEditText.text.toString().toIntOrNull() ?: 0
 
                         if (categoryId == 0 || price == 0) {
-                            Toast.makeText(this@CropCostCalculationActivity, "Please fill all the fields", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@CropCostCalculationActivity,
+                                "Please fill all the fields",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             return@setOnClickListener
                         }
 

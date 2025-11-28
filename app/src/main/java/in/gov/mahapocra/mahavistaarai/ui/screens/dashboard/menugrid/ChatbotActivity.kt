@@ -32,6 +32,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.CROP_ADVISORY_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import kotlinx.coroutines.CoroutineScope
@@ -54,7 +55,8 @@ class ChatbotActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        languageToLoad = if (AppSettings.getLanguage(this).equals("1", ignoreCase = true)) "en" else "mr"
+        languageToLoad =
+            if (AppSettings.getLanguage(this).equals("1", ignoreCase = true)) "en" else "mr"
         switchLanguage(this, languageToLoad)
         binding = ActivityChatbotBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -104,13 +106,25 @@ class ChatbotActivity : AppCompatActivity() {
 
     private fun askForLocationAndMicrophonePermission() {
         val permissionsNeeded = mutableListOf<String>()
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED)
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED
+        )
             permissionsNeeded.add(Manifest.permission.RECORD_AUDIO)
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        )
             permissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION)
 
         if (permissionsNeeded.isNotEmpty()) {
-            ActivityCompat.requestPermissions(this, permissionsNeeded.toTypedArray(), PERMISSION_REQUEST_CODE)
+            ActivityCompat.requestPermissions(
+                this,
+                permissionsNeeded.toTypedArray(),
+                PERMISSION_REQUEST_CODE
+            )
         }
     }
 
@@ -146,13 +160,20 @@ class ChatbotActivity : AppCompatActivity() {
                     runOnUiThread { request.grant(request.resources) }
                 }
 
-                override fun onGeolocationPermissionsShowPrompt(origin: String?, callback: GeolocationPermissions.Callback?) {
+                override fun onGeolocationPermissionsShowPrompt(
+                    origin: String?,
+                    callback: GeolocationPermissions.Callback?
+                ) {
                     callback?.invoke(origin, true, false)
                 }
             }
 
             webViewClient = object : WebViewClient() {
-                override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
+                override fun onReceivedSslError(
+                    view: WebView?,
+                    handler: SslErrorHandler?,
+                    error: SslError?
+                ) {
                     handler?.cancel()
                     Clarity.sendCustomEvent("WEBVIEW_STOPPED")
                     onChatbotError()
@@ -165,18 +186,20 @@ class ChatbotActivity : AppCompatActivity() {
                     binding.noInternetAvailableLayout.visibility = View.GONE
                     binding.webView.visibility = View.VISIBLE
                     binding.webView.animate().alpha(1f).setDuration(250).start()
-                    leaderboardViewModel.updateUserPoints(this@ChatbotActivity, CHATBOT_POINT)
+                    if (containsFarmerId(this@ChatbotActivity)) {
+                        leaderboardViewModel.updateUserPoints(this@ChatbotActivity, CHATBOT_POINT)
+                    }
                 }
             }
         }
     }
 
-    private fun observeResponse(){
-        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
-            if (response!=null){
+    private fun observeResponse() {
+        leaderboardViewModel.responseUpdateUserPoints.observe(this) { response ->
+            if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 val status = jSONObject.optInt("status")
-                if (status==200){
+                if (status == 200) {
                     ScoreBubbleHelper.showScoreBubble(binding.root, "+100🔥 Points Added")
                 }
             }
@@ -241,17 +264,25 @@ class ChatbotActivity : AppCompatActivity() {
         Clarity.sendCustomEvent("WEBVIEW_CLOSED")
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_CODE) {
             permissions.forEachIndexed { index, permission ->
-                Log.d("Permissions", "$permission -> ${if (grantResults[index] == PackageManager.PERMISSION_GRANTED) "granted" else "denied"}")
+                Log.d(
+                    "Permissions",
+                    "$permission -> ${if (grantResults[index] == PackageManager.PERMISSION_GRANTED) "granted" else "denied"}"
+                )
             }
         }
     }
 
     override fun attachBaseContext(newBase: Context) {
-        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) "en" else "mr"
+        languageToLoad =
+            if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) "en" else "mr"
         val updatedContext = configureLocale(newBase, languageToLoad)
         super.attachBaseContext(updatedContext)
     }

@@ -39,6 +39,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -88,7 +89,7 @@ class CHCenterActivity : AppCompatActivity() {
             startActivity(Intent(this, DashboardScreen::class.java))
         }
 
-        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 startActivity(Intent(this@CHCenterActivity, DashboardScreen::class.java))
             }
@@ -160,18 +161,18 @@ class CHCenterActivity : AppCompatActivity() {
 
     private fun observeResponse() {
 
-        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
-            if (response!=null){
+        leaderboardViewModel.responseUpdateUserPoints.observe(this) { response ->
+            if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 val status = jSONObject.optInt("status")
-                if (status==200){
+                if (status == 200) {
                     ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
                 }
             }
         }
 
-        farmerViewModel.chcCentersResponse.observe(this){
-            if (it!=null){
+        farmerViewModel.chcCentersResponse.observe(this) {
+            if (it != null) {
                 val jSONObject = JSONObject(it.toString())
                 jSONObject.optJSONArray("data")?.let { data ->
                     adapter = CHCenterRecyclerAdapter(data)
@@ -188,7 +189,10 @@ class CHCenterActivity : AppCompatActivity() {
                             if (latitude != null && longitude != null) {
                                 Marker(binding.mapView).apply {
                                     position = GeoPoint(latitude, longitude)
-                                    icon = ContextCompat.getDrawable(this@CHCenterActivity, R.drawable.ic_red_location)
+                                    icon = ContextCompat.getDrawable(
+                                        this@CHCenterActivity,
+                                        R.drawable.ic_red_location
+                                    )
                                     title = "Marker $index"
                                     snippet = "Lat: $latitude, Lon: $longitude"
                                     setOnMarkerClickListener { _, _ ->
@@ -209,12 +213,14 @@ class CHCenterActivity : AppCompatActivity() {
                             }
                         }
                     }
-                    leaderboardViewModel.updateUserPoints(this, CUSTOM_HIRING_CENTRE_POINT)
+                    if (containsFarmerId(this)) {
+                        leaderboardViewModel.updateUserPoints(this, CUSTOM_HIRING_CENTRE_POINT)
+                    }
                 }
             }
         }
 
-        farmerViewModel.error.observe(this){
+        farmerViewModel.error.observe(this) {
             Log.d(TAG, "observeResponse: $it")
         }
     }
@@ -313,7 +319,8 @@ class CHCenterActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == LOCATION_PERMISSION_REQUEST && grantResults.isNotEmpty() &&
-            grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            grantResults[0] == PackageManager.PERMISSION_GRANTED
+        ) {
             fetchLocation()
         } else {
             Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show()

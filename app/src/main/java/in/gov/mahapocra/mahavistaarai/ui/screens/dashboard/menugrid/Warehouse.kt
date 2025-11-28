@@ -30,6 +30,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -99,11 +100,11 @@ class Warehouse : AppCompatActivity(), AlertListEventListener, OnMultiRecyclerIt
 
     private fun setUpObserver() {
 
-        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
-            if (response!=null){
+        leaderboardViewModel.responseUpdateUserPoints.observe(this) { response ->
+            if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 val status = jSONObject.optInt("status")
-                if (status==200){
+                if (status == 200) {
                     ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
                 }
             }
@@ -204,7 +205,9 @@ class Warehouse : AppCompatActivity(), AlertListEventListener, OnMultiRecyclerIt
                 } else {
                     UIToastMessage.show(this, response.response)
                 }
-                leaderboardViewModel.updateUserPoints(this, WAREHOUSE_POINT)
+                if (containsFarmerId(this)) {
+                    leaderboardViewModel.updateUserPoints(this, WAREHOUSE_POINT)
+                }
             }
         }
     }
@@ -218,7 +221,7 @@ class Warehouse : AppCompatActivity(), AlertListEventListener, OnMultiRecyclerIt
             startActivity(intent)
         }
 
-        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 startActivity(Intent(this@Warehouse, DashboardScreen::class.java))
             }

@@ -19,6 +19,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONObject
@@ -96,7 +97,9 @@ class ShetishalaVideosActivity : AppCompatActivity(), RecyclerItemClickListener 
     override fun onRecyclerItemClick(i: Int, obj: Any) {
         if (i == 2) {
             Log.d(TAG, "onRecyclerItemClick: $obj")
-            leaderboardViewModel.updateUserPoints(this, SHETISHALA_VIDEO_POINT)
+            if (containsFarmerId(this)) {
+                leaderboardViewModel.updateUserPoints(this, SHETISHALA_VIDEO_POINT)
+            }
         }
     }
 }

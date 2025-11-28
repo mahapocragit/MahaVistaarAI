@@ -24,6 +24,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONObject
 
@@ -60,7 +61,9 @@ class PocraDbtSchemes : AppCompatActivity(), OnMultiRecyclerItemClickListener {
         }
 
         binding.applyForNDKSPLinearLayout.setOnClickListener {
-            leaderboardViewModel.updateUserPoints(this, DBT_POCRA_POINT)
+            if (containsFarmerId(this)) {
+                leaderboardViewModel.updateUserPoints(this, DBT_POCRA_POINT)
+            }
             startActivity(Intent(this, DBTDashboard::class.java))
         }
 

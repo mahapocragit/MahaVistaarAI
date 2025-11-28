@@ -20,6 +20,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONObject
 
@@ -50,7 +51,9 @@ class MahaDbtSchemesActivity : AppCompatActivity() {
         }
 
         binding.applyForMahaDBTLinearLayout.setOnClickListener {
-            leaderboardViewModel.updateUserPoints(this, DBT_MAHA_POINT)
+            if (containsFarmerId(this)) {
+                leaderboardViewModel.updateUserPoints(this, DBT_MAHA_POINT)
+            }
             val url = "https://mahadbt.maharashtra.gov.in/farmer/login/login"
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             startActivity(intent)
@@ -58,7 +61,7 @@ class MahaDbtSchemesActivity : AppCompatActivity() {
         dbtSchemesViewModel.getMahaDBTSchemes(this)
     }
 
-    private fun observeResponse(){
+    private fun observeResponse() {
         leaderboardViewModel.responseUpdateUserPoints.observe(this) { response ->
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())

@@ -31,6 +31,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import kotlinx.coroutines.delay
@@ -153,7 +154,9 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
                 ) { selectedName ->
                     marketPriceAdapter.filter(selectedName)
                     binding.searchEditText.text = selectedName
-                    leaderboardViewModel.updateUserPoints(this, MARKET_PRICE_POINT)
+                    if (containsFarmerId(this)) {
+                        leaderboardViewModel.updateUserPoints(this, MARKET_PRICE_POINT)
+                    }
                 }
             }
         }
@@ -164,11 +167,11 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
 
     private fun setupObservers() {
 
-        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
-            if (response!=null){
+        leaderboardViewModel.responseUpdateUserPoints.observe(this) { response ->
+            if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 val status = jSONObject.optInt("status")
-                if (status==200){
+                if (status == 200) {
                     ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
                 }
             }

@@ -19,6 +19,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.SOP_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONObject
 
@@ -66,12 +67,12 @@ class SOPWebViewActivity : AppCompatActivity() {
         })
     }
 
-    private fun observeResponse(){
-        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
-            if (response!=null){
+    private fun observeResponse() {
+        leaderboardViewModel.responseUpdateUserPoints.observe(this) { response ->
+            if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 val status = jSONObject.optInt("status")
-                if (status==200){
+                if (status == 200) {
                     ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
                 }
             }
@@ -113,8 +114,9 @@ class SOPWebViewActivity : AppCompatActivity() {
                 return false
             }
         }
-
-        leaderboardViewModel.updateUserPoints(this, SOP_POINT)
+        if (containsFarmerId(this)) {
+            leaderboardViewModel.updateUserPoints(this, SOP_POINT)
+        }
     }
 
     private fun openWebView(url: String) {

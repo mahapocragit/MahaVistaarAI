@@ -28,6 +28,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -80,13 +81,14 @@ class WeatherActivity : AppCompatActivity() {
             startActivity(Intent(this, DashboardScreen::class.java))
         }
 
-        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 startActivity(Intent(this@WeatherActivity, DashboardScreen::class.java))
             }
         })
-
-        leaderboardViewModel.updateUserPoints(this, WEATHER_POINT)
+        if (containsFarmerId(this)) {
+            leaderboardViewModel.updateUserPoints(this, WEATHER_POINT)
+        }
         farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
         binding.tabLayout.visibility = View.GONE
         binding.viewPager.visibility = View.GONE
@@ -198,11 +200,11 @@ class WeatherActivity : AppCompatActivity() {
             }
         }
 
-        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
-            if (response!=null){
+        leaderboardViewModel.responseUpdateUserPoints.observe(this) { response ->
+            if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 val status = jSONObject.optInt("status")
-                if (status==200){
+                if (status == 200) {
                     ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
                 }
             }

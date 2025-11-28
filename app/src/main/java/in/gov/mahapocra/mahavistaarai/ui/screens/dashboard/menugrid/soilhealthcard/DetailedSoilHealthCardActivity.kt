@@ -17,6 +17,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONArray
@@ -34,7 +35,9 @@ class DetailedSoilHealthCardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         languageToLoad = "mr"
-        if (AppSettings.getLanguage(this@DetailedSoilHealthCardActivity).equals("1", ignoreCase = true)) {
+        if (AppSettings.getLanguage(this@DetailedSoilHealthCardActivity)
+                .equals("1", ignoreCase = true)
+        ) {
             languageToLoad = "en"
         }
         switchLanguage(this, languageToLoad)
@@ -66,11 +69,11 @@ class DetailedSoilHealthCardActivity : AppCompatActivity() {
 
     private fun observeResponse() {
 
-        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
-            if (response!=null){
+        leaderboardViewModel.responseUpdateUserPoints.observe(this) { response ->
+            if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 val status = jSONObject.optInt("status")
-                if (status==200){
+                if (status == 200) {
                     ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
                 }
             }
@@ -106,8 +109,9 @@ class DetailedSoilHealthCardActivity : AppCompatActivity() {
                     FertilizerRecommendationAdapter(fertilizerRecommendationJson)
                 binding.soilHealthCardLayout.fertilizerRecommendationRecyclerView.adapter =
                     fertilizerRecommendationAdapter
-
-                leaderboardViewModel.updateUserPoints(this, SOIL_HEALTH_CARD_POINT)
+                if (containsFarmerId(this)) {
+                    leaderboardViewModel.updateUserPoints(this, SOIL_HEALTH_CARD_POINT)
+                }
 
             } catch (e: Exception) {
                 e.printStackTrace()

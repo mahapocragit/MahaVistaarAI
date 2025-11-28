@@ -16,6 +16,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONObject
 
@@ -58,12 +59,12 @@ class VideosDetailedActivity : AppCompatActivity(), RecyclerItemClickListener {
         }
     }
 
-    private fun observeResponse(){
-        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
-            if (response!=null){
+    private fun observeResponse() {
+        leaderboardViewModel.responseUpdateUserPoints.observe(this) { response ->
+            if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 val status = jSONObject.optInt("status")
-                if (status==200){
+                if (status == 200) {
                     ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
                 }
             }
@@ -81,8 +82,10 @@ class VideosDetailedActivity : AppCompatActivity(), RecyclerItemClickListener {
     }
 
     override fun onRecyclerItemClick(i: Int, obj: Any) {
-        if (i==1){
-            leaderboardViewModel.updateUserPoints(this, VIDEOS_POINT)
+        if (i == 1) {
+            if (containsFarmerId(this)) {
+                leaderboardViewModel.updateUserPoints(this, VIDEOS_POINT)
+            }
         }
     }
 }

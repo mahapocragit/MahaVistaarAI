@@ -47,6 +47,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.app_util.DeleteApi
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.showDisabledFutureDatePicker
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -211,7 +212,8 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (isUpdating) return  // Prevent recursive calls when setting text programmatically
 
-                val acreNo = s?.toString()?.toIntOrNull() ?: return  // Safely convert to Int, skip if invalid
+                val acreNo = s?.toString()?.toIntOrNull()
+                    ?: return  // Safely convert to Int, skip if invalid
 
                 if (acreNo > 99) {
                     val messageRes = if (plotUnitCode == 3)
@@ -219,7 +221,11 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     else
                         R.string.area_hectare_exceed_warning
 
-                    Toast.makeText(this@FertilizerCalculatorActivity, messageRes, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@FertilizerCalculatorActivity,
+                        messageRes,
+                        Toast.LENGTH_SHORT
+                    ).show()
 
                     isUpdating = true
                     binding.edtAcre.setText("0")
@@ -263,19 +269,24 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             startActivity(Intent(this, ChatbotActivity::class.java))
         })
 
-        onBackPressedDispatcher.addCallback( object : OnBackPressedCallback(true){
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(Intent(this@FertilizerCalculatorActivity, DashboardScreen::class.java))
+                startActivity(
+                    Intent(
+                        this@FertilizerCalculatorActivity,
+                        DashboardScreen::class.java
+                    )
+                )
             }
         })
     }
 
-    private fun observeResponse(){
-        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
-            if (response!=null){
+    private fun observeResponse() {
+        leaderboardViewModel.responseUpdateUserPoints.observe(this) { response ->
+            if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 val status = jSONObject.optInt("status")
-                if (status==200){
+                if (status == 200) {
                     ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
                 }
             }
@@ -502,7 +513,6 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             if (jSONObject != null) {
                 when (code) {
                     1 -> {
-                        leaderboardViewModel.updateUserPoints(this, FERTILIZER_CALCULATOR_POINT)
                         binding.availableOptionTv.visibility = View.INVISIBLE
                         val simpleFertilizersArray: JSONArray =
                             jSONObject.getJSONArray("SimpleFertilizers")
@@ -579,6 +589,9 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                         DebugLog.getInstance().d("fertilizerCalculatedValue=$fertilizerOptionValue")
                         availableOption = "fertilizerCalculatedValue"
                         showCalculatorData()
+                        if (containsFarmerId(this)) {
+                            leaderboardViewModel.updateUserPoints(this, FERTILIZER_CALCULATOR_POINT)
+                        }
                     }
 
                     2 -> {
