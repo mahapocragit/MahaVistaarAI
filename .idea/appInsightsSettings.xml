@@ -22,8 +22,8 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="in.gov.mahapocra.mahavistaarai.dev" />
-                  <option name="mobileSdkAppId" value="1:573300977247:android:6cd119c317fdf8765bb5ea" />
+                  <option name="appId" value="in.gov.mahapocra.mahavistaarai" />
+                  <option name="mobileSdkAppId" value="1:573300977247:android:b704a50e1a1558555bb5ea" />
                   <option name="projectId" value="pocra-eef95" />
                   <option name="projectNumber" value="573300977247" />
                 </ConnectionSetting>
