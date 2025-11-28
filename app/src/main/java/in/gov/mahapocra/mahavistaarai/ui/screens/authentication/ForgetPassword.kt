@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
@@ -13,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
@@ -29,6 +31,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityForgetPasswordTempBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LoginViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
@@ -40,15 +43,15 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
 
-class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode {
+class ForgetPassword : AppCompatActivity() {
 
     private lateinit var binding: ActivityForgetPasswordTempBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
+    private val loginViewModel: LoginViewModel by viewModels()
     private lateinit var mob: String
+    private var timestamp: Long = 0
     private var userPass: String = ""
     private lateinit var dialog: Dialog
-    private var loginOption: Int = 0
-    private var farmerRegistrationId: Int = 0
     var languageToLoad: String = "mr"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,10 +68,11 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
         binding = ActivityForgetPasswordTempBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
+        observeResponse()
         onClick()
 
         val farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-        if (farmerId!=0){
+        if (farmerId != 0) {
             if (languageToLoad == "en") {
                 binding.forgetHeadingText1.text = "Change"
                 binding.forgetHeadingText2.text = "Password"
@@ -76,6 +80,52 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
                 binding.forgetHeadingText1.text = "पासवर्ड"
                 binding.forgetHeadingText2.text = "बदला"
             }
+        }
+    }
+
+    private fun observeResponse() {
+
+        loginViewModel.sendOtpToMobileResponse.observe(this) { response ->
+            if (response != null) {
+                val jSONObject = JSONObject(response.toString())
+                val status = jSONObject.optInt("status")
+                val response = jSONObject.optString("response")
+                if (status == 200) {
+                    val response: String = jSONObject.getString("response")
+                    Toast.makeText(this, response, Toast.LENGTH_LONG).show()
+                    addVerificationDialog()
+                }else{
+                    Toast.makeText(this, response, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+        loginViewModel.error.observe(this){
+            if (it!=null){
+                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+            }
+        }
+
+        farmerViewModel.compareOtpResponse.observe(this) {
+            if (it != null) {
+                val calculatedResponse = provideValidEncryptedString(timestamp)
+                val jSONObject = JSONObject(it.toString())
+                val status = jSONObject.optInt("status")
+                val response = jSONObject.optString("response")
+                if (status == 200) {
+                    if (calculatedResponse != response) {
+                        userVerification()
+                    } else {
+                        Toast.makeText(this, R.string.wrong_OTP, Toast.LENGTH_LONG).show()
+                    }
+                } else {
+                    Toast.makeText(this, response, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+        farmerViewModel.error.observe(this) {
+            Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
         }
     }
 
@@ -100,26 +150,7 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
             binding.mobileEditText.error = resources.getString(R.string.login_mob_valid_err)
             binding.mobileEditText.requestFocus()
         } else {
-            val jsonObject = JSONObject()
-            try {
-                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api =
-                    AppInventorApi(
-                        this,
-                        AppEnvironment.FARMER.baseUrl,
-                        "",
-                        AppString(this).getkMSG_WAIT(),
-                        true
-                    )
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(ApiService::class.java)
-                val responseCall: Call<JsonObject> =
-                    apiRequest.getOTPRequest(mob.trim { it <= ' ' }, requestBody)
-                api.postRequest(responseCall, this, 2)
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
+            loginViewModel.sendOtpToMobile(this, mob.trim { it <= ' ' })
         }
     }
 
@@ -138,29 +169,23 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
         val submitButton = dialog.findViewById<Button>(R.id.submitButton)
         val resendOTP = dialog.findViewById<Button>(R.id.resendOTP)
         val cancelButton = dialog.findViewById<ImageView>(R.id.imageView_close)
-
+        otpVerification(resendOTP)
         cancelButton.setOnClickListener { dialog.dismiss() }
         submitButton.setOnClickListener {
-            val timestamp = System.currentTimeMillis()
+            timestamp = System.currentTimeMillis()
             val enteredOTP: String = receiveOTPEditText.text.toString()
             if (enteredOTP.isEmpty()) {
                 receiveOTPEditText.error = resources.getString(R.string.regist_otp_err)
                 receiveOTPEditText.requestFocus()
             } else {
-                farmerViewModel.compareOtp(this, timestamp,binding.mobileEditText.text.toString(), enteredOTP)
+                farmerViewModel.compareOtp(
+                    this,
+                    timestamp,
+                    binding.mobileEditText.text.toString(),
+                    enteredOTP
+                )
             }
-            farmerViewModel.compareOtpResponse.observe(this) {
-                if (it != null) {
-                    val calculatedResponse = provideValidEncryptedString(timestamp)
-                    val jSONObject = JSONObject(it.toString())
-                    val response = jSONObject.optString("response")
-                    if (calculatedResponse != response) {
-                        userVerification()
-                    } else {
-                        Toast.makeText(this, R.string.wrong_OTP, Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
+            dialog.dismiss()
         }
         resendOTP.setOnClickListener {
             dialog.dismiss()
@@ -169,31 +194,39 @@ class ForgetPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode 
         dialog.show()
     }
 
+    private fun otpVerification(resendOTP: Button) {
+        // Disable and gray out the button before starting timer
+        resendOTP.isEnabled = false
+        resendOTP.setBackgroundColor(ContextCompat.getColor(this, R.color.gray))
+        resendOTP.setTextColor(ContextCompat.getColor(this, R.color.white))
+
+        object : CountDownTimer(30000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                resendOTP.text =
+                    resources.getString(R.string.Time) + ":" + millisUntilFinished / 1000
+            }
+
+            override fun onFinish() {
+                // Enable and reset button appearance
+                resendOTP.isEnabled = true
+                resendOTP.text = resources.getString(R.string.Resend_OTP)
+                resendOTP.setBackgroundColor(
+                    ContextCompat.getColor(
+                        this@ForgetPassword,
+                        R.color.actionbar_color_figma
+                    )
+                )
+                resendOTP.setTextColor(ContextCompat.getColor(this@ForgetPassword, R.color.white))
+            }
+        }.start()
+    }
+
     private fun userVerification() {
         Toast.makeText(this, "Thank you...", Toast.LENGTH_LONG).show()
         val intent = Intent(this, ConfirmPassword::class.java)
         intent.putExtra("MobileNo", mob)
         startActivity(intent)
         dialog.dismiss()
-    }
-
-    override fun onResponse(jSONObject: JSONObject?, i: Int) {
-        if (jSONObject != null) {
-            if (jSONObject.optInt("status") == 200) {
-                val response: String = jSONObject.getString("response")
-                Toast.makeText(this, response, Toast.LENGTH_LONG).show()
-                addVerificationDialog()
-            }
-        }
-    }
-
-
-    override fun onFailure(th: Throwable?, i: Int) {
-        DebugLog.getInstance().d("onResponse=$th")
-    }
-
-    override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        DebugLog.getInstance().d("onResponse=$obj")
     }
 
     override fun attachBaseContext(newBase: Context) {

@@ -450,32 +450,6 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun fetchLocationDataFromCoordinates(context: Context, latitude: Double, longitude: Double) {
-        viewModelScope.launch {
-            try {
-                val jsonObject = JSONObject()
-                jsonObject.put("lat", latitude)
-                jsonObject.put("lon", longitude)
-
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
-                val response = apiRequest.getCodeFromCoordinates(requestBody)
-                _fetchLocationDataFromCoordinates.value = response
-            } catch (e: Exception) {
-                val message = when (e) {
-                    is SocketTimeoutException -> "Request timed out. Please try again."
-                    is SocketException -> "Connection lost. Please check your internet."
-                    is IOException -> "Network error occurred."
-                    else -> e.localizedMessage ?: "Unknown error"
-                }
-                _error.value = message
-                FirebaseCrashlytics.getInstance().recordException(e)
-            }
-        }
-    }
-
     fun fetchMarketList(context: Context, languageToLoad: String, districtCode: Int) {
         viewModelScope.launch {
             try {

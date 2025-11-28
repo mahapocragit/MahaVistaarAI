@@ -251,7 +251,8 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     // CAPTCHA failed or dialog canceled
                     UIToastMessage.show(this, "CAPTCHA verification Failed!!")
                 }
-            }}
+            }
+        }
     }
 
     private fun sendOTP() {

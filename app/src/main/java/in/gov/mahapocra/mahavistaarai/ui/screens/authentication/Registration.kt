@@ -43,6 +43,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.isStrongPassword
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.showCaptchaDialog
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.toSHA512
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
@@ -303,15 +304,20 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
             }
         })
         binding.submitButton.setOnClickListener {
-            machineId = getMachineId()
-            if (farmerRegisterID > 0) {
-                isUserLoggedIn = true
-                userValidationAndUpdateProfile()
-            } else {
-                isUserLoggedIn = false
-                userValidationAndRegistration()
+            showCaptchaDialog(this) {
+                if (it) {
+                    machineId = getMachineId()
+                    if (farmerRegisterID > 0) {
+                        isUserLoggedIn = true
+                        userValidationAndUpdateProfile()
+                    } else {
+                        isUserLoggedIn = false
+                        userValidationAndRegistration()
+                    }
+                } else {
+                    UIToastMessage.show(this, "CAPTCHA verification Failed!!")
+                }
             }
-
         }
         binding.textViewVerify.setOnClickListener {
             sendOTP()
@@ -828,7 +834,12 @@ class Registration : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode,
                 // Enable and reset button appearance
                 resendOTP.isEnabled = true
                 resendOTP.text = resources.getString(R.string.Resend_OTP)
-                resendOTP.setBackgroundColor(ContextCompat.getColor(this@Registration, R.color.status_green))
+                resendOTP.setBackgroundColor(
+                    ContextCompat.getColor(
+                        this@Registration,
+                        R.color.status_green
+                    )
+                )
                 resendOTP.setTextColor(ContextCompat.getColor(this@Registration, R.color.white))
             }
         }.start()
