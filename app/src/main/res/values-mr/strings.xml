@@ -209,6 +209,7 @@
     <string name="notes"> टिप </string>
     <string name="reg_name">तुमचे नाव लिहा</string>
     <string name="reg_mobno">मोबाईल नंबर टाका </string>
+    <string name="reg_pwd">तुमचा पासवर्ड टाका </string>
     <string name="reg_verify"> सत्यापित करा</string>
     <string name="reg_verified"> सत्यापित </string>
     <string name="reg_submit">प्रस्तुत करा</string>

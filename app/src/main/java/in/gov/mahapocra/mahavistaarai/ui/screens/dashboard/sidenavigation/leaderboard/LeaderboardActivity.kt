@@ -8,9 +8,9 @@ import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.PopupWindow
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -18,14 +18,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLeaderboardBinding
-import `in`.gov.mahapocra.mahavistaarai.databinding.LeaderboardRulesDialogBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.LeaderboardNewAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MahavistaarViewModel
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -40,6 +39,7 @@ class LeaderboardActivity : AppCompatActivity() {
     var languageToLoad = "mr"
     private var selectedValue = "taluka"
     private var token: String = ""
+    private var leaderboardInfoText = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,11 +75,7 @@ class LeaderboardActivity : AppCompatActivity() {
         leaderboardViewModel.responseLeaderboardForAll.observe(this) { response ->
             if (response != null) {
                 val json = JSONObject(response.toString())
-                val userPoints = json.optInt("users_points")
-                if (userPoints.toString().isNotEmpty()) {
-                    binding.userPointCardView.visibility = View.VISIBLE
-                    binding.userPointTextView.text = userPoints.toString()
-                }
+                leaderboardInfoText = if (languageToLoad=="en")json.optString("leaderInfoText") else json.optString("leaderInfoTextMr")
                 val dataJson = json.optJSONObject("data")
                 talukaJsonArray = dataJson.optJSONArray("talukaList")
                 districtJsonArray = dataJson.optJSONArray("districtList")
@@ -90,7 +86,6 @@ class LeaderboardActivity : AppCompatActivity() {
     }
 
     private fun enableDisableViews(dataJsonArray: JSONArray) {
-        Log.d(TAG, "enableDisableViews: $dataJsonArray")
         if (dataJsonArray.length() > 0) {
             formatToppers(dataJsonArray)
             binding.rankNameLocationTextView.visibility = View.VISIBLE
@@ -114,10 +109,7 @@ class LeaderboardActivity : AppCompatActivity() {
 
         for (i in 0 until minOf(3, dataJsonArray.length())) {
             val topperJson = dataJsonArray[i] as JSONObject
-            val userName = topperJson.optString("full_name").ifEmpty {
-                topperJson.optString("username")
-            }
-            val username = userName.trim().split(" ")[0]
+            val username = topperJson.optString("username").trim().split(" ")[0]
             val taluka = topperJson.optString("taluka")
             val district = topperJson.optString("district")
 
@@ -178,22 +170,25 @@ class LeaderboardActivity : AppCompatActivity() {
                 R.drawable.info_ic
             )
         )
-        binding.toolbarLayout.imageViewFilterMenu.setOnClickListener {
-            showLeaderboardRulesDialog()
-        }
+        binding.toolbarLayout.imageViewFilterMenu.setOnClickListener { view ->
+            val popupView = layoutInflater.inflate(R.layout.popup_info, null)
 
-        val hideLeaderboardDialog = AppSettings.getInstance().getBooleanValue(this, "HIDE_LEADERBOARD_DIALOG", false)
-        if (!hideLeaderboardDialog){
-            showLeaderboardRulesDialog()
-        }
-    }
+            val popupWindow = PopupWindow(
+                popupView,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                true // focusable, allows dismiss on outside touch
+            )
 
-    private fun showLeaderboardRulesDialog(){
-        val dialogBinding = LeaderboardRulesDialogBinding.inflate(layoutInflater)
-        val alertDialog = AlertDialog.Builder(this).setView(dialogBinding.root).create()
-        dialogBinding.closeDialogImageView.setOnClickListener { alertDialog.dismiss() }
-        alertDialog.show()
-        AppSettings.getInstance().setBooleanValue(this, "HIDE_LEADERBOARD_DIALOG", true)
+            val popupText = popupView.findViewById<TextView>(R.id.popupText)
+            popupText.text = leaderboardInfoText
+
+            popupWindow.elevation = 10f
+            popupWindow.isOutsideTouchable = true
+
+            // Show popup just below the info icon
+            popupWindow.showAsDropDown(view, 0, 0)
+        }
     }
 
     override fun attachBaseContext(newBase: Context) {
