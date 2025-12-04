@@ -501,7 +501,7 @@
     <string name="add_crops_to_calculate_profit">नफा मोजण्यासाठी पिके जोडा</string>
     <string name="leaderboard">लीडरबोर्ड</string>
     <string name="state">राज्य</string>
-    <string name="leaderboard_duration">१५ सप्टेंबर २०२५ ते ३० सप्टेंबर २०२५ या कालावधीत चॅटबॉटमध्ये विचारलेल्या प्रश्नांच्या संख्येवर लीडरबोर्ड आधारित आहे.</string>
+    <string name="leaderboard_duration">1. लीडरबोर्डसाठी महाविस्तार अ‍ॅपवर शेतकरी आयडीने (फार्मर आयडी) नोंदणी करणे आवश्यक आहे.\n2. गुण प्रणाली:\n• चॅटबॉटवर दररोज किमान एक प्रश्न विचारल्यास तुम्हाला १०० गुण मिळतील.\n• शेतकरी जेव्हा एखादे मॉड्यूल किंवा उप-मॉड्यूल उघडेल, तेव्हा त्या मॉड्यूलसाठी दररोज एकदाच 10 गुण दिले जातील.\n3. लीडरबोर्डवर गुण त्वरित अद्ययावत केले जातात.</string>
     <string name="rank">श्रेणी</string>
     <string name="name_amp_location">नाव आणि स्थान</string>
     <string name="farmers_in_taluka">तालुक्यातील टॉप ३ शेतकरी</string>
@@ -522,4 +522,5 @@
     <string name="farmer_id_confirmation_desc">तुमचा डेटा तुमच्या फार्मर आयडीमधून मिळवलेल्या डेटाने ओव्हरराईट केला जाईल. तुम्हाला पुढे चालू ठेवायचे आहे का?</string>
     <string name="farmer_details_update_text_1">शेतकरी आयडी</string>
     <string name="farmer_details_update_text_2">अद्ययावत करा</string>
+    <string name="farmer_leader_board">शेतकरी लीडरबोर्ड</string>
 </resources>

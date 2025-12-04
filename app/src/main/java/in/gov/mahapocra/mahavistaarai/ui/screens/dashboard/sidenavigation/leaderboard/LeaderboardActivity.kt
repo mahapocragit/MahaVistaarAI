@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLeaderboardBinding
+import `in`.gov.mahapocra.mahavistaarai.databinding.LeaderboardRulesDialogBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.LeaderboardNewAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
@@ -176,22 +178,22 @@ class LeaderboardActivity : AppCompatActivity() {
                 R.drawable.info_ic
             )
         )
-        binding.toolbarLayout.imageViewFilterMenu.setOnClickListener { view ->
-            val popupView = layoutInflater.inflate(R.layout.popup_info, null)
-
-            val popupWindow = PopupWindow(
-                popupView,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                true // focusable, allows dismiss on outside touch
-            )
-
-            popupWindow.elevation = 10f
-            popupWindow.isOutsideTouchable = true
-
-            // Show popup just below the info icon
-            popupWindow.showAsDropDown(view, 0, 0)
+        binding.toolbarLayout.imageViewFilterMenu.setOnClickListener {
+            showLeaderboardRulesDialog()
         }
+
+        val hideLeaderboardDialog = AppSettings.getInstance().getBooleanValue(this, "HIDE_LEADERBOARD_DIALOG", false)
+        if (!hideLeaderboardDialog){
+            showLeaderboardRulesDialog()
+        }
+    }
+
+    private fun showLeaderboardRulesDialog(){
+        val dialogBinding = LeaderboardRulesDialogBinding.inflate(layoutInflater)
+        val alertDialog = AlertDialog.Builder(this).setView(dialogBinding.root).create()
+        dialogBinding.closeDialogImageView.setOnClickListener { alertDialog.dismiss() }
+        alertDialog.show()
+        AppSettings.getInstance().setBooleanValue(this, "HIDE_LEADERBOARD_DIALOG", true)
     }
 
     override fun attachBaseContext(newBase: Context) {

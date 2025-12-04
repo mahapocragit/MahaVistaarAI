@@ -503,7 +503,7 @@
     <string name="add_crops_to_calculate_profit">Add Crops to calculate profit</string>
     <string name="leaderboard">Leaderboard</string>
     <string name="state">State</string>
-    <string name="leaderboard_duration">The leaderboard is based on points earned from the number of questions asked on the chatbot in real-time.</string>
+    <string name="leaderboard_duration">1. Farmers who are registered with Farmer ID will be consider for Leader Board.\n2. Points System:\n• Farmers will earn 100 points for asking at least one question in the chatbot per day.\n• Farmer will earn 10 points once a day when they click and open a module or its sub-modules.\n3. Points are updated in real time.</string>
     <string name="rank">Rank</string>
     <string name="name_amp_location"><![CDATA[Name & Location]]></string>
     <string name="farmers_in_taluka">Farmers In Taluka</string>
@@ -524,4 +524,5 @@
     <string name="farmer_id_confirmation_desc">Your data will be overwritten with the data fetched from your Farmer ID. Do you want to continue?</string>
     <string name="farmer_details_update_text_1">Update</string>
     <string name="farmer_details_update_text_2">Farmer ID</string>
+    <string name="farmer_leader_board">Farmer Leader Board</string>
 </resources>

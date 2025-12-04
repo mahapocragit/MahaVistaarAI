@@ -53,13 +53,13 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <com.mikhaellopez.circularimageview.CircularImageView
+                    <ImageView
                         android:layout_width="@dimen/_80sdp"
                         android:layout_height="@dimen/_80sdp"
                         android:layout_gravity="center"
-                        android:scaleType="centerCrop"
                         android:layout_margin="@dimen/_5sdp"
-                        android:src="@drawable/pocra_farmer_logo" />
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/krishi_dept_icon" />
 
                     <TextView
                         android:layout_width="match_parent"

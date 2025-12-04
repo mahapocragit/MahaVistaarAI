@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
@@ -21,6 +22,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardS
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.WEATHER_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -86,6 +88,7 @@ class WeatherActivity : AppCompatActivity() {
                 startActivity(Intent(this@WeatherActivity, DashboardScreen::class.java))
             }
         })
+        Log.d(TAG, "onCreate: ${containsFarmerId(this)}")
         if (containsFarmerId(this)) {
             leaderboardViewModel.updateUserPoints(this, WEATHER_POINT)
         }

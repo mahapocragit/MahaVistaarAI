@@ -11,13 +11,11 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/actionbar_color_figma">
 
-        <com.mikhaellopez.circularimageview.CircularImageView
-            android:layout_width="@dimen/height40"
-            android:layout_height="@dimen/height40"
+        <ImageView
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
             android:layout_gravity="start"
-            android:adjustViewBounds="true"
-            android:scaleType="centerInside"
-            android:src="@drawable/pocra_farmer_logo" />
+            android:src="@drawable/krishi_dept_icon" />
 
         <TextView
             android:layout_width="match_parent"
