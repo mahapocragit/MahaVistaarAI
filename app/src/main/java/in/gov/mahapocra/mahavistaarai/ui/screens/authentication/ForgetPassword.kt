@@ -170,19 +170,29 @@ class ForgetPassword : AppCompatActivity() {
         cancelButton.setOnClickListener { dialog.dismiss() }
         submitButton.setOnClickListener {
             timestamp = System.currentTimeMillis()
-            val enteredOTP: String = receiveOTPEditText.text.toString()
-            if (enteredOTP.isEmpty()) {
-                receiveOTPEditText.error = resources.getString(R.string.regist_otp_err)
-                receiveOTPEditText.requestFocus()
-            } else {
-                farmerViewModel.compareOtp(
-                    this,
-                    timestamp,
-                    binding.mobileEditText.text.toString(),
-                    enteredOTP
-                )
+            val enteredOTP = receiveOTPEditText.text.toString().trim()
+
+            when {
+                enteredOTP.isEmpty() -> {
+                    receiveOTPEditText.error = resources.getString(R.string.regist_otp_err)
+                    receiveOTPEditText.requestFocus()
+                }
+
+                enteredOTP.length != 6 -> {
+                    receiveOTPEditText.error = "OTP must be 6 digits"
+                    receiveOTPEditText.requestFocus()
+                }
+
+                else -> {
+                    farmerViewModel.compareOtp(
+                        this,
+                        timestamp,
+                        binding.mobileEditText.text.toString(),
+                        enteredOTP
+                    )
+                    dialog.dismiss()
+                }
             }
-            dialog.dismiss()
         }
         resendOTP.setOnClickListener {
             dialog.dismiss()

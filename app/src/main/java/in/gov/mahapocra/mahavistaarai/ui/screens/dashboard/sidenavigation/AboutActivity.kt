@@ -30,7 +30,7 @@ class AboutActivity : AppCompatActivity() {
         setContentView(binding.root)
         uiResponsive(binding.root)
 
-        if (languageToLoad == "en"){
+        if (languageToLoad == "en") {
             binding.aboutAppIcon.setImageResource(R.drawable.about_logo_en)
         }
         binding.toolbarLayout.imgBackArrow.visibility = View.VISIBLE
@@ -58,9 +58,13 @@ class AboutActivity : AppCompatActivity() {
 
             SettingItem(R.drawable.wotr_icon, "WOTR"),
             SettingItem(R.drawable.pani_foundation_logo, "Pani Foundation"),
-            SettingItem(R.drawable.animal_husbandry_logo, "Department of Animal Husbandry and Dairying"),
+            SettingItem(
+                R.drawable.animal_husbandry_logo,
+                "Department of Animal Husbandry and Dairying"
+            ),
 
-            SettingItem(R.drawable.matsyavyavasay_icon, "Department of Fisheries")
+            SettingItem(R.drawable.matsyavyavasay_icon, "Department of Fisheries"),
+            SettingItem(R.drawable.ic_world_bank, "The World Bank")
         )
 
         binding.recyclerView.layoutManager = GridLayoutManager(this, 3)

@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -97,6 +98,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.Objects
+import androidx.core.net.toUri
 
 class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecyclerItemClickListener {
 
@@ -266,8 +268,16 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         dashboardGridItemsLayoutSetup()
         shakeAnimationChatbot()
         bubbleAnimationChatbot()
-
+        AppPreferenceManager(this).saveBoolean("COST_CALCULATOR_REDIRECT", false)
         binding.appBarMain.imgLangChange.setOnClickListener { openChangeLangPopup() }
+
+        binding.appBarMain.callImageView.setOnClickListener {
+            val intent = Intent(Intent.ACTION_DIAL).apply {
+                data = "tel:155313".toUri()
+            }
+            startActivity(intent)
+        }
+
         binding.appBarMain.imgNotification.setOnClickListener {
             val intent = Intent(
                 this@DashboardScreen,
@@ -427,7 +437,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     private fun observeResponse() {
 
         farmerViewModel.error.observe(this) {
-            LocalCustom.createSnackbar(binding.root, it)
             Log.d(TAG, "onCreate: $it")
         }
 

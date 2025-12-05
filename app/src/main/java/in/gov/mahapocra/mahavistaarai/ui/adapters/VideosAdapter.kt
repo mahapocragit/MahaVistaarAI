@@ -25,7 +25,6 @@ class VideosAdapter(
             val activityName = jsonObject.optString("name")
             binding.textView21.text = activityName
             binding.cardTrendingView.setOnClickListener {
-                ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
                 val videoUrl = jsonObject.optString("link")
                 val context = binding.root.context
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl))

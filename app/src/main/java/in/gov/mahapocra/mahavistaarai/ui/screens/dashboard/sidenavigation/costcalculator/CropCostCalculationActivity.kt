@@ -3,6 +3,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.cos
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -389,13 +390,33 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                     isIncomeSelected = true
                     incomeLinearLayout.visibility = View.VISIBLE
                     expenseLinearLayout.visibility = View.GONE
+                    expenseToggleButton.setTextColor(Color.BLACK)
+                    incomeToggleButton.setTextColor(Color.WHITE)
+                    expenseToggleButton.background = ContextCompat.getDrawable(
+                        this@CropCostCalculationActivity,
+                        R.drawable.shape_right
+                    )
+                    incomeToggleButton.background = ContextCompat.getDrawable(
+                        this@CropCostCalculationActivity,
+                        R.drawable.shape_left
+                    )
                 }
 
                 dialogBinding.expenseToggleButton.setOnClickListener {
-                    costCalculatorViewModel.getExpenseCategory()
                     isIncomeSelected = false
+                    costCalculatorViewModel.getExpenseCategory()
                     incomeLinearLayout.visibility = View.GONE
                     expenseLinearLayout.visibility = View.VISIBLE
+                    expenseToggleButton.setTextColor(Color.WHITE)
+                    incomeToggleButton.setTextColor(Color.BLACK)
+                    expenseToggleButton.background = ContextCompat.getDrawable(
+                        this@CropCostCalculationActivity,
+                        R.drawable.shape_right_green
+                    )
+                    incomeToggleButton.background = ContextCompat.getDrawable(
+                        this@CropCostCalculationActivity,
+                        R.drawable.shape_left_white
+                    )
                 }
 
                 cancelText.setOnClickListener {

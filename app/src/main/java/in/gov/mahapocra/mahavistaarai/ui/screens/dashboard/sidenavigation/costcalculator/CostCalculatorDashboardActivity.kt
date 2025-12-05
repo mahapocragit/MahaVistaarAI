@@ -55,6 +55,7 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
         binding = ActivityCostCalculatorDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
         LocalCustom.uiResponsive(binding.root)
+        AppPreferenceManager(this).saveBoolean("COST_CALCULATOR_REDIRECT", true)
 
         setupToolbar()
         setupBackPress()

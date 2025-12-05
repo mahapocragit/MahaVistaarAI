@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityPdfViewBinding
@@ -25,12 +26,12 @@ import org.json.JSONObject
 
 class DetailedSoilHealthCardActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityPdfViewBinding
     private val gisViewModel: GisViewModel by viewModels()
-    private val leaderboardViewModel: LeaderboardViewModel by viewModels()
+    private lateinit var binding: ActivityPdfViewBinding
     private lateinit var soilTestResultAdapter: SoilTestResultAdapter
     private lateinit var fertilizerRecommendationAdapter: FertilizerRecommendationAdapter
     private lateinit var languageToLoad: String
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,56 +69,36 @@ class DetailedSoilHealthCardActivity : AppCompatActivity() {
     }
 
     private fun observeResponse() {
-
-        leaderboardViewModel.responseUpdateUserPoints.observe(this) { response ->
-            if (response != null) {
-                val jSONObject = JSONObject(response.toString())
-                val status = jSONObject.optInt("status")
-                if (status == 200) {
-                    ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
-                }
-            }
-        }
-
-        gisViewModel.shcInformationResponse.observe(this) { response ->
+        gisViewModel.shcInformationResponse.observe(this) {
             ProgressHelper.disableProgressDialog()
-            response ?: return@observe
-            try {
-                val jsonObject = JSONObject(response.toString())
+            if (it != null) {
+                val jsonObject = JSONObject(it.toString())
+                val basicInfo = jsonObject.getJSONArray("basic_info")[0] as JSONObject
+                binding.soilHealthCardLayout.farmerName.text = basicInfo.optString("farmer_name")
+                binding.soilHealthCardLayout.shcNo.text = basicInfo.optString("shc_no")
+                binding.soilHealthCardLayout.villageTextView.text = basicInfo.optString("village")
+                binding.soilHealthCardLayout.talukaTextView.text = basicInfo.optString("taluka")
+                binding.soilHealthCardLayout.districtTextView.text = basicInfo.optString("district")
 
-                val basicInfoArray = jsonObject.optJSONArray("basic_info")
-                val basicInfo = basicInfoArray?.optJSONObject(0)
-
-                basicInfo?.let {
-                    binding.soilHealthCardLayout.apply {
-                        farmerName.text = it.optString("farmer_name")
-                        shcNo.text = it.optString("shc_no")
-                        villageTextView.text = it.optString("village")
-                        talukaTextView.text = it.optString("taluka")
-                        districtTextView.text = it.optString("district")
-                    }
-                }
-
-                val soilTestResultJson = jsonObject.optJSONArray("soil_test_result") ?: JSONArray()
+                val soilTestResultJson = jsonObject.getJSONArray("soil_test_result")
                 soilTestResultAdapter = SoilTestResultAdapter(soilTestResultJson)
+                binding.soilHealthCardLayout.soilTestResultRecyclerView.layoutManager =
+                    LinearLayoutManager(this)
                 binding.soilHealthCardLayout.soilTestResultRecyclerView.adapter =
                     soilTestResultAdapter
+                soilTestResultAdapter.notifyDataSetChanged()
 
                 val fertilizerRecommendationJson =
-                    jsonObject.optJSONArray("fertilizer_recommendation") ?: JSONArray()
+                    jsonObject.getJSONArray("fertilizer_recommendation")
                 fertilizerRecommendationAdapter =
                     FertilizerRecommendationAdapter(fertilizerRecommendationJson)
+                binding.soilHealthCardLayout.fertilizerRecommendationRecyclerView.layoutManager =
+                    LinearLayoutManager(this)
                 binding.soilHealthCardLayout.fertilizerRecommendationRecyclerView.adapter =
                     fertilizerRecommendationAdapter
-                if (containsFarmerId(this)) {
-                    leaderboardViewModel.updateUserPoints(this, SOIL_HEALTH_CARD_POINT)
-                }
-
-            } catch (e: Exception) {
-                e.printStackTrace()
+                fertilizerRecommendationAdapter.notifyDataSetChanged()
             }
         }
-
 
         gisViewModel.error.observe(this) {
             ProgressHelper.disableProgressDialog()
