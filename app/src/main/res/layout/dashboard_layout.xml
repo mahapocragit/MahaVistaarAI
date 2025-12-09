@@ -310,6 +310,16 @@
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/smaRedirectTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:gravity="end"
+                android:textSize="@dimen/_11sdp"
+                android:textStyle="bold"
+                android:text="Click Here for SMA"/>
         </LinearLayout>
 
     </LinearLayout>

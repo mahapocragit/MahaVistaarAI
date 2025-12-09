@@ -44,8 +44,10 @@ import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.CropsCategName
+import `in`.gov.mahapocra.mahavistaarai.data.model.PocraRole
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDashboardScreenBinding
+import `in`.gov.mahapocra.mahavistaarai.sma.SmaLoginActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropRecyclerSapAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DashboardAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DrawerMenuAdapter
@@ -267,6 +269,49 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         shakeAnimationChatbot()
         bubbleAnimationChatbot()
 
+        binding.appBarMain.dashboardScreen.smaRedirectTextView.setOnClickListener {
+
+            // 1. Get saved roles JSON from AppSettings
+            val rolesJson = AppSettings.getInstance()
+                .getValue(this, AppConstants.pocraRoles, "[]")
+
+            // 2. Convert JSON → List<PocraRole>
+            val pocraRoles = mutableListOf<PocraRole>()
+            try {
+                val arr = JSONArray(rolesJson)
+                for (i in 0 until arr.length()) {
+                    val obj = arr.getJSONObject(i)
+                    val roleId = obj.getInt("role_id")
+                    val userName = obj.getString("username")
+                    val role = obj.getString("role")
+                    val shortName = obj.getString("short_name")
+                    Log.d("POCRA_ROLE", "btn Click Role ID = $roleId")
+                    Log.d("POCRA_ROLE", "btn Click userName = $userName")
+                    Log.d("POCRA_ROLE", "btn Click role = $role")
+                    Log.d("POCRA_ROLE", "btn Click shortName = $shortName")
+                    pocraRoles.add(
+                        PocraRole(
+                            obj.getInt("role_id"),
+                            obj.getString("username"),
+                            obj.getString("role"),
+                            obj.getString("short_name")
+                        )
+                    )
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            // 3. Check if role_id = 45
+            val isKrishiTai = pocraRoles.any { it.role_id == 45 }
+            if (isKrishiTai) {
+                // 4. Navigate to SMA Login
+                startActivity(Intent(this, SmaLoginActivity::class.java))
+            } else {
+                // 5. Not allowed
+                Toast.makeText(this, "You are not authorized for SMA module", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         binding.appBarMain.imgLangChange.setOnClickListener { openChangeLangPopup() }
         binding.appBarMain.imgNotification.setOnClickListener {
             val intent = Intent(
@@ -422,6 +467,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 dialog.dismiss()
             }
         }
+
     }
 
     private fun observeResponse() {
@@ -656,6 +702,22 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     val villageNameMr = data.optString("VillageNameMr", "")
                     val agristack_id = data.optString("farmer_id", "")
                     val consent = data.optBoolean("consent")
+                    //  pocra_roles array
+                    val pocraRoles = mutableListOf<PocraRole>()
+                    val rolesArray = data.optJSONArray("pocra_roles")
+                    var userRoleId = -1
+                    if (rolesArray != null) {
+                        for (i in 0 until rolesArray.length()) {
+                            val roleObj = rolesArray.optJSONObject(i) ?: continue
+                            val roleId = roleObj.optInt("role_id", -1)
+                            val username = roleObj.optString("username", "")
+                            val role = roleObj.optString("role", "")
+                            val shortName = roleObj.optString("short_name", "")
+                            userRoleId = roleId
+                            Log.d("POCRA_ROLE", "RoleId ID = $roleId")
+                            pocraRoles.add(PocraRole(roleId, username, role, shortName))
+                        }
+                    }
                     farmerViewModel.getCropSapAdvisory(
                         this,
                         villageId
@@ -684,6 +746,13 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         setIntValue(this@DashboardScreen, AppConstants.uVILLAGEID, villageId)
                         setBooleanValue(this@DashboardScreen, AppConstants.userDataSaved, true)
                         setValue(this@DashboardScreen, AppConstants.AGRISTACKID, agristack_id)
+
+                        // Save POCRA roles list
+                        val rolesJsonString = convertRolesToJson(pocraRoles)
+                        setValue(this@DashboardScreen, AppConstants.pocraRoles, rolesJsonString)
+                        Log.d("SAVE_ROLES", "Saved rolesJsonString = $rolesJsonString")
+                        setIntValue(this@DashboardScreen, AppConstants.uRole, userRoleId)
+                        Log.d("POCRA_ROLE", "userRoleId ID = $userRoleId")
                     }
 
                     binding.appBarMain.dashboardScreen.userFullNameTextView.text = name
@@ -726,6 +795,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                             showAgristackLinkingDialog()
                         }
                     }
+
                 }
             } catch (e: Exception) {
                 Log.e("userDetailsObserver", "Exception: ${e.localizedMessage}")
@@ -784,6 +854,19 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 }
             }
         }
+    }
+
+    fun convertRolesToJson(roles: List<PocraRole>): String {
+        val jsonArray = JSONArray()
+        for (role in roles) {
+            val obj = JSONObject()
+            obj.put("role_id", role.role_id)
+            obj.put("username", role.username)
+            obj.put("role", role.role)
+            obj.put("short_name", role.short_name)
+            jsonArray.put(obj)
+        }
+        return jsonArray.toString()
     }
 
     private fun showDialogForConsent() {

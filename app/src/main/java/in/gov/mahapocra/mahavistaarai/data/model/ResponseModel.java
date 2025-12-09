@@ -16,6 +16,15 @@ public class ResponseModel {
     private String totalWarehouse;
     private String totalAvailableWarehouse;
 
+    private String token;
+    private String dataString;
+    private JSONArray dataArray1;
+    private String refreshToken;
+    private String total_month_meetings;
+    private String total_month_trainings;
+    private String total_month_visits;
+    private String version;
+
     private JSONObject jsonObject;
 
     public ResponseModel(JSONObject jsonObject) {
@@ -52,7 +61,6 @@ public class ResponseModel {
         return flag;
     }
 
-
     public String getResponse() {
 
         response = AppUtility.getInstance().sanitizeJSONObj(this.jsonObject, "response");
@@ -74,6 +82,54 @@ public class ResponseModel {
         return dataArray;
     }
 
+    public String getRefreshToken() {
+        refreshToken = AppUtility.getInstance().sanitizeJSONObj(this.jsonObject, "refresh_token");
+        return refreshToken;
+    }
+    public String getTotalMeetings() {
+        total_month_meetings = AppUtility.getInstance().sanitizeJSONObj(this.jsonObject, "total_month_meetings");
+        return total_month_meetings;
+    }
+    public String getTotalTrainings() {
+        total_month_trainings = AppUtility.getInstance().sanitizeJSONObj(this.jsonObject, "total_month_trainings");
+        return total_month_trainings;
+    }
+    public String getTotalVisits() {
+        total_month_visits = AppUtility.getInstance().sanitizeJSONObj(this.jsonObject, "total_month_visits");
+        return total_month_visits;
+    }
+
+    public String getStringData() {
+
+        return AppUtility.getInstance().sanitizeJSONObj(this.jsonObject, "data");
+    }
+
+
+    public JSONArray getDataArray() {
+        dataArray = AppUtility.getInstance().sanitizeArrayJSONObj(this.jsonObject, "data");
+        return dataArray;
+    }
+
+    public JSONArray getResignDataArray() {
+        dataArray1 = AppUtility.getInstance().sanitizeArrayJSONObj(this.jsonObject, "rdata");
+        return dataArray1;
+    }
+
+    public String getToken() {
+        token = AppUtility.getInstance().sanitizeJSONObj(this.jsonObject, "token");
+        return token;
+    }
+
+    public String getDataString() {
+        dataString = AppUtility.getInstance().sanitizeJSONObj(this.jsonObject, "data");
+        return dataString;
+
+    }
+    public String getForceUpdateAppVersion() {
+
+        version = AppUtility.getInstance().sanitizeJSONObj(this.jsonObject, "version");
+        return version;
+    }
     public JSONArray getAdvisoryArray() {
         dataArray = AppUtility.getInstance().sanitizeArrayJSONObj(this.jsonObject, "autoadvisory");
         return dataArray;

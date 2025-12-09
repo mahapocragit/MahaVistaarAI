@@ -27,5 +27,12 @@ public class AppString {
         kMSG_WAIT = mContext.getResources().getString(R.string.please_wait);
         return kMSG_WAIT;
     }
+    public String getYES() {
+        return mContext.getResources().getString(R.string.yes);
+    }
 
+
+    public String getNO() {
+        return mContext.getResources().getString(R.string.no);
+    }
 }

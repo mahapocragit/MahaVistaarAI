@@ -524,4 +524,13 @@
     <string name="farmer_details_update_text_1">शेतकरी आयडी</string>
     <string name="farmer_details_update_text_2">अद्ययावत करा</string>
     <string name="farmer_leader_board">शेतकरी लीडरबोर्ड</string>
+    <string name="login_monitoring">SMA</string>
+    <string name="login_password">Password</string>
+    <string name="login_forgot_password">Forgot password?</string>
+    <string name="login_login">Login</string>
+    <string name="login_monitoring_KT">कृषिताई विस्तार कार्य</string>
+    <string name="logout_alert_mr">आपण साइन आउट करण्यास निश्चित आहात का?</string>
+    <string name="activity">विस्तार कार्य</string>
+    <string name="ca_activity_info">Information</string>
+    <string name="ca_activity_refresh">Re-Sync master data</string>
 </resources>
