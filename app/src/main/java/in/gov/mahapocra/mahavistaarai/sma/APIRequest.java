@@ -19,6 +19,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -29,8 +30,14 @@ public interface APIRequest {
 
     /****** COMMON API ******/
     // Login
-    @POST(APIServices.kOAuth)
-    Call<JsonObject> oauthLoginRequest(@Body RequestBody params);
+//    @POST(APIServices.kOAuth)
+//    Call<JsonObject> oauthLoginRequest(@Body RequestBody params);
+    @POST("authService/sso_login_farmer_app")
+    Call<JsonObject> oauthLoginRequest(
+            @Header("username") String username,
+            @Header("secret") String secret,
+            @Body RequestBody body
+    );
 
     @POST(APIServices.kOAuthRefreshToken)
     Call<JsonObject> oauthRefreshToken(@Body RequestBody params);

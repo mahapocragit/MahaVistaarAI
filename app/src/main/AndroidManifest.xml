@@ -55,6 +55,25 @@
             android:name=".sma.KTProjectInformation"
             android:exported="false" />
         <activity
+            android:name=".sma.KTReportDetailsActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".sma.KTDetailsHistory"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".sma.ImageViewerActivity"
+            android:screenOrientation="portrait"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".sma.KTYoutubeView"
+            android:exported="false" />
+        <activity
+            android:name=".sma.WebviewActivity"
+            android:exported="false" />
+        <activity
             android:name=".sma.KTDashboardActivity"
             android:exported="false" />
         <activity

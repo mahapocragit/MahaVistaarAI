@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardElevation="@dimen/padding2"
+    app:cardUseCompatPadding="true">
+
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="@dimen/height75"
+        android:layout_height="@dimen/height75"
+        android:background="@color/status_green">
+
+        <TextView
+            android:id="@+id/dayTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="@drawable/rect_bg_calendar"
+            android:textColor="@color/white"
+            android:text="30"
+            android:padding="@dimen/padding2"
+            android:paddingStart="@dimen/padding4"
+            android:paddingEnd="@dimen/padding4"
+            android:textStyle="bold"
+            android:textSize="@dimen/text12" />
+
+        <TextView
+            android:id="@+id/hrTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/dayTextView"
+            android:gravity="center"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            android:text="H 11:12"
+            android:textStyle="normal"
+            android:textSize="@dimen/text10" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/padding2"
+            android:layout_below="@id/dayTextView"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/reasonTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:text="Meeting"
+                android:textSize="@dimen/text10" />
+
+            <TextView
+                android:id="@+id/inTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/padding0"
+                android:paddingEnd="@dimen/padding3"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:maxLines="1"
+                android:visibility="gone"
+                android:text="10:00 AM"
+                android:textSize="@dimen/text11" />
+            <TextView
+                android:id="@+id/outTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/padding0"
+                android:paddingEnd="@dimen/padding3"
+                android:gravity="center"
+                android:visibility="gone"
+                android:textColor="@color/white"
+                android:text="10:00 AM"
+                android:maxLines="1"
+                android:textSize="@dimen/text11" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+
+</androidx.cardview.widget.CardView>

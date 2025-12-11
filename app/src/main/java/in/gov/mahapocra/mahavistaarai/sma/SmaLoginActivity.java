@@ -294,67 +294,67 @@ public class SmaLoginActivity extends AppCompatActivity implements ApiCallbackCo
             e.printStackTrace();
         }
     }
-    private void fetchLogin(String strRefreshToken)
-    {
-        String mob = usernameEditText.getText().toString();
-        String pass = passEditText.getText().toString();
-        Log.d("MAYU111","updated token=="+strToken);
-
-        String deviceName = Build.MODEL;
-        String deviceName2 = Build.BRAND;
-        publicIP = getLocalIPv4Address();
-        versionCode = getVersionCode(this);
-        getAddressFromLocation(this, latitude, longitude);
-        sdkVersion = Build.VERSION.SDK_INT;
-        strAddress = getAddressFromLocation(this, latitude, longitude);
-        Log.d("MAYU111","MODEL===="+deviceName);
-        Log.d("MAYU111","BRAND===="+deviceName2);
-        Log.d("MAYU111","sdkVersion===="+sdkVersion);
-        Log.d("MAYU111","VERSION_CODES===="+versionCode);
-        Log.d("MAYU111","strAddress===="+strAddress);
-
-        JSONObject jsonObject = new JSONObject();
-        try {
-
-            JSONArray user_agent_JsonArray = new JSONArray();
-
-            JSONObject jsonObject1 = new JSONObject();
-            jsonObject1.put("model",deviceName );
-            jsonObject1.put("sdk",sdkVersion );
-            jsonObject1.put("brand", deviceName2);
-            jsonObject1.put("version_code",versionCode );
-            user_agent_JsonArray.put(jsonObject1);
-
-            jsonObject.put("username", mob.trim());
-            jsonObject.put("password", pass.trim());
-            jsonObject.put("secret", APIServices.SSO_KEY);
-            jsonObject.put("ip", publicIP);
-            jsonObject.put("is_dashboard", false);
-            jsonObject.put("device", "mobile");
-            jsonObject.put("user_agent", user_agent_JsonArray);
-            jsonObject.put("lat", latitude);
-            jsonObject.put("long", longitude);
-            jsonObject.put("address", strAddress);
-            Log.d("MAYU111","publicIP===="+publicIP);
-            Log.d("Mayu111","latitude===="+latitude);
-            Log.d("Mayu111","longitude===="+longitude);
-            jsonObject.put("refresh_token", strRefreshToken);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
-
-//            RuntimeAPI api = new RuntimeAPI(this, APIServices.BASE_API, "", AppConstants.kMSG_WAIT, true);
-        AppinventorIncAPI api = new AppinventorIncAPI(this, APIServices.SSO, "", new AppString(this).getkMSG_WAIT(), true);
-        Retrofit retrofit = api.getRetrofitInstance();
-        APIRequest apiRequest = retrofit.create(APIRequest.class);
-        Call<JsonObject> responseCall = apiRequest.oauthLoginRequest(requestBody);
-        DebugLog.getInstance().d("param=" + responseCall.request().toString());
-        DebugLog.getInstance().d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()));
-        api.postRequest(responseCall, this, 1);
-
-    }
+//    private void fetchLogin(String strRefreshToken)
+//    {
+//        String mob = usernameEditText.getText().toString();
+//        String pass = passEditText.getText().toString();
+//        Log.d("MAYU111","updated token=="+strToken);
+//
+//        String deviceName = Build.MODEL;
+//        String deviceName2 = Build.BRAND;
+//        publicIP = getLocalIPv4Address();
+//        versionCode = getVersionCode(this);
+//        getAddressFromLocation(this, latitude, longitude);
+//        sdkVersion = Build.VERSION.SDK_INT;
+//        strAddress = getAddressFromLocation(this, latitude, longitude);
+//        Log.d("MAYU111","MODEL===="+deviceName);
+//        Log.d("MAYU111","BRAND===="+deviceName2);
+//        Log.d("MAYU111","sdkVersion===="+sdkVersion);
+//        Log.d("MAYU111","VERSION_CODES===="+versionCode);
+//        Log.d("MAYU111","strAddress===="+strAddress);
+//
+//        JSONObject jsonObject = new JSONObject();
+//        try {
+//
+//            JSONArray user_agent_JsonArray = new JSONArray();
+//
+//            JSONObject jsonObject1 = new JSONObject();
+//            jsonObject1.put("model",deviceName );
+//            jsonObject1.put("sdk",sdkVersion );
+//            jsonObject1.put("brand", deviceName2);
+//            jsonObject1.put("version_code",versionCode );
+//            user_agent_JsonArray.put(jsonObject1);
+//
+//            jsonObject.put("username", mob.trim());
+//            jsonObject.put("password", pass.trim());
+//            jsonObject.put("secret", APIServices.SSO_KEY);
+//            jsonObject.put("ip", publicIP);
+//            jsonObject.put("is_dashboard", false);
+//            jsonObject.put("device", "mobile");
+//            jsonObject.put("user_agent", user_agent_JsonArray);
+//            jsonObject.put("lat", latitude);
+//            jsonObject.put("long", longitude);
+//            jsonObject.put("address", strAddress);
+//            Log.d("MAYU111","publicIP===="+publicIP);
+//            Log.d("Mayu111","latitude===="+latitude);
+//            Log.d("Mayu111","longitude===="+longitude);
+//            jsonObject.put("refresh_token", strRefreshToken);
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
+//
+////            RuntimeAPI api = new RuntimeAPI(this, APIServices.BASE_API, "", AppConstants.kMSG_WAIT, true);
+//        AppinventorIncAPI api = new AppinventorIncAPI(this, APIServices.SSO, "", new AppString(this).getkMSG_WAIT(), true);
+//        Retrofit retrofit = api.getRetrofitInstance();
+//        APIRequest apiRequest = retrofit.create(APIRequest.class);
+//        Call<JsonObject> responseCall = apiRequest.oauthLoginRequest(requestBody);
+//        DebugLog.getInstance().d("param=" + responseCall.request().toString());
+//        DebugLog.getInstance().d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()));
+//        api.postRequest(responseCall, this, 1);
+//
+//    }
 
     public static String getLocalIPv4Address() {
         try {
@@ -622,7 +622,7 @@ public class SmaLoginActivity extends AppCompatActivity implements ApiCallbackCo
                     if (response1.getStatus()) {
                         strToken=response1.getRefreshToken();
                         Log.d("MAYU111","RefreshToken==="+strToken);
-                        fetchLogin(strToken);
+//                        fetchLogin(strToken);
                     } else {
                         Toast.makeText(this, "" + response1.getResponse(), Toast.LENGTH_SHORT).show();
                     }

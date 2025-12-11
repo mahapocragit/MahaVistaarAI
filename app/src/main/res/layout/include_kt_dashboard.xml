@@ -44,10 +44,10 @@
                         android:background="@drawable/app_footer_white">
 
                         <ImageView
-                            android:layout_width="@dimen/height70"
-                            android:layout_height="@dimen/height70"
+                            android:layout_width="@dimen/height100"
+                            android:layout_height="@dimen/height100"
                             android:layout_marginLeft="@dimen/padding30"
-                            android:layout_marginTop="@dimen/padding30"
+                            android:layout_marginTop="@dimen/padding20"
                             android:contentDescription="@string/app_name"
                             android:src="@drawable/logo_pocra" />
 
@@ -105,6 +105,7 @@
                             android:layout_alignParentEnd="true"
                             android:layout_marginTop="25dp"
                             android:layout_marginEnd="@dimen/padding10"
+                            android:visibility="gone"
                             android:adjustViewBounds="true"
                             android:contentDescription="@string/app_name"
                             android:padding="@dimen/padding6"

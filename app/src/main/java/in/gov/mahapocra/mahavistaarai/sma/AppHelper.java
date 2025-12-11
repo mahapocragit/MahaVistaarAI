@@ -2278,7 +2278,7 @@ public class AppHelper {
         try {
             int selectedYear = Integer.parseInt(year);
             Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat month_date = new SimpleDateFormat("MMMM", Locale.getDefault());
+            SimpleDateFormat month_date = new SimpleDateFormat("MMMM", Locale.ENGLISH);
             String currentMonthName = month_date.format(calendar.getTime());
             int currentYear = calendar.get(Calendar.YEAR);
             Log.d("selectedtyear", selectedYear + "" + currentYear);
@@ -2314,7 +2314,7 @@ public class AppHelper {
 
 
                     Calendar cal = Calendar.getInstance();
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
                     cal.setTimeInMillis(firstDayOfMonthTimestamp);
                     cal.set(Calendar.MONTH, months[i]);
 

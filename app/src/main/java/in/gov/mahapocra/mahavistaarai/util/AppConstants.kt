@@ -8,6 +8,7 @@ object AppConstants {
     const val uName: String = "USER_NAME"
 
     const val uRole: String = "USER_ROLE"
+    const val smaUsername: String = "SMA_USERNAME"
     const val pocraRoles: String = "POCRA_ROLES"
     const val userDataSaved: String = "USER_DATA_SAVED"
     const val AGRISTACKID: String = "AGRISTACK_ID"

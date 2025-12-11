@@ -25,8 +25,8 @@ public interface APIServices {
 
     String SSO_KEY = APIKeys.SSO_PROD.key();
 
-    String kOAuth ="authService/sso_login"; // new SSO final
-//    String kOAuth ="authService/sso_login_farmer_app"; // new for SSO-SMA final
+//    String kOAuth ="authService/sso_login"; // new SSO final
+    String kOAuth ="authService/sso_login_farmer_app"; // new for SSO-SMA final
     String kOAuthRefreshToken = "authService/refresh-token"; // new refresh token final
     String kTaluka = SSO + "masterService/get-villages-by-taluka-id/";
     String kForgotPass = "authService/forgot-password-send-otp";

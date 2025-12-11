@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -68,6 +69,7 @@ import in.co.appinventor.services_api.listener.AIImgAsyncResponse;
 import in.co.appinventor.services_api.listener.AlertListEventListener;
 import in.co.appinventor.services_api.listener.ApiCallbackCode;
 import in.co.appinventor.services_api.listener.ApiJSONObjCallback;
+import in.co.appinventor.services_api.settings.AppSettings;
 import in.co.appinventor.services_api.util.Utility;
 import in.co.appinventor.services_api.widget.UIAlertView;
 import in.co.appinventor.services_api.widget.UIToastMessage;
@@ -81,7 +83,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 
-public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback, AIImgAsyncResponse, ApiCallbackCode, AlertListEventListener {
+public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback, AIImgAsyncResponse, ApiCallbackCode , AlertListEventListener {
 
     private AppSession session;
     private static final int PERMISSION_REQUEST_CODE = 1;
@@ -312,9 +314,13 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
 
     private void initComponant() {
 
+        Toolbar toolbar = findViewById(R.id.toolbar2);
+        setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         txtKTName = findViewById(R.id.KT_Name); //
         technologyImage = findViewById(R.id.techImage);
@@ -725,7 +731,6 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
 //                    }
 //                }
 //            }
-
 
         } catch (Exception e) {
             e.printStackTrace();
