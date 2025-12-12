@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,14 @@ class GridAdapter(
 
     override fun onBindViewHolder(holder: GridViewHolder, position: Int) {
         val item = items[position]
+
+        if (item.title == "The World Bank") {
+            val padding = (12 * holder.itemView.context.resources.displayMetrics.density).toInt()
+            holder.icon.setPadding(padding, padding, padding, padding)
+        } else {
+            holder.icon.setPadding(0, 0, 0, 0)
+        }
+
         holder.icon.setImageResource(item.icon)
         holder.text.text = item.title
     }

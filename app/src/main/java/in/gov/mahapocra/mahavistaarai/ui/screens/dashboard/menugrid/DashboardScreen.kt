@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -100,6 +101,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.Objects
+import androidx.core.net.toUri
 
 class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecyclerItemClickListener {
 
@@ -269,100 +271,16 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         dashboardGridItemsLayoutSetup()
         shakeAnimationChatbot()
         bubbleAnimationChatbot()
+        AppPreferenceManager(this).saveBoolean("COST_CALCULATOR_REDIRECT", false)
+        binding.appBarMain.imgLangChange.setOnClickListener { openChangeLangPopup() }
 
-//        binding.appBarMain.dashboardScreen.smaRedirectTextView.setOnClickListener {
-////            startActivity(Intent(this, SmaLoginActivity::class.java))
-////             1. Get saved roles JSON from AppSettings
-//            val rolesJson = AppSettings.getInstance()
-//                .getValue(this, AppConstants.pocraRoles, "[]")
-//
-//            // 2. Convert JSON → List<PocraRole>
-//            val pocraRoles = mutableListOf<PocraRole>()
-//            try {
-//                val arr = JSONArray(rolesJson)
-//                for (i in 0 until arr.length()) {
-//                    val obj = arr.getJSONObject(i)
-//                    val roleId = obj.getInt("role_id")
-//                    val userName = obj.getString("username")
-//                    val role = obj.getString("role")
-//                    val shortName = obj.getString("short_name")
-//                    Log.d("POCRA_ROLE", "btn Click Role ID = $roleId")
-//                    Log.d("POCRA_ROLE", "btn Click userName = $userName")
-//                    Log.d("POCRA_ROLE", "btn Click role = $role")
-//                    Log.d("POCRA_ROLE", "btn Click shortName = $shortName")
-//                    AppSettings.getInstance().setValue(this@DashboardScreen, AppConstants.smaUsername, userName)
-//                    pocraRoles.add(
-//                        PocraRole(
-//                            obj.getInt("role_id"),
-//                            obj.getString("username"),
-//                            obj.getString("role"),
-//                            obj.getString("short_name")
-//                        )
-//                    )
-//                }
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//            }
-//            // 3. Check if role_id = 45
-//            val isKrishiTai = pocraRoles.any { it.role_id == 45 }
-//            if (isKrishiTai) {
-//                // 4. Navigate to SMA Login
-//                startActivity(Intent(this, KTDashboardActivity::class.java))
-//            } else {
-//                // 5. Not allowed
-//                Toast.makeText(this, "You are not authorized for SMA module", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-        binding.appBarMain.dashboardScreen.krishiTaiLayout.setOnClickListener {
-
-            val rolesJson = AppSettings.getInstance()
-                .getValue(this, AppConstants.pocraRoles, "[]")
-
-            val pocraRoles = mutableListOf<PocraRole>()
-
-            try {
-                val arr = JSONArray(rolesJson)
-                for (i in 0 until arr.length()) {
-                    val obj = arr.getJSONObject(i)
-                    pocraRoles.add(
-                        PocraRole(
-                            obj.getInt("role_id"),
-                            obj.getString("username"),
-                            obj.getString("role"),
-                            obj.getString("short_name")
-                        )
-                    )
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
+        binding.appBarMain.callImageView.setOnClickListener {
+            val intent = Intent(Intent.ACTION_DIAL).apply {
+                data = "tel:155313".toUri()
             }
-
-            // Check only Krishi Tai roles
-            val ktRoles = pocraRoles.filter { it.role_id == 45 }
-
-            if (ktRoles.isEmpty()) {
-                Toast.makeText(this, "You are not authorized for SMA module", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            // If only one username → direct login
-            if (ktRoles.size == 1) {
-                val userName = ktRoles[0].username
-                AppSettings.getInstance().setValue(this, AppConstants.smaUsername, userName)
-                Log.d("ROLE_SELECT", "Auto-selected Username = $userName")
-                val intent = Intent(this, KTDashboardActivity::class.java)
-                intent.putExtra("selected_username", userName)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-            }
-            // If multiple usernames → show dialog
-            else {
-                showRoleSelectionDialog(ktRoles)
-            }
+            startActivity(intent)
         }
 
-
-        binding.appBarMain.imgLangChange.setOnClickListener { openChangeLangPopup() }
         binding.appBarMain.imgNotification.setOnClickListener {
             val intent = Intent(
                 this@DashboardScreen,
@@ -542,7 +460,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     private fun observeResponse() {
 
         farmerViewModel.error.observe(this) {
-            LocalCustom.createSnackbar(binding.root, it)
             Log.d(TAG, "onCreate: $it")
         }
 
@@ -878,6 +795,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 Log.e("userDetailsObserver", "Exception: ${e.localizedMessage}")
             }
         }
+
 
         farmerViewModel.updateFCMTokenResponse.observe(this) {
             Log.d(TAG, "logoutFromApp: $it")
