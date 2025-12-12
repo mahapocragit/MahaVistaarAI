@@ -1079,19 +1079,19 @@ public class AppHelper {
             jsonObject1.put("id", 0);
 //            jsonObject1.put("name", "Village Profile");
             jsonObject1.put("name", "प्रकल्प माहिती");
-            jsonObject1.put("icon", R.drawable.logo_pocra);
+            jsonObject1.put("icon", R.drawable.kt_prakalp_info);
 
             JSONObject jsonObject2 = new JSONObject();
             jsonObject2.put("id", 1);
 //            jsonObject2.put("name", "Activity");
             jsonObject2.put("name", "विस्तार कार्य");
-            jsonObject2.put("icon", R.drawable.ktbaithak);
+            jsonObject2.put("icon", R.drawable.kt_work_icon);
 
             JSONObject jsonObject3 = new JSONObject();
             jsonObject3.put("id", 2);
 //            jsonObject3.put("name", "Activity Report");
             jsonObject3.put("name", "विस्तार कार्य अहवाल");
-            jsonObject3.put("icon", R.drawable.ktbaithak);
+            jsonObject3.put("icon", R.drawable.kt_report_icon);
 
             JSONObject jsonObject4 = new JSONObject();
             jsonObject4.put("id", 3);
