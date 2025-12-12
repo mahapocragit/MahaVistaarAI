@@ -143,7 +143,7 @@
                                 android:layout_marginTop="@dimen/padding10"
                                 android:gravity="center"
                                 android:maxLines="1"
-                                android:text="Mayuri"
+                                android:text="Swamini Kasar"
                                 android:textColor="@color/bg_button"
                                 android:textSize="@dimen/text16"
                                 android:textStyle="bold" />
@@ -154,7 +154,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:maxLines="1"
-                                android:text="TC"
+                                android:text="Krushi Tai"
                                 android:textColor="@color/bg_button"
                                 android:textSize="@dimen/text14"
                                 android:textStyle="normal" />

@@ -71,13 +71,13 @@ public class KTReportDetailsActivity extends AppCompatActivity implements ApiCal
 
         ImageView downloadIcon = findViewById(R.id.downloadIcon);
         TextView hoverMessage = findViewById(R.id.hoverMessage);
-//        downloadIcon.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Show the Toast message when the download icon is clicked
-//                Toast.makeText(KTReportDetailsActivity.this, "Comming Soon", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        downloadIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Show the Toast message when the download icon is clicked
+                Toast.makeText(KTReportDetailsActivity.this, "Comming Soon", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         //ImageView downloadIcon = findViewById(R.id.downloadIcon);
         LinearLayout hoverLayout = findViewById(R.id.hoverLayout);
@@ -104,7 +104,7 @@ public class KTReportDetailsActivity extends AppCompatActivity implements ApiCal
                 }
                 hoverVisible = false;
             }
-            Toast.makeText(KTReportDetailsActivity.this, "Hello", Toast.LENGTH_SHORT).show();
+            Toast.makeText(KTReportDetailsActivity.this, "Comming Soon", Toast.LENGTH_SHORT).show();
         };
         // Hide hover message and show toast on icon click
         downloadIcon.setOnClickListener(hideHoverAndToast);

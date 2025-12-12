@@ -1,6 +1,7 @@
 package in.gov.mahapocra.mahavistaarai.sma;
 
-
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -27,7 +28,28 @@ public class WebviewActivity extends AppCompatActivity {
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
 
-        webView.setWebViewClient(new WebViewClient());
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
+                // Handle Play Store links properly
+                if (url.startsWith("https://play.google.com") ||
+                        url.startsWith("market://")) {
+
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return true;
+                }
+
+                view.loadUrl(url);
+                return true;
+            }
+        });
+
         webView.loadUrl(url);
     }
 

@@ -537,5 +537,7 @@
     <string name="call">Phone Call</string>
     <string name="work_activity">प्रकल्प माहिती</string>
     <string name="kt_report_details">विस्तार कार्य अहवाल</string>
+    <string name="kt_report">अहवाल</string>
     <string name="view_kt_details">अहवाल माहिती</string>
+    <string name="KrishiTai">कृषिताई</string>
 </resources>

@@ -71,17 +71,19 @@ public class KTDashboardActivity extends AppCompatActivity implements OnMultiRec
     TextView switchtxt;
     int appID,userID,notifiCountValue;
     JSONArray array2 = new JSONArray();
+    String selectedUsername;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_ktdashboard);
-
+        selectedUsername = getIntent().getStringExtra("selected_username");
+        Log.d("ROLE_SELECT","Dashboard=="+selectedUsername);
+        fetchLogin(selectedUsername);
         initComponents();
         setConfiguration();
-        String username = AppSettings.getInstance().getValue(this, in.gov.mahapocra.mahavistaarai.util.AppConstants.smaUsername, in.gov.mahapocra.mahavistaarai.util.AppConstants.smaUsername);
-        Log.d("MAYUU","Dashboard=="+username);
-        fetchLogin(username);
+//        String username = AppSettings.getInstance().getValue(this, in.gov.mahapocra.mahavistaarai.util.AppConstants.smaUsername, in.gov.mahapocra.mahavistaarai.util.AppConstants.smaUsername);
+
+//        fetchLogin(selectedUsername);
     }
     private void initComponents() {
 
@@ -164,6 +166,8 @@ public class KTDashboardActivity extends AppCompatActivity implements OnMultiRec
 
         String appVer = "App Version : " + BuildConfig.VERSION_NAME;
         appVersion.setText(appVer);*/
+
+        fetchLogin(selectedUsername);
         requestDataValidation();
         getUnreadNotificationCount();
         dataBinding();
@@ -576,7 +580,9 @@ public class KTDashboardActivity extends AppCompatActivity implements OnMultiRec
 
                                 // Print in log or show in TextView
                                 Log.d("VillageInfo", "Village: " + villageName + ", Code: " + villageCode);
-
+                                String name = profileModel.getFirst_name()+" "+profileModel.getMiddle_name()+" "+profileModel.getLast_name() +"-"+AppSettings.getInstance().getValue(this, AppConstants.kDesignation, AppConstants.kDesignation);
+                                nameTextView.setText(name);
+                                designationTextView.setText(villageName+" ("+villageCode+") ");
                                 // Example: display in Toast
 //                            Toast.makeText(this, "Village: " + villageName + "\nCode: " + villageCode, Toast.LENGTH_LONG).show();
                             }

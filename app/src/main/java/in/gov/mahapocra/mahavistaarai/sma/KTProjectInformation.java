@@ -35,14 +35,11 @@ public class KTProjectInformation extends AppCompatActivity {
         itemMahavistar = findViewById(R.id.itemMahavistar);
 
         itemDocuments.setOnClickListener(v ->
-//                openUrl("https://mahapocra.gov.in/mr/document")
                 openInternalWebView("https://mahapocra.gov.in/mr/document"));
         itemMahavistar.setOnClickListener(v ->
-//                openUrl("https://play.google.com/store/apps/details?id=in.gov.mahapocra.mahavistaarai&hl=mr"));
-                openInternalWebView("https://play.google.com/store/apps/details?id=in.gov.mahapocra.mahavistaarai&hl=mr"));
+                openPlayStore("in.gov.mahapocra.mahavistaarai"));
 
         itemGuidelines.setOnClickListener(v ->
-//                openUrl("https://mahapocra.gov.in/mr/project_guidelines"));
                  openInternalWebView("https://mahapocra.gov.in/mr/project_guidelines"));
 
         itemVideos.setOnClickListener(new View.OnClickListener() {
@@ -53,7 +50,6 @@ public class KTProjectInformation extends AppCompatActivity {
                 Toast.makeText(KTProjectInformation.this, "Comming Soon", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
     private void openUrl(String url) {
         Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -63,5 +59,18 @@ public class KTProjectInformation extends AppCompatActivity {
         Intent intent = new Intent(KTProjectInformation.this, WebviewActivity.class);
         intent.putExtra("url", url);
         startActivity(intent);
+    }
+    private void openPlayStore(String packageName) {
+        try {
+            // Open Play Store App
+            Intent intent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("market://details?id=" + packageName));
+            startActivity(intent);
+        } catch (Exception e) {
+            // If Play Store app not available → open in browser
+            Intent intent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=" + packageName));
+            startActivity(intent);
+        }
     }
 }

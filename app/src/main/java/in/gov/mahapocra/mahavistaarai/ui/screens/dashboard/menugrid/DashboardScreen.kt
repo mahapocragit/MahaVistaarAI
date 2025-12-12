@@ -313,7 +313,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 //                Toast.makeText(this, "You are not authorized for SMA module", Toast.LENGTH_SHORT).show()
 //            }
 //        }
-        binding.appBarMain.dashboardScreen.smaRedirectTextView.setOnClickListener {
+        binding.appBarMain.dashboardScreen.krishiTaiLayout.setOnClickListener {
 
             val rolesJson = AppSettings.getInstance()
                 .getValue(this, AppConstants.pocraRoles, "[]")
@@ -348,12 +348,12 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             // If only one username → direct login
             if (ktRoles.size == 1) {
                 val userName = ktRoles[0].username
-                AppSettings.getInstance()
-                    .setValue(this, AppConstants.smaUsername, userName)
-
+                AppSettings.getInstance().setValue(this, AppConstants.smaUsername, userName)
                 Log.d("ROLE_SELECT", "Auto-selected Username = $userName")
-
-                startActivity(Intent(this, KTDashboardActivity::class.java))
+                val intent = Intent(this, KTDashboardActivity::class.java)
+                intent.putExtra("selected_username", userName)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
             }
             // If multiple usernames → show dialog
             else {
@@ -522,17 +522,18 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
     private fun showRoleSelectionDialog(roles: List<PocraRole>) {
         val usernames = roles.map { it.username }.toTypedArray()
-
         AlertDialog.Builder(this)
             .setTitle("Select Username")
             .setItems(usernames) { dialog, which ->
                 val selectedUser = usernames[which]
-                AppSettings.getInstance()
-                    .setValue(this, AppConstants.smaUsername, selectedUser)
+                AppSettings.getInstance().setValue(this, AppConstants.smaUsername, selectedUser)
 
                 Log.d("ROLE_SELECT", "Selected Username = $selectedUser")
 
-                startActivity(Intent(this, KTDashboardActivity::class.java))
+                val intent = Intent(this, KTDashboardActivity::class.java)
+                intent.putExtra("selected_username", selectedUser)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
                 dialog.dismiss()
             }
             .setCancelable(false)
@@ -774,25 +775,25 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     val pocraRoles = mutableListOf<PocraRole>()
                     val rolesArray = data.optJSONArray("pocra_roles")
                     var userRoleId = -1
-                    if (rolesArray != null) {
+                    if (rolesArray != null && rolesArray.length() > 0) {
+
+                        // roles exist → parse them
                         for (i in 0 until rolesArray.length()) {
                             val roleObj = rolesArray.optJSONObject(i) ?: continue
                             val roleId = roleObj.optInt("role_id", -1)
                             val username = roleObj.optString("username", "")
                             val role = roleObj.optString("role", "")
                             val shortName = roleObj.optString("short_name", "")
-                            userRoleId = roleId
-                            Log.d("POCRA_ROLE", "RoleId ID = $roleId")
                             pocraRoles.add(PocraRole(roleId, username, role, shortName))
                         }
-                        // Show SMA Redirect Button (because roles exist)
-                        binding.appBarMain.dashboardScreen.smaRedirectTextView.visibility = View.VISIBLE
-                        Log.d("POCRA_ROLE", "SMA button visible. Roles found: ${pocraRoles.size}")
-                    }
-                    else {
-                        // No roles → hide
-                        binding.appBarMain.dashboardScreen.smaRedirectTextView.visibility = View.GONE
-                        Log.d("POCRA_ROLE", "No roles found → SMA button hidden")
+                        // Show SMA Redirect Button
+                        binding.appBarMain.dashboardScreen.krishiTaiLayout.visibility = View.VISIBLE
+                        Log.d("POCRA_ROLE", "roles found → SMA button visible. Count = ${pocraRoles.size}")
+
+                    } else {
+                        // No roles → hide SMA button
+                        binding.appBarMain.dashboardScreen.krishiTaiLayout.visibility = View.GONE
+                        Log.d("POCRA_ROLE", "roles empty → SMA button hidden")
                     }
                     farmerViewModel.getCropSapAdvisory(
                         this,
@@ -877,7 +878,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 Log.e("userDetailsObserver", "Exception: ${e.localizedMessage}")
             }
         }
-
 
         farmerViewModel.updateFCMTokenResponse.observe(this) {
             Log.d(TAG, "logoutFromApp: $it")

@@ -250,7 +250,7 @@ public class KTReportActivity extends AppCompatActivity implements OnMultiRecycl
         final CalendarFilterAdapterKT filterAdapter = new CalendarFilterAdapterKT(this, this, monthJsonArray);
         recyclerView.setAdapter(filterAdapter);
 
-        Button applyButton = dialog.findViewById(R.id.applyButton);
+        TextView applyButton = dialog.findViewById(R.id.applyButton);
         applyButton.setText("लागू करा");
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -289,8 +289,7 @@ public class KTReportActivity extends AppCompatActivity implements OnMultiRecycl
             }
         });
 
-
-        Button cancelButton = dialog.findViewById(R.id.cancelButton);
+        TextView cancelButton = dialog.findViewById(R.id.cancelButton);
         cancelButton.setText("हटवा");
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override

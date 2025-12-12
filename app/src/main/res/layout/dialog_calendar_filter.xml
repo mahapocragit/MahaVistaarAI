@@ -57,24 +57,7 @@
         android:layout_marginBottom="@dimen/padding10"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/applyButton"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/height50"
-            android:layout_weight="1"
-            android:layout_marginBottom="10dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="@dimen/padding20"
-            android:layout_marginTop="@dimen/padding10"
-            android:layout_marginRight="@dimen/padding20"
-            android:background="@drawable/btn_cancel_bg"
-            android:padding="@dimen/padding6"
-            android:text="Apply"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text16" />
-
-        <Button
+        <TextView
             android:id="@+id/cancelButton"
             android:layout_width="0dp"
             android:layout_height="@dimen/height50"
@@ -86,9 +69,29 @@
             android:background="@drawable/btn_cancel_bg"
             android:padding="@dimen/padding6"
             android:text="Cancel"
+            android:gravity="center"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="@dimen/text16" />
+        <TextView
+            android:id="@+id/applyButton"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/height50"
+            android:layout_weight="1"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/padding20"
+            android:layout_marginTop="@dimen/padding10"
+            android:gravity="center"
+            android:layout_marginRight="@dimen/padding20"
+            android:background="@drawable/btn_apply_bg"
+            android:padding="@dimen/padding6"
+            android:text="Apply"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text16" />
+
+
 
     </LinearLayout>
 </RelativeLayout>
