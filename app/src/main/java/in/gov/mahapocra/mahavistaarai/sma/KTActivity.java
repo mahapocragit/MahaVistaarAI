@@ -680,7 +680,6 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
                                 JSONObject actor = subCategoryJSONArray.getJSONObject(m);
                                 // your existing logic
                             }
-
                         }
 
                     } else {
@@ -694,12 +693,13 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
                     DebugLog.getInstance().d("onResponse=" + jsonObject);
                     ResponseModel response = new ResponseModel(jsonObject);
                     if (response.getStatus()) {
-                        Toast.makeText(this, "" + response.getResponse(), Toast.LENGTH_SHORT).show();
-                        Intent newIntent= new Intent(KTActivity.this, KTDashboardActivity.class);
-                        startActivity(newIntent);
+                        Toast.makeText(KTActivity.this, "" + response.getResponse(), Toast.LENGTH_SHORT).show();
+//                        Intent newIntent= new Intent(KTActivity.this, KTDashboardActivity.class);
+//                        startActivity(newIntent);
+                        finish();
                         Log.d("MAYU111","RefreshToken==="+response.getResponse());
                     } else {
-                        Toast.makeText(this, "" + response.getResponse(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(KTActivity.this, "" + response.getResponse(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }

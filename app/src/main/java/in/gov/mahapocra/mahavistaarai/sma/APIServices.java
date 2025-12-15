@@ -16,7 +16,7 @@ public interface APIServices {
 //// *************** For PROD *************
 //   String BASE_API = AppEnv.PROD.instance();
 //   String SSO = AppEnv.SSO.instance();
-//String BASE_URL_FORCE_UPDATE = "https://mahapocra.gov.in/";
+//   String BASE_URL_FORCE_UPDATE = "https://mahapocra.gov.in/";
 
    //*************** For UAT *************
     String BASE_API = AppEnv.UAT.instance();

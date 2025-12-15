@@ -38,19 +38,20 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <RelativeLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/height100"
+                        android:orientation="horizontal"
+                        android:gravity="center_horizontal"
                         android:background="@drawable/app_footer_white">
 
                         <ImageView
-                            android:layout_width="@dimen/height100"
-                            android:layout_height="@dimen/height100"
-                            android:layout_marginLeft="@dimen/padding30"
+                            android:layout_width="@dimen/_50sdp"
+                            android:layout_height="@dimen/_50sdp"
                             android:layout_marginTop="@dimen/padding20"
+                            android:layout_marginLeft="5dp"
                             android:contentDescription="@string/app_name"
                             android:src="@drawable/logo_pocra" />
-
 
                         <TextView
                             android:id="@+id/textView"
@@ -58,6 +59,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="45dp"
                             android:gravity="center"
+                            android:layout_weight="1"
                             android:text="@string/login_monitoring_KT"
                             android:textColor="@color/text_black"
                             android:textSize="@dimen/text16"
@@ -112,7 +114,7 @@
                             android:src="@drawable/ic_logout" />
 
 
-                    </RelativeLayout>
+                    </LinearLayout>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
