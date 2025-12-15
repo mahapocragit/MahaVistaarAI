@@ -13,6 +13,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         app:title="@string/work_activity"
+        app:titleTextAppearance="@style/ToolbarTitleStyle"
         app:titleTextColor="@android:color/white"
         app:navigationIcon="@drawable/ic_arrow_left_back_24dp"
         app:layout_constraintTop_toTopOf="parent"

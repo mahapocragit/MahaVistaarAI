@@ -28,6 +28,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                app:titleTextAppearance="@style/ToolbarTitleStyle"
                 android:background="?attr/colorPrimary"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
         </com.google.android.material.appbar.AppBarLayout>
@@ -298,7 +299,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="#FAD4E8"
+            android:background="@color/grey_300"
             android:padding="10dp">
 
             <TextView
@@ -315,7 +316,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="#FAD4E8"
+                android:background="@color/app_bg"
                 android:paddingStart="10dp">
 
                 <TextView
@@ -325,7 +326,7 @@
                     android:text="बैठका – 12"
                     android:textStyle="bold"
                     android:textSize="16sp"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/badge_bg"
                     android:padding="4dp"/>
 
                 <TextView
@@ -335,7 +336,7 @@
                     android:text="प्रशिक्षण – 10"
                     android:textStyle="bold"
                     android:textSize="16sp"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/badge_bg"
                     android:padding="4dp"/>
 
                 <TextView
@@ -345,7 +346,7 @@
                     android:text="भेट – 6"
                     android:textStyle="bold"
                     android:textSize="16sp"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/badge_bg"
                     android:padding="4dp"/>
             </LinearLayout>
             <Button
@@ -355,6 +356,7 @@
                 android:visibility="visible"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
+                android:layout_marginTop="10dp"
                 android:text="📩  अभिप्राय नोंदवा"
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/bg_custom_dialog">

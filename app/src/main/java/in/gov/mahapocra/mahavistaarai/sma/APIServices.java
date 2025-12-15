@@ -13,15 +13,15 @@ package in.gov.mahapocra.mahavistaarai.sma;
 //8470807282
 public interface APIServices {
 
-//// *************** For PROD *************
-//   String BASE_API = AppEnv.PROD.instance();
-//   String SSO = AppEnv.SSO.instance();
-//   String BASE_URL_FORCE_UPDATE = "https://mahapocra.gov.in/";
+// *************** For PROD *************
+   String BASE_API = AppEnv.PROD.instance();
+   String SSO = AppEnv.SSO.instance();
+   String BASE_URL_FORCE_UPDATE = "https://mahapocra.gov.in/";
 
-   //*************** For UAT *************
-    String BASE_API = AppEnv.UAT.instance();
-    String SSO = AppEnv.UAT_SSO.instance();
-    String BASE_URL_FORCE_UPDATE = "https://mahapocra.gov.in/";
+//   //*************** For UAT *************
+//    String BASE_API = AppEnv.UAT.instance();
+//    String SSO = AppEnv.UAT_SSO.instance();
+//    String BASE_URL_FORCE_UPDATE = "https://mahapocra.gov.in/";
 
     String SSO_KEY = APIKeys.SSO_PROD.key();
 
