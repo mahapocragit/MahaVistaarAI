@@ -75,7 +75,7 @@ public class KTReportDetailsActivity extends AppCompatActivity implements ApiCal
             @Override
             public void onClick(View v) {
                 // Show the Toast message when the download icon is clicked
-                Toast.makeText(KTReportDetailsActivity.this, "Comming Soon", Toast.LENGTH_SHORT).show();
+                Toast.makeText(KTReportDetailsActivity.this, "लवकरच येत आहे…", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -104,7 +104,7 @@ public class KTReportDetailsActivity extends AppCompatActivity implements ApiCal
                 }
                 hoverVisible = false;
             }
-            Toast.makeText(KTReportDetailsActivity.this, "Comming Soon", Toast.LENGTH_SHORT).show();
+            Toast.makeText(KTReportDetailsActivity.this, "लवकरच येत आहे…", Toast.LENGTH_SHORT).show();
         };
         // Hide hover message and show toast on icon click
         downloadIcon.setOnClickListener(hideHoverAndToast);

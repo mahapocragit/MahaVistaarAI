@@ -156,7 +156,7 @@
                     android:background="@drawable/rounded_brown_button"
                     android:orientation="horizontal"
                     android:paddingLeft="16dp"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:paddingTop="8dp"
                     android:layout_marginRight="@dimen/_10sdp"
                     android:paddingBottom="8dp"

@@ -47,7 +47,7 @@ public class KTProjectInformation extends AppCompatActivity {
             public void onClick(View v) {
 //                Intent intent = new Intent(KTProjectInformation.this, KTYoutubeView.class);
 //                startActivity(intent);
-                Toast.makeText(KTProjectInformation.this, "Comming Soon", Toast.LENGTH_SHORT).show();
+                Toast.makeText(KTProjectInformation.this, "लवकरच येत आहे…", Toast.LENGTH_SHORT).show();
             }
         });
     }

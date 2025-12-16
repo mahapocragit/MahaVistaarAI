@@ -1,11 +1,11 @@
 package `in`.gov.mahapocra.mahavistaarai.data.api
-import `in`.gov.mahapocra.mahavistaarai.BuildConfig
 class AppEnvironment(val baseUrl: String?) {
     companion object {
 //        val DBT_BASE_URL: AppEnvironment = AppEnvironment("https://uat-dbt.mahapocra.gov.in:8026/") //For Internal Testing
         val DBT_BASE_URL: AppEnvironment = AppEnvironment("https://dbt-ndksp.mahapocra.gov.in:8021/")
 
-        val FARMER: AppEnvironment = AppEnvironment(BuildConfig.BASE_URL)  //Live
+//        val FARMER: AppEnvironment = AppEnvironment(BuildConfig.BASE_URL)  //Live
+        val FARMER: AppEnvironment = AppEnvironment("https://farmers-app-api.mahapocra.gov.in/")  //Live
 //        val FARMER: AppEnvironment = AppEnvironment("https://stage-farmers-app-api.mahapocra.gov.in/")  //UAT
         val WOTR: AppEnvironment = AppEnvironment("https://kisan.wotr.org.in/")
         val GIS: AppEnvironment = AppEnvironment("https://gis.mahapocra.gov.in/")
