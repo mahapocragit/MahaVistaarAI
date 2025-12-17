@@ -1,0 +1,534 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".chms.CropImageRandomForCA">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:title="CHMS Observation"
+        app:titleTextAppearance="@style/ToolbarTitleStyle"
+        app:titleTextColor="@android:color/white"
+        app:navigationIcon="@drawable/ic_arrow_left_back_24dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/cuurentDate"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/drop_down"
+                android:gravity="center|start"
+                android:hint="Cuurent Date"
+                android:inputType="text"
+                android:maxLength="30"
+                android:maxLines="1"
+                android:paddingStart="@dimen/padding20"
+                android:paddingEnd="@dimen/padding20"
+                android:textColorHint="@color/text_black"
+                android:textSize="@dimen/text14" />
+
+            <RelativeLayout
+                android:id="@+id/relativeLayout_Village"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/height10"
+                android:elevation="8dp"
+                android:layout_below="@+id/cuurentDate"
+                android:visibility="visible"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvSelectVillage"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/drop_down"
+                    android:gravity="start|center"
+                    android:hint="Select Village"
+                    android:paddingStart="@dimen/padding20"
+                    android:paddingEnd="@dimen/padding20"
+                    android:textColor="@color/heading"
+                    android:textColorHint="@color/text_black"
+                    android:textSize="@dimen/text14"
+                    android:textStyle="normal" />
+
+                <ImageView
+                    android:id="@+id/imageview3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/padding30"
+                    android:layout_marginRight="@dimen/padding30"
+                    android:contentDescription="@string/app_name"
+                    app:srcCompat="@drawable/ic_expand_more_black_24dp"
+                    app:tint="@color/gray"
+                    tools:ignore="VectorDrawableCompat" />
+            </RelativeLayout>
+
+            <!--    <RelativeLayout-->
+            <!--        android:id="@+id/relativeLayout_District"-->
+            <!--        android:layout_width="match_parent"-->
+            <!--        android:layout_height="wrap_content"-->
+            <!--        android:layout_marginTop="@dimen/height5"-->
+            <!--        android:elevation="8dp"-->
+            <!--        android:layout_below="@+id/cuurentDate"-->
+            <!--        android:visibility="visible"-->
+            <!--        android:orientation="horizontal">-->
+
+            <!--        <TextView-->
+            <!--            android:id="@+id/tvSelectDist"-->
+            <!--            android:layout_width="match_parent"-->
+            <!--            android:layout_height="40dp"-->
+            <!--            android:layout_marginLeft="20dp"-->
+            <!--            android:layout_marginRight="20dp"-->
+            <!--            android:background="@drawable/drop_down"-->
+            <!--            android:gravity="start|center"-->
+            <!--            android:hint="Select District"-->
+            <!--            android:paddingStart="@dimen/padding20"-->
+            <!--            android:paddingEnd="@dimen/padding20"-->
+            <!--            android:textColor="@color/heading"-->
+            <!--            android:textColorHint="@color/text_black"-->
+            <!--            android:textSize="@dimen/text14"-->
+            <!--            android:textStyle="normal" />-->
+
+            <!--        <ImageView-->
+            <!--            android:id="@+id/imageview1"-->
+            <!--            android:layout_width="wrap_content"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:layout_alignParentEnd="true"-->
+            <!--            android:layout_alignParentRight="true"-->
+            <!--            android:layout_centerVertical="true"-->
+            <!--            android:layout_marginEnd="@dimen/padding30"-->
+            <!--            android:layout_marginRight="@dimen/padding30"-->
+            <!--            android:contentDescription="@string/app_name"-->
+            <!--            app:srcCompat="@drawable/ic_expand_more_black_24dp"-->
+            <!--            app:tint="@color/gray"-->
+            <!--            tools:ignore="VectorDrawableCompat" />-->
+            <!--    </RelativeLayout>-->
+            <!--    <RelativeLayout-->
+            <!--        android:id="@+id/relativeLayout_Taluka"-->
+            <!--        android:layout_width="match_parent"-->
+            <!--        android:layout_height="wrap_content"-->
+            <!--        android:layout_marginTop="@dimen/height10"-->
+            <!--        android:elevation="8dp"-->
+            <!--        android:layout_below="@+id/cuurentDate"-->
+            <!--        android:visibility="visible"-->
+            <!--        android:orientation="horizontal">-->
+
+            <!--        <TextView-->
+            <!--            android:id="@+id/tvSelectTaluka"-->
+            <!--            android:layout_width="match_parent"-->
+            <!--            android:layout_height="40dp"-->
+            <!--            android:layout_marginLeft="20dp"-->
+            <!--            android:layout_marginRight="20dp"-->
+            <!--            android:background="@drawable/drop_down"-->
+            <!--            android:gravity="start|center"-->
+            <!--            android:hint="Select Taluka"-->
+            <!--            android:paddingStart="@dimen/padding20"-->
+            <!--            android:paddingEnd="@dimen/padding20"-->
+            <!--            android:textColor="@color/heading"-->
+            <!--            android:textColorHint="@color/text_black"-->
+            <!--            android:textSize="@dimen/text14"-->
+            <!--            android:textStyle="normal" />-->
+
+            <!--        <ImageView-->
+            <!--            android:id="@+id/imageview2"-->
+            <!--            android:layout_width="wrap_content"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:layout_alignParentEnd="true"-->
+            <!--            android:layout_alignParentRight="true"-->
+            <!--            android:layout_centerVertical="true"-->
+            <!--            android:layout_marginEnd="@dimen/padding30"-->
+            <!--            android:layout_marginRight="@dimen/padding30"-->
+            <!--            android:contentDescription="@string/app_name"-->
+            <!--            app:srcCompat="@drawable/ic_expand_more_black_24dp"-->
+            <!--            app:tint="@color/gray"-->
+            <!--            tools:ignore="VectorDrawableCompat" />-->
+            <!--    </RelativeLayout>-->
+            <EditText
+                android:id="@+id/edtFarmerName"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/drop_down"
+                android:gravity="start|center"
+                android:digits="@string/name_validation"
+                android:hint=" Enter Farmer Name "
+                android:paddingStart="@dimen/padding20"
+                android:paddingEnd="@dimen/padding20"
+                android:textColor="@color/heading"
+                android:textColorHint="@color/text_black"
+                android:textSize="@dimen/text14"
+                android:textStyle="normal" />
+            <EditText
+                android:id="@+id/edtSurveyNumber"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/drop_down"
+                android:gravity="start|center"
+                android:hint=" Enter Survey No  "
+                android:paddingStart="@dimen/padding20"
+                android:paddingEnd="@dimen/padding20"
+                android:textColor="@color/heading"
+                android:textColorHint="@color/text_black"
+                android:textSize="@dimen/text14"
+                android:textStyle="normal" />
+            <EditText
+                android:id="@+id/edtArea"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/drop_down"
+                android:gravity="start|center"
+                android:hint=" Enter Area  "
+                android:paddingStart="@dimen/padding20"
+                android:digits="1234567890."
+                android:paddingEnd="@dimen/padding20"
+                android:textColor="@color/heading"
+                android:textColorHint="@color/text_black"
+                android:textSize="@dimen/text14"
+                android:textStyle="normal" />
+            <RelativeLayout
+                android:id="@+id/relativeLayout_Crops"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/height10"
+                android:elevation="8dp"
+                android:layout_below="@+id/relativeLayout_Crops"
+                android:visibility="visible"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvSelectCrops"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/drop_down"
+                    android:gravity="start|center"
+                    android:hint="Select Crop "
+                    android:paddingStart="@dimen/padding20"
+                    android:paddingEnd="@dimen/padding20"
+                    android:textColor="@color/heading"
+                    android:textColorHint="@color/text_black"
+                    android:textSize="@dimen/text14"
+                    android:textStyle="normal" />
+
+                <ImageView
+                    android:id="@+id/imageview4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/padding30"
+                    android:layout_marginRight="@dimen/padding30"
+                    android:contentDescription="@string/app_name"
+                    app:srcCompat="@drawable/ic_expand_more_black_24dp"
+                    app:tint="@color/gray"
+                    tools:ignore="VectorDrawableCompat" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/relativeLayout_CropStage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/height10"
+                android:elevation="8dp"
+                android:layout_below="@+id/relativeLayout_Crops"
+                android:visibility="visible"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvSelectCropStage"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/drop_down"
+                    android:gravity="start|center"
+                    android:hint="Select Crop Stage"
+                    android:paddingStart="@dimen/padding20"
+                    android:paddingEnd="@dimen/padding20"
+                    android:textColor="@color/heading"
+                    android:textColorHint="@color/text_black"
+                    android:textSize="@dimen/text14"
+                    android:textStyle="normal" />
+
+                <ImageView
+                    android:id="@+id/imageview5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/padding30"
+                    android:layout_marginRight="@dimen/padding30"
+                    android:contentDescription="@string/app_name"
+                    app:srcCompat="@drawable/ic_expand_more_black_24dp"
+                    app:tint="@color/gray"
+                    tools:ignore="VectorDrawableCompat" />
+            </RelativeLayout>
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_below="@+id/relativeLayout_CropStage"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radioButton1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Infected Crop"
+                    tools:ignore="OnClick" />
+
+                <RadioButton
+                    android:id="@+id/radioButton2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Normal Crop"
+                    tools:ignore="OnClick" />
+
+            </RadioGroup>
+            <RadioGroup
+                android:id="@+id/radioGroup2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_below="@+id/radioGroup2"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radioButton3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pest                 "
+                    tools:ignore="OnClick" />
+
+                <RadioButton
+                    android:id="@+id/radioButton4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Disease"
+                    android:layout_marginRight="10dp"
+                    tools:ignore="OnClick" />
+
+            </RadioGroup>
+            <RelativeLayout
+                android:id="@+id/relativeLayout_PestType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/height5"
+                android:elevation="8dp"
+                android:layout_below="@+id/radioGroup2"
+                android:visibility="visible"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvSelectPestType"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/drop_down"
+                    android:gravity="start|center"
+                    android:hint="Select Pest Type"
+                    android:paddingStart="@dimen/padding20"
+                    android:paddingEnd="@dimen/padding20"
+                    android:textColor="@color/heading"
+                    android:textColorHint="@color/text_black"
+                    android:textSize="@dimen/text14"
+                    android:textStyle="normal" />
+
+                <ImageView
+                    android:id="@+id/imageview6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/padding30"
+                    android:layout_marginRight="@dimen/padding30"
+                    android:contentDescription="@string/app_name"
+                    app:srcCompat="@drawable/ic_expand_more_black_24dp"
+                    app:tint="@color/gray"
+                    tools:ignore="VectorDrawableCompat" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/relativeLayout_DiseaseType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/height10"
+                android:elevation="8dp"
+                android:layout_below="@+id/relativeLayout_PestType"
+                android:visibility="gone"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvSelectDiseaseType"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/drop_down"
+                    android:gravity="start|center"
+                    android:hint="Select Disease Type"
+                    android:paddingStart="@dimen/padding20"
+                    android:paddingEnd="@dimen/padding20"
+                    android:textColor="@color/heading"
+                    android:textColorHint="@color/text_black"
+                    android:textSize="@dimen/text14"
+                    android:textStyle="normal" />
+
+                <ImageView
+                    android:id="@+id/imageview7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/padding30"
+                    android:layout_marginRight="@dimen/padding30"
+                    android:contentDescription="@string/app_name"
+                    app:srcCompat="@drawable/ic_expand_more_black_24dp"
+                    app:tint="@color/gray"
+                    tools:ignore="VectorDrawableCompat" />
+            </RelativeLayout>
+            <LinearLayout
+                android:id="@+id/imageLinLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:weightSum="5"
+                tools:ignore="MissingConstraints">
+
+                <LinearLayout
+                    android:id="@+id/imageContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp"
+                    android:padding="2dp"
+                    android:orientation="vertical" />
+                <Button
+                    android:id="@+id/addImageButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:layout_margin="2dp"
+                    android:textAllCaps="false"
+                    android:textSize="10dp"
+                    android:background="@color/card_bg"
+                    android:text="Add Image" />
+                <Button
+                    android:id="@+id/removeImageButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:layout_margin="2dp"
+                    android:textAllCaps="false"
+                    android:visibility="gone"
+                    android:background="@color/card_bg"
+                    android:text="Remove" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:padding="5dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="10dp"
+                android:layout_marginLeft="100dp"
+                android:layout_marginTop="@dimen/text10"
+                android:layout_weight="1"
+                android:scaleType="centerCrop"
+                android:text="Save"
+                android:layout_alignParentBottom="true"
+                android:backgroundTint="@color/status_green"
+                android:textSize="@dimen/text14"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+            <Button
+                android:id="@+id/btnImageCount"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@color/colorPrimary"
+                android:padding="2dp"
+                android:visibility="gone"
+                android:layout_margin="5dp"
+                android:layout_marginTop="@dimen/text10"
+                android:layout_weight="1"
+                android:text="Image Count"
+                android:layout_alignParentBottom="true"
+                android:backgroundTint="@color/blue_light"
+                android:textSize="@dimen/text14"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewCropList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/relativeLayoutTopBar"
+                android:layout_marginTop="15dp"
+                android:layout_margin="10dp"
+                android:scrollbarAlwaysDrawHorizontalTrack="true"
+                android:scrollbarStyle="insideOverlay"
+                android:scrollbars="vertical">
+
+            </androidx.recyclerview.widget.RecyclerView>
+            <Button
+                android:id="@+id/btnSubmit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:padding="5dp"
+                android:layout_weight="1"
+                android:layout_margin="20dp"
+                android:layout_marginLeft="100dp"
+                android:layout_marginTop="@dimen/text10"
+                android:scaleType="centerCrop"
+                android:text="Submit"
+                android:layout_alignParentBottom="true"
+                android:backgroundTint="@color/status_green"
+                android:textSize="@dimen/text14"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

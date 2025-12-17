@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".chms.RandomObservationDashboardCA">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:title="@string/chms_dashboard"
+        app:titleTextAppearance="@style/ToolbarTitleStyle"
+        app:titleTextColor="@android:color/white"
+        app:navigationIcon="@drawable/ic_arrow_left_back_24dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:padding="6dp">
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewFarmerCHMSdata"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/padding5"
+        android:layout_marginStart="@dimen/padding5"
+        android:layout_marginTop="@dimen/padding5"
+        android:visibility="visible"
+        app:cardElevation="@dimen/padding1"
+        app:cardMaxElevation="@dimen/padding1"
+        app:cardUseCompatPadding="true"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/btnChmsCrop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:backgroundTint="@color/dusk_yellow"
+                android:padding="@dimen/_5sdp"
+                android:background="@drawable/drop_down"
+                android:layout_gravity="end"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="Add CHMS Observation ">
+            </TextView>
+            <TextView
+                android:id="@+id/chmsName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="CHMS Random Observation ">
+            </TextView>
+            <LinearLayout
+                android:id="@+id/linLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/textName1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="0.5dp"
+                    android:text="Village"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/white"
+                    android:padding="8dp" />
+
+                <TextView
+                    android:id="@+id/textAge1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Farmer Name"
+                    android:layout_margin="0.5dp"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/white"
+                    android:padding="8dp" />
+                <TextView
+                    android:id="@+id/textMobileNumber1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="0.5dp"
+                    android:text="Crop "
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/white"
+                    android:padding="8dp" />
+
+                <TextView
+                    android:id="@+id/textVillage1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="0.5dp"
+                    android:text="Date"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/white"
+                    android:padding="8dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/padding10"
+                android:layout_marginStart="@dimen/padding10"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/farmerDataRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    </ScrollView>
+
+</RelativeLayout>

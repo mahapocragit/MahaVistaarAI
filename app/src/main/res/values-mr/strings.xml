@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MahaVISTAAR-AI</string>
+    <string name="app_name">CHMS</string>
     <string name="app_name_label">महाविस्तार - AI</string>
     <string name="app_logo_name"> नानाजी देशमुख कृषि संजीवनी प्रकल्प</string>
     <string name="weather">हवामान</string>
@@ -536,6 +536,7 @@
     <string name="month_filter">Filter by month</string>
     <string name="call">Phone Call</string>
     <string name="work_activity">प्रकल्प माहिती</string>
+    <string name="chms_dashboard">CHMS-Dashboard</string>
     <string name="kt_report_details">विस्तार कार्य अहवाल</string>
     <string name="kt_report">अहवाल</string>
     <string name="view_kt_details">अहवाल माहिती</string>

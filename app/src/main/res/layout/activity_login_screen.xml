@@ -323,7 +323,7 @@
         android:layout_width="@dimen/_80sdp"
         android:layout_height="@dimen/_80sdp"
         android:elevation="10dp"
-        android:src="@drawable/app_logo"
+        android:src="@mipmap/chms_logo"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toTopOf="@+id/cardView2"
         app:layout_constraintEnd_toEndOf="parent"

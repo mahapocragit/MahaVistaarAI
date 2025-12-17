@@ -26,12 +26,12 @@ import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.chms.RandomObservationDashboardCA
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLoginScreenBinding
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
@@ -221,7 +221,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, userId)
             AppSettings.getInstance()
                 .setBooleanValue(this, AppConstants.IS_USER_GUEST, true)
-            startActivity(Intent(this, DashboardScreen::class.java))
+            startActivity(Intent(this, RandomObservationDashboardCA::class.java))
         }
     }
 
@@ -272,7 +272,6 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             e.printStackTrace()
         }
     }
-
     private fun userValidateAndLogin() {
         mobileNo = binding.userIdEditText.text.toString()
         userPass = binding.passwordEditText.text.toString()
@@ -283,7 +282,6 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             callRefreshTokenAPI(mobileNo, userPass)
         }
     }
-
     private fun callRefreshTokenAPI(mobileNo: String, userPass: String = "", otp: String = "") {
         if (mobileNo.isEmpty()) {
             binding.userIdEditText.error = resources.getString(R.string.lgn_register_phone_error)
@@ -493,7 +491,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         farmerRegisteredID = jSONObject.getInt("FAAPRegistrationID")
                         AppSettings.getInstance()
                             .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisteredID)
-                        val intent = Intent(this, DashboardScreen::class.java)
+                        val intent = Intent(this, RandomObservationDashboardCA::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -504,7 +502,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         farmerRegisteredID = jSONObject.getInt("FAAPRegistrationID")
                         AppSettings.getInstance()
                             .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisteredID)
-                        val intent = Intent(this, DashboardScreen::class.java)
+                        val intent = Intent(this, RandomObservationDashboardCA::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
