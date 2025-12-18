@@ -547,8 +547,8 @@
     <!--District List-->
     <string name="district_title">District List</string>
     <string name="TcVillage">-- Select Village --</string>
-    <string name="district">-- Select District --</string>
-    <string name="taluka">-- Select Taluka --</string>
+    <string name="Alldistrict">-- Select District --</string>
+    <string name="Alltaluka">-- Select Taluka --</string>
     <string name="CropStage">-- Select CropStage --</string>
     <string name="Cropname">-- Select Crop --</string>
     <string name="CropPest">-- Select Pest --</string>

@@ -562,7 +562,7 @@ public class CropImageRandomForCA extends AppCompatActivity implements ApiJSONOb
         if (mDistArray == null) {
             fetchDistrict();
         } else {
-            AppUtility.getInstance().showListDialogIndex(mDistArray, 11, getString(R.string.district), "name", "code", this, this);
+            AppUtility.getInstance().showListDialogIndex(mDistArray, 11, getString(R.string.Alldistrict), "name", "code", this, this);
         }
     }
     private void fetchDistrict() {
@@ -591,7 +591,7 @@ public class CropImageRandomForCA extends AppCompatActivity implements ApiJSONOb
         if (mDistArray == null) {
             fetchTaluka();
         } else {
-            AppUtility.getInstance().showListDialogIndex(mDistArray, 12, getString(R.string.taluka), "name", "code", this, this);
+            AppUtility.getInstance().showListDialogIndex(mDistArray, 12, getString(R.string.Alltaluka), "name", "code", this, this);
         }
     }
     private void fetchTaluka() {
