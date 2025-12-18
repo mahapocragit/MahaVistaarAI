@@ -18,14 +18,14 @@
     <color name="schedule_up">#2762a1</color>
     <color name="link">#0D91CD</color>
     <color name="gry">#E6E2E2</color>
-    <color name="primary_green">#1d6b08</color>
+    <color name="primary_green">#9BC367</color>
 <!--    Figma Color Pallet Starts Here-->
     <color name="font_color_figma">#64748B</color>
     <color name="arrow_color_figma">#94A3B8</color>
     <color name="card_background_color_figma">#F0F6FF</color>
     <color name="card_background_color_figma_dash">#F8FAFC</color>
     <color name="card_background_color_round_figma">#F1F5F9</color>
-    <color name="actionbar_color_figma">#009444</color>
+    <color name="actionbar_color_figma">#9BC367</color>
     <color name="actionbar_color_figma2">#C0D6C8</color>
     <color name="gradient_top_figma">#204FC5</color>
     <color name="gradient_middle_figma">#71AAE1</color>

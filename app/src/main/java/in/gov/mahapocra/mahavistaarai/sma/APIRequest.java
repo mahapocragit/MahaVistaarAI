@@ -154,6 +154,32 @@ public interface APIRequest {
 //    Call<JsonObject> uploadCAImagesRequest(@Part MultipartBody.Part image,
 //                                           @PartMap Map<String, RequestBody> params);
 
+
+    @POST(APIServices.kAllDistrict)
+    Call<JsonObject> fetchDistrict(@Body RequestBody params);
+    @POST(APIServices.kAllTaluka)
+    Call<JsonObject> fetchTaluka(@Body RequestBody params);
+    @POST(APIServices.kAllVillage)
+    Call<JsonObject> fetchVillage(@Body RequestBody params);
+    @POST(APIServices.kAllCrops)
+    Call<JsonObject> fetchCropsForCA(@Body RequestBody params);
+    @POST(APIServices.kCropsPest)
+    Call<JsonObject> fetchCropsPestForCA(@Body RequestBody params);
+    @POST(APIServices.kImageSection)
+    Call<JsonObject> fetchkImageSectionForCA(@Body RequestBody params);
+    @POST(APIServices.kCropsDiease)
+    Call<JsonObject> fetchCropsDieaseForCA(@Body RequestBody params);
+    @POST(APIServices.kCHMS_Farmer_CropListTC)
+    Call<JsonObject> fetchkCHMSFarmerCropListForTC(@Body RequestBody params);
+
+    @POST(APIServices.kUpdatefarmerDataByTC)
+    Call<JsonObject> fetchUpdatefarmerStatusForTC(@Body RequestBody params);
+    @Multipart
+    @POST(APIServices.kFileUploadImgCGMByTC)
+    Call<JsonObject> uploadImagesRequestImgCropTC(@Part MultipartBody.Part image,
+                                                  @PartMap Map<String, RequestBody> params);
+
+
 }
 
 

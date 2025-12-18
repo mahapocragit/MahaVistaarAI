@@ -541,4 +541,17 @@
     <string name="kt_report">अहवाल</string>
     <string name="view_kt_details">अहवाल माहिती</string>
     <string name="KrishiTai">कृषिताई</string>
+
+
+    <!--District List-->
+    <string name="district_title">District List</string>
+    <string name="TcVillage">-- Select Village --</string>
+    <string name="district">-- Select District --</string>
+    <string name="taluka">-- Select Taluka --</string>
+    <string name="CropStage">-- Select CropStage --</string>
+    <string name="Cropname">-- Select Crop --</string>
+    <string name="CropPest">-- Select Pest --</string>
+    <string name="CropImageSection">-- Select Section --</string>
+    <string name="Cropdisease">-- Select Disease --</string>
+    <string name="farmerFromCAVillages">-- Select Farmer --</string>
 </resources>

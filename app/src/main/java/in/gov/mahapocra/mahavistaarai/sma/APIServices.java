@@ -13,15 +13,16 @@ package in.gov.mahapocra.mahavistaarai.sma;
 //8470807282
 public interface APIServices {
 
-// *************** For PROD *************
-   String BASE_API = AppEnv.PROD.instance();
-   String SSO = AppEnv.SSO.instance();
-   String BASE_URL_FORCE_UPDATE = "https://mahapocra.gov.in/";
+//// *************** For PROD *************
+//   String BASE_API = AppEnv.PROD.instance();
+//   String SSO = AppEnv.SSO.instance();
+//   String BASE_URL_FORCE_UPDATE = "https://mahapocra.gov.in/";
 
-//   //*************** For UAT *************
-//    String BASE_API = AppEnv.UAT.instance();
-//    String SSO = AppEnv.UAT_SSO.instance();
-//    String BASE_URL_FORCE_UPDATE = "https://mahapocra.gov.in/";
+   //*************** For UAT *************
+    String BASE_API = AppEnv.UAT.instance();
+    String SSO = AppEnv.UAT_SSO.instance();
+    String BASE_URL_FORCE_UPDATE = "https://mahapocra.gov.in/";
+    String BASE_URL_CHMS = "https://stage-farmers-app-api.mahapocra.gov.in/";
 
     String SSO_KEY = APIKeys.SSO_PROD.key();
 
@@ -67,5 +68,19 @@ public interface APIServices {
     String KT_GET_WORK_DETAILS = "ktservice/get-kt-details";
     String CA_CLUSTER_CODE = "attendanceService/offline-ca-cluster-data";
     String CA_ABSENT_REASON = "attendanceService/absent-reason";
+
+
+    //chms module
+    String kAllDistrict= "masterService/get-all-district";
+    String kAllTaluka= "masterService/get-taluka-on-district";
+    String kAllVillage= "masterService/get-village-on-taluka";
+    String kAllCrops= "masterServices/get-crops";
+    String kCropsPest = "chms/get_crop_pest";
+    String kImageSection = "chms/get-cgm-image-types";
+    String kCropsDiease = "chms/get_crop_disease";
+    String kCHMS_Farmer_CropListTC = "masterService/get_image_data_by_form_no_cgm_tc";
+    String kCropStages =  "chms/get-cgm-crop-stages";
+    String kUpdatefarmerDataByTC =  "masterService/update_form_data_cgm_tc";
+    String kFileUploadImgCGMByTC = "cgmService/upload-images-cgm-tc";
 
 }
