@@ -1144,7 +1144,7 @@ public class CropImageRandomForCA extends AppCompatActivity implements ApiJSONOb
 //                partBody = MultipartBody.Part.createFormData("image_name", String.valueOf(capturedImages), reqFile);
 
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), imageFile);
-            partBody = MultipartBody.Part.createFormData("image", String.valueOf(imageFile), reqFile);
+            partBody = MultipartBody.Part.createFormData("image_file", String.valueOf(imageFile), reqFile);
 
 
             AppinventorIncAPI api = new AppinventorIncAPI(this, APIServices.BASE_URL_CHMS, session.getToken(), new AppString(this).getkMSG_WAIT(), true);
