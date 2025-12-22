@@ -174,6 +174,9 @@ public interface APIRequest {
 
     @POST(APIServices.kUpdatefarmerDataByTC)
     Call<JsonObject> fetchUpdatefarmerStatusForTC(@Body RequestBody params);
+    @POST(APIServices.kUpdatefarmerAllDataByTC)
+    Call<JsonObject> fetchfarmerAllImg(@Body RequestBody params);
+
     @Multipart
     @POST(APIServices.kFileUploadImgCGMByTC)
     Call<JsonObject> uploadImagesRequestImgCropTC(@Part MultipartBody.Part image,

@@ -789,11 +789,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         setValue(this@DashboardScreen, AppConstants.uName, name)
                         setValue(this@DashboardScreen, AppConstants.uMobileNo, mobNo)
                         setValue(this@DashboardScreen, AppConstants.uEmail, emailId)
-                        if (ffaReg != -1) setIntValue(
-                            this@DashboardScreen,
-                            AppConstants.fREGISTER_ID,
-                            ffaReg
-                        )
+                        if (ffaReg != -1) setIntValue(this@DashboardScreen, AppConstants.fREGISTER_ID, ffaReg)
                         setValue(this@DashboardScreen, AppConstants.uDIST, distName)
                         setValue(this@DashboardScreen, AppConstants.uDISTMR, distNameMr)
                         setIntValue(this@DashboardScreen, AppConstants.uDISTId, distId)

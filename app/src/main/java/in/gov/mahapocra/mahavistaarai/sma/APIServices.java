@@ -80,7 +80,10 @@ public interface APIServices {
     String kCropsDiease = "chms/get_crop_disease";
     String kCHMS_Farmer_CropListTC = "masterService/get_image_data_by_form_no_cgm_tc";
     String kCropStages =  "chms/get-cgm-crop-stages";
-    String kUpdatefarmerDataByTC =  "masterService/update_form_data_cgm_tc";
-    String kFileUploadImgCGMByTC = "cgmService/upload-images-cgm-tc";
+//    String kUpdatefarmerDataByTC =  "masterService/update_form_data_cgm_tc";
+    String kUpdatefarmerDataByTC =  "chms/get-uploaded-images";
+    String kUpdatefarmerAllDataByTC =  "chms/get-uploaded-images-all";
+//    String kFileUploadImgCGMByTC = "cgmService/upload-images-cgm-tc";
+    String kFileUploadImgCGMByTC = "chms/upload-images";
 
 }

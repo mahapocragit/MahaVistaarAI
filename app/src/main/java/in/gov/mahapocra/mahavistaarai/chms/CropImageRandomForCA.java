@@ -38,11 +38,13 @@ import in.co.appinventor.services_api.listener.ApiCallbackCode;
 import in.co.appinventor.services_api.listener.ApiJSONObjCallback;
 import in.co.appinventor.services_api.listener.AsyncResponse;
 import in.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener;
+import in.co.appinventor.services_api.settings.AppSettings;
 import in.gov.mahapocra.mahavistaarai.R;
 import in.gov.mahapocra.mahavistaarai.sma.APIRequest;
 import in.gov.mahapocra.mahavistaarai.sma.APIServices;
 import in.gov.mahapocra.mahavistaarai.sma.AppSession;
 import in.gov.mahapocra.mahavistaarai.sma.ProfileModel;
+import in.gov.mahapocra.mahavistaarai.util.AppConstants;
 import in.gov.mahapocra.mahavistaarai.util.app_util.AppString;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -116,13 +118,14 @@ public class CropImageRandomForCA extends AppCompatActivity implements ApiJSONOb
     private TextView txtSelectCropPest;
     private JSONArray mCropPestArray;
     private JSONArray mDistArray;
+    private JSONArray mTalukaArray;
     private int cropPestId = 0;
     private TextView txtSelectCropList;
     private JSONArray mCropArray;
     private int cropId = 0;
     private TextView txtSelectCropDisease;
     private JSONArray mCropDieaseArray;
-    private int cropDieaseId = 0;
+    private int cropDiseaseId = 0;
     private EditText edtFarmerName;
     //    private JSONArray mFarmerListArray;
 //    private int farmerId = 0;
@@ -147,6 +150,7 @@ public class CropImageRandomForCA extends AppCompatActivity implements ApiJSONOb
     private static final int CAMERA_CODE = 22;
     private File imgFile = null;
     private File file = null;
+    private int fRegisterId;
 //    public AppLocationManager appLocationManager;
 
     //    private TextView txtSelectImgSection;
@@ -176,7 +180,8 @@ public class CropImageRandomForCA extends AppCompatActivity implements ApiJSONOb
         Log.d("MAYU111", "dynamicViews" + dynamicViews.size());
         capturedImages = new ArrayList<>();
         imageFiles = new ArrayList<>();
-
+        fRegisterId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0);
+        Log.d("REGISTER_ID", "fREGISTER_ID = " + fRegisterId);
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -325,7 +330,7 @@ public class CropImageRandomForCA extends AppCompatActivity implements ApiJSONOb
 
                 else if (isFlagSetCategory == 0 && isFlagSetDisease == 0 && cropPestId == 0) {
                     Toast.makeText(CropImageRandomForCA.this, "Please Select Pest Type ", Toast.LENGTH_SHORT).show();
-                } else if (isFlagSetCategory == 0 && isFlagSetDisease == 1 && cropDieaseId == 0){
+                } else if (isFlagSetCategory == 0 && isFlagSetDisease == 1 && cropDiseaseId == 0){
                     Toast.makeText(CropImageRandomForCA.this, "Please Select Disease Type ", Toast.LENGTH_SHORT).show();
                 } else if(sectionId == 0){
                     Toast.makeText(CropImageRandomForCA.this, "Please Select section ", Toast.LENGTH_SHORT).show();
@@ -517,27 +522,27 @@ public class CropImageRandomForCA extends AppCompatActivity implements ApiJSONOb
         return sdf.format(currentDate);
     }
 
-    public void showVillage() {
-        if (mVillageArray == null) {
-//            fetchVillage(Integer.parseInt(userId));
-            fetchVillage();
-        } else {
-            AppUtility.getInstance().showListDialogIndex(mVillageArray, 1, getString(R.string.TcVillage), "name", "id", this, this);
-        }
-    }
+//    public void showVillage() {
+//        if (mVillageArray == null) {
+////            fetchVillage(Integer.parseInt(userId));
+//            fetchVillage();
+//        } else {
+//            AppUtility.getInstance().showListDialogIndex(mVillageArray, 1, getString(R.string.TcVillage), "name", "id", this, this);
+//        }
+//    }
 
-    private void fetchVillage() {
-
-        String url = "https://sso-ndksp.mahapocra.gov.in/v23/masterService/get-village-on-taluka/4015";
-//                APIServices.kCAId + userID;
-        Log.d("Mayu111", "URL===" + url);
-        AppinventorIncAPI api = new AppinventorIncAPI(this, APIServices.SSO, "", new AppString(this).getkMSG_WAIT(), false);
-        Log.d("Mayu111", "URL===" +APIServices.SSO+url);
-        //  AppinventorIncAPI api = new AppinventorIncAPI(this, APIServices.SSO, "", new AppString(this).getkMSG_WAIT(), true);
-        //  AppinventorIncAPI api = new AppinventorIncAPI(this, APIServices.BASE_API, new AppSession(this).getToken(), new AppString(this).getkMSG_WAIT(), true);
-        api.getRequestData(url, this, 1);
-        DebugLog.getInstance().d(url);
-    }
+//    private void fetchVillage() {
+//
+//        String url = "https://sso-ndksp.mahapocra.gov.in/v23/masterService/get-village-on-taluka/4015";
+////                APIServices.kCAId + userID;
+//        Log.d("Mayu111", "URL===" + url);
+//        AppinventorIncAPI api = new AppinventorIncAPI(this, APIServices.SSO, "", new AppString(this).getkMSG_WAIT(), false);
+//        Log.d("Mayu111", "URL===" +APIServices.SSO+url);
+//        //  AppinventorIncAPI api = new AppinventorIncAPI(this, APIServices.SSO, "", new AppString(this).getkMSG_WAIT(), true);
+//        //  AppinventorIncAPI api = new AppinventorIncAPI(this, APIServices.BASE_API, new AppSession(this).getToken(), new AppString(this).getkMSG_WAIT(), true);
+//        api.getRequestData(url, this, 1);
+//        DebugLog.getInstance().d(url);
+//    }
 
     private void fetchAllCrops() {
 
@@ -558,6 +563,7 @@ public class CropImageRandomForCA extends AppCompatActivity implements ApiJSONOb
             AppUtility.getInstance().showListDialogIndex(mCropArray, 3, getString(R.string.Cropname), "name", "id", this, this);
         }
     }
+
     public void showDistrict() {
         if (mDistArray == null) {
             fetchDistrict();
@@ -588,19 +594,18 @@ public class CropImageRandomForCA extends AppCompatActivity implements ApiJSONOb
         }
     }
     public void showTaluka() {
-        if (mDistArray == null) {
-            fetchTaluka();
+        if (mTalukaArray == null) {
+            fetchTaluka(String.valueOf(districtID));
         } else {
-            AppUtility.getInstance().showListDialogIndex(mDistArray, 12, getString(R.string.Alltaluka), "name", "code", this, this);
+            AppUtility.getInstance().showListDialogIndex(mTalukaArray, 12, getString(R.string.Alltaluka), "name", "code", this, this);
         }
     }
-    private void fetchTaluka() {
-
+    private void fetchTaluka(String districtID) {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("lang", "en");
-            jsonObject.put("district_code", "515");
-            Log.d("Mayu111","croppingSystemId=="+croppingSystem);
+            jsonObject.put("district_code", districtID);
+            Log.d("Mayu111","districtID=="+districtID);
             RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
 
             AppinventorIncAPI api = new AppinventorIncAPI(this, APIServices.BASE_URL_CHMS, session.getToken(), new AppString(this).getkMSG_WAIT(), true);
@@ -617,6 +622,37 @@ public class CropImageRandomForCA extends AppCompatActivity implements ApiJSONOb
             e.printStackTrace();
         }
     }
+    public void showVillage() {
+        if (mVillageArray == null) {
+            fetchVillage(String.valueOf(talukaID));
+        } else {
+            AppUtility.getInstance().showListDialogIndex(mVillageArray, 13, getString(R.string.TcVillage), "name", "code", this, this);
+        }
+    }
+    private void fetchVillage(String talukaID) {
+
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("lang", "en");
+            jsonObject.put("taluka_code", talukaID);
+            Log.d("Mayu111","talukaID=="+talukaID);
+            RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
+
+            AppinventorIncAPI api = new AppinventorIncAPI(this, APIServices.BASE_URL_CHMS, session.getToken(), new AppString(this).getkMSG_WAIT(), true);
+            Retrofit retrofit = api.getRetrofitInstance();
+            APIRequest apiRequest = retrofit.create(APIRequest.class);
+            Call<com.google.gson.JsonObject> responseCall = apiRequest.fetchVillage(requestBody);
+
+            DebugLog.getInstance().d("param=" + responseCall.request().toString());
+            DebugLog.getInstance().d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()));
+
+            api.postRequest(responseCall, this, 13);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void showCropStage() {
         if (mCropStageArray == null) {
             fetchCropStage();
@@ -794,12 +830,13 @@ public class CropImageRandomForCA extends AppCompatActivity implements ApiJSONOb
 
         try {
             JSONObject jsonObject = new JSONObject();
-            Log.d("Mayu111", "fetchCropDisease formNoId==" + formNoId);
-            jsonObject.put("form_no", formNoId);
+            Log.d("Mayu111", "fetchCropDisease fRegisterId==" + fRegisterId);
+//            jsonObject.put("form_no", formNoId);
+            jsonObject.put("user_id", fRegisterId);
             // jsonObject.put("cropping_system_id", croppingSystem);
             RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
 
-            AppinventorIncAPI api = new AppinventorIncAPI(this, APIServices.BASE_API, session.getToken(), new AppString(this).getkMSG_WAIT(), true);
+            AppinventorIncAPI api = new AppinventorIncAPI(this, APIServices.BASE_URL_CHMS, session.getToken(), new AppString(this).getkMSG_WAIT(), true);
             Retrofit retrofit = api.getRetrofitInstance();
             APIRequest apiRequest = retrofit.create(APIRequest.class);
             Call<com.google.gson.JsonObject> responseCall = apiRequest.fetchUpdatefarmerStatusForTC(requestBody);
@@ -993,7 +1030,7 @@ public class CropImageRandomForCA extends AppCompatActivity implements ApiJSONOb
 //        }
 
     private void addImage() {   // For multiple images
-        if (capturedImages.size() >= 10) {
+        if (capturedImages.size() >= 5) {
             Toast.makeText(this, "Maximum number of images reached", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -1067,13 +1104,13 @@ public class CropImageRandomForCA extends AppCompatActivity implements ApiJSONOb
             params.put("date", AppinventorIncAPI.toRequestBody(currentDate));
             //   params.put("farmer_id", AppinventorApi.toRequestBody(String.valueOf(farmerId)));
             params.put("category", AppinventorIncAPI.toRequestBody(String.valueOf(isFlagSetCategory)));
-            params.put("district", AppinventorIncAPI.toRequestBody(String.valueOf(districtID))); // new added
-            params.put("taluka", AppinventorIncAPI.toRequestBody(String.valueOf(talukaID))); // new added
+//            params.put("district", AppinventorIncAPI.toRequestBody(String.valueOf(districtID))); // new added
+//            params.put("taluka", AppinventorIncAPI.toRequestBody(String.valueOf(talukaID))); // new added
             params.put("village", AppinventorIncAPI.toRequestBody(String.valueOf(villageID)));
             params.put("farmer_name", AppinventorIncAPI.toRequestBody(stredtFarmerName));
             params.put("survey_no", AppinventorIncAPI.toRequestBody(stredtSurveyNo));
             params.put("area", AppinventorIncAPI.toRequestBody("0"));
-            params.put("user_id", AppinventorIncAPI.toRequestBody(userId));
+            params.put("user_id", AppinventorIncAPI.toRequestBody(String.valueOf(fRegisterId)));
             params.put("crop", AppinventorIncAPI.toRequestBody(String.valueOf(cropId)));
             params.put("stage", AppinventorIncAPI.toRequestBody(String.valueOf(cropStageId)));
             if (isFlagSetCategory == 0) {
@@ -1083,36 +1120,34 @@ public class CropImageRandomForCA extends AppCompatActivity implements ApiJSONOb
                     //params.put("disease", AppinventorApi.toRequestBody("0"));
                 } else {
                     //params.put("pest", AppinventorApi.toRequestBody("0"));
-                    params.put("disease", AppinventorIncAPI.toRequestBody(String.valueOf(cropDieaseId)));
-                    Log.d("MAYU111", "imageUploadRequest cropDieaseId==" + cropDieaseId);
+                    params.put("disease", AppinventorIncAPI.toRequestBody(String.valueOf(cropDiseaseId)));
+                    Log.d("MAYU111", "imageUploadRequest cropDiseaseId==" + cropDiseaseId);
                 }
             }
             params.put("lat", AppinventorIncAPI.toRequestBody(String.valueOf(latitude)));
             params.put("long", AppinventorIncAPI.toRequestBody(String.valueOf(longitude)));
-
-            params.put("form_no", AppinventorIncAPI.toRequestBody(formNo));
-            // params.put("section", AppinventorApi.toRequestBody(String.valueOf(categories)));
             params.put("section", AppinventorIncAPI.toRequestBody(String.valueOf(sectionId)));
-            //  params.put("image_name", requestBody);
-            //  Log.d("MAYU111", "postImages2 jsonObject= " + jsonObject);
+//            params.put("form_no", AppinventorIncAPI.toRequestBody(formNo));
+            // params.put("section", AppinventorApi.toRequestBody(String.valueOf(categories)));
             Log.d("MAYU111", "imageUploadRequest param==" + params);
             Log.d("MAYU111", "imageUploadRequest categories==" + categories);
             //   Log.d("MAYU111", "imageUploadRequest farmerId==" + farmerId);
-            Log.d("MAYU111", "imageUploadRequest formNo==" + formNo);
+//            Log.d("MAYU111", "imageUploadRequest formNo==" + formNo);
             Log.d("MAYU111", "imageUploadRequest lat==" + latitude);
             Log.d("MAYU111", "imageUploadRequest long==" + longitude);
-            Log.d("MAYU111", "imageUploadRequest userId==" + userId);
+            Log.d("MAYU111", "imageUploadRequest userId==" + fRegisterId);
 //            Log.d("MAYU111", "imageUploadRequest Area==" + stredtArea);
-            Log.d("MAYU111", "imageUploadRequest param==" + "currentDate=" + currentDate + "isFlagSetCategory=" + isFlagSetCategory +"districtID=" + districtID +"talukaID=" + talukaID + "villageID=" + villageID + "stredtSurveyNo=" + stredtSurveyNo + "cropId=" + cropId + "cropStageId=" + cropStageId);
+            Log.d("MAYU111", "imageUploadRequest param==" + "date=" + currentDate + "category=" + isFlagSetCategory + "survey_no=" + stredtSurveyNo + "village=" + villageID + "farmer_name=" + stredtFarmerName + "crop=" + cropId + "stage=" + cropStageId);
+            Log.d("MAYU111", "imageUploadRequest param==" + "lat=" + latitude + "long=" + longitude +"user_id=" + fRegisterId + "image=" + imageFile + "section=" + sectionId + "pest=" + cropPestId + "disease=" + cropDiseaseId);
 
 //                RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), capturedImages);
 //                partBody = MultipartBody.Part.createFormData("image_name", String.valueOf(capturedImages), reqFile);
 
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), imageFile);
-            partBody = MultipartBody.Part.createFormData("image_name", String.valueOf(imageFile), reqFile);
+            partBody = MultipartBody.Part.createFormData("image", String.valueOf(imageFile), reqFile);
 
 
-            AppinventorIncAPI api = new AppinventorIncAPI(this, APIServices.BASE_API, session.getToken(), new AppString(this).getkMSG_WAIT(), true);
+            AppinventorIncAPI api = new AppinventorIncAPI(this, APIServices.BASE_URL_CHMS, session.getToken(), new AppString(this).getkMSG_WAIT(), true);
             Retrofit retrofit = api.getRetrofitInstance();
 
             //creating our api
@@ -1180,13 +1215,27 @@ public class CropImageRandomForCA extends AppCompatActivity implements ApiJSONOb
 
     @Override
     public void didSelectListItem(int i, String str, String str2) {
-        if (i == 1) {
+
+        if (i == 11) {
+            districtID = Integer.parseInt(str2);
+            txtSelectDist.setText(str);
+            Log.d("Mayu111", "didSelectListItem txtSelectDist===" + districtID);
+            Log.d("Mayu111", "txtSelectDist===" + str);
+            fetchTaluka(String.valueOf(districtID));
+        }
+        if (i == 12) {
+            talukaID = Integer.parseInt(str2);
+            txtSelectTaluka.setText(str);
+            Log.d("Mayu111", "didSelectListItem txtSelectTaluka===" + talukaID);
+            Log.d("Mayu111", "txtSelectTaluka===" + str);
+            fetchVillage(String.valueOf(talukaID));
+        }
+        if (i == 13) {
             villageID = Integer.parseInt(str2);
             txtSelectVillage.setText(str);
             Log.d("Mayu111", "didSelectListItem villageID===" + villageID);
             Log.d("Mayu111", "txtSelectVillage===" + str);
 //            fetchVillageFarmerList(villageID);
-
         }
         if (i == 2) {
             cropStageId = Integer.parseInt(str2);
@@ -1212,9 +1261,9 @@ public class CropImageRandomForCA extends AppCompatActivity implements ApiJSONOb
 
         }
         if (i == 5) {
-            cropDieaseId = Integer.parseInt(str2);
+            cropDiseaseId = Integer.parseInt(str2);
             txtSelectCropDisease.setText(str);
-            Log.d("Mayu111", "didSelectListItem cropDieaseId===" + cropDieaseId);
+            Log.d("Mayu111", "didSelectListItem cropDiseaseId===" + cropDiseaseId);
             Log.d("Mayu111", "txtSelectCropDisease===" + str);
 
         }
@@ -1264,22 +1313,6 @@ public class CropImageRandomForCA extends AppCompatActivity implements ApiJSONOb
     @Override
     public void onResponse(JSONObject jsonObject, int i) {
         try {
-            if (i == 1) {
-                if (jsonObject != null) {
-                    DebugLog.getInstance().d("onResponse=" + jsonObject);
-                    ResponseModel response = new ResponseModel(jsonObject);
-
-                    if (response.getStatus()) {
-                        mVillageArray = response.getDataArray();
-                        for (int m = 0; m < mVillageArray.length(); m++) {
-                            JSONObject actor = mVillageArray.getJSONObject(m);
-                        }
-
-                    } else {
-                        Toast.makeText(this, "" + response.getResponse(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
             if (i == 2) {
                 if (jsonObject != null) {
                     DebugLog.getInstance().d("onResponse=" + jsonObject);
@@ -1378,6 +1411,38 @@ public class CropImageRandomForCA extends AppCompatActivity implements ApiJSONOb
                         mDistArray = response.getDataArray();
                         for (int m = 0; m < mDistArray.length(); m++) {
                             JSONObject actor = mDistArray.getJSONObject(m);
+                        }
+
+                    } else {
+                        Toast.makeText(this, "" + response.getResponse(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            if (i == 12) {
+                if (jsonObject != null) {
+                    DebugLog.getInstance().d("onResponse=" + jsonObject);
+                    ResponseModel response = new ResponseModel(jsonObject);
+
+                    if (response.getStatus()) {
+                        mTalukaArray = response.getDataArray();
+                        for (int m = 0; m < mTalukaArray.length(); m++) {
+                            JSONObject actor = mTalukaArray.getJSONObject(m);
+                        }
+
+                    } else {
+                        Toast.makeText(this, "" + response.getResponse(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            if (i == 13) {
+                if (jsonObject != null) {
+                    DebugLog.getInstance().d("onResponse=" + jsonObject);
+                    ResponseModel response = new ResponseModel(jsonObject);
+
+                    if (response.getStatus()) {
+                        mVillageArray = response.getDataArray();
+                        for (int m = 0; m < mVillageArray.length(); m++) {
+                            JSONObject actor = mVillageArray.getJSONObject(m);
                         }
 
                     } else {

@@ -1,7 +1,6 @@
 package in.gov.mahapocra.mahavistaarai.chms;
 
 import android.content.Context;
-import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -46,7 +42,7 @@ public class ImageListCHMS extends RecyclerView.Adapter<ImageListCHMS.ViewHolder
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            Log.d("mmhkjfhkdsajhf",mJSONArray.toString());
+            Log.d("MAYU",mJSONArray.toString());
             try {
                 holder.setDvata(mJSONArray.getJSONObject(position), listener);
 
