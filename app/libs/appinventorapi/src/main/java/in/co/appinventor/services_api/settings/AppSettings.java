@@ -57,7 +57,6 @@ public class AppSettings {
     public static AppSettings getInstance() {
         return ourInstance;
     }
-
     public void initAppSettings(String sharedPreferenceName) {
         this.APP_SHARED_PREFERENCE_NAME = "in.co.appinventor" + sharedPreferenceName + "sharedpreference";
     }

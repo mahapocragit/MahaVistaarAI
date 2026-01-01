@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_bg"
+    android:fillViewport="true"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".sma.KTReportActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/app_bg"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:fitsSystemWindows="true"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            app:elevation="@dimen/padding0">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:titleTextAppearance="@style/ToolbarTitleStyle"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <TextView
+            android:id="@+id/jdatetxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            android:textSize="18sp"
+            android:textColor="@color/badge_bg"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:visibility="visible" />
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardElevation="@dimen/padding3"
+            android:visibility="gone"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="एकूण उपस्थितीचे दिवस = "
+                        android:textColor="@color/text_black"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/presentDayTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="start"
+                        android:padding="8dp"
+                        android:textColor="@color/text_black_light"
+                        android:textStyle="normal" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="एकूण गैरहजेरीचे दिवस = "
+                        android:textColor="@color/text_black"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/absentDayTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="start"
+                        android:padding="8dp"
+                        android:textColor="@color/text_black_light"
+                        android:textStyle="normal" />
+
+                </LinearLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/padding1"
+                    android:background="@color/line" />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:padding="8dp"
+                    android:text="✅ दर्शक सूची "
+                    android:textColor="@color/text_black"
+                    android:textSize="@dimen/text18"
+                    android:textStyle="bold" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/padding10"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="@dimen/padding20"
+                            android:layout_height="@dimen/padding20"
+                            android:background="@color/status_green"
+                            android:layout_gravity="center_vertical"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="start"
+                            android:padding="8dp"
+                            android:text="एकूण कामकाजाचे दिवस"
+                            android:textColor="@color/status_green"
+                            android:textStyle="normal"
+                            android:textSize="@dimen/text13"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="@dimen/padding20"
+                            android:layout_height="@dimen/padding20"
+                            android:background="@color/red"
+                            android:layout_gravity="center_vertical"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="start"
+                            android:padding="8dp"
+                            android:text="कामकाज नसलेले एकूण दिवस"
+                            android:textColor="@color/red"
+                            android:textStyle="normal"
+                            android:textSize="@dimen/text13"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/padding10"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="@dimen/padding20"
+                            android:layout_height="@dimen/padding20"
+                            android:background="@color/schedule_up"
+                            android:layout_gravity="center_vertical"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="start"
+                            android:padding="8dp"
+                            android:text="सुट्टीचे(रजा) दिवस"
+                            android:textColor="@color/schedule_up"
+                            android:textStyle="normal"
+                            android:textSize="@dimen/text13"/>
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="@dimen/padding20"
+                            android:layout_height="@dimen/padding20"
+                            android:background="@color/white_dim_light"
+                            android:layout_gravity="center_vertical"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="start"
+                            android:padding="8dp"
+                            android:text="शासकीय सुट्टीचे दिवस"
+                            android:textColor="@color/heading"
+                            android:textStyle="normal"
+                            android:textSize="@dimen/text13"/>
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+                <!--
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/padding10"
+                                    android:orientation="horizontal">
+
+                                    <View
+                                        android:layout_width="@dimen/padding20"
+                                        android:layout_height="@dimen/padding20"
+                                        android:background="@color/white_light"
+                                        android:layout_gravity="center_vertical"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="start"
+                                        android:padding="8dp"
+                                        android:text="Upcoming"
+                                        android:textColor="@color/white_light"
+                                        android:textStyle="normal" />
+
+                                </LinearLayout>
+                -->
+
+<!--                <Button-->
+<!--                    android:id="@+id/btnFeedback"-->
+<!--                    android:layout_width="250dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:visibility="invisible"-->
+<!--                    android:layout_gravity="center_horizontal"-->
+<!--                    android:gravity="center"-->
+<!--                    android:text="अभिप्राय नोंदवा"-->
+<!--                    android:layout_marginBottom="5dp"-->
+<!--                    android:background="@drawable/bg_custom_dialog">-->
+<!--                </Button>-->
+<!--                -->
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+        <!-- ================== महिन्यात केलेले कामकाज ================== -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FAD4E8"
+            app:cardElevation="@dimen/padding3"
+            app:cardUseCompatPadding="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/grey_300"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="✅  महिन्यात केलेले कामकाज"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:paddingBottom="6dp" />
+
+            <LinearLayout
+                android:id="@+id/linLayoutKT"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/app_bg"
+                android:paddingStart="10dp">
+
+                <TextView
+                    android:id="@+id/tv_meetings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="बैठका – 12"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/badge_bg"
+                    android:padding="4dp"/>
+
+                <TextView
+                    android:id="@+id/tv_trainings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="प्रशिक्षण – 10"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/badge_bg"
+                    android:padding="4dp"/>
+
+                <TextView
+                    android:id="@+id/tv_visits"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="भेट – 6"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/badge_bg"
+                    android:padding="4dp"/>
+            </LinearLayout>
+            <Button
+                android:id="@+id/btnFeedback"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:text="📩  अभिप्राय नोंदवा"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/bg_custom_dialog">
+            </Button>
+
+        </LinearLayout>
+        </androidx.cardview.widget.CardView>
+        <!-- ============================================================ -->
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
+

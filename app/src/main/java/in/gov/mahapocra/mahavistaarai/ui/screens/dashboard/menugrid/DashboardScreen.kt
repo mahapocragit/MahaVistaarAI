@@ -16,6 +16,7 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.view.Window
 import android.view.WindowManager
+import android.view.animation.AlphaAnimation
 import android.view.animation.AnimationUtils
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
@@ -45,8 +46,11 @@ import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.CropsCategName
+import `in`.gov.mahapocra.mahavistaarai.data.model.PocraRole
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDashboardScreenBinding
+import `in`.gov.mahapocra.mahavistaarai.sma.KTDashboardActivity
+import `in`.gov.mahapocra.mahavistaarai.sma.SmaLoginActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropRecyclerSapAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DashboardAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DrawerMenuAdapter
@@ -271,6 +275,54 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         AppPreferenceManager(this).saveBoolean("COST_CALCULATOR_REDIRECT", false)
         binding.appBarMain.imgLangChange.setOnClickListener { openChangeLangPopup() }
 
+        binding.appBarMain.dashboardScreen.krishiTaiLayout.setOnClickListener {
+
+            val rolesJson = AppSettings.getInstance()
+                .getValue(this, AppConstants.pocraRoles, "[]")
+
+            val pocraRoles = mutableListOf<PocraRole>()
+
+            try {
+                val arr = JSONArray(rolesJson)
+                for (i in 0 until arr.length()) {
+                    val obj = arr.getJSONObject(i)
+                    pocraRoles.add(
+                        PocraRole(
+                            obj.getInt("role_id"),
+                            obj.getString("username"),
+                            obj.getString("role"),
+                            obj.getString("short_name")
+                        )
+                    )
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            // Check only Krishi Tai roles
+            val ktRoles = pocraRoles.filter { it.role_id == 45 }
+
+            if (ktRoles.isEmpty()) {
+                Toast.makeText(this, "You are not authorized for SMA module", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // If only one username → direct login
+            if (ktRoles.size == 1) {
+                val userName = ktRoles[0].username
+                AppSettings.getInstance().setValue(this, AppConstants.smaUsername, userName)
+                Log.d("ROLE_SELECT", "Auto-selected Username = $userName")
+                val intent = Intent(this, KTDashboardActivity::class.java)
+                intent.putExtra("selected_username", userName)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
+            // If multiple usernames → show dialog
+            else {
+                showRoleSelectionDialog(ktRoles)
+            }
+        }
+
         binding.appBarMain.callImageView.setOnClickListener {
             val intent = Intent(Intent.ACTION_DIAL).apply {
                 data = "tel:155313".toUri()
@@ -432,8 +484,28 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 dialog.dismiss()
             }
         }
+
     }
 
+    private fun showRoleSelectionDialog(roles: List<PocraRole>) {
+        val usernames = roles.map { it.username }.toTypedArray()
+        AlertDialog.Builder(this)
+            .setTitle("Select Username")
+            .setItems(usernames) { dialog, which ->
+                val selectedUser = usernames[which]
+                AppSettings.getInstance().setValue(this, AppConstants.smaUsername, selectedUser)
+
+                Log.d("ROLE_SELECT", "Selected Username = $selectedUser")
+
+                val intent = Intent(this, KTDashboardActivity::class.java)
+                intent.putExtra("selected_username", selectedUser)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                dialog.dismiss()
+            }
+            .setCancelable(false)
+            .show()
+    }
     private fun observeResponse() {
 
         farmerViewModel.error.observe(this) {
@@ -665,6 +737,46 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     val villageNameMr = data.optString("VillageNameMr", "")
                     val agristack_id = data.optString("farmer_id", "")
                     val consent = data.optBoolean("consent")
+                    //  pocra_roles array
+                    val pocraRoles = mutableListOf<PocraRole>()
+                    val rolesArray = data.optJSONArray("pocra_roles")
+                    var userRoleId = -1
+                    var hasKrishiTaiRole = false   // FLAG
+                    if (rolesArray != null && rolesArray.length() > 0) {
+
+                        // roles exist → parse them
+                        for (i in 0 until rolesArray.length()) {
+                            val roleObj = rolesArray.optJSONObject(i) ?: continue
+                            val roleId = roleObj.optInt("role_id", -1)
+                            val username = roleObj.optString("username", "")
+                            val role = roleObj.optString("role", "")
+                            val shortName = roleObj.optString("short_name", "")
+                            pocraRoles.add(PocraRole(roleId, username, role, shortName))
+                            // ✅ CHECK ROLE 45
+                            if (roleId == 45) {
+                                hasKrishiTaiRole = true
+                            }
+                        }
+//                        // SHOW / HIDE BASED ON ROLE
+//                        binding.appBarMain.dashboardScreen.krishiTaiLayout.visibility =
+//                            if (hasKrishiTaiRole) View.VISIBLE else View.GONE
+//                            Log.d("POCRA_ROLE", "roles found → SMA button visible. Count = ${pocraRoles.size}")
+                        binding.appBarMain.dashboardScreen.krishiTaiLayout.visibility =
+                            if (hasKrishiTaiRole) View.VISIBLE else View.GONE
+
+                        if (hasKrishiTaiRole) {
+                            blinkViewFor5Seconds(binding.appBarMain.dashboardScreen.krishiTaiLayout)
+                            Log.d(
+                                "POCRA_ROLE",
+                                "roles found → SMA button visible & blinking. Count = ${pocraRoles.size}"
+                            )
+                        }
+
+                    } else {
+                        // No roles → hide SMA button
+                        binding.appBarMain.dashboardScreen.krishiTaiLayout.visibility = View.GONE
+                        Log.d("POCRA_ROLE", "roles empty → SMA button hidden")
+                    }
                     farmerViewModel.getCropSapAdvisory(
                         this,
                         villageId
@@ -693,6 +805,13 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         setIntValue(this@DashboardScreen, AppConstants.uVILLAGEID, villageId)
                         setBooleanValue(this@DashboardScreen, AppConstants.userDataSaved, true)
                         setValue(this@DashboardScreen, AppConstants.AGRISTACKID, agristack_id)
+
+                        // Save POCRA roles list
+                        val rolesJsonString = convertRolesToJson(pocraRoles)
+                        setValue(this@DashboardScreen, AppConstants.pocraRoles, rolesJsonString)
+                        Log.d("SAVE_ROLES", "Saved rolesJsonString = $rolesJsonString")
+                        setIntValue(this@DashboardScreen, AppConstants.uRole, userRoleId)
+                        Log.d("POCRA_ROLE", "userRoleId ID = $userRoleId")
                     }
 
                     binding.appBarMain.dashboardScreen.userFullNameTextView.text = name
@@ -735,6 +854,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                             showAgristackLinkingDialog()
                         }
                     }
+
                 }
             } catch (e: Exception) {
                 Log.e("userDetailsObserver", "Exception: ${e.localizedMessage}")
@@ -793,6 +913,28 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 }
             }
         }
+    }
+
+    fun convertRolesToJson(roles: List<PocraRole>): String {
+        val jsonArray = JSONArray()
+        for (role in roles) {
+            val obj = JSONObject()
+            obj.put("role_id", role.role_id)
+            obj.put("username", role.username)
+            obj.put("role", role.role)
+            obj.put("short_name", role.short_name)
+            jsonArray.put(obj)
+        }
+        return jsonArray.toString()
+    }
+    private fun blinkViewFor5Seconds(view: View) {
+        val blinkAnimation = AlphaAnimation(0.0f, 1.0f).apply {
+            duration = 500          // 0.5 sec fade
+            startOffset = 100
+            repeatMode = AlphaAnimation.REVERSE
+            repeatCount = 9         // 0.5 sec × 10 = 5 seconds
+        }
+        view.startAnimation(blinkAnimation)
     }
 
     private fun showDialogForConsent() {

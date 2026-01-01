@@ -21,6 +21,11 @@
         <item name="android:fontFamily">@font/poppins_regular_font</item>
         <item name="fontFamily">@font/poppins_regular_font</item>
     </style>
+    <style name="RadioButtonStyle" parent="AppTheme">
+        <item name="colorControlNormal">@color/status_red</item>
+        <item name="colorAccent">@color/schedule_up</item>
+        <item name="android:textColorSecondary">@color/black</item>
+    </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
@@ -99,5 +104,11 @@
     <style name="CalendarAnimation">
         <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
         <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+    <!-- res/values/styles.xml -->
+    <style name="ToolbarTitleStyle">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
     </style>
 </resources>
