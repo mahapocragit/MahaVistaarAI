@@ -540,4 +540,7 @@
     <string name="kt_report">अहवाल</string>
     <string name="view_kt_details">अहवाल माहिती</string>
     <string name="KrishiTai">कृषिताई</string>
+    <string name="farmer_id_login_text">आपल्या कामासाठी लागणारी माहिती मिळाली नाही. कृपया थोड्या वेळाने पुन्हा प्रयत्न करा.</string>
+    <string name="limit_reached">मर्यादा गाठली आहे</string>
+    <string name="limit_reached_desc">तुम्ही तुमच्या डिव्हाइसवरून आधीच ५ वापरकर्त्यांची नोंदणी केली आहे.</string>
 </resources>

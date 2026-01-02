@@ -16,6 +16,7 @@ import android.widget.RadioButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.firebase.messaging.FirebaseMessaging
@@ -59,6 +60,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     private var timestamp: Long = 0
     private lateinit var mobileNo: String
     private lateinit var dialog: Dialog
+    private var agristackLoginMethodEnabled = true
     private var userPass = ""
     var languageToLoad = "mr"
     private var farmerRegisteredID: Int = 0
@@ -117,6 +119,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             binding.farmerLoginLayout.visibility = View.GONE
         }
         binding.farmerIdOption.setOnClickListener {
+            agristackLoginMethodEnabled = true
             binding.mobileNoOption.background =
                 ContextCompat.getDrawable(this, R.drawable.shape_left_white)
             binding.farmerIdOption.background =
@@ -129,6 +132,47 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             binding.farmerLoginLayout.visibility = View.VISIBLE
         }
 
+        loginViewModel.getRegisteredDeviceCountByDeviceIdResponse.observe(this) { response ->
+            if (response != null) {
+                val jSONObject = JSONObject(response.toString())
+                val status = jSONObject.optInt("status")
+                val responseText =
+                    if (languageToLoad == "en") jSONObject.optString("response") else jSONObject.optString(
+                        "responseMr"
+                    )
+                if (status == 200) {
+                    val count = jSONObject.optInt("count")
+                    if (count > 5) {
+                        AlertDialog.Builder(this)
+                            .setTitle(R.string.limit_reached)
+                            .setMessage(R.string.limit_reached_desc)
+                            .setPositiveButton(R.string.okay) { dialog, _ ->
+                                dialog.dismiss()
+                            }
+                            .show()
+                    } else {
+                        // Continue user creation logic
+                        if (agristackLoginMethodEnabled) {
+                            farmerViewModel.farmerIdBasedLogin(this, agriStackId)
+                        } else {
+                            val intent2 =
+                                Intent(applicationContext, PreRegistrationActivity::class.java)
+                            startActivity(intent2)
+                        }
+                    }
+                } else {
+                    AlertDialog.Builder(this)
+                        .setTitle(R.string.limit_reached)
+                        .setMessage(responseText)
+                        .setPositiveButton(R.string.okay) { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        .show()
+                }
+                Log.d(TAG, "onCreate: $jSONObject")
+            }
+        }
+
         farmerIdLayoutValidation()
     }
 
@@ -138,7 +182,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             if (agriStackId.length != 11 && agriStackId.isEmpty()) {
                 UIToastMessage.show(this, "Please enter valid Farmer ID")
             } else {
-                farmerViewModel.farmerIdBasedLogin(this, agriStackId)
+                loginViewModel.getRegisteredDeviceCountByDeviceId(this)
             }
         }
 
@@ -150,13 +194,16 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     agriStackMobile = jsonObject.optString("mobile")
                     agriStackUserExist = jsonObject.optBoolean("isUserExists")
                     addVerificationDialogForFarmer()
+                } else {
+                    Toast.makeText(this, R.string.farmer_id_login_text, Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
-        farmerViewModel.error.observe(this)
-        {
-            Log.d(TAG, "farmerIdLayoutValidation error: $it")
+        farmerViewModel.error.observe(this) {
+            if (it == "Correlation ID not found in response") {
+                Toast.makeText(this, R.string.farmer_id_login_text, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -206,8 +253,8 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         }
 
         binding.registerTextView.setOnClickListener {
-            val intent2 = Intent(applicationContext, PreRegistrationActivity::class.java)
-            startActivity(intent2)
+            agristackLoginMethodEnabled = false
+            loginViewModel.getRegisteredDeviceCountByDeviceId(this)
         }
 
         binding.passwordEditText.setOnClickListener {
@@ -218,15 +265,6 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     Toast.LENGTH_LONG
                 ).show()
             }
-        }
-
-        binding.guestModeCardView.setOnClickListener {
-            // CAPTCHA was successfully verified
-            val userId = LocalCustom.generateRandom10DigitNumber()
-            AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, userId)
-            AppSettings.getInstance()
-                .setBooleanValue(this, AppConstants.IS_USER_GUEST, true)
-            startActivity(Intent(this, DashboardScreen::class.java))
         }
     }
 

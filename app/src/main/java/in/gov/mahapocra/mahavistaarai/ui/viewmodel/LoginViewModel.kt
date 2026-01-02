@@ -45,6 +45,9 @@ class LoginViewModel : ViewModel() {
     private val _updateFarmerDetailsByIdResponse = MutableLiveData<JsonObject>()
     val updateFarmerDetailsByIdResponse: LiveData<JsonObject> = _updateFarmerDetailsByIdResponse
 
+    private val _getRegisteredDeviceCountByDeviceIdResponse = MutableLiveData<JsonObject>()
+    val getRegisteredDeviceCountByDeviceIdResponse: LiveData<JsonObject> = _getRegisteredDeviceCountByDeviceIdResponse
+
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
@@ -218,6 +221,33 @@ class LoginViewModel : ViewModel() {
                 )
                 ProgressHelper.disableProgressDialog()
                 _updateFarmerDetailsByIdResponse.value = response
+            } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getRegisteredDeviceCountByDeviceId(context: Context) {
+        viewModelScope.launch {
+            ProgressHelper.showProgressDialog(context)
+            val deviceId =
+                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+            try {
+                val userId =
+                    AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val api = retrofit.create(ApiService::class.java)
+                val response = api.getRegisteredDeviceCountByDeviceId(deviceId)
+                ProgressHelper.disableProgressDialog()
+                _getRegisteredDeviceCountByDeviceIdResponse.value = response
             } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {

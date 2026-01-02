@@ -541,4 +541,7 @@
     <string name="kt_report">अहवाल</string>
     <string name="view_kt_details">अहवाल माहिती</string>
     <string name="KrishiTai">Krushi Tai</string>
+    <string name="farmer_id_login_text">We could not get the required information for your request. Please try again later.</string>
+    <string name="limit_reached">Limit Reached</string>
+    <string name="limit_reached_desc">You have already registered 5 users from your device.</string>
 </resources>
