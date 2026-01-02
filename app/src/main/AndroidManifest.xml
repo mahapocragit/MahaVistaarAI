@@ -45,39 +45,39 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FarmerApp">
         <activity
-            android:name=".sma.KTReportActivity"
+            android:name=".sma.ui.screens.KTReportActivity"
             android:exported="false" />
         <activity
-            android:name=".sma.KTActivity"
+            android:name=".sma.ui.screens.KTActivity"
             android:label="@string/activity"
             android:exported="false" />
         <activity
-            android:name=".sma.KTProjectInformation"
+            android:name=".sma.ui.screens.KTProjectInformation"
             android:exported="false" />
         <activity
-            android:name=".sma.KTReportDetailsActivity"
+            android:name=".sma.ui.screens.KTReportDetailsActivity"
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".sma.KTDetailsHistory"
+            android:name=".sma.ui.screens.KTDetailsHistory"
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".sma.ImageViewerActivity"
+            android:name=".sma.ui.screens.ImageViewerActivity"
             android:screenOrientation="portrait"
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".sma.KTYoutubeView"
+            android:name=".sma.ui.screens.KTYoutubeView"
             android:exported="false" />
         <activity
-            android:name=".sma.WebviewActivity"
+            android:name=".sma.ui.screens.WebviewActivity"
             android:exported="false" />
         <activity
-            android:name=".sma.KTDashboardActivity"
+            android:name=".sma.ui.screens.KTDashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".sma.SmaLoginActivity"
+            android:name=".sma.ui.screens.SmaLoginActivity"
             android:exported="false" />
         <activity
             android:name=".ui.screens.dashboard.shetishala.ShetishalaVideosActivity"

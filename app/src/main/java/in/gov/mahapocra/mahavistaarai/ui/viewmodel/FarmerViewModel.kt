@@ -588,7 +588,6 @@ class FarmerViewModel : ViewModel() {
                 ProgressHelper.disableProgressDialog()
                 // You can handle the result however you want, for example:
                 _agristackLoginResponse.value = response
-
             } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {

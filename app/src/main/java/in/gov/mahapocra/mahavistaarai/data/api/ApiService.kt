@@ -351,6 +351,16 @@ interface ApiService {
         @Body params: RequestBody
     ): JsonObject
 
+    @POST("authService/farmerid_reg_compare_otp")
+    suspend fun compareOtpToFarmerIdRegistration(
+        @Header("FarmerID") farmerID: String,
+        @Header("otp") otp: String,
+        @Header("timestamp") timestamp: Long,
+        @Header("versionNumber") versionNumber: String,
+        @Header("deviceId") deviceId: String,
+        @Body params: RequestBody
+    ): JsonObject
+
     @POST("authService/update_farmer_id")
     suspend fun updateFarmerDetailsById(
         @Header("FarmerID") farmerID: String,

@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".sma.KTReportDetailsActivity">
+    tools:context=".sma.ui.screens.KTReportDetailsActivity">
 
 <!--    &lt;!&ndash; Toolbar at the top &ndash;&gt;-->
 <!--    <androidx.appcompat.widget.Toolbar-->

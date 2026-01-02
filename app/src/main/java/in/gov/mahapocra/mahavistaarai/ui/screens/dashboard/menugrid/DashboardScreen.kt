@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -49,8 +48,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.CropsCategName
 import `in`.gov.mahapocra.mahavistaarai.data.model.PocraRole
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDashboardScreenBinding
-import `in`.gov.mahapocra.mahavistaarai.sma.KTDashboardActivity
-import `in`.gov.mahapocra.mahavistaarai.sma.SmaLoginActivity
+import `in`.gov.mahapocra.mahavistaarai.sma.ui.screens.KTDashboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropRecyclerSapAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DashboardAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DrawerMenuAdapter
