@@ -7,6 +7,7 @@ import android.text.SpannableString
 import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import `in`.co.appinventor.services_api.settings.AppSettings
@@ -63,11 +64,13 @@ class DetailedNotificationActivity : AppCompatActivity() {
         setContentView(binding.root)
         uiResponsive(binding.root)
         val notificationObject = intent.getStringExtra("notificationObject")
+        Log.d(TAG, "onCreate: $notificationObject")
         if (notificationObject != null) {
             val jsonObject = JSONObject(notificationObject)
             val id = jsonObject.optLong("id")
             val flatCropId = jsonObject.optInt("crop")
-            farmerViewModel.getNotificationDetails(this, id)
+            val type = jsonObject.optString("type")
+            farmerViewModel.getNotificationDetails(this, id, type)
             farmerViewModel.getNotificationDetailedResponse.observe(this) {
                 if (it != null) {
                     Log.d(TAG, "onCreate: $it")
@@ -79,7 +82,8 @@ class DetailedNotificationActivity : AppCompatActivity() {
             fetchCropList(flatCropId)
         } else {
             val id = intent.getLongExtra("id", 0L)
-            farmerViewModel.getNotificationDetails(this, id)
+            val type = intent.getStringExtra("type")
+            farmerViewModel.getNotificationDetails(this, id, type)
             farmerViewModel.getNotificationDetailedResponse.observe(this) {
                 if (it != null) {
                     val jsonObject = JSONObject(it.toString())
@@ -97,9 +101,13 @@ class DetailedNotificationActivity : AppCompatActivity() {
             getString(R.string.detailed_notifications)
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-            Log.d(TAG, "onCreate relativeLayoutTopBar: $it")
+            startActivity(Intent(this@DetailedNotificationActivity, DashboardScreen::class.java))
         }
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                startActivity(Intent(this@DetailedNotificationActivity, DashboardScreen::class.java))
+            }
+        })
     }
 
     private fun fetchCropList(flatCropId: Int?) {
@@ -172,6 +180,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
         val page = jsonObject.optString("page")
         val type = jsonObject.optString("type")
         var title = jsonObject.optString("title")
+        val description = jsonObject.optString("description")
         if (type == "etl") {
             title = jsonObject.optString("crop")
         }
@@ -181,14 +190,18 @@ class DetailedNotificationActivity : AppCompatActivity() {
         val notificationDate =
             LocalCustom.convertDateFormat(jsonObject.optString("notification_date"))
         val redirectionText = jsonObject.optString("redirection_text")
-        if (redirectionText.isEmpty()){
+        if (redirectionText.isEmpty()) {
             binding.redirectTextView.visibility = View.GONE
         }
         binding.titleTextView.text = title
         binding.shortDescriptionTextView.text = shortDescription
         if (url.isEmpty()) {
+            binding.descriptionTextView.text = description
             binding.webView.visibility = View.GONE
+            binding.descriptionTextView.visibility = View.VISIBLE
         } else {
+            binding.webView.visibility = View.VISIBLE
+            binding.descriptionTextView.visibility = View.GONE
             binding.webView.loadUrl(url)
         }
         binding.dateTextView.text = notificationDate
@@ -196,7 +209,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
         content.setSpan(UnderlineSpan(), 0, content.length, 0)
         binding.redirectTextView.text = content
         binding.redirectTextView.setOnClickListener { redirectToScreen(page) }
-        farmerViewModel.updateNotificationStatus(this, notificationId)
+        farmerViewModel.updateNotificationStatus(this, notificationId, type)
         farmerViewModel.updateNotificationStatusResponse.observe(this) {
         }
     }

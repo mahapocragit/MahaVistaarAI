@@ -36,14 +36,15 @@ class FBaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         // Log data payload
         if (remoteMessage.data.isNotEmpty()) {
-            Log.d(tag, "Data payload: ${remoteMessage.data}")
-
+            Log.d(tag, "Data payload 1: $remoteMessage")
+            Log.d(tag, "Data payload: 2 ${remoteMessage.data}")
             val notificationId = remoteMessage.data["not_id"] ?: "0"
             val title = remoteMessage.data["title"] ?: "Notification"
             val body = remoteMessage.data["body"] ?: "You have a new message"
             val page = remoteMessage.data["page"] ?: "You have a new message"
+            val type = remoteMessage.data["type"] ?: "You have a new message"
             Log.d(tag, "onMessageReceived: $page")
-            sendNotification(title, body, page, notificationId)
+            sendNotification(title, body, page, notificationId, type)
         }
     }
 
@@ -51,7 +52,8 @@ class FBaseMessagingService : FirebaseMessagingService() {
         title: String,
         body: String,
         page: String,
-        notificationId: String?
+        notificationId: String?,
+        type: String?
     ) {
         createNotificationChannelIfNeeded()
 
@@ -63,6 +65,7 @@ class FBaseMessagingService : FirebaseMessagingService() {
         targetIntent.apply {
             putExtra("ROUTE", "NOTIFICATION_TRAY")
             putExtra("id", notificationId?.toLong())
+            putExtra("type", type)
         }.apply {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         }

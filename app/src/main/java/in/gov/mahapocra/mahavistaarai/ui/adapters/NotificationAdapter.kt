@@ -28,8 +28,19 @@ class NotificationAdapter(private val jsonArray: JSONArray, private val callback
         val notificationDate = jsonObject.optString("notification_date")
         val notificationStatus = jsonObject.optInt("is_read")
         if (notificationStatus == 1) {
+            // READ notification
             holder.notificationCard.backgroundTintList =
-                ContextCompat.getColorStateList(holder.itemView.context, R.color.white_dim_dark)
+                ContextCompat.getColorStateList(
+                    holder.itemView.context,
+                    R.color.white_dim_dark
+                )
+        } else {
+            // UNREAD notification (RESET STATE)
+            holder.notificationCard.backgroundTintList =
+                ContextCompat.getColorStateList(
+                    holder.itemView.context,
+                    R.color.notification_card_background
+                )
         }
         holder.notificationTitle.text = title
         holder.notificationMessage.text = body

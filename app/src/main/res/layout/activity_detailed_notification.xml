@@ -75,7 +75,14 @@
                 android:layout_height="@dimen/_430sdp"
                 android:layout_marginHorizontal="@dimen/_5sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:fadeScrollbars="false"></WebView>
+                android:fadeScrollbars="false"/>
+            <TextView
+                android:id="@+id/descriptionTextView"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_height="@dimen/_430sdp"
+                android:layout_marginHorizontal="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_10sdp"/>
 
             <TextView
                 android:id="@+id/redirectTextView"

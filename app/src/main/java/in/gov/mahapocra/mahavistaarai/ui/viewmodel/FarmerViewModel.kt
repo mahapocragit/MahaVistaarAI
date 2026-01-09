@@ -771,11 +771,12 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun getNotificationDetails(context: Context, notificationID: Long) {
+    fun getNotificationDetails(context: Context, notificationID: Long, notificationType: String?) {
         ProgressHelper.showProgressDialog(context)
         viewModelScope.launch {
             val jsonObject = JSONObject().apply {
                 put("notification_id", notificationID)
+                put("type", notificationType)
             }
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             try {
@@ -799,11 +800,12 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun updateNotificationStatus(context: Context, notificationID: Long) {
+    fun updateNotificationStatus(context: Context, notificationID: Long, notificationType: String) {
         ProgressHelper.showProgressDialog(context)
         viewModelScope.launch {
             val jsonObject = JSONObject().apply {
                 put("notification_id", notificationID)
+                put("type", notificationType)
             }
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             try {
