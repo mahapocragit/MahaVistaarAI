@@ -1,13 +1,3 @@
-/*
- * Copyright (c) 2018. Runtime Solutions Pvt Ltd. All right reserved.
- * Web URL  http://runtime-solutions.com
- * Author Name: Vinod Vishwakarma
- * Linked In: https://www.linkedin.com/in/vvishwakarma
- * Official Email ID : vinod@runtime-solutions.com
- * Email ID: vish.vino@gmail.com
- * Last Modified : 28/12/18 11:58 AM
- */
-
 package in.gov.mahapocra.mahavistaarai.sma.data.helper;
 
 import android.content.Context;
@@ -37,7 +27,6 @@ import in.co.appinventor.services_api.debug.DebugLog;
 import in.gov.mahapocra.mahavistaarai.R;
 
 import static java.util.concurrent.TimeUnit.DAYS;
-
 
 public class AppHelper {
 

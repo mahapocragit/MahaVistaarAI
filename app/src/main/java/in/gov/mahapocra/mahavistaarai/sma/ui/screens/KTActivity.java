@@ -110,35 +110,33 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
     private File imgFile;
     private File photoFile;
     private String fileNames = null;
-    private String strRemark,strCategoryOther,strFarmerGrpOther;
-    private TextView reasonDropTextView,categoryDropTextView,subCategoryDropTextView,farmerListDropTextView,farmerGrpListDropTextView,discussionTopicDropTextView;
+    private String strRemark;
+    private TextView reasonDropTextView,categoryDropTextView,subCategoryDropTextView,farmerListDropTextView,farmerGrpListDropTextView;
     private JSONArray reasonJSONArray = null;
     private JSONArray farmerListJSONArray = null;
     private JSONArray categoryJSONArray = null;
     private JSONArray subCategoryJSONArray = null;
     private JSONArray farmerGrpListJSONArray = null;
-    private JSONArray discussionTopicJSONArray = null;
     private String username,observationNote;
     private int villageCensuscode;
     private int reason_id = 0;
     private String farmer_id = "";
     private int categoryTypeId = 0;
     private int subCategoryTypeId = 0;
-    private int discussionTopicTypeId = 0;
     private int farmerGrpTypeId = 0;
     private int farmerSelectedType = 1;
     private int ktWorkType = 1;
     private int technologySelectedType = 1;
     private RadioGroup radioGroupFarmer,radioGroupTechnology,radioGroupOptions;
     private TextView tooltipRemark;
-    private RadioButton farmerRBtnOne, farmerRBtnTwo,technologyRBtnOne,technologyRBtnTwo,rb1_Baithak,rb2_Prashikshan,rb3_Bhet;
+    private RadioButton technologyRBtnTwo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ktactivity);
 
-        initComponant();
+        initComponent();
         session = new AppSession(this);
         profileModel = session.getProfileModel();
         String name = profileModel.getFirst_name() + " " + profileModel.getMiddle_name() + " " + profileModel.getLast_name();
@@ -147,104 +145,48 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         username = AppSettings.getInstance().getValue(this, AppConstants.kUSERNAME, AppConstants.kUSERNAME);
         villageCensuscode = AppSettings.getInstance().getIntValue(this, AppConstants.kVillageCensus, 0);
-        Log.d("MAYU1","Censuscode=="+villageCensuscode);
-        //  fetchAbsentReason();
-        //  fetchDbtFarmerList();
-        //  fetchFarmerGroupName();
-        //  fetchDiscussionTopic();
-        technologyImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        technologyImage.setOnClickListener(view -> {
 
-                if (Utility.checkConnection(KTActivity.this)) {
-                    onImageAction();
-                } else {
-                    UIAlertView.getOurInstance().show(KTActivity.this, "Please turn on your Mobile data/Wi-fi for your attendance");
-                }
+            if (Utility.checkConnection(KTActivity.this)) {
+                onImageAction();
+            } else {
+                UIAlertView.getOurInstance().show(KTActivity.this, "Please turn on your Mobile data/Wi-fi for your attendance");
             }
         });
-        reasonDropTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                populateReason();
+        reasonDropTextView.setOnClickListener(view -> populateReason());
+        farmerGrpListDropTextView.setOnClickListener(view -> populateFarmerGrpList());
+        radioGroupOptions.setOnCheckedChangeListener((radioGroup, i) -> {
+            if (i == R.id.rb1_Baithak) {
+                ktWorkType = 1; //Baithak
+            } else if (i == R.id.rb2_Prashikshan) {
+                ktWorkType = 2; //Prashikshan
+            } else if (i == R.id.rb3_Bhet)
+            {
+                ktWorkType = 5;//Bhet
             }
         });
-        farmerGrpListDropTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                populateFarmerGrpList();
+        radioGroupFarmer.setOnCheckedChangeListener((radioGroup, i) -> {
+            if (i == R.id.farmerRBtnOne) {
+                farmerSelectedType = 1; //Individual
+                technologyRBtnTwo.setVisibility(View.VISIBLE);
+            } else {
+                farmerSelectedType = 2; //FPC
+                technologyRBtnTwo.setVisibility(View.GONE);
             }
         });
-//        discussionTopicDropTextView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                populateDiscussionTopic();
-//            }
-//        });
-        categoryDropTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                populateCategoryType();
-            }
-        });
-        subCategoryDropTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                populateSubCategoryType();
-            }
-        });
-        farmerListDropTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                populateFarmerList();
-            }
-        });
-
-        radioGroupOptions.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                if (i == R.id.rb1_Baithak) {
-                    ktWorkType = 1; //Baithak
-                } else if (i == R.id.rb2_Prashikshan) {
-                    ktWorkType = 2; //Prashikshan
-                } else if (i == R.id.rb3_Bhet)
-                {
-                    ktWorkType = 5;//Bhet
-                }
-            }
-        });
-        Log.d("Mayu111", "onCreate categoryTypeID===" + categoryTypeId);
-        radioGroupFarmer.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                if (i == R.id.farmerRBtnOne) {
-                    farmerSelectedType = 1; //Individual
-                    technologyRBtnTwo.setVisibility(View.VISIBLE);
-                } else {
-                    farmerSelectedType = 2; //FPC
-                    technologyRBtnTwo.setVisibility(View.GONE);
-                }
-            }
-        });
-        radioGroupTechnology.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                if (i == R.id.technologyRBtnOne) {
-                    technologySelectedType = 1; //Demonstration
-//                    Log.d("Mayu111", "onCreate technologySelectedType1===" + technologySelectedType);
-                    linLayoutUnit.setVisibility(View.GONE);
-                } else {
-                    technologySelectedType = 2; //Adoption
-                    linLayoutUnit.setVisibility(View.VISIBLE);
-//                    Log.d("Mayu111", "onCreate technologySelectedType2===" + technologySelectedType);
-                }
+        radioGroupTechnology.setOnCheckedChangeListener((radioGroup, i) -> {
+            if (i == R.id.technologyRBtnOne) {
+                technologySelectedType = 1; //Demonstration
+                linLayoutUnit.setVisibility(View.GONE);
+            } else {
+                technologySelectedType = 2; //Adoption
+                linLayoutUnit.setVisibility(View.VISIBLE);
             }
         });
 
         tooltipRemark = findViewById(R.id.tooltipRemark);
 
         Handler handler = new Handler();
-//        Runnable hideTooltipRunnable = () -> tooltipRemark.setVisibility(View.GONE);
 
         Runnable hideTooltipRunnable = () -> {
             tooltipRemark.animate()
@@ -280,44 +222,20 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
             public void afterTextChanged(Editable s) {}
         });
 
-        btnSubmitKTAttendance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (Utility.checkConnection(KTActivity.this)) {
-
-                    String strRemark = edtRemark.getText().toString();
-
-//                        if (strRemark.equalsIgnoreCase("")) {
-//                            Toast.makeText(KTActivity.this, "कृपया निरीक्षण लिहा. ", Toast.LENGTH_SHORT).show();
-//                        } else
-//                        if (ktWorkType == 0) {
-//                            Toast.makeText(KTActivity.this, "कृपया कामाचे स्वरूप निवडा. ", Toast.LENGTH_SHORT).show();
-//                        }
-//                        else if (categoryTypeId == 0) {
-//                            Toast.makeText(KTActivity.this, "कृपया कामाचा प्रकार निवडा. ", Toast.LENGTH_SHORT).show();
-//                        } else if (categoryTypeId == 3 && farmer_id.equalsIgnoreCase("")) {
-//                            Toast.makeText(KTActivity.this, "कृपया शेतकरी नाव निवडा. ", Toast.LENGTH_SHORT).show();
-//                        } else if (categoryTypeId == 3 && subCategoryTypeId == 0) {
-//                            Toast.makeText(KTActivity.this, "कृपया हवामान अनुकूल तंत्रज्ञान प्रकार निवडा. ", Toast.LENGTH_SHORT).show();
-//                        } else if ((categoryTypeId == 4 || categoryTypeId == 7 || categoryTypeId == 9) && farmerGrpTypeId == 0) {
-//                            Toast.makeText(KTActivity.this, "कृपया शेतकरी गटाचे निवडा.", Toast.LENGTH_SHORT).show();
-//                        }
-                    if (fileNames == null) {
-                        //UIToastMessage.show(KTActivity.this, "Please take photo to mark attendance");
-                        Toast.makeText(KTActivity.this, "कृपया फोटो अपलोड करा. ", Toast.LENGTH_SHORT).show();
-                    } else {
-                        submitKTAttendace(fileNames);
-                    }
-
+        btnSubmitKTAttendance.setOnClickListener(view -> {
+            if (Utility.checkConnection(KTActivity.this)) {
+                if (fileNames == null) {
+                    Toast.makeText(KTActivity.this, "कृपया फोटो अपलोड करा. ", Toast.LENGTH_SHORT).show();
                 } else {
-                    UIAlertView.getOurInstance().show(KTActivity.this, "Please turn on your Mobile data/Wi-fi for your attendance");
+                    submitKTAttendance(fileNames);
                 }
+            } else {
+                UIAlertView.getOurInstance().show(KTActivity.this, "Please turn on your Mobile data/Wi-fi for your attendance");
             }
         });
     }
 
-    private void initComponant() {
+    private void initComponent() {
 
         Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
@@ -339,17 +257,10 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
         subCategoryDropTextView = findViewById(R.id.subCategoryDropTextView);
         farmerListDropTextView = findViewById(R.id.farmerListDropTextView);
         farmerGrpListDropTextView = findViewById(R.id.farmerGrpListDropTextView);
-        discussionTopicDropTextView = findViewById(R.id.discussionTopicDropTextView);
 
         radioGroupFarmer = findViewById(R.id.radioGroupFarmer);
         radioGroupTechnology = findViewById(R.id.radioGroupTechnology);
         radioGroupOptions = findViewById(R.id.radioGroupOptions);
-        farmerRBtnOne = radioGroupFarmer.findViewById(R.id.farmerRBtnOne);
-        farmerRBtnTwo = radioGroupFarmer.findViewById(R.id.farmerRBtnTwo);
-        rb1_Baithak = radioGroupFarmer.findViewById(R.id.rb1_Baithak);
-        rb2_Prashikshan = radioGroupFarmer.findViewById(R.id.rb2_Prashikshan);
-        rb3_Bhet = radioGroupFarmer.findViewById(R.id.rb3_Bhet);
-        technologyRBtnOne = radioGroupTechnology.findViewById(R.id.technologyRBtnOne);
         technologyRBtnTwo = radioGroupTechnology.findViewById(R.id.technologyRBtnTwo);
 
         linLayoutUnit = findViewById(R.id.linLayoutUnit);
@@ -384,76 +295,7 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
             e.printStackTrace();
         }
     }
-    private void fetchFarmerGroupName() {
 
-        try {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("category_type", 4);
-
-            RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
-
-            AppinventorIncAPI api = new AppinventorIncAPI(this, APIServices.BASE_API_CA, session.getToken(), new AppString(this).getkMSG_WAIT(), false);
-            Retrofit retrofit = api.getRetrofitInstance();
-            APIRequest apiRequest = retrofit.create(APIRequest.class);
-            Call<JsonObject> responseCall = apiRequest.farmerGroupListKTRequest(requestBody);
-
-            DebugLog.getInstance().d("param=" + responseCall.request().toString());
-            DebugLog.getInstance().d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()));
-
-            api.postRequest(responseCall, this, 8);
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-    private void fetchDiscussionTopic() {
-
-        try {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("category_type", 4);
-
-            RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
-
-            AppinventorIncAPI api = new AppinventorIncAPI(this, APIServices.BASE_API_CA, session.getToken(), new AppString(this).getkMSG_WAIT(), false);
-            Retrofit retrofit = api.getRetrofitInstance();
-            APIRequest apiRequest = retrofit.create(APIRequest.class);
-            Call<JsonObject> responseCall = apiRequest.farmerDiscussionListKTRequest(requestBody);
-
-            DebugLog.getInstance().d("param=" + responseCall.request().toString());
-            DebugLog.getInstance().d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()));
-
-            api.postRequest(responseCall, this, 9);
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-    private void fetchDbtFarmerList() {
-
-        try {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("village_code", villageCensuscode);
-//            jsonObject.put("role_id", session.getUserRoleId());
-
-            RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
-
-            AppinventorIncAPI api = new AppinventorIncAPI(this, APIServices.BASE_API_CA, session.getToken(), new AppString(this).getkMSG_WAIT(), false);
-            Retrofit retrofit = api.getRetrofitInstance();
-            APIRequest apiRequest = retrofit.create(APIRequest.class);
-            Call<JsonObject> responseCall = apiRequest.dbtFarmerListKTRequest(requestBody);
-
-            DebugLog.getInstance().d("param=" + responseCall.request().toString());
-            DebugLog.getInstance().d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()));
-
-            api.postRequest(responseCall, this, 6);
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
     private void fetchKTCategory(int reason_id) {
 
         try {
@@ -561,33 +403,6 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
             ApUtil.getInstance().showListDialogIndex(farmerGrpListJSONArray, 8, "शेतकरी गटाचे नाव निवडा", "name", "id", this, this);
         }
     }
-    //    private void populateDiscussionTopic() {
-//        if (discussionTopicJSONArray != null && discussionTopicJSONArray.length() > 0) {
-//            AppUtility.getInstance().showListDialogIndex(discussionTopicJSONArray, 9, "चर्चेचा विषय निवडा", "name", "id", this, this);
-//        }
-//    }
-    private void populateFarmerList() {
-        if (farmerListJSONArray != null && farmerListJSONArray.length() > 0) {
-            ApUtil.getInstance().showListDialogIndex(farmerListJSONArray, 6, "शेतकरी नाव निवडा", "register_name", "adhar_vaultid", this, this);
-        }
-    }
-    private void populateCategoryType() {
-        if (categoryJSONArray == null) {
-            fetchKTCategory(reason_id);
-
-        }else {
-//        if (absentJSONArray != null && absentJSONArray.length() > 0) {
-            ApUtil.getInstance().showListDialogIndex(categoryJSONArray, 4, "कामाचा प्रकार निवडा", "category_shortname", "id", this, this);
-        }
-    }
-    private void populateSubCategoryType() {
-        if (subCategoryJSONArray == null) {
-            fetchKTSubCategory(categoryTypeId);
-        }else {
-//        if (absentJSONArray != null && absentJSONArray.length() > 0) {
-            ApUtil.getInstance().showListDialogIndex(subCategoryJSONArray, 5, "हवामान अनुकूल तंत्रज्ञान प्रकार", "subcategory_name", "id", this, this);
-        }
-    }
 
     @Override
     public void onFailure(Throwable th, int i) {
@@ -665,14 +480,6 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
                 if (jsonObject != null) {
                     DebugLog.getInstance().d("onResponse=" + jsonObject);
                     ResponseModel response = new ResponseModel(jsonObject);
-//                    if (response.getStatus()) {
-//                        subCategoryJSONArray = response.getDataArray();
-//                        for (int m = 0; m < subCategoryJSONArray.length(); m++) {
-//                            JSONObject actor = subCategoryJSONArray.getJSONObject(m);
-//                        }
-//                    } else {
-//                        UIToastMessage.show(this, response.getResponse());
-//                    }
                     if (response.getStatus()) {
                         subCategoryJSONArray = response.getDataArray();
 
@@ -699,8 +506,6 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
                     ResponseModel response = new ResponseModel(jsonObject);
                     if (response.getStatus()) {
                         Toast.makeText(KTActivity.this, "" + response.getResponse(), Toast.LENGTH_SHORT).show();
-//                        Intent newIntent= new Intent(KTActivity.this, KTDashboardActivity.class);
-//                        startActivity(newIntent);
                         finish();
                         Log.d("MAYU111","RefreshToken==="+response.getResponse());
                     } else {
@@ -722,20 +527,6 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
                     }
                 }
             }
-//            if (i == 9) {
-//                if (jsonObject != null) {
-//                    DebugLog.getInstance().d("onResponse=" + jsonObject);
-//                    ResponseModel response = new ResponseModel(jsonObject);
-//                    if (response.getStatus()) {
-//                        discussionTopicJSONArray = response.getDataArray();
-//                        for (int m = 0; m < discussionTopicJSONArray.length(); m++) {
-//                            JSONObject actor = discussionTopicJSONArray.getJSONObject(m);
-//                        }
-//                    } else {
-//                        UIToastMessage.show(this, response.getResponse());
-//                    }
-//                }
-//            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -745,11 +536,9 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_info:
-                //showInfoDialog();
                 return true;
 
             case R.id.action_refresh:
-                // syncDownMasterData();
                 return true;
 
             case android.R.id.home:
@@ -771,21 +560,6 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
     }
 
     private void onImageAction() {
-
-//        if (Build.VERSION.SDK_INT < 23) {
-//            //Do not need to check the permission
-//            DebugLog.getInstance().d("No need to check the permission");
-//            captureCamera();
-//        } else {
-//
-//            if (checkPermissionsIsEnabledOrNot()) {
-//                //If you have already permitted the permission
-//                captureCamera();
-//            } else {
-//                requestMultiplePermission();
-//            }
-//
-//        }
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
@@ -798,62 +572,6 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
         dispatchTakePictureIntent();
     }
 
-    //    private void dispatchTakePictureIntent() {
-//
-//        AIImageLoadingUtil aiImageLoadingUtil = new AIImageLoadingUtil(this);
-//
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//
-//        // Ensure that there's a camera activity to handle the intent
-//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//            // Create the File where the photo should go
-//
-//            try {
-//                photoFile = aiImageLoadingUtil.createImageFile(ImageTypes.ATTENDANCE.id());
-//            } catch (Exception ex) {
-//                // Error occurred while creating the File
-//                ex.printStackTrace();
-//            }
-//
-//            // Continue only if the File was successfully created
-//
-//            if (photoFile != null) {
-//                Uri mImgURI;
-//
-//                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-//                    mImgURI = Uri.fromFile(photoFile);
-//                } else {
-    ////                    mImgURI = FileProvider.getUriForFile(getApplication().getApplicationContext(),
-    ////                            "ibas.provider", photoFile);
-//                    mImgURI = FileProvider.getUriForFile(this,
-//                            "in.gov.mahapocra.sma.android.fileprovider",
-//                            photoFile);
-//                }
-//
-//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImgURI);
-//                takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//                takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-//
-//                PackageManager packageManager = getPackageManager();
-//
-//                List<ResolveInfo> listCam = packageManager.queryIntentActivities(takePictureIntent, 0);
-//
-//                ResolveInfo res = listCam.get(0);
-//                String packageName = res.activityInfo.packageName;
-//
-//                Intent intent = new Intent(takePictureIntent);
-//                intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-//                intent.setPackage(packageName);
-//
-//                startActivityForResult(intent, CAMERA_CODE);
-//
-//                DebugLog.getInstance().d("Camera Package Name=" + packageName);
-//                DebugLog.getInstance().d("mImgURI=" + mImgURI);
-//
-//            }
-//
-//        }
-//    }
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         try {
@@ -919,7 +637,6 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
 
     @Override
     public void asyncImgProcessFinish(Object output) {
-
         String result = (String) output;
         try {
             imgFile = new File(result);
@@ -927,25 +644,16 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
                     .load(imgFile)
                     .fit()
                     .into(technologyImage);
-
             fileNames = imgFile.getAbsolutePath();
-            Log.d("Mayu111","filename==="+fileNames);
-            // syncUpImageRequest(fileNames, "", 0);
-            // submitKTAttendace(fileNames, workTypeFlag, villageID);
-
-//            AppSettings.getInstance().setValue(this, AppConstants.kTC_ATTENDANCE, fileNames);
-
         }catch (Exception e)
         {
             e.printStackTrace();
         }
     }
 
-    public void submitKTAttendace(String filePath ) {
+    public void submitKTAttendance(String filePath ) {
 
         try {
-//            String userId = String.valueOf(session.getUserId());
-//            Log.d("Mayu111","userId=="+userId);
             strRemark=edtRemark.getText().toString();
             Log.d("Mayu111","Remark=="+strRemark);
             AppSession session = new AppSession(this);
@@ -1081,6 +789,7 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
 //
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
 
             case PERMISSION_REQUEST_CODE:

@@ -1,79 +1,76 @@
-package in.gov.mahapocra.mahavistaarai.sma.domain;
+package `in`.gov.mahapocra.mahavistaarai.sma.domain
 
-import com.google.gson.JsonObject;
+import com.google.gson.JsonObject
+import `in`.gov.mahapocra.mahavistaarai.sma.data.constants.APIServices
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import retrofit2.Call
+import retrofit2.http.Body
+import retrofit2.http.Header
+import retrofit2.http.Multipart
+import retrofit2.http.POST
+import retrofit2.http.Part
+import retrofit2.http.PartMap
 
-import java.util.Map;
-
-import in.gov.mahapocra.mahavistaarai.sma.data.constants.APIServices;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.Header;
-import retrofit2.http.Multipart;
-import retrofit2.http.POST;
-import retrofit2.http.Part;
-import retrofit2.http.PartMap;
-
-public interface APIRequest {
-
+interface APIRequest {
     @POST("authService/sso_login_farmer_app")
-    Call<JsonObject> oauthLoginRequest(
-            @Header("username") String username,
-            @Header("secret") String secret,
-            @Body RequestBody body
-    );
+    fun oauthLoginRequest(
+        @Header("username") username: String?,
+        @Header("secret") secret: String?,
+        @Body body: RequestBody?
+    ): Call<JsonObject?>?
 
     @POST(APIServices.kOAuthRefreshToken)
-    Call<JsonObject> oauthRefreshToken(@Body RequestBody params);
+    fun oauthRefreshToken(@Body params: RequestBody?): Call<JsonObject?>?
 
     @POST("scripts/get_apk_file.php?app=SMA")
-    Call<JsonObject> forceUpdateRequest();
+    fun forceUpdateRequest(): Call<JsonObject?>?
 
     @POST(APIServices.CHECK_USER_ACTIVE_DEACTIVE)
-    Call<JsonObject> checkActivateDeactivateUser(@Body RequestBody params);
+    fun checkActivateDeactivateUser(@Body params: RequestBody?): Call<JsonObject?>?
 
     @POST(APIServices.GET_NOTIFICATION_UNREAD_COUNT)
-    Call<JsonObject> getFirebaseUnreadNotificationCount(@Body RequestBody params);
+    fun getFirebaseUnreadNotificationCount(@Body params: RequestBody?): Call<JsonObject?>?
 
     @POST(APIServices.userdetails)
-    Call<JsonObject> getroledata(@Body RequestBody params);
+    fun getroledata(@Body params: RequestBody?): Call<JsonObject?>?
 
     @Multipart
     @POST(APIServices.KT_FileUpload)
-    Call<JsonObject> uploadImagesKTActivity(@Part MultipartBody.Part image,
-                                            @PartMap Map<String, RequestBody> params);
+    fun uploadImagesKTActivity(
+        @Part image: MultipartBody.Part?,
+        @PartMap params: MutableMap<String?, RequestBody?>?
+    ): Call<JsonObject?>?
 
     @POST(APIServices.KT_FarmerGroupList)
-    Call<JsonObject> farmerGroupListKTRequest(@Body RequestBody params);
+    fun farmerGroupListKTRequest(@Body params: RequestBody?): Call<JsonObject?>?
 
     @POST(APIServices.KT_FarmerDiscussionList)
-    Call<JsonObject> farmerDiscussionListKTRequest(@Body RequestBody params);
+    fun farmerDiscussionListKTRequest(@Body params: RequestBody?): Call<JsonObject?>?
 
     @POST(APIServices.KT_submitDetails)
-    Call<JsonObject> submitDetailsKTRequest(@Body RequestBody params);
+    fun submitDetailsKTRequest(@Body params: RequestBody?): Call<JsonObject?>?
 
     @POST(APIServices.KT_CATEGORY_LIST)
-    Call<JsonObject> categoryListKTRequest(@Body RequestBody params);
+    fun categoryListKTRequest(@Body params: RequestBody?): Call<JsonObject?>?
 
     @POST(APIServices.KT_dbtFarmerList)
-    Call<JsonObject> dbtFarmerListKTRequest(@Body RequestBody params);
+    fun dbtFarmerListKTRequest(@Body params: RequestBody?): Call<JsonObject?>?
 
     @POST(APIServices.KT_SUB_CATEGORY_LIST)
-    Call<JsonObject> subCategoryListKTRequest(@Body RequestBody params);
+    fun subCategoryListKTRequest(@Body params: RequestBody?): Call<JsonObject?>?
 
     @POST(APIServices.KT_REPORT_CALENDAR)
-    Call<JsonObject> fetchCalendarMonthReportKT(@Body RequestBody params);
+    fun fetchCalendarMonthReportKT(@Body params: RequestBody?): Call<JsonObject?>?
 
     @POST(APIServices.KT_FEEDBACK)
-    Call<JsonObject> addKTFeedBackRequest(@Body RequestBody params);
+    fun addKTFeedBackRequest(@Body params: RequestBody?): Call<JsonObject?>?
 
     @POST(APIServices.KT_GET_WORK_DETAILS)
-    Call<JsonObject> fetchWorkDetailsKT(@Body RequestBody params);
+    fun fetchWorkDetailsKT(@Body params: RequestBody?): Call<JsonObject?>?
 
     @POST(APIServices.CA_ABSENT_REASON)
-    Call<JsonObject> absentReasonSyncDownRequest(@Body RequestBody params);
-
+    fun absentReasonSyncDownRequest(@Body params: RequestBody?): Call<JsonObject?>?
 }
 
 
