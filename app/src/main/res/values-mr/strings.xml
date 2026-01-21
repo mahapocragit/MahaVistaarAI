@@ -469,4 +469,5 @@
     <string name="captcha_validate_err">कॅप्चा नक्की ६ अक्षरांचा असावा</string>
     <string name="captcha_success">कॅप्चा यशस्वीपणे तपासला गेला.</string>
     <string name="captcha_invalid">कॅप्चा चुकीचा आहे. कृपया पुन्हा प्रयत्न करा</string>
+    <string name="farmer_id_error">We could not get the required information for your request. Please try again later.</string>
 </resources>

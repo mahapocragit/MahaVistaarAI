@@ -161,13 +161,18 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 if (jsonObject.optInt("status") == 200) {
                     agriStackMobile = jsonObject.optString("mobile")
                     addVerificationDialogForFarmer()
+                } else {
+                    val jsonObject = JSONObject(it.toString())
+                    val response = jsonObject.optString("response")
+                    Toast.makeText(this, response, Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
-        farmerViewModel.error.observe(this)
-        {
-            Log.d("TAGGER", "farmerIdLayoutValidation error: $it")
+        farmerViewModel.error.observe(this) {
+            if (it == "Correlation ID not found in response") {
+                Toast.makeText(this, getString(R.string.farmer_id_error), Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -489,10 +494,9 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     val response: String = jSONObject.getString("response")
                     Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                     addVerificationDialog()
-                } else if (jSONObject.optInt("status") == 201) {
-                    Toast.makeText(this, R.string.mobile_otp_error_text, Toast.LENGTH_LONG).show()
-                } else if (jSONObject.optInt("status") == 429) {
-                    Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_LONG).show()
+                } else {
+                    val response: String = jSONObject.getString("response")
+                    Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -540,7 +544,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         finish()
                     }
                 } else {
-                    val message: String = jSONObject.getString("Message")
+                    val message: String = jSONObject.getString("response")
                     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
                 }
             }

@@ -468,4 +468,5 @@
     <string name="captcha_validate_err">CAPTCHA must be exactly 6 characters</string>
     <string name="captcha_success">CAPTCHA verified successfully</string>
     <string name="captcha_invalid">Incorrect CAPTCHA. Please try again</string>
+    <string name="farmer_id_error">We could not get the required information for your request. Please try again later.</string>
 </resources>
