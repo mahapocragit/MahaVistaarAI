@@ -195,7 +195,9 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     agriStackUserExist = jsonObject.optBoolean("isUserExists")
                     addVerificationDialogForFarmer()
                 } else {
-                    Toast.makeText(this, R.string.farmer_id_login_text, Toast.LENGTH_SHORT).show()
+                    val jsonObject = JSONObject(it.toString())
+                    val response = jsonObject.optString("response")
+                    Toast.makeText(this, response, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -284,16 +286,16 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         }
 
         // Check OTP Rate Limit before proceeding
-        if (!OtpRateLimiter.canSendOtp(mobile)) {
-            val timeLeftMillis = OtpRateLimiter.getBlockedTimeLeft(mobile)
-            val minutesLeft = (timeLeftMillis / 60000).toInt()
-            val secondsLeft = ((timeLeftMillis % 60000) / 1000).toInt()
-            UIToastMessage.show(
-                this,
-                "OTP limit reached. Try again in ${minutesLeft}m ${secondsLeft}s."
-            )
-            return
-        }
+//        if (!OtpRateLimiter.canSendOtp(mobile)) {
+//            val timeLeftMillis = OtpRateLimiter.getBlockedTimeLeft(mobile)
+//            val minutesLeft = (timeLeftMillis / 60000).toInt()
+//            val secondsLeft = ((timeLeftMillis % 60000) / 1000).toInt()
+//            UIToastMessage.show(
+//                this,
+//                "OTP limit reached. Try again in ${minutesLeft}m ${secondsLeft}s."
+//            )
+//            return
+//        }
 
         val jsonObject = JSONObject()
         try {
@@ -502,12 +504,9 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     val response: String = jSONObject.getString("response")
                     Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                     addVerificationDialog()
-                } else if (jSONObject.optInt("status") == 201) {
-                    Toast.makeText(this, R.string.mobile_otp_error_text, Toast.LENGTH_LONG).show()
-                } else if (jSONObject.optInt("status") == 429) {
-                    Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_LONG).show()
                 } else {
-                    Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_LONG).show()
+                    val response: String = jSONObject.getString("response")
+                    Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                 }
             }
         }

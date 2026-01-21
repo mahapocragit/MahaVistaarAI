@@ -65,8 +65,10 @@ class PreRegistrationActivity : AppCompatActivity() {
                     Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                     addVerificationDialog()
                 } else if (jSONObject.optInt("status") == 201) {
-                    Toast.makeText(this, R.string.otp_error, Toast.LENGTH_LONG).show()
+                    val response: String = jSONObject.getString("response")
+                    Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                 } else if (jSONObject.optInt("status") == 429) {
+                    val response: String = jSONObject.getString("response")
                     Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_LONG).show()
                 }
             }
