@@ -8,6 +8,23 @@
     android:background="@drawable/status_colored_background"
     tools:context=".ui.screens.notification.DetailedNotificationActivity">
 
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/feedbackFAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_10sdp"
+        android:backgroundTint="@color/actionbar_color_figma"
+        android:clickable="true"
+        android:paddingVertical="@dimen/_10sdp"
+        android:text="Give us Feedback"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:cornerRadius="@dimen/_10sdp"
+        app:icon="@drawable/baseline_add_24"
+        app:iconTint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <include
         android:id="@+id/relativeLayoutTopBar"
         layout="@layout/layout_toolbar"
@@ -17,9 +34,9 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/_45sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/_45sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -75,14 +92,15 @@
                 android:layout_height="@dimen/_430sdp"
                 android:layout_marginHorizontal="@dimen/_5sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:fadeScrollbars="false"/>
+                android:fadeScrollbars="false" />
+
             <TextView
                 android:id="@+id/descriptionTextView"
                 android:layout_width="match_parent"
-                android:visibility="gone"
                 android:layout_height="@dimen/_430sdp"
                 android:layout_marginHorizontal="@dimen/_5sdp"
-                android:layout_marginTop="@dimen/_10sdp"/>
+                android:layout_marginTop="@dimen/_10sdp"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/redirectTextView"

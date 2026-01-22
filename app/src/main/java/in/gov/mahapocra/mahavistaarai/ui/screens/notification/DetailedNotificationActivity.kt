@@ -7,12 +7,17 @@ import android.text.SpannableString
 import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDetailedNotificationBinding
+import `in`.gov.mahapocra.mahavistaarai.databinding.DialogFeedbackNotificationsBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.adapters.QuestionsAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.etl.AgriStackAdvisoryActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
@@ -63,6 +68,11 @@ class DetailedNotificationActivity : AppCompatActivity() {
         binding = ActivityDetailedNotificationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
+
+        farmerViewModel.addNotificationFeedbackResponse.observe(this){
+            Log.d(TAG, "onCreate: $it")
+        }
+        
         val notificationObject = intent.getStringExtra("notificationObject")
         Log.d(TAG, "onCreate: $notificationObject")
         if (notificationObject != null) {
@@ -73,10 +83,58 @@ class DetailedNotificationActivity : AppCompatActivity() {
             farmerViewModel.getNotificationDetails(this, id, type)
             farmerViewModel.getNotificationDetailedResponse.observe(this) {
                 if (it != null) {
-                    Log.d(TAG, "onCreate: $it")
+                    Log.d(TAG, "onCreate............: $it")
                     val jsonObject = JSONObject(it.toString())
                     val notificationObject = jsonObject.optJSONObject("notifications")
                     setUpPageContent(notificationObject, id)
+                    val questionsJson = notificationObject?.optJSONArray("questions")
+                    if (questionsJson?.length() == 0) {
+                        binding.feedbackFAB.visibility = View.GONE
+                    } else {
+                        binding.feedbackFAB.visibility = View.VISIBLE
+                        binding.feedbackFAB.setOnClickListener {
+                            val dialogBinding =
+                                DialogFeedbackNotificationsBinding.inflate(layoutInflater)
+                            // 🔥 Create JSON once and share with adapter
+                            dialogBinding.questionRecyclerView.apply {
+                                layoutManager =
+                                    LinearLayoutManager(this@DetailedNotificationActivity)
+                                setHasFixedSize(false)
+                                adapter = QuestionsAdapter(questionsJson)
+                            }
+
+                            val dialog = AlertDialog.Builder(this@DetailedNotificationActivity)
+                                .setView(dialogBinding.root)
+                                .setCancelable(true)
+                                .create()
+
+                            dialogBinding.button.setOnClickListener {
+                                questionsJson?.let { jsonArray ->
+                                    if (!isAllAnswered(jsonArray)) {
+                                        Toast.makeText(
+                                            this@DetailedNotificationActivity,
+                                            "Please answer all questions",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        return@setOnClickListener
+                                    }
+                                }
+
+                                // ✅ FINAL OUTPUT JSON
+                                questionsJson?.let {
+                                    farmerViewModel.addNotificationFeedback(
+                                        this,
+                                        id.toString(),
+                                        type,
+                                        questionsJson
+                                    )
+                                }
+                                Log.d("FEEDBACK_JSON", questionsJson.toString())
+                                dialog.dismiss()
+                            }
+                            dialog.show()
+                        }
+                    }
                 }
             }
             fetchCropList(flatCropId)
@@ -103,11 +161,44 @@ class DetailedNotificationActivity : AppCompatActivity() {
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
             startActivity(Intent(this@DetailedNotificationActivity, DashboardScreen::class.java))
         }
-        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true){
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(Intent(this@DetailedNotificationActivity, DashboardScreen::class.java))
+                startActivity(
+                    Intent(
+                        this@DetailedNotificationActivity,
+                        DashboardScreen::class.java
+                    )
+                )
             }
         })
+    }
+
+    private fun isAllAnswered(jsonArray: JSONArray): Boolean {
+        for (i in 0 until jsonArray.length()) {
+            if (jsonArray.getJSONObject(i).isNull("answer")) {
+                return false
+            }
+        }
+        return true
+    }
+
+    private fun getQuestionsJson(): JSONArray {
+        return JSONArray(
+            """
+        [
+          {
+            "id": 1,
+            "question": "आपल्याला मिळालेला कृषी हवामान सल्ला (Agromet Advisory) उपयुक्त वाटला का?",
+            "answer": null
+          },
+          {
+            "id": 2,
+            "question": "दिलेल्या सल्ल्यानुसार आपण काही उपाययोजना केल्या का ?",
+            "answer": null
+          }
+        ]
+        """
+        )
     }
 
     private fun fetchCropList(flatCropId: Int?) {

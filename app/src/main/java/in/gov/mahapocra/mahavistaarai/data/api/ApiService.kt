@@ -150,6 +150,9 @@ interface ApiService {
     @POST("notificationServices/update-chatbot-notification-read-status")
     suspend fun updateNotificationStatusForChatbot(@Body params: RequestBody): JsonObject
 
+    @POST("notificationServices/add-notification-feedback")
+    suspend fun addNotificationFeedback(@Body params: RequestBody): JsonObject
+
     @POST("authService/updateFcmToken")
     suspend fun updateFCMToken(
         @Header("userid") farmerId: Int,

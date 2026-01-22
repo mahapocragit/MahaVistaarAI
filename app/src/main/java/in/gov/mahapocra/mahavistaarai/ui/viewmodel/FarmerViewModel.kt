@@ -22,6 +22,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Retrofit
 import java.io.IOException
@@ -102,6 +103,9 @@ class FarmerViewModel : ViewModel() {
 
     private val _updateNotificationStatusResponse = MutableLiveData<JsonObject>()
     val updateNotificationStatusResponse: LiveData<JsonObject> = _updateNotificationStatusResponse
+
+    private val _addNotificationFeedbackResponse = MutableLiveData<JsonObject>()
+    val addNotificationFeedbackResponse: LiveData<JsonObject> = _addNotificationFeedbackResponse
 
     private val _updateFCMTokenResponse = MutableLiveData<JsonObject>()
     val updateFCMTokenResponse: LiveData<JsonObject> = _updateFCMTokenResponse
@@ -843,6 +847,36 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.updateNotificationStatusForChatbot(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _updateNotificationStatusResponse.value = response
+            } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun addNotificationFeedback(context: Context, customId: String, type:String, feedbackArray: JSONArray) {
+        ProgressHelper.showProgressDialog(context)
+        viewModelScope.launch {
+            val jsonObject = JSONObject().apply {
+                put("cust_id", customId)
+                put("type", type)
+                put("feedback", feedbackArray)
+            }
+            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+            try {
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.addNotificationFeedback(requestBody)
+                ProgressHelper.disableProgressDialog()
+                _addNotificationFeedbackResponse.value = response
             } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {
