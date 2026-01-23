@@ -3,18 +3,21 @@ package `in`.gov.mahapocra.mahavistaarai.ui.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.OnDeleteClick
 import org.json.JSONArray
 
-class CHCenterRecyclerAdapter(private val tempStrArr: JSONArray) : RecyclerView.Adapter<CHCenterRecyclerAdapter.ViewHolder>() {
+class CHCenterRecyclerAdapter(private val tempStrArr: JSONArray, private val onItemClick: OnDeleteClick) : RecyclerView.Adapter<CHCenterRecyclerAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val chcUserName: TextView = itemView.findViewById(R.id.chcUserName)
         val chcNameTV: TextView = itemView.findViewById(R.id.chcNameTV)
         val contactNumberTV: TextView = itemView.findViewById(R.id.contactNumberTV)
         val chcUserDistance: TextView = itemView.findViewById(R.id.chcUserDistance)
+        val infoImageView: ImageView = itemView.findViewById(R.id.infoImageView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,5 +35,8 @@ class CHCenterRecyclerAdapter(private val tempStrArr: JSONArray) : RecyclerView.
         holder.contactNumberTV.text = jsonObject?.optString("contact_no")
         holder.chcNameTV.text = jsonObject?.optString("chcname")
         holder.chcUserDistance.text = "${jsonObject?.optString("distance")} kms"
+        holder.infoImageView.setOnClickListener {
+            onItemClick.onDeleteClick(position, jsonObject)
+        }
     }
 }

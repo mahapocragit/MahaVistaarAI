@@ -68,10 +68,6 @@ class DetailedNotificationActivity : AppCompatActivity() {
         binding = ActivityDetailedNotificationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
-
-        farmerViewModel.addNotificationFeedbackResponse.observe(this){
-            Log.d(TAG, "onCreate: $it")
-        }
         
         val notificationObject = intent.getStringExtra("notificationObject")
         Log.d(TAG, "onCreate: $notificationObject")
@@ -129,6 +125,11 @@ class DetailedNotificationActivity : AppCompatActivity() {
                                         questionsJson
                                     )
                                 }
+
+                                farmerViewModel.addNotificationFeedbackResponse.observe(this){
+                                    Log.d(TAG, "onCreate: $it")
+                                    farmerViewModel.getNotificationDetails(this, id, type)
+                                }
                                 Log.d("FEEDBACK_JSON", questionsJson.toString())
                                 dialog.dismiss()
                             }
@@ -150,6 +151,59 @@ class DetailedNotificationActivity : AppCompatActivity() {
                     val flatCropId = notificationObject?.optInt("crop")
                     Log.d(TAG, "onCreate: $flatCropId")
                     setUpPageContent(notificationObject, id)
+                    val questionsJson = notificationObject?.optJSONArray("questions")
+                    if (questionsJson?.length() == 0) {
+                        binding.feedbackFAB.visibility = View.GONE
+                    } else {
+                        binding.feedbackFAB.visibility = View.VISIBLE
+                        binding.feedbackFAB.setOnClickListener {
+                            val dialogBinding =
+                                DialogFeedbackNotificationsBinding.inflate(layoutInflater)
+                            // 🔥 Create JSON once and share with adapter
+                            dialogBinding.questionRecyclerView.apply {
+                                layoutManager =
+                                    LinearLayoutManager(this@DetailedNotificationActivity)
+                                setHasFixedSize(false)
+                                adapter = QuestionsAdapter(questionsJson)
+                            }
+
+                            val dialog = AlertDialog.Builder(this@DetailedNotificationActivity)
+                                .setView(dialogBinding.root)
+                                .setCancelable(true)
+                                .create()
+
+                            dialogBinding.button.setOnClickListener {
+                                questionsJson?.let { jsonArray ->
+                                    if (!isAllAnswered(jsonArray)) {
+                                        Toast.makeText(
+                                            this@DetailedNotificationActivity,
+                                            "Please answer all questions",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        return@setOnClickListener
+                                    }
+                                }
+
+                                // ✅ FINAL OUTPUT JSON
+                                questionsJson?.let {
+                                    farmerViewModel.addNotificationFeedback(
+                                        this,
+                                        id.toString(),
+                                        type.toString(),
+                                        questionsJson
+                                    )
+                                }
+
+                                farmerViewModel.addNotificationFeedbackResponse.observe(this){
+                                    Log.d(TAG, "onCreate: $it")
+                                    farmerViewModel.getNotificationDetails(this, id, type)
+                                }
+                                Log.d("FEEDBACK_JSON", questionsJson.toString())
+                                dialog.dismiss()
+                            }
+                            dialog.show()
+                        }
+                    }
                     fetchCropList(flatCropId)
                 }
             }
@@ -180,25 +234,6 @@ class DetailedNotificationActivity : AppCompatActivity() {
             }
         }
         return true
-    }
-
-    private fun getQuestionsJson(): JSONArray {
-        return JSONArray(
-            """
-        [
-          {
-            "id": 1,
-            "question": "आपल्याला मिळालेला कृषी हवामान सल्ला (Agromet Advisory) उपयुक्त वाटला का?",
-            "answer": null
-          },
-          {
-            "id": 2,
-            "question": "दिलेल्या सल्ल्यानुसार आपण काही उपाययोजना केल्या का ?",
-            "answer": null
-          }
-        ]
-        """
-        )
     }
 
     private fun fetchCropList(flatCropId: Int?) {

@@ -543,4 +543,7 @@
     <string name="farmer_id_login_text">आपल्या कामासाठी लागणारी माहिती मिळाली नाही. कृपया थोड्या वेळाने पुन्हा प्रयत्न करा.</string>
     <string name="limit_reached">मर्यादा गाठली आहे</string>
     <string name="limit_reached_desc">तुम्ही तुमच्या डिव्हाइसवरून आधीच ५ वापरकर्त्यांची नोंदणी केली आहे.</string>
+    <string name="give_feedback">अभिप्राय द्या</string>
+    <string name="your_feedback_on_advisory">सूचनेबाबत आपला अभिप्राय</string>
+    <string name="send_feedback">अभिप्राय पाठवा</string>
 </resources>

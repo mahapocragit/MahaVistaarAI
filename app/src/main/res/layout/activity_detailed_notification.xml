@@ -16,7 +16,7 @@
         android:backgroundTint="@color/actionbar_color_figma"
         android:clickable="true"
         android:paddingVertical="@dimen/_10sdp"
-        android:text="Give us Feedback"
+        android:text="@string/give_feedback"
         android:textColor="@color/white"
         android:visibility="gone"
         app:cornerRadius="@dimen/_10sdp"

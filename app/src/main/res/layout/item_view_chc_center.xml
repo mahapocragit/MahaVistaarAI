@@ -25,21 +25,34 @@
                 android:layout_marginBottom="@dimen/_10sdp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/chcNameTV"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="4"
-                    android:gravity="center_vertical"
-                    android:text="Lorem Ipsum"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_12sdp" />
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/chcNameTV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:text="Lorem Ipsum"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <ImageView
+                        android:id="@+id/infoImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_weight="9"
+                        app:srcCompat="@drawable/info_ic" />
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/chcUserDistance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="6"
                     android:gravity="start"
                     android:text="1.7 Kms Far"
                     android:textSize="@dimen/_11sdp" />

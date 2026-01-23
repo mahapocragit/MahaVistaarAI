@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import org.json.JSONArray
 
 class QuestionsAdapter(
@@ -24,15 +26,15 @@ class QuestionsAdapter(
 
         val questionObject = questionsArray?.getJSONObject(position)
 
-        holder.tvQuestion.text = questionObject?.getString("question")
+        holder.tvQuestion.text = "प्र. क्र. ${position+1}) ${questionObject?.getString("question")}"
 
         // Remove old listener to avoid unwanted triggers
         holder.rgAnswer.setOnCheckedChangeListener(null)
-
+        Log.d(TAG, "onBindViewHolder: $questionObject")
         // Restore previously selected answer
-        when (questionObject?.opt("answer")) {
-            true -> holder.rbYes.isChecked = true
-            false -> holder.rbNo.isChecked = true
+        when (questionObject?.optString("answer")) {
+            "1" -> holder.rbYes.isChecked = true
+            "0" -> holder.rbNo.isChecked = true
             else -> holder.rgAnswer.clearCheck()
         }
 

@@ -380,7 +380,7 @@ public class KTReportActivity extends AppCompatActivity implements OnMultiRecycl
             if (monthName.length() > 0 && year.length() > 0) {
                 jsonObject.put("month", monthName);
 //                jsonObject.put("year", year);
-                jsonObject.put("year", "2025");
+                jsonObject.put("year", currentYear);
 
             } else { // Current month report
                 jsonObject.put("month", monthName1);
