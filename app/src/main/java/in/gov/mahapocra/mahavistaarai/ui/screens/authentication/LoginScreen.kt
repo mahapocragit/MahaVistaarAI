@@ -32,6 +32,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLoginScreenTempBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LoginViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -51,6 +52,7 @@ import retrofit2.Retrofit
 class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     private lateinit var binding: ActivityLoginScreenTempBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
+    private val loginViewModel: LoginViewModel by viewModels()
     private lateinit var refreshToken: String
     private lateinit var mobileNo: String
     private lateinit var dialog: Dialog
@@ -65,6 +67,8 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     private var agriStackMobile = ""
     private var fcmToken = ""
     private var timestamp: Long = 0
+    private var agriStackUserExist = false
+    private var agriStackId = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -140,13 +144,13 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
     private fun farmerIdLayoutValidation() {
         binding.sendFarmerIdOTPButton.setOnClickListener {
-            val farmerId = binding.farmerIdEditText.text.toString()
-            if (farmerId.length != 11 && farmerId.isEmpty()) {
+            agriStackId = binding.farmerIdEditText.text.toString()
+            if (agriStackId.length != 11 && agriStackId.isEmpty()) {
                 UIToastMessage.show(this, "Please enter valid Farmer ID")
             } else {
                 showCaptchaDialog(this) {
                     if (it) {
-                        farmerViewModel.farmerIdBasedLogin(this, farmerId)
+                        farmerViewModel.farmerIdBasedLogin(this, agriStackId)
                     } else {
                         UIToastMessage.show(this, "CAPTCHA verification Failed!!")
                     }
@@ -155,11 +159,11 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         }
 
         farmerViewModel.agristackLoginResponse.observe(this) {
-            Log.d("TAGGER", "farmerIdLayoutValidation: $it")
             if (it != null) {
                 val jsonObject = JSONObject(it.toString())
                 if (jsonObject.optInt("status") == 200) {
                     agriStackMobile = jsonObject.optString("mobile")
+                    agriStackUserExist = jsonObject.optBoolean("isUserExists")
                     addVerificationDialogForFarmer()
                 } else {
                     val jsonObject = JSONObject(it.toString())
@@ -631,20 +635,43 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 receiveOTPEditText.requestFocus()
             } else {
                 timestamp = System.currentTimeMillis()
-                farmerViewModel.compareOtp(this, timestamp, agriStackMobile, enteredOTP)
-                farmerViewModel.compareOtpResponse.observe(this) {
-                    if (it != null) {
-                        val calculatedResponse = provideValidEncryptedString(timestamp)
-                        val jSONObject = JSONObject(it.toString())
-                        val response = jSONObject.optString("response")
-                        if (calculatedResponse != response) {
-                            callRefreshTokenAPI(mobileNo = agriStackMobile, otp = enteredOTP)
+                if (agriStackUserExist) {
+                    farmerViewModel.compareOtpResponse.observe(this) {
+                        if (it != null) {
+                            val calculatedResponse = provideValidEncryptedString(timestamp)
+                            val jSONObject = JSONObject(it.toString())
+                            val response = jSONObject.optString("response")
+                            if (calculatedResponse != response) {
+                                callRefreshTokenAPI(mobileNo = agriStackMobile, otp = enteredOTP)
+                                dialog.dismiss()
+                            } else {
+                                Toast.makeText(this, "Invalid OTP", Toast.LENGTH_LONG).show()
+                            }
                             dialog.dismiss()
-                        } else {
-                            Toast.makeText(this, "Invalid OTP", Toast.LENGTH_LONG).show()
                         }
-                        dialog.dismiss()
                     }
+                    farmerViewModel.compareOtp(this, timestamp, agriStackMobile, enteredOTP)
+                } else {
+                    loginViewModel.compareOtpToFarmerIdRegistrationResponse.observe(this) {
+                        if (it != null) {
+                            val calculatedResponse = provideValidEncryptedString(timestamp)
+                            val jSONObject = JSONObject(it.toString())
+                            val response = jSONObject.optString("response")
+                            if (calculatedResponse != response) {
+                                callRefreshTokenAPI(mobileNo = agriStackMobile, otp = enteredOTP)
+                                dialog.dismiss()
+                            } else {
+                                Toast.makeText(this, "Invalid OTP", Toast.LENGTH_LONG).show()
+                            }
+                            dialog.dismiss()
+                        }
+                    }
+                    loginViewModel.compareOtpToFarmerIdRegistration(
+                        this,
+                        agriStackId,
+                        enteredOTP,
+                        timestamp
+                    )
                 }
             }
 

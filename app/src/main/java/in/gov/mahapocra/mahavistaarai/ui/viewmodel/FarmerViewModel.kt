@@ -552,6 +552,7 @@ class FarmerViewModel : ViewModel() {
 
     fun farmerIdBasedLogin(context: Context, agristackID: String) {
         viewModelScope.launch {
+            ProgressHelper.showProgressDialog(context)
             try {
                 val jsonObject = JSONObject().apply {
                     put("SecurityKey", APIKeys.SSO_PROD)
@@ -561,11 +562,12 @@ class FarmerViewModel : ViewModel() {
                 val apiRequest = retrofit.create(ApiService::class.java)
 
                 val response = apiRequest.farmerLoginBasedOnID(agristackID, requestBody)
-
+                ProgressHelper.disableProgressDialog()
                 // You can handle the result however you want, for example:
                 _agristackLoginResponse.value = response
 
             } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."

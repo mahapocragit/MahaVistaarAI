@@ -29,7 +29,7 @@ object ApiConstants {
     const val kGetVideosCategories: String = "videoService/get-video-category-details"
     const val kGetShetishalaVideos: String = "videoService/get-digital-shetishala-details"
     const val kdeleteFarmerSelectedCrop: String = "farmerService/delete-farmers-selected-crop"
-    const val kLoginViaFarmerId: String = "authService/farmeridotp"
+    const val kLoginViaFarmerId: String = "authService/farmeridotpn"
     const val kGetmarketsPriceDetails: String = "msambService/msamb-data"
     const val kResetPassword: String = "authService/resetPassword"
     const val kCompareOtp: String = "authService/compareOTP"
