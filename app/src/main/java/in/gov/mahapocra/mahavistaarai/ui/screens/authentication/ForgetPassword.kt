@@ -5,6 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
@@ -50,6 +53,7 @@ class ForgetPassword : AppCompatActivity() {
     private var userPass: String = ""
     private lateinit var dialog: Dialog
     var languageToLoad: String = "mr"
+    private lateinit var otpFields: List<EditText>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,6 +84,37 @@ class ForgetPassword : AppCompatActivity() {
         }
     }
 
+    private fun setupOtpInputs(otpFields: List<EditText>) {
+
+        otpFields.forEachIndexed { index, editText ->
+
+            editText.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    if (s?.length == 1 && index < otpFields.size - 1) {
+                        otpFields[index + 1].requestFocus()
+                    }
+                }
+
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            })
+
+            editText.setOnKeyListener { _, keyCode, event ->
+                if (keyCode == KeyEvent.KEYCODE_DEL &&
+                    event.action == KeyEvent.ACTION_DOWN &&
+                    editText.text.isEmpty() &&
+                    index > 0
+                ) {
+                    otpFields[index - 1].requestFocus()
+                    otpFields[index - 1].setSelection(
+                        otpFields[index - 1].text.length
+                    )
+                }
+                false
+            }
+        }
+    }
+
     private fun observeResponse() {
 
         loginViewModel.sendOtpToMobileResponse.observe(this) { response ->
@@ -91,14 +126,14 @@ class ForgetPassword : AppCompatActivity() {
                     val response: String = jSONObject.getString("response")
                     Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                     addVerificationDialog()
-                }else{
+                } else {
                     Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                 }
             }
         }
 
-        loginViewModel.error.observe(this){
-            if (it!=null){
+        loginViewModel.error.observe(this) {
+            if (it != null) {
                 Toast.makeText(this, it, Toast.LENGTH_LONG).show()
             }
         }
@@ -156,13 +191,21 @@ class ForgetPassword : AppCompatActivity() {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
         dialog.setContentView(R.layout.dialog_activity_verification)
+        val otpFields = listOf(
+            dialog.findViewById<EditText>(R.id.otp1),
+            dialog.findViewById<EditText>(R.id.otp2),
+            dialog.findViewById<EditText>(R.id.otp3),
+            dialog.findViewById<EditText>(R.id.otp4),
+            dialog.findViewById<EditText>(R.id.otp5),
+            dialog.findViewById<EditText>(R.id.otp6)
+        )
+        setupOtpInputs(otpFields)
         dialog.window!!.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
         val dialogTitle = dialog.findViewById<TextView>(R.id.dialogTitle)
         dialogTitle.text = getString(R.string.enterOtp)
-        val receiveOTPEditText = dialog.findViewById<EditText>(R.id.OptEditText)
         val submitButton = dialog.findViewById<Button>(R.id.submitButton)
         val resendOTP = dialog.findViewById<Button>(R.id.resendOTP)
         val cancelButton = dialog.findViewById<ImageView>(R.id.imageView_close)
@@ -170,30 +213,22 @@ class ForgetPassword : AppCompatActivity() {
         cancelButton.setOnClickListener { dialog.dismiss() }
         submitButton.setOnClickListener {
             timestamp = System.currentTimeMillis()
-            val enteredOTP = receiveOTPEditText.text.toString().trim()
+            val enteredOTP = otpFields.joinToString("") { it.text.toString() }
 
-            when {
-                enteredOTP.isEmpty() -> {
-                    receiveOTPEditText.error = resources.getString(R.string.regist_otp_err)
-                    receiveOTPEditText.requestFocus()
-                }
-
-                enteredOTP.length != 6 -> {
-                    receiveOTPEditText.error = "OTP must be 6 digits"
-                    receiveOTPEditText.requestFocus()
-                }
-
-                else -> {
-                    farmerViewModel.compareOtp(
-                        this,
-                        timestamp,
-                        binding.mobileEditText.text.toString(),
-                        enteredOTP
-                    )
-                    dialog.dismiss()
-                }
+            if (enteredOTP.length < 6) {
+                Toast.makeText(this, "Enter valid OTP", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            } else {
+                farmerViewModel.compareOtp(
+                    this,
+                    timestamp,
+                    binding.mobileEditText.text.toString(),
+                    enteredOTP
+                )
+                dialog.dismiss()
             }
         }
+
         resendOTP.setOnClickListener {
             dialog.dismiss()
             sendOTP()

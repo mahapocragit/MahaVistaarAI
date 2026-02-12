@@ -546,4 +546,17 @@
     <string name="give_feedback">अभिप्राय द्या</string>
     <string name="your_feedback_on_advisory">सूचनेबाबत आपला अभिप्राय</string>
     <string name="send_feedback">अभिप्राय पाठवा</string>
+
+    <!--    pest and diseases identification marathi titles-->
+    <string name="curative_measures_text">उपचारात्मक उपाय</string>
+    <string name="analysis_result_text">रोगनिदान</string>
+    <string name="new_scan_text">नवीन तपासणी</string>
+    <string name="analyse_and_submit_text">तपासणीसाठी पाठवा</string>
+    <string name="plant_pest_image_tips_text">पीक किंवा किडीचा फोटो (कमाल १)</string>
+    <string name="capture_image_text">फोटो काढा</string>
+    <string name="select_from_gallery_text">गॅलरीमधून फोटो निवडा</string>
+    <string name="enter_feedback">अभिप्राय लिहा</string>
+    <string name="submit_feedback">अभिप्राय नोंदवा</string>
+    <string name="disease_text">रोग: </string>
+    <string name="pest_identification_text">कीड ओळख</string>
 </resources>

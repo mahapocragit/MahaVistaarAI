@@ -7,38 +7,39 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.model.DashboardAction
+import `in`.gov.mahapocra.mahavistaarai.data.model.DashboardItem
 
 class DashboardAdapter(
-    private val context: Context,
-    private val mobileValues: Array<String>,
-    private val mobileImg: IntArray
-) : BaseAdapter() {
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val gridView: View?
-        if (convertView == null) {
-            gridView = inflater.inflate(R.layout.single_item_grid, parent, false)
-            val textView = gridView.findViewById<TextView>(R.id.grid_item_label)
-            textView.text = mobileValues[position]
-            val imageView = gridView.findViewById<ImageView>(R.id.grid_item_image)
-            imageView.setImageResource(mobileImg[position])
-            notifyDataSetChanged()
-        } else {
-            gridView = convertView
+    private val items: List<DashboardItem>,
+    private val onItemClick: (DashboardAction) -> Unit
+) : RecyclerView.Adapter<DashboardAdapter.ViewHolder>() {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.single_item_grid, parent, false)
+        return ViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(items[position])
+    }
+
+    override fun getItemCount() = items.size
+
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val label: TextView = itemView.findViewById(R.id.grid_item_label)
+        private val image: ImageView = itemView.findViewById(R.id.grid_item_image)
+
+        fun bind(item: DashboardItem) {
+            label.text = item.title
+            image.setImageResource(item.iconRes)
+
+            itemView.setOnClickListener {
+                onItemClick(item.action)
+            }
         }
-        return gridView
-    }
-
-    override fun getCount(): Int {
-        return mobileValues.size
-    }
-
-    override fun getItem(position: Int): Any? {
-        return null
-    }
-
-    override fun getItemId(position: Int): Long {
-        return 0
     }
 }

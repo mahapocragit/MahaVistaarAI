@@ -8,6 +8,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
@@ -101,6 +103,11 @@ import java.util.Date
 import java.util.Locale
 import java.util.Objects
 import androidx.core.net.toUri
+import androidx.core.os.postDelayed
+import androidx.recyclerview.widget.GridLayoutManager
+import `in`.gov.mahapocra.mahavistaarai.data.model.DashboardAction
+import `in`.gov.mahapocra.mahavistaarai.data.model.DashboardItem
+import `in`.gov.mahapocra.mahavistaarai.pestIdentification.ui.PestIdentificationActivity
 
 class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecyclerItemClickListener {
 
@@ -124,6 +131,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     private var showToast = true
     private var etlAdvisoryJsonArray: JSONArray = JSONArray()
     private var selectedCropList: ArrayList<CropsCategName>? = null
+    private var doubleBackToExitPressedOnce = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -143,7 +151,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         observeResponse()
         setUpListeners()
         FirebaseHelper(this)
-
+        FirebaseHelper(this).subscribeToTopic("generic_notifications")
         binding.appBarMain.dashboardScreen.progressBar.visibility = View.VISIBLE
         binding.appBarMain.dashboardScreen.temperatureTextView.visibility = View.GONE
 
@@ -205,15 +213,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             navUserPhone.text = userNumber
         }
 
-        binding.appBarMain.dashboardScreen.gridViewDashboard.columnWidth =
-            GridView.STRETCH_COLUMN_WIDTH
-        if (languageToLoad.equals("en", ignoreCase = true)) {
-            binding.appBarMain.dashboardScreen.gridViewDashboard.adapter =
-                DashboardAdapter(this, arrayCategory, arrayCategoryImg)
-        } else if (languageToLoad.equals("mr", ignoreCase = true)) {
-            binding.appBarMain.dashboardScreen.gridViewDashboard.adapter =
-                DashboardAdapter(this, arrayCategoryMarathi, arrayCategoryImg)
-        }
+        setupDashboardRecyclerView()
         setVersion()
         if (NetworkUtils.isInternetAvailable(this)) {
             farmerViewModel.getFarmerSelectedCrop(this, languageToLoad)
@@ -230,11 +230,157 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             LocalCustom.createSnackbar(binding.root, "Internet not available!")
         }
 
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                finishAffinity()
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+
+                    if (doubleBackToExitPressedOnce) {
+                        finishAffinity()
+                        return
+                    }
+
+                    doubleBackToExitPressedOnce = true
+                    Toast.makeText(
+                        this@DashboardScreen,
+                        "Swipe again to exit",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        doubleBackToExitPressedOnce = false
+                    }, 2000)
+                }
             }
-        })
+        )
+    }
+
+    private fun setupDashboardRecyclerView() {
+        binding.appBarMain.dashboardScreen.dashboardRecyclerView.apply {
+            layoutManager = GridLayoutManager(this@DashboardScreen, 3)
+            adapter = DashboardAdapter(getDashboardItems()) { action ->
+                handleDashboardClick(action)
+            }
+            setHasFixedSize(true)
+            isNestedScrollingEnabled = false
+        }
+    }
+
+    private fun getDashboardItems(): List<DashboardItem> {
+        val titles = if (languageToLoad.equals("en", true)) {
+            arrayCategory
+        } else {
+            arrayCategoryMarathi
+        }
+
+        return titles.mapIndexed { index, title ->
+            DashboardItem(
+                title = title,
+                iconRes = arrayCategoryImg[index],
+                action = DashboardAction.values()[index]
+            )
+        }
+    }
+
+    private fun handleDashboardClick(action: DashboardAction) {
+        if (!NetworkUtils.isInternetAvailable(this)) {
+            LocalCustom.createSnackbar(binding.root, "Internet not available!")
+            return
+        }
+
+        when (action) {
+
+            DashboardAction.ADVISORY -> {
+                if (savedCropName.isEmpty()) {
+                    navigateToAddCrop(AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD)
+                } else {
+                    openAdvisory()
+                }
+            }
+
+            DashboardAction.SOP -> {
+                if (savedCropName.isEmpty()) {
+                    navigateToAddCrop(AppConstants.SOP_FROM_DASHBOARD)
+                } else {
+                    openSOP()
+                }
+            }
+
+            DashboardAction.SOIL_HEALTH ->
+                startActivity(Intent(this, SoilHealthCardActivity::class.java))
+
+            DashboardAction.FERTILIZER -> {
+                if (savedCropName.isEmpty()) {
+                    navigateToAddCrop(AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD)
+                } else {
+                    openFertilizer()
+                }
+            }
+
+            DashboardAction.CLIMATE_TECH ->
+                startActivity(Intent(this, ClimateResilientTechnology::class.java))
+
+            DashboardAction.PEST_STAGE -> {
+                if (savedCropName.isEmpty()) {
+                    navigateToAddCrop(AppConstants.PEST_AND_DISEASES_STAGES)
+                } else {
+                    openPestStages()
+                }
+            }
+
+            DashboardAction.MARKET ->
+                startActivity(Intent(this, MarketPrice::class.java))
+
+            DashboardAction.DBT ->
+                startActivity(Intent(this, DBTActivity::class.java))
+
+            DashboardAction.WAREHOUSE ->
+                startActivity(Intent(this, Warehouse::class.java))
+        }
+    }
+
+    private fun openPestStages() {
+        val intent = Intent(this, PestsAndDiseasesStages::class.java)
+        intent.putExtra("id", savedCropId)
+        intent.putExtra("wotr_crop_id", savedCropWoTRId)
+        intent.putExtra("sowingDate", savedCropSowingDate)
+        intent.putExtra("mUrl", savedCropImageUrl)
+        intent.putExtra("mName", savedCropName)
+        startActivity(intent)
+    }
+
+    private fun openFertilizer() {
+        val intent = Intent(this, FertilizerCalculatorActivity::class.java)
+        intent.putExtra("id", savedCropId)
+        intent.putExtra("wotr_crop_id", savedCropWoTRId?.toInt())
+        intent.putExtra("mUrl", savedCropImageUrl)
+        intent.putExtra("mName", savedCropName)
+        intent.putExtra("sowingDate", savedCropSowingDate)
+        startActivity(intent)
+    }
+
+    private fun openSOP() {
+        val intent = Intent(this, SOPActivity::class.java)
+        intent.putExtra("id", savedCropId)
+        intent.putExtra("wotr_crop_id", savedCropWoTRId)
+        intent.putExtra("mUrl", savedCropImageUrl)
+        intent.putExtra("mName", savedCropName)
+        startActivity(intent)
+    }
+
+    private fun openAdvisory() {
+        val intent = Intent(this, AdvisoryCropActivity::class.java)
+        intent.putExtra("id", savedCropId)
+        intent.putExtra("wotr_crop_id", savedCropWoTRId)
+        intent.putExtra("mUrl", savedCropImageUrl)
+        intent.putExtra("sowingDate", savedCropSowingDate)
+        intent.putExtra("mName", savedCropName)
+        startActivity(intent)
+    }
+
+    private fun navigateToAddCrop(action: String) {
+        appPreferenceManager.saveString(AppConstants.ACTION_FROM_DASHBOARD, action)
+        startActivity(Intent(this, AddCropActivity::class.java))
     }
 
     private fun shakeAnimationChatbot() {
@@ -267,11 +413,14 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
         init()
         setUpDrawerMenu()
-        dashboardGridItemsLayoutSetup()
         shakeAnimationChatbot()
         bubbleAnimationChatbot()
         AppPreferenceManager(this).saveBoolean("COST_CALCULATOR_REDIRECT", false)
         binding.appBarMain.imgLangChange.setOnClickListener { openChangeLangPopup() }
+
+        binding.appBarMain.dashboardScreen.takePictureButton.setOnClickListener {
+            startActivity(Intent(this, PestIdentificationActivity::class.java))
+        }
 
         binding.appBarMain.dashboardScreen.krishiTaiLayout.setOnClickListener {
 
@@ -1073,166 +1222,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 }
             }
         }
-
-    private fun dashboardGridItemsLayoutSetup() {
-        binding.appBarMain.dashboardScreen.gridViewDashboard.onItemClickListener =
-            OnItemClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
-                when (position) {
-                    0 -> {
-                        if (NetworkUtils.isInternetAvailable(this)) {
-                            if (savedCropName.isEmpty()) {
-                                val sharing =
-                                    Intent(this@DashboardScreen, AddCropActivity::class.java)
-                                appPreferenceManager.saveString(
-                                    AppConstants.ACTION_FROM_DASHBOARD,
-                                    AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD
-                                )
-                                startActivity(sharing)
-                            } else {
-                                val intent = Intent(this, AdvisoryCropActivity::class.java)
-                                intent.putExtra("id", savedCropId)
-                                intent.putExtra("wotr_crop_id", savedCropWoTRId)
-                                intent.putExtra("mUrl", savedCropImageUrl)
-                                intent.putExtra("sowingDate", savedCropSowingDate)
-                                intent.putExtra("mName", savedCropName)
-                                startActivity(intent)
-                            }
-                        } else {
-                            LocalCustom.createSnackbar(binding.root, "Internet not available!")
-                        }
-
-                    }
-
-                    1 -> {
-                        if (NetworkUtils.isInternetAvailable(this)) {
-                            if (savedCropName.isEmpty()) {
-                                val sharing =
-                                    Intent(this@DashboardScreen, AddCropActivity::class.java)
-                                appPreferenceManager.saveString(
-                                    AppConstants.ACTION_FROM_DASHBOARD,
-                                    AppConstants.SOP_FROM_DASHBOARD
-                                )
-                                startActivity(sharing)
-                            } else {
-                                val intent = Intent(this, SOPActivity::class.java)
-                                intent.putExtra("id", savedCropId)
-                                intent.putExtra("wotr_crop_id", savedCropWoTRId)
-                                intent.putExtra("mUrl", savedCropImageUrl)
-                                intent.putExtra("mName", savedCropName)
-                                startActivity(intent)
-                            }
-                        } else {
-                            LocalCustom.createSnackbar(binding.root, "Internet not available!")
-                        }
-                    }
-
-                    2 -> {
-                        if (NetworkUtils.isInternetAvailable(this)) {
-                            val healthIntent = Intent(
-                                this@DashboardScreen,
-                                SoilHealthCardActivity::class.java
-                            )
-                            startActivity(healthIntent)
-                        } else {
-                            LocalCustom.createSnackbar(binding.root, "Internet not available!")
-                        }
-                    }
-
-                    3 -> {
-                        if (NetworkUtils.isInternetAvailable(this)) {
-                            if (savedCropName.isEmpty()) {
-                                val comingSoonIntent = Intent(
-                                    this@DashboardScreen,
-                                    AddCropActivity::class.java
-                                )
-                                appPreferenceManager.saveString(
-                                    AppConstants.ACTION_FROM_DASHBOARD,
-                                    AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD
-                                )
-                                startActivity(comingSoonIntent)
-                            } else {
-                                val intent = Intent(this, FertilizerCalculatorActivity::class.java)
-                                intent.putExtra("id", savedCropId)
-                                intent.putExtra("wotr_crop_id", savedCropWoTRId?.toInt())
-                                intent.putExtra("mUrl", savedCropImageUrl)
-                                intent.putExtra("mName", savedCropName)
-                                intent.putExtra("sowingDate", savedCropSowingDate)
-                                startActivity(intent)
-                            }
-                        } else {
-                            LocalCustom.createSnackbar(binding.root, "Internet not available!")
-                        }
-                    }
-
-                    4 -> {
-                        if (NetworkUtils.isInternetAvailable(this)) {
-                            val addPeople =
-                                Intent(this@DashboardScreen, ClimateResilientTechnology::class.java)
-                            startActivity(addPeople)
-                        } else {
-                            LocalCustom.createSnackbar(binding.root, "Internet not available!")
-                        }
-
-                    }
-
-                    5 -> {
-                        if (NetworkUtils.isInternetAvailable(this)) {
-                            if (savedCropName.isEmpty()) {
-                                val sharing =
-                                    Intent(this@DashboardScreen, AddCropActivity::class.java)
-                                appPreferenceManager.saveString(
-                                    AppConstants.ACTION_FROM_DASHBOARD,
-                                    AppConstants.PEST_AND_DISEASES_STAGES
-                                )
-                                startActivity(sharing)
-                            } else {
-                                val intent = Intent(this, PestsAndDiseasesStages::class.java)
-                                intent.putExtra("id", savedCropId)
-                                intent.putExtra("wotr_crop_id", savedCropWoTRId)
-                                intent.putExtra("sowingDate", savedCropSowingDate)
-                                intent.putExtra("mUrl", savedCropImageUrl)
-                                intent.putExtra("mName", savedCropName)
-                                startActivity(intent)
-                            }
-                        } else {
-                            LocalCustom.createSnackbar(binding.root, "Internet not available!")
-                        }
-                    }
-
-                    6 -> {
-                        if (NetworkUtils.isInternetAvailable(this)) {
-                            val marketIntent = Intent(this@DashboardScreen, MarketPrice::class.java)
-                            startActivity(marketIntent)
-                        } else {
-                            LocalCustom.createSnackbar(binding.root, "Internet not available!")
-                        }
-                    }
-
-                    7 -> {
-                        if (NetworkUtils.isInternetAvailable(this)) {
-                            startActivity(
-                                Intent(
-                                    this@DashboardScreen,
-                                    DBTActivity::class.java
-                                )
-                            )
-                        } else {
-                            LocalCustom.createSnackbar(binding.root, "Internet not available!")
-                        }
-                    }
-
-                    8 -> {
-                        if (NetworkUtils.isInternetAvailable(this)) {
-                            val warehouseIntent =
-                                Intent(this@DashboardScreen, Warehouse::class.java)
-                            startActivity(warehouseIntent)
-                        } else {
-                            LocalCustom.createSnackbar(binding.root, "Internet not available!")
-                        }
-                    }
-                }
-            }
-    }
 
     private fun init() {
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)

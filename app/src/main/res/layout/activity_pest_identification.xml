@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/status_colored_background_for_detection"
+    tools:context=".pestIdentification.ui.PestIdentificationActivity">
+
+    <include
+        android:id="@+id/relativeLayoutTopBar"
+        layout="@layout/layout_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/edit_crop_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_12sdp"
+            android:background="@drawable/rounded_edittext_background"
+            android:cursorVisible="false"
+            android:drawableEnd="@drawable/ic_leaf"
+            android:drawablePadding="@dimen/_5sdp"
+            android:focusable="false"
+            android:hint="@string/select_crop"
+            android:inputType="none"
+            android:minHeight="@dimen/_40sdp"
+            android:textSize="@dimen/_12sdp"
+            android:padding="@dimen/_8sdp"
+            android:textColor="@color/gray" />
+
+        <EditText
+            android:id="@+id/edit_sowing_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_12sdp"
+            android:background="@drawable/rounded_edittext_background"
+            android:clickable="true"
+            android:drawableEnd="@drawable/ic_calendar_small"
+            android:drawablePadding="@dimen/_5sdp"
+            android:focusable="false"
+            android:hint="@string/sowing_date"
+            android:textSize="@dimen/_12sdp"
+            android:inputType="date"
+            android:minHeight="@dimen/_40sdp"
+            android:padding="@dimen/_8sdp"
+            android:textColor="@color/gray" />
+
+        <LinearLayout
+            android:id="@+id/imageSelectorLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_200sdp"
+            android:layout_marginBottom="@dimen/_20sdp"
+            android:background="@drawable/dotted_border_background"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:textSize="@dimen/_10sdp"
+                android:text="@string/plant_pest_image_tips_text"
+                android:textColor="@android:color/darker_gray"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/cameraLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:padding="@dimen/_8sdp"
+                        android:src="@drawable/ic_camera"
+                        android:text="Capture Image"
+                        android:textAllCaps="false" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="7"
+                        android:gravity="center"
+                        android:textSize="@dimen/_10sdp"
+                        android:text="@string/capture_image_text" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/galleryLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:src="@drawable/ic_gallery"
+                        android:text="Select from Gallery"
+                        android:textAllCaps="false"
+                        android:textSize="@dimen/_11sdp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="7"
+                        android:gravity="center"
+                        android:text="@string/select_from_gallery_text"
+                        android:textSize="@dimen/_10sdp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/previewLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/previewImage"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_200sdp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/deleteImageView"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_margin="@dimen/_5sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_delete" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_analyze_submit"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/actionbar_color_figma"
+            android:text="@string/analyse_and_submit_text"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/_12sdp"
+            app:cornerRadius="@dimen/_10sdp" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="@dimen/padding10"
     android:orientation="vertical">
 
@@ -10,10 +10,10 @@
         android:id="@+id/imageView_close"
         android:layout_width="@dimen/_25sdp"
         android:layout_height="@dimen/_25sdp"
-        app:tint="@color/font_color_figma"
         android:layout_gravity="top|right"
         android:clickable="true"
-        android:src="@drawable/ic_cross" />
+        android:src="@drawable/ic_cross"
+        app:tint="@color/font_color_figma" />
 
     <TextView
         android:id="@+id/dialogTitle"
@@ -29,23 +29,43 @@
         android:id="@+id/countdownTextview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:text="@string/enter_your_otp" />
+        android:text="@string/enter_your_otp"
+        android:visibility="gone" />
 
 
-    <EditText
-        android:id="@+id/OptEditText"
+    <LinearLayout
+        android:id="@+id/otpContainer"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_40sdp"
-        android:background="@drawable/drop_down"
-        android:gravity="center"
-        android:inputType="number"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/_5sdp"
-        android:maxLength="6"
-        android:hint="______"
-        android:textColor="@color/heading"
-        android:textSize="@dimen/_10sdp"
-        android:textStyle="normal" />
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/otp1"
+            style="@style/OtpBoxStyle" />
+
+        <EditText
+            android:id="@+id/otp2"
+            style="@style/OtpBoxStyle" />
+
+        <EditText
+            android:id="@+id/otp3"
+            style="@style/OtpBoxStyle" />
+
+        <EditText
+            android:id="@+id/otp4"
+            style="@style/OtpBoxStyle" />
+
+        <EditText
+            android:id="@+id/otp5"
+            style="@style/OtpBoxStyle" />
+
+        <EditText
+            android:id="@+id/otp6"
+            style="@style/OtpBoxStyle" />
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -57,12 +77,12 @@
             android:layout_height="@dimen/_45sdp"
             android:layout_margin="@dimen/_5sdp"
             android:layout_weight="1"
-            app:cornerRadius="@dimen/_20sdp"
             android:backgroundTint="@color/actionbar_color_figma"
             android:text="@string/Resend_OTP"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="@dimen/_10sdp" />
+            android:textSize="@dimen/_10sdp"
+            app:cornerRadius="@dimen/_20sdp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/submitButton"
@@ -70,11 +90,11 @@
             android:layout_height="@dimen/_45sdp"
             android:layout_margin="@dimen/_5sdp"
             android:layout_weight="1"
-            app:cornerRadius="@dimen/_20sdp"
             android:backgroundTint="@color/actionbar_color_figma"
             android:text="@string/reg_verify"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="@dimen/_10sdp" />
+            android:textSize="@dimen/_10sdp"
+            app:cornerRadius="@dimen/_20sdp" />
     </LinearLayout>
 </LinearLayout>

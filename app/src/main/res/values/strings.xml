@@ -547,4 +547,17 @@
     <string name="give_feedback">Give Feedback</string>
     <string name="your_feedback_on_advisory">Your Feedback on Advisory</string>
     <string name="send_feedback">Send Feedback</string>
+
+    <!--    pest and diseases identification marathi titles-->
+    <string name="curative_measures_text">Curative Measures</string>
+    <string name="analysis_result_text">Diagnosis</string>
+    <string name="new_scan_text">New Scan</string>
+    <string name="analyse_and_submit_text">Analyze &amp; Submit</string>
+    <string name="plant_pest_image_tips_text">PLANT/PEST IMAGE (MAX 1 IMAGE)</string>
+    <string name="capture_image_text">Capture Image</string>
+    <string name="select_from_gallery_text">Select From Gallery</string>
+    <string name="enter_feedback">Enter Feedback</string>
+    <string name="submit_feedback">Submit Feedback</string>
+    <string name="disease_text">Disease: </string>
+    <string name="pest_identification_text">Pest Identification</string>
 </resources>

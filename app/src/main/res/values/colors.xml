@@ -9,6 +9,9 @@
     <color name="watercolor"></color>
     <color name="white_light">#80FFFEFE</color>
     <color name="dusk_yellow">#ead538</color>
+    <color name="baby_blue">#6495ED</color>
+    <color name="light_gray">#E0E0E0</color>
+    <color name="pale_aqua">#E5FBFC</color>
 
     <color name="schedule_com">#42842d</color>
     <color name="schedule_re">#535353</color>
