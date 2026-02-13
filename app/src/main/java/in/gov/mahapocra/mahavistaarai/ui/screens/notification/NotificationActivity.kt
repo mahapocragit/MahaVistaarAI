@@ -60,7 +60,7 @@ class NotificationActivity : AppCompatActivity() {
                             startActivity(
                                 Intent(
                                     this@NotificationActivity,
-                                    DetailedNotificationActivity::class.java
+                                    DashboardScreen::class.java
                                 ).apply {
                                     putExtra("notificationObject", jsonObject.toString())
                                 })

@@ -150,6 +150,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         setContentView(binding.root)
         askForPermissions()
         observeResponse()
+        init()
         setUpListeners()
         FirebaseHelper(this)
         FirebaseHelper(this).subscribeToTopic("generic_notifications")
@@ -411,8 +412,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     }
 
     private fun setUpListeners() {
-
-        init()
         setUpDrawerMenu()
         shakeAnimationChatbot()
         bubbleAnimationChatbot()
