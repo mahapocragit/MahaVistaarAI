@@ -557,7 +557,7 @@
     <string name="select_from_gallery_text">गॅलरीमधून फोटो निवडा</string>
     <string name="enter_feedback">अभिप्राय लिहा</string>
     <string name="submit_feedback">अभिप्राय नोंदवा</string>
-    <string name="disease_text">रोग: </string>
+    <string name="disease_text">कीड/रोग: </string>
     <string name="pest_identification_text">कीड ओळख</string>
     <string name="identity_pest_amp_disease">कीड व रोग ओळखा</string>
     <string name="take_a_npicture">फोटो\nकाढा</string>

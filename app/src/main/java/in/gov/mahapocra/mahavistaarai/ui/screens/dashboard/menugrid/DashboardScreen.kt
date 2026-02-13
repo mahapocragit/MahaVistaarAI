@@ -40,6 +40,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.messaging.FirebaseMessaging
 import com.microsoft.clarity.Clarity
 import com.squareup.picasso.Picasso
 import `in`.co.appinventor.services_api.app_util.AppUtility
@@ -131,6 +132,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     private var etlAdvisoryJsonArray: JSONArray = JSONArray()
     private var selectedCropList: ArrayList<CropsCategName>? = null
     private var doubleBackToExitPressedOnce = false
+    private val topic = "generic_advisory"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -449,7 +451,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             val ktRoles = pocraRoles.filter { it.role_id == 45 }
 
             if (ktRoles.isEmpty()) {
-                Toast.makeText(this, "You are not authorized for SMA module", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "You are not authorized for SMA module", Toast.LENGTH_SHORT)
+                    .show()
                 return@setOnClickListener
             }
 
@@ -504,7 +507,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
         binding.appBarMain.dashboardScreen.temperatureLayout.setOnClickListener {
             val tempTXT = binding.appBarMain.dashboardScreen.temperatureTextView.text
-            if (tempTXT == "22°C") {
+            if (tempTXT == "") {
                 Toast.makeText(this, "Weather isn't updated Currently", Toast.LENGTH_SHORT).show()
             } else {
                 val weather = Intent(
@@ -652,6 +655,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             .setCancelable(false)
             .show()
     }
+
     private fun observeResponse() {
 
         farmerViewModel.error.observe(this) {
@@ -869,6 +873,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     val data = jsonObject.optJSONObject("data") ?: return@observe
 
                     val name = data.optString("Name", "")
+                    binding.appBarMain.dashboardScreen.userFullNameTextView.text = name
                     val mobNo = data.optString("MobileNo", "")
                     val emailId = data.optString("EmailId", "")
                     val ffaReg = data.optInt("FAAPRegistrationID", -1)
@@ -886,7 +891,23 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     //  pocra_roles array
                     val pocraRoles = mutableListOf<PocraRole>()
                     val rolesArray = data.optJSONArray("pocra_roles")
-                    var userRoleId = -1
+                    val topicsArray = data.optJSONArray("topics")
+                    topicsArray?.length()?.let {
+                        if (it > 0) {
+                            Log.d(TAG, "observeResponse: NOT EMPTY")
+                        } else {
+                            FirebaseMessaging.getInstance()
+                                .subscribeToTopic(topic)
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        farmerViewModel.saveSubscribedTopic(this, topic)
+                                    } else {
+                                        Log.e("FCM", "Topic subscription failed", task.exception)
+                                    }
+                                }
+                        }
+                    }
+                    val userRoleId = -1
                     var hasKrishiTaiRole = false   // FLAG
                     if (rolesArray != null && rolesArray.length() > 0) {
 
@@ -903,7 +924,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                                 hasKrishiTaiRole = true
                             }
                         }
-                        binding.appBarMain.dashboardScreen.krishiTaiLayout.visibility = if (hasKrishiTaiRole) View.VISIBLE else View.GONE
+                        binding.appBarMain.dashboardScreen.krishiTaiLayout.visibility =
+                            if (hasKrishiTaiRole) View.VISIBLE else View.GONE
 
                         if (hasKrishiTaiRole) {
                             blinkViewFor5Seconds(binding.appBarMain.dashboardScreen.krishiTaiLayout)
@@ -1068,6 +1090,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
         return jsonArray.toString()
     }
+
     private fun blinkViewFor5Seconds(view: View) {
         val blinkAnimation = AlphaAnimation(0.0f, 1.0f).apply {
             duration = 500          // 0.5 sec fade
@@ -1175,7 +1198,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode == PERMISSION_REQUEST_CODE) {
-            for ((index, permission) in permissions.withIndex()) {
+            for ((index, _) in permissions.withIndex()) {
                 if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
                     UIToastMessage.show(
                         this@DashboardScreen,
@@ -1395,6 +1418,9 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
     private fun logoutFromApp() {
         if (NetworkUtils.isInternetAvailable(this)) {
+            FirebaseMessaging.getInstance()
+            .unsubscribeFromTopic(topic)
+            farmerViewModel.deleteSubscribedTopic(this, topic)
             farmerViewModel.updateFCMToken(this, "NA")
             appPreferenceManager.clearAll()
         } else {

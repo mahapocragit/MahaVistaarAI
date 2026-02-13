@@ -378,4 +378,10 @@ interface ApiService {
     @POST("authService/get_device_id_count")
     suspend fun getRegisteredDeviceCountByDeviceId(@Header("deviceId") deviceId: String): JsonObject
 
+    @POST("notificationServices/add-subscribed-topic")
+    suspend fun saveSubscribedTopic(@Body params: RequestBody): JsonObject
+
+    @POST("notificationServices/delete-subscribed-topic")
+    suspend fun deleteSubscribedTopic(@Body params: RequestBody): JsonObject
+
 }

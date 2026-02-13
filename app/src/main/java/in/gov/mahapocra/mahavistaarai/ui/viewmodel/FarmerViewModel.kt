@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.viewmodel
 
+import android.adservices.topics.Topic
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -121,6 +122,12 @@ class FarmerViewModel : ViewModel() {
 
     private val _consentResponse = MutableLiveData<JsonObject>()
     val consentResponse: LiveData<JsonObject> = _consentResponse
+
+    private val _saveSubscribedTopicResponse = MutableLiveData<JsonObject>()
+    val saveSubscribedTopicResponse: LiveData<JsonObject> = _saveSubscribedTopicResponse
+
+    private val _deleteSubscribedTopicResponse = MutableLiveData<JsonObject>()
+    val deleteSubscribedTopicResponse: LiveData<JsonObject> = _deleteSubscribedTopicResponse
 
 
     private val _error = MutableLiveData<String>()
@@ -1015,6 +1022,56 @@ class FarmerViewModel : ViewModel() {
                 _consentResponse.value = response
             } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun saveSubscribedTopic(context: Context, topic: String) {
+        val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+        viewModelScope.launch {
+            try {
+                val jsonObject = JSONObject()
+                jsonObject.put("user_id", farmerId)
+                jsonObject.put("topic", topic)
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val api = retrofit.create(ApiService::class.java)
+                val response = api.saveSubscribedTopic(requestBody)
+                _saveSubscribedTopicResponse.value = response
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun deleteSubscribedTopic(context: Context, topic: String) {
+        val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+        viewModelScope.launch {
+            try {
+                val jsonObject = JSONObject()
+                jsonObject.put("user_id", farmerId)
+                jsonObject.put("topic", topic)
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val api = retrofit.create(ApiService::class.java)
+                val response = api.deleteSubscribedTopic(requestBody)
+                _deleteSubscribedTopicResponse.value = response
+            } catch (e: Exception) {
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
