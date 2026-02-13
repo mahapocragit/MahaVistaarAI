@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,6 +42,13 @@ class NotificationActivity : AppCompatActivity() {
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
             startActivity(Intent(this, DashboardScreen::class.java))
         }
+
+        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                startActivity(Intent(this@NotificationActivity, DashboardScreen::class.java))
+            }
+        })
+
         if (NetworkUtils.isInternetAvailable(this)){
             farmerViewModel.getNotificationList(this)
         }else{
@@ -60,7 +68,7 @@ class NotificationActivity : AppCompatActivity() {
                             startActivity(
                                 Intent(
                                     this@NotificationActivity,
-                                    DashboardScreen::class.java
+                                    DetailedNotificationActivity::class.java
                                 ).apply {
                                     putExtra("notificationObject", jsonObject.toString())
                                 })

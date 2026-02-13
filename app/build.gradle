@@ -23,11 +23,19 @@ android {
         }
     }
 
+    packagingOptions {
+        jniLibs {
+            excludes += [
+                    "**/libimage_processing_util_jni.so"
+            ]
+        }
+    }
+
     defaultConfig {
         applicationId "in.gov.mahapocra.mahavistaarai"
         minSdkVersion 23
         targetSdkVersion 36
-        versionCode 46
+        versionCode 47
         versionName "2.0.5"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

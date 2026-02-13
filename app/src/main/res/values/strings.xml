@@ -553,13 +553,13 @@
     <string name="analysis_result_text">Diagnosis</string>
     <string name="new_scan_text">New Scan</string>
     <string name="analyse_and_submit_text">Analyze &amp; Submit</string>
-    <string name="plant_pest_image_tips_text">PLANT/PEST IMAGE (MAX 1 IMAGE)</string>
+    <string name="plant_pest_image_tips_text">PLANT/PEST IMAGE</string>
     <string name="capture_image_text">Capture Image</string>
     <string name="select_from_gallery_text">Select From Gallery</string>
     <string name="enter_feedback">Enter Feedback</string>
     <string name="submit_feedback">Submit Feedback</string>
     <string name="disease_text">Pest/Disease: </string>
-    <string name="pest_identification_text">Pest Identification</string>
+    <string name="pest_identification_text">Pest &amp; Disease Identification</string>
     <string name="identity_pest_amp_disease">Identity Pest &amp; Disease</string>
     <string name="take_a_npicture">Take\nPhoto</string>
     <string name="get_the_nresult">View\nResult</string>
