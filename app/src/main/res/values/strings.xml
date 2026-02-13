@@ -560,4 +560,10 @@
     <string name="submit_feedback">Submit Feedback</string>
     <string name="disease_text">Disease: </string>
     <string name="pest_identification_text">Pest Identification</string>
+    <string name="identity_pest_amp_disease">Identity Pest &amp; Disease</string>
+    <string name="take_a_npicture">Take\nPhoto</string>
+    <string name="get_the_nresult">View\nResult</string>
+    <string name="get_ndiagnosis">Upload\nPhoto</string>
+    <string name="image_upload_pnd_warning">Only JPEG, PNG, and JPG file formats are allowed. The maximum file size is 10 MB.</string>
+    <string name="snackbar_pnd_message">Please upload only JPEG, PNG, or JPG images up to 10 MB</string>
 </resources>

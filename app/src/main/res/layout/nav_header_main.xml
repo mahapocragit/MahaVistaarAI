@@ -13,7 +13,7 @@
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
@@ -22,7 +22,7 @@
             android:layout_height="@dimen/_50sdp"
             android:padding="2dp"
             android:contentDescription="@string/nav_header_desc"
-            app:srcCompat="@drawable/profilepic" />
+            app:srcCompat="@drawable/user_ic" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,20 +36,18 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/nav_header_vertical_spacing"
                 android:text="@string/nav_Farmer_Name"
+                android:textStyle="bold"
+                android:textSize="@dimen/_11sdp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="@color/status_green" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/line" />
+                android:textColor="@color/black" />
 
             <TextView
                 android:id="@+id/tv_famerPhoneNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/_10sdp"
                 android:text="Mobile Number"
-                android:textColor="@color/status_green" />
+                android:textColor="@color/font_color_figma" />
 
         </LinearLayout>
 

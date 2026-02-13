@@ -31,6 +31,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.messaging.FirebaseMessaging
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
@@ -97,9 +98,17 @@ class PestIdentificationActivity : AppCompatActivity() {
     private val pickImage =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
-                cameraImageUri = it
-                showToast("Image selected")
-                showPreviewLayout()
+                if (isValidImage(it)) {
+                    cameraImageUri = it
+                    showToast("Image selected")
+                    showPreviewLayout()
+                } else {
+                    Snackbar.make(
+                        binding.root,
+                        R.string.snackbar_pnd_message,
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                }
             }
         }
 
@@ -149,6 +158,24 @@ class PestIdentificationActivity : AppCompatActivity() {
             view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    private fun isValidImage(uri: Uri): Boolean {
+        val maxSize = 10 * 1024 * 1024 // 10 MB
+
+        // ✅ Check file size
+        val fileSize = contentResolver.openFileDescriptor(uri, "r")?.statSize ?: 0
+        if (fileSize > maxSize) return false
+
+        // ✅ Check MIME type
+        val mimeType = contentResolver.getType(uri) ?: return false
+        val allowedTypes = listOf(
+            "image/jpeg",
+            "image/jpg",
+            "image/png"
+        )
+
+        return mimeType in allowedTypes
     }
 
     private fun handleBackPress() {

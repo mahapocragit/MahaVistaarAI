@@ -22,20 +22,22 @@ import android.view.animation.AnimationUtils
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.Button
-import android.widget.GridView
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.microsoft.clarity.Clarity
@@ -47,9 +49,12 @@ import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.CropsCategName
+import `in`.gov.mahapocra.mahavistaarai.data.model.DashboardAction
+import `in`.gov.mahapocra.mahavistaarai.data.model.DashboardItem
 import `in`.gov.mahapocra.mahavistaarai.data.model.PocraRole
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDashboardScreenBinding
+import `in`.gov.mahapocra.mahavistaarai.pestIdentification.ui.PestIdentificationActivity
 import `in`.gov.mahapocra.mahavistaarai.sma.ui.screens.KTDashboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropRecyclerSapAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DashboardAdapter
@@ -102,12 +107,6 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.Objects
-import androidx.core.net.toUri
-import androidx.core.os.postDelayed
-import androidx.recyclerview.widget.GridLayoutManager
-import `in`.gov.mahapocra.mahavistaarai.data.model.DashboardAction
-import `in`.gov.mahapocra.mahavistaarai.data.model.DashboardItem
-import `in`.gov.mahapocra.mahavistaarai.pestIdentification.ui.PestIdentificationActivity
 
 class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecyclerItemClickListener {
 
@@ -135,7 +134,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        enableEdgeToEdge()
         languageToLoad = "mr"
         if (AppSettings.getLanguage(this@DashboardScreen).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
@@ -904,12 +903,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                                 hasKrishiTaiRole = true
                             }
                         }
-//                        // SHOW / HIDE BASED ON ROLE
-//                        binding.appBarMain.dashboardScreen.krishiTaiLayout.visibility =
-//                            if (hasKrishiTaiRole) View.VISIBLE else View.GONE
-//                            Log.d("POCRA_ROLE", "roles found → SMA button visible. Count = ${pocraRoles.size}")
-                        binding.appBarMain.dashboardScreen.krishiTaiLayout.visibility =
-                            if (hasKrishiTaiRole) View.VISIBLE else View.GONE
+                        binding.appBarMain.dashboardScreen.krishiTaiLayout.visibility = if (hasKrishiTaiRole) View.VISIBLE else View.GONE
 
                         if (hasKrishiTaiRole) {
                             blinkViewFor5Seconds(binding.appBarMain.dashboardScreen.krishiTaiLayout)

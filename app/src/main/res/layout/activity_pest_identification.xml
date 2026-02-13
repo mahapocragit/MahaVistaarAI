@@ -58,7 +58,7 @@
         <LinearLayout
             android:id="@+id/imageSelectorLayout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_200sdp"
+            android:layout_height="@dimen/_220sdp"
             android:layout_marginBottom="@dimen/_20sdp"
             android:background="@drawable/dotted_border_background"
             android:gravity="center"
@@ -69,7 +69,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
+                android:layout_marginBottom="@dimen/_10sdp"
                 android:textSize="@dimen/_10sdp"
                 android:text="@string/plant_pest_image_tips_text"
                 android:textColor="@android:color/darker_gray"
@@ -77,7 +77,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/_125sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -102,8 +103,8 @@
                         android:layout_height="match_parent"
                         android:layout_weight="7"
                         android:gravity="center"
-                        android:textSize="@dimen/_10sdp"
-                        android:text="@string/capture_image_text" />
+                        android:text="@string/capture_image_text"
+                        android:textSize="@dimen/_10sdp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -132,6 +133,14 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView71"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="@dimen/_10sdp"
+                android:text="@string/image_upload_pnd_warning" />
 
         </LinearLayout>
 

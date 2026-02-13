@@ -75,11 +75,9 @@
             android:exported="false" />
         <activity
             android:name=".pestIdentification.ui.PestIdentificationActivity"
-            android:theme="@style/Theme.FarmerApp"
             android:exported="false" />
         <activity
             android:name=".pestIdentification.ui.ResultActivity"
-            android:theme="@style/Theme.FarmerApp"
             android:windowSoftInputMode="adjustPan"
             android:exported="false" />
         <activity android:name=".sma.ui.screens.KTReportActivity" />
@@ -156,7 +154,7 @@
 
         <activity
             android:name=".ui.screens.authentication.LoginScreen"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:windowSoftInputMode="adjustPan|stateHidden" />
 
         <!-- ===== FIREBASE MESSAGING ===== -->
 
@@ -182,7 +180,7 @@
         <activity
             android:name=".ui.screens.dashboard.menugrid.DashboardScreen"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/DashboardTheme"/>
 
         <activity android:name=".ui.screens.authentication.ProfileScreen" />
         <activity android:name=".ui.screens.authentication.Registration" />

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/_48sdp"
+    android:layout_marginTop="?attr/actionBarSize"
     tools:showIn="@layout/app_bar_main">
 
     <androidx.core.widget.NestedScrollView
@@ -12,6 +12,8 @@
         android:layout_height="match_parent"
         android:fillViewport="true"
         android:layout_marginBottom="@dimen/_70sdp"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -161,10 +163,10 @@
 
                         <LinearLayout
                             android:id="@+id/krishiTaiLayout"
-                            android:layout_width="wrap_content"
+                            android:layout_width="@dimen/_80sdp"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="@dimen/_10sdp"
-                            android:background="@drawable/rounded_brown_button"
+                            android:background="@drawable/bg_krishi_button"
                             android:gravity="center_vertical"
                             android:orientation="horizontal"
                             android:paddingLeft="16dp"
@@ -174,10 +176,10 @@
 
                             <TextView
                                 android:id="@+id/smaRedirectTextView"
-                                android:layout_width="@dimen/_60sdp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="@dimen/_5sdp"
-                                android:gravity="center"
+                                android:textStyle="bold"
                                 android:text="@string/KrishiTai"
                                 android:textColor="@android:color/white"
                                 android:textSize="@dimen/_10sdp" />
@@ -186,8 +188,8 @@
                                 android:id="@+id/arrowIcon"
                                 android:layout_width="10dp"
                                 android:layout_height="15dp"
-                                android:paddingRight="2dp"
-                                android:src="@drawable/ic_arrow_right" />
+                                android:padding="@dimen/_1sdp"
+                                android:src="@drawable/navigating_arrow" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -195,10 +197,11 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_60sdp"
-                        android:layout_margin="@dimen/_10sdp"
+                        android:layout_marginHorizontal="@dimen/_10sdp"
+                        android:layout_marginVertical="@dimen/_5sdp"
                         android:backgroundTint="@color/card_background_color_figma_dash"
                         app:cardCornerRadius="@dimen/_15sdp"
-                        app:cardElevation="0dp"
+                        app:cardElevation="@dimen/_1sdp"
                         app:useCompatPadding="false">
 
                         <LinearLayout
@@ -362,7 +365,7 @@
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_160sdp"
+                android:layout_height="@dimen/_130sdp"
                 app:cardCornerRadius="@dimen/_15sdp"
                 android:backgroundTint="@color/pale_aqua"
                 android:layout_marginBottom="@dimen/_10sdp"
@@ -371,23 +374,136 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="@dimen/_10sdp"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"
                     android:orientation="vertical">
 
-                    <ImageView
+                    <LinearLayout
                         android:id="@+id/imageView32"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:padding="@dimen/_14sdp"
-                        android:layout_weight="3"
-                        app:srcCompat="@drawable/pest_identification_flow" />
+                        android:layout_weight="3" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:padding="@dimen/_15sdp"
+                                android:layout_weight="3"
+                                app:srcCompat="@drawable/pnd_img_one" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/_10sdp"
+                                android:textColor="@color/font_color_figma"
+                                android:text="@string/take_a_npicture" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="@dimen/_20sdp"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:padding="@dimen/_4sdp"
+                                android:layout_weight="3"
+                                app:srcCompat="@drawable/pnd_img_nav" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="7"
+                                android:gravity="center"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/_10sdp"
+                                android:text="" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="3"
+                                android:padding="@dimen/_15sdp"
+                                app:srcCompat="@drawable/pnd_img_two" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textSize="@dimen/_10sdp"
+                                android:textColor="@color/font_color_figma"
+                                android:textStyle="bold"
+                                android:text="@string/get_ndiagnosis" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="@dimen/_20sdp"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:padding="@dimen/_4sdp"
+                                android:layout_weight="3"
+                                app:srcCompat="@drawable/pnd_img_nav" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="7"
+                                android:gravity="center"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/_10sdp"
+                                android:text="" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="3"
+                                android:padding="@dimen/_15sdp"
+                                app:srcCompat="@drawable/pnd_img_three" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textSize="@dimen/_10sdp"
+                                android:textColor="@color/font_color_figma"
+                                android:textStyle="bold"
+                                android:text="@string/get_the_nresult" />
+                        </LinearLayout>
+                    </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/takePictureButton"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="7"
-                        android:elevation="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
                         android:textAllCaps="false"
                         android:gravity="center"
                         android:background="@drawable/scan_image_button_drawable"
@@ -408,7 +524,7 @@
                             android:textSize="@dimen/_10sdp"
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="@dimen/_10sdp"
-                            android:text="Identity Pest &amp; Disease" />
+                            android:text="@string/identity_pest_amp_disease" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

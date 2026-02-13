@@ -213,14 +213,14 @@ class DetailedNotificationActivity : AppCompatActivity() {
             getString(R.string.detailed_notifications)
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
-            startActivity(Intent(this@DetailedNotificationActivity, DashboardScreen::class.java))
+            startActivity(Intent(this@DetailedNotificationActivity, NotificationActivity::class.java))
         }
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 startActivity(
                     Intent(
                         this@DetailedNotificationActivity,
-                        DashboardScreen::class.java
+                        NotificationActivity::class.java
                     )
                 )
             }

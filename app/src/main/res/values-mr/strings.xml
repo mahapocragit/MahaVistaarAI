@@ -559,4 +559,10 @@
     <string name="submit_feedback">अभिप्राय नोंदवा</string>
     <string name="disease_text">रोग: </string>
     <string name="pest_identification_text">कीड ओळख</string>
+    <string name="identity_pest_amp_disease">कीड व रोग ओळखा</string>
+    <string name="take_a_npicture">फोटो\nकाढा</string>
+    <string name="get_the_nresult">निकाल\nपहा</string>
+    <string name="get_ndiagnosis">अपलोड\nकरा</string>
+    <string name="image_upload_pnd_warning">कृपया फक्त JPEG, PNG किंवा JPG फाइल अपलोड करा. फाइलचा आकार जास्तीत जास्त 10 MB असावा.</string>
+    <string name="snackbar_pnd_message">फक्त JPEG, PNG किंवा JPG प्रतिमा (कमाल 10 MB) परवानगी आहेत.</string>
 </resources>
