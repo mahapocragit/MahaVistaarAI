@@ -4,13 +4,306 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.HealthCardActivity">
+    android:background="@drawable/status_colored_background"
+    tools:context=".ui.screens.dashboard.menugrid.soilhealthcard.SoilHealthCardActivity">
 
-    <WebView
-        android:id="@+id/webView"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include
+            android:id="@+id/relativeLayoutToolbar"
+            layout="@layout/layout_toolbar" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/height5"
+            android:elevation="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewDist"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/drop_down"
+                android:gravity="start|center"
+                android:hint="@string/farmer_select_district"
+                android:paddingStart="@dimen/padding20"
+                android:paddingEnd="@dimen/padding20"
+
+                android:textColor="@color/heading"
+                android:textColorHint="@color/text_black"
+                android:textSize="@dimen/text14"
+                android:textStyle="normal" />
+
+            <ImageView
+                android:id="@+id/imageviewDist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/padding30"
+                android:layout_marginRight="@dimen/padding30"
+                android:contentDescription="@string/app_name"
+                app:srcCompat="@drawable/ic_expand_more_black_24dp"
+                app:tint="@color/gray"
+                tools:ignore="VectorDrawableCompat" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/height5"
+            android:elevation="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewTaluka"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/drop_down"
+                android:gravity="start|center"
+                android:hint="@string/farmer_select_taluka"
+                android:paddingStart="@dimen/padding20"
+                android:paddingEnd="@dimen/padding20"
+                android:textColor="@color/heading"
+                android:textColorHint="@color/text_black"
+                android:textSize="@dimen/text14"
+                android:textStyle="normal" />
+
+            <ImageView
+                android:id="@+id/imageviewTaluka"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/padding30"
+                android:layout_marginRight="@dimen/padding30"
+                android:contentDescription="@string/app_name"
+                app:srcCompat="@drawable/ic_expand_more_black_24dp"
+                app:tint="@color/gray"
+                tools:ignore="VectorDrawableCompat" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewVillage"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/drop_down"
+                android:gravity="start|center"
+                android:hint="@string/farmer_select_village"
+                android:paddingStart="@dimen/padding20"
+                android:paddingEnd="@dimen/padding20"
+                android:textColor="@color/heading"
+                android:textColorHint="@color/text_black"
+                android:textSize="@dimen/text14"
+                android:textStyle="normal" />
+
+            <ImageView
+                android:id="@+id/imageviewVillage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/padding30"
+                android:layout_marginRight="@dimen/padding30"
+                android:contentDescription="@string/app_name"
+                app:srcCompat="@drawable/ic_expand_more_black_24dp"
+                app:tint="@color/gray"
+                tools:ignore="VectorDrawableCompat" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="8dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edtSurveyNo"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/drop_down"
+                android:gravity="start|center"
+                android:hint="@string/enter_survey_number"
+                android:inputType="number"
+                android:paddingHorizontal="@dimen/padding20"
+                android:textColor="@color/heading"
+                android:textColorHint="@color/text_black"
+                android:textSize="@dimen/text14"
+                android:textStyle="normal" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/submitButton"
+            android:layout_width="@dimen/_80sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginVertical="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_20sdp"
+            android:background="@drawable/green_bg_gradient"
+            android:elevation="@dimen/_10sdp"
+            android:gravity="center"
+            android:padding="@dimen/_10sdp"
+            android:text="@string/reg_submit"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:paddingVertical="@dimen/_5sdp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="8"
+                    android:padding="@dimen/_2sdp"
+                    android:src="@drawable/ic_soil_health_card_high" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center_vertical"
+                    android:text="@string/low_soil_value"
+                    android:textSize="@dimen/_10sdp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="8"
+                    android:padding="@dimen/_2sdp"
+                    android:src="@drawable/ic_soil_health_card_low" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center_vertical"
+                    android:text="@string/medium_soil_value"
+                    android:textSize="@dimen/_10sdp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="8"
+                    android:padding="@dimen/_2sdp"
+                    android:src="@drawable/ic_soil_health_card_mid" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center_vertical"
+                    android:text="@string/high_soil_value"
+                    android:textSize="@dimen/_10sdp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/farmerRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/transparent"
-        android:scrollbars="none"/>
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        tools:listitem="@layout/item_view_soil_health_card" />
+
+    <TextView
+        android:id="@+id/noDataFoundText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Data Found"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/noDataFoundImageView" />
+
+    <ImageView
+        android:id="@+id/noDataFoundImageView"
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="@dimen/_80sdp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        app:srcCompat="@drawable/ic_no_data_found" />
+
+    <ImageView
+        android:id="@+id/chatbotIcon"
+        android:layout_width="@dimen/_58sdp"
+        android:layout_height="@dimen/_58sdp"
+        android:layout_margin="@dimen/_10sdp"
+        android:padding="@dimen/_5sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/chatbot_icon" />
+
+    <ImageView
+        android:id="@+id/bubbleIconImageView"
+        android:layout_width="@dimen/_60sdp"
+        android:layout_height="@dimen/_60sdp"
+        android:layout_margin="@dimen/_25sdp"
+        app:layout_constraintBottom_toBottomOf="@+id/chatbotIcon"
+        app:layout_constraintEnd_toEndOf="@+id/chatbotIcon"
+        app:srcCompat="@drawable/corner_bubble" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

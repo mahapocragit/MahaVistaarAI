@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".notification.ReadNotificationActivity">
+    tools:context=".ui.screens.dashboard.sidenavigation.news.NewsReadActivity">
+
+    <include
+        android:id="@+id/relativeLayoutTopBar"
+        layout="@layout/layout_toolbar" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:focusable="true"
-        android:gravity="center"
-        android:layout_margin="3dp"
+        android:layout_marginHorizontal="3dp"
+        android:layout_marginTop="48dp"
         android:background="@color/app_bg"
+        android:focusable="true"
         android:focusableInTouchMode="true"
+        android:gravity="center"
         android:orientation="vertical">
-
-        <include
-            android:id="@+id/relativeLayoutTopBar"
-            layout="@layout/layout_toolbar" />
 
         <TextView
             android:id="@+id/tittleTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="@dimen/text10"
+            android:background="@color/colorPrimary"
             android:gravity="center"
             android:padding="3dp"
             android:text="Tittle : "
-            android:background="@color/colorPrimary"
             android:textColor="@color/white"
             android:textSize="15dp"
-            android:layout_marginBottom="@dimen/text10"
             android:textStyle="bold" />
 
         <ImageView
@@ -41,12 +41,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="2dp"
-            android:visibility="gone"
-            android:src="@drawable/ic_launcher_background">
-        </ImageView>
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_launcher_background"
+            android:visibility="gone"></ImageView>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -57,20 +56,18 @@
                 android:id="@+id/messageTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="3dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginStart="10dp"
                 android:gravity="start|center"
+                android:padding="3dp"
                 android:text="Message : "
                 android:textColor="@color/black"
                 android:textSize="14dp"
                 android:textStyle="normal" />
 
 
-
         </RelativeLayout>
-
 
 
         <RelativeLayout
@@ -82,18 +79,17 @@
                 android:id="@+id/urlInfoTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="3dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginStart="10dp"
-                android:gravity="start|center"
-                android:text="Url Info : "
-                android:visibility="gone"
                 android:clickable="true"
+                android:gravity="start|center"
+                android:padding="3dp"
+                android:text="Url Info : "
                 android:textColor="@color/black"
-                android:textStyle="bold|italic"
                 android:textSize="12dp"
-                />
+                android:textStyle="bold|italic"
+                android:visibility="gone" />
 
         </RelativeLayout>
 
@@ -106,15 +102,14 @@
                 android:id="@+id/dateTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="3dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginStart="10dp"
                 android:gravity="end"
+                android:padding="3dp"
                 android:text="Created At : "
                 android:textColor="@color/black"
-                android:textSize="10dp"
-                />
+                android:textSize="10dp" />
         </RelativeLayout>
 
     </LinearLayout>

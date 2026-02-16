@@ -128,7 +128,7 @@ public class AppinventorSoapApi {
                     apiCallback.onResponse(response.body().string(), requestCode);
                     return;
                 }
-                apiCallback.onResponse((String) null, requestCode);
+                apiCallback.onResponse( null, requestCode);
             }
         });
     }

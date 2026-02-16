@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_bg"
+    tools:context=".sma.ui.screens.KTDashboardActivity">
+    <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/app_bg"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".activity.dashboard.TCDashboardActivity"
+        tools:showIn="@layout/app_bar_ktdashboard">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/app_bg"
+            android:orientation="vertical">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/app_bg"
+                android:fitsSystemWindows="true"
+                android:theme="@style/AppTheme.AppBarOverlay"
+                app:elevation="@dimen/padding0">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/height100"
+                        android:orientation="horizontal"
+                        android:gravity="center_horizontal"
+                        android:background="@drawable/app_footer_white">
+
+                        <ImageView
+                            android:layout_width="@dimen/_50sdp"
+                            android:layout_height="@dimen/_50sdp"
+                            android:layout_marginTop="@dimen/padding20"
+                            android:layout_marginLeft="5dp"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/logo_pocra" />
+
+                        <TextView
+                            android:id="@+id/textView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="45dp"
+                            android:gravity="center"
+                            android:layout_weight="1"
+                            android:text="@string/login_monitoring_KT"
+                            android:textColor="@color/text_black"
+                            android:textSize="@dimen/text16"
+                            android:textStyle="bold" />
+
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignRight="@id/logoutImageView"
+                            android:paddingEnd="@dimen/height30"
+                            android:adjustViewBounds="true"
+                            android:padding="@dimen/padding6">
+
+                            <ImageView
+                                android:id="@+id/iv_notification_image"
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:layout_marginRight="20dp"
+                                android:layout_marginTop="20dp"
+                                android:src="@drawable/notifications_24"
+                                android:visibility="gone"
+                                app:tint="@color/bg_button" />
+
+                            <TextView
+                                android:id="@+id/tv_notification_count"
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:layout_gravity="top|center"
+                                android:layout_marginLeft="5dp"
+                                android:background="@drawable/notification_count_icon"
+                                android:gravity="center"
+                                android:text=""
+                                android:layout_marginTop="18dp"
+                                android:textSize="10sp"
+                                android:textStyle="bold"
+                                android:tint="@android:color/white"
+                                android:visibility="gone" />
+
+                        </FrameLayout>
+
+                        <ImageView
+                            android:id="@+id/logoutImageView"
+                            android:layout_width="@dimen/height30"
+                            android:layout_height="@dimen/height30"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginTop="25dp"
+                            android:layout_marginEnd="@dimen/padding10"
+                            android:visibility="gone"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/app_name"
+                            android:padding="@dimen/padding6"
+                            android:src="@drawable/ic_logout" />
+
+
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/height200"
+                        android:background="@drawable/login_top1">
+
+                        <ImageView
+                            android:id="@+id/profileImageView"
+                            android:layout_width="@dimen/height70"
+                            android:layout_height="@dimen/height70"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_gravity="center"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/app_name"
+                            android:src="@mipmap/ic_profile" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/profileImageView"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/nameTextView"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/padding10"
+                                android:gravity="center"
+                                android:maxLines="1"
+                                android:text="Swamini Kasar"
+                                android:textColor="@color/bg_button"
+                                android:textSize="@dimen/text16"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/designationTextView"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:maxLines="1"
+                                android:text="Krushi Tai"
+                                android:textColor="@color/bg_button"
+                                android:textSize="@dimen/text14"
+                                android:textStyle="normal" />
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:id="@+id/switchtxt"
+                                    android:layout_width="100dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="7dp"
+                                    android:text="Switch Role"
+                                    android:padding="7dp"
+                                    android:visibility="gone"
+                                    android:textAllCaps="true"
+                                    android:background="@drawable/btn_rolel_bg"
+                                    android:layout_marginRight="10dp"
+                                    android:gravity="center"
+                                    android:textColor="@color/white"
+                                    android:textStyle="bold"
+                                    android:textSize="13sp" />
+                            </RelativeLayout>
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <!-- RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="@dimen/padding20"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:clipToPadding="false"
+                android:paddingBottom="70dp" />
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Fixed at bottom -->
+    <TextView
+        android:id="@+id/appVerTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="App Version 1.0.0"
+        android:textColor="@color/gray"
+        android:textSize="14sp"
+        android:background="@color/white"
+        android:elevation="4dp" />
+</RelativeLayout>

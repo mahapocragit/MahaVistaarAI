@@ -1,28 +1,29 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">PoCRA-कृषी संजीवनी</string>
+    <string name="app_name">MahaVISTAAR-AI</string>
+    <string name="app_name_label">MahaVISTAAR-AI</string>
     <string name="app_logo_name">Nanaji Deshmukh Krushi Sanjivani Prakalp</string>
 
-        <string-array name="dashboard">
-            <item>Weather</item>
-            <item>Climate Resilient Technology</item>
-            <item>DBT Schemes</item>
-            <item>Soil Health Card</item>
-            <item>Market Price</item>
-            <item>Warehouse Availability</item>
-            <item>GIS</item>
-            <item>Pest Management</item>
-            <item>Bandhavan</item>
-        </string-array>
+    <string-array name="dashboard">
+        <item>Weather</item>
+        <item>Climate Resilient Technology</item>
+        <item>DBT Schemes</item>
+        <item>Soil Health Card</item>
+        <item>Market Price</item>
+        <item>Warehouse Availability</item>
+        <item>GIS</item>
+        <item>Pest Management</item>
+        <item>Bandhavan</item>
+    </string-array>
     <string name="weather">  Weather</string>
     <string name="climateTechnology">Climate Resilient Technology</string>
     <string name="dbtschema"> DBT Schemes</string>
-    <string name="soilhealth">Soil Health Card</string>
+    <string name="soil_health_card">Soil Health Card</string>
     <string name="marketprice">Market Price</string>
     <string name="wareHouse">Warehouse Availability</string>
     <string name="gis">GIS</string>
     <string name="pest_management">Pest Management</string>
     <string name="bandhavan">Bandhavar</string>
-    <string name="about_pocra"> About PoCRA</string>
+    <string name="about">About</string>
     <string name="post_story"> Post </string>
     <string name="view_story"> View </string>
     <string name="village_profile">My Village Profile</string>
@@ -31,12 +32,33 @@
     <string name="climate_resilient_technology">Climate Resilient Details</string>
     <string name="climate_resilient_Newupdate">खरीप विशेष</string>
 
-    <string name="add_Crop"> + Add Crop</string>
+    <string name="apply_for_mahadbt">To apply for MahaDBT</string>
+    <string name="apply_for_pocradbt">To apply on NDKSP DBT portal</string>
+    <string name="click_here">Click Here</string>
+
+    <string name="add_Crop">Add Crop</string>
+    <string name="change_Crop">Change Crop</string>
+    <string name="no_crops_added">No Crops Added</string>
+    <string name="see_less">see less</string>
+    <string name="selected_crop">Selected Crop</string>
+
+    <string name="good_morning">Good Morning, </string>
+    <string name="good_afternoon">Good Afternoon, </string>
+    <string name="good_evening">Good Evening, </string>
+    <string name="good_night">Good Night, </string>
+
+    <!--NAMES FOR DELETE CROP DIALOG-->
+    <string name="delete">Delete</string>
+    <string name="delete_crop_title">Delete Crop</string>
+    <string name="delete_crop_message">Are you sure you want to delete?</string>
+    <string name="delete_crop_yes">Yes</string>
+    <string name="delete_crop_no">No</string>
 
     <string name="agri_forums"> Agri Forums</string>
     <string name="forums"> My Application </string>
     <string name="supportgrivience">Suggestion &amp; Grievances</string>
     <string name="profile">Profile</string>
+
 
     <string name="news">News</string>
     <string name="news_details">News Details</string>
@@ -47,13 +69,12 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_Farmer_Name">Farmer Name</string>
     <string name="nav_header_subtitle">farmer </string>
-    <string name="nav_Farmer_phone_number"></string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
     <string name="my_profile">My Profile</string>
     <string name="login_menu">Login / Registration</string>
-    <string name="my_Notification">My Notification</string>
+    <string name="my_notification">My Notification</string>
     <string name="my_dbt_status">My DBT Application Status</string>
     <string name="my_farm_survay">My farm Survey</string>
     <string name="crop_registration">Crop Registration</string>
@@ -70,15 +91,19 @@
     <string name="image_upload">Upload Image/PDF</string>
     <string name="image_pdf">Upload PDF</string>
     <string name="upcoming_events_location">Upcoming Events Location</string>
+    <string name="individual_benefit_component">Individual Benefit Component</string>
+    <string name="agribusiness_component">Agribusiness Component</string>
+    <string name="soil_and_water_conservation_practices">Soil and Water Conservation Practices</string>
+    <string name="important_documents">Important Documents</string>
+    <string name="required_documents">Required Documents</string>
+    <string name="main_component">Main Component</string>
 
 
     <string name="regist_mob_verify_err">Please verify mobile number</string>
     <string name="regist_otp_err">Please enter OTP number</string>
 
     <string name="name_validation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ.</string>
-    <string name="char_validation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ.</string>
     <string name="alpha_num_validation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.</string>
-    <string name="name_char_validation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <string name="decimal">1234567890.</string>
     <string name="numeric">1234567890</string>
     <string name="ifsc_code">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890</string>
@@ -106,20 +131,17 @@
     <string name="enterOtp">Enter OTP</string>
     <string name="Resend_OTP">Resend OTP</string>
     <string name="otp">OTP</string>
+    <string name="enter_otp">Enter OTP</string>
     <string name="Time">Time</string>
+    <string name="do_not_have_account">Don\'t have an account?</string>
     <string name="create_new">Click here for registration</string>
 
-    <string name="not_register">Not Register?</string>
     <string name="name">Name</string>
-    <string name="phone_number">Phone Number</string>
     <string name="register">Register</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="change_password">Change Password</string>
     <string name="name_error">Please enter your name</string>
-    <string name="phone_error">Please enter your phone number</string>
     <string name="lgn_register_phone_error">Please enter your registered number</string>
-    <string name="email_error">Please enter your email address</string>
-    <string name="error_invalid_email">This email address is invalid</string>
     <string name="password_error">Please enter a password</string>
     <string name="conf_password_error">Please enter your confirm password</string>
     <string name="pass_equals_confirmpass">Password and confirmed password should be same</string>
@@ -128,7 +150,9 @@
     <string name="feedback1_rating_error">Please give some rating for question1</string>
     <string name="feedback2_rating_error">Please give some rating for question2</string>
 
-
+    <string name="district">District</string>
+    <string name="taluka">Taluka</string>
+    <string name="village">Village</string>
     <string name="farmer_select_district">Select District</string>
     <string name="farmer_select_taluka">Select Taluka</string>
     <string name="farmer_select_village">Select Village</string>
@@ -137,20 +161,13 @@
     <string name="farmer_select_market">Select Market</string>
     <string name="tonnes">MT</string>
     <string name="comming_Soon">Coming Soon ........</string>
+    <string name="no_notifications_error">कोणत्याही नवीन सूचना आढळल्या नाहीत</string>
     <string name="NotificationMsg">Notification not found...!!! </string>
-
-    <string name="advisory_feedback_scale_text">On a scale of 5(1-lowest,5-highest), please provide your feedback on the following.</string>
-    <string name="advisory_questions1_text">1) Is advisory provided useful to you ?</string>
-    <string name="advisory_questions2_text">2) Are Pests &amp; Diseases mitigation provided feasible for you?</string>
-    <string name="advisory_questions2_1_text">2) As mentioned in advisory,Is there a pest/disease attack in your crop or in your area?</string>
-    <string name="advisory_comment_heading">Please provide your comment below if any:</string>
-
 
     <string name="min_Price">Min Price :  </string>
     <string name="max_Price">Max Price :  </string>
     <string name="avg_Price">Avg Price :  </string>
     <string name="advisoryTip"> टीप : वरील सल्ला भारतीय हवामान खात्याच्या अंदाजावर आधारित असून कृषि विद्यापीठाच्या शिफारशीप्रमाणे स्थानिक पीक परिस्थितीनुसार/ क्रॉपसॅपअंतर्गत तयार केलेला आहे. प्रकल्प व्यवस्थापन कक्ष मुंबई येथून सदर हवामान अंदाज व कृषि सल्ला प्रसारित करण्यात येत आहे. </string>
-
 
     <string name="error_farmer_select_district">Please Select District</string>
     <string name="error_farmer_select_taluka">Please Select Taluka</string>
@@ -158,15 +175,12 @@
     <string name="aboutPocra_text1">PoCRA Project Area and its Villages</string>
     <string name="aboutPocra_text2">PoCRA Achivements and Success Stories</string>
     <string name="total_warehouse">Total Warehouse : </string>
-    <string name="total_available_capacity">Total Availabale Capacity : </string>
+    <string name="total_available_capacity">Total Availabale Capacity</string>
     <string name="record_date">Record Date </string>
     <string name="warehouse_details">Details </string>
-    <string name="weatherTextf">Forecast Next 5 days Advisory-(IMD)</string>
-    <string name="weatherTextp">Last 5 days Advisory-(Mahaved)</string>
-    <string name="badhvarText">Yashogatha</string>
-    <string name="my_vill_Profi_Pdf">PoCRA Village Profile</string>
 
     <string name="date_text">Select Date</string>
+    <string name="date">Date: </string>
     <string name="rainfall">Rainfall</string>
     <string name="max_temp">Max Temp</string>
     <string name="min_temp">Min Temp</string>
@@ -177,10 +191,6 @@
     <string name="cloud_cover">Cloud Cover</string>
 
     <string name="weatherText">Forecast Next 5 days Advisory</string>
-
-
-    <string name="pocra_village">PoCRA Village List</string>
-
     <string name="todays_temp">Todays Weather</string>
     <string name="select_crop">Select Crop</string>
     <string name="select_sowing_date">Select Sowing Date</string>
@@ -193,18 +203,11 @@
     <string name="max_value"> Max Temp</string>
     <string name="wind_value"> Wind Speed</string>
     <string name="humidity_value">Humidity</string>
-    <string name="next_days">Forecast Next 5 Days  </string>
-    <string name="previous_days">Previous 5 Days Weather</string>
     <string name="agromet">Agro-Met Advisory</string>
     <string name="source_info_market"> Information Source- Maharashtra State Agricultural Marketing Board</string>
-    <string name="source_info_warehouse">Information Source- Maharashtra State Warehousing Corporation </string>
-    <string name="source_info_weather">Information Source- (IMD &amp; Mahavedh) </string>
     <string name="agromet_details">हलक्या स्वरुपात पाऊस पडण्याची शक्यता.  आकाश अंशतः स्वच्छ ते बहुतांश ढगाळ राहण्याची शक्यता.  हळुवार वारा असण्याची शक्यता.  तापमान १८.८ ते ३४.१ अंश से. दरम्यान असण्याची शक्यता.</string>
-    <string name="about_pocra_details">Maharashtras Project On Climate Resilient Agriculture (POCRA) is a constructive effort to develop in farmers the skills to adapt to the changing climate patterns. The results of the efforts made through the Nanaji Deshmukh Krishi Sanjeevani project (POCRA) are being visible. The last few years have seen major changes in the climate. Agriculture and climate are closely related. The project is designed keeping in mind that climate has great impact on agriculture and to enhance the profitability of farmers despite the climate change.</string>
 
-    <string name="subsidey_string"><u>Subsidy</u></string>
-    <string name="poCRA_dBT_activity">PoCRA DBT Activity</string>
-    <string name="required_Documents">Required Documents</string>
+    <string name="poCRA_dBT_activity">NDKSP DBT Activity</string>
     <string name="eligibility_Criteria">Eligibility Criteria</string>
     <string name="notes">Notes</string>
 
@@ -217,6 +220,7 @@
     <string name="reg_verify">Verify</string>
     <string name="reg_verified">Verified </string>
     <string name="reg_submit">Submit </string>
+    <string name="reg_next">Next</string>
     <string name="reg_email">Enter your Email(Optional)</string>
     <string name="market_term">  Term </string>
     <string name="market_percentage">Max Subsidy Percentage</string>
@@ -228,38 +232,41 @@
     <string name="market_c_price">Commodity Prices </string>
     <string name="grievance">Describe Your Grievance </string>
     <string name="success_farmer"> Farmer Success Story </string>
-    <string name="crop_advisory"> Crop Advisory </string>
+    <string name="crop_advisory">Crop Advisory</string>
+    <string name="crop_advisory_etl">Crop Advisory</string>
     <string name="doc_upload"> Upload Image/Doc if any </string>
     <string name="event_details"> Event Details </string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" tools:ignore="MissingTranslation">Hello blank fragment</string>
-
-    <string name="cropSapAdvisoryDummyDta"></string>
+    <string name="change">Change</string>
     <string name="my_crops">My Crops</string>
     <string name="edit_crop">Edit Crop</string>
-    <string name="sowing_date">Sowing Date -</string>
+    <string name="sowing_date">Sowing Date</string>
 
     <string name="fertiliser_calculator">Fertiliser Calculator</string>
     <string name="crop_management">Crop Management</string>
     <string name="pets_and_diseases">Pets And Diseases</string>
 
     <string name="Crop_details">Crop Advisory details</string>
-    <string name="cancel">Okay</string>
+    <string name="okay">Okay</string>
+    <string name="cancel_it">Cancel</string>
     <string name="pests_n_diseases">Pests and Diseases</string>
     <string name="Pests_n_diseases_by_stage">Pests and Diseases by Stage</string>
     <string name="different_stages_text">All Pests and Diseases that might appear in your crop at different stages</string>
     <string name="stages_text">All Pests and Diseases that might appear in your crop at this stage</string>
-    <string name="see_more">See More</string>
+    <string name="see_more">see more</string>
     <string name="symptoms">Symptoms</string>
     <string name="preventive_measure">Preventive Measures</string>
     <string name="control_measures">Control Measures</string>
-    <string name="read_more">...Read More</string>
+    <string name="read_more">...Read more</string>
+    <string name="read_less">...Read less</string>
     <string name="fruiting_stage">Fruiting Stage</string>
 
     <string name="fertilizer_calculator">Fertilizer Calculator</string>
     <string name="plot_size">Plot Size</string>
     <string name="hectare">Hectare</string>
+    <string name="hectare_selected">Hectare selected</string>
     <string name="acre">Acre</string>
+    <string name="acre_selected">Acre selected</string>
     <string name="guntha">Guntha</string>
     <string name="do_you_have_soil_test_report">Do you have Soil Test Report?</string>
     <string name="yes">Yes</string>
@@ -293,15 +300,270 @@
     <string name="nav_close">Close</string>
 
     <string name="Please_Enter_Your_Acre_Area">Please Enter Your Acre Area</string>
+    <string name="Please_Enter_Your_Hectare_Area">Please Enter Your Hectare Area</string>
     <string name="Please_Enter_Your_nitrogenValue">Please Enter Nitrogen Value</string>
     <string name="Please_Enter_Your_phosphorusValue">Please Enter Phosphorus Value</string>
     <string name="Please_Enter_Your_potassiumValue">Please Enter Potassium Value</string>
     <string name="Please_Enter_Your_FYMValue">Please Enter FYM Value</string>
     <string name="fertilizer_availability_for_crop">Select Another Crop for Fertilizer Calculator</string>
 
+    <string name="selected_crop_deleted">Your crop has been deleted successfully</string>
+    <string name="selected_crop_saved">Your crop has been saved.</string>
+
     <string name="wrong_OTP">You have entered wrong OTP</string>
+    <string name="request_for_mobile">Request for mobile number</string>
+    <string name="weather_title">Weather</string>
+    <string name="rain">Rain</string>
+    <string name="humidity">Humidity</string>
+    <string name="wind">Wind</string>
+    <string name="advisory_agro_met">Agro-Met Advisory</string>
+
+    <string name="previous_seven_days">Previous 5 days</string>
+    <string name="next_seven_days">Next 5 days</string>
+
+    <string name="stage_wise">Stage-wise</string>
+    <string name="task_wise">Task-wise</string>
+    <string name="enter_survey_number">Enter survey number</string>
+
+    <string name="farmer_name">Farmer Name</string>
+    <string name="soil_health_card_number">Soil Health Card Number</string>
+    <string name="survey_number_card">Survey Number</string>
+    <string name="farm_size">Farm Size</string>
+    <string name="view_pdf">View PDF</string>
+
+    <string name="price_per">Price Per</string>
+    <string name="minimum">Min</string>
+    <string name="max">Max</string>
+    <string name="average">Average</string>
+
+    <string name="home_bottom">Home</string>
+    <string name="chc_bottom">CHC</string>
+    <string name="chat_bottom">Chat</string>
+    <string name="forum_bottom">Forum</string>
+    <string name="videos_bottom">Videos</string>
+    <string name="chc_title">Custom Hiring Center</string>
+    <string name="list_view">List View</string>
+    <string name="map_view">Map View</string>
+    <string name="rules_and_regulations">Rules and Regulations</string>
+    <string name="rules_and_regulations_desc">
+        1. Follow the Rules – Ensure you adhere to all guidelines to maintain a safe and enjoyable environment.\n\n
+        2. Be Respectful – Treat everyone with kindness. Avoid hate speech, harassment, or offensive language.\n\n
+        3. No Spamming – Do not flood the chat with repetitive messages, links, or promotional content.\n\n
+        4. Stay On Topic – Keep discussions relevant to the chat\'s purpose. Off-topic conversations may be redirected or removed.\n\n
+        5. No Personal Attacks – Debate ideas, not people. Disagreements are okay, but personal attacks are not tolerated.\n\n
+        6. No Sharing of Personal Information – For privacy and security, do not share personal details like phone numbers or addresses.\n\n
+        7. Follow Moderator Instructions – Respect the decisions of moderators. They are here to ensure a fair and enjoyable experience for everyone.</string>
+    <string name="i_agree">I agree</string>
+    <string name="credits">Suppoted by WOTR and IASRI ICAR</string>
+    <string name="app_version">Version</string>
+
+    <string name="magazine">Farm Magazine</string>
+    <string name="enter_your_otp">Please enter your OTP</string>
+
+    <string name="crop_stage_completed">Completed</string>
+    <string name="crop_stage_current">Current</string>
+    <string name="crop_stage_pending">Pending</string>
+    <string name="sop_title">S.O.P.</string>
+
+    <string name="get_otp">Get OTP</string>
+    <string name="forgot_password_1">Forgot</string>
+    <string name="forgot_password_2">Password ?</string>
+    <string name="dont_have_an_account">Don\'t have an account?</string>
+    <string name="welcome_text">Welcome</string>
+    <string name="sign_in_text">Sign In!</string>
+    <string name="register_text_1">Register</string>
+    <string name="register_text_2">Your Account!</string>
+    <string name="user_info_text_1">User</string>
+    <string name="user_info_text_2">Information</string>
+    <string name="update_profile_text">Update Profile</string>
+    <string name="about_mahavistar_ai">About MahaVISTAAR-AI:</string>
+    <string name="our_partner_text">Our Partners:</string>
+    <string name="credit">Credits</string>
+    <string name="app_name_text">MahaVISTAAR-AI</string>
+    <string name="aboutText">Welcome to the MahaVISTAAR-AI App, your trusted companion in modern farming at your fingertips, from the Department of Agriculture, Government of Maharashtra.\n\nThis App is the one-stop solution for farmers which is focused on empowering farmers by providing essential agricultural information, real-time weather updates, market prices, pest identification and control tips, agromet advisories, warehouse and CHC information, expert advice to help farmers make informed decisions and many more. With AI-Powered Chatbot, farmers can easily get local and need-based advice in Marathi and English. MahaVISTAAR-AI works to bridge the gap between complex information and actionable decisions in agriculture. By integrating technology with climate-resilient farming practices, we aim to promote sustainable and profitable agriculture. From monitoring your crops to connecting with fellow farmers, we ensure you’re never alone on your farming journey. Let’s grow together!</string>
+    <string name="low_soil_value">Low</string>
+    <string name="medium_soil_value">Medium</string>
+    <string name="high_soil_value">High</string>
+    <string name="videos">Videos</string>
+    <string name="pocra_dbt_name">NDKSP DBT</string>
+    <string name="maha_dbt_name">MahaDBT</string>
+    <string name="farmerdetails">Farmer Details</string>
+    <string name="soiltestresult">Soil test results</string>
+    <string name="fertiliserrecomendation">Fertilizer recommendation</string>
+    <string name="viewsoilhealthreport">View Soil Health Card</string>
+    <string name="select_language">Select Language</string>
+    <string name="sop_not_available">Coming Soon</string>
+    <string name="sowing_date_alert_title">Default Sowing Date Advisory</string>
+    <string name="sowing_date_alert">The sowing date mentioned here is default sowing date recommended by the university for the crop you have selected. Advisory provided here is based on this date and the stage of the crop. If your crop was sown on a different date, please enter your actual sowing date for more accurate advice.</string>
+    <string name="area_acre_exceed_warning">Please Enter Acre Area Should Be Less Than 99</string>
+    <string name="area_hectare_exceed_warning">Please Enter Hectare Area Should Be Less Than 99</string>
+    <string name="guntha_exceed_warning">Please Enter Guntha Area Should Be Less Than or equal to 39</string>
+    <string name="coming_soon">Coming Soon.....!</string>
+    <string name="data_not_available">Data Not Available</string>
+    <string name="mobile_otp_error_text">You are not registered, Please register.</string>
+    <string name="otp_error">You are registered already</string>
+    <string name="no_internet_found_text">No Internet found. Please Check your connection and</string>
+    <string name="try_again">Try Again</string>
+    <string name="test_parameter">Test parameter</string>
+    <string name="value">Value</string>
+    <string name="unit">Unit</string>
+    <string name="rating">Rating</string>
+    <string name="crop_variety">Crop Variety</string>
+    <string name="organic_nfertilizers">Organic \nFertilizers</string>
+    <string name="bio_fertilizers">Bio \nFertilizers</string>
+    <string name="qty_n_g_kg_of_seed">Qty \n g/kg of seed</string>
+    <string name="weak_password">Your password is Weak! Please enter a strong password!!</string>
+    <string name="password_validation">* Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.</string>
+    <string name="search_by_crop_name">Search for crops</string>
+    <string name="search_commodity">Search Crop</string>
+    <string name="shetishala">Digital Shetishala</string>
+    <string name="dshetishala">Shetishala</string>
+    <string name="dbt">DBT</string>
+    <string name="schedules">Schedules</string>
+    <string name="shetishala_schedule">Digital Shetishala Timetable 2025</string>
+    <string name="crop">Crop</string>
+    <string name="time">Time</string>
+    <string name="zoom_id">Zoom Link</string>
+    <string name="use_youtube"><u>If you can\'t join the Zoom link, use YouTube Live link instead.</u></string>
+    <string name="day">Day</string>
+    <string name="link"><u>Link</u></string>
+    <string name="bot_chat_login_redirect_mesage">This feature is only available for logged-in users. Do you wish to login?</string>
+    <string name="regenerate_captcha">Regenerate Captcha</string>
+    <string name="enter_captcha">Enter CAPTCHA</string>
+    <string name="verify_captcha">Verify CAPTCHA</string>
+    <string name="you_re_too_early">You’re too early</string>
+    <string name="the_meeting_hasn_t_started_yet_please_try_again_closer_to_the_scheduled_time">The meeting hasn’t started yet. Please try again closer to the scheduled time.</string>
+    <string name="do_you_have_a_farmer_id">Do you have a Farmer ID?</string>
+    <string name="farmer_id">Farmer ID</string>
+    <string name="mobile_no">Mobile No.</string>
+    <string name="enter_farmer_id">Enter your Farmer ID</string>
+    <string name="click_here_to_know_your_farmer_id">Click here to know your Farmer ID</string>
+    <string name="etl_crossed_click_here_for_advisory">Pest and Diseases Alert</string>
+    <string name="etl_crop_advisory">Pest and Disease Advisory</string>
+    <string name="click_here_to_view_full_advisory">Click here to view full advisory</string>
+    <string name="date_etl">Date: </string>
+    <string name="no_notification_right_now">No notification Right Now!!</string>
+    <string name="detailed_notifications">Detailed Notification</string>
+    <string name="cost_calculator">Cost Calculator</string>
+    <string name="consent_one">I acknowledge that my data may be used as per the consent already provided under systems (Agristack in Maharashtra, MahaDBT) for e-KYC, eligibility determination, benefit delivery, and integration of agriculture-related services.</string>
+    <string name="consent_two">I hereby provide my consent for sharing my personal details with the Department of Agriculture, Government of Maharashtra, for receiving personalized advisories and services.</string>
+    <string name="consent_three">I allow the Department of Agriculture, Government of Maharashtra, to share my data with other Government Agencies/Departments for providing relevant service delivery and monitoring.</string>
+    <string name="consent_four">I understand that I have the right to withdraw my consent at any time, though such withdrawal may affect the services I receive.</string>
+    <string name="consent_five">I understand that my data will be stored securely, and efforts will be made to protect it from unauthorized access or misuse.</string>
+    <string name="consent_for_mahavistaar">Consent for MahaVISTAAR</string>
+    <string name="accept">Accept</string>
+    <string name="decline">Decline</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="withdraw_consent">Withdraw Consent</string>
+    <string name="withdraw_consent_desc_withdraw">If you withdraw the consent, then you will be logged out of the app for now. In future, if you wish to access the app through Farmer ID, kindly accept the consent. Do you wish to confirm?</string>
+    <string name="withdraw_consent_desc_decline">If you decline the consent, then you will be logged out of the app for now. In future, if you wish to access the app through Farmer ID, kindly accept the consent. Do you wish to confirm?</string>
+    <string name="consent_profile_text_1">To </string>
+    <string name="consent_profile_text_2">Withdraw Consent, </string>
+    <string name="consent_profile_text_3">Click here</string>
+    <string name="consent_accepted">Consent has been accepted</string>
+    <string name="consent_withdrawn">Consent has been withdrawn</string>
+    <string name="consent_declined">Consent has been declined</string>
 
 
+    <string name="captcha_empty_err">Please enter the CAPTCHA</string>
+    <string name="captcha_validate_err">CAPTCHA must be exactly 6 characters</string>
+    <string name="captcha_success">CAPTCHA verified successfully</string>
+    <string name="captcha_invalid">Incorrect CAPTCHA. Please try again</string>
+    <string name="there_are_currently_no_posts">There are currently no posts.</string>
+    <string name="price_rs">Price (₹)</string>
+    <string name="expense_date">Expense Date</string>
+    <string name="expense_name_optional">Expense Name (Optional)</string>
+    <string name="yield">Yield</string>
+    <string name="price_per_kilo">Price per kilo (₹)</string>
+    <string name="income_date">Income Date</string>
+    <string name="income_name_optional">Income Name (Optional)</string>
+    <string name="expenses">Expense</string>
+    <string name="income">Income</string>
+    <string name="add_new_transaction">Add new transaction</string>
+    <string name="all_transactions">All Transactions</string>
+    <string name="estimated_total_profit">Estimated total profit</string>
+    <string name="calculate_profit">Calculate profit</string>
+    <string name="totalPrice">Total price</string>
+    <string name="submit">Submit</string>
+    <string name="total_price_0">Total Price: ₹0</string>
+    <string name="select_category">Category</string>
+    <string name="edit_expense">Edit Expense</string>
+    <string name="edit_income">Edit Income</string>
+    <string name="expense">Expenses</string>
+    <string name="rabbi">Rabbi</string>
+    <string name="kharif">Kharif</string>
+    <string name="year_text">Year: </string>
+    <string name="season_text">Season: </string>
+    <string name="season_kharif">Season: Kharif</string>
+    <string name="season_rabbi">Season: Rabbi</string>
+    <string name="crops_profit">Profit</string>
+    <string name="select_option">Select Option</string>
+    <string name="no_transactions_found">No Transactions Found</string>
+    <string name="add_crops_to_calculate_profit">Add Crops to calculate profit</string>
+    <string name="leaderboard">Leaderboard</string>
+    <string name="state">State</string>
+    <string name="leaderboard_duration">1. Farmers who are registered with Farmer ID will be consider for Leader Board.\n2. Points System:\n• Farmers will earn 100 points for asking at least one question in the chatbot per day.\n• Farmer will earn 10 points once a day when they click and open a module or its sub-modules.\n3. Points are updated in real time.</string>
+    <string name="rank">Rank</string>
+    <string name="name_amp_location"><![CDATA[Name & Location]]></string>
+    <string name="farmers_in_taluka">Farmers In Taluka</string>
+    <string name="change_or_reset_your_password">Change or reset your password</string>
+    <string name="location_information">Location Information</string>
+    <string name="personal_information">Personal Information</string>
 
+    <string name="error_saving_crop">Failed to save crop. Please try again.</string>
+    <string name="failed_to_load">Unable to load data. Please check your connection.</string>
+    <string name="error_loading_data">Something went wrong while loading data. Please try again.</string>
+    <string name="points">Points</string>
 
+    <string name="agristack_title">Link Your Farmer ID</string>
+    <string name="agristack_request">Dear Farmer Friends, you can now link your Farmer ID in the MahaVistar app! This will automatically fill in your information and help you access various schemes, guidance, and services more easily. \n👉 Please click on the ‘Link Farmer ID’ option and complete the process by entering the required details. Your participation is the path to your progress!</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_link">Link Now</string>
+    <string name="overwrite_data">Overwrite Data?</string>
+    <string name="farmer_id_confirmation_desc">Your data will be overwritten with the data fetched from your Farmer ID. Do you want to continue?</string>
+    <string name="farmer_details_update_text_1">Update</string>
+    <string name="farmer_details_update_text_2">Farmer ID</string>
+    <string name="farmer_leader_board">Farmer Leader Board</string>
+    <string name="login_monitoring">SMA</string>
+    <string name="login_password">Password</string>
+    <string name="login_forgot_password">Forgot password?</string>
+    <string name="login_login">Login</string>
+    <string name="login_monitoring_KT">कृषिताई विस्तार कार्य</string>
+    <string name="logout_alert_mr">आपण साइन आउट करण्यास निश्चित आहात का?</string>
+    <string name="activity">विस्तार कार्य</string>
+    <string name="ca_activity_info">Information</string>
+    <string name="ca_activity_refresh">Re-Sync master data</string>
+    <string name="month_filter">Filter by month</string>
+    <string name="call">Phone Call</string>
+    <string name="work_activity">प्रकल्प माहिती</string>
+    <string name="kt_report_details">विस्तार कार्य अहवाल</string>
+    <string name="kt_report">अहवाल</string>
+    <string name="view_kt_details">अहवाल माहिती</string>
+    <string name="KrishiTai">Krushi Tai</string>
+    <string name="farmer_id_login_text">We could not get the required information for your request. Please try again later.</string>
+    <string name="limit_reached">Limit Reached</string>
+    <string name="limit_reached_desc">You have already registered 5 users from your device.</string>
+    <string name="give_feedback">Give Feedback</string>
+    <string name="your_feedback_on_advisory">Your Feedback on Advisory</string>
+    <string name="send_feedback">Send Feedback</string>
+
+    <!--    pest and diseases identification marathi titles-->
+    <string name="curative_measures_text">Curative Measures</string>
+    <string name="analysis_result_text">Diagnosis</string>
+    <string name="new_scan_text">New Scan</string>
+    <string name="analyse_and_submit_text">Analyze &amp; Submit</string>
+    <string name="plant_pest_image_tips_text">PLANT/PEST IMAGE</string>
+    <string name="capture_image_text">Capture Image</string>
+    <string name="select_from_gallery_text">Select From Gallery</string>
+    <string name="enter_feedback">Enter Feedback</string>
+    <string name="submit_feedback">Submit Feedback</string>
+    <string name="disease_text">Pest/Disease: </string>
+    <string name="pest_identification_text">Pest &amp; Disease Identification</string>
+    <string name="identity_pest_amp_disease">Identity Pest &amp; Disease</string>
+    <string name="take_a_npicture">Take\nPhoto</string>
+    <string name="get_the_nresult">View\nResult</string>
+    <string name="get_ndiagnosis">Upload\nPhoto</string>
+    <string name="image_upload_pnd_warning">Only JPEG, PNG, and JPG file formats are allowed. The maximum file size is 10 MB.</string>
+    <string name="snackbar_pnd_message">Please upload only JPEG, PNG, or JPG images up to 10 MB</string>
 </resources>

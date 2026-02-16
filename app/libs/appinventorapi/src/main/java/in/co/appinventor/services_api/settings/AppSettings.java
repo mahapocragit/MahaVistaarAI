@@ -46,7 +46,7 @@ public class AppSettings {
 
     public static String CHOOSE_LANGUAGE = "ChooseLanguage";
     public static String LANGUAGE_ENG = "en";
-    public static String LANGUAGE_MAR = "hi";
+    public static String LANGUAGE_MAR = "mr";
     public static String LANGUAGE_ENG_ID = "1"; //--- for english
     public static String LANGUAGE_MAR_ID = "2"; //--- for marathi
     private static String PREFERENCE_NAME = "UserInfo";
@@ -57,7 +57,6 @@ public class AppSettings {
     public static AppSettings getInstance() {
         return ourInstance;
     }
-
     public void initAppSettings(String sharedPreferenceName) {
         this.APP_SHARED_PREFERENCE_NAME = "in.co.appinventor" + sharedPreferenceName + "sharedpreference";
     }
@@ -115,6 +114,16 @@ public class AppSettings {
             prefs = context.getSharedPreferences(this.APP_SHARED_PREFERENCE_NAME, 0);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putInt(key, value);
+            editor.apply();
+        }
+    }
+
+    public void clearIntValue(Context context, String key) {
+        isAppSettingInit();
+        if (context != null) {
+            prefs = context.getSharedPreferences(this.APP_SHARED_PREFERENCE_NAME, 0);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt(key, 0);  // Set to default "cleared" value
             editor.apply();
         }
     }

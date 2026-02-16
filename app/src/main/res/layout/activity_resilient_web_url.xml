@@ -1,14 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activity.ResilientWebUrl">
+    android:background="@drawable/status_colored_background"
+    android:layout_height="match_parent">
 
+    <!-- Your toolbar layout -->
+    <include
+        android:id="@+id/layoutToolbar"
+        layout="@layout/layout_toolbar" />
+
+    <!-- WebView -->
     <WebView
         android:id="@+id/climateWebView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/_39sdp" /> <!-- adjust for toolbar -->
 
-</RelativeLayout>
+    <!-- ProgressBar (centered) -->
+    <ProgressBar
+        android:id="@+id/webViewProgressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+</FrameLayout>

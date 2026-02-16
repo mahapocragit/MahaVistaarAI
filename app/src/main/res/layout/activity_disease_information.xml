@@ -4,152 +4,150 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.DiseaseInformation">
+    android:background="@drawable/status_colored_background"
+    tools:context=".ui.screens.dashboard.menugrid.pest.DiseaseInformation">
 
+    <include
+        android:id="@+id/relativeLayoutTopBar"
+        layout="@layout/layout_toolbar" />
 
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:layout_marginLeft="@dimen/height5"
-        android:orientation="vertical">
-
-        <include
-            android:id="@+id/relativeLayoutTopBar"
-            layout="@layout/layout_toolbar" />
-
-        <TextView
-            android:id="@+id/tvCropName"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/height30"
-            android:layout_marginTop="@dimen/height5"
-            android:layout_gravity="end"
-            android:layout_marginRight="@dimen/height30"
-            android:gravity="center"
-            android:textAlignment="center"
-            android:padding="@dimen/padding3"
-            android:paddingRight="@dimen/padding2"
-            android:text="@string/Crop_name"
-            android:textColor="@color/black"
-            android:background="@drawable/text_bg_with_border"
-            android:textSize="@dimen/text14"
-            android:textStyle="italic">
-        </TextView>
-
-        <RelativeLayout
-            android:id="@+id/bannerLayout"
-            android:layout_width="match_parent"
-            android:layout_height="250dp">
-
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/view_pager"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"/>
-
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/indicator"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerInParent="true"
-                app:tabBackground="@drawable/indicator_selector"
-                app:tabGravity="center"
-                android:background="@android:color/transparent"
-                app:tabIndicatorHeight="0dp" />
-
-        </RelativeLayout>
+        android:layout_height="match_parent"
+        android:layout_marginTop="48dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/height10"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/cropicons1"
-                android:layout_width="@dimen/height20"
-                android:layout_height="@dimen/height20"
+            <TextView
+                android:id="@+id/tvCropName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/crop_symptoms_img" />
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textColor="@color/font_color_figma"
+                android:text="@string/Crop_name"
+                android:textAlignment="center"
+                android:textSize="@dimen/_12sdp" />
 
-            <TextView
-                android:id="@+id/stages"
+            <RelativeLayout
+                android:id="@+id/bannerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="250dp">
+
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/view_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true" />
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerInParent="true"
+                    android:background="@android:color/transparent"
+                    app:tabBackground="@drawable/indicator_selector"
+                    app:tabGravity="center"
+                    app:tabIndicatorHeight="0dp" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/height10"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/cropicons1"
+                    android:layout_width="@dimen/height20"
+                    android:layout_height="@dimen/height20"
+                    android:layout_gravity="center"
+                    android:src="@drawable/crop_symptoms_img" />
+
+                <TextView
+                    android:id="@+id/stages"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/height5"
+                    android:text="@string/symptoms"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text14"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+
+            <WebView
+                android:id="@+id/symptomsList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/height5"
-                android:text="@string/symptoms"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="@dimen/text14">
-            </TextView>
-        </LinearLayout>
+                android:background="@android:color/transparent"
+                android:scrollbars="none"
+                tools:ignore="WebViewLayout">
 
+            </WebView>
 
-
-        <WebView
-            android:id="@+id/symptomsList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/height10"
-            android:background="@android:color/transparent"
-            android:scrollbars="none"
-            tools:ignore="WebViewLayout" />
-
-        <LinearLayout
-            android:id="@+id/linLayoutButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/prevention_msr"
+            <LinearLayout
+                android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginRight="1dp"
-                android:layout_weight="0.5"
-                android:background="@drawable/dashboard_button"
-                android:gravity="center"
-                android:padding="@dimen/height5"
-                android:text="@string/preventive_measure"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text16" />
+                android:layout_height="60dp"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginVertical="@dimen/_6sdp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/control_msr"
+                <TextView
+                    android:id="@+id/prevention_msr"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginVertical="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_right_green"
+                    android:elevation="5dp"
+                    android:gravity="center"
+                    android:text="@string/preventive_measure"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/control_msr"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginVertical="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_left_white"
+                    android:elevation="5dp"
+                    android:gravity="center"
+                    android:text="@string/control_measures"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+
+            <WebView
+                android:id="@+id/prevent_cntrl_measur"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginRight="1dp"
-                android:layout_weight="0.5"
-                android:background="@drawable/layout_button_bg"
-                android:gravity="center"
-                android:padding="@dimen/height5"
-                android:text="@string/control_measures"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text16" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/height5"
+                android:background="@android:color/transparent"
+                android:scrollbars="none"
+                tools:ignore="WebViewLayout" />
+
         </LinearLayout>
-
-        <WebView
-            android:id="@+id/prevent_cntrl_measur"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/height10"
-            android:layout_marginTop="@dimen/height5"
-            android:background="@android:color/transparent"
-            android:scrollbars="none"
-            tools:ignore="WebViewLayout" />
-
-    </LinearLayout>
-</ScrollView>
-
-
-
-
+    </ScrollView>
 </RelativeLayout>
 

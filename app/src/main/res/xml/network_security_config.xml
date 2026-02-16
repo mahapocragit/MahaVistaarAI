@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
 
-    <domain-config cleartextTrafficPermitted="true">
+    <!-- Default config: use only system CA trust -->
+    <domain-config cleartextTrafficPermitted="false">
         <domain includeSubdomains="true">ilab-mlp-api.pocra.work</domain>
         <domain includeSubdomains="true">ilab-sso.mahapocra.gov.in</domain>
         <domain includeSubdomains="true">ilab-sma-api.mahapocra.gov.in</domain>
         <domain includeSubdomains="true">api-ffs.mahapocra.gov.in</domain>
-
         <domain includeSubdomains="true">api-mlp.mahapocra.gov.in</domain>
         <domain includeSubdomains="true">sso.mahapocra.gov.in</domain>
         <domain includeSubdomains="true">api-sma.mahapocra.gov.in</domain>
@@ -14,8 +14,21 @@
         <domain includeSubdomains="true">mahapocra.gov.in</domain>
         <domain includeSubdomains="true">dbt.mahapocra.gov.in</domain>
         <domain includeSubdomains="true">kisan.wotr.org.in</domain>
+
         <trust-anchors>
             <certificates src="system" />
         </trust-anchors>
     </domain-config>
+
+    <!-- For these domains, allow user-installed CAs in addition to system -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">nibpp.krishimegh.in</domain>
+        <domain includeSubdomains="true">vistaar.maharashtra.gov.in</domain>
+
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </domain-config>
+
 </network-security-config>

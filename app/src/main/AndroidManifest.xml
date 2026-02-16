@@ -1,237 +1,191 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="in.gov.mahapocra.farmerapppks">
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- 🔥 FORCE REMOVE MEDIA PERMISSIONS FROM ALL LIBRARIES -->
+    <uses-permission
+        android:name="android.permission.READ_MEDIA_IMAGES"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.READ_MEDIA_VIDEO"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.ACCESS_MEDIA_LOCATION"
+        tools:node="remove" />
+
+    <!-- ===== SAFE & JUSTIFIED PERMISSIONS ===== -->
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.AD_ID" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Location (keep only if app uses GPS / maps / weather) -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_LOCATION" /> <!-- <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> -->
-    <!-- Needed only if your app targets Android 5.0 (API level 21) or higher. -->
-    <uses-feature android:name="android.hardware.location.gps" />
 
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.hardware.location.network" />
-    <uses-permission android:name="android.permission.ACCESS_GPS" />
-    <uses-permission android:name="android.permission.ACCESS_ASSISTED_GPS" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- Notifications (Android 13+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Camera -->
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.hardware.camera" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-    <uses-feature android:name="android.hardware.camera.autofocus" />
-    <uses-feature android:name="android.hardware.camera.flash" />
+    <!-- Audio (keep only if voice recording is used) -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- Phone calls (ONLY if app directly places calls) -->
+    <!-- Remove if you only open dialer -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
+    <!-- ===== HARDWARE FEATURES ===== -->
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
+    <!-- ===== APPLICATION ===== -->
 
     <application
-        android:name=".AppDelegate"
-        android:allowBackup="true"
-        android:icon="@drawable/farmer_appfinal_logo"
+        android:name=".application.MyApplication"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:icon="@mipmap/ic_launcher_store"
         android:label="@string/app_name"
+        android:localeConfig="@xml/locales_config"
         android:networkSecurityConfig="@xml/network_security_config"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_store_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FarmerApp"
-        android:usesCleartextTraffic="true">
+        android:theme="@style/Theme.FarmerApp">
+
+        <!-- ================= ACTIVITIES ================= -->
         <activity
-            android:name=".activity.CropStageAcitvity"
+            android:name=".pestIdentification.ui.CameraActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.FertilizerCalculatorAcitvity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.PestsAndDiseasesStages"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.DiseaseInformation"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.CropStageAdvisory"
+            android:name=".pestIdentification.ui.PestIdentificationActivity"
             android:exported="false" />
         <activity
-            android:name=".ai_disc_tp_imp.identify.Identify.Identify_dashboard"
-            android:exported="true" />
+            android:name=".pestIdentification.ui.ResultActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:exported="false" />
+        <activity android:name=".sma.ui.screens.KTReportActivity" />
+        <activity android:name=".sma.ui.screens.KTActivity" />
+        <activity android:name=".sma.ui.screens.KTProjectInformation" />
         <activity
-            android:name=".ai_disc_tp_imp.identify.Identify.Identify_img_upload"
-            android:exported="true"
-            android:parentActivityName=".ai_disc_tp_imp.identify.Identify.Identify_dashboard" />
-        <activity
-            android:name=".ai_disc_tp_imp.identify.util.NetNotWorking"
-            android:exported="false"
-            android:label="@string/title_activity_internet_not_working"
-            android:screenOrientation="portrait"
+            android:name=".sma.ui.screens.KTReportDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ai_disc_tp_imp.identify.util.Cam"
-            android:exported="true"
-            android:parentActivityName=".ai_disc_tp_imp.identify.Identify.Identify_img_upload" /> <!-- <activity -->
-        <!-- android:name=".ai_disc_tp_imp.identify.InternetNotWorking" -->
-        <!-- android:exported="false" -->
-        <!-- android:label="@string/title_activity_internet_not_working" -->
-        <!-- android:screenOrientation="portrait" -->
-        <!-- android:theme="@style/AppTheme.NoActionBar" /> -->
+            android:name=".sma.ui.screens.KTDetailsHistory"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ai_disc_tp_imp.identify.farmerdiseasepestIdentify"
-            android:configChanges="screenLayout|orientation|screenSize"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ai_disc_tp_imp.identify.Identify.Result_identified"
-            android:exported="true"
-            android:parentActivityName=".ai_disc_tp_imp.identify.Identify.Identify_img_upload" />
-        <activity
-            android:name=".activity.SelectSowingDataAndFarmer"
-            android:exported="false" />
-        <activity
-            android:name=".activity.AddCropActivity"
-            android:exported="false" />
-        <activity android:name=".activity.NewUpdateKharip" />
-        <activity android:name=".activity.NewUpdateCRT" />
-        <activity android:name=".activity.CropAdvisoryDetails" />
-        <activity android:name=".activity.CropAdvisory" /> <!-- <activity android:name=".notification.ReadNotificationActivity"></activity> -->
-        <activity
-            android:name=".notification.PocraFarmerNews"
-            android:exported="true"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="PocraFarmerNews" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".notification.ReadNotificationActivity"
-            android:exported="true"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="ReadNotificationActivity" />
+            android:name=".sma.ui.screens.ImageViewerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".sma.ui.screens.KTYoutubeView" />
+        <activity android:name=".sma.ui.screens.WebviewActivity" />
+        <activity android:name=".sma.ui.screens.KTDashboardActivity" />
+        <activity android:name=".sma.ui.screens.SmaLoginActivity" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".notification.NotificationListActivity" />
+        <activity android:name=".ui.screens.dashboard.shetishala.ShetishalaVideosActivity" />
+        <activity android:name=".ui.screens.authentication.FarmerDetailsConfirmationActivity" />
+        <activity android:name=".ui.screens.authentication.AuthenticateFarmerIdActivity" />
+        <activity android:name=".ui.screens.authentication.PreRegistrationActivity" />
+        <activity android:name=".ui.screens.dashboard.menugrid.dbt.DBTDashboard" />
+        <activity android:name=".ui.screens.dashboard.sidenavigation.leaderboard.LeaderboardActivity" />
+        <activity android:name=".ui.screens.dashboard.sidenavigation.experts.ExpertsCornerFilterActivity" />
+        <activity android:name=".ui.screens.dashboard.sidenavigation.costcalculator.CropCostCalculationActivity" />
+        <activity android:name=".ui.screens.dashboard.sidenavigation.costcalculator.CostCalculatorDashboardActivity" />
+        <activity android:name=".ui.screens.dashboard.sidenavigation.experts.ExpertsCornerFarmerActivity" />
+        <activity android:name=".ui.screens.dashboard.sidenavigation.experts.ExpertsCornerAdminActivity" />
+        <activity android:name=".ui.screens.notification.DetailedNotificationActivity" />
+        <activity android:name=".ui.screens.dashboard.etl.AgriStackAdvisoryActivity" />
+        <activity android:name=".ui.screens.dashboard.shetishala.ShetishalaScheduleActivity" />
+        <activity android:name=".ui.screens.dashboard.shetishala.ShetishalaActivity" />
+        <activity android:name=".ui.screens.dashboard.menugrid.dbt.mahadbt.MahaDbtSchemesDetailsActivity" />
+        <activity android:name=".ui.screens.dashboard.menugrid.dbt.mahadbt.MahaDbtSchemesActivity" />
+        <activity android:name=".ui.screens.dashboard.sidenavigation.CreditsActivity" />
+        <activity android:name=".ui.screens.dashboard.sidenavigation.news.NewsWebViewActivity" />
+        <activity android:name=".ui.screens.dashboard.menugrid.dbt.DBTActivity" />
+        <activity android:name=".ui.screens.dashboard.video.VideosDetailedActivity" />
+        <activity android:name=".ui.screens.dashboard.video.VideosActivity" />
+        <activity android:name=".ui.screens.dashboard.menugrid.sop.SOPActivity" />
+        <activity android:name=".ui.screens.dashboard.menugrid.sop.SOPWebViewActivity" />
+        <activity android:name=".ui.screens.dashboard.sidenavigation.AboutActivity" />
+
+        <activity android:name=".ui.screens.dashboard.forum.SingleReplyActivity" />
+        <activity android:name=".ui.screens.dashboard.forum.ForumPostDetailsActivity" />
+        <activity android:name=".ui.screens.dashboard.forum.ForumViewActivity" />
+        <activity android:name=".ui.screens.dashboard.forum.ForumActivity" />
+        <activity android:name=".ui.screens.dashboard.chc.CHCenterActivity" />
+        <activity android:name=".ui.screens.dashboard.menugrid.dbt.pocra.PocraSchemesDetailsActivity" />
+        <activity android:name=".ui.screens.dashboard.menugrid.soilhealthcard.DetailedSoilHealthCardActivity" />
+        <activity android:name=".ui.screens.dashboard.menugrid.ChatbotActivity" />
         <activity
-            android:name=".activity.ViewStoriesBandavar"
-            android:screenOrientation="portrait" />
+            android:name=".ui.screens.dashboard.weather.WeatherActivity"
+            android:theme="@style/WeatherTheme" />
+        <activity android:name=".ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity" />
+        <activity android:name=".ui.screens.dashboard.menugrid.FertilizerCalculatorActivity" />
+        <activity android:name=".ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages" />
+        <activity android:name=".ui.screens.dashboard.menugrid.pest.DiseaseInformation" />
+        <activity android:name=".ui.screens.dashboard.menugrid.AddCropActivity" />
+        <activity android:name=".ui.screens.dashboard.sidenavigation.news.NewsListActivity" />
+        <activity android:name=".ui.screens.dashboard.menugrid.climate.ResilientWebUrl" />
+        <activity android:name=".ui.screens.dashboard.menugrid.climate.ClimateDetailsGrid" />
+        <activity android:name=".ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology" />
+        <activity android:name=".ui.screens.authentication.ConfirmPassword" />
+        <activity android:name=".ui.screens.authentication.ForgetPassword" />
+        <activity android:name=".ui.screens.dashboard.menugrid.marketprice.MarketPrice" />
+        <activity android:name=".ui.screens.dashboard.menugrid.dbt.pocra.PocraDbtSchemes" />
+        <activity android:name=".ui.screens.dashboard.menugrid.soilhealthcard.SoilHealthCardActivity" />
+        <activity android:name=".ui.screens.dashboard.menugrid.Warehouse" />
+        <activity android:name=".ui.screens.notification.NotificationActivity" />
+
         <activity
-            android:name=".activity.CropCurrentAdvisoryAndFeedback"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.BandavarActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.ResilientWebUrl"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.UpcomingEventsDetails"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.UpcomingEvents"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.TrainingLocationSelection"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.ClimateDetailsGrid"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.DbtStatus"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.ClimateResilintTechnology"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.Grievances"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.ConfirmPassword"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.ForgetPassword"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.MarketPrice"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.WeatherHome"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.MyVillageProfilePdf"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.PocraVillages"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.DbtSchemes"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.DbtActivityDetails"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.HealthCardActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activity.Gis" />
-        <activity
-            android:name=".activity.Warehouse"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.AboutPocra"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.CommingSoonActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.LoginScreen"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_dashboard"
-            android:theme="@style/Theme.FarmerApp.NoActionBar" />
+            android:name=".ui.screens.authentication.LoginScreen"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+
+        <!-- ===== FIREBASE MESSAGING ===== -->
 
         <service
-            android:name=".webServices.FBaseMessagingService"
+            android:name=".data.services.FBaseMessagingService"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
+        <!-- ===== LAUNCHER ===== -->
+
         <activity
-            android:name=".activity.SplashScreen"
-            android:exported="true"
-            android:screenOrientation="portrait">
+            android:name=".ui.screens.splash.SplashScreenActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".activity.Dashboard"
+            android:name=".ui.screens.dashboard.menugrid.DashboardScreen"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activity.DashboardScreen"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activity.MobileOTP"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.Registration"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.MyVillageProfile"
-            android:screenOrientation="portrait" />
+            android:theme="@style/DashboardTheme"/>
+
+        <activity android:name=".ui.screens.authentication.ProfileScreen" />
+        <activity android:name=".ui.screens.authentication.Registration" />
+
+        <!-- ===== FILE PROVIDER ===== -->
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -242,6 +196,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="default_channel" />
+
     </application>
 
 </manifest>

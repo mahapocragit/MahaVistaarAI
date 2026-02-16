@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@drawable/status_colored_background_for_detection"
+    android:orientation="vertical"
+    tools:context=".pestIdentification.ui.ResultActivity">
+
+    <include
+        android:id="@+id/relativeLayoutTopBar"
+        layout="@layout/layout_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/mainScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/card_background_color_figma"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayoutTopBar">
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/_10sdp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_summary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16sdp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/pestOne"
+                style="@style/PestResultText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/baby_blue"
+                android:textSize="@dimen/_14sdp" />
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/image_submitted_preview"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_160sdp"
+                android:layout_marginVertical="@dimen/_10sdp"
+                android:background="@android:color/darker_gray"
+                android:backgroundTint="@color/transparent"
+                android:contentDescription="Submitted plant image"
+                android:scaleType="centerCrop"
+                app:riv_corner_radius="@dimen/_20sdp"
+                tools:src="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/confidenceOne"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/diseaseIdOne"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/pestTwo"
+                style="@style/PestResultText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:text="PQR Disease"
+                android:textColor="@color/gray"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/confidenceTwo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/pestThree"
+                style="@style/PestResultText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:text="XYT Insect"
+                android:textColor="@color/gray"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/confidenceThree"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/text_recommended_action"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="48dp"
+                android:background="@drawable/rounded_box_light"
+                android:padding="12dp"
+                android:text="Recommended Action: Apply fungicide X within 48 hours."
+                android:textColor="@color/black"
+                android:visibility="gone" />
+
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/advisoryCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_2sdp"
+                android:visibility="gone"
+                app:cardCornerRadius="@dimen/_10sdp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/preventiveMeasureSoundImageView"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/ic_speaker" />
+
+                    <TextView
+                        android:id="@+id/preventiveMeasureLabelTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/preventive_measure"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/preventiveMeasureTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/_10sdp"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/curativeMeasureSoundImageView"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/ic_speaker" />
+
+                    <TextView
+                        android:id="@+id/curativeMeasureLabelTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:text="@string/curative_measures_text"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/curativeMeasureTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/_10sdp"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/noteTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:text=""
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/edtFeedBack"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:background="@drawable/rounded_edittext_background"
+                android:drawablePadding="@dimen/_5sdp"
+                android:hint="@string/enter_feedback"
+                android:inputType="text"
+                android:maxLength="100"
+                android:maxLines="10"
+                android:minHeight="@dimen/_40sdp"
+                android:padding="@dimen/_8sdp"
+                android:textColor="@color/gray" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSubmitFeedback"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:backgroundTint="@color/actionbar_color_figma"
+                android:text="@string/submit_feedback"
+                android:textColor="@android:color/white"
+                android:textAllCaps="false"
+                android:textSize="@dimen/_12sdp"
+                android:visibility="gone"
+                app:cornerRadius="@dimen/_10sdp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_20sdp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:textColor="@color/gray">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_new_scan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/actionbar_color_figma"
+                    android:padding="16dp"
+                    android:textAllCaps="false"
+                    android:text="@string/new_scan_text"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/_12sdp"
+                    app:cornerRadius="@dimen/_10sdp" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,170 @@
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest
+
+import android.content.Context
+import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.co.appinventor.services_api.widget.UIToastMessage
+import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
+import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDiseaseInformationBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DiseasesInformationImgAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.PEST_AND_DISEASE_POINT
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
+import org.json.JSONArray
+import org.json.JSONObject
+
+
+class DiseaseInformation : AppCompatActivity() {
+
+    private lateinit var binding: ActivityDiseaseInformationBinding
+    private val farmerViewModel: FarmerViewModel by viewModels()
+    private val leaderboardViewModel: LeaderboardViewModel by viewModels()
+    var id: Int = 0
+    private lateinit var imgBackArrow: ImageView
+    private lateinit var textViewHeaderTitle: TextView
+    private lateinit var cropName: String
+    private lateinit var mainCropName: String
+    private var symptomDescriptionList: String = ""
+    private var preventiveMeasures: String = ""
+    private var curativeMeasures: String = ""
+    lateinit var languageToLoad: String
+    private lateinit var pestAndDiseaseDetailsJson: JSONObject
+    private var diseasesImages: ArrayList<String> = ArrayList()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        languageToLoad = "mr"
+        if (AppSettings.getLanguage(this@DiseaseInformation).equals("1", ignoreCase = true)) {
+            languageToLoad = "en"
+        }
+        switchLanguage(this, languageToLoad)
+        binding = ActivityDiseaseInformationBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        uiResponsive(binding.root)
+
+        textViewHeaderTitle = findViewById(R.id.textViewHeaderTitle)
+        imgBackArrow = findViewById(R.id.imgBackArrow)
+        imgBackArrow.visibility = View.VISIBLE
+        imgBackArrow.setOnClickListener {
+            finish()
+        }
+
+        observeResponse()
+        cropName = intent.getStringExtra("name").toString()
+        id = intent.getIntExtra("id", 0)
+        farmerViewModel.showPestDiseaseDetails(this, id)
+        mainCropName = AppSettings.getInstance()
+            .getValue(this, AppConstants.tmpCROPNAME, AppConstants.tmpCROPNAME)
+        binding.preventionMsr.setOnClickListener {
+            binding.preventionMsr.background =
+                ContextCompat.getDrawable(this, R.drawable.shape_right_green) //enabled
+            binding.controlMsr.background =
+                ContextCompat.getDrawable(this, R.drawable.shape_left_white)
+            binding.preventionMsr.setTextColor(ContextCompat.getColor(this, R.color.white))
+            binding.controlMsr.setTextColor(ContextCompat.getColor(this, R.color.black))
+            setPreventControlMeasureWebView(preventiveMeasures)
+        }
+        binding.controlMsr.setOnClickListener {
+            binding.preventionMsr.background =
+                ContextCompat.getDrawable(this, R.drawable.shape_right)
+            binding.controlMsr.background = ContextCompat.getDrawable(this, R.drawable.shape_left)
+            binding.preventionMsr.setTextColor(ContextCompat.getColor(this, R.color.black))
+            binding.controlMsr.setTextColor(ContextCompat.getColor(this, R.color.white))
+            binding.preventionMsr
+            binding.controlMsr
+            setPreventControlMeasureWebView(curativeMeasures)
+        }
+
+        textViewHeaderTitle.text = mainCropName
+        binding.tvCropName.text = cropName
+    }
+
+    private fun observeResponse() {
+
+        leaderboardViewModel.responseUpdateUserPoints.observe(this) { response ->
+            if (response != null) {
+                val jSONObject = JSONObject(response.toString())
+                val status = jSONObject.optInt("status")
+                if (status == 200) {
+                    ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
+                }
+            }
+        }
+
+        farmerViewModel.getPestDiseaseDetailsResponse.observe(this) {
+            if (it != null) {
+                val response = ResponseModel(JSONObject(it.toString()))
+                if (response.getStatus()) {
+                    binding.symptomsList.visibility = View.VISIBLE
+                    pestAndDiseaseDetailsJson = response.getJSONObject()
+                    symptomDescriptionList = pestAndDiseaseDetailsJson.getString("symptoms")
+                    preventiveMeasures =
+                        pestAndDiseaseDetailsJson.getString("preventive_measures")
+                    curativeMeasures = pestAndDiseaseDetailsJson.getString("curative_measures")
+                    val diseaseImages: JSONArray =
+                        pestAndDiseaseDetailsJson.getJSONArray("image")
+                    for (j in 0 until diseaseImages.length()) {
+                        val diseaseImagesJsonObject: JSONObject =
+                            diseaseImages.get(j) as JSONObject
+                        val img: String = diseaseImagesJsonObject.get("img") as String
+                        diseasesImages.add(img)
+                    }
+                    binding.viewPager.adapter =
+                        DiseasesInformationImgAdapter(this, diseasesImages)
+                    binding.indicator.setupWithViewPager(binding.viewPager, true)
+
+                    setPreventControlMeasureWebView(preventiveMeasures)
+                    setSymptomsWebView(symptomDescriptionList)
+                    if (containsFarmerId(this)) {
+                        leaderboardViewModel.updateUserPoints(this, PEST_AND_DISEASE_POINT)
+                    }
+                } else {
+                    UIToastMessage.show(this, response.response)
+                }
+            }
+
+        }
+        farmerViewModel.error.observe(this) {
+            Log.d(TAG, "observeResponse: $it")
+        }
+    }
+
+    private fun setPreventControlMeasureWebView(param: String) {
+        binding.preventCntrlMeasur.loadDataWithBaseURL(
+            "file:///android_asset/",
+            param, "text/html", "utf-8", null
+        )
+    }
+
+    private fun setSymptomsWebView(param: String) {
+        binding.symptomsList.loadDataWithBaseURL(
+            "file:///android_asset/",
+            param, "text/html", "utf-8", null
+        )
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
+    }
+}

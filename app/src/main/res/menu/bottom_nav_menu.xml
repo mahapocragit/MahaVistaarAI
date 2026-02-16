@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/home_ic"
+        android:title="@string/home_bottom"/>
+
+    <item
+        android:id="@+id/nav_about"
+        android:icon="@drawable/chc_ic"
+        android:title="@string/chc_bottom"/>
+
+    <item
+        android:id="@+id/nav_chat"
+        android:enabled="false"
+        android:title="" />
+
+    <item
+        android:id="@+id/nav_videos"
+        android:icon="@drawable/video_ic"
+        android:title="@string/videos_bottom"/>
+
+    <item
+        android:id="@+id/nav_about2"
+        android:icon="@drawable/info_ic"
+        android:title="@string/about"/>
+</menu>

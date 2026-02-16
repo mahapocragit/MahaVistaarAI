@@ -1,49 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/linlayout1"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:orientation="horizontal"
-        android:padding="5dp"
-        android:background="@drawable/news_bg">
+        android:layout_height="@dimen/_48sdp"
+        android:layout_margin="2dp"
+        app:cardCornerRadius="@dimen/_10sdp">
 
-        <TextView
-            android:id="@+id/nameTextView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:text="sN"
-            android:textAllCaps="false"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textStyle="bold" />
+        <LinearLayout
+            android:id="@+id/linlayout1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="5dp">
 
-        <TextView
-            android:id="@+id/nameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
-            android:paddingRight="2dp"
+            <TextView
+                android:id="@+id/nameTextView2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_weight="6"
+                android:text="sN"
+                android:textAllCaps="false"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10sdp" />
 
-            android:layout_marginTop="5dp"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:layout_gravity="left"
-            android:gravity="left"
-            android:textAlignment="gravity"
-            android:text="@string/poCRA_dBT_activity"
-            android:textAllCaps="false"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            <TextView
+                android:id="@+id/nameTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="@string/poCRA_dBT_activity"
+                android:textAllCaps="false"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10sdp" />
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/imageView12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="6"
+                app:srcCompat="@drawable/next" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
 </LinearLayout>

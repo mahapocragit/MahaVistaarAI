@@ -1,21 +1,16 @@
 package in.co.appinventor.services_api.util;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
-import android.provider.Settings;
-import android.telephony.TelephonyManager;
-
-import androidx.core.app.ActivityCompat;
+import android.os.Build;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.UUID;
-
-import in.co.appinventor.services_api.app_util.AppConstants;
 
 /* renamed from: in.co.appinventor.services_api.util.Utility */
 public class Utility {
@@ -56,40 +51,24 @@ public class Utility {
         }
     }
 
-    public static String uniqueDeviceID(Context context) {
-        @SuppressLint("WrongConstant") TelephonyManager tm = (TelephonyManager) context.getSystemService("phone");
-        if (ActivityCompat.checkSelfPermission(context, "android.permission.READ_PHONE_STATE") != 0) {
-            try {
-                throw new Exception("Implement runtime permission before using this method");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    public static boolean checkConnection(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm == null) return false;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Network network = cm.getActiveNetwork();
+            if (network == null) return false;
+
+            NetworkCapabilities capabilities = cm.getNetworkCapabilities(network);
+            return capabilities != null &&
+                    (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET));
+        } else {
+            // For older devices (pre-Android 6.0)
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            return activeNetwork != null && activeNetwork.isConnected();
         }
-        String tmDevice = "" + tm.getDeviceId();
-        if (ActivityCompat.checkSelfPermission(context, "android.permission.READ_PHONE_STATE") != 0) {
-            try {
-                throw new Exception("Implement runtime permission before using this method");
-            } catch (Exception e2) {
-                e2.printStackTrace();
-            }
-        }
-        return new UUID((long) ("" + Settings.Secure.getString(context.getContentResolver(), "android_id")).hashCode(), (((long) tmDevice.hashCode()) << 32) | ((long) ("" + tm.getSimSerialNumber()).hashCode())).toString();
     }
 
-    public static boolean checkConnection(Context c) {
-        @SuppressLint("WrongConstant") NetworkInfo networkInfo = ((ConnectivityManager) c.getSystemService("connectivity")).getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected() && networkInfo.getType() == 1) {
-            System.out.println("true wifi");
-            return true;
-        } else if (networkInfo != null && networkInfo.isConnected() && networkInfo.getType() == 0) {
-            System.out.println("true edge");
-            return true;
-        } else if (networkInfo == null || !networkInfo.isConnected()) {
-            System.out.println(AppConstants.kSOUP_FLAG_FLASE);
-            return false;
-        } else {
-            System.out.println("true net");
-            return true;
-        }
-    }
 }

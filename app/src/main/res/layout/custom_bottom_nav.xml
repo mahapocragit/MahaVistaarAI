@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/custom_bottom_nav"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_48sdp"
+    android:layout_marginTop="@dimen/_4sdp"
+    android:background="@drawable/bottom_nav_notch"
+    android:elevation="8dp"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="4dp">
+
+    <LinearLayout
+        android:id="@+id/nav_home"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/_18sdp"
+            android:layout_height="@dimen/_18sdp"
+            android:src="@drawable/home_ic"
+            app:tint="@color/actionbar_color_figma" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/home_bottom"
+            android:textColor="@color/actionbar_color_figma"
+            android:textSize="@dimen/_8sdp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/nav_chc"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/_18sdp"
+            android:layout_height="@dimen/_18sdp"
+            android:src="@drawable/chc_ic" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/chc_bottom"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_8sdp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/navChat"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_chatbot" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/nav_videos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/_18sdp"
+            android:layout_height="@dimen/_18sdp"
+            android:src="@drawable/video_ic" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/videos_bottom"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_8sdp" />
+    </LinearLayout>
+
+    <!-- Repeat similar blocks for other items -->
+
+    <LinearLayout
+        android:id="@+id/nav_shetishala"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/icon_search"
+            android:layout_width="@dimen/_18sdp"
+            android:layout_height="@dimen/_18sdp"
+            android:src="@drawable/icon_shetishala" />
+
+        <TextView
+            android:id="@+id/label_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/dshetishala"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_8sdp" />
+    </LinearLayout>
+
+</LinearLayout>

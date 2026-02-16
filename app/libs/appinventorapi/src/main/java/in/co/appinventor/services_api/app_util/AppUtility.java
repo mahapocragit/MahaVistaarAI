@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.DownloadManager;
-import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.CursorLoader;
@@ -68,7 +67,7 @@ import java.net.NetworkInterface;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
@@ -107,7 +106,7 @@ import okio.Buffer;
 
 /* renamed from: in.co.appinventor.services_api.app_util.AppUtility */
 public class AppUtility {
-    private static AppUtility appUtility = new AppUtility();
+    private static final AppUtility appUtility = new AppUtility();
 
     private AppUtility() {
     }
@@ -174,10 +173,7 @@ public class AppUtility {
     }
 
     public boolean isValidPersonName(String value) {
-        if (checkSpecialCharsAndNumbers(value, "names") && value.length() >= 2) {
-            return true;
-        }
-        return false;
+        return checkSpecialCharsAndNumbers(value, "names") && value.length() >= 2;
     }
 
     public boolean checkSpecialChars(String value) {
@@ -204,10 +200,7 @@ public class AppUtility {
                 return false;
             }
         }
-        if (value.length() >= 6) {
-            return true;
-        }
-        return false;
+        return value.length() >= 6;
     }
 
     public boolean checkNumbers(String value) {
@@ -220,7 +213,7 @@ public class AppUtility {
     }
 
     public boolean isValidCallingNumber(String value) {
-        String alphas = "abcdefghijklmnopqrstuvwxyz".toUpperCase() + "" + "abcdefghijklmnopqrstuvwxyz";
+        String alphas = "abcdefghijklmnopqrstuvwxyz".toUpperCase() + "abcdefghijklmnopqrstuvwxyz";
         int counter0 = 0;
         for (int j = 0; j < value.length(); j++) {
             if ((value.charAt(j) + "").equals("0")) {
@@ -235,10 +228,7 @@ public class AppUtility {
                 return false;
             }
         }
-        if (value.length() < 10 || value.contains("1234567890") || value.contains("0000000000") || value.contains("1111111111") || value.contains("2222222222") || value.contains("3333333333") || value.contains("4444444444") || value.contains("5555555555") || value.contains("6666666666") || value.contains("7777777777") || value.contains("8888888888")) {
-            return false;
-        }
-        return true;
+        return value.length() >= 10 && !value.contains("1234567890") && !value.contains("0000000000") && !value.contains("1111111111") && !value.contains("2222222222") && !value.contains("3333333333") && !value.contains("4444444444") && !value.contains("5555555555") && !value.contains("6666666666") && !value.contains("7777777777") && !value.contains("8888888888");
     }
 
     public String isValidMobileNumber(String paramString) {
@@ -342,6 +332,8 @@ public class AppUtility {
                 throw th;
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
             }
         }
         return null;
@@ -354,7 +346,7 @@ public class AppUtility {
     public String getRealPathFromURIs(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
-            cursor = context.getContentResolver().query(contentUri, new String[]{"_data"}, (String) null, (String[]) null, (String) null);
+            cursor = context.getContentResolver().query(contentUri, new String[]{"_data"}, null, null, null);
             int column_index = 0;
             if (cursor != null) {
                 column_index = cursor.getColumnIndexOrThrow("_data");
@@ -423,7 +415,7 @@ public class AppUtility {
         listPicker.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 tv.setText(items[which].toString());
-                alertListCallbackEventListener.didSelectAlertViewListItem(tv, (String) selectedIndexArray.get(which));
+                alertListCallbackEventListener.didSelectAlertViewListItem(tv, selectedIndexArray.get(which));
             }
         });
         listPicker.show();
@@ -444,32 +436,49 @@ public class AppUtility {
         listPicker.setTitle(title);
         listPicker.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                callBackListener.didSelectAlertViewListItem(null, (String) selectedIndexArray.get(which));
+                callBackListener.didSelectAlertViewListItem(null, selectedIndexArray.get(which));
             }
         });
         listPicker.show();
     }
 
     public void showListDialogIndex(JSONArray ja, int requestCode, String title, String type, String typeId, Activity act, AlertListEventListener callBackListener) {
-        final CharSequence[] items = new CharSequence[ja.length()];
-        final List<String> selectedIndexArray = new ArrayList<>();
+        List<String> itemList = new ArrayList<>();
+        List<String> selectedIndexArray = new ArrayList<>();
+
         for (int i = 0; i < ja.length(); i++) {
             try {
-                items[i] = ja.getJSONObject(i).getString(type);
-                selectedIndexArray.add(ja.getJSONObject(i).getString(typeId));
+                JSONObject obj = ja.getJSONObject(i);
+                String item = obj.optString(type, null);
+                String id = obj.optString(typeId, null);
+
+                if (item != null && id != null) {
+                    itemList.add(item);
+                    selectedIndexArray.add(id);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+
+        // Convert to CharSequence array
+        final CharSequence[] items = itemList.toArray(new CharSequence[0]);
+
         AlertDialog.Builder listPicker = new AlertDialog.Builder(act);
         listPicker.setTitle(title);
         final AlertListEventListener alertListEventListener = callBackListener;
         final int i2 = requestCode;
-        listPicker.setItems(items, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                alertListEventListener.didSelectListItem(i2, items[which].toString(), (String) selectedIndexArray.get(which));
+
+        listPicker.setItems(items, (dialog, which) -> {
+            if (which >= 0 && which < selectedIndexArray.size()) {
+                String selectedText = items[which].toString();
+                String selectedId = selectedIndexArray.get(which);
+                alertListEventListener.didSelectListItem(i2, selectedText, selectedId);
+            } else {
+                Log.e("AppUtility", "Invalid selection index: " + which + " | Array size: " + selectedIndexArray.size());
             }
         });
+
         listPicker.show();
     }
 
@@ -488,10 +497,8 @@ public class AppUtility {
         listPicker.setTitle(title);
         final AlertListEventListener alertListEventListener = callBackListener;
         final int i2 = requestCode;
-        listPicker.setItems(items, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                alertListEventListener.didSelectListItem(i2, items[which].toString(), (String) selectedIndexArray.get(which));
-            }
+        listPicker.setItems(items, (dialog, which) -> {
+            alertListEventListener.didSelectListItem(i2, items[which].toString(), ja.optJSONObject(which).toString());
         });
         listPicker.show();
     }
@@ -537,14 +544,28 @@ public class AppUtility {
     }
 
     public void showDisabledFutureDatePicker(Context context, Date date, final int requestCode, final DatePickerRequestListener callbackListener) {
-        Calendar calender = Calendar.getInstance();
-        Context context2 = context;
-        DatePickerDialog datePickerDialog1 = new DatePickerDialog(context2, new DatePickerDialog.OnDateSetListener() {
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                callbackListener.onDateSelected(requestCode, dayOfMonth, monthOfYear + 1, year);
-            }
-        }, calender.get(1), calender.get(2), calender.get(5));
-        datePickerDialog1.getDatePicker().setMaxDate(date.getTime());
+        Locale locale = context.getResources().getConfiguration().locale;
+        Locale.setDefault(locale);
+
+        Calendar calendar = Calendar.getInstance();
+
+        DatePickerDialog datePickerDialog1 = new DatePickerDialog(
+                context,
+                (view, year, monthOfYear, dayOfMonth) ->
+                        callbackListener.onDateSelected(requestCode, dayOfMonth, monthOfYear + 1, year),
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+        );
+
+        // ✅ Allow up to 15 days after today
+        Calendar maxCalendar = Calendar.getInstance();
+        maxCalendar.add(Calendar.DAY_OF_MONTH, 15);
+        datePickerDialog1.getDatePicker().setMaxDate(maxCalendar.getTimeInMillis());
+
+        // (Optional) Disallow past dates
+        // datePickerDialog1.getDatePicker().setMinDate(System.currentTimeMillis());
+
         datePickerDialog1.show();
     }
 
@@ -572,11 +593,7 @@ public class AppUtility {
         }
         final DatePickerRequestListener datePickerRequestListener = callbackListener;
         final int i = requestCode;
-        DatePickerDialog datePickerDialog1 = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                datePickerRequestListener.onDateSelected(i, dayOfMonth, monthOfYear + 1, year);
-            }
-        }, mYear, mMonth, mDay);
+        DatePickerDialog datePickerDialog1 = new DatePickerDialog(context, (view, year, monthOfYear, dayOfMonth) -> datePickerRequestListener.onDateSelected(i, dayOfMonth, monthOfYear + 1, year), mYear, mMonth, mDay);
         datePickerDialog1.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         datePickerDialog1.show();
     }
@@ -661,7 +678,7 @@ public class AppUtility {
     }
 
     public String getDate(Calendar cal) {
-        return "" + cal.get(5) + "/" + (cal.get(2) + 1) + "/" + cal.get(1);
+        return cal.get(5) + "/" + (cal.get(2) + 1) + "/" + cal.get(1);
     }
 
     public long getDateDiff(Date sDate, Date eDate) {
@@ -688,7 +705,6 @@ public class AppUtility {
         Log.v("DateTime", "End Date : " + endDate + " ,  MS:" + newDate.getTimeInMillis());
         return diff;
     }
-
 
 
     public String appVersionNumber(Context context) {
@@ -937,11 +953,7 @@ public class AppUtility {
 
     public String getEmojiFilterText(String text) {
         String utf8tweet = "";
-        try {
-            utf8tweet = new String(text.getBytes("UTF-8"), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        utf8tweet = new String(text.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
         try {
             Matcher unicodeOutlierMatcher = Pattern.compile("[^\\x00-\\x7F]", 66).matcher(utf8tweet);
             System.out.println("Before: " + utf8tweet);
@@ -975,7 +987,7 @@ public class AppUtility {
 
     public void sendSMS(String phoneNo, String msg) {
         try {
-            SmsManager.getDefault().sendTextMessage(phoneNo, (String) null, msg, (PendingIntent) null, (PendingIntent) null);
+            SmsManager.getDefault().sendTextMessage(phoneNo, null, msg, null, null);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -984,7 +996,7 @@ public class AppUtility {
     public void sendLongSMS(String phoneNo, String msg) {
         try {
             SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendMultipartTextMessage(msg, (String) null, smsManager.divideMessage(phoneNo), (ArrayList) null, (ArrayList) null);
+            smsManager.sendMultipartTextMessage(msg, null, smsManager.divideMessage(phoneNo), null, null);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -1202,17 +1214,18 @@ public class AppUtility {
     }
 
     public String getFileExt(String fileName) {
-        return fileName.substring(fileName.lastIndexOf(FileUtils.HIDDEN_PREFIX) + 1, fileName.length());
+        return fileName.substring(fileName.lastIndexOf(FileUtils.HIDDEN_PREFIX) + 1);
     }
 
     public String getFileExtension(File fileName) {
         return MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(fileName).toString());
     }
 
-    public String getFileName(Context mContext, Uri uri) {
+    @SuppressLint("Range")
+    public String getFileName(Context mContext, Uri uri) throws Throwable {
         String result = null;
         if (uri.getScheme().equals("content")) {
-            Cursor cursor = mContext.getContentResolver().query(uri, (String[]) null, (String) null, (String[]) null, (String) null);
+            Cursor cursor = mContext.getContentResolver().query(uri, null, null, null, null);
             if (cursor != null) {
                 try {
                     if (cursor.moveToFirst()) {
@@ -1337,7 +1350,7 @@ public class AppUtility {
         if (amount == null || amount.length() <= 0) {
             return "";
         }
-        return String.format(Locale.getDefault(), "%,.2f", new Object[]{Double.valueOf(Double.parseDouble(amount))});
+        return String.format(Locale.getDefault(), "%,.2f", Double.valueOf(Double.parseDouble(amount)));
     }
 
     public long setSyncFrequencyOnInternetConnection(Context mContext) {
@@ -1354,13 +1367,9 @@ public class AppUtility {
 
     public String decodeString(String encoded) {
         try {
-            String decodedString = new String(Base64.decode(encoded, 2), "UTF-8");
+            String decodedString = new String(Base64.decode(encoded, 2), StandardCharsets.UTF_8);
             String str = decodedString;
             return decodedString;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            Object obj = "";
-            return "";
         } catch (Throwable th) {
             Object obj2 = "";
             return "";
@@ -1445,11 +1454,7 @@ public class AppUtility {
             return file.delete();
         }
         for (String child : file.list()) {
-            if (!deleteFile(new File(file, child)) || !deletedAll) {
-                deletedAll = false;
-            } else {
-                deletedAll = true;
-            }
+            deletedAll = deleteFile(new File(file, child)) && deletedAll;
         }
         return deletedAll;
     }
@@ -1559,7 +1564,7 @@ public class AppUtility {
 
     public Uri getBitmapToUri(Context inContext, Bitmap inImage) {
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, new ByteArrayOutputStream());
-        return Uri.parse(MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", (String) null));
+        return Uri.parse(MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null));
     }
 
     @SuppressLint("WrongConstant")
@@ -1695,6 +1700,7 @@ public class AppUtility {
         }
         return value;
     }
+
     public JSONArray sanitizeArrayJSONObj(JSONObject jsonObject, String key) {
         JSONArray value = null;
         try {
@@ -1715,8 +1721,9 @@ public class AppUtility {
         sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
         return sb.toString();
     }
+
     public String getRealPathFromURI(Context context, Uri contentUri) {
-        Cursor cursor = new CursorLoader(context, contentUri, new String[]{"_data"}, (String) null, (String[]) null, (String) null).loadInBackground();
+        Cursor cursor = new CursorLoader(context, contentUri, new String[]{"_data"}, null, null, null).loadInBackground();
         int column_index = cursor.getColumnIndexOrThrow("_data");
         cursor.moveToFirst();
         String result = cursor.getString(column_index);
@@ -1757,7 +1764,7 @@ public class AppUtility {
                     StringBuilder res1 = new StringBuilder();
                     int length = macBytes.length;
                     for (int i = 0; i < length; i++) {
-                        res1.append(String.format("%02X:", new Object[]{Byte.valueOf(macBytes[i])}));
+                        res1.append(String.format("%02X:", Byte.valueOf(macBytes[i])));
                     }
                     if (res1.length() > 0) {
                         res1.deleteCharAt(res1.length() - 1);
@@ -1786,10 +1793,7 @@ public class AppUtility {
             }
         } catch (Exception e) {
         }
-        if (canExecuteCommand("/system/xbin/which su") || canExecuteCommand("/system/bin/which su") || canExecuteCommand("which su")) {
-            return true;
-        }
-        return false;
+        return canExecuteCommand("/system/xbin/which su") || canExecuteCommand("/system/bin/which su") || canExecuteCommand("which su");
     }
 
     private static boolean canExecuteCommand(String command) {
@@ -1802,11 +1806,11 @@ public class AppUtility {
     }
 
     public String encodeBase64Param(String param) {
-        return Base64.encodeToString(param.getBytes(Charset.forName("UTF-8")), 0);
+        return Base64.encodeToString(param.getBytes(StandardCharsets.UTF_8), 0);
     }
 
     public String decodeBase64Param(String param) {
-        return new String(Base64.decode(param.getBytes(), 0), Charset.forName("UTF-8"));
+        return new String(Base64.decode(param.getBytes(), 0), StandardCharsets.UTF_8);
     }
 
     public String readJSONFromAsset(Context mContext, String fileName) {
@@ -1815,7 +1819,7 @@ public class AppUtility {
             byte[] buffer = new byte[is.available()];
             is.read(buffer);
             is.close();
-            String json = new String(buffer, "UTF-8");
+            String json = new String(buffer, StandardCharsets.UTF_8);
             return json;
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -1840,6 +1844,7 @@ public class AppUtility {
 
         return filePath.getAbsolutePath();
     }
+
     public String saveImageToDirAndSystemGallery(Context context, Bitmap capturedBitmap, String dirPath, String fileName) {
         OutputStream fOutputStream = null;
         File filePath = new File(dirPath, fileName);
@@ -1953,10 +1958,7 @@ public class AppUtility {
     public boolean validateFromToDate(String fromDate, String toDate) {
         SimpleDateFormat dfDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         try {
-            if (!dfDate.parse(fromDate).before(dfDate.parse(toDate)) && !dfDate.parse(fromDate).equals(dfDate.parse(toDate))) {
-                return false;
-            }
-            return true;
+            return dfDate.parse(fromDate).before(dfDate.parse(toDate)) || dfDate.parse(fromDate).equals(dfDate.parse(toDate));
         } catch (ParseException e) {
             e.printStackTrace();
             return false;
@@ -1967,7 +1969,7 @@ public class AppUtility {
         StringBuilder sb = new StringBuilder(name.toLowerCase());
         if (sb.length() < 1) {
             System.out.println("next line is empty");
-        }else {
+        } else {
             sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
         }
         return sb.toString();

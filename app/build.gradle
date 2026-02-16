@@ -2,143 +2,182 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+    id 'kotlin-parcelize'
 }
 
 android {
-        dataBinding {
-            enabled = true
-        }
+
+    compileSdk 36
+    namespace 'in.gov.mahapocra.mahavistaarai'
 
     signingConfigs {
-//        debug {
-//            storeFile file('D:\\office_imporatant_file\\Pocra-JKS\\Pocra-JKS\\farmer_app.jks')
-//            storePassword 'farmer@20022022'
-//            keyPassword 'farmer@20022022'
+        release {
+//            storeFile file('C:\Users\Admin\AndroidStudioProjects\Keys\key_store_credentials.jks')
+//            storePassword 'NDKSP@2025'
+//            keyPassword 'NDKSP@2025'
 //            keyAlias 'pks_prod_alias'
-//        }
-//        Release {
-//            storeFile file('D:\\office_imporatant_file\\Pocra-JKS\\Pocra-JKS\\farmer_app.jks')
-//            storePassword 'farmer@20022022'
-//            keyPassword 'farmer@20022022'
-//            keyAlias 'pks_prod_alias'
-//
-////            storeFile file('D:\\office_imporatant_file\\Pocra-JKS\\Pocra-JKS\\krushiapp.jks')
-////            storePassword 'farmerapp@2022'
-////            keyPassword 'farmerapp@2022'
-////            keyAlias 'krushi_prod_alias'
-//        }
-//        Debug {
-//
-//        }
+        }
+        debug {
+            // No signing configuration for debug
+        }
     }
 
-//    storeFile file('D:\\office_imporatant_file\\Pocra-JKS\\pcra_farmer_JKS\\krushiapp.jks')
-//    storePassword 'farmerapp@2022'
-//    keyPassword 'farmerapp@2022'
-//    keyAlias 'krushi_prod_alias'
-//    }
-    compileSdkVersion 33
-    buildToolsVersion "30.0.2"
+    packagingOptions {
+        jniLibs {
+            excludes += [
+                    "**/libimage_processing_util_jni.so"
+            ]
+        }
+    }
 
     defaultConfig {
-        applicationId "in.gov.mahapocra.farmerapppks"
-        minSdkVersion 19
-        targetSdkVersion 33
-        versionCode 4
-        versionName "1.3"
+        applicationId "in.gov.mahapocra.mahavistaarai"
+        minSdkVersion 23
+        targetSdkVersion 36
+        versionCode 47
+        versionName "2.0.5"
         multiDexEnabled true
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        resourceConfigurations += ['en', 'mr']
+    }
+
+    bundle {
+        language {
+            enableSplit = false
+        }
     }
 
     buildTypes {
         release {
+            minifyEnabled true // Enable shrinking & obfuscation
+            shrinkResources true // Remove unused resources
+            crunchPngs false // Optional: disable PNG crunching to save build time
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            ndk {
+                debugSymbolLevel 'FULL' // Include native debug symbols (if using NDK)
+            }
+        }
+        debug {
             minifyEnabled false
-            crunchPngs false // or true
+            debuggable true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        lintOptions {
-            checkReleaseBuilds false
-            // Or, if you prefer, you can continue to check for errors in release builds,
-            // but continue the build even when errors are found:
-            abortOnError false
-        }
-
-            debug {
-                // Check if you have this parameter enabled.
-                // Add if missing and rebuild your app to device.
-                debuggable true
-                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            }
-
     }
+
+    flavorDimensions "version"
+    productFlavors {
+        stage {
+            dimension "version"
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
+            buildConfigField "String", "BASE_URL", "\"https://stage-farmers-app-api.mahapocra.gov.in/\""
+        }
+        prod {
+            dimension "version"
+            buildConfigField "String", "BASE_URL", "\"https://farmers-app-api.mahapocra.gov.in/\""
+        }
+    }
+
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
     buildFeatures {
         viewBinding true
+        dataBinding true
     }
-
-
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
 }
+
+
 dependencies {
-
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    //Camera
+    def camerax_version = "1.3.2"
+    implementation "androidx.camera:camera-core:$camerax_version"
+    implementation "androidx.camera:camera-camera2:$camerax_version"
+    implementation "androidx.camera:camera-lifecycle:$camerax_version"
+    implementation "androidx.camera:camera-view:$camerax_version"
+    //Clarity
+    implementation 'com.microsoft.clarity:clarity:3.4.3'
+    //osm
+    implementation 'org.osmdroid:osmdroid-android:6.1.20'
+    implementation 'com.intuit.sdp:sdp-android:1.1.1'
+    implementation 'com.mikhaellopez:circularimageview:4.3.1'
+    // Project dependencies
     implementation project(path: ':app:libs:appinventorapi')
-    //implementation project(path: ':app:libs:appinventorapi')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.6.0'
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
-   // implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
-    implementation 'com.google.firebase:firebase-config:19.1.1'
-    implementation 'com.google.firebase:firebase-messaging:20.2.4'
-    implementation 'com.google.mlkit:vision-common:17.3.0'
-    implementation 'com.google.mlkit:image-labeling-common:18.1.0'
-    implementation 'com.google.mlkit:image-labeling:17.0.7'
-    implementation 'com.google.mlkit:image-labeling-default-common:17.0.0'
-//    implementation 'com.google.firebase:firebase-firestore:24.10.0'
-    testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'uk.co.chrisjenx:calligraphy:2.2.0'
-   // implementation 'com.jakewharton:butterknife:8.8.1'
-    //annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
-    implementation "androidx.multidex:multidex:2.0.1"
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:2.1.0"
+
+    // AndroidX Libraries
+    implementation 'androidx.core:core-ktx:1.16.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+    implementation 'androidx.recyclerview:recyclerview:1.4.0'
+
+    // Navigation
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.9.2'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.9.2'
+
+    // Material Design
+    implementation 'com.google.android.material:material:1.12.0'
+
+    // Firebase
+    implementation platform('com.google.firebase:firebase-bom:34.0.0')
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-config'
+    implementation 'com.google.firebase:firebase-crashlytics:20.0.0'
+    implementation 'com.google.firebase:firebase-database-ktx:21.0.0'
+
+    // Retrofit
+    implementation 'com.squareup.retrofit2:converter-gson:3.0.0'
+
+    // Image Loading
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'com.google.firebase:firebase-database-ktx:21.0.0'
+    implementation 'com.google.android.gms:play-services-location:21.3.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
     implementation 'com.makeramen:roundedimageview:2.3.0'
-//    implementation "com.squareup.okhttp3:okhttp:4.7.2"
 
-    implementation 'com.github.bumptech.glide:glide:4.12.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+    // Lifecycle
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.2'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.9.2'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.9.2'
+    implementation 'androidx.activity:activity-ktx:1.10.1'
 
-    implementation 'android.arch.lifecycle:viewmodel:1.1.1'
-    annotationProcessor 'android.arch.lifecycle:compiler:1.1.1'
-    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    // RxJava
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
 
-  //  implementation 'com.amitshekhar.android:android-networking:1.0.2'
+    // Networking
     implementation 'com.squareup.okhttp:okhttp:2.7.5'
- //   implementation 'com.squareup.okhttp3:okhttp:4.8.0'
-    implementation 'com.amitshekhar.android:android-networking:1.0.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
+    implementation 'com.github.amitshekhariitbhu.Fast-Android-Networking:android-networking:1.0.4'
 
-    implementation 'com.wx.wheelview:wheelview:1.3.3'
+    // Circle Image View
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.13'
-    implementation 'com.github.sujithkanna:smileyrating:2.0.0'
+    // Testing
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 
-    implementation 'com.google.mlkit:object-detection:17.0.0'
-    implementation 'com.android.support:design:22.2.0'
+    // Multidex
+    implementation "androidx.multidex:multidex:2.0.1"
 
+    // Calligraphy (optional)
+    implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
 }

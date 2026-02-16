@@ -7,6 +7,32 @@
     <color name="teal_700">#FF018786</color>
     <color name="white">#FFFFFFFF</color>
     <color name="watercolor"></color>
+    <color name="white_light">#80FFFEFE</color>
+    <color name="dusk_yellow">#ead538</color>
+    <color name="baby_blue">#6495ED</color>
+    <color name="light_gray">#E0E0E0</color>
+    <color name="pale_aqua">#E5FBFC</color>
+
+    <color name="schedule_com">#42842d</color>
+    <color name="schedule_re">#535353</color>
+    <color name="schedule_mi">#e23d63</color>
+    <color name="schedule_t">#c4af24</color>
+    <color name="schedule_g">#73726D</color>
+    <color name="schedule_up">#2762a1</color>
+    <color name="link">#0D91CD</color>
+    <color name="gry">#E6E2E2</color>
+    <color name="primary_green">#1d6b08</color>
+<!--    Figma Color Pallet Starts Here-->
+    <color name="font_color_figma">#64748B</color>
+    <color name="arrow_color_figma">#94A3B8</color>
+    <color name="card_background_color_figma">#F0F6FF</color>
+    <color name="card_background_color_figma_dash">#F8FAFC</color>
+    <color name="card_background_color_round_figma">#F1F5F9</color>
+    <color name="actionbar_color_figma">#009444</color>
+    <color name="actionbar_color_figma2">#C0D6C8</color>
+    <color name="gradient_top_figma">#204FC5</color>
+    <color name="gradient_middle_figma">#71AAE1</color>
+    <color name="gradient_bottom_figma">#F4D9B8</color>
 
     <color name="app_bg">#ecebeb</color>
 
@@ -58,8 +84,11 @@
     <color name="stroke_color_gray">#C0C0C0</color>
     <color name="bg_green">#3d8724</color>
     <color name="selected_light_green_color">#381BF727</color>
+    <color name="notification_card_background">#E8FCEE</color>
 
     <color name="blue">#b2a1c7</color>
+    <color name="blue_light">#3B82F6</color>
+    <color name="gray_bar_light">#CBD5E1</color>
 
     <color name="stepview_line_done">@android:color/white</color>
     <color name="stepview_line_next">#26ffffff</color>
@@ -80,4 +109,9 @@
     <color name="green">#98D850</color>
     <color name="white1">#FFFFFF</color>
     <color name="yeellowies">#F6EDA1</color>
+
+    <color name="nav_selected">#008D36</color> <!-- Green -->
+    <color name="nav_unselected">#B0BEC5</color> <!-- Light gray -->
+    <color name="bottom_icon_tint">#64748B</color> <!-- Light gray -->
+    <color name="nav_text">#263238</color> <!-- Dark gray for text -->
 </resources>

@@ -1,0 +1,21 @@
+package `in`.gov.mahapocra.mahavistaarai.ui.adapters
+
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.forum.ForumFirstFragment
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.forum.ForumSecondFragment
+
+class ViewPagerAdapter(fragmentActivity: FragmentActivity) :
+    FragmentStateAdapter(fragmentActivity) {
+
+    override fun getItemCount(): Int = 2 // Number of tabs
+
+    override fun createFragment(position: Int): Fragment {
+        return when (position) {
+            0 -> ForumFirstFragment()
+            1 -> ForumSecondFragment()
+            else -> ForumFirstFragment()
+        }
+    }
+}

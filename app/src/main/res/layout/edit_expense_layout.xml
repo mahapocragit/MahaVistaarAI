@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/linearLayout25"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView55"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/edit_expense"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:textSize="@dimen/_14sdp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/categoryExpenseLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/login_edit_bg"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/_48sdp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/categoryNameTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:paddingStart="@dimen/_10sdp"
+                android:text="@string/select_category" />
+
+            <ImageView
+                android:id="@+id/imageView42"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_14sdp"
+                android:layout_weight="8"
+                app:srcCompat="@drawable/down_arrow_figma" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView57"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:text="@string/expense_name_optional" />
+
+        <EditText
+            android:id="@+id/expenseNameEditText2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_48sdp"
+            android:background="@drawable/login_edit_bg"
+            android:gravity="start|center"
+            android:inputType="text"
+            android:paddingHorizontal="@dimen/padding20"
+            android:textColor="@color/heading"
+            android:textColorHint="@color/text_black"
+            android:textSize="@dimen/text14"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/textView59"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:text="@string/expense_date" />
+
+        <LinearLayout
+            android:id="@+id/expenseDateLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_54sdp"
+            android:background="@drawable/login_edit_bg"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="8"
+                app:srcCompat="@drawable/ic_calendar"
+                app:tint="@color/font_color_figma" />
+
+            <TextView
+                android:id="@+id/expenseCalendarDateTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="2"
+                android:text="TextView" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/priceTextView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:text="@string/price_rs" />
+
+        <EditText
+            android:id="@+id/priceEditText2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_48sdp"
+            android:background="@drawable/login_edit_bg"
+            android:gravity="start|center"
+            android:hint="0"
+            android:inputType="number"
+            android:paddingHorizontal="@dimen/padding20"
+            android:textColor="@color/heading"
+            android:textColorHint="@color/text_black"
+            android:textSize="@dimen/text14"
+            android:textStyle="normal" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/deleteText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/delete"
+                android:textColor="@color/rebranding_red"
+                android:textSize="@dimen/_14sdp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/cancelText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cancel"
+                    android:textSize="@dimen/_14sdp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/submitText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:text="@string/submit"
+                    android:textColor="@color/actionbar_color_figma"
+                    android:textSize="@dimen/_14sdp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
