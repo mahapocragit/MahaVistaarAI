@@ -38,12 +38,15 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.RegistrationViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SessionManager
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.subscribeToTopic
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.unSubscribeToTopic
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -79,6 +82,7 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
     private var versionName: String? = null
     private var token: String? = null
     private var machineId: String? = null
+    private var talukaToken = ""
     private val farmerViewModel: FarmerViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -356,6 +360,35 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
             machineId = getMachineId()
             if (farmerRegisterID > 0) {
                 isUserLoggedIn = true
+                val jsonStr = AppPreferenceManager(this).getString("topic_saved_fcm")
+                val jsonArray = JSONArray(jsonStr.toString())
+                for (i in 0 until jsonArray.length()) {
+                    val topic = jsonArray.optString(i)
+                    try {
+                        val topicStr = topic.split("_")
+                        val topicHead = topicStr[0]
+                        if (topicHead == "taluka") {
+                            if (topic == talukaToken) {
+                                Log.d(TAG, "onclick: no change needed")
+                            } else {
+                                //unsubscribe
+                                unSubscribeToTopic(topic) { unsubscribed ->
+                                    //delete
+                                    if (unsubscribed) {
+                                        farmerViewModel.deleteSubscribedTopic(this, topic)
+                                        farmerViewModel.saveSubscribedTopic(
+                                            this,
+                                            talukaToken
+                                        )
+                                    }
+                                }
+                                Log.d(TAG, "onclick: change and delete")
+                            }
+                        }
+                    } catch (_: Exception) {
+                        Log.d(TAG, "onclick: no change needed")
+                    }
+                }
                 userValidationAndUpdateProfile()
             }
         }
@@ -593,7 +626,14 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
                     }
                 }
 
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             })
 
@@ -653,6 +693,7 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
         if (i == 2) {
             if (s1 != "") {
                 talukaID = s1!!.toInt()
+                talukaToken = "taluka_$talukaID"
             }
             if (s != null) {
                 talukaName = s

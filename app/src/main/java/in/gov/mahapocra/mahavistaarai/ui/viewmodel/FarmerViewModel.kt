@@ -814,9 +814,12 @@ class FarmerViewModel : ViewModel() {
     fun updateNotificationStatus(context: Context, notificationID: Long, notificationType: String) {
         ProgressHelper.showProgressDialog(context)
         viewModelScope.launch {
+            val userId =
+            AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
             val jsonObject = JSONObject().apply {
                 put("notification_id", notificationID)
                 put("type", notificationType)
+                put("user_id", userId)
             }
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             try {

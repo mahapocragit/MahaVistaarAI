@@ -13,19 +13,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="@dimen/_40sdp"
+    android:paddingStart="@dimen/_5sdp"
     android:orientation="horizontal"
     android:background="@color/transparent">
 
     <ImageView
         android:id="@+id/iconImageView"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:adjustViewBounds="true"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
         android:layout_gravity="center"
-        android:layout_margin="18dp"
+        android:layout_margin="@dimen/_10sdp"
         android:contentDescription="@string/app_name"
-        app:srcCompat="@mipmap/ic_menu_profile" />
+        app:srcCompat="@mipmap/myprofile" />
 
     <TextView
         android:id="@+id/nameTextView"

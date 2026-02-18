@@ -95,6 +95,8 @@ import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.ApUtil
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SideNavMenuHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper.shrinkToCenter
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.subscribeToTopic
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.unSubscribeToTopic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -132,7 +134,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     private var etlAdvisoryJsonArray: JSONArray = JSONArray()
     private var selectedCropList: ArrayList<CropsCategName>? = null
     private var doubleBackToExitPressedOnce = false
-    private val topic = "generic_advisory"
+    private var topicsArray = JSONArray()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -153,7 +155,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         init()
         setUpListeners()
         FirebaseHelper(this)
-        FirebaseHelper(this).subscribeToTopic("generic_notifications")
         binding.appBarMain.dashboardScreen.progressBar.visibility = View.VISIBLE
         binding.appBarMain.dashboardScreen.temperatureTextView.visibility = View.GONE
 
@@ -678,16 +679,21 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         farmerViewModel.getNotificationResponse.observe(this) {
             if (it != null) {
                 val jsonObject = JSONObject(it.toString())
-                val notificationJsonArray = jsonObject.getJSONArray("notifications")
+
+                val notificationJsonArray = jsonObject.optJSONArray("notifications")
 
                 var unreadCount = 0
-                for (i in 0 until notificationJsonArray.length()) {
-                    val notification = notificationJsonArray.getJSONObject(i)
-                    if (notification.optInt("is_read") == 0) {
-                        unreadCount++
+
+                if (notificationJsonArray != null) {
+                    for (i in 0 until notificationJsonArray.length()) {
+                        val notification = notificationJsonArray.getJSONObject(i)
+                        if (notification.optInt("is_read", 1) == 0) {
+                            unreadCount++
+                        }
                     }
                 }
-                // Optionally update your badge view
+
+                // Always safe to update
                 updateNotificationCount(unreadCount)
             }
         }
@@ -890,20 +896,30 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     //  pocra_roles array
                     val pocraRoles = mutableListOf<PocraRole>()
                     val rolesArray = data.optJSONArray("pocra_roles")
-                    val topicsArray = data.optJSONArray("topics")
-                    topicsArray?.length()?.let {
-                        if (it > 0) {
-                            Log.d(TAG, "observeResponse: NOT EMPTY")
-                        } else {
-                            FirebaseMessaging.getInstance()
-                                .subscribeToTopic(topic)
-                                .addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        farmerViewModel.saveSubscribedTopic(this, topic)
-                                    } else {
-                                        Log.e("FCM", "Topic subscription failed", task.exception)
-                                    }
+                    val topicsToSubArray = data.optJSONArray("topics_to_subscribe")
+                    val topicJsonArray = JSONArray()
+                    if (topicsToSubArray != null && topicsToSubArray.length() > 0) {
+                        val total = topicsToSubArray.length()
+                        var completed = 0
+
+                        for (i in 0 until total) {
+                            val topic = topicsToSubArray.optString(i)
+
+                            subscribeToTopic(topic) { subscribed ->
+                                if (subscribed) {
+                                    topicJsonArray.put(topic)
+                                    farmerViewModel.saveSubscribedTopic(this, topic)
                                 }
+                                completed++
+                                if (completed == total) {
+                                    Log.d(TAG, "Final topicJsonArray: $topicJsonArray")
+                                    topicsArray = topicJsonArray
+                                    appPreferenceManager.saveString(
+                                        "topic_saved_fcm",
+                                        topicJsonArray.toString()
+                                    )
+                                }
+                            }
                         }
                     }
                     val userRoleId = -1
@@ -1416,15 +1432,35 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     }
 
     private fun logoutFromApp() {
-        if (NetworkUtils.isInternetAvailable(this)) {
-            FirebaseMessaging.getInstance()
-            .unsubscribeFromTopic(topic)
-            farmerViewModel.deleteSubscribedTopic(this, topic)
-            farmerViewModel.updateFCMToken(this, "NA")
-            appPreferenceManager.clearAll()
-        } else {
+        if (!NetworkUtils.isInternetAvailable(this)) {
             LocalCustom.createSnackbar(binding.root, "Internet not available!")
+            return
         }
+
+        if (topicsArray != null && topicsArray.length() > 0) {
+            val total = topicsArray.length()
+            var completed = 0
+
+            for (i in 0 until total) {
+                val topic = topicsArray.optString(i)
+
+                unSubscribeToTopic(topic) { unsubscribed ->
+                    if (unsubscribed) {
+                        topicsArray.put(topic)
+                        farmerViewModel.deleteSubscribedTopic(this, topic)
+                    }
+                    completed++
+                    if (completed == total) {
+                        completeLogout()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun completeLogout() {
+        farmerViewModel.updateFCMToken(this, "NA")
+        appPreferenceManager.clearAll()
     }
 
     override fun onMultiRecyclerViewItemClick(i: Int, id: Any) {
