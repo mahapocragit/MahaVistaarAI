@@ -127,6 +127,15 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
     }
 
     private fun observeResponse() {
+        
+        farmerViewModel.deleteSubscribedTopicResponse.observe(this){
+            userValidationAndUpdateProfile()
+        }
+        farmerViewModel.error.observe(this){
+            Log.d(TAG, "observeResponse: $it")
+        }
+
+        
         farmerViewModel.talukaList.observe(this) {
             if (it != null) {
                 val jSONObject = JSONObject(it.toString())
@@ -369,27 +378,23 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
                         val topicHead = topicStr[0]
                         if (topicHead == "taluka") {
                             if (topic == talukaToken) {
-                                Log.d(TAG, "onclick: no change needed")
+                                userValidationAndUpdateProfile()
                             } else {
                                 //unsubscribe
                                 unSubscribeToTopic(topic) { unsubscribed ->
                                     //delete
                                     if (unsubscribed) {
                                         farmerViewModel.deleteSubscribedTopic(this, topic)
-                                        farmerViewModel.saveSubscribedTopic(
-                                            this,
-                                            talukaToken
-                                        )
+                                    }else{
+                                        userValidationAndUpdateProfile()
                                     }
                                 }
-                                Log.d(TAG, "onclick: change and delete")
                             }
                         }
                     } catch (_: Exception) {
-                        Log.d(TAG, "onclick: no change needed")
+                        userValidationAndUpdateProfile()
                     }
                 }
-                userValidationAndUpdateProfile()
             }
         }
         binding.textViewVerify.setOnClickListener {
