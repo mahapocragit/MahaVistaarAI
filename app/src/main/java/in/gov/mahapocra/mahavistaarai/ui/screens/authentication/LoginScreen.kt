@@ -59,7 +59,6 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     private lateinit var binding: ActivityLoginScreenBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
     private val loginViewModel: LoginViewModel by viewModels()
-    private lateinit var otpFields: List<EditText>
     private lateinit var refreshToken: String
     private var timestamp: Long = 0
     private lateinit var mobileNo: String

@@ -1065,6 +1065,7 @@ class FarmerViewModel : ViewModel() {
     fun deleteSubscribedTopic(context: Context, topic: String) {
         val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
         viewModelScope.launch {
+            ProgressHelper.showProgressDialog(context)
             try {
                 val jsonObject = JSONObject()
                 jsonObject.put("user_id", farmerId)
@@ -1073,8 +1074,10 @@ class FarmerViewModel : ViewModel() {
                 val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val api = retrofit.create(ApiService::class.java)
                 val response = api.deleteSubscribedTopic(requestBody)
+                ProgressHelper.disableProgressDialog()
                 _deleteSubscribedTopicResponse.value = response
             } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
