@@ -103,24 +103,4 @@ class FirebaseHelper(private val context: Context) {
             }
         }
     }
-
-    fun subscribeToTopic(topic:String){
-        FirebaseMessaging.getInstance().subscribeToTopic(topic).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Log.d("FCM", "Subscribed to topic")
-            } else {
-                Log.e("FCM", "Subscription failed", task.exception)
-            }
-        }
-    }
-
-    fun unSubscribeToTopic(topic:String){
-        FirebaseMessaging.getInstance().unsubscribeFromTopic(topic).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Log.d("FCM", "Subscribed to topic")
-            } else {
-                Log.e("FCM", "Subscription failed", task.exception)
-            }
-        }
-    }
 }

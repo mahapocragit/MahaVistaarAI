@@ -896,8 +896,9 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     //  pocra_roles array
                     val pocraRoles = mutableListOf<PocraRole>()
                     val rolesArray = data.optJSONArray("pocra_roles")
+                    val topicJsonArray = data.optJSONArray("topics")
+                    topicsArray = topicJsonArray
                     val topicsToSubArray = data.optJSONArray("topics_to_subscribe")
-                    val topicJsonArray = JSONArray()
                     if (topicsToSubArray != null && topicsToSubArray.length() > 0) {
                         val total = topicsToSubArray.length()
                         var completed = 0
@@ -1455,6 +1456,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     }
                 }
             }
+        }else{
+            completeLogout()
         }
     }
 
