@@ -68,7 +68,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
         binding = ActivityDetailedNotificationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
-        
+
         val notificationObject = intent.getStringExtra("notificationObject")
         Log.d(TAG, "onCreate: $notificationObject")
         if (notificationObject != null) {
@@ -126,11 +126,15 @@ class DetailedNotificationActivity : AppCompatActivity() {
                                     )
                                 }
 
-                                farmerViewModel.addNotificationFeedbackResponse.observe(this){
-                                    Log.d(TAG, "onCreate: $it")
-                                    farmerViewModel.getNotificationDetails(this, id, type)
+                                farmerViewModel.addNotificationFeedbackResponse.observe(this) { response ->
+                                    if (response != null) {
+                                        val jsonObject = JSONObject(response.toString())
+                                        val responseMessage = jsonObject.optString("response")
+                                        Toast.makeText(this, responseMessage, Toast.LENGTH_SHORT)
+                                            .show()
+                                        farmerViewModel.getNotificationDetails(this, id, type)
+                                    }
                                 }
-                                Log.d("FEEDBACK_JSON", questionsJson.toString())
                                 dialog.dismiss()
                             }
                             dialog.show()
@@ -194,7 +198,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
                                     )
                                 }
 
-                                farmerViewModel.addNotificationFeedbackResponse.observe(this){
+                                farmerViewModel.addNotificationFeedbackResponse.observe(this) {
                                     Log.d(TAG, "onCreate: $it")
                                     farmerViewModel.getNotificationDetails(this, id, type)
                                 }
@@ -213,7 +217,12 @@ class DetailedNotificationActivity : AppCompatActivity() {
             getString(R.string.detailed_notifications)
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
-            startActivity(Intent(this@DetailedNotificationActivity, NotificationActivity::class.java))
+            startActivity(
+                Intent(
+                    this@DetailedNotificationActivity,
+                    NotificationActivity::class.java
+                )
+            )
         }
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
