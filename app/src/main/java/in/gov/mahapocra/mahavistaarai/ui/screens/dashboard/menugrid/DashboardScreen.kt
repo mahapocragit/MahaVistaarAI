@@ -899,6 +899,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     val topicJsonArray = data.optJSONArray("topics")
                     topicsArray = topicJsonArray
                     val topicsToSubArray = data.optJSONArray("topics_to_subscribe")
+                    val topicsToDeleteArray = data.optJSONArray("topics_to_delete")
                     if (topicsToSubArray != null && topicsToSubArray.length() > 0) {
                         val total = topicsToSubArray.length()
                         var completed = 0
@@ -918,6 +919,28 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                                     appPreferenceManager.saveString(
                                         "topic_saved_fcm",
                                         topicJsonArray.toString()
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    if (topicsToDeleteArray != null && topicsToDeleteArray.length() > 0) {
+                        val total = topicsToDeleteArray.length()
+                        var completed = 0
+
+                        for (i in 0 until total) {
+                            val topic = topicsToDeleteArray.optString(i)
+
+                            unSubscribeToTopic(topic) { subscribed ->
+                                if (subscribed) {
+                                    topicsToDeleteArray.put(topic)
+                                    farmerViewModel.deleteSubscribedTopic(this, topic)
+                                }
+                                completed++
+                                if (completed == total) {
+                                    appPreferenceManager.saveString(
+                                        "topic_saved_fcm",
+                                        topicsToDeleteArray.toString()
                                     )
                                 }
                             }
