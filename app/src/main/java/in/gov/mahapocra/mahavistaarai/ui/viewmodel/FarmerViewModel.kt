@@ -876,9 +876,12 @@ class FarmerViewModel : ViewModel() {
 
     fun addNotificationFeedback(context: Context, customId: String, type:String, feedbackArray: JSONArray) {
         ProgressHelper.showProgressDialog(context)
+        val userId =
+            AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
         viewModelScope.launch {
             val jsonObject = JSONObject().apply {
-                put("cust_id", customId)
+                put("user_id", userId)
+                put("notification_id", customId)
                 put("type", type)
                 put("feedback", feedbackArray)
             }
