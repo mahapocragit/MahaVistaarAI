@@ -45,6 +45,8 @@ class FBaseMessagingService : FirebaseMessagingService() {
             val type = remoteMessage.data["type"] ?: "You have a new message"
             Log.d(tag, "onMessageReceived: $page")
             sendNotification(title, body, page, notificationId, type)
+        }else{
+            Log.d(tag, "Data payload 1: $remoteMessage is empty")
         }
     }
 
