@@ -37,16 +37,14 @@ import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLoginScreenBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
-import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LoginViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
-import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.toSHA512
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
-import `in`.gov.mahapocra.mahavistaarai.util.OtpRateLimiter
 import `in`.gov.mahapocra.mahavistaarai.util.OtpRateLimiter.provideValidEncryptedString
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import org.json.JSONException
@@ -57,8 +55,7 @@ import retrofit2.Retrofit
 
 class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     private lateinit var binding: ActivityLoginScreenBinding
-    private val farmerViewModel: FarmerViewModel by viewModels()
-    private val loginViewModel: LoginViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
     private lateinit var refreshToken: String
     private var timestamp: Long = 0
     private lateinit var mobileNo: String
@@ -135,7 +132,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             binding.farmerLoginLayout.visibility = View.VISIBLE
         }
 
-        loginViewModel.getRegisteredDeviceCountByDeviceIdResponse.observe(this) { response ->
+        authViewModel.getRegisteredDeviceCountByDeviceIdResponse.observe(this) { response ->
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 val status = jSONObject.optInt("status")
@@ -156,7 +153,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     } else {
                         // Continue user creation logic
                         if (agristackLoginMethodEnabled) {
-                            farmerViewModel.farmerIdBasedLogin(this, agriStackId)
+                            authViewModel.farmerIdBasedLogin(this, agriStackId)
                         } else {
                             val intent2 =
                                 Intent(applicationContext, PreRegistrationActivity::class.java)
@@ -185,11 +182,11 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             if (agriStackId.length != 11 && agriStackId.isEmpty()) {
                 UIToastMessage.show(this, "Please enter valid Farmer ID")
             } else {
-                loginViewModel.getRegisteredDeviceCountByDeviceId(this)
+                authViewModel.getRegisteredDeviceCountByDeviceId(this)
             }
         }
 
-        farmerViewModel.agristackLoginResponse.observe(this) {
+        authViewModel.agristackLoginResponse.observe(this) {
             Log.d(TAG, "farmerIdLayoutValidation: $it")
             if (it != null) {
                 val jsonObject = JSONObject(it.toString())
@@ -205,7 +202,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             }
         }
 
-        farmerViewModel.error.observe(this) {
+        authViewModel.error.observe(this) {
             if (it == "Correlation ID not found in response") {
                 Toast.makeText(this, R.string.farmer_id_login_text, Toast.LENGTH_SHORT).show()
             }
@@ -259,7 +256,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
         binding.registerTextView.setOnClickListener {
             agristackLoginMethodEnabled = false
-            loginViewModel.getRegisteredDeviceCountByDeviceId(this)
+            authViewModel.getRegisteredDeviceCountByDeviceId(this)
         }
 
         binding.passwordEditText.setOnClickListener {
@@ -600,8 +597,8 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 return@setOnClickListener
             } else {
                 timestamp = System.currentTimeMillis()
-                farmerViewModel.compareOtp(this, timestamp, mobile, enteredOTP)
-                farmerViewModel.compareOtpResponse.observe(this) {
+                authViewModel.compareOtp(timestamp, mobile, enteredOTP)
+                authViewModel.compareOtpResponse.observe(this) {
                     if (it != null) {
                         val calculatedResponse = provideValidEncryptedString(timestamp)
                         val jSONObject = JSONObject(it.toString())
@@ -638,7 +635,14 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     }
                 }
 
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             })
 
@@ -664,11 +668,11 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         dialog.setCancelable(false)
         dialog.setContentView(R.layout.dialog_activity_verification)
         val otpFields = listOf(
-            dialog.findViewById<EditText>(R.id.otp1),
-            dialog.findViewById<EditText>(R.id.otp2),
-            dialog.findViewById<EditText>(R.id.otp3),
-            dialog.findViewById<EditText>(R.id.otp4),
-            dialog.findViewById<EditText>(R.id.otp5),
+            dialog.findViewById(R.id.otp1),
+            dialog.findViewById(R.id.otp2),
+            dialog.findViewById(R.id.otp3),
+            dialog.findViewById(R.id.otp4),
+            dialog.findViewById(R.id.otp5),
             dialog.findViewById<EditText>(R.id.otp6)
         )
         setupOtpInputs(otpFields)
@@ -695,7 +699,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             } else {
                 timestamp = System.currentTimeMillis()
                 if (agriStackUserExist) {
-                    farmerViewModel.compareOtpResponse.observe(this) {
+                    authViewModel.compareOtpResponse.observe(this) {
                         if (it != null) {
                             val calculatedResponse = provideValidEncryptedString(timestamp)
                             val jSONObject = JSONObject(it.toString())
@@ -709,9 +713,9 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                             dialog.dismiss()
                         }
                     }
-                    farmerViewModel.compareOtp(this, timestamp, agriStackMobile, enteredOTP)
+                    authViewModel.compareOtp(timestamp, agriStackMobile, enteredOTP)
                 } else {
-                    loginViewModel.compareOtpToFarmerIdRegistrationResponse.observe(this) {
+                    authViewModel.compareOtpToFarmerIdRegistrationResponse.observe(this) {
                         if (it != null) {
                             val calculatedResponse = provideValidEncryptedString(timestamp)
                             val jSONObject = JSONObject(it.toString())
@@ -725,7 +729,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                             dialog.dismiss()
                         }
                     }
-                    loginViewModel.compareOtpToFarmerIdRegistration(
+                    authViewModel.compareOtpToFarmerIdRegistration(
                         this,
                         agriStackId,
                         enteredOTP,
@@ -740,7 +744,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             dialog.dismiss()
             if (agriStackMobile.isNotEmpty()) {
                 val farmerId = binding.farmerIdEditText.text.toString()
-                farmerViewModel.farmerIdBasedLogin(this, farmerId)
+                authViewModel.farmerIdBasedLogin(this, farmerId)
             } else {
                 userValidateAndLogin()
             }

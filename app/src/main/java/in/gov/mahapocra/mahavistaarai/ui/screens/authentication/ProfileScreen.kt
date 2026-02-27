@@ -34,6 +34,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityProfileScreenBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.RegistrationViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
@@ -55,6 +56,7 @@ import org.json.JSONObject
 class ProfileScreen : AppCompatActivity(), AlertListEventListener {
     private lateinit var binding: ActivityProfileScreenBinding
     private val registrationViewModel: RegistrationViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
     private var isUserLoggedIn: Boolean = false
     private var consentMessage: String? = null
     private lateinit var userName: String
@@ -591,13 +593,12 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
                 Toast.makeText(this, "Enter valid OTP", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             } else {
-                farmerViewModel.compareOtpReg(
-                    this,
+                authViewModel.compareOtpReg(
                     binding.mobNoEditText.text.toString(),
                     enteredOTP
                 )
             }
-            farmerViewModel.compareOtpResponseReg.observe(this) {
+            authViewModel.compareOtpResponseReg.observe(this) {
                 if (it != null) {
                     val jSONObject = JSONObject(it.toString())
                     if (jSONObject.optInt("status") == 200) {

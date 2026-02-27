@@ -54,6 +54,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.DashboardAction
 import `in`.gov.mahapocra.mahavistaarai.data.model.DashboardItem
 import `in`.gov.mahapocra.mahavistaarai.data.model.PocraRole
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
+import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDashboardScreenBinding
 import `in`.gov.mahapocra.mahavistaarai.pestIdentification.ui.PestIdentificationActivity
 import `in`.gov.mahapocra.mahavistaarai.sma.ui.screens.KTDashboardActivity
@@ -83,6 +84,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivit
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.NotificationActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
@@ -97,6 +99,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.app_util.SideNavMenuHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper.shrinkToCenter
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.subscribeToTopic
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.unSubscribeToTopic
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -115,6 +118,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
     private lateinit var binding: ActivityDashboardScreenBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
     private lateinit var navUserName: TextView
     private var consentMessage: String? = null
     private var districtCode: Int = 0
@@ -160,12 +164,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
         if (NetworkUtils.isInternetAvailable(this)) {
             farmerViewModel.validateFCMToken(this)
-        } else {
-            LocalCustom.createSnackbar(binding.root, "Internet not available!")
-        }
-
-        if (NetworkUtils.isInternetAvailable(this)) {
-            farmerViewModel.fetchWeatherDetails(this, languageToLoad)
         } else {
             LocalCustom.createSnackbar(binding.root, "Internet not available!")
         }
@@ -219,7 +217,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         setupDashboardRecyclerView()
         setVersion()
         if (NetworkUtils.isInternetAvailable(this)) {
-            farmerViewModel.getFarmerSelectedCrop(this, languageToLoad)
+            farmerViewModel.getFarmerSelectedCrop(farmerId, languageToLoad)
         } else {
             LocalCustom.createSnackbar(binding.root, "Internet not available!")
         }
@@ -709,105 +707,114 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             }
         }
 
-        farmerViewModel.getFarmerSelectedCrop.observe(this) { response ->
-            response ?: return@observe
+        farmerViewModel.getFarmerSelectedCrop.observe(this) { state ->
+            when (state) {
+                is UiState.Loading ->{
+                    ProgressHelper.showProgressDialog(this)
+                }
 
-            if (isFinishing || isDestroyed) return@observe
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    val jsonObject = JSONObject(state.data.toString())
+                    val cropResponse = ResponseModel(jsonObject)
 
-            try {
-                val jsonObject = JSONObject(response.toString())
-                val cropResponse = ResponseModel(jsonObject)
+                    if (cropResponse.getStatus()) {
+                        val selectedCrops = cropResponse.getDataArrays()
+                        if (selectedCrops.length() > 0) {
+                            selectedCropList = ArrayList()
 
-                if (cropResponse.getStatus()) {
-                    val selectedCrops = cropResponse.getDataArrays()
-                    if (selectedCrops.length() > 0) {
-                        selectedCropList = ArrayList()
+                            for (j in 0 until selectedCrops.length()) {
+                                val selectedCrop = selectedCrops.getJSONObject(j)
 
-                        for (j in 0 until selectedCrops.length()) {
-                            val selectedCrop = selectedCrops.getJSONObject(j)
+                                savedCropId = selectedCrop.getInt("crop_id")
+                                savedCropName = selectedCrop.getString("name")
+                                savedCropImageUrl = selectedCrop.getString("image")
+                                savedCropSowingDate = selectedCrop.getString("sowing_date")
+                                savedCropWoTRId = selectedCrop.getString("wotr_crop_id")
 
-                            savedCropId = selectedCrop.getInt("crop_id")
-                            savedCropName = selectedCrop.getString("name")
-                            savedCropImageUrl = selectedCrop.getString("image")
-                            savedCropSowingDate = selectedCrop.getString("sowing_date")
-                            savedCropWoTRId = selectedCrop.getString("wotr_crop_id")
+                                AppPreferenceManager(this).saveInt("CROP_ID_SAVED", savedCropId)
+                                AppPreferenceManager(this).saveString(
+                                    "CROP_NAME_SAVED",
+                                    savedCropName
+                                )
+                                AppPreferenceManager(this).saveString(
+                                    "CROP_IMAGE_SAVED",
+                                    savedCropImageUrl
+                                )
+                                AppPreferenceManager(this).saveString(
+                                    "CROP_SOWING_DATE_SAVED",
+                                    savedCropSowingDate
+                                )
+                                AppPreferenceManager(this).saveString(
+                                    "CROP_WOTR_ID_SAVED",
+                                    savedCropWoTRId
+                                )
 
-                            AppPreferenceManager(this).saveInt("CROP_ID_SAVED", savedCropId)
-                            AppPreferenceManager(this).saveString("CROP_NAME_SAVED", savedCropName)
-                            AppPreferenceManager(this).saveString(
-                                "CROP_IMAGE_SAVED",
-                                savedCropImageUrl
+                                binding.appBarMain.dashboardScreen.apply {
+                                    addChangeCropTV.setText(R.string.change_Crop)
+                                    addChangeCropIV.setImageDrawable(
+                                        ContextCompat.getDrawable(
+                                            this@DashboardScreen,
+                                            R.drawable.ic_swap
+                                        )
+                                    )
+                                    savedCropNameCardView.visibility = View.VISIBLE
+                                    savedCropNameTextView.text = savedCropName
+                                    yourCropTv.visibility = View.GONE
+                                    addCropCardView.visibility = View.GONE
+                                }
+
+                                if (!savedCropImageUrl.isNullOrEmpty() && !isFinishing && !isDestroyed) {
+                                    Picasso.get()
+                                        .load(savedCropImageUrl)
+                                        .fit()
+                                        .centerCrop()
+                                        .error(R.drawable.ic_no_data_found) // fallback image
+                                        .into(binding.appBarMain.dashboardScreen.savedCropNameImageView)
+                                }
+
+                                appPreferenceManager.saveInt("saved_crop_id", savedCropId)
+
+                                selectedCropList?.add(
+                                    CropsCategName(
+                                        savedCropId,
+                                        savedCropName,
+                                        savedCropImageUrl,
+                                        savedCropWoTRId
+                                    )
+                                )
+                            }
+
+                            AppSettings.getInstance().setList(
+                                this,
+                                AppConstants.kFarmerCrop,
+                                mutableListOf<Any>(*selectedCropList!!.toTypedArray())
                             )
-                            AppPreferenceManager(this).saveString(
-                                "CROP_SOWING_DATE_SAVED",
-                                savedCropSowingDate
-                            )
-                            AppPreferenceManager(this).saveString(
-                                "CROP_WOTR_ID_SAVED",
-                                savedCropWoTRId
-                            )
 
+                        } else {
                             binding.appBarMain.dashboardScreen.apply {
-                                addChangeCropTV.setText(R.string.change_Crop)
+                                savedCropNameCardView.visibility = View.GONE
+                                yourCropTv.visibility = View.VISIBLE
+                                yourCropTv.setText(R.string.no_crops_added)
+                                addCropCardView.visibility = View.VISIBLE
+                                addChangeCropTV.setText(R.string.add_Crop)
                                 addChangeCropIV.setImageDrawable(
                                     ContextCompat.getDrawable(
                                         this@DashboardScreen,
-                                        R.drawable.ic_swap
+                                        R.drawable.baseline_add_24
                                     )
                                 )
-                                savedCropNameCardView.visibility = View.VISIBLE
-                                savedCropNameTextView.text = savedCropName
-                                yourCropTv.visibility = View.GONE
-                                addCropCardView.visibility = View.GONE
                             }
-
-                            if (!savedCropImageUrl.isNullOrEmpty() && !isFinishing && !isDestroyed) {
-                                Picasso.get()
-                                    .load(savedCropImageUrl)
-                                    .fit()
-                                    .centerCrop()
-                                    .error(R.drawable.ic_no_data_found) // fallback image
-                                    .into(binding.appBarMain.dashboardScreen.savedCropNameImageView)
-                            }
-
-                            appPreferenceManager.saveInt("saved_crop_id", savedCropId)
-
-                            selectedCropList?.add(
-                                CropsCategName(
-                                    savedCropId,
-                                    savedCropName,
-                                    savedCropImageUrl,
-                                    savedCropWoTRId
-                                )
-                            )
                         }
-
-                        AppSettings.getInstance().setList(
-                            this,
-                            AppConstants.kFarmerCrop,
-                            mutableListOf<Any>(*selectedCropList!!.toTypedArray())
-                        )
-
                     } else {
-                        binding.appBarMain.dashboardScreen.apply {
-                            savedCropNameCardView.visibility = View.GONE
-                            yourCropTv.visibility = View.VISIBLE
-                            yourCropTv.setText(R.string.no_crops_added)
-                            addCropCardView.visibility = View.VISIBLE
-                            addChangeCropTV.setText(R.string.add_Crop)
-                            addChangeCropIV.setImageDrawable(
-                                ContextCompat.getDrawable(
-                                    this@DashboardScreen,
-                                    R.drawable.baseline_add_24
-                                )
-                            )
-                        }
+                        UIToastMessage.show(this, cropResponse.getResponse())
                     }
-                } else {
-                    UIToastMessage.show(this, cropResponse.getResponse())
                 }
-            } catch (e: Exception) {
-                Log.e("fetchReceivingData", "Exception: ${e.localizedMessage}")
+
+                is UiState.Error->{
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
@@ -824,7 +831,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
                     AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null)
                     selectedCropList?.clear()
-                    farmerViewModel.getFarmerSelectedCrop(this, languageToLoad)
+                    farmerViewModel.getFarmerSelectedCrop(farmerId, languageToLoad)
                     savedCropName = ""
                     AppPreferenceManager(this).saveInt("CROP_ID_SAVED", 0)
                     AppPreferenceManager(this).clearPreference("CROP_NAME_SAVED")
@@ -840,231 +847,255 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
 
         // Observe weather details
-        farmerViewModel.weatherResponse.observe(this) { response ->
-            response ?: return@observe
+        farmerViewModel.weatherResponse.observe(this) { state ->
 
-            try {
-                binding.appBarMain.dashboardScreen.apply {
-                    progressBar.visibility = View.GONE
-                    temperatureTextView.visibility = View.VISIBLE
-                    progressBar.progress = 0
+            when (state) {
+                is UiState.Loading -> {
+                    binding.appBarMain.dashboardScreen.apply {
+                        progressBar.visibility = View.VISIBLE
+                        temperatureTextView.visibility = View.GONE
+                    }
                 }
 
-                val jsonObject = JSONObject(response.toString())
-                appPreferenceManager.saveString(
-                    AppConstants.WEATHER_RESPONSE,
-                    jsonObject.toString()
-                )
+                is UiState.Success -> {
+                    binding.appBarMain.dashboardScreen.apply {
+                        progressBar.visibility = View.GONE
+                        temperatureTextView.visibility = View.VISIBLE
+                        progressBar.progress = 0
+                    }
 
-                val weatherResponse = ResponseModel(jsonObject)
-                if (weatherResponse.getStatus()) {
-                    binding.appBarMain.dashboardScreen.temperatureTextView.text =
-                        getTemperatureFromJSON(jsonObject)
+                    val jsonObject = JSONObject(state.data.toString())
+                    appPreferenceManager.saveString(
+                        AppConstants.WEATHER_RESPONSE,
+                        jsonObject.toString()
+                    )
+
+                    val weatherResponse = ResponseModel(jsonObject)
+                    if (weatherResponse.getStatus()) {
+                        binding.appBarMain.dashboardScreen.temperatureTextView.text =
+                            getTemperatureFromJSON(jsonObject)
+                    }
                 }
 
-            } catch (e: Exception) {
-                Log.e("weatherResponse", "Exception: ${e.localizedMessage}")
+                is UiState.Error -> {
+                    binding.appBarMain.dashboardScreen.apply {
+                        progressBar.visibility = View.GONE
+                        temperatureTextView.visibility = View.GONE
+                        progressBar.progress = 0
+                    }
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
         // Observe user details
-        farmerViewModel.userDetailsResponse.observe(this) { response ->
-            response ?: return@observe
-
-            try {
-                val jsonObject = JSONObject(response.toString())
-                Log.d(TAG, "observeResponse: $jsonObject")
-                if (jsonObject.optInt("status") == 200) {
-                    val data = jsonObject.optJSONObject("data") ?: return@observe
-
-                    val name = data.optString("Name", "")
-                    binding.appBarMain.dashboardScreen.userFullNameTextView.text = name
-                    val mobNo = data.optString("MobileNo", "")
-                    val emailId = data.optString("EmailId", "")
-                    val ffaReg = data.optInt("FAAPRegistrationID", -1)
-                    val distName = data.optString("DistrictName", "")
-                    val distNameMr = data.optString("DistrictNameMr", "")
-                    val distId = data.optInt("DistrictCode", 0)
-                    val talukaName = data.optString("TalukaName", "")
-                    val talukaNameMr = data.optString("TalukaNameMr", "")
-                    val talukaId = data.optInt("TalukaCode", 0)
-                    val villageId = data.optInt("VillageCode", 0)
-                    val villageName = data.optString("VillageName", "")
-                    val villageNameMr = data.optString("VillageNameMr", "")
-                    val agristack_id = data.optString("farmer_id", "")
-                    val consent = data.optBoolean("consent")
-                    //  pocra_roles array
-                    val pocraRoles = mutableListOf<PocraRole>()
-                    val rolesArray = data.optJSONArray("pocra_roles")
-                    val topicJsonArray = data.optJSONArray("topics")
-                    topicsArray = topicJsonArray
-                    val topicsToSubArray = data.optJSONArray("topics_to_subscribe")
-                    val topicsToDeleteArray = data.optJSONArray("topics_to_delete")
-                    if (topicsToSubArray != null && topicsToSubArray.length() > 0) {
-                        val total = topicsToSubArray.length()
-                        var completed = 0
-
-                        for (i in 0 until total) {
-                            val topic = topicsToSubArray.optString(i)
-
-                            subscribeToTopic(topic) { subscribed ->
-                                if (subscribed) {
-                                    topicJsonArray.put(topic)
-                                    farmerViewModel.saveSubscribedTopic(this, topic)
-                                }
-                                completed++
-                                if (completed == total) {
-                                    Log.d(TAG, "Final topicJsonArray: $topicJsonArray")
-                                    topicsArray = topicJsonArray
-                                    appPreferenceManager.saveString(
-                                        "topic_saved_fcm",
-                                        topicJsonArray.toString()
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    if (topicsToDeleteArray != null && topicsToDeleteArray.length() > 0) {
-                        val total = topicsToDeleteArray.length()
-                        var completed = 0
-
-                        for (i in 0 until total) {
-                            val topic = topicsToDeleteArray.optString(i)
-
-                            unSubscribeToTopic(topic) { subscribed ->
-                                if (subscribed) {
-                                    topicsToDeleteArray.put(topic)
-                                    farmerViewModel.deleteSubscribedTopic(this, topic)
-                                }
-                                completed++
-                                if (completed == total) {
-                                    appPreferenceManager.saveString(
-                                        "topic_saved_fcm",
-                                        topicsToDeleteArray.toString()
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    val userRoleId = -1
-                    var hasKrishiTaiRole = false   // FLAG
-                    if (rolesArray != null && rolesArray.length() > 0) {
-
-                        // roles exist → parse them
-                        for (i in 0 until rolesArray.length()) {
-                            val roleObj = rolesArray.optJSONObject(i) ?: continue
-                            val roleId = roleObj.optInt("role_id", -1)
-                            val username = roleObj.optString("username", "")
-                            val role = roleObj.optString("role", "")
-                            val shortName = roleObj.optString("short_name", "")
-                            pocraRoles.add(PocraRole(roleId, username, role, shortName))
-                            // ✅ CHECK ROLE 45
-                            if (roleId == 45) {
-                                hasKrishiTaiRole = true
-                            }
-                        }
-                        binding.appBarMain.dashboardScreen.krishiTaiLayout.visibility =
-                            if (hasKrishiTaiRole) View.VISIBLE else View.GONE
-
-                        if (hasKrishiTaiRole) {
-                            blinkViewFor5Seconds(binding.appBarMain.dashboardScreen.krishiTaiLayout)
-                            Log.d(
-                                "POCRA_ROLE",
-                                "roles found → SMA button visible & blinking. Count = ${pocraRoles.size}"
-                            )
-                        }
-
-                    } else {
-                        // No roles → hide SMA button
-                        binding.appBarMain.dashboardScreen.krishiTaiLayout.visibility = View.GONE
-                        Log.d("POCRA_ROLE", "roles empty → SMA button hidden")
-                    }
-                    farmerViewModel.getCropSapAdvisory(
-                        this,
-                        villageId
-                    ) //TODO: static village code 537820
-                    districtCode = distId
-                    villageCode = talukaId
-                    binding.appBarMain.dashboardScreen.weatherTalukaTV.text =
-                        if (languageToLoad == "mr") talukaNameMr else talukaName
-                    AppSettings.getInstance().apply {
-                        setValue(this@DashboardScreen, AppConstants.uName, name)
-                        setValue(this@DashboardScreen, AppConstants.uMobileNo, mobNo)
-                        setValue(this@DashboardScreen, AppConstants.uEmail, emailId)
-                        if (ffaReg != -1) setIntValue(
-                            this@DashboardScreen,
-                            AppConstants.fREGISTER_ID,
-                            ffaReg
-                        )
-                        setValue(this@DashboardScreen, AppConstants.uDIST, distName)
-                        setValue(this@DashboardScreen, AppConstants.uDISTMR, distNameMr)
-                        setIntValue(this@DashboardScreen, AppConstants.uDISTId, distId)
-                        setValue(this@DashboardScreen, AppConstants.uTALUKA, talukaName)
-                        setValue(this@DashboardScreen, AppConstants.uTALUKAMR, talukaNameMr)
-                        setIntValue(this@DashboardScreen, AppConstants.uTALUKAID, talukaId)
-                        setValue(this@DashboardScreen, AppConstants.uVILLAGE, villageName)
-                        setValue(this@DashboardScreen, AppConstants.uVILLAGEMR, villageNameMr)
-                        setIntValue(this@DashboardScreen, AppConstants.uVILLAGEID, villageId)
-                        setBooleanValue(this@DashboardScreen, AppConstants.userDataSaved, true)
-                        setValue(this@DashboardScreen, AppConstants.AGRISTACKID, agristack_id)
-
-                        // Save POCRA roles list
-                        val rolesJsonString = convertRolesToJson(pocraRoles)
-                        setValue(this@DashboardScreen, AppConstants.pocraRoles, rolesJsonString)
-                        Log.d("SAVE_ROLES", "Saved rolesJsonString = $rolesJsonString")
-                        setIntValue(this@DashboardScreen, AppConstants.uRole, userRoleId)
-                        Log.d("POCRA_ROLE", "userRoleId ID = $userRoleId")
-                    }
-
-                    binding.appBarMain.dashboardScreen.userFullNameTextView.text = name
-                    val userName = AppSettings.getInstance().getValue(this, AppConstants.uName, "")
-                    val userNumber =
-                        AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, "")
-                    val headerView = binding.navView.getHeaderView(0)
-                    navUserName = headerView.findViewById(R.id.tv_farmerName)
-                    navUserPhone = headerView.findViewById(R.id.tv_famerPhoneNumber)
-
-                    navUserName.text = ApUtil.getCamelCaseStreing(userName).ifEmpty { userName }
-                    navUserPhone.text = userNumber
-                    farmerViewModel.fetchWeatherDetails(this, languageToLoad)
-                    if (agristack_id != "null" && farmerId != null) {
-                        if (!consent) {
-                            showDialogForConsent()
-                        } else {
-                            Log.d(TAG, "observeResponse: consent is given")
-                        }
-                    } else {
-                        val lastDate = appPreferenceManager.getString("AGRISTACK_LAST_DATE")
-
-                        val today = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            LocalDate.now().toString()
-                        } else {
-                            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                            sdf.format(Date())
-                        }
-
-                        if (lastDate != today) {
-                            // New day → reset flag
-                            appPreferenceManager.saveBoolean("AGRISTACK_LOGIN_DIALOG", false)
-
-                            // 🔥 IMPORTANT: update saved date
-                            appPreferenceManager.saveString("AGRISTACK_LAST_DATE", today)
-                        }
-
-                        val showDialog = appPreferenceManager.getBoolean("AGRISTACK_LOGIN_DIALOG")
-                        if (!showDialog) {
-                            showAgristackLinkingDialog()
-                        }
-                    }
-
+        authViewModel.userDetailsState.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
                 }
-            } catch (e: Exception) {
-                Log.e("userDetailsObserver", "Exception: ${e.localizedMessage}")
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    val jsonObject = JSONObject(state.data.toString())
+                    Log.d(TAG, "observeResponse: $jsonObject")
+                    if (jsonObject.optInt("status") == 200) {
+                        val data = jsonObject.optJSONObject("data") ?: return@observe
+
+                        val name = data.optString("Name", "")
+                        binding.appBarMain.dashboardScreen.userFullNameTextView.text = name
+                        val mobNo = data.optString("MobileNo", "")
+                        val emailId = data.optString("EmailId", "")
+                        val ffaReg = data.optInt("FAAPRegistrationID", -1)
+                        val distName = data.optString("DistrictName", "")
+                        val distNameMr = data.optString("DistrictNameMr", "")
+                        val distId = data.optInt("DistrictCode", 0)
+                        val talukaName = data.optString("TalukaName", "")
+                        val talukaNameMr = data.optString("TalukaNameMr", "")
+                        val talukaId = data.optInt("TalukaCode", 0)
+                        val villageId = data.optInt("VillageCode", 0)
+                        val villageName = data.optString("VillageName", "")
+                        val villageNameMr = data.optString("VillageNameMr", "")
+                        val agristack_id = data.optString("farmer_id", "")
+                        val consent = data.optBoolean("consent")
+                        //  pocra_roles array
+                        val pocraRoles = mutableListOf<PocraRole>()
+                        val rolesArray = data.optJSONArray("pocra_roles")
+                        val topicJsonArray = data.optJSONArray("topics")
+                        topicsArray = topicJsonArray
+                        val topicsToSubArray = data.optJSONArray("topics_to_subscribe")
+                        val topicsToDeleteArray = data.optJSONArray("topics_to_delete")
+                        if (topicsToSubArray != null && topicsToSubArray.length() > 0) {
+                            val total = topicsToSubArray.length()
+                            var completed = 0
+
+                            for (i in 0 until total) {
+                                val topic = topicsToSubArray.optString(i)
+
+                                subscribeToTopic(topic) { subscribed ->
+                                    if (subscribed) {
+                                        topicJsonArray.put(topic)
+                                        farmerViewModel.saveSubscribedTopic(this, topic)
+                                    }
+                                    completed++
+                                    if (completed == total) {
+                                        Log.d(TAG, "Final topicJsonArray: $topicJsonArray")
+                                        topicsArray = topicJsonArray
+                                        appPreferenceManager.saveString(
+                                            "topic_saved_fcm",
+                                            topicJsonArray.toString()
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                        if (topicsToDeleteArray != null && topicsToDeleteArray.length() > 0) {
+                            val total = topicsToDeleteArray.length()
+                            var completed = 0
+
+                            for (i in 0 until total) {
+                                val topic = topicsToDeleteArray.optString(i)
+
+                                unSubscribeToTopic(topic) { subscribed ->
+                                    if (subscribed) {
+                                        topicsToDeleteArray.put(topic)
+                                        farmerViewModel.deleteSubscribedTopic(this, topic)
+                                    }
+                                    completed++
+                                    if (completed == total) {
+                                        appPreferenceManager.saveString(
+                                            "topic_saved_fcm",
+                                            topicsToDeleteArray.toString()
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                        val userRoleId = -1
+                        var hasKrishiTaiRole = false   // FLAG
+                        if (rolesArray != null && rolesArray.length() > 0) {
+
+                            // roles exist → parse them
+                            for (i in 0 until rolesArray.length()) {
+                                val roleObj = rolesArray.optJSONObject(i) ?: continue
+                                val roleId = roleObj.optInt("role_id", -1)
+                                val username = roleObj.optString("username", "")
+                                val role = roleObj.optString("role", "")
+                                val shortName = roleObj.optString("short_name", "")
+                                pocraRoles.add(PocraRole(roleId, username, role, shortName))
+                                // ✅ CHECK ROLE 45
+                                if (roleId == 45) {
+                                    hasKrishiTaiRole = true
+                                }
+                            }
+                            binding.appBarMain.dashboardScreen.krishiTaiLayout.visibility =
+                                if (hasKrishiTaiRole) View.VISIBLE else View.GONE
+
+                            if (hasKrishiTaiRole) {
+                                blinkViewFor5Seconds(binding.appBarMain.dashboardScreen.krishiTaiLayout)
+                                Log.d(
+                                    "POCRA_ROLE",
+                                    "roles found → SMA button visible & blinking. Count = ${pocraRoles.size}"
+                                )
+                            }
+
+                        } else {
+                            // No roles → hide SMA button
+                            binding.appBarMain.dashboardScreen.krishiTaiLayout.visibility =
+                                View.GONE
+                            Log.d("POCRA_ROLE", "roles empty → SMA button hidden")
+                        }
+                        farmerViewModel.getCropSapAdvisory(
+                            this,
+                            villageId
+                        ) //TODO: static village code 537820
+                        districtCode = distId
+                        villageCode = talukaId
+                        binding.appBarMain.dashboardScreen.weatherTalukaTV.text =
+                            if (languageToLoad == "mr") talukaNameMr else talukaName
+                        AppSettings.getInstance().apply {
+                            setValue(this@DashboardScreen, AppConstants.uName, name)
+                            setValue(this@DashboardScreen, AppConstants.uMobileNo, mobNo)
+                            setValue(this@DashboardScreen, AppConstants.uEmail, emailId)
+                            if (ffaReg != -1) setIntValue(
+                                this@DashboardScreen,
+                                AppConstants.fREGISTER_ID,
+                                ffaReg
+                            )
+                            setValue(this@DashboardScreen, AppConstants.uDIST, distName)
+                            setValue(this@DashboardScreen, AppConstants.uDISTMR, distNameMr)
+                            setIntValue(this@DashboardScreen, AppConstants.uDISTId, distId)
+                            setValue(this@DashboardScreen, AppConstants.uTALUKA, talukaName)
+                            setValue(this@DashboardScreen, AppConstants.uTALUKAMR, talukaNameMr)
+                            setIntValue(this@DashboardScreen, AppConstants.uTALUKAID, talukaId)
+                            setValue(this@DashboardScreen, AppConstants.uVILLAGE, villageName)
+                            setValue(this@DashboardScreen, AppConstants.uVILLAGEMR, villageNameMr)
+                            setIntValue(this@DashboardScreen, AppConstants.uVILLAGEID, villageId)
+                            setBooleanValue(this@DashboardScreen, AppConstants.userDataSaved, true)
+                            setValue(this@DashboardScreen, AppConstants.AGRISTACKID, agristack_id)
+
+                            // Save POCRA roles list
+                            val rolesJsonString = convertRolesToJson(pocraRoles)
+                            setValue(this@DashboardScreen, AppConstants.pocraRoles, rolesJsonString)
+                            Log.d("SAVE_ROLES", "Saved rolesJsonString = $rolesJsonString")
+                            setIntValue(this@DashboardScreen, AppConstants.uRole, userRoleId)
+                            Log.d("POCRA_ROLE", "userRoleId ID = $userRoleId")
+                        }
+
+                        binding.appBarMain.dashboardScreen.userFullNameTextView.text = name
+                        val userName =
+                            AppSettings.getInstance().getValue(this, AppConstants.uName, "")
+                        val userNumber =
+                            AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, "")
+                        val headerView = binding.navView.getHeaderView(0)
+                        navUserName = headerView.findViewById(R.id.tv_farmerName)
+                        navUserPhone = headerView.findViewById(R.id.tv_famerPhoneNumber)
+
+                        navUserName.text = ApUtil.getCamelCaseStreing(userName).ifEmpty { userName }
+                        navUserPhone.text = userNumber
+                        farmerViewModel.fetchWeatherDetails(talukaId, languageToLoad)
+                        if (agristack_id != "null" && farmerId != null) {
+                            if (!consent) {
+                                showDialogForConsent()
+                            } else {
+                                Log.d(TAG, "observeResponse: consent is given")
+                            }
+                        } else {
+                            val lastDate = appPreferenceManager.getString("AGRISTACK_LAST_DATE")
+
+                            val today = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                LocalDate.now().toString()
+                            } else {
+                                val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                                sdf.format(Date())
+                            }
+
+                            if (lastDate != today) {
+                                // New day → reset flag
+                                appPreferenceManager.saveBoolean("AGRISTACK_LOGIN_DIALOG", false)
+
+                                // 🔥 IMPORTANT: update saved date
+                                appPreferenceManager.saveString("AGRISTACK_LAST_DATE", today)
+                            }
+
+                            val showDialog =
+                                appPreferenceManager.getBoolean("AGRISTACK_LOGIN_DIALOG")
+                            if (!showDialog) {
+                                showAgristackLinkingDialog()
+                            }
+                        }
+                    }
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
-
-        farmerViewModel.updateFCMTokenResponse.observe(this) {
+        farmerViewModel.updateFCMTokenResponse.observe(this)
+        {
             Log.d(TAG, "logoutFromApp: $it")
             if (it != null) {
                 AppPreferenceManager(this).saveBoolean("FCM_VALIDATED", true)
@@ -1102,7 +1133,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             }
         }
 
-        farmerViewModel.consentResponse.observe(this) { response ->
+        farmerViewModel.consentResponse.observe(this)
+        { response ->
             if (response != null) {
                 val jsonObject = JSONObject(response.toString())
                 val status = jsonObject.optInt("status")
@@ -1283,7 +1315,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
         if (farmerId > 0) {
             if (NetworkUtils.isInternetAvailable(this)) {
-                farmerViewModel.fetchUserInformation(this, farmerId)
+                authViewModel.fetchUserInformation(farmerId)
             } else {
                 LocalCustom.createSnackbar(binding.root, "Internet not available!")
             }
@@ -1334,7 +1366,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             startActivity(intent)
 
             dialog.dismiss()
-            farmerViewModel.getFarmerSelectedCrop(this, languageToLoad)
+            farmerViewModel.getFarmerSelectedCrop(farmerId, languageToLoad)
         }
 
         tvMarathi.setOnClickListener {
@@ -1346,7 +1378,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             startActivity(intent)
 
             dialog.dismiss()
-            farmerViewModel.getFarmerSelectedCrop(this, languageToLoad)
+            farmerViewModel.getFarmerSelectedCrop(farmerId, languageToLoad)
         }
 
         dialog.show()
@@ -1479,7 +1511,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     }
                 }
             }
-        }else{
+        } else {
             completeLogout()
         }
     }

@@ -10,21 +10,23 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
+import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import retrofit2.Retrofit
 import java.io.IOException
 import java.net.SocketException
 import java.net.SocketTimeoutException
-import java.sql.Timestamp
 
-class LoginViewModel : ViewModel() {
+class AuthViewModel : ViewModel() {
 
     private val _sendOtpToMobileResponse = MutableLiveData<JsonObject>()
     val sendOtpToMobileResponse: LiveData<JsonObject> = _sendOtpToMobileResponse
@@ -47,6 +49,18 @@ class LoginViewModel : ViewModel() {
 
     private val _getRegisteredDeviceCountByDeviceIdResponse = MutableLiveData<JsonObject>()
     val getRegisteredDeviceCountByDeviceIdResponse: LiveData<JsonObject> = _getRegisteredDeviceCountByDeviceIdResponse
+
+    private val _userDetailsState = MutableLiveData<UiState<JsonObject>>()
+    val userDetailsState: LiveData<UiState<JsonObject>> = _userDetailsState
+
+    private val _compareOtpResponse = MutableLiveData<JsonObject>()
+    val compareOtpResponse: LiveData<JsonObject> = _compareOtpResponse
+
+    private val _compareOtpResponseReg = MutableLiveData<JsonObject>()
+    val compareOtpResponseReg: LiveData<JsonObject> = _compareOtpResponseReg
+
+    private val _agristackLoginResponse = MutableLiveData<JsonObject>()
+    val agristackLoginResponse: LiveData<JsonObject> = _agristackLoginResponse
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -248,6 +262,116 @@ class LoginViewModel : ViewModel() {
                 val response = api.getRegisteredDeviceCountByDeviceId(deviceId)
                 ProgressHelper.disableProgressDialog()
                 _getRegisteredDeviceCountByDeviceIdResponse.value = response
+            } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun fetchUserInformation(farmerRegistrationID: Int) {
+        viewModelScope.launch {
+            try {
+                val jsonObject = JSONObject().apply {
+                    put("SecurityKey", ApiConstants.SSO_KEY)
+                }
+
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val apiRequest = retrofit.create(ApiService::class.java)
+
+                val response = apiRequest.getGetRegistration(farmerRegistrationID, requestBody)
+
+                // Handle success
+                _userDetailsState.value = UiState.Success(response)
+
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _userDetailsState.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun compareOtp(timestamp: Long, mobile: String, enteredOTP: String) {
+        viewModelScope.launch {
+            val jsonObject = JSONObject()
+            try {
+                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
+                jsonObject.put("otp", enteredOTP)
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response =
+                    apiRequest.compareOtp(mobile.trim { it <= ' ' }, timestamp, requestBody)
+                _compareOtpResponse.value = response
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun compareOtpReg(mobile: String, enteredOTP: String) {
+        viewModelScope.launch {
+            val jsonObject = JSONObject()
+            try {
+                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
+                jsonObject.put("otp", enteredOTP)
+
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.compareOtpReg(mobile.trim { it <= ' ' }, requestBody)
+                _compareOtpResponseReg.value = response
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun farmerIdBasedLogin(context: Context, agristackID: String) {
+        viewModelScope.launch {
+            ProgressHelper.showProgressDialog(context)
+            try {
+                val jsonObject = JSONObject().apply {
+                    put("SecurityKey", APIKeys.SSO_PROD)
+                }
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val apiRequest = retrofit.create(ApiService::class.java)
+
+                val response = apiRequest.farmerLoginBasedOnID(agristackID, requestBody)
+                ProgressHelper.disableProgressDialog()
+                // You can handle the result however you want, for example:
+                _agristackLoginResponse.value = response
             } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {

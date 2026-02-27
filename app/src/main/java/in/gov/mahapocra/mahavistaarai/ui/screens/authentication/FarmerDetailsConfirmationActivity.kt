@@ -13,7 +13,7 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityFarmerDetailsConfirmationBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
-import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LoginViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
@@ -23,7 +23,7 @@ import org.json.JSONObject
 class FarmerDetailsConfirmationActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFarmerDetailsConfirmationBinding
-    private val loginViewModel: LoginViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
     private lateinit var appPreferenceManager: AppPreferenceManager
     var languageToLoad = "mr"
     private var token = ""
@@ -67,7 +67,7 @@ class FarmerDetailsConfirmationActivity : AppCompatActivity() {
         binding.villageET.setText(villageName)
 
         binding.updateProfileDataButton.setOnClickListener {
-            loginViewModel.updateFarmerDetailsById(
+            authViewModel.updateFarmerDetailsById(
                 this,
                 farmerId,
                 userName,
@@ -93,7 +93,7 @@ class FarmerDetailsConfirmationActivity : AppCompatActivity() {
     }
 
     private fun observeResponse() {
-        loginViewModel.updateFarmerDetailsByIdResponse.observe(this) { response ->
+        authViewModel.updateFarmerDetailsByIdResponse.observe(this) { response ->
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 val status = jSONObject.optInt("status")

@@ -26,7 +26,7 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityAuthenticateFarmerIdBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
-import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LoginViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
@@ -36,7 +36,7 @@ import org.json.JSONObject
 class AuthenticateFarmerIdActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAuthenticateFarmerIdBinding
-    private val loginViewModel: LoginViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
     var languageToLoad = "mr"
     private var farmerId = ""
     private lateinit var dialog: Dialog
@@ -95,7 +95,7 @@ class AuthenticateFarmerIdActivity : AppCompatActivity() {
                 binding.farmerIdEditText.error = "Please enter valid Farmer ID"
                 return@setOnClickListener
             }
-            loginViewModel.sendOtpToFarmerId(this, farmerId)
+            authViewModel.sendOtpToFarmerId(this, farmerId)
         }
 
         binding.backPressIcon.setOnClickListener {
@@ -113,7 +113,7 @@ class AuthenticateFarmerIdActivity : AppCompatActivity() {
 
         var userDataJson = JSONObject()
 
-        loginViewModel.sendOtpToFarmerIdResponse.observe(this) { response ->
+        authViewModel.sendOtpToFarmerIdResponse.observe(this) { response ->
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 val status = jSONObject.optInt("status")
@@ -128,7 +128,7 @@ class AuthenticateFarmerIdActivity : AppCompatActivity() {
             }
         }
 
-        loginViewModel.compareOtpToFarmerIdResponse.observe(this) { response ->
+        authViewModel.compareOtpToFarmerIdResponse.observe(this) { response ->
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 Log.d(TAG, "observe compareOtpToFarmerIdResponse: $jSONObject")
@@ -183,13 +183,13 @@ class AuthenticateFarmerIdActivity : AppCompatActivity() {
                 Toast.makeText(this, "Enter valid OTP", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             } else {
-                loginViewModel.compareOtpToFarmerId(this, farmerId, enteredOTP)
+                authViewModel.compareOtpToFarmerId(this, farmerId, enteredOTP)
             }
         }
 
         resendOTP.setOnClickListener {
             dialog.dismiss()
-            loginViewModel.sendOtpToFarmerId(this, farmerId)
+            authViewModel.sendOtpToFarmerId(this, farmerId)
         }
         dialog.show()
     }

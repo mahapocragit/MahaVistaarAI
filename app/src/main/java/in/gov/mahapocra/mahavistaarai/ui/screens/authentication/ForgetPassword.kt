@@ -18,36 +18,23 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.google.gson.JsonObject
-import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
-import `in`.co.appinventor.services_api.debug.DebugLog
-import `in`.co.appinventor.services_api.listener.ApiCallbackCode
-import `in`.co.appinventor.services_api.listener.ApiJSONObjCallback
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
-import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
-import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityForgetPasswordTempBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
-import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LoginViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.OtpRateLimiter.provideValidEncryptedString
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
-import org.json.JSONException
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Retrofit
 
 class ForgetPassword : AppCompatActivity() {
 
     private lateinit var binding: ActivityForgetPasswordTempBinding
-    private val farmerViewModel: FarmerViewModel by viewModels()
-    private val loginViewModel: LoginViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
     private lateinit var mob: String
     private var timestamp: Long = 0
     private var userPass: String = ""
@@ -117,7 +104,7 @@ class ForgetPassword : AppCompatActivity() {
 
     private fun observeResponse() {
 
-        loginViewModel.sendOtpToMobileResponse.observe(this) { response ->
+        authViewModel.sendOtpToMobileResponse.observe(this) { response ->
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 val status = jSONObject.optInt("status")
@@ -132,13 +119,13 @@ class ForgetPassword : AppCompatActivity() {
             }
         }
 
-        loginViewModel.error.observe(this) {
+        authViewModel.error.observe(this) {
             if (it != null) {
                 Toast.makeText(this, it, Toast.LENGTH_LONG).show()
             }
         }
 
-        farmerViewModel.compareOtpResponse.observe(this) {
+        authViewModel.compareOtpResponse.observe(this) {
             if (it != null) {
                 val calculatedResponse = provideValidEncryptedString(timestamp)
                 val jSONObject = JSONObject(it.toString())
@@ -156,7 +143,7 @@ class ForgetPassword : AppCompatActivity() {
             }
         }
 
-        farmerViewModel.error.observe(this) {
+        authViewModel.error.observe(this) {
             Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
         }
     }
@@ -182,7 +169,7 @@ class ForgetPassword : AppCompatActivity() {
             binding.mobileEditText.error = resources.getString(R.string.login_mob_valid_err)
             binding.mobileEditText.requestFocus()
         } else {
-            loginViewModel.sendOtpToMobile(this, mob.trim { it <= ' ' })
+            authViewModel.sendOtpToMobile(this, mob.trim { it <= ' ' })
         }
     }
 
@@ -219,8 +206,7 @@ class ForgetPassword : AppCompatActivity() {
                 Toast.makeText(this, "Enter valid OTP", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             } else {
-                farmerViewModel.compareOtp(
-                    this,
+                authViewModel.compareOtp(
                     timestamp,
                     binding.mobileEditText.text.toString(),
                     enteredOTP
