@@ -31,6 +31,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
+import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityProfileScreenBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
@@ -48,6 +49,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SessionManager
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.subscribeToTopic
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.unSubscribeToTopic
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -71,6 +73,7 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
     private var villageID: Int = 0
     private var agristackId: String = ""
     private var fAAPRegistrationID: String = ""
+    private var farmerId = 0
     private var sessionManager: SessionManager? = null
 
     private var districtJSONArray: JSONArray? = null
@@ -100,6 +103,7 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
         binding = ActivityProfileScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
+        farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
         versionName = LocalCustom.getVersionName(this)
         FirebaseHelper(this).getFCMToken { token = it }
         sessionManager = SessionManager(this)
@@ -129,15 +133,15 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
     }
 
     private fun observeResponse() {
-        
-        farmerViewModel.deleteSubscribedTopicResponse.observe(this){
+
+        farmerViewModel.deleteSubscribedTopicResponse.observe(this) {
             userValidationAndUpdateProfile()
         }
-        farmerViewModel.error.observe(this){
+        farmerViewModel.error.observe(this) {
             Log.d(TAG, "observeResponse: $it")
         }
 
-        
+
         farmerViewModel.talukaList.observe(this) {
             if (it != null) {
                 val jSONObject = JSONObject(it.toString())
@@ -164,53 +168,77 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
                 }
             }
         }
-        farmerViewModel.updateFCMTokenResponse.observe(this) {
-            Log.d(TAG, "logoutFromApp: $it")
-            if (it != null) {
-                val jsonObject = JSONObject(it.toString())
-                val response = jsonObject.optString("response")
-                if (response == "FCM Cleared") {
-                    AppSettings.getInstance().setValue(this, AppConstants.uName, AppConstants.uName)
-                    AppSettings.getInstance()
-                        .setValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
-                    AppSettings.getInstance()
-                        .setValue(this, AppConstants.uEmail, AppConstants.uEmail)
-                    AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, 0)
-                    AppSettings.getInstance().setValue(this, AppConstants.uDIST, AppConstants.uDIST)
-                    AppSettings.getInstance().setIntValue(this, AppConstants.uDISTId, 0)
-                    AppSettings.getInstance()
-                        .setValue(this, AppConstants.uTALUKA, AppConstants.uTALUKA)
-                    AppSettings.getInstance().setIntValue(this, AppConstants.uTALUKAID, 0)
-                    AppSettings.getInstance()
-                        .setValue(this, AppConstants.uVILLAGE, AppConstants.uVILLAGE)
-                    AppSettings.getInstance().setIntValue(this, AppConstants.uVILLAGEID, 0)
-                    AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null)
-                    AppUtility.getInstance().clearAppSharedPrefData(this, AppConstants.kSHARED_PREF)
-                    AppSettings.getInstance()
-                        .setBooleanValue(this, AppConstants.userDataSaved, false)
-                    val intent = Intent(this@ProfileScreen, SplashScreenActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                    finish()
-                } else {
-                    Log.d(TAG, "logoutFromApp: $response")
+        farmerViewModel.updateFCMTokenResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
+                }
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    val jsonObject = JSONObject(state.data.toString())
+                    val response = jsonObject.optString("response")
+                    if (response == "FCM Cleared") {
+                        AppSettings.getInstance()
+                            .setValue(this, AppConstants.uName, AppConstants.uName)
+                        AppSettings.getInstance()
+                            .setValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
+                        AppSettings.getInstance()
+                            .setValue(this, AppConstants.uEmail, AppConstants.uEmail)
+                        AppSettings.getInstance().setIntValue(this, AppConstants.fREGISTER_ID, 0)
+                        AppSettings.getInstance()
+                            .setValue(this, AppConstants.uDIST, AppConstants.uDIST)
+                        AppSettings.getInstance().setIntValue(this, AppConstants.uDISTId, 0)
+                        AppSettings.getInstance()
+                            .setValue(this, AppConstants.uTALUKA, AppConstants.uTALUKA)
+                        AppSettings.getInstance().setIntValue(this, AppConstants.uTALUKAID, 0)
+                        AppSettings.getInstance()
+                            .setValue(this, AppConstants.uVILLAGE, AppConstants.uVILLAGE)
+                        AppSettings.getInstance().setIntValue(this, AppConstants.uVILLAGEID, 0)
+                        AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null)
+                        AppUtility.getInstance()
+                            .clearAppSharedPrefData(this, AppConstants.kSHARED_PREF)
+                        AppSettings.getInstance()
+                            .setBooleanValue(this, AppConstants.userDataSaved, false)
+                        val intent = Intent(this@ProfileScreen, SplashScreenActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                        finish()
+                    }
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
-        farmerViewModel.consentResponse.observe(this) { response ->
-            if (response != null) {
-                val jsonObject = JSONObject(response.toString())
-                val status = jsonObject.optInt("status")
-                if (status == 200) {
-                    Toast.makeText(this, consentMessage ?: "Consent Submitted", Toast.LENGTH_SHORT)
-                        .show()
-                } else {
-                    val responseText = jsonObject.optString("response")
-                    Toast.makeText(this, responseText, Toast.LENGTH_SHORT).show()
+        farmerViewModel.consentResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
+                }
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    val jsonObject = JSONObject(state.data.toString())
+                    val status = jsonObject.optInt("status")
+                    if (status == 200) {
+                        Toast.makeText(this, consentMessage ?: "Consent Submitted", Toast.LENGTH_SHORT)
+                            .show()
+                    } else {
+                        val responseText = jsonObject.optString("response")
+                        Toast.makeText(this, responseText, Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -387,7 +415,7 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
                                     //delete
                                     if (unsubscribed) {
                                         farmerViewModel.deleteSubscribedTopic(this, topic)
-                                    }else{
+                                    } else {
                                         userValidationAndUpdateProfile()
                                     }
                                 }
@@ -551,11 +579,11 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
         dialog.setCancelable(false)
         dialog.setContentView(R.layout.dialog_activity_verification)
         val otpFields = listOf(
-            dialog.findViewById<EditText>(R.id.otp1),
-            dialog.findViewById<EditText>(R.id.otp2),
-            dialog.findViewById<EditText>(R.id.otp3),
-            dialog.findViewById<EditText>(R.id.otp4),
-            dialog.findViewById<EditText>(R.id.otp5),
+            dialog.findViewById(R.id.otp1),
+            dialog.findViewById(R.id.otp2),
+            dialog.findViewById(R.id.otp3),
+            dialog.findViewById(R.id.otp4),
+            dialog.findViewById(R.id.otp5),
             dialog.findViewById<EditText>(R.id.otp6)
         )
 
@@ -768,7 +796,7 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
                 .setMessage(R.string.withdraw_consent_desc_withdraw)
                 .setPositiveButton(R.string.confirm) { dialog, _ ->
                     consentMessage = ContextCompat.getString(this, R.string.consent_withdrawn)
-                    farmerViewModel.updateConsent(this, false)
+                    farmerViewModel.updateConsent(farmerId, false)
                     logoutFromApp()
                     dialog.dismiss()
                 }.setNegativeButton(R.string.cancel) { dialog, _ ->
@@ -778,8 +806,9 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
     }
 
     private fun logoutFromApp() {
+        val farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
         if (NetworkUtils.isInternetAvailable(this)) {
-            farmerViewModel.updateFCMToken(this, "NA")
+            farmerViewModel.updateFCMToken(farmerId, "NA")
         } else {
             LocalCustom.createSnackbar(binding.root, "Internet not available!")
         }

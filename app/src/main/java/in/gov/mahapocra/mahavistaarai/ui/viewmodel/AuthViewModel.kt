@@ -278,6 +278,7 @@ class AuthViewModel : ViewModel() {
 
     fun fetchUserInformation(farmerRegistrationID: Int) {
         viewModelScope.launch {
+            _userDetailsState.value = UiState.Loading
             try {
                 val jsonObject = JSONObject().apply {
                     put("SecurityKey", ApiConstants.SSO_KEY)
