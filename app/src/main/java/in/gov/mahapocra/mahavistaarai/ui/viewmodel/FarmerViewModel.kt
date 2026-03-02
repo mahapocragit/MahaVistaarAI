@@ -42,8 +42,8 @@ class FarmerViewModel : ViewModel() {
     private val _deleteFarmerSelectedCrop = MutableLiveData<UiState<JsonObject>>()
     val deleteFarmerSelectedCrop: LiveData<UiState<JsonObject>> = _deleteFarmerSelectedCrop
 
-    private val _cropCategoryResponse = MutableLiveData<JsonObject>()
-    val cropCategoryResponse: LiveData<JsonObject> = _cropCategoryResponse
+    private val _cropCategoryResponse = MutableLiveData<UiState<JsonObject>>()
+    val cropCategoryResponse: LiveData<UiState<JsonObject>> = _cropCategoryResponse
 
     private val _talukaList = MutableLiveData<JsonObject>()
     val talukaList: LiveData<JsonObject> = _talukaList
@@ -67,8 +67,9 @@ class FarmerViewModel : ViewModel() {
     private val _shetishalaVideosResponse = MutableLiveData<JsonObject>()
     val shetishalaVideosResponse: LiveData<JsonObject> = _shetishalaVideosResponse
 
-    private val _getCropStagesAndAdvisoryResponse = MutableLiveData<JsonObject>()
-    val getCropStagesAndAdvisoryResponse: LiveData<JsonObject> = _getCropStagesAndAdvisoryResponse
+    private val _getCropStagesAndAdvisoryResponse = MutableLiveData<UiState<JsonObject>>()
+    val getCropStagesAndAdvisoryResponse: LiveData<UiState<JsonObject>> =
+        _getCropStagesAndAdvisoryResponse
 
     private val _getClimateResilientListResponse = MutableLiveData<JsonObject>()
     val getClimateResilientListResponse: LiveData<JsonObject> = _getClimateResilientListResponse
@@ -91,10 +92,10 @@ class FarmerViewModel : ViewModel() {
     private val _updateNotificationStatusResponse = MutableLiveData<JsonObject>()
     val updateNotificationStatusResponse: LiveData<JsonObject> = _updateNotificationStatusResponse
 
-    private val _addNotificationFeedbackResponse = MutableLiveData<JsonObject>()
-    val addNotificationFeedbackResponse: LiveData<JsonObject> = _addNotificationFeedbackResponse
+    private val _addNotificationFeedbackResponse = MutableLiveData<UiState<JsonObject>>()
+    val addNotificationFeedbackResponse: LiveData<UiState<JsonObject>> = _addNotificationFeedbackResponse
 
-    private val _updateFCMTokenResponse = MutableLiveData< UiState<JsonObject>>()
+    private val _updateFCMTokenResponse = MutableLiveData<UiState<JsonObject>>()
     val updateFCMTokenResponse: LiveData<UiState<JsonObject>> = _updateFCMTokenResponse
 
     private val _checkFCMTokenResponse = MutableLiveData<UiState<JsonObject>>()
@@ -219,9 +220,9 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun getCropCategoriesAndCropDetails(context: Context, languageToLoad: String) {
+    fun getCropCategoriesAndCropDetails(languageToLoad: String) {
         viewModelScope.launch {
-            ProgressHelper.showProgressDialog(context)
+            _cropCategoryResponse.value = UiState.Loading
             try {
                 val jsonObject = JSONObject().apply {
                     put("api_key", APIKeys.SSO_PROD)
@@ -234,19 +235,18 @@ class FarmerViewModel : ViewModel() {
 
                 // Suspend call
                 val response = apiRequest.getCropCategoryWise(requestBody)
-                ProgressHelper.disableProgressDialog()
                 // Handle the response (success case)
-                _cropCategoryResponse.value = response // ← use appropriate LiveData
+                _cropCategoryResponse.value =
+                    UiState.Success(response) // ← use appropriate LiveData
 
             } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
+                _cropCategoryResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -442,14 +442,13 @@ class FarmerViewModel : ViewModel() {
     }
 
     fun getCropStagesAndAdvisory(
-        context: Context,
+        farmerId: Int,
         cropId: Int?,
         sowingDate: String,
         language: String
     ) {
-        val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
         viewModelScope.launch {
-            ProgressHelper.showProgressDialog(context)
+            _getCropStagesAndAdvisoryResponse.value = UiState.Loading
             try {
                 val jsonObject = JSONObject()
                 jsonObject.put("crop_id", cropId)
@@ -462,17 +461,15 @@ class FarmerViewModel : ViewModel() {
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getCropStagesAndAdvisory(requestBody)
-                ProgressHelper.disableProgressDialog()
-                _getCropStagesAndAdvisoryResponse.value = response
+                _getCropStagesAndAdvisoryResponse.value = UiState.Success(response)
             } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
+                _getCropStagesAndAdvisoryResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -585,7 +582,7 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun getNotificationList(farmerId:Int) {
+    fun getNotificationList(farmerId: Int) {
         viewModelScope.launch {
             try {
                 _getNotificationResponse.value = UiState.Loading
@@ -700,38 +697,34 @@ class FarmerViewModel : ViewModel() {
     }
 
     fun addNotificationFeedback(
-        context: Context,
+        userId: Int,
         customId: String,
         type: String,
         feedbackArray: JSONArray
     ) {
-        ProgressHelper.showProgressDialog(context)
-        val userId =
-            AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
         viewModelScope.launch {
-            val jsonObject = JSONObject().apply {
-                put("user_id", userId)
-                put("notification_id", customId)
-                put("type", type)
-                put("feedback", feedbackArray)
-            }
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+            _addNotificationFeedbackResponse.value = UiState.Loading
             try {
+                val jsonObject = JSONObject().apply {
+                    put("user_id", userId)
+                    put("notification_id", customId)
+                    put("type", type)
+                    put("feedback", feedbackArray)
+                }
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit: Retrofit =
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.addNotificationFeedback(requestBody)
-                ProgressHelper.disableProgressDialog()
-                _addNotificationFeedbackResponse.value = response
+                _addNotificationFeedbackResponse.value = UiState.Success(response)
             } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
+                _addNotificationFeedbackResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -764,7 +757,7 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun validateFCMToken(farmerId:Int) {
+    fun validateFCMToken(farmerId: Int) {
         viewModelScope.launch {
             _checkFCMTokenResponse.value = UiState.Loading
             try {
@@ -781,7 +774,7 @@ class FarmerViewModel : ViewModel() {
                     else -> e.localizedMessage ?: "Unknown error"
                 }
                 _checkFCMTokenResponse.value = UiState.Error(message)
-                    FirebaseCrashlytics.getInstance().recordException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -842,7 +835,7 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun updateConsent(farmerId:Int, consentValue: Boolean) {
+    fun updateConsent(farmerId: Int, consentValue: Boolean) {
         viewModelScope.launch {
             try {
                 _consentResponse.value = UiState.Loading

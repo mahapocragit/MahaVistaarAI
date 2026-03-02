@@ -35,6 +35,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.Shetisha
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
@@ -51,8 +52,9 @@ class DetailedNotificationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailedNotificationBinding
     private lateinit var languageToLoad: String
     private val farmerViewModel: FarmerViewModel by viewModels()
-    val flatCropsJsonArray = JSONArray()
-    var cropId: Int? = 0
+    private val flatCropsJsonArray = JSONArray()
+    private var cropId: Int? = 0
+    private var farmerId: Int = 0
     private var cropName: String? = null
     private var wotrCropId: String? = null
     private var mUrl: String? = null
@@ -70,7 +72,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
         binding = ActivityDetailedNotificationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
-
+        farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
         val notificationObject = intent.getStringExtra("notificationObject")
         Log.d(TAG, "onCreate: $notificationObject")
         if (notificationObject != null) {
@@ -121,20 +123,37 @@ class DetailedNotificationActivity : AppCompatActivity() {
                                 // ✅ FINAL OUTPUT JSON
                                 questionsJson?.let {
                                     farmerViewModel.addNotificationFeedback(
-                                        this,
+                                        farmerId,
                                         id.toString(),
                                         type,
                                         questionsJson
                                     )
                                 }
 
-                                farmerViewModel.addNotificationFeedbackResponse.observe(this) { response ->
-                                    if (response != null) {
-                                        val jsonObject = JSONObject(response.toString())
-                                        val responseMessage = jsonObject.optString("response")
-                                        Toast.makeText(this, responseMessage, Toast.LENGTH_SHORT)
-                                            .show()
-                                        farmerViewModel.getNotificationDetails(this, id, type)
+                                farmerViewModel.addNotificationFeedbackResponse.observe(this) { state ->
+                                    when (state) {
+                                        is UiState.Loading -> {
+                                            ProgressHelper.showProgressDialog(this)
+                                        }
+
+                                        is UiState.Success -> {
+                                            ProgressHelper.disableProgressDialog()
+                                            val jsonObject = JSONObject(state.data.toString())
+                                            val responseMessage = jsonObject.optString("response")
+                                            Toast.makeText(
+                                                this,
+                                                responseMessage,
+                                                Toast.LENGTH_SHORT
+                                            )
+                                                .show()
+                                            farmerViewModel.getNotificationDetails(this, id, type)
+                                        }
+
+                                        is UiState.Error -> {
+                                            ProgressHelper.disableProgressDialog()
+                                            Toast.makeText(this, state.message, Toast.LENGTH_SHORT)
+                                                .show()
+                                        }
                                     }
                                 }
                                 dialog.dismiss()
@@ -193,15 +212,38 @@ class DetailedNotificationActivity : AppCompatActivity() {
                                 // ✅ FINAL OUTPUT JSON
                                 questionsJson?.let {
                                     farmerViewModel.addNotificationFeedback(
-                                        this,
+                                        farmerId,
                                         id.toString(),
                                         type.toString(),
                                         questionsJson
                                     )
                                 }
 
-                                farmerViewModel.addNotificationFeedbackResponse.observe(this) {
-                                    Log.d(TAG, "onCreate: $it")
+                                farmerViewModel.addNotificationFeedbackResponse.observe(this) {state->
+                                    when (state) {
+                                        is UiState.Loading -> {
+                                            ProgressHelper.showProgressDialog(this)
+                                        }
+
+                                        is UiState.Success -> {
+                                            ProgressHelper.disableProgressDialog()
+                                            val jsonObject = JSONObject(state.data.toString())
+                                            val responseMessage = jsonObject.optString("response")
+                                            Toast.makeText(
+                                                this,
+                                                responseMessage,
+                                                Toast.LENGTH_SHORT
+                                            )
+                                                .show()
+                                            farmerViewModel.getNotificationDetails(this, id, type)
+                                        }
+
+                                        is UiState.Error -> {
+                                            ProgressHelper.disableProgressDialog()
+                                            Toast.makeText(this, state.message, Toast.LENGTH_SHORT)
+                                                .show()
+                                        }
+                                    }
                                     farmerViewModel.getNotificationDetails(this, id, type)
                                 }
                                 Log.d("FEEDBACK_JSON", questionsJson.toString())
@@ -248,11 +290,15 @@ class DetailedNotificationActivity : AppCompatActivity() {
     }
 
     private fun fetchCropList(flatCropId: Int?) {
-        farmerViewModel.getCropCategoriesAndCropDetails(this, languageToLoad)
-        farmerViewModel.cropCategoryResponse.observe(this) { response ->
-            if (response != null) {
-                try {
-                    val jsonObject = JSONObject(response.toString())
+        farmerViewModel.cropCategoryResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
+                }
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    val jsonObject = JSONObject(state.data.toString())
                     val dataArray = jsonObject.optJSONArray("data")
 
                     if (dataArray != null) {
@@ -268,48 +314,51 @@ class DetailedNotificationActivity : AppCompatActivity() {
                             }
                         }
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
+                    var foundMatch = false
+                    if (flatCropsJsonArray.length() > 0 && flatCropId != null) {
+                        for (i in 0 until flatCropsJsonArray.length()) {
+                            val jsonObject = flatCropsJsonArray.getJSONObject(i)
+                            val id = jsonObject.optInt("id")
+                            if (id == flatCropId) {
+                                Log.d(TAG, "checkCropIdAndFetchJson: $jsonObject")
+                                cropId = jsonObject.optInt("id")
+                                cropName = jsonObject.optString("name")
+                                sowingDate = jsonObject.optString("sowing_date")
+                                wotrCropId = jsonObject.optString("wotr_crop_id")
+                                mUrl = jsonObject.optString("mUrl")
+                                foundMatch = true
+                                break
+                            }
+                        }
+                    }
 
-            var foundMatch = false
-            if (flatCropsJsonArray.length() > 0 && flatCropId != null) {
-                for (i in 0 until flatCropsJsonArray.length()) {
-                    val jsonObject = flatCropsJsonArray.getJSONObject(i)
-                    val id = jsonObject.optInt("id")
-                    if (id == flatCropId) {
-                        Log.d(TAG, "checkCropIdAndFetchJson: $jsonObject")
-                        cropId = jsonObject.optInt("id")
-                        cropName = jsonObject.optString("name")
-                        sowingDate = jsonObject.optString("sowing_date")
-                        wotrCropId = jsonObject.optString("wotr_crop_id")
-                        mUrl = jsonObject.optString("mUrl")
-                        foundMatch = true
-                        break
+                    // 🔁 Fallback to saved preferences if no matching crop found
+                    if (!foundMatch) {
+                        val prefs = AppPreferenceManager(this)
+                        cropId = prefs.getInt("CROP_ID_SAVED")
+                        if (cropId != 0) {
+                            cropName = prefs.getString("CROP_NAME_SAVED")
+                            mUrl = prefs.getString("CROP_IMAGE_SAVED")
+                            sowingDate = prefs.getString("CROP_SOWING_DATE_SAVED") ?: ""
+                            wotrCropId = prefs.getString("CROP_WOTR_ID_SAVED")
+                        } else {
+                            cropId = 25
+                            cropName = if (languageToLoad == "en") "Cotton" else "कापूस"
+                            mUrl =
+                                "https://s3.object.webwerksvmx.com/ffsauditlogs/ffs-api/ffs-api/uploads/crop_image/25_Cotton_1697091770.png"
+                            sowingDate = "22/06"
+                            wotrCropId = "1"
+                        }
                     }
                 }
-            }
 
-            // 🔁 Fallback to saved preferences if no matching crop found
-            if (!foundMatch) {
-                val prefs = AppPreferenceManager(this)
-                cropId = prefs.getInt("CROP_ID_SAVED")
-                if (cropId != 0) {
-                    cropName = prefs.getString("CROP_NAME_SAVED")
-                    mUrl = prefs.getString("CROP_IMAGE_SAVED")
-                    sowingDate = prefs.getString("CROP_SOWING_DATE_SAVED") ?: ""
-                    wotrCropId = prefs.getString("CROP_WOTR_ID_SAVED")
-                } else {
-                    cropId = 25
-                    cropName = if (languageToLoad == "en") "Cotton" else "कापूस"
-                    mUrl =
-                        "https://s3.object.webwerksvmx.com/ffsauditlogs/ffs-api/ffs-api/uploads/crop_image/25_Cotton_1697091770.png"
-                    sowingDate = "22/06"
-                    wotrCropId = "1"
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
+        farmerViewModel.getCropCategoriesAndCropDetails(languageToLoad)
     }
 
     private fun setUpPageContent(jsonObject: JSONObject, notificationId: Long) {

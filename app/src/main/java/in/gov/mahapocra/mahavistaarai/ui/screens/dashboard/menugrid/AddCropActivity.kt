@@ -16,6 +16,7 @@ import `in`.co.appinventor.services_api.listener.DatePickerRequestListener
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityAddCropBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropCategoriesAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
@@ -71,7 +72,7 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
         uiScope.launch {
             ProgressHelper.showProgressDialog(this@AddCropActivity)
             withContext(Dispatchers.IO) {
-                viewModel.getCropCategoriesAndCropDetails(this@AddCropActivity, languageToLoad)
+                viewModel.getCropCategoriesAndCropDetails(languageToLoad)
             }
         }
 
@@ -110,34 +111,39 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
     // 🌾 Observe Crop Data
     // -----------------------------
     private fun observeCropData() {
-        viewModel.cropCategoryResponse.observe(this) { response ->
-            ProgressHelper.disableProgressDialog()
-
-            try {
-                val jsonObject = JSONObject(response.toString())
-                val jsonDataArray = jsonObject.getJSONArray("data")
-                val callerActivityString = if (intent.getStringExtra("callerActivity") != null) {
-                    "costCalculator"
-                } else {
-                    "TitleVideosDetailsAdpter"
+        viewModel.cropCategoryResponse.observe(this) { state ->
+            when(state){
+                is UiState.Loading->{
+                    ProgressHelper.showProgressDialog(this)
                 }
+                is UiState.Success->{
+                    ProgressHelper.disableProgressDialog()
+                    val jsonObject = JSONObject(state.data.toString())
+                    val jsonDataArray = jsonObject.getJSONArray("data")
+                    val callerActivityString = if (intent.getStringExtra("callerActivity") != null) {
+                        "costCalculator"
+                    } else {
+                        "TitleVideosDetailsAdpter"
+                    }
 
-                if (callerActivityString != null) {
-                    uiScope.launch(Dispatchers.Default) {
-                        val adapter = CropCategoriesAdapter(
-                            this@AddCropActivity,
-                            jsonDataArray,
-                            callerActivityString,
-                            this@AddCropActivity
-                        )
-                        withContext(Dispatchers.Main) {
-                            binding.mainRecyclerView.adapter = adapter
+                    if (callerActivityString != null) {
+                        uiScope.launch(Dispatchers.Default) {
+                            val adapter = CropCategoriesAdapter(
+                                this@AddCropActivity,
+                                jsonDataArray,
+                                callerActivityString,
+                                this@AddCropActivity
+                            )
+                            withContext(Dispatchers.Main) {
+                                binding.mainRecyclerView.adapter = adapter
+                            }
                         }
                     }
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Toast.makeText(this, R.string.error_loading_data, Toast.LENGTH_SHORT).show()
+                is UiState.Error->{
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
 

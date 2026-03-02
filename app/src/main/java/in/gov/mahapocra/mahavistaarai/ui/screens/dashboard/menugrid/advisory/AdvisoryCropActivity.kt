@@ -12,6 +12,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.microsoft.clarity.k.f
 import `in`.co.appinventor.services_api.listener.DatePickerRequestListener
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
@@ -137,7 +138,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
             startActivity(Intent(this, DashboardScreen::class.java))
         }
-        viewModel.getCropStagesAndAdvisory(this, cropId, sowingDate, languageToLoad)
+        viewModel.getCropStagesAndAdvisory(farmerId, cropId, sowingDate, languageToLoad)
         binding.chatbotIcon.setOnTouchListener(DraggableTouchListener {
             startActivity(Intent(this, ChatbotActivity::class.java))
         })
@@ -145,43 +146,54 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
 
     private fun observeResponse() {
 
-        leaderboardViewModel.responseUpdateUserPoints.observe(this){ response->
-            if (response!=null){
+        leaderboardViewModel.responseUpdateUserPoints.observe(this) { response ->
+            if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 val status = jSONObject.optInt("status")
-                if (status==200){
+                if (status == 200) {
                     ScoreBubbleHelper.showScoreBubble(binding.root, "+10🔥 Points Added")
                 }
             }
         }
 
-        viewModel.getCropStagesAndAdvisoryResponse.observe(this) {
-            Log.d(TAG, "observeCropStagesAndAdvisory: $it")
-            if (it != null) {
-                val jSONObject = JSONObject(it.toString())
-                val response = ResponseModel(jSONObject)
-                if (response.status) {
-                    if (jSONObject.getString("sowing_date").isNotEmpty()) {
-                        binding.sowingInfoLayout.sowingDateTextView.text =
-                            jSONObject.getString("sowing_date")
-                    }
-                    cropAdvisoryDetailsJSONArray = response.getdataArray()
-                    if (cropAdvisoryDetailsJSONArray?.length()!! > 0) {
-                        val stagesAdvisoryAdapter =
-                            StageAdvisoryAdapter(this, this, cropAdvisoryDetailsJSONArray)
-                        binding.cropStagesRecyclerView.layoutManager =
-                            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-                        binding.cropStagesRecyclerView.adapter = stagesAdvisoryAdapter
-                        val currentStagePos = stagesAdvisoryAdapter.getCurrentStagePosition()
-                        if (currentStagePos != -1) {
-                            binding.cropStagesRecyclerView.post {
-                                binding.cropStagesRecyclerView.scrollToPosition(currentStagePos)
-                            }
+        viewModel.getCropStagesAndAdvisoryResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
+                }
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    val jSONObject = JSONObject(state.data.toString())
+                    val response = ResponseModel(jSONObject)
+                    if (response.status) {
+                        if (jSONObject.getString("sowing_date").isNotEmpty()) {
+                            binding.sowingInfoLayout.sowingDateTextView.text =
+                                jSONObject.getString("sowing_date")
                         }
-                        stagesAdvisoryAdapter.notifyDataSetChanged()
+                        cropAdvisoryDetailsJSONArray = response.getdataArray()
+                        if (cropAdvisoryDetailsJSONArray?.length()!! > 0) {
+                            val stagesAdvisoryAdapter =
+                                StageAdvisoryAdapter(this, this, cropAdvisoryDetailsJSONArray)
+                            binding.cropStagesRecyclerView.layoutManager =
+                                LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+                            binding.cropStagesRecyclerView.adapter = stagesAdvisoryAdapter
+                            val currentStagePos = stagesAdvisoryAdapter.getCurrentStagePosition()
+                            if (currentStagePos != -1) {
+                                binding.cropStagesRecyclerView.post {
+                                    binding.cropStagesRecyclerView.scrollToPosition(currentStagePos)
+                                }
+                            }
+                            stagesAdvisoryAdapter.notifyDataSetChanged()
+                        }
+                    } else {
+                        UIToastMessage.show(this, response.response)
                     }
-                } else {
-                    UIToastMessage.show(this, response.response)
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -212,7 +224,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         if (i == 2) {
             binding.relativeLayoutTopBar.relativeLayoutToolbar.visibility = View.GONE
         }
-        if (i==3){
+        if (i == 3) {
             if (containsFarmerId(this)) {
                 leaderboardViewModel.updateUserPoints(this, CROP_ADVISORY_POINT)
             }
@@ -226,7 +238,12 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
             viewModel.saveFarmerSelectedCrop.observe(this) {
                 if (it != null) {
                     if (it.get("status").toString() == "200") {
-                        viewModel.getCropStagesAndAdvisory(this, cropId, sowingDate, languageToLoad)
+                        viewModel.getCropStagesAndAdvisory(
+                            farmerId,
+                            cropId,
+                            sowingDate,
+                            languageToLoad
+                        )
                     }
                 }
             }
