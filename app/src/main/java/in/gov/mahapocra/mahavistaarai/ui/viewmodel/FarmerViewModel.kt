@@ -113,8 +113,8 @@ class FarmerViewModel : ViewModel() {
     private val _saveSubscribedTopicResponse = MutableLiveData<JsonObject>()
     val saveSubscribedTopicResponse: LiveData<JsonObject> = _saveSubscribedTopicResponse
 
-    private val _deleteSubscribedTopicResponse = MutableLiveData<JsonObject>()
-    val deleteSubscribedTopicResponse: LiveData<JsonObject> = _deleteSubscribedTopicResponse
+    private val _deleteSubscribedTopicResponse = MutableLiveData<UiState<JsonObject>>()
+    val deleteSubscribedTopicResponse: LiveData<UiState<JsonObject>> = _deleteSubscribedTopicResponse
 
 
     private val _error = MutableLiveData<String>()
@@ -881,29 +881,39 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun deleteSubscribedTopic(context: Context, topic: String) {
-        val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+    fun deleteSubscribedTopics(farmerId: Int, topics: List<String>) {
         viewModelScope.launch {
-            ProgressHelper.showProgressDialog(context)
+            _deleteSubscribedTopicResponse.value = UiState.Loading
             try {
                 val jsonObject = JSONObject()
                 jsonObject.put("user_id", farmerId)
-                jsonObject.put("topic", topic)
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+
+                val jsonArray = JSONArray()
+                topics.forEach { jsonArray.put(it) }
+
+                jsonObject.put("topic", jsonArray)
+
+                val requestBody =
+                    AppUtility.getInstance().getRequestBody(jsonObject.toString())
+
+                val retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+
                 val api = retrofit.create(ApiService::class.java)
+
                 val response = api.deleteSubscribedTopic(requestBody)
-                ProgressHelper.disableProgressDialog()
-                _deleteSubscribedTopicResponse.value = response
+
+                _deleteSubscribedTopicResponse.value = UiState.Success(response)
+
             } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
+
+                _deleteSubscribedTopicResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }

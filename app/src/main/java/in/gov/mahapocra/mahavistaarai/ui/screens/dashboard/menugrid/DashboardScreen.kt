@@ -988,22 +988,38 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                             }
                         }
                         if (topicsToDeleteArray != null && topicsToDeleteArray.length() > 0) {
+
                             val total = topicsToDeleteArray.length()
                             var completed = 0
+
+                            val topicsToDelete = mutableListOf<String>()
 
                             for (i in 0 until total) {
                                 val topic = topicsToDeleteArray.optString(i)
 
-                                unSubscribeToTopic(topic) { subscribed ->
-                                    if (subscribed) {
-                                        topicsToDeleteArray.put(topic)
-                                        farmerViewModel.deleteSubscribedTopic(this, topic)
+                                unSubscribeToTopic(topic) { unsubscribed ->
+                                    if (unsubscribed) {
+                                        topicsToDelete.add(topic)
                                     }
+
                                     completed++
+
                                     if (completed == total) {
+                                        // Call API ONCE with all topics
+                                        if (topicsToDelete.isNotEmpty()) {
+                                            farmerViewModel.deleteSubscribedTopics(
+                                                farmerId = farmerId,
+                                                topics = topicsToDelete
+                                            )
+                                        }
+
+                                        // Save updated topics list
+                                        val updatedArray = JSONArray()
+                                        topicsToDelete.forEach { updatedArray.put(it) }
+
                                         appPreferenceManager.saveString(
                                             "topic_saved_fcm",
-                                            topicsToDeleteArray.toString()
+                                            updatedArray.toString()
                                         )
                                     }
                                 }
@@ -1556,30 +1572,33 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             return
         }
 
+        ProgressHelper.showProgressDialog(this)
         if (topicsArray != null && topicsArray.length() > 0) {
-            val total = topicsArray.length()
-            var completed = 0
 
-            for (i in 0 until total) {
+            val topicList = mutableListOf<String>()
+
+            for (i in 0 until topicsArray.length()) {
                 val topic = topicsArray.optString(i)
 
                 unSubscribeToTopic(topic) { unsubscribed ->
                     if (unsubscribed) {
-                        topicsArray.put(topic)
-                        farmerViewModel.deleteSubscribedTopic(this, topic)
+                        topicList.add(topic)
                     }
-                    completed++
-                    if (completed == total) {
+
+                    if (topicList.size == topicsArray.length()) {
+                        farmerViewModel.deleteSubscribedTopics(farmerId, topicList)
                         completeLogout()
                     }
                 }
             }
+
         } else {
             completeLogout()
         }
     }
 
     private fun completeLogout() {
+        ProgressHelper.disableProgressDialog()
         farmerViewModel.updateFCMToken(farmerId, "NA")
         appPreferenceManager.clearAll()
     }

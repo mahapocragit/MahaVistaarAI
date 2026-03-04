@@ -134,8 +134,23 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
 
     private fun observeResponse() {
 
-        farmerViewModel.deleteSubscribedTopicResponse.observe(this) {
-            userValidationAndUpdateProfile()
+        farmerViewModel.deleteSubscribedTopicResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
+                }
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    userValidationAndUpdateProfile()
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+
         }
         farmerViewModel.error.observe(this) {
             Log.d(TAG, "observeResponse: $it")
@@ -228,7 +243,11 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
                     val jsonObject = JSONObject(state.data.toString())
                     val status = jsonObject.optInt("status")
                     if (status == 200) {
-                        Toast.makeText(this, consentMessage ?: "Consent Submitted", Toast.LENGTH_SHORT)
+                        Toast.makeText(
+                            this,
+                            consentMessage ?: "Consent Submitted",
+                            Toast.LENGTH_SHORT
+                        )
                             .show()
                     } else {
                         val responseText = jsonObject.optString("response")
@@ -399,30 +418,58 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
             machineId = getMachineId()
             if (farmerRegisterID > 0) {
                 isUserLoggedIn = true
-                val jsonStr = AppPreferenceManager(this).getString("topic_saved_fcm")
-                val jsonArray = JSONArray(jsonStr.toString())
+
+                val prefManager = AppPreferenceManager(this)
+                val jsonStr = prefManager.getString("topic_saved_fcm")
+                val jsonArray = JSONArray(jsonStr ?: "[]")
+
                 for (i in 0 until jsonArray.length()) {
                     val topic = jsonArray.optString(i)
+
                     try {
-                        val topicStr = topic.split("_")
-                        val topicHead = topicStr[0]
+                        val topicHead = topic.substringBefore("_")
+
                         if (topicHead == "taluka") {
+
+                            // If same taluka, nothing to delete
                             if (topic == talukaToken) {
                                 userValidationAndUpdateProfile()
-                            } else {
-                                //unsubscribe
-                                unSubscribeToTopic(topic) { unsubscribed ->
-                                    //delete
-                                    if (unsubscribed) {
-                                        farmerViewModel.deleteSubscribedTopic(this, topic)
-                                    } else {
-                                        userValidationAndUpdateProfile()
-                                    }
-                                }
+                                break
                             }
+
+                            // 🔥 Only ONE topic, but API expects ARRAY
+                            unSubscribeToTopic(topic) { unsubscribed ->
+
+                                if (unsubscribed) {
+                                    farmerViewModel.deleteSubscribedTopics(
+                                        farmerId = farmerId,
+                                        topics = listOf(topic) // 👈 ARRAY
+                                    )
+
+                                    // Remove topic locally
+                                    val updatedArray = JSONArray()
+                                    for (j in 0 until jsonArray.length()) {
+                                        val savedTopic = jsonArray.optString(j)
+                                        if (savedTopic != topic) {
+                                            updatedArray.put(savedTopic)
+                                        }
+                                    }
+
+                                    prefManager.saveString(
+                                        "topic_saved_fcm",
+                                        updatedArray.toString()
+                                    )
+                                }
+
+                                // ✅ Continue flow ONLY ONCE
+                                userValidationAndUpdateProfile()
+                            }
+
+                            break // only one taluka topic exists
                         }
                     } catch (_: Exception) {
                         userValidationAndUpdateProfile()
+                        break
                     }
                 }
             }

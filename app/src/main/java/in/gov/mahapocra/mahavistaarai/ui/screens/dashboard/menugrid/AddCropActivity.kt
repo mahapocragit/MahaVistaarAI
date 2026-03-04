@@ -20,6 +20,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityAddCropBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropCategoriesAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -46,7 +47,7 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
     private lateinit var imageMenuShow: ImageView
     private lateinit var imgBackArrow: ImageView
     private lateinit var receivedJson: JSONObject
-
+    private var farmerId = 0
     private val viewModel: FarmerViewModel by viewModels()
     private var languageToLoad: String = "mr"
     private var cropId: Int = 0
@@ -64,7 +65,7 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
         binding = ActivityAddCropBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
-
+        farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
         setupToolbar()
         setupRecyclerView()
 
@@ -112,19 +113,21 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
     // -----------------------------
     private fun observeCropData() {
         viewModel.cropCategoryResponse.observe(this) { state ->
-            when(state){
-                is UiState.Loading->{
+            when (state) {
+                is UiState.Loading -> {
                     ProgressHelper.showProgressDialog(this)
                 }
-                is UiState.Success->{
+
+                is UiState.Success -> {
                     ProgressHelper.disableProgressDialog()
                     val jsonObject = JSONObject(state.data.toString())
                     val jsonDataArray = jsonObject.getJSONArray("data")
-                    val callerActivityString = if (intent.getStringExtra("callerActivity") != null) {
-                        "costCalculator"
-                    } else {
-                        "TitleVideosDetailsAdpter"
-                    }
+                    val callerActivityString =
+                        if (intent.getStringExtra("callerActivity") != null) {
+                            "costCalculator"
+                        } else {
+                            "TitleVideosDetailsAdpter"
+                        }
 
                     if (callerActivityString != null) {
                         uiScope.launch(Dispatchers.Default) {
@@ -140,15 +143,31 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
                         }
                     }
                 }
-                is UiState.Error->{
+
+                is UiState.Error -> {
                     ProgressHelper.disableProgressDialog()
                     Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
-        viewModel.deleteSubscribedTopicResponse.observe(this) {
-            startActivity()
+        viewModel.deleteSubscribedTopicResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
+                }
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    startActivity()
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+
         }
 
         viewModel.error.observe(this) {
@@ -199,36 +218,64 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
                 ProgressHelper.disableProgressDialog()
                 val jsonObject = JSONObject(response.toString())
                 if (jsonObject.optString("status") == "200") {
-                    val jsonStr = AppPreferenceManager(this).getString("topic_saved_fcm")
-                    val jsonArray = JSONArray(jsonStr.toString())
+
+                    val prefManager = AppPreferenceManager(this)
+                    val jsonStr = prefManager.getString("topic_saved_fcm")
+                    val jsonArray = JSONArray(jsonStr ?: "[]")
+
                     for (i in 0 until jsonArray.length()) {
                         val topic = jsonArray.optString(i)
+
                         try {
-                            val topicStr = topic.split("_")
-                            val topicHead = topicStr[0]
+                            val topicHead = topic.substringBefore("_")
+
                             if (topicHead == "crop") {
+
                                 Log.d(TAG, "onDateSelected: $topic and $cropToken")
+
                                 if (topic == cropToken) {
                                     Log.d(TAG, "onDateSelected: same")
                                     startActivity()
-                                } else {
-                                    Log.d(TAG, "onDateSelected: diff")
-                                    //unsubscribe
-                                    unSubscribeToTopic(topic) { unsubscribed ->
-                                        //delete
-                                        if (unsubscribed) {
-                                            Log.d(TAG, "onDateSelected: unsub")
-                                            viewModel.deleteSubscribedTopic(this, topic)
-                                        } else {
-                                            Log.d(TAG, "onDateSelected: start")
-                                            startActivity()
-                                        }
-                                    }
+                                    break
                                 }
+
+                                Log.d(TAG, "onDateSelected: diff")
+
+                                unSubscribeToTopic(topic) { unsubscribed ->
+
+                                    if (unsubscribed) {
+                                        Log.d(TAG, "onDateSelected: unsub")
+
+                                        // ✅ ARRAY even for one topic
+                                        viewModel.deleteSubscribedTopics(
+                                            farmerId = farmerId,
+                                            topics = listOf(topic)
+                                        )
+
+                                        // 🔥 Update local storage
+                                        val updatedArray = JSONArray()
+                                        for (j in 0 until jsonArray.length()) {
+                                            val savedTopic = jsonArray.optString(j)
+                                            if (savedTopic != topic) {
+                                                updatedArray.put(savedTopic)
+                                            }
+                                        }
+
+                                        prefManager.saveString(
+                                            "topic_saved_fcm",
+                                            updatedArray.toString()
+                                        )
+                                    }
+
+                                    startActivity()
+                                }
+
+                                break // only one crop topic exists
                             }
                         } catch (_: Exception) {
                             Log.d(TAG, "onDateSelected: exc")
                             startActivity()
+                            break
                         }
                     }
 
