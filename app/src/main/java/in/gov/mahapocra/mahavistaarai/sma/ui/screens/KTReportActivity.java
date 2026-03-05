@@ -31,7 +31,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
@@ -53,21 +52,20 @@ import in.co.appinventor.services_api.listener.ApiCallbackCode;
 import in.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener;
 import in.co.appinventor.services_api.settings.AppSettings;
 import in.co.appinventor.services_api.widget.UIToastMessage;
-
 import in.gov.mahapocra.mahavistaarai.R;
 import in.gov.mahapocra.mahavistaarai.data.model.ResponseModel;
-import in.gov.mahapocra.mahavistaarai.sma.domain.APIRequest;
 import in.gov.mahapocra.mahavistaarai.sma.data.constants.APIServices;
 import in.gov.mahapocra.mahavistaarai.sma.data.constants.AppConstants;
-import in.gov.mahapocra.mahavistaarai.sma.data.helper.AppHelper;
 import in.gov.mahapocra.mahavistaarai.sma.data.constants.AppRole;
+import in.gov.mahapocra.mahavistaarai.sma.data.helper.AppHelper;
 import in.gov.mahapocra.mahavistaarai.sma.data.helper.AppSession;
 import in.gov.mahapocra.mahavistaarai.sma.data.models.CAModel;
-import in.gov.mahapocra.mahavistaarai.sma.ui.adapters.CalendarFilterAdapterKT;
 import in.gov.mahapocra.mahavistaarai.sma.data.models.CalendarFilterModel;
 import in.gov.mahapocra.mahavistaarai.sma.data.models.CalendarModelKT;
-import in.gov.mahapocra.mahavistaarai.sma.ui.adapters.KTCalendarReportAdapter;
 import in.gov.mahapocra.mahavistaarai.sma.data.models.ProfileModel;
+import in.gov.mahapocra.mahavistaarai.sma.domain.APIRequest;
+import in.gov.mahapocra.mahavistaarai.sma.ui.adapters.CalendarFilterAdapterKT;
+import in.gov.mahapocra.mahavistaarai.sma.ui.adapters.KTCalendarReportAdapter;
 import in.gov.mahapocra.mahavistaarai.util.app_util.AppString;
 import okhttp3.RequestBody;
 import retrofit2.Call;

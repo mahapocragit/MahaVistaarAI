@@ -54,11 +54,15 @@ class NotificationActivity : AppCompatActivity() {
             }
         })
 
+        observeResponse()
         if (NetworkUtils.isInternetAvailable(this)) {
             farmerViewModel.getNotificationList(farmerId)
         } else {
             LocalCustom.createSnackbar(binding.root, "Internet not available!")
         }
+    }
+
+    private fun observeResponse() {
         farmerViewModel.getNotificationResponse.observe(this) { state ->
             when (state) {
                 is UiState.Loading -> {

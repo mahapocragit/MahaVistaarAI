@@ -3,9 +3,11 @@
 package in.gov.mahapocra.mahavistaarai.sma.ui.screens;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.squareup.picasso.Picasso;
 
 import in.gov.mahapocra.mahavistaarai.R;

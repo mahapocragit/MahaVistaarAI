@@ -36,7 +36,6 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLoginScreenBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
-import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
@@ -497,6 +496,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     }
 
     override fun onResponse(jSONObject: JSONObject?, i: Int) {
+        if (isFinishing || isDestroyed) return
         if (i == 1) {
             Log.d(TAG, "onResponse: $jSONObject")
             if (jSONObject != null) {
@@ -563,6 +563,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     }
 
     private fun addVerificationDialog() {
+        if (isFinishing || isDestroyed) return
         dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -663,6 +664,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     }
 
     private fun addVerificationDialogForFarmer() {
+        if (isFinishing || isDestroyed) return
         dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)

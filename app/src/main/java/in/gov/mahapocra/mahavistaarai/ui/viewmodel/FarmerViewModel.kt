@@ -20,10 +20,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Retrofit
@@ -86,8 +83,8 @@ class FarmerViewModel : ViewModel() {
     private val _getNotificationResponse = MutableLiveData<UiState<JsonObject>>()
     val getNotificationResponse: LiveData<UiState<JsonObject>> = _getNotificationResponse
 
-    private val _getNotificationDetailedResponse = MutableLiveData<JsonObject>()
-    val getNotificationDetailedResponse: LiveData<JsonObject> = _getNotificationDetailedResponse
+    private val _getNotificationDetailedResponse = MutableLiveData<UiState<JsonObject>>()
+    val getNotificationDetailedResponse: LiveData<UiState<JsonObject>> = _getNotificationDetailedResponse
 
     private val _updateNotificationStatusResponse = MutableLiveData<JsonObject>()
     val updateNotificationStatusResponse: LiveData<JsonObject> = _updateNotificationStatusResponse
@@ -604,43 +601,36 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun getNotificationDetails(context: Context, notificationID: Long, notificationType: String?) {
-        ProgressHelper.showProgressDialog(context)
-        val userId =
-            AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+    fun getNotificationDetails(userId: Int, notificationID: Long, notificationType: String?) {
         viewModelScope.launch {
-            val jsonObject = JSONObject().apply {
-                put("notification_id", notificationID)
-                put("user_id", userId)
-                put("type", notificationType)
-            }
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+            _getNotificationDetailedResponse.value = UiState.Loading
             try {
+                val jsonObject = JSONObject().apply {
+                    put("notification_id", notificationID)
+                    put("user_id", userId)
+                    put("type", notificationType)
+                }
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit: Retrofit =
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getNotificationDetails(requestBody)
-                ProgressHelper.disableProgressDialog()
-                _getNotificationDetailedResponse.value = response
+                _getNotificationDetailedResponse.value = UiState.Success(response)
             } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
+                _getNotificationDetailedResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
 
-    fun updateNotificationStatus(context: Context, notificationID: Long, notificationType: String) {
-        ProgressHelper.showProgressDialog(context)
+    fun updateNotificationStatus(userId:Int, notificationID: Long, notificationType: String) {
         viewModelScope.launch {
-            val userId =
-                AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
             val jsonObject = JSONObject().apply {
                 put("notification_id", notificationID)
                 put("type", notificationType)

@@ -47,6 +47,7 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
     private lateinit var imageMenuShow: ImageView
     private lateinit var imgBackArrow: ImageView
     private lateinit var receivedJson: JSONObject
+    private var activityStarted = false
     private var farmerId = 0
     private val viewModel: FarmerViewModel by viewModels()
     private var languageToLoad: String = "mr"
@@ -77,7 +78,7 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
             }
         }
 
-        observeCropData()
+        observeResponse()
     }
 
     // -----------------------------
@@ -111,7 +112,7 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
     // -----------------------------
     // 🌾 Observe Crop Data
     // -----------------------------
-    private fun observeCropData() {
+    private fun observeResponse() {
         viewModel.cropCategoryResponse.observe(this) { state ->
             when (state) {
                 is UiState.Loading -> {
@@ -159,7 +160,7 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
 
                 is UiState.Success -> {
                     ProgressHelper.disableProgressDialog()
-                    startActivity()
+                    safeStartActivity()
                 }
 
                 is UiState.Error -> {
@@ -168,6 +169,68 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
                 }
             }
 
+        }
+
+        viewModel.saveFarmerSelectedCrop.observe(this) { response ->
+
+            ProgressHelper.disableProgressDialog()
+
+            val jsonObject = JSONObject(response.toString())
+
+            if (jsonObject.optString("status") == "200") {
+
+                val prefManager = AppPreferenceManager(this)
+                val jsonStr = prefManager.getString("topic_saved_fcm")
+                val jsonArray = JSONArray(jsonStr ?: "[]")
+
+                var cropTopicFound = false
+
+                for (i in 0 until jsonArray.length()) {
+                    val topic = jsonArray.optString(i)
+                    try {
+                        val topicHead = topic.substringBefore("_")
+                        if (topicHead == "crop") {
+                            cropTopicFound = true
+                            if (topic == cropToken) {
+                                safeStartActivity()
+                                return@observe
+                            }
+                            unSubscribeToTopic(topic) { unsubscribed ->
+                                if (unsubscribed) {
+                                    viewModel.deleteSubscribedTopics(
+                                        farmerId = farmerId,
+                                        topics = listOf(topic)
+                                    )
+                                    val updatedArray = JSONArray()
+                                    for (j in 0 until jsonArray.length()) {
+                                        val savedTopic = jsonArray.optString(j)
+                                        if (savedTopic != topic) {
+                                            updatedArray.put(savedTopic)
+                                        }
+                                    }
+
+                                    prefManager.saveString(
+                                        "topic_saved_fcm",
+                                        updatedArray.toString()
+                                    )
+                                }
+                                safeStartActivity()
+                            }
+                            return@observe
+                        }
+                    } catch (e: Exception) {
+                        safeStartActivity()
+                        return@observe
+                    }
+                }
+
+                // If no crop topic found
+                if (!cropTopicFound) {
+                    safeStartActivity()
+                }
+            } else {
+                Toast.makeText(this, R.string.error_saving_crop, Toast.LENGTH_SHORT).show()
+            }
         }
 
         viewModel.error.observe(this) {
@@ -213,84 +276,17 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
             cropToken = "crop_$cropId"
             ProgressHelper.showProgressDialog(this)
             viewModel.saveFarmerSelectedCrop(this, sowingDate, cropId)
-
-            viewModel.saveFarmerSelectedCrop.observe(this) { response ->
-                ProgressHelper.disableProgressDialog()
-                val jsonObject = JSONObject(response.toString())
-                if (jsonObject.optString("status") == "200") {
-
-                    val prefManager = AppPreferenceManager(this)
-                    val jsonStr = prefManager.getString("topic_saved_fcm")
-                    val jsonArray = JSONArray(jsonStr ?: "[]")
-
-                    for (i in 0 until jsonArray.length()) {
-                        val topic = jsonArray.optString(i)
-
-                        try {
-                            val topicHead = topic.substringBefore("_")
-
-                            if (topicHead == "crop") {
-
-                                Log.d(TAG, "onDateSelected: $topic and $cropToken")
-
-                                if (topic == cropToken) {
-                                    Log.d(TAG, "onDateSelected: same")
-                                    startActivity()
-                                    break
-                                }
-
-                                Log.d(TAG, "onDateSelected: diff")
-
-                                unSubscribeToTopic(topic) { unsubscribed ->
-
-                                    if (unsubscribed) {
-                                        Log.d(TAG, "onDateSelected: unsub")
-
-                                        // ✅ ARRAY even for one topic
-                                        viewModel.deleteSubscribedTopics(
-                                            farmerId = farmerId,
-                                            topics = listOf(topic)
-                                        )
-
-                                        // 🔥 Update local storage
-                                        val updatedArray = JSONArray()
-                                        for (j in 0 until jsonArray.length()) {
-                                            val savedTopic = jsonArray.optString(j)
-                                            if (savedTopic != topic) {
-                                                updatedArray.put(savedTopic)
-                                            }
-                                        }
-
-                                        prefManager.saveString(
-                                            "topic_saved_fcm",
-                                            updatedArray.toString()
-                                        )
-                                    }
-
-                                    startActivity()
-                                }
-
-                                break // only one crop topic exists
-                            }
-                        } catch (_: Exception) {
-                            Log.d(TAG, "onDateSelected: exc")
-                            startActivity()
-                            break
-                        }
-                    }
-
-                } else {
-                    Toast.makeText(this, R.string.error_saving_crop, Toast.LENGTH_SHORT).show()
-                }
-            }
         }
     }
 
-    fun startActivity() {
-        Toast.makeText(this, R.string.selected_crop_saved, Toast.LENGTH_SHORT).show()
-        startActivity(Intent(this, DashboardScreen::class.java).apply {
-            putExtra("savedCropResponse", "200")
-        })
+    fun safeStartActivity() {
+        if (!activityStarted) {
+            activityStarted = true
+            Toast.makeText(this, R.string.selected_crop_saved, Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, DashboardScreen::class.java).apply {
+                putExtra("savedCropResponse", "200")
+            })
+        }
     }
 
     // -----------------------------

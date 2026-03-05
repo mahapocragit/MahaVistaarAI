@@ -1,5 +1,7 @@
 package in.gov.mahapocra.mahavistaarai.sma.data.helper;
 
+import static java.util.concurrent.TimeUnit.DAYS;
+
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
@@ -25,8 +27,6 @@ import java.util.concurrent.TimeUnit;
 
 import in.co.appinventor.services_api.debug.DebugLog;
 import in.gov.mahapocra.mahavistaarai.R;
-
-import static java.util.concurrent.TimeUnit.DAYS;
 
 public class AppHelper {
 

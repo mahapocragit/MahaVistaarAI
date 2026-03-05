@@ -147,10 +147,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             languageToLoad = "en"
         }
         switchLanguage(this, languageToLoad)
-        showToast = true
         binding = ActivityDashboardScreenBinding.inflate(
             layoutInflater
         )
+        showToast = true
         appPreferenceManager = AppPreferenceManager(this)
         setContentView(binding.root)
         askForPermissions()
@@ -1567,33 +1567,40 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     }
 
     private fun logoutFromApp() {
+
         if (!NetworkUtils.isInternetAvailable(this)) {
             LocalCustom.createSnackbar(binding.root, "Internet not available!")
             return
         }
 
         ProgressHelper.showProgressDialog(this)
-        if (topicsArray != null && topicsArray.length() > 0) {
 
-            val topicList = mutableListOf<String>()
+        if (topicsArray == null || topicsArray.length() == 0) {
+            completeLogout()
+            return
+        }
 
-            for (i in 0 until topicsArray.length()) {
-                val topic = topicsArray.optString(i)
+        val topicList = mutableListOf<String>()
+        var completedCount = 0
+        val totalTopics = topicsArray.length()
 
-                unSubscribeToTopic(topic) { unsubscribed ->
-                    if (unsubscribed) {
-                        topicList.add(topic)
-                    }
+        for (i in 0 until totalTopics) {
 
-                    if (topicList.size == topicsArray.length()) {
-                        farmerViewModel.deleteSubscribedTopics(farmerId, topicList)
-                        completeLogout()
-                    }
+            val topic = topicsArray.optString(i)
+
+            unSubscribeToTopic(topic) { unsubscribed ->
+
+                completedCount++
+
+                if (unsubscribed) {
+                    topicList.add(topic)
+                }
+
+                if (completedCount == totalTopics) {
+                    farmerViewModel.deleteSubscribedTopics(farmerId, topicList)
+                    completeLogout()
                 }
             }
-
-        } else {
-            completeLogout()
         }
     }
 

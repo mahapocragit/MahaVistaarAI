@@ -1,16 +1,9 @@
 package in.gov.mahapocra.mahavistaarai.sma.ui.screens;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -32,6 +25,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -57,15 +56,13 @@ import in.co.appinventor.services_api.settings.AppSettings;
 import in.co.appinventor.services_api.widget.UIToastMessage;
 import in.co.appinventor.serviceslibrary.BuildConfig;
 import in.gov.mahapocra.mahavistaarai.R;
-
-
 import in.gov.mahapocra.mahavistaarai.data.model.ResponseModel;
-import in.gov.mahapocra.mahavistaarai.sma.domain.APIRequest;
 import in.gov.mahapocra.mahavistaarai.sma.data.constants.APIServices;
 import in.gov.mahapocra.mahavistaarai.sma.data.constants.AppConstants;
 import in.gov.mahapocra.mahavistaarai.sma.data.constants.AppRole;
 import in.gov.mahapocra.mahavistaarai.sma.data.helper.AppSession;
 import in.gov.mahapocra.mahavistaarai.sma.data.models.ProfileModel;
+import in.gov.mahapocra.mahavistaarai.sma.domain.APIRequest;
 import in.gov.mahapocra.mahavistaarai.util.app_util.AppString;
 import okhttp3.RequestBody;
 import retrofit2.Call;
