@@ -167,11 +167,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="@dimen/_10sdp"
                             android:background="@drawable/bg_krishi_button"
-                            android:gravity="center_vertical"
+                            android:gravity="center"
                             android:orientation="horizontal"
-                            android:paddingLeft="16dp"
-                            android:paddingTop="8dp"
-                            android:paddingBottom="8dp"
+                            android:paddingVertical="@dimen/_4sdp"
                             android:visibility="gone">
 
                             <TextView
@@ -179,16 +177,16 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="@dimen/_5sdp"
-                                android:textStyle="bold"
                                 android:text="@string/KrishiTai"
                                 android:textColor="@android:color/white"
-                                android:textSize="@dimen/_10sdp" />
+                                android:textSize="@dimen/_10sdp"
+                                android:textStyle="bold" />
 
                             <ImageView
                                 android:id="@+id/arrowIcon"
-                                android:layout_width="10dp"
-                                android:layout_height="15dp"
-                                android:padding="@dimen/_1sdp"
+                                android:layout_width="@dimen/_10sdp"
+                                android:layout_height="@dimen/_10sdp"
+                                android:padding="@dimen/_2sdp"
                                 android:src="@drawable/navigating_arrow" />
                         </LinearLayout>
 

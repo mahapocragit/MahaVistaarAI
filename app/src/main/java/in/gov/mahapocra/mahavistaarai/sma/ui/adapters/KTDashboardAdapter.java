@@ -1,10 +1,6 @@
 package in.gov.mahapocra.mahavistaarai.sma.ui.adapters;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,12 +8,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import in.gov.mahapocra.mahavistaarai.R;
 
 import in.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener;
+import in.gov.mahapocra.mahavistaarai.R;
 
 public class KTDashboardAdapter extends RecyclerView.Adapter<KTDashboardAdapter.ViewHolder> {
 

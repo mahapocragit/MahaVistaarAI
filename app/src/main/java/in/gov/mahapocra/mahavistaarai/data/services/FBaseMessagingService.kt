@@ -45,6 +45,8 @@ class FBaseMessagingService : FirebaseMessagingService() {
             val type = remoteMessage.data["type"] ?: "You have a new message"
             Log.d(tag, "onMessageReceived: $page")
             sendNotification(title, body, page, notificationId, type)
+        }else{
+            Log.d(tag, "Data payload 1: $remoteMessage is empty")
         }
     }
 
@@ -72,9 +74,9 @@ class FBaseMessagingService : FirebaseMessagingService() {
 
         val pendingIntent = PendingIntent.getActivity(
             this,
-            0,
+            notificationId?.toInt() ?: System.currentTimeMillis().toInt(),
             targetIntent,
-            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         val bigTextStyle = NotificationCompat.BigTextStyle()

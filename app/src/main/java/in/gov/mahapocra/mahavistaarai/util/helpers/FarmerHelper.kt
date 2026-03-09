@@ -1,8 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.util.helpers
 
 import android.content.Context
-import `in`.co.appinventor.services_api.settings.AppSettings
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 
 object FarmerHelper {
 

@@ -17,6 +17,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
@@ -25,7 +26,6 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityResultBinding
 import `in`.gov.mahapocra.mahavistaarai.pestIdentification.data.model.AnalysisData
 import `in`.gov.mahapocra.mahavistaarai.pestIdentification.data.repository.PredictRepository
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
@@ -67,12 +67,13 @@ class ResultActivity : AppCompatActivity() {
             stopTtsAndNavigate()
         }
 
-        val analysisData = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra("analysis_data", AnalysisData::class.java)
-        } else {
-            @Suppress("DEPRECATION")
-            intent.getParcelableExtra("analysis_data")
-        }
+        val analysisData: AnalysisData? =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                intent.getParcelableExtra("analysis_data", AnalysisData::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                intent.getParcelableExtra("analysis_data")
+            }
 
         initViewModel()
         viewModel.getStoreDataResponse.observe(this) { result ->
@@ -91,7 +92,7 @@ class ResultActivity : AppCompatActivity() {
                     it.sowingDate,
                     it.isSuccess,
                     it.responseString,
-                    it.imageUri,
+                    it.imageUri.toUri(),
                     it.diseaseId
                 )
             }

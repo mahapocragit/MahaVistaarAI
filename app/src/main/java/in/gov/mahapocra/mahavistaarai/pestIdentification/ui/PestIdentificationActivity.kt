@@ -24,7 +24,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
@@ -66,7 +65,7 @@ class PestIdentificationActivity : AppCompatActivity() {
     private var predictRespStoredId: Int = 0
     private lateinit var predictResult: String
     var languageToLoad = "mr"
-    private var analysisData = AnalysisData(0, "", "", false, "", "".toUri(), "")
+    private var analysisData = AnalysisData(0, "", "", false, "", "", "")
 
     // --- Permissions ---
     private val requestCameraPermission =
@@ -241,7 +240,7 @@ class PestIdentificationActivity : AppCompatActivity() {
                             sowingDate = convertDateToServerFormat(binding.editSowingDate.text.toString()),
                             isSuccess = success,
                             responseString = result,
-                            imageUri = compressedUri,
+                            imageUri = compressedUri.toString(),
                             diseaseId = diseaseId
                         )
                     }

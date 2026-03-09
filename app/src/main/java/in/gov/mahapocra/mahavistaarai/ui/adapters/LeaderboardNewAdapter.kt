@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.mahavistaarai.R
 import org.json.JSONArray
 import org.json.JSONObject
-import kotlin.text.ifEmpty
 
 class LeaderboardNewAdapter(private val items: JSONArray, val selectedValue: String) :
     RecyclerView.Adapter<LeaderboardNewAdapter.ViewHolder>() {

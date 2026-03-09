@@ -1,7 +1,11 @@
 package `in`.gov.mahapocra.mahavistaarai.application
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.graphics.Color
+import android.os.Build
 import com.androidnetworking.AndroidNetworking
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
@@ -14,39 +18,85 @@ import org.osmdroid.config.Configuration
 import java.io.File
 
 class MyApplication : Application() {
+
     override fun onCreate() {
         super.onCreate()
-        instance = this // Initialize instance here
+        instance = this
 
+        initAppSettings()
+        initNetworking()
+        initFirebase()
+        initNotificationChannel()
+        initOsmdroid()
+        initRemoteConfig()
+    }
+
+    // -------------------- Initializers --------------------
+
+    private fun initAppSettings() {
         AppSettings.getInstance().initAppSettings(AppConstants.kSHARED_PREF)
         DebugLog.getInstance().initLoggingEnabled(true)
-        AndroidNetworking.initialize(applicationContext)
-        // Initialize Firebase
-        FirebaseApp.initializeApp(this)
+    }
 
-        // Set osmdroid cache directory
+    private fun initNetworking() {
+        AndroidNetworking.initialize(applicationContext)
+    }
+
+    private fun initFirebase() {
+        FirebaseApp.initializeApp(this)
+    }
+
+    private fun initNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelId = "default_channel_id"
+            val channelName = "Default Channel"
+
+            val notificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+            if (notificationManager.getNotificationChannel(channelId) == null) {
+                val channel = NotificationChannel(
+                    channelId,
+                    channelName,
+                    NotificationManager.IMPORTANCE_HIGH
+                ).apply {
+                    description = "Channel for FCM notifications"
+                    enableVibration(true)
+                    lightColor = Color.GREEN
+                }
+                notificationManager.createNotificationChannel(channel)
+            }
+        }
+    }
+
+    private fun initOsmdroid() {
         Configuration.getInstance().osmdroidBasePath = File(cacheDir, "osmdroid")
         Configuration.getInstance().osmdroidTileCache = File(cacheDir, "osmdroid/tiles")
+    }
 
-        val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
-        // Set in-app defaults
-        val remoteConfigDefaults: MutableMap<String, Any> = HashMap()
-        firebaseRemoteConfig.setDefaultsAsync(remoteConfigDefaults)
+    private fun initRemoteConfig() {
+        val remoteConfig = FirebaseRemoteConfig.getInstance()
+        remoteConfig.setDefaultsAsync(emptyMap())
 
-        firebaseRemoteConfig.fetch(60) // Fetch every minute
+        remoteConfig.fetch(60)
             .addOnCompleteListener { task: Task<Void?> ->
                 if (task.isSuccessful) {
-                    firebaseRemoteConfig.activate()
+                    remoteConfig.activate()
                 }
             }
     }
 
-    companion object {
-        var instance: MyApplication? = null
-            private set
-    }
+    // -------------------- Locale --------------------
+
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(configureLocale(base, "fr"))
     }
 
+    // -------------------- Singleton --------------------
+
+    companion object {
+        @Volatile
+        var instance: MyApplication? = null
+            private set
+    }
 }

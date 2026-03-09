@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDetailedNotificationBinding
 import `in`.gov.mahapocra.mahavistaarai.databinding.DialogFeedbackNotificationsBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.QuestionsAdapter
@@ -34,12 +35,14 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.Shetisha
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -49,8 +52,9 @@ class DetailedNotificationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailedNotificationBinding
     private lateinit var languageToLoad: String
     private val farmerViewModel: FarmerViewModel by viewModels()
-    val flatCropsJsonArray = JSONArray()
-    var cropId: Int? = 0
+    private val flatCropsJsonArray = JSONArray()
+    private var cropId: Int? = 0
+    private var farmerId: Int = 0
     private var cropName: String? = null
     private var wotrCropId: String? = null
     private var mUrl: String? = null
@@ -68,7 +72,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
         binding = ActivityDetailedNotificationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
-        
+        farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
         val notificationObject = intent.getStringExtra("notificationObject")
         Log.d(TAG, "onCreate: $notificationObject")
         if (notificationObject != null) {
@@ -76,65 +80,99 @@ class DetailedNotificationActivity : AppCompatActivity() {
             val id = jsonObject.optLong("id")
             val flatCropId = jsonObject.optInt("crop")
             val type = jsonObject.optString("type")
-            farmerViewModel.getNotificationDetails(this, id, type)
-            farmerViewModel.getNotificationDetailedResponse.observe(this) {
-                if (it != null) {
-                    Log.d(TAG, "onCreate............: $it")
-                    val jsonObject = JSONObject(it.toString())
-                    val notificationObject = jsonObject.optJSONObject("notifications")
-                    setUpPageContent(notificationObject, id)
-                    val questionsJson = notificationObject?.optJSONArray("questions")
-                    if (questionsJson?.length() == 0) {
-                        binding.feedbackFAB.visibility = View.GONE
-                    } else {
-                        binding.feedbackFAB.visibility = View.VISIBLE
-                        binding.feedbackFAB.setOnClickListener {
-                            val dialogBinding =
-                                DialogFeedbackNotificationsBinding.inflate(layoutInflater)
-                            // 🔥 Create JSON once and share with adapter
-                            dialogBinding.questionRecyclerView.apply {
-                                layoutManager =
-                                    LinearLayoutManager(this@DetailedNotificationActivity)
-                                setHasFixedSize(false)
-                                adapter = QuestionsAdapter(questionsJson)
-                            }
-
-                            val dialog = AlertDialog.Builder(this@DetailedNotificationActivity)
-                                .setView(dialogBinding.root)
-                                .setCancelable(true)
-                                .create()
-
-                            dialogBinding.button.setOnClickListener {
-                                questionsJson?.let { jsonArray ->
-                                    if (!isAllAnswered(jsonArray)) {
-                                        Toast.makeText(
-                                            this@DetailedNotificationActivity,
-                                            "Please answer all questions",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        return@setOnClickListener
+            farmerViewModel.getNotificationDetails(farmerId, id, type)
+            farmerViewModel.getNotificationDetailedResponse.observe(this) { state ->
+                when(state){
+                    is UiState.Loading->{
+                        ProgressHelper.showProgressDialog(this)
+                    }
+                    is UiState.Success->{
+                        ProgressHelper.disableProgressDialog()
+                            val jsonObject = JSONObject(state.data.toString())
+                            val notificationObject = jsonObject.optJSONObject("notifications")
+                            setUpPageContent(notificationObject, id)
+                            val questionsJson = notificationObject?.optJSONArray("questions")
+                            if (questionsJson?.length() == 0) {
+                                binding.feedbackFAB.visibility = View.GONE
+                            } else {
+                                binding.feedbackFAB.visibility = View.VISIBLE
+                                binding.feedbackFAB.setOnClickListener {
+                                    val dialogBinding =
+                                        DialogFeedbackNotificationsBinding.inflate(layoutInflater)
+                                    // 🔥 Create JSON once and share with adapter
+                                    dialogBinding.questionRecyclerView.apply {
+                                        layoutManager =
+                                            LinearLayoutManager(this@DetailedNotificationActivity)
+                                        setHasFixedSize(false)
+                                        adapter = QuestionsAdapter(questionsJson)
                                     }
-                                }
 
-                                // ✅ FINAL OUTPUT JSON
-                                questionsJson?.let {
-                                    farmerViewModel.addNotificationFeedback(
-                                        this,
-                                        id.toString(),
-                                        type,
-                                        questionsJson
-                                    )
-                                }
+                                    val dialog = AlertDialog.Builder(this@DetailedNotificationActivity)
+                                        .setView(dialogBinding.root)
+                                        .setCancelable(true)
+                                        .create()
 
-                                farmerViewModel.addNotificationFeedbackResponse.observe(this){
-                                    Log.d(TAG, "onCreate: $it")
-                                    farmerViewModel.getNotificationDetails(this, id, type)
+                                    dialogBinding.button.setOnClickListener {
+                                        questionsJson?.let { jsonArray ->
+                                            if (!isAllAnswered(jsonArray)) {
+                                                Toast.makeText(
+                                                    this@DetailedNotificationActivity,
+                                                    "Please answer all questions",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                                return@setOnClickListener
+                                            }
+                                        }
+
+                                        // ✅ FINAL OUTPUT JSON
+                                        questionsJson?.let {
+                                            farmerViewModel.addNotificationFeedback(
+                                                farmerId,
+                                                id.toString(),
+                                                type,
+                                                questionsJson
+                                            )
+                                        }
+
+                                        farmerViewModel.addNotificationFeedbackResponse.observe(this) { state ->
+                                            when (state) {
+                                                is UiState.Loading -> {
+                                                    ProgressHelper.showProgressDialog(this)
+                                                }
+
+                                                is UiState.Success -> {
+                                                    ProgressHelper.disableProgressDialog()
+                                                    val jsonObject = JSONObject(state.data.toString())
+                                                    val responseMessage = jsonObject.optString("response")
+                                                    Toast.makeText(
+                                                        this,
+                                                        responseMessage,
+                                                        Toast.LENGTH_SHORT
+                                                    )
+                                                        .show()
+                                                    farmerViewModel.getNotificationDetails(
+                                                        farmerId,
+                                                        id,
+                                                        type
+                                                    )
+                                                }
+
+                                                is UiState.Error -> {
+                                                    ProgressHelper.disableProgressDialog()
+                                                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT)
+                                                        .show()
+                                                }
+                                            }
+                                        }
+                                        dialog.dismiss()
+                                    }
+                                    dialog.show()
                                 }
-                                Log.d("FEEDBACK_JSON", questionsJson.toString())
-                                dialog.dismiss()
                             }
-                            dialog.show()
-                        }
+                    }
+                    is UiState.Error->{
+                        ProgressHelper.disableProgressDialog()
+                        Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -142,69 +180,113 @@ class DetailedNotificationActivity : AppCompatActivity() {
         } else {
             val id = intent.getLongExtra("id", 0L)
             val type = intent.getStringExtra("type")
-            farmerViewModel.getNotificationDetails(this, id, type)
-            farmerViewModel.getNotificationDetailedResponse.observe(this) {
-                if (it != null) {
-                    val jsonObject = JSONObject(it.toString())
-                    Log.d(TAG, "getNotificationDetails: $jsonObject")
-                    val notificationObject = jsonObject.optJSONObject("notifications")
-                    val flatCropId = notificationObject?.optInt("crop")
-                    Log.d(TAG, "onCreate: $flatCropId")
-                    setUpPageContent(notificationObject, id)
-                    val questionsJson = notificationObject?.optJSONArray("questions")
-                    if (questionsJson?.length() == 0) {
-                        binding.feedbackFAB.visibility = View.GONE
-                    } else {
-                        binding.feedbackFAB.visibility = View.VISIBLE
-                        binding.feedbackFAB.setOnClickListener {
-                            val dialogBinding =
-                                DialogFeedbackNotificationsBinding.inflate(layoutInflater)
-                            // 🔥 Create JSON once and share with adapter
-                            dialogBinding.questionRecyclerView.apply {
-                                layoutManager =
-                                    LinearLayoutManager(this@DetailedNotificationActivity)
-                                setHasFixedSize(false)
-                                adapter = QuestionsAdapter(questionsJson)
-                            }
-
-                            val dialog = AlertDialog.Builder(this@DetailedNotificationActivity)
-                                .setView(dialogBinding.root)
-                                .setCancelable(true)
-                                .create()
-
-                            dialogBinding.button.setOnClickListener {
-                                questionsJson?.let { jsonArray ->
-                                    if (!isAllAnswered(jsonArray)) {
-                                        Toast.makeText(
-                                            this@DetailedNotificationActivity,
-                                            "Please answer all questions",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        return@setOnClickListener
-                                    }
-                                }
-
-                                // ✅ FINAL OUTPUT JSON
-                                questionsJson?.let {
-                                    farmerViewModel.addNotificationFeedback(
-                                        this,
-                                        id.toString(),
-                                        type.toString(),
-                                        questionsJson
-                                    )
-                                }
-
-                                farmerViewModel.addNotificationFeedbackResponse.observe(this){
-                                    Log.d(TAG, "onCreate: $it")
-                                    farmerViewModel.getNotificationDetails(this, id, type)
-                                }
-                                Log.d("FEEDBACK_JSON", questionsJson.toString())
-                                dialog.dismiss()
-                            }
-                            dialog.show()
-                        }
+            farmerViewModel.getNotificationDetails(farmerId, id, type)
+            farmerViewModel.getNotificationDetailedResponse.observe(this) { state ->
+                when (state) {
+                    is UiState.Loading -> {
+                        ProgressHelper.showProgressDialog(this)
                     }
-                    fetchCropList(flatCropId)
+
+                    is UiState.Success -> {
+                        ProgressHelper.disableProgressDialog()
+                        val jsonObject = JSONObject(state.data.toString())
+                        Log.d(TAG, "getNotificationDetails: $jsonObject")
+                        val notificationObject = jsonObject.optJSONObject("notifications")
+                        val flatCropId = notificationObject?.optInt("crop")
+                        Log.d(TAG, "onCreate: $flatCropId")
+                        setUpPageContent(notificationObject, id)
+                        val questionsJson = notificationObject?.optJSONArray("questions")
+                        if (questionsJson?.length() == 0) {
+                            binding.feedbackFAB.visibility = View.GONE
+                        } else {
+                            binding.feedbackFAB.visibility = View.VISIBLE
+                            binding.feedbackFAB.setOnClickListener {
+                                val dialogBinding =
+                                    DialogFeedbackNotificationsBinding.inflate(layoutInflater)
+                                // 🔥 Create JSON once and share with adapter
+                                dialogBinding.questionRecyclerView.apply {
+                                    layoutManager =
+                                        LinearLayoutManager(this@DetailedNotificationActivity)
+                                    setHasFixedSize(false)
+                                    adapter = QuestionsAdapter(questionsJson)
+                                }
+
+                                val dialog = AlertDialog.Builder(this@DetailedNotificationActivity)
+                                    .setView(dialogBinding.root)
+                                    .setCancelable(true)
+                                    .create()
+
+                                dialogBinding.button.setOnClickListener {
+                                    questionsJson?.let { jsonArray ->
+                                        if (!isAllAnswered(jsonArray)) {
+                                            Toast.makeText(
+                                                this@DetailedNotificationActivity,
+                                                "Please answer all questions",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            return@setOnClickListener
+                                        }
+                                    }
+
+                                    // ✅ FINAL OUTPUT JSON
+                                    questionsJson?.let {
+                                        farmerViewModel.addNotificationFeedback(
+                                            farmerId,
+                                            id.toString(),
+                                            type.toString(),
+                                            questionsJson
+                                        )
+                                    }
+
+                                    farmerViewModel.addNotificationFeedbackResponse.observe(this) { state ->
+                                        when (state) {
+                                            is UiState.Loading -> {
+                                                ProgressHelper.showProgressDialog(this)
+                                            }
+
+                                            is UiState.Success -> {
+                                                ProgressHelper.disableProgressDialog()
+                                                val jsonObject = JSONObject(state.data.toString())
+                                                val responseMessage =
+                                                    jsonObject.optString("response")
+                                                Toast.makeText(
+                                                    this,
+                                                    responseMessage,
+                                                    Toast.LENGTH_SHORT
+                                                )
+                                                    .show()
+                                                farmerViewModel.getNotificationDetails(
+                                                    farmerId,
+                                                    id,
+                                                    type
+                                                )
+                                            }
+
+                                            is UiState.Error -> {
+                                                ProgressHelper.disableProgressDialog()
+                                                Toast.makeText(
+                                                    this,
+                                                    state.message,
+                                                    Toast.LENGTH_SHORT
+                                                )
+                                                    .show()
+                                            }
+                                        }
+                                        farmerViewModel.getNotificationDetails(farmerId, id, type)
+                                    }
+                                    Log.d("FEEDBACK_JSON", questionsJson.toString())
+                                    dialog.dismiss()
+                                }
+                                dialog.show()
+                            }
+                        }
+                        fetchCropList(flatCropId)
+                    }
+
+                    is UiState.Error -> {
+                        ProgressHelper.disableProgressDialog()
+                        Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
@@ -213,7 +295,12 @@ class DetailedNotificationActivity : AppCompatActivity() {
             getString(R.string.detailed_notifications)
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
-            startActivity(Intent(this@DetailedNotificationActivity, NotificationActivity::class.java))
+            startActivity(
+                Intent(
+                    this@DetailedNotificationActivity,
+                    NotificationActivity::class.java
+                )
+            )
         }
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -237,11 +324,15 @@ class DetailedNotificationActivity : AppCompatActivity() {
     }
 
     private fun fetchCropList(flatCropId: Int?) {
-        farmerViewModel.getCropCategoriesAndCropDetails(this, languageToLoad)
-        farmerViewModel.cropCategoryResponse.observe(this) { response ->
-            if (response != null) {
-                try {
-                    val jsonObject = JSONObject(response.toString())
+        farmerViewModel.cropCategoryResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
+                }
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    val jsonObject = JSONObject(state.data.toString())
                     val dataArray = jsonObject.optJSONArray("data")
 
                     if (dataArray != null) {
@@ -257,48 +348,51 @@ class DetailedNotificationActivity : AppCompatActivity() {
                             }
                         }
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
+                    var foundMatch = false
+                    if (flatCropsJsonArray.length() > 0 && flatCropId != null) {
+                        for (i in 0 until flatCropsJsonArray.length()) {
+                            val jsonObject = flatCropsJsonArray.getJSONObject(i)
+                            val id = jsonObject.optInt("id")
+                            if (id == flatCropId) {
+                                Log.d(TAG, "checkCropIdAndFetchJson: $jsonObject")
+                                cropId = jsonObject.optInt("id")
+                                cropName = jsonObject.optString("name")
+                                sowingDate = jsonObject.optString("sowing_date")
+                                wotrCropId = jsonObject.optString("wotr_crop_id")
+                                mUrl = jsonObject.optString("mUrl")
+                                foundMatch = true
+                                break
+                            }
+                        }
+                    }
 
-            var foundMatch = false
-            if (flatCropsJsonArray.length() > 0 && flatCropId != null) {
-                for (i in 0 until flatCropsJsonArray.length()) {
-                    val jsonObject = flatCropsJsonArray.getJSONObject(i)
-                    val id = jsonObject.optInt("id")
-                    if (id == flatCropId) {
-                        Log.d(TAG, "checkCropIdAndFetchJson: $jsonObject")
-                        cropId = jsonObject.optInt("id")
-                        cropName = jsonObject.optString("name")
-                        sowingDate = jsonObject.optString("sowing_date")
-                        wotrCropId = jsonObject.optString("wotr_crop_id")
-                        mUrl = jsonObject.optString("mUrl")
-                        foundMatch = true
-                        break
+                    // 🔁 Fallback to saved preferences if no matching crop found
+                    if (!foundMatch) {
+                        val prefs = AppPreferenceManager(this)
+                        cropId = prefs.getInt("CROP_ID_SAVED")
+                        if (cropId != 0) {
+                            cropName = prefs.getString("CROP_NAME_SAVED")
+                            mUrl = prefs.getString("CROP_IMAGE_SAVED")
+                            sowingDate = prefs.getString("CROP_SOWING_DATE_SAVED") ?: ""
+                            wotrCropId = prefs.getString("CROP_WOTR_ID_SAVED")
+                        } else {
+                            cropId = 25
+                            cropName = if (languageToLoad == "en") "Cotton" else "कापूस"
+                            mUrl =
+                                "https://s3.object.webwerksvmx.com/ffsauditlogs/ffs-api/ffs-api/uploads/crop_image/25_Cotton_1697091770.png"
+                            sowingDate = "22/06"
+                            wotrCropId = "1"
+                        }
                     }
                 }
-            }
 
-            // 🔁 Fallback to saved preferences if no matching crop found
-            if (!foundMatch) {
-                val prefs = AppPreferenceManager(this)
-                cropId = prefs.getInt("CROP_ID_SAVED")
-                if (cropId != 0) {
-                    cropName = prefs.getString("CROP_NAME_SAVED")
-                    mUrl = prefs.getString("CROP_IMAGE_SAVED")
-                    sowingDate = prefs.getString("CROP_SOWING_DATE_SAVED") ?: ""
-                    wotrCropId = prefs.getString("CROP_WOTR_ID_SAVED")
-                } else {
-                    cropId = 25
-                    cropName = if (languageToLoad == "en") "Cotton" else "कापूस"
-                    mUrl =
-                        "https://s3.object.webwerksvmx.com/ffsauditlogs/ffs-api/ffs-api/uploads/crop_image/25_Cotton_1697091770.png"
-                    sowingDate = "22/06"
-                    wotrCropId = "1"
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
+        farmerViewModel.getCropCategoriesAndCropDetails(languageToLoad)
     }
 
     private fun setUpPageContent(jsonObject: JSONObject, notificationId: Long) {
@@ -335,7 +429,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
         content.setSpan(UnderlineSpan(), 0, content.length, 0)
         binding.redirectTextView.text = content
         binding.redirectTextView.setOnClickListener { redirectToScreen(page) }
-        farmerViewModel.updateNotificationStatus(this, notificationId, type)
+        farmerViewModel.updateNotificationStatus(userId = farmerId, notificationId, type)
         farmerViewModel.updateNotificationStatusResponse.observe(this) {
         }
     }

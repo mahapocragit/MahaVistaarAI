@@ -23,7 +23,7 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityPreRegistrationBinding
-import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.RegistrationViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -35,7 +35,7 @@ class PreRegistrationActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPreRegistrationBinding
     private val registrationViewModel: RegistrationViewModel by viewModels()
-    private val farmerViewModel: FarmerViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
     private lateinit var languageToLoad: String
     private lateinit var dialog: Dialog
     private var mobile: String = ""
@@ -69,7 +69,14 @@ class PreRegistrationActivity : AppCompatActivity() {
                     }
                 }
 
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             })
 
@@ -108,7 +115,7 @@ class PreRegistrationActivity : AppCompatActivity() {
             }
         }
 
-        farmerViewModel.compareOtpResponseReg.observe(this) {
+        authViewModel.compareOtpResponseReg.observe(this) {
             if (it != null) {
                 val jSONObject = JSONObject(it.toString())
                 if (jSONObject.optInt("status") == 200) {
@@ -204,8 +211,7 @@ class PreRegistrationActivity : AppCompatActivity() {
                 Toast.makeText(this, "Enter valid OTP", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             } else {
-                farmerViewModel.compareOtpReg(
-                    this,
+                authViewModel.compareOtpReg(
                     binding.mobNoEditText.text.toString(),
                     enteredOTP
                 )

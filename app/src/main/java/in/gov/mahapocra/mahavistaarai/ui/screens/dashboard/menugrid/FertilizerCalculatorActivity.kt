@@ -85,6 +85,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     private var availableOption: String = ""
     private var totalAcrArea: Float = 0.0F
     private var plotUnitCode = 3
+    private var farmerId = 0
     private var fertilizerOptionValue: JSONArray? = null
     private val date = Date()
 
@@ -101,6 +102,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         binding = ActivityFertilizerCalculatorActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
+        farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
         observeResponse()
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {

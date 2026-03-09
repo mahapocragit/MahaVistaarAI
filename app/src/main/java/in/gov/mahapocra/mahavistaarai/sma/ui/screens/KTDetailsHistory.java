@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 
@@ -25,11 +24,11 @@ import in.co.appinventor.services_api.listener.ApiCallbackCode;
 import in.co.appinventor.services_api.settings.AppSettings;
 import in.gov.mahapocra.mahavistaarai.R;
 import in.gov.mahapocra.mahavistaarai.data.model.ResponseModel;
-import in.gov.mahapocra.mahavistaarai.sma.domain.APIRequest;
 import in.gov.mahapocra.mahavistaarai.sma.data.constants.APIServices;
 import in.gov.mahapocra.mahavistaarai.sma.data.constants.AppConstants;
 import in.gov.mahapocra.mahavistaarai.sma.data.helper.AppSession;
 import in.gov.mahapocra.mahavistaarai.sma.data.models.KTReportDetailsModel;
+import in.gov.mahapocra.mahavistaarai.sma.domain.APIRequest;
 import in.gov.mahapocra.mahavistaarai.util.app_util.AppString;
 import okhttp3.RequestBody;
 import retrofit2.Call;
