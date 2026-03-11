@@ -417,58 +417,42 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
             machineId = getMachineId()
             if (farmerRegisterID > 0) {
                 isUserLoggedIn = true
-
                 val prefManager = AppPreferenceManager(this)
                 val jsonStr = prefManager.getString("topic_saved_fcm")
                 val jsonArray = JSONArray(jsonStr ?: "[]")
 
-                for (i in 0 until jsonArray.length()) {
-                    val topic = jsonArray.optString(i)
-
-                    try {
-                        val topicHead = topic.substringBefore("_")
-
-                        if (topicHead == "taluka") {
-
-                            // If same taluka, nothing to delete
-                            if (topic == talukaToken) {
-                                userValidationAndUpdateProfile()
-                                break
-                            }
-
-                            // 🔥 Only ONE topic, but API expects ARRAY
-                            unSubscribeToTopic(topic) { unsubscribed ->
-
-                                if (unsubscribed) {
-                                    farmerViewModel.deleteSubscribedTopics(
-                                        farmerId = farmerId,
-                                        topics = listOf(topic) // 👈 ARRAY
-                                    )
-
-                                    // Remove topic locally
-                                    val updatedArray = JSONArray()
-                                    for (j in 0 until jsonArray.length()) {
-                                        val savedTopic = jsonArray.optString(j)
-                                        if (savedTopic != topic) {
-                                            updatedArray.put(savedTopic)
-                                        }
-                                    }
-
-                                    prefManager.saveString(
-                                        "topic_saved_fcm",
-                                        updatedArray.toString()
-                                    )
-                                }
-
-                                // ✅ Continue flow ONLY ONCE
-                                userValidationAndUpdateProfile()
-                            }
-
-                            break // only one taluka topic exists
-                        }
-                    } catch (_: Exception) {
+                val topics = (0 until jsonArray.length()).map { jsonArray.optString(it) }
+                val talukaTopic = topics.firstOrNull { it.startsWith("taluka_") }
+                when {
+                    // ✅ No taluka topic saved
+                    talukaTopic == null -> {
                         userValidationAndUpdateProfile()
-                        break
+                    }
+                    // ✅ Same taluka topic
+                    talukaTopic == talukaToken -> {
+                        userValidationAndUpdateProfile()
+                    }
+                    // ✅ Different taluka topic
+                    else -> {
+                        unSubscribeToTopic(talukaTopic) { unsubscribed ->
+                            if (unsubscribed) {
+                                farmerViewModel.deleteSubscribedTopics(
+                                    farmerId = farmerId,
+                                    topics = listOf(talukaTopic)
+                                )
+                                val updatedArray = JSONArray()
+                                topics.forEach {
+                                    if (it != talukaTopic) {
+                                        updatedArray.put(it)
+                                    }
+                                }
+                                prefManager.saveString(
+                                    "topic_saved_fcm",
+                                    updatedArray.toString()
+                                )
+                            }
+                            userValidationAndUpdateProfile()
+                        }
                     }
                 }
             }

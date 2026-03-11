@@ -382,4 +382,7 @@ interface ApiService {
     @POST("notificationServices/delete-subscribed-topic")
     suspend fun deleteSubscribedTopic(@Body params: RequestBody): JsonObject
 
+    @GET("otherServices/get_magazine_details")
+    suspend fun getMagazineDetails(): JsonObject
+
 }

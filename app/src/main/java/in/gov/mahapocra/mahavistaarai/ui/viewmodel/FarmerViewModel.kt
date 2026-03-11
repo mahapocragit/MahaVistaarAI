@@ -113,6 +113,9 @@ class FarmerViewModel : ViewModel() {
     private val _deleteSubscribedTopicResponse = MutableLiveData<UiState<JsonObject>>()
     val deleteSubscribedTopicResponse: LiveData<UiState<JsonObject>> = _deleteSubscribedTopicResponse
 
+    private val _getMagazineDetailsResponse = MutableLiveData<UiState<JsonObject>>()
+    val getMagazineDetailsResponse: LiveData<UiState<JsonObject>> = _getMagazineDetailsResponse
+
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -904,6 +907,30 @@ class FarmerViewModel : ViewModel() {
                 }
 
                 _deleteSubscribedTopicResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getMagazineDetails() {
+        viewModelScope.launch {
+            _getMagazineDetailsResponse.value = UiState.Loading
+            try {
+                val retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val api = retrofit.create(ApiService::class.java)
+                val response = api.getMagazineDetails()
+                _getMagazineDetailsResponse.value = UiState.Success(response)
+
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+
+                _getMagazineDetailsResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }

@@ -65,6 +65,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.ProfileScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.etl.AgriStackAdvisoryActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.magazine.MagazineDashboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.DBTActivity
@@ -336,6 +337,15 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
             DashboardAction.WAREHOUSE ->
                 startActivity(Intent(this, Warehouse::class.java))
+
+            DashboardAction.DASHBOARD_MAGAZINE ->
+                startActivity(Intent(this, MagazineDashboardActivity::class.java))
+
+            DashboardAction.COST_CALCULATOR ->
+                startActivity(Intent(this, CostCalculatorDashboardActivity::class.java))
+
+            DashboardAction.LEADERBOARD ->
+                startActivity(Intent(this, LeaderboardActivity::class.java))
         }
     }
 
@@ -1628,7 +1638,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             "Pest and Diseases",
             "Market Price",
             "D.B.T.",
-            "Warehouse"
+            "Warehouse",
+            "Magazine",
+            "Cost Calculator",
+            "Leaderboard"
         )
 
         private val arrayCategoryMarathi = arrayOf(
@@ -1640,7 +1653,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             "कीड व रोग",
             "बाजारभाव",
             "डी.बी.टी.",
-            "गोदाम"
+            "गोदाम",
+            "मासिक",
+            "खर्च गणक",
+            "लीडरबोर्ड"
         )
 
         var arrayCategoryImg: IntArray = intArrayOf(
@@ -1652,7 +1668,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             R.drawable.ic_pestsanddiseases,
             R.drawable.ic_marketprice,
             R.drawable.icon_dbt,
-            R.drawable.ic_warehouse
+            R.drawable.ic_warehouse,
+            R.drawable.ic_magazine,
+            R.drawable.ic_cost_calculator_grid,
+            R.drawable.ic_leaderboard_grid
         )
 
         val formattedTimestamp: String
