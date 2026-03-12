@@ -28,15 +28,16 @@
             android:id="@+id/magazineThumbnailImageView"
             android:layout_width="@dimen/_90sdp"
             android:layout_height="@dimen/_120sdp"
-            app:srcCompat="@drawable/sample_magazine"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:padding="@dimen/_2sdp"
+            android:layout_marginVertical="@dimen/_10sdp"
             android:background="@color/white"
-            android:scaleType="fitXY"
             android:elevation="@dimen/_10sdp"
-            app:layout_constraintStart_toStartOf="@+id/magazineDownloadCard"
+            android:padding="@dimen/_2sdp"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="@+id/magazineDownloadCard"
             app:layout_constraintEnd_toEndOf="@+id/magazineDownloadCard"
-            app:layout_constraintBottom_toBottomOf="@+id/magazineDownloadCard"/>
+            app:layout_constraintStart_toStartOf="@+id/magazineDownloadCard"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/sample_magazine" />
 
         <ImageView
             android:id="@+id/downloadButton"

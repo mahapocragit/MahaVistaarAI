@@ -18,7 +18,7 @@ import com.bumptech.glide.Glide
 import `in`.gov.mahapocra.mahavistaarai.R
 import org.json.JSONArray
 
-class MagazineRecyclerAdapter(val jsonArray: JSONArray) :
+class MagazineRecyclerAdapter(val jsonArray: JSONArray, val languageToLoad: String) :
     RecyclerView.Adapter<MagazineRecyclerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,7 +31,7 @@ class MagazineRecyclerAdapter(val jsonArray: JSONArray) :
         val context = holder.itemView.context
         val jsonObject = jsonArray.getJSONObject(position)
         val pdfUrl = jsonObject.optString("pdf_url")
-        holder.magazineTitleTextView.text = jsonObject.optString("title")
+        holder.magazineTitleTextView.text = if (languageToLoad=="en")jsonObject.optString("title") else jsonObject.optString("title_mr")
         holder.magazineDateTextView.text = jsonObject.optString("date")
         holder.downloadButton.setOnClickListener {
             val request = DownloadManager.Request(Uri.parse(pdfUrl))

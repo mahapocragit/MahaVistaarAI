@@ -69,7 +69,7 @@ class MagazineDashboardActivity : AppCompatActivity() {
                     ProgressHelper.disableProgressDialog()
                     val responseObject = JSONObject(state.data.toString())
                     val dataArray = responseObject.optJSONArray("data")
-                    binding.magazineRecyclerView.adapter = MagazineRecyclerAdapter(dataArray)
+                    binding.magazineRecyclerView.adapter = MagazineRecyclerAdapter(dataArray, languageToLoad)
                 }
 
                 is UiState.Error -> {
