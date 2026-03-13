@@ -345,8 +345,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             DashboardAction.COST_CALCULATOR ->
                 startActivity(Intent(this, CostCalculatorDashboardActivity::class.java))
 
-            DashboardAction.LEADERBOARD ->
-                startActivity(Intent(this, LeaderboardActivity::class.java))
+            DashboardAction.LEADERBOARD ->{}
+//                startActivity(Intent(this, LeaderboardActivity::class.java))
         }
     }
 
@@ -1668,7 +1668,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             "Warehouse",
             "Mahapashudhan Varta",
             "Cost Calculator",
-            "Leaderboard"
+            ""
         )
 
         private val arrayCategoryMarathi = arrayOf(
@@ -1683,7 +1683,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             "गोदाम",
             "महापशुधन वार्ता",
             "खर्च गणक",
-            "लीडरबोर्ड"
+            ""
         )
 
         var arrayCategoryImg: IntArray = intArrayOf(
@@ -1698,7 +1698,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             R.drawable.ic_warehouse,
             R.drawable.ic_magazine,
             R.drawable.ic_cost_calculator_grid,
-            R.drawable.ic_leaderboard_grid
+            0
         )
 
         val formattedTimestamp: String

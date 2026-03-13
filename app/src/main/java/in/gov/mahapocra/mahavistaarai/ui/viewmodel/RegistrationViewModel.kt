@@ -12,6 +12,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
+import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -26,8 +27,8 @@ class RegistrationViewModel : ViewModel() {
     private val _getOTPRegisterResponse = MutableLiveData<JsonObject>()
     val getOTPRegisterResponse: LiveData<JsonObject> = _getOTPRegisterResponse
 
-    private val _getRegistrationResponse = MutableLiveData<JsonObject>()
-    val getRegistrationResponse: LiveData<JsonObject> = _getRegistrationResponse
+    private val _getRegistrationResponse = MutableLiveData<UiState<JsonObject>>()
+    val getRegistrationResponse: LiveData<UiState<JsonObject>> = _getRegistrationResponse
 
     private val _getVillageListResponse = MutableLiveData<JsonObject>()
     val getVillageListResponse: LiveData<JsonObject> = _getVillageListResponse
@@ -62,14 +63,9 @@ class RegistrationViewModel : ViewModel() {
         }
     }
 
-    fun getRegistrationRequest(
-        context: Context,
-        registerMob: String,
-        updatedMobile: String,
-        data: JSONObject
-    ) {
-        ProgressHelper.showProgressDialog(context)
+    fun getRegistrationRequest(registerMob: String, updatedMobile: String, data: JSONObject) {
         viewModelScope.launch {
+            _getRegistrationResponse.value = UiState.Loading
             try {
                 val requestBody = AppUtility.getInstance().getRequestBody(data.toString())
                 val retrofit: Retrofit =
@@ -80,19 +76,15 @@ class RegistrationViewModel : ViewModel() {
                     updatedMobile,
                     requestBody
                 )
-//                Toast.makeText(context, response.toString(), Toast.LENGTH_LONG).show()
-                ProgressHelper.disableProgressDialog()
-                _getRegistrationResponse.value = response
+                _getRegistrationResponse.value = UiState.Success(response)
             } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-//                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-                _error.value = message
+                _getRegistrationResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }

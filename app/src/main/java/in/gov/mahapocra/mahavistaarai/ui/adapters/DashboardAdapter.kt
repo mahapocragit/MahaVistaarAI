@@ -33,6 +33,9 @@ class DashboardAdapter(
 
         fun bind(item: DashboardItem) {
             label.text = item.title
+            if (item.iconRes == 0){
+                image.visibility = View.INVISIBLE
+            }
             image.setImageResource(item.iconRes)
 
             itemView.setOnClickListener {

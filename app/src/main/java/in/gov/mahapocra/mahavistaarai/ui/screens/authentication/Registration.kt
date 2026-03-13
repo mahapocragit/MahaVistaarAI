@@ -163,24 +163,37 @@ class Registration : AppCompatActivity(), AlertListEventListener {
             }
         }
 
-        registrationViewModel.getRegistrationResponse.observe(this) { response ->
-            if (response != null) {
-                val jSONObject = JSONObject(response.toString())
-                if (jSONObject.optInt("status") == 200) {
-                    val response: String = jSONObject.getString("response")
-                    Toast.makeText(this, response, Toast.LENGTH_LONG).show()
-                    var intent = Intent(this, LoginScreen::class.java)
-                    if (isUserLoggedIn) {
-                        intent = Intent(this, DashboardScreen::class.java)
+        registrationViewModel.getRegistrationResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
+                }
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    val jSONObject = JSONObject(state.data.toString())
+                    if (jSONObject.optInt("status") == 200) {
+                        val response: String = jSONObject.getString("response")
+                        Toast.makeText(this, response, Toast.LENGTH_LONG).show()
+                        var intent = Intent(this, LoginScreen::class.java)
+                        if (isUserLoggedIn) {
+                            intent = Intent(this, DashboardScreen::class.java)
+                        }
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        val response: String =
+                            jSONObject.getString("response") ?: "Registration failed"
+                        Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                     }
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                    finish()
-                } else {
-                    val response: String = jSONObject.getString("response") ?: "Registration failed"
-                    Toast.makeText(this, response, Toast.LENGTH_LONG).show()
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -324,7 +337,7 @@ class Registration : AppCompatActivity(), AlertListEventListener {
                 jsonObject.put("FAAPRegistrationID", fAAPRegistrationID)
                 jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
                 registrationViewModel.getRegistrationRequest(
-                    this, mob.trim { it <= ' ' },
+                    mob.trim { it <= ' ' },
                     mob.trim { it <= ' ' }, jsonObject
                 )
             } catch (e: JSONException) {
