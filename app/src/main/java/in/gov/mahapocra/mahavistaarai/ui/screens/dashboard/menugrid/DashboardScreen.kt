@@ -47,6 +47,7 @@ import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListene
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.api.AppConstant
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.CropsCategName
 import `in`.gov.mahapocra.mahavistaarai.data.model.DashboardAction
@@ -970,6 +971,32 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         val pocraRoles = mutableListOf<PocraRole>()
                         val rolesArray = data.optJSONArray("pocra_roles")
                         val topicJsonArray = data.optJSONArray("topics")
+                        val isFirstLogin =
+                            appPreferenceManager.getBoolean(AppConstant.IS_FIRST_LOGIN)
+
+                        if (isFirstLogin && topicJsonArray != null && topicJsonArray.length() > 0) {
+
+                            var successCount = 0
+                            val totalTopics = topicJsonArray.length()
+
+                            for (i in 0 until topicJsonArray.length()) {
+                                val topic = topicJsonArray.optString(i)
+
+                                subscribeToTopic(topic) { subscribed ->
+                                    if (subscribed) {
+                                        successCount++
+                                    }
+
+                                    // when all topics processed
+                                    if (successCount == totalTopics) {
+                                        appPreferenceManager.saveBoolean(
+                                            AppConstant.IS_FIRST_LOGIN,
+                                            false
+                                        )
+                                    }
+                                }
+                            }
+                        }
                         topicsArray = topicJsonArray
                         val topicsToSubArray = data.optJSONArray("topics_to_subscribe")
                         val topicsToDeleteArray = data.optJSONArray("topics_to_delete")
@@ -983,7 +1010,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                                 subscribeToTopic(topic) { subscribed ->
                                     if (subscribed) {
                                         topicJsonArray.put(topic)
-                                        farmerViewModel.saveSubscribedTopic(this, topic)
+                                        farmerViewModel.saveSubscribedTopic(farmerId, topic)
                                     }
                                     completed++
                                     if (completed == total) {
@@ -1639,7 +1666,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             "Market Price",
             "D.B.T.",
             "Warehouse",
-            "Magazine",
+            "Mahapashudhan Varta",
             "Cost Calculator",
             "Leaderboard"
         )
@@ -1654,7 +1681,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             "बाजारभाव",
             "डी.बी.टी.",
             "गोदाम",
-            "मासिक",
+            "महापशुधन वार्ता",
             "खर्च गणक",
             "लीडरबोर्ड"
         )
