@@ -40,7 +40,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.microsoft.clarity.Clarity
+import com.squareup.okhttp.Dispatcher
 import com.squareup.picasso.Picasso
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
@@ -56,7 +58,9 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.PocraRole
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDashboardScreenBinding
-import `in`.gov.mahapocra.mahavistaarai.pestIdentification.ui.PestIdentificationActivity
+import `in`.gov.mahapocra.mahavistaarai.databinding.DialogPromotionalPopupBinding
+import `in`.gov.mahapocra.mahavistaarai.sma.ui.adapters.KTReportDetailsAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.ui.PestIdentificationActivity
 import `in`.gov.mahapocra.mahavistaarai.sma.ui.screens.KTDashboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropRecyclerSapAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DashboardAdapter
@@ -103,11 +107,13 @@ import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.unSubsc
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import org.osmdroid.views.overlay.Polygon
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.Calendar
@@ -157,6 +163,9 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         setContentView(binding.root)
         askForPermissions()
         observeResponse()
+        if (appPreferenceManager.getBoolean("SHOW_PROMO_DIALOG")) {
+            farmerViewModel.getPromoBanner()
+        }
         init()
         setUpListeners()
         FirebaseHelper(this)
@@ -257,6 +266,47 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         )
     }
 
+    private fun showPromotionalDialog(imageUrl: String, page: String) {
+        appPreferenceManager.saveBoolean("SHOW_PROMO_DIALOG", false)
+        val promoView = DialogPromotionalPopupBinding.inflate(layoutInflater)
+        val dialogPromo = AlertDialog.Builder(this).setView(promoView.root).create()
+        dialogPromo.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        promoView.closeImage.setOnClickListener {
+            dialogPromo.dismiss()
+        }
+        Glide.with(this).load(imageUrl).into(promoView.previewImage)
+        promoView.previewImage.setOnClickListener {
+            redirectToScreen(page)
+        }
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(1000)
+            dialogPromo.show()
+        }
+    }
+
+    private fun redirectToScreen(testValue: String) {
+        val targetIntent = when (testValue) {
+            "advisory" -> Intent(this, AdvisoryCropActivity::class.java)
+            "sop" -> Intent(this, SOPActivity::class.java)
+            "fertilizer" -> Intent(this, FertilizerCalculatorActivity::class.java)
+            "pestdisease" -> Intent(this, PestsAndDiseasesStages::class.java)
+            "weather" -> Intent(this, WeatherActivity::class.java)
+            "soilcard" -> Intent(this, SoilHealthCardActivity::class.java)
+            "climatetech" -> Intent(this, ClimateResilientTechnology::class.java)
+            "marketPrice" -> Intent(this, MarketPrice::class.java)
+            "shetishala" -> Intent(this, ShetishalaActivity::class.java)
+            "warehouse" -> Intent(this, Warehouse::class.java)
+            "customhire" -> Intent(this, CHCenterActivity::class.java)
+            "videos" -> Intent(this, VideosActivity::class.java)
+            "dbtschemes" -> Intent(this, DBTActivity::class.java)
+            "dashboard" -> Intent(this, DashboardScreen::class.java)
+            "etl_page" -> Intent(this, AgriStackAdvisoryActivity::class.java)
+            "pestDetection" -> Intent(this, PestIdentificationActivity::class.java)
+            else -> Intent(this, DashboardScreen::class.java)
+        }
+        startActivity(targetIntent)
+    }
+
     private fun setupDashboardRecyclerView() {
         binding.appBarMain.dashboardScreen.dashboardRecyclerView.apply {
             layoutManager = GridLayoutManager(this@DashboardScreen, 3)
@@ -345,7 +395,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             DashboardAction.COST_CALCULATOR ->
                 startActivity(Intent(this, CostCalculatorDashboardActivity::class.java))
 
-            DashboardAction.LEADERBOARD ->{}
+            DashboardAction.LEADERBOARD -> {}
 //                startActivity(Intent(this, LeaderboardActivity::class.java))
         }
     }
@@ -361,6 +411,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     }
 
     private fun openFertilizer() {
+        savedCropWoTRId = if (savedCropWoTRId == "") "0" else savedCropWoTRId
         val intent = Intent(this, FertilizerCalculatorActivity::class.java)
         intent.putExtra("id", savedCropId)
         intent.putExtra("wotr_crop_id", savedCropWoTRId?.toInt())
@@ -1259,6 +1310,28 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
                 is UiState.Error -> {
                     ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        farmerViewModel.getPromoBannerResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                }
+
+                is UiState.Success -> {
+                    val jsonObject = JSONObject(state.data.toString())
+                    val dataObject = jsonObject.optJSONObject("data")
+                    if (dataObject != null) {
+                        val imageUrl = dataObject.optString("url")
+                        val page = dataObject.optString("page")
+                        showPromotionalDialog(imageUrl, page)
+                    }
+
+                }
+
+                is UiState.Error -> {
                     Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                 }
             }

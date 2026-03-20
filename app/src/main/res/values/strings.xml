@@ -567,4 +567,7 @@
     <string name="get_ndiagnosis">Upload\nPhoto</string>
     <string name="image_upload_pnd_warning">Only JPEG, PNG, and JPG file formats are allowed. The maximum file size is 10 MB.</string>
     <string name="snackbar_pnd_message">Please upload only JPEG, PNG, or JPG images up to 10 MB</string>
+    <string name="notice_promo">Notice</string>
+    <string name="message_promo">This feature is not available for the selected crop. Please choose a different crop and try again.</string>
+    <string name="ok_promo">OK</string>
 </resources>

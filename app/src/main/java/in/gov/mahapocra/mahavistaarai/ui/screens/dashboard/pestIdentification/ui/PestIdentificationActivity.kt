@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.mahavistaarai.pestIdentification.ui
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.ui
 
 import android.Manifest
 import android.app.DatePickerDialog
@@ -35,10 +35,10 @@ import com.google.firebase.messaging.FirebaseMessaging
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityPestIdentificationBinding
-import `in`.gov.mahapocra.mahavistaarai.pestIdentification.CropAdapter
-import `in`.gov.mahapocra.mahavistaarai.pestIdentification.CropModel
-import `in`.gov.mahapocra.mahavistaarai.pestIdentification.data.model.AnalysisData
-import `in`.gov.mahapocra.mahavistaarai.pestIdentification.data.repository.PredictRepository
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.CropAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.CropModel
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.data.model.AnalysisData
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.data.repository.PredictRepository
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager

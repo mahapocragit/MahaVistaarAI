@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <androidx.core.widget.NestedScrollView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/_45sdp"
@@ -89,7 +89,7 @@
             <WebView
                 android:id="@+id/webView"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_430sdp"
+                android:layout_height="@dimen/_400sdp"
                 android:layout_marginHorizontal="@dimen/_5sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:fadeScrollbars="false" />
@@ -113,6 +113,6 @@
                 android:textColor="@color/darkblue"
                 android:textSize="@dimen/_11sdp" />
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

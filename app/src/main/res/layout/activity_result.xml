@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     android:background="@drawable/status_colored_background_for_detection"
     android:orientation="vertical"
-    tools:context=".pestIdentification.ui.ResultActivity">
+    tools:context=".ui.screens.dashboard.pestIdentification.ui.ResultActivity">
 
     <include
         android:id="@+id/relativeLayoutTopBar"

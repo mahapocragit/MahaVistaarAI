@@ -385,4 +385,7 @@ interface ApiService {
     @GET("otherServices/get_magazine_details")
     suspend fun getMagazineDetails(): JsonObject
 
+    @GET("otherServices/get_promo_banner")
+    suspend fun getPromoBanner(): JsonObject
+
 }

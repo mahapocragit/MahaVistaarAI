@@ -53,13 +53,13 @@
             android:exported="false" />
         <!-- ================= ACTIVITIES ================= -->
         <activity
-            android:name=".pestIdentification.ui.CameraActivity"
+            android:name=".ui.screens.dashboard.pestIdentification.ui.CameraActivity"
             android:exported="false" />
         <activity
-            android:name=".pestIdentification.ui.PestIdentificationActivity"
+            android:name=".ui.screens.dashboard.pestIdentification.ui.PestIdentificationActivity"
             android:exported="false" />
         <activity
-            android:name=".pestIdentification.ui.ResultActivity"
+            android:name=".ui.screens.dashboard.pestIdentification.ui.ResultActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".sma.ui.screens.KTReportActivity" />

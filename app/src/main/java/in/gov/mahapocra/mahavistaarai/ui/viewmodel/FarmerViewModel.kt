@@ -116,6 +116,9 @@ class FarmerViewModel : ViewModel() {
     private val _getMagazineDetailsResponse = MutableLiveData<UiState<JsonObject>>()
     val getMagazineDetailsResponse: LiveData<UiState<JsonObject>> = _getMagazineDetailsResponse
 
+    private val _getPromoBannerResponse = MutableLiveData<UiState<JsonObject>>()
+    val getPromoBannerResponse: LiveData<UiState<JsonObject>> = _getPromoBannerResponse
+
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -931,6 +934,30 @@ class FarmerViewModel : ViewModel() {
                 }
 
                 _getMagazineDetailsResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getPromoBanner() {
+        viewModelScope.launch {
+            _getPromoBannerResponse.value = UiState.Loading
+            try {
+                val retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val api = retrofit.create(ApiService::class.java)
+                val response = api.getPromoBanner()
+                _getPromoBannerResponse.value = UiState.Success(response)
+
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+
+                _getPromoBannerResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }

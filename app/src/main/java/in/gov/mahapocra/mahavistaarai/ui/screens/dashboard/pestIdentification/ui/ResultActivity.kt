@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.mahavistaarai.pestIdentification.ui
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.ui
 
 import android.content.Context
 import android.content.Intent
@@ -24,8 +24,8 @@ import androidx.lifecycle.ViewModelProvider
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityResultBinding
-import `in`.gov.mahapocra.mahavistaarai.pestIdentification.data.model.AnalysisData
-import `in`.gov.mahapocra.mahavistaarai.pestIdentification.data.repository.PredictRepository
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.data.model.AnalysisData
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.data.repository.PredictRepository
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper

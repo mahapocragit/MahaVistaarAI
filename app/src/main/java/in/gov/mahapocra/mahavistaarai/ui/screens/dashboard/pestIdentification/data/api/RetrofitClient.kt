@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.mahavistaarai.pestIdentification.data.api
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.data.api
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
