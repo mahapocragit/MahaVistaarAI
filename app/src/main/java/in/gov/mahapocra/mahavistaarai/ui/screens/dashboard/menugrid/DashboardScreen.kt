@@ -79,6 +79,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.Pests
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard.SoilHealthCardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.sop.SOPActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaScheduleActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.AboutActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.CreditsActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.CostCalculatorDashboardActivity
@@ -294,7 +295,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             "soilcard" -> Intent(this, SoilHealthCardActivity::class.java)
             "climatetech" -> Intent(this, ClimateResilientTechnology::class.java)
             "marketPrice" -> Intent(this, MarketPrice::class.java)
-            "shetishala" -> Intent(this, ShetishalaActivity::class.java)
+            "shetishala" -> Intent(this, ShetishalaScheduleActivity::class.java)
             "warehouse" -> Intent(this, Warehouse::class.java)
             "customhire" -> Intent(this, CHCenterActivity::class.java)
             "videos" -> Intent(this, VideosActivity::class.java)
