@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.mahavistaarai.pestIdentification.data.model
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.data.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

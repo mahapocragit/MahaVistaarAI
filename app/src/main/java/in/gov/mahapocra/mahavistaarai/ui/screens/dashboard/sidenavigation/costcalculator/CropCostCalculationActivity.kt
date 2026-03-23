@@ -151,7 +151,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
         costCalculatorViewModel.addCropSpecificTransactionsResponse.observe(this) { response ->
             if (response != null) {
                 val currentSelectedYear =
-                    AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION", 2025)
+                    AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION", 2026)
                 val currentSelectedSeason =
                     AppPreferenceManager(this).getInt("CURRENT_SEASON_FOR_TRANSACTION", 1)
                 costCalculatorViewModel.getCropSpecificTransactions(
@@ -171,7 +171,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                 val jSONObject = JSONObject(response.toString())
                 Log.d(TAG, "setUpObservers: $jSONObject")
                 val currentSelectedYear =
-                    AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION", 2025)
+                    AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION", 2026)
                 val currentSelectedSeason =
                     AppPreferenceManager(this).getInt("CURRENT_SEASON_FOR_TRANSACTION", 1)
                 costCalculatorViewModel.getCropSpecificTransactions(
@@ -188,7 +188,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                 val jSONObject = JSONObject(response.toString())
                 Log.d(TAG, "setUpObservers: $jSONObject")
                 val currentSelectedYear =
-                    AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION", 2025)
+                    AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION", 2026)
                 val currentSelectedSeason =
                     AppPreferenceManager(this).getInt("CURRENT_SEASON_FOR_TRANSACTION", 1)
                 costCalculatorViewModel.getCropSpecificTransactions(
@@ -213,7 +213,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                 append(getString(R.string.crops_profit))
             }
             val currentSelectedYear =
-                AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION", 2025)
+                AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION", 2026)
             val currentSelectedSeason =
                 AppPreferenceManager(this).getInt("CURRENT_SEASON_FOR_TRANSACTION", 1)
             costCalculatorViewModel.getCropSpecificTransactions(
@@ -464,7 +464,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                     }
                     binding.cropNameTextView.text = selectedCropName
                     val currentSelectedYear =
-                        AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION", 2025)
+                        AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION", 2026)
                     val currentSelectedSeason =
                         AppPreferenceManager(this).getInt("CURRENT_SEASON_FOR_TRANSACTION", 1)
                     costCalculatorViewModel.getCropSpecificTransactions(

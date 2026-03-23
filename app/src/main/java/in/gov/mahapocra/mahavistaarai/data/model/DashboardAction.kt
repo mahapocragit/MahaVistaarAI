@@ -9,5 +9,8 @@ enum class DashboardAction {
     PEST_STAGE,
     MARKET,
     DBT,
-    WAREHOUSE
+    WAREHOUSE,
+    DASHBOARD_MAGAZINE,
+    COST_CALCULATOR,
+    LEADERBOARD
 }

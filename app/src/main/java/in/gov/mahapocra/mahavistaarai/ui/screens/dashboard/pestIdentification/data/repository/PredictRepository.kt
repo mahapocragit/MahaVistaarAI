@@ -1,9 +1,9 @@
-package `in`.gov.mahapocra.mahavistaarai.pestIdentification.data.repository
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.data.repository
 
 import android.content.Context
 import android.net.Uri
-import `in`.gov.mahapocra.mahavistaarai.pestIdentification.AppConstant
-import `in`.gov.mahapocra.mahavistaarai.pestIdentification.data.api.RetrofitClient
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.AppConstant
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.data.api.RetrofitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType

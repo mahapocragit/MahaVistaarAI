@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.mahavistaarai.pestIdentification.ui
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.ui
 
 import android.content.Context
 import android.net.Uri
@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import `in`.gov.mahapocra.mahavistaarai.pestIdentification.data.repository.PredictRepository
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.data.repository.PredictRepository
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import kotlinx.coroutines.launch
 import java.io.IOException

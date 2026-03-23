@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.mahavistaarai.pestIdentification
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification
 
 import android.view.LayoutInflater
 import android.view.View

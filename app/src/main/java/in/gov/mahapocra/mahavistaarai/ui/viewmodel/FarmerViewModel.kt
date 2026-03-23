@@ -107,11 +107,17 @@ class FarmerViewModel : ViewModel() {
     private val _consentResponse = MutableLiveData<UiState<JsonObject>>()
     val consentResponse: LiveData<UiState<JsonObject>> = _consentResponse
 
-    private val _saveSubscribedTopicResponse = MutableLiveData<JsonObject>()
-    val saveSubscribedTopicResponse: LiveData<JsonObject> = _saveSubscribedTopicResponse
+    private val _saveSubscribedTopicResponse = MutableLiveData<UiState<JsonObject>>()
+    val saveSubscribedTopicResponse: LiveData<UiState<JsonObject>> = _saveSubscribedTopicResponse
 
     private val _deleteSubscribedTopicResponse = MutableLiveData<UiState<JsonObject>>()
     val deleteSubscribedTopicResponse: LiveData<UiState<JsonObject>> = _deleteSubscribedTopicResponse
+
+    private val _getMagazineDetailsResponse = MutableLiveData<UiState<JsonObject>>()
+    val getMagazineDetailsResponse: LiveData<UiState<JsonObject>> = _getMagazineDetailsResponse
+
+    private val _getPromoBannerResponse = MutableLiveData<UiState<JsonObject>>()
+    val getPromoBannerResponse: LiveData<UiState<JsonObject>> = _getPromoBannerResponse
 
 
     private val _error = MutableLiveData<String>()
@@ -846,9 +852,9 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun saveSubscribedTopic(context: Context, topic: String) {
-        val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+    fun saveSubscribedTopic(farmerId: Int, topic: String) {
         viewModelScope.launch {
+            _saveSubscribedTopicResponse.value = UiState.Loading
             try {
                 val jsonObject = JSONObject()
                 jsonObject.put("user_id", farmerId)
@@ -857,7 +863,7 @@ class FarmerViewModel : ViewModel() {
                 val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val api = retrofit.create(ApiService::class.java)
                 val response = api.saveSubscribedTopic(requestBody)
-                _saveSubscribedTopicResponse.value = response
+                _saveSubscribedTopicResponse.value = UiState.Success(response)
             } catch (e: Exception) {
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
@@ -865,7 +871,7 @@ class FarmerViewModel : ViewModel() {
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
+                _saveSubscribedTopicResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -904,6 +910,54 @@ class FarmerViewModel : ViewModel() {
                 }
 
                 _deleteSubscribedTopicResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getMagazineDetails() {
+        viewModelScope.launch {
+            _getMagazineDetailsResponse.value = UiState.Loading
+            try {
+                val retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val api = retrofit.create(ApiService::class.java)
+                val response = api.getMagazineDetails()
+                _getMagazineDetailsResponse.value = UiState.Success(response)
+
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+
+                _getMagazineDetailsResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getPromoBanner() {
+        viewModelScope.launch {
+            _getPromoBannerResponse.value = UiState.Loading
+            try {
+                val retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val api = retrofit.create(ApiService::class.java)
+                val response = api.getPromoBanner()
+                _getPromoBannerResponse.value = UiState.Success(response)
+
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+
+                _getPromoBannerResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }

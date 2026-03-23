@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.mahavistaarai.pestIdentification.ui
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.ui
 
 import android.content.Context
 import android.content.Intent

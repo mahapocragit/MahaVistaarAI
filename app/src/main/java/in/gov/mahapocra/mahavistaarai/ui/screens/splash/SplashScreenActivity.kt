@@ -16,6 +16,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
@@ -25,6 +26,7 @@ class SplashScreenActivity : AppCompatActivity() {
     private var farmerId: Int = 0
     private lateinit var languageToLoad: String
     private lateinit var appVersionText: TextView
+    private lateinit var appPreferenceManager: AppPreferenceManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,13 +36,13 @@ class SplashScreenActivity : AppCompatActivity() {
         }
         switchLanguage(this, languageToLoad)
         setContentView(R.layout.activity_splash_screen)
-
+        appPreferenceManager = AppPreferenceManager(this)
         val config = ClarityConfig(
             projectId = APIKeys.CLARITY_PROD,
             logLevel = LogLevel.Verbose
         )
         Clarity.initialize(applicationContext, config)
-
+        appPreferenceManager.saveBoolean("SHOW_PROMO_DIALOG", true)
         appVersionText = findViewById(R.id.appVersionText)
         appVersionText.text = buildString {
             append(getString(R.string.app_version))

@@ -188,7 +188,7 @@
 
     <string name="weatherText">मोबाईल नंबर टाका</string>
     <string name="todays_temp">आजचे हवामान </string>
-    <string name="select_crop">पीक निवडा </string>
+    <string name="select_crop">पीक निवडा</string>
     <string name="select_sowing_date">पेरणीची तारीख निवडा</string>
     <string name="advisory_next_button">पुढे</string>
     <string name="user_feedback_button">कृपया तुमचा अभिप्राय द्या</string>
@@ -438,6 +438,7 @@
     <string name="click_here_to_know_your_farmer_id">तुमचा शेतकरी ओळख क्रमांक जाणून घेण्यासाठी येथे क्लिक करा</string>
     <string name="etl_crossed_click_here_for_advisory">किड आणि रोगांचा इशारा</string>
     <string name="etl_crop_advisory">पिकांच्या कीड व रोगावरील तज्ञांचा सल्ला</string>
+    <string name="dashboard_magazine">महापशुधन वार्ता</string>
     <string name="click_here_to_view_full_advisory">पूर्ण सल्ला पाहण्यासाठी येथे क्लिक करा.</string>
     <string name="date_etl">दि.: </string>
     <string name="cost_calculator">खर्च गणक</string>
@@ -565,4 +566,7 @@
     <string name="get_ndiagnosis">अपलोड\nकरा</string>
     <string name="image_upload_pnd_warning">कृपया फक्त JPEG, PNG किंवा JPG फाइल अपलोड करा. फाइलचा आकार जास्तीत जास्त 10 MB असावा.</string>
     <string name="snackbar_pnd_message">फक्त JPEG, PNG किंवा JPG प्रतिमा (कमाल 10 MB) परवानगी आहेत.</string>
+    <string name="notice_promo">सूचना</string>
+    <string name="message_promo">निवडलेल्या पिकासाठी ही सुविधा उपलब्ध नाही. कृपया दुसरे पीक निवडा आणि पुन्हा प्रयत्न करा.</string>
+    <string name="ok_promo">ठीक आहे</string>
 </resources>

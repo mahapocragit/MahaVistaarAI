@@ -72,9 +72,11 @@ class FBaseMessagingService : FirebaseMessagingService() {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 
+        val requestCode = (notificationId?.toLongOrNull() ?: System.currentTimeMillis()) % Int.MAX_VALUE
+
         val pendingIntent = PendingIntent.getActivity(
             this,
-            notificationId?.toInt() ?: System.currentTimeMillis().toInt(),
+            requestCode.toInt(),
             targetIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )

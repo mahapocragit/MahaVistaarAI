@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <!-- 🔥 FORCE REMOVE MEDIA PERMISSIONS FROM ALL LIBRARIES -->
     <uses-permission
         android:name="android.permission.READ_MEDIA_IMAGES"
@@ -17,70 +16,52 @@
         tools:node="remove" />
     <uses-permission
         android:name="android.permission.ACCESS_MEDIA_LOCATION"
-        tools:node="remove" />
-
-    <!-- ===== SAFE & JUSTIFIED PERMISSIONS ===== -->
-
-    <uses-permission android:name="android.permission.INTERNET" />
-
-    <!-- Location (keep only if app uses GPS / maps / weather) -->
+        tools:node="remove" /> <!-- ===== SAFE & JUSTIFIED PERMISSIONS ===== -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- Location (keep only if app uses GPS / maps / weather) -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-    <!-- Notifications (Android 13+) -->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
-    <!-- Camera -->
-    <uses-permission android:name="android.permission.CAMERA" />
-
-    <!-- Audio (keep only if voice recording is used) -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- Notifications (Android 13+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> <!-- Camera -->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- Audio (keep only if voice recording is used) -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-
-    <!-- Phone calls (ONLY if app directly places calls) -->
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" /> <!-- Phone calls (ONLY if app directly places calls) -->
     <!-- Remove if you only open dialer -->
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-
-    <!-- ===== HARDWARE FEATURES ===== -->
-
+    <uses-permission android:name="android.permission.CALL_PHONE" /> <!-- ===== HARDWARE FEATURES ===== -->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
-
     <uses-feature
         android:name="android.hardware.camera.autofocus"
         android:required="false" />
-
     <uses-feature
         android:name="android.hardware.telephony"
         android:required="false" />
 
-    <!-- ===== APPLICATION ===== -->
-
     <application
         android:name=".application.MyApplication"
         android:allowBackup="false"
-        android:pageSizeCompat="enabled"
         android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher_store"
         android:label="@string/app_name"
         android:localeConfig="@xml/locales_config"
         android:networkSecurityConfig="@xml/network_security_config"
+        android:pageSizeCompat="enabled"
         android:roundIcon="@mipmap/ic_launcher_store_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FarmerApp">
-
+        <activity
+            android:name=".ui.screens.dashboard.magazine.MagazineDashboardActivity"
+            android:exported="false" />
         <!-- ================= ACTIVITIES ================= -->
         <activity
-            android:name=".pestIdentification.ui.CameraActivity"
+            android:name=".ui.screens.dashboard.pestIdentification.ui.CameraActivity"
             android:exported="false" />
         <activity
-            android:name=".pestIdentification.ui.PestIdentificationActivity"
+            android:name=".ui.screens.dashboard.pestIdentification.ui.PestIdentificationActivity"
             android:exported="false" />
         <activity
-            android:name=".pestIdentification.ui.ResultActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="false" />
+            android:name=".ui.screens.dashboard.pestIdentification.ui.ResultActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".sma.ui.screens.KTReportActivity" />
         <activity android:name=".sma.ui.screens.KTActivity" />
         <activity android:name=".sma.ui.screens.KTProjectInformation" />
@@ -98,7 +79,6 @@
         <activity android:name=".sma.ui.screens.WebviewActivity" />
         <activity android:name=".sma.ui.screens.KTDashboardActivity" />
         <activity android:name=".sma.ui.screens.SmaLoginActivity" />
-
         <activity android:name=".ui.screens.dashboard.shetishala.ShetishalaVideosActivity" />
         <activity android:name=".ui.screens.authentication.FarmerDetailsConfirmationActivity" />
         <activity android:name=".ui.screens.authentication.AuthenticateFarmerIdActivity" />
@@ -124,7 +104,6 @@
         <activity android:name=".ui.screens.dashboard.menugrid.sop.SOPActivity" />
         <activity android:name=".ui.screens.dashboard.menugrid.sop.SOPWebViewActivity" />
         <activity android:name=".ui.screens.dashboard.sidenavigation.AboutActivity" />
-
         <activity android:name=".ui.screens.dashboard.forum.SingleReplyActivity" />
         <activity android:name=".ui.screens.dashboard.forum.ForumPostDetailsActivity" />
         <activity android:name=".ui.screens.dashboard.forum.ForumViewActivity" />
@@ -152,42 +131,31 @@
         <activity android:name=".ui.screens.dashboard.menugrid.soilhealthcard.SoilHealthCardActivity" />
         <activity android:name=".ui.screens.dashboard.menugrid.Warehouse" />
         <activity android:name=".ui.screens.notification.NotificationActivity" />
-
         <activity
             android:name=".ui.screens.authentication.LoginScreen"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
-
-        <!-- ===== FIREBASE MESSAGING ===== -->
-
+            android:windowSoftInputMode="adjustPan|stateHidden" /> <!-- ===== FIREBASE MESSAGING ===== -->
         <service
             android:name=".data.services.FBaseMessagingService"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
-
-        <!-- ===== LAUNCHER ===== -->
-
+        </service> <!-- ===== LAUNCHER ===== -->
         <activity
             android:name=".ui.screens.splash.SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.screens.dashboard.menugrid.DashboardScreen"
             android:label="@string/app_name"
-            android:theme="@style/DashboardTheme"/>
-
+            android:theme="@style/DashboardTheme" />
         <activity android:name=".ui.screens.authentication.ProfileScreen" />
-        <activity android:name=".ui.screens.authentication.Registration" />
-
-        <!-- ===== FILE PROVIDER ===== -->
-
+        <activity android:name=".ui.screens.authentication.Registration" /> <!-- ===== FILE PROVIDER ===== -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.android.fileprovider"
@@ -201,7 +169,6 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="default_channel_id" />
-
     </application>
 
 </manifest>

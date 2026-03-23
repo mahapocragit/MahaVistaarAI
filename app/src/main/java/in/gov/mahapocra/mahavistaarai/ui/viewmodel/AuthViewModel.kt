@@ -47,14 +47,14 @@ class AuthViewModel : ViewModel() {
     private val _updateFarmerDetailsByIdResponse = MutableLiveData<JsonObject>()
     val updateFarmerDetailsByIdResponse: LiveData<JsonObject> = _updateFarmerDetailsByIdResponse
 
-    private val _getRegisteredDeviceCountByDeviceIdResponse = MutableLiveData<JsonObject>()
-    val getRegisteredDeviceCountByDeviceIdResponse: LiveData<JsonObject> = _getRegisteredDeviceCountByDeviceIdResponse
+    private val _getRegisteredDeviceCountByDeviceIdResponse = MutableLiveData<UiState<JsonObject>>()
+    val getRegisteredDeviceCountByDeviceIdResponse: LiveData<UiState<JsonObject>> = _getRegisteredDeviceCountByDeviceIdResponse
 
     private val _userDetailsState = MutableLiveData<UiState<JsonObject>>()
     val userDetailsState: LiveData<UiState<JsonObject>> = _userDetailsState
 
-    private val _compareOtpResponse = MutableLiveData<JsonObject>()
-    val compareOtpResponse: LiveData<JsonObject> = _compareOtpResponse
+    private val _compareOtpResponse = MutableLiveData<UiState<JsonObject>>()
+    val compareOtpResponse: LiveData<UiState<JsonObject>> = _compareOtpResponse
 
     private val _compareOtpResponseReg = MutableLiveData<JsonObject>()
     val compareOtpResponseReg: LiveData<JsonObject> = _compareOtpResponseReg
@@ -249,28 +249,22 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    fun getRegisteredDeviceCountByDeviceId(context: Context) {
+    fun getRegisteredDeviceCountByDeviceId(deviceId: String) {
         viewModelScope.launch {
-            ProgressHelper.showProgressDialog(context)
-            val deviceId =
-                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+            _getRegisteredDeviceCountByDeviceIdResponse.value = UiState.Loading
             try {
-                val userId =
-                    AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
                 val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val api = retrofit.create(ApiService::class.java)
                 val response = api.getRegisteredDeviceCountByDeviceId(deviceId)
-                ProgressHelper.disableProgressDialog()
-                _getRegisteredDeviceCountByDeviceIdResponse.value = response
+                _getRegisteredDeviceCountByDeviceIdResponse.value = UiState.Success(response)
             } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
+                _getRegisteredDeviceCountByDeviceIdResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -308,17 +302,19 @@ class AuthViewModel : ViewModel() {
 
     fun compareOtp(timestamp: Long, mobile: String, enteredOTP: String) {
         viewModelScope.launch {
-            val jsonObject = JSONObject()
+            _compareOtpResponse.value = UiState.Loading
             try {
-                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
-                jsonObject.put("otp", enteredOTP)
+                val jsonObject = JSONObject().apply {
+                    put("SecurityKey", ApiConstants.SSO_KEY)
+                    put("otp", enteredOTP)
+                }
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit: Retrofit =
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response =
                     apiRequest.compareOtp(mobile.trim { it <= ' ' }, timestamp, requestBody)
-                _compareOtpResponse.value = response
+                _compareOtpResponse.value = UiState.Success(response)
             } catch (e: Exception) {
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
@@ -326,7 +322,7 @@ class AuthViewModel : ViewModel() {
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
+                _compareOtpResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }

@@ -1,6 +1,7 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -8,6 +9,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.widget.RadioButton
 import android.widget.Toast
@@ -88,6 +90,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     private var farmerId = 0
     private var fertilizerOptionValue: JSONArray? = null
     private val date = Date()
+    private var isShowing = false
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -126,6 +129,46 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         wotrCropId = intent.getIntExtra("wotr_crop_id", 0).toString()
         mUrl = intent.getStringExtra("mUrl")
         sowingDate = intent.getStringExtra("sowingDate")
+
+        if (wotrCropId == "0") {
+            if (!isShowing) {
+                isShowing = true
+                val dialog = AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.notice_promo))
+                    .setMessage(getString(R.string.message_promo))
+                    .setCancelable(false)
+                    .setPositiveButton(getString(R.string.select_crop)) { dialogInterface, _ ->
+                        val sharing = Intent(this, AddCropActivity::class.java)
+                        sharing.putExtra("id", cropId)
+                        sharing.putExtra("mName", cropName)
+                        sharing.putExtra("wotr_crop_id", wotrCropId)
+                        sharing.putExtra("mUrl", mUrl)
+
+                        AppPreferenceManager(this).saveString(
+                            AppConstants.ACTION_FROM_DASHBOARD,
+                            AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD
+                        )
+
+                        isShowing = false
+                        startActivity(sharing)
+                        dialogInterface.dismiss()
+                    }
+                    .create()
+
+                dialog.setOnKeyListener { _, keyCode, _ ->
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dialog.dismiss()
+
+                        // trigger your back logic manually
+                        onBackPressedDispatcher.onBackPressed()
+
+                        true
+                    } else false
+                }
+
+                dialog.show()
+            }
+        }
 
         binding.sowingInfoLayout.cropInfoCardView.setOnClickListener {
             val sharing = Intent(this, AddCropActivity::class.java)
@@ -300,6 +343,52 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         binding.plotSizeTitleTextView.text = getString(R.string.plot_size)
         binding.acreRadioButton.text = getString(R.string.acre)
         binding.radioButton2.text = getString(R.string.hectare)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        try {
+            if (wotrCropId == "0") {
+                if (!isShowing) {
+                    isShowing = true
+                    val dialog = AlertDialog.Builder(this)
+                        .setTitle(getString(R.string.notice_promo))
+                        .setMessage(getString(R.string.message_promo))
+                        .setCancelable(false)
+                        .setPositiveButton(getString(R.string.select_crop)) { dialogInterface, _ ->
+                            val sharing = Intent(this, AddCropActivity::class.java)
+                            sharing.putExtra("id", cropId)
+                            sharing.putExtra("mName", cropName)
+                            sharing.putExtra("wotr_crop_id", wotrCropId)
+                            sharing.putExtra("mUrl", mUrl)
+
+                            AppPreferenceManager(this).saveString(
+                                AppConstants.ACTION_FROM_DASHBOARD,
+                                AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD
+                            )
+
+                            isShowing = false
+                            startActivity(sharing)
+                            dialogInterface.dismiss()
+                        }
+                        .create()
+
+                    dialog.setOnKeyListener { _, keyCode, _ ->
+                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                            dialog.dismiss()
+
+                            // trigger your back logic manually
+                            onBackPressedDispatcher.onBackPressed()
+
+                            true
+                        } else false
+                    }
+
+                    dialog.show()
+                }
+            }
+        } catch (_: Exception) {
+        }
     }
 
     private fun getSelectedSavedOption() {

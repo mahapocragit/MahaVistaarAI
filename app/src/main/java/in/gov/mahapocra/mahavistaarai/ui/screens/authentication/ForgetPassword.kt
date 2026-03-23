@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityForgetPasswordTempBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
@@ -28,6 +29,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.OtpRateLimiter.provideValidEncryptedString
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONObject
 
 class ForgetPassword : AppCompatActivity() {
@@ -81,7 +83,14 @@ class ForgetPassword : AppCompatActivity() {
                     }
                 }
 
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             })
 
@@ -124,20 +133,32 @@ class ForgetPassword : AppCompatActivity() {
             }
         }
 
-        authViewModel.compareOtpResponse.observe(this) {
-            if (it != null) {
-                val calculatedResponse = provideValidEncryptedString(timestamp)
-                val jSONObject = JSONObject(it.toString())
-                val status = jSONObject.optInt("status")
-                val response = jSONObject.optString("response")
-                if (status == 200) {
-                    if (calculatedResponse != response) {
-                        userVerification()
+        authViewModel.compareOtpResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
+                }
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    val calculatedResponse = provideValidEncryptedString(timestamp)
+                    val jSONObject = JSONObject(state.data.toString())
+                    val status = jSONObject.optInt("status")
+                    val response = jSONObject.optString("response")
+                    if (status == 200) {
+                        if (calculatedResponse != response) {
+                            userVerification()
+                        } else {
+                            Toast.makeText(this, R.string.wrong_OTP, Toast.LENGTH_LONG).show()
+                        }
                     } else {
-                        Toast.makeText(this, R.string.wrong_OTP, Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                     }
-                } else {
-                    Toast.makeText(this, response, Toast.LENGTH_LONG).show()
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_LONG).show()
                 }
             }
         }

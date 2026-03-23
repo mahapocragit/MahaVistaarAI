@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.mahavistaarai.pestIdentification.data.api
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.data.api
 
 import com.google.gson.JsonObject
 import okhttp3.MultipartBody

@@ -440,6 +440,7 @@
     <string name="click_here_to_know_your_farmer_id">Click here to know your Farmer ID</string>
     <string name="etl_crossed_click_here_for_advisory">Pest and Diseases Alert</string>
     <string name="etl_crop_advisory">Pest and Disease Advisory</string>
+    <string name="dashboard_magazine">Mahapashudhan Varta</string>
     <string name="click_here_to_view_full_advisory">Click here to view full advisory</string>
     <string name="date_etl">Date: </string>
     <string name="no_notification_right_now">No notification Right Now!!</string>
@@ -566,4 +567,7 @@
     <string name="get_ndiagnosis">Upload\nPhoto</string>
     <string name="image_upload_pnd_warning">Only JPEG, PNG, and JPG file formats are allowed. The maximum file size is 10 MB.</string>
     <string name="snackbar_pnd_message">Please upload only JPEG, PNG, or JPG images up to 10 MB</string>
+    <string name="notice_promo">Notice</string>
+    <string name="message_promo">This feature is not available for the selected crop. Please choose a different crop and try again.</string>
+    <string name="ok_promo">OK</string>
 </resources>

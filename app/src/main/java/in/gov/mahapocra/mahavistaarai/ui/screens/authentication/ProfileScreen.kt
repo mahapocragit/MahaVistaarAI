@@ -277,24 +277,36 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
             }
         }
 
-        registrationViewModel.getRegistrationResponse.observe(this) { response ->
-            if (response != null) {
-                val jSONObject = JSONObject(response.toString())
-                if (jSONObject.optInt("status") == 200) {
-                    val response: String = jSONObject.getString("response")
-                    Toast.makeText(this, response, Toast.LENGTH_LONG).show()
-                    var intent = Intent(this, LoginScreen::class.java)
-                    if (isUserLoggedIn) {
-                        intent = Intent(this, DashboardScreen::class.java)
+        registrationViewModel.getRegistrationResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
+                }
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    val jSONObject = JSONObject(state.data.toString())
+                    if (jSONObject.optInt("status") == 200) {
+                        val response: String = jSONObject.getString("response")
+                        Toast.makeText(this, response, Toast.LENGTH_LONG).show()
+                        var intent = Intent(this, LoginScreen::class.java)
+                        if (isUserLoggedIn) {
+                            intent = Intent(this, DashboardScreen::class.java)
+                        }
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        val message: String = jSONObject.getString("Message")
+                        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
                     }
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                    finish()
-                } else {
-                    val message: String = jSONObject.getString("Message")
-                    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -417,58 +429,46 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
             machineId = getMachineId()
             if (farmerRegisterID > 0) {
                 isUserLoggedIn = true
-
                 val prefManager = AppPreferenceManager(this)
                 val jsonStr = prefManager.getString("topic_saved_fcm")
-                val jsonArray = JSONArray(jsonStr ?: "[]")
+                val jsonArray = if (!jsonStr.isNullOrBlank()) {
+                    JSONArray(jsonStr)
+                } else {
+                    JSONArray()
+                }
 
-                for (i in 0 until jsonArray.length()) {
-                    val topic = jsonArray.optString(i)
-
-                    try {
-                        val topicHead = topic.substringBefore("_")
-
-                        if (topicHead == "taluka") {
-
-                            // If same taluka, nothing to delete
-                            if (topic == talukaToken) {
-                                userValidationAndUpdateProfile()
-                                break
-                            }
-
-                            // 🔥 Only ONE topic, but API expects ARRAY
-                            unSubscribeToTopic(topic) { unsubscribed ->
-
-                                if (unsubscribed) {
-                                    farmerViewModel.deleteSubscribedTopics(
-                                        farmerId = farmerId,
-                                        topics = listOf(topic) // 👈 ARRAY
-                                    )
-
-                                    // Remove topic locally
-                                    val updatedArray = JSONArray()
-                                    for (j in 0 until jsonArray.length()) {
-                                        val savedTopic = jsonArray.optString(j)
-                                        if (savedTopic != topic) {
-                                            updatedArray.put(savedTopic)
-                                        }
-                                    }
-
-                                    prefManager.saveString(
-                                        "topic_saved_fcm",
-                                        updatedArray.toString()
-                                    )
-                                }
-
-                                // ✅ Continue flow ONLY ONCE
-                                userValidationAndUpdateProfile()
-                            }
-
-                            break // only one taluka topic exists
-                        }
-                    } catch (_: Exception) {
+                val topics = (0 until jsonArray.length()).map { jsonArray.optString(it) }
+                val talukaTopic = topics.firstOrNull { it.startsWith("taluka_") }
+                when {
+                    // ✅ No taluka topic saved
+                    talukaTopic == null -> {
                         userValidationAndUpdateProfile()
-                        break
+                    }
+                    // ✅ Same taluka topic
+                    talukaTopic == talukaToken -> {
+                        userValidationAndUpdateProfile()
+                    }
+                    // ✅ Different taluka topic
+                    else -> {
+                        unSubscribeToTopic(talukaTopic) { unsubscribed ->
+                            if (unsubscribed) {
+                                farmerViewModel.deleteSubscribedTopics(
+                                    farmerId = farmerId,
+                                    topics = listOf(talukaTopic)
+                                )
+                                val updatedArray = JSONArray()
+                                topics.forEach {
+                                    if (it != talukaTopic) {
+                                        updatedArray.put(it)
+                                    }
+                                }
+                                prefManager.saveString(
+                                    "topic_saved_fcm",
+                                    updatedArray.toString()
+                                )
+                            }
+                            userValidationAndUpdateProfile()
+                        }
                     }
                 }
             }
@@ -606,7 +606,6 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
                 jsonObject.put("Password", "")
                 jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
                 registrationViewModel.getRegistrationRequest(
-                    this,
                     registerMob,
                     mob.trim { it <= ' ' },
                     jsonObject

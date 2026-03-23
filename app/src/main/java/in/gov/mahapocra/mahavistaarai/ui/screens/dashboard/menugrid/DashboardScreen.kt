@@ -40,13 +40,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.microsoft.clarity.Clarity
+import com.squareup.okhttp.Dispatcher
 import com.squareup.picasso.Picasso
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.api.AppConstant
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.CropsCategName
 import `in`.gov.mahapocra.mahavistaarai.data.model.DashboardAction
@@ -55,7 +58,9 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.PocraRole
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDashboardScreenBinding
-import `in`.gov.mahapocra.mahavistaarai.pestIdentification.ui.PestIdentificationActivity
+import `in`.gov.mahapocra.mahavistaarai.databinding.DialogPromotionalPopupBinding
+import `in`.gov.mahapocra.mahavistaarai.sma.ui.adapters.KTReportDetailsAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.ui.PestIdentificationActivity
 import `in`.gov.mahapocra.mahavistaarai.sma.ui.screens.KTDashboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropRecyclerSapAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DashboardAdapter
@@ -65,6 +70,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.ProfileScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.etl.AgriStackAdvisoryActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.magazine.MagazineDashboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.DBTActivity
@@ -73,6 +79,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.Pests
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard.SoilHealthCardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.sop.SOPActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaScheduleActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.AboutActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.CreditsActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.CostCalculatorDashboardActivity
@@ -101,11 +108,13 @@ import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.unSubsc
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import org.osmdroid.views.overlay.Polygon
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.Calendar
@@ -155,6 +164,9 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         setContentView(binding.root)
         askForPermissions()
         observeResponse()
+        if (appPreferenceManager.getBoolean("SHOW_PROMO_DIALOG")) {
+            farmerViewModel.getPromoBanner()
+        }
         init()
         setUpListeners()
         FirebaseHelper(this)
@@ -255,6 +267,47 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         )
     }
 
+    private fun showPromotionalDialog(imageUrl: String, page: String) {
+        appPreferenceManager.saveBoolean("SHOW_PROMO_DIALOG", false)
+        val promoView = DialogPromotionalPopupBinding.inflate(layoutInflater)
+        val dialogPromo = AlertDialog.Builder(this).setView(promoView.root).create()
+        dialogPromo.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        promoView.closeImage.setOnClickListener {
+            dialogPromo.dismiss()
+        }
+        Glide.with(this).load(imageUrl).into(promoView.previewImage)
+        promoView.previewImage.setOnClickListener {
+            redirectToScreen(page)
+        }
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(1000)
+            dialogPromo.show()
+        }
+    }
+
+    private fun redirectToScreen(testValue: String) {
+        val targetIntent = when (testValue) {
+            "advisory" -> Intent(this, AdvisoryCropActivity::class.java)
+            "sop" -> Intent(this, SOPActivity::class.java)
+            "fertilizer" -> Intent(this, FertilizerCalculatorActivity::class.java)
+            "pestdisease" -> Intent(this, PestsAndDiseasesStages::class.java)
+            "weather" -> Intent(this, WeatherActivity::class.java)
+            "soilcard" -> Intent(this, SoilHealthCardActivity::class.java)
+            "climatetech" -> Intent(this, ClimateResilientTechnology::class.java)
+            "marketPrice" -> Intent(this, MarketPrice::class.java)
+            "shetishala" -> Intent(this, ShetishalaScheduleActivity::class.java)
+            "warehouse" -> Intent(this, Warehouse::class.java)
+            "customhire" -> Intent(this, CHCenterActivity::class.java)
+            "videos" -> Intent(this, VideosActivity::class.java)
+            "dbtschemes" -> Intent(this, DBTActivity::class.java)
+            "dashboard" -> Intent(this, DashboardScreen::class.java)
+            "etl_page" -> Intent(this, AgriStackAdvisoryActivity::class.java)
+            "pestDetection" -> Intent(this, PestIdentificationActivity::class.java)
+            else -> Intent(this, DashboardScreen::class.java)
+        }
+        startActivity(targetIntent)
+    }
+
     private fun setupDashboardRecyclerView() {
         binding.appBarMain.dashboardScreen.dashboardRecyclerView.apply {
             layoutManager = GridLayoutManager(this@DashboardScreen, 3)
@@ -336,6 +389,15 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
             DashboardAction.WAREHOUSE ->
                 startActivity(Intent(this, Warehouse::class.java))
+
+            DashboardAction.DASHBOARD_MAGAZINE ->
+                startActivity(Intent(this, MagazineDashboardActivity::class.java))
+
+            DashboardAction.COST_CALCULATOR ->
+                startActivity(Intent(this, CostCalculatorDashboardActivity::class.java))
+
+            DashboardAction.LEADERBOARD -> {}
+//                startActivity(Intent(this, LeaderboardActivity::class.java))
         }
     }
 
@@ -350,6 +412,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     }
 
     private fun openFertilizer() {
+        savedCropWoTRId = if (savedCropWoTRId == "") "0" else savedCropWoTRId
         val intent = Intent(this, FertilizerCalculatorActivity::class.java)
         intent.putExtra("id", savedCropId)
         intent.putExtra("wotr_crop_id", savedCropWoTRId?.toInt())
@@ -960,6 +1023,32 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         val pocraRoles = mutableListOf<PocraRole>()
                         val rolesArray = data.optJSONArray("pocra_roles")
                         val topicJsonArray = data.optJSONArray("topics")
+                        val isFirstLogin =
+                            appPreferenceManager.getBoolean(AppConstant.IS_FIRST_LOGIN)
+
+                        if (isFirstLogin && topicJsonArray != null && topicJsonArray.length() > 0) {
+
+                            var successCount = 0
+                            val totalTopics = topicJsonArray.length()
+
+                            for (i in 0 until topicJsonArray.length()) {
+                                val topic = topicJsonArray.optString(i)
+
+                                subscribeToTopic(topic) { subscribed ->
+                                    if (subscribed) {
+                                        successCount++
+                                    }
+
+                                    // when all topics processed
+                                    if (successCount == totalTopics) {
+                                        appPreferenceManager.saveBoolean(
+                                            AppConstant.IS_FIRST_LOGIN,
+                                            false
+                                        )
+                                    }
+                                }
+                            }
+                        }
                         topicsArray = topicJsonArray
                         val topicsToSubArray = data.optJSONArray("topics_to_subscribe")
                         val topicsToDeleteArray = data.optJSONArray("topics_to_delete")
@@ -973,7 +1062,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                                 subscribeToTopic(topic) { subscribed ->
                                     if (subscribed) {
                                         topicJsonArray.put(topic)
-                                        farmerViewModel.saveSubscribedTopic(this, topic)
+                                        farmerViewModel.saveSubscribedTopic(farmerId, topic)
                                     }
                                     completed++
                                     if (completed == total) {
@@ -1222,6 +1311,28 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
                 is UiState.Error -> {
                     ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        farmerViewModel.getPromoBannerResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                }
+
+                is UiState.Success -> {
+                    val jsonObject = JSONObject(state.data.toString())
+                    val dataObject = jsonObject.optJSONObject("data")
+                    if (dataObject != null) {
+                        val imageUrl = dataObject.optString("url")
+                        val page = dataObject.optString("page")
+                        showPromotionalDialog(imageUrl, page)
+                    }
+
+                }
+
+                is UiState.Error -> {
                     Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                 }
             }
@@ -1628,7 +1739,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             "Pest and Diseases",
             "Market Price",
             "D.B.T.",
-            "Warehouse"
+            "Warehouse",
+            "Mahapashudhan Varta",
+            "Cost Calculator",
+            ""
         )
 
         private val arrayCategoryMarathi = arrayOf(
@@ -1640,7 +1754,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             "कीड व रोग",
             "बाजारभाव",
             "डी.बी.टी.",
-            "गोदाम"
+            "गोदाम",
+            "महापशुधन वार्ता",
+            "खर्च गणक",
+            ""
         )
 
         var arrayCategoryImg: IntArray = intArrayOf(
@@ -1652,7 +1769,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             R.drawable.ic_pestsanddiseases,
             R.drawable.ic_marketprice,
             R.drawable.icon_dbt,
-            R.drawable.ic_warehouse
+            R.drawable.ic_warehouse,
+            R.drawable.ic_magazine,
+            R.drawable.ic_cost_calculator_grid,
+            0
         )
 
         val formattedTimestamp: String
