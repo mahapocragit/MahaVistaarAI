@@ -23,6 +23,7 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -40,6 +41,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.microsoft.clarity.Clarity
 import com.squareup.okhttp.Dispatcher
@@ -69,6 +71,9 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.AuthenticateFa
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.ProfileScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.corousal.DashboardCorAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.corousal.DashboardItemCor
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.corousal.HandleViewClick
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.etl.AgriStackAdvisoryActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.magazine.MagazineDashboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
@@ -122,7 +127,7 @@ import java.util.Date
 import java.util.Locale
 import java.util.Objects
 
-class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecyclerItemClickListener {
+class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecyclerItemClickListener, HandleViewClick {
 
     private lateinit var binding: ActivityDashboardScreenBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
@@ -147,6 +152,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     private var selectedCropList: ArrayList<CropsCategName>? = null
     private var doubleBackToExitPressedOnce = false
     private var topicsArray = JSONArray()
+    private var items = emptyList<DashboardItemCor>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -167,6 +173,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         if (appPreferenceManager.getBoolean("SHOW_PROMO_DIALOG")) {
             farmerViewModel.getPromoBanner()
         }
+        setUpCarousal()
         init()
         setUpListeners()
         FirebaseHelper(this)
@@ -1824,5 +1831,102 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
 
         agristackLoginDialog.show()
+    }
+
+    private fun setUpCarousal(){
+        val corBinding = binding.appBarMain.dashboardScreen
+
+        items = listOf(
+            DashboardItemCor("Market Price", "Avg. Price\n6800", R.drawable.bg_orange),
+            DashboardItemCor("SOP", "ipsum dolor sit amet, consectetur adipiscing ", R.drawable.bg_red),
+            DashboardItemCor("Soil Health Card", "N:20 P:30 K:40", R.drawable.bg_yellow),
+            DashboardItemCor("Weather", "22.6°C", R.drawable.bg_blue),
+            DashboardItemCor("Crop Advisory", "ipsum dolor sit amet, consectetur adipiscing", R.drawable.bg_green),
+        )
+
+        corBinding.viewPager.adapter = DashboardCorAdapter(items, this)
+        corBinding.viewPager.apply {
+            offscreenPageLimit = 2 // Keeps 3 items on each side loaded
+            clipToPadding = false
+            clipChildren = false
+            val startPosition = Int.MAX_VALUE / 2 - (Int.MAX_VALUE / 2 % items.size)
+            try {
+                setCurrentItem(startPosition, false)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            // Increase padding to make the center item smaller,
+            // allowing more side items to peek in.
+            val paddingPx = 120 * resources.displayMetrics.density
+            setPadding(paddingPx.toInt(), 0, paddingPx.toInt(), 0)
+        }
+
+        // 🚫 Remove overscroll glow
+        (corBinding.viewPager.getChildAt(0) as RecyclerView).overScrollMode =
+            RecyclerView.OVER_SCROLL_NEVER
+
+        // 🔥 Center zoom effect
+        corBinding.viewPager.setPageTransformer { page, position ->
+
+            val absPosition = kotlin.math.abs(position)
+
+            // 🚫 Hide pages beyond 2 positions
+            if (absPosition > 2f) {
+                page.alpha = 0f
+                page.scaleX = 0f
+                page.scaleY = 0f
+                page.translationX = 0f
+                page.z = -1f
+                return@setPageTransformer
+            }
+
+            // ✅ Scale (center big, others small)
+            val scale = 1f - (absPosition * 0.15f)
+            page.scaleX = scale
+            page.scaleY = scale
+
+            // ✅ Overlap stacking effect
+            val overlapPx = -60 * page.resources.displayMetrics.density
+            page.translationX = position * overlapPx
+
+            // ✅ Proper Z order (center on top)
+            page.z = (2 - absPosition)
+
+            // ✅ Optional: slight fade for depth feel
+            page.alpha = 1f - (absPosition * 0.2f)
+        }
+
+        corBinding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                val actualPosition = position % items.size
+                setupDots(items.size, actualPosition)
+            }
+        })
+    }
+
+    private fun setupDots(total: Int, currentPosition: Int) {
+        val corBinding = binding.appBarMain.dashboardScreen
+        val dotsLayout = corBinding.dotsLayout
+        dotsLayout.removeAllViews() // Clear old dots
+
+        for (i in 0 until total) {
+            val dot = ImageView(this).apply {
+                setImageResource(
+                    if (i == currentPosition) R.drawable.dot_active
+                    else R.drawable.dot_inactive
+                )
+                val params = LinearLayout.LayoutParams(20, 20) // width, height in px
+                params.marginStart = 8
+                params.marginEnd = 8
+                layoutParams = params
+            }
+            dotsLayout.addView(dot)
+        }
+    }
+
+    override fun onCorItemClick(position: Int) {
+        val item = items[position]
+        Log.d("TAGGER", "onItemClick: ${item.title}")
     }
 }
