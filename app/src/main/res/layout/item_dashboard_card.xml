@@ -24,8 +24,8 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/_13sdp"
+                android:textColor="@color/text_black"
+                android:textSize="@dimen/_12sdp"
                 android:gravity="center_horizontal"
                 android:textStyle="bold" />
 
@@ -33,7 +33,8 @@
                 android:id="@+id/tvValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:paddingBottom="@dimen/_2sdp"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/_10sdp"
                 android:gravity="center_horizontal" />

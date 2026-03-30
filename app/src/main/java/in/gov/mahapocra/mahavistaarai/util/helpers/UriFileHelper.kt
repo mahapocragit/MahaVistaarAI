@@ -1,6 +1,8 @@
 package `in`.gov.mahapocra.mahavistaarai.util.helpers
 
 import android.content.ContentResolver
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.provider.OpenableColumns
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -34,6 +36,18 @@ object UriFileHelper {
             }
         }
         return name.ifEmpty { "tempfile" }
+    }
+
+    fun openYouTube(context: Context, url: String) {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            intent.setPackage("com.google.android.youtube") // Force YouTube app
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            // If YouTube app not installed → open in browser
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            context.startActivity(intent)
+        }
     }
 
 }

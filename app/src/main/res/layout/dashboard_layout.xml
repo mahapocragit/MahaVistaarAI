@@ -29,9 +29,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_90sdp"
                 android:layout_margin="@dimen/_5sdp"
-                android:visibility="gone"
                 android:background="@drawable/gradient_bg"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -94,8 +94,10 @@
             </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/carousalDashboardLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_marginBottom="@dimen/_10sdp">
 
                 <TextView
@@ -104,7 +106,7 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="@dimen/_5sdp"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:text="My Dashboard"
+                    android:text="@string/my_dashboard"
                     android:textColor="@color/actionbar_color_figma"
                     android:textSize="@dimen/_13sdp"
                     android:textStyle="bold"

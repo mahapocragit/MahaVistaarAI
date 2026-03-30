@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.mahavistaarai.R
 
 class DashboardCorAdapter(
-    private val items: List<DashboardItemCor>,
+    private val items: MutableList<DashboardItemCor>,
     private val handleViewClick: HandleViewClick
 ) : RecyclerView.Adapter<DashboardCorAdapter.ViewHolder>() {
 
@@ -35,6 +35,12 @@ class DashboardCorAdapter(
         holder.container.setOnClickListener {
             handleViewClick.onCorItemClick(realPosition)
         }
+    }
+
+    fun updateList(newList: List<DashboardItemCor>) {
+        items.clear()
+        items.addAll(newList)
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = Int.MAX_VALUE // 🔥 infinite

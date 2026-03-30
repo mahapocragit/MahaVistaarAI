@@ -40,8 +40,10 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLoginScreenBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
@@ -60,6 +62,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     private lateinit var binding: ActivityLoginScreenBinding
     private lateinit var appPreferenceManager: AppPreferenceManager
     private val authViewModel: AuthViewModel by viewModels()
+    private val farmerViewModel: FarmerViewModel by viewModels()
     private lateinit var refreshToken: String
     private var timestamp: Long = 0
     private lateinit var mobileNo: String
@@ -92,6 +95,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         setContentView(binding.root)
         uiResponsive(binding.root)
         FirebaseHelper(this)
+        checkForUpdate()
         appPreferenceManager = AppPreferenceManager(this)
         binding.changeLanguageImageView.setOnClickListener {
             openChangeLangPopup()
@@ -827,6 +831,31 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 resendOTP.setTextColor(ContextCompat.getColor(this@LoginScreen, R.color.white))
             }
         }.start()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkForUpdate()
+    }
+
+    private fun checkForUpdate(){
+        farmerViewModel.getAppVersionResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {}
+                is UiState.Success -> {
+                    val appHelper = AppHelper(this@LoginScreen)
+                    val jsonResponse = JSONObject(state.data.toString())
+                    val remoteAppVersion = jsonResponse.optInt("version_code")
+                    val currentAppVersion = appHelper.getCurrentAppVersion()
+                    if (remoteAppVersion > currentAppVersion) {
+                        appHelper.showUpdateDialog()
+                    }
+                }
+
+                is UiState.Error -> {}
+            }
+        }
+        farmerViewModel.getAppVersion()
     }
 
     override fun attachBaseContext(newBase: Context) {
