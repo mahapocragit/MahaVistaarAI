@@ -23,6 +23,7 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -36,13 +37,14 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.microsoft.clarity.Clarity
-import com.squareup.okhttp.Dispatcher
 import com.squareup.picasso.Picasso
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
@@ -59,8 +61,6 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDashboardScreenBinding
 import `in`.gov.mahapocra.mahavistaarai.databinding.DialogPromotionalPopupBinding
-import `in`.gov.mahapocra.mahavistaarai.sma.ui.adapters.KTReportDetailsAdapter
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.ui.PestIdentificationActivity
 import `in`.gov.mahapocra.mahavistaarai.sma.ui.screens.KTDashboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropRecyclerSapAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DashboardAdapter
@@ -69,6 +69,9 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.AuthenticateFa
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.ProfileScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.corousal.DashboardCorAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.corousal.DashboardItemCor
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.corousal.HandleViewClick
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.etl.AgriStackAdvisoryActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.magazine.MagazineDashboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
@@ -78,6 +81,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.marketpric
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard.SoilHealthCardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.sop.SOPActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.ui.PestIdentificationActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaScheduleActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.AboutActivity
@@ -94,6 +98,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -106,15 +111,14 @@ import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper.shrinkToCen
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.subscribeToTopic
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.unSubscribeToTopic
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.UriFileHelper.openYouTube
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import org.osmdroid.views.overlay.Polygon
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.Calendar
@@ -122,7 +126,8 @@ import java.util.Date
 import java.util.Locale
 import java.util.Objects
 
-class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecyclerItemClickListener {
+class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecyclerItemClickListener,
+    HandleViewClick {
 
     private lateinit var binding: ActivityDashboardScreenBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
@@ -147,6 +152,15 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     private var selectedCropList: ArrayList<CropsCategName>? = null
     private var doubleBackToExitPressedOnce = false
     private var topicsArray = JSONArray()
+    private var carousalItemArray = JSONArray()
+    private val autoScrollHandler = Handler(Looper.getMainLooper())
+    private var autoScrollRunnable: Runnable? = null
+    private lateinit var dashboardAdapter: DashboardCorAdapter
+    private val items = mutableListOf<DashboardItemCor>()
+    private lateinit var pageChangeCallback: ViewPager2.OnPageChangeCallback
+    private var isUpdateChecked = false
+    private var isPromoFetched = false
+    private var isPromoDialogShowing = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -164,12 +178,11 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         setContentView(binding.root)
         askForPermissions()
         observeResponse()
-        if (appPreferenceManager.getBoolean("SHOW_PROMO_DIALOG")) {
-            farmerViewModel.getPromoBanner()
-        }
+//        setUpCarousal()
         init()
         setUpListeners()
         FirebaseHelper(this)
+        checkForUpdate()
         binding.appBarMain.dashboardScreen.progressBar.visibility = View.VISIBLE
         binding.appBarMain.dashboardScreen.temperatureTextView.visibility = View.GONE
 
@@ -267,21 +280,66 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         )
     }
 
-    private fun showPromotionalDialog(imageUrl: String, page: String) {
+    private fun showPromotionalDialog(
+        imageUrl: String,
+        page: String,
+        videoUrl: String = ""
+    ) {
+        if (isPromoDialogShowing || isFinishing || isDestroyed) return
+
         appPreferenceManager.saveBoolean("SHOW_PROMO_DIALOG", false)
+
         val promoView = DialogPromotionalPopupBinding.inflate(layoutInflater)
-        val dialogPromo = AlertDialog.Builder(this).setView(promoView.root).create()
+        val dialogPromo = AlertDialog.Builder(this)
+            .setView(promoView.root)
+            .create()
+
         dialogPromo.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        isPromoDialogShowing = true
+
+        dialogPromo.setOnDismissListener {
+            isPromoDialogShowing = false
+        }
+
         promoView.closeImage.setOnClickListener {
             dialogPromo.dismiss()
         }
-        Glide.with(this).load(imageUrl).into(promoView.previewImage)
+
+        Glide.with(this)
+            .load(imageUrl)
+            .into(promoView.previewImage)
+
         promoView.previewImage.setOnClickListener {
-            redirectToScreen(page)
+            if (videoUrl.isEmpty()) {
+                redirectToScreen(page)
+            } else {
+                openYouTube(this, videoUrl)
+            }
+            dialogPromo.dismiss()
         }
-        CoroutineScope(Dispatchers.Main).launch {
+
+        lifecycleScope.launch {
+            // delay for UX (optional)
             delay(1000)
-            dialogPromo.show()
+
+            // ✅ Safe to show dialog
+            if (!isFinishing &&
+                !isDestroyed &&
+                lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)
+            ) {
+                dialogPromo.show()
+            }
+
+            // ⏳ Auto dismiss after 10 sec
+            delay(10_000)
+
+            if (!isFinishing &&
+                !isDestroyed &&
+                dialogPromo.isShowing
+            ) {
+                dialogPromo.dismiss()
+            }
         }
     }
 
@@ -744,6 +802,28 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             }
         }
 
+        farmerViewModel.getAppVersionResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {}
+                is UiState.Success -> {
+                    val appHelper = AppHelper(this@DashboardScreen)
+                    val jsonResponse = JSONObject(state.data.toString())
+                    val remoteAppVersion = jsonResponse.optInt("version_code")
+                    val currentAppVersion = appHelper.getCurrentAppVersion()
+                    if (remoteAppVersion > currentAppVersion) {
+                        appHelper.showUpdateDialog()
+                    } else {
+                        if (appPreferenceManager.getBoolean("SHOW_PROMO_DIALOG") && !isPromoFetched) {
+                            isPromoFetched = true
+                            farmerViewModel.getPromoBanner()
+                        }
+                    }
+                }
+
+                is UiState.Error -> {}
+            }
+        }
+
         farmerViewModel.getNotificationResponse.observe(this) { state ->
             when (state) {
                 is UiState.Loading -> {
@@ -1052,6 +1132,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         topicsArray = topicJsonArray
                         val topicsToSubArray = data.optJSONArray("topics_to_subscribe")
                         val topicsToDeleteArray = data.optJSONArray("topics_to_delete")
+//                        carousalItemArray = data.optJSONArray("cust_dash")
+//                        updateCarousalData(carousalItemArray)
                         if (topicsToSubArray != null && topicsToSubArray.length() > 0) {
                             val total = topicsToSubArray.length()
                             var completed = 0
@@ -1327,7 +1409,12 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     if (dataObject != null) {
                         val imageUrl = dataObject.optString("url")
                         val page = dataObject.optString("page")
-                        showPromotionalDialog(imageUrl, page)
+                        if (page == "youtube") {
+                            val youtubeUrl = dataObject.optString("video_url")
+                            showPromotionalDialog(imageUrl, page, youtubeUrl)
+                        } else {
+                            showPromotionalDialog(imageUrl, page)
+                        }
                     }
 
                 }
@@ -1410,10 +1497,17 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
     override fun onResume() {
         super.onResume()
         shakeAnimationChatbot()
+        if (!isUpdateChecked) {
+            checkForUpdate()
+            isUpdateChecked = true
+        }
         if (NetworkUtils.isInternetAvailable(this)) {
             farmerViewModel.getNotificationList(farmerId)
         } else {
             LocalCustom.createSnackbar(binding.root, "Internet not available!")
+        }
+        autoScrollRunnable?.let {
+            autoScrollHandler.postDelayed(it, 2500)
         }
     }
 
@@ -1824,5 +1918,228 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
 
         agristackLoginDialog.show()
+    }
+
+    private fun setUpCarousal() {
+        val corBinding = binding.appBarMain.dashboardScreen
+        corBinding.carousalDashboardLayout.visibility = View.VISIBLE
+        corBinding.temperatureLayout.visibility = View.GONE
+        // ✅ Clear & add items
+        items.clear()
+        items.addAll(
+            listOf(
+                DashboardItemCor("Weather", "22.6°C", R.drawable.bg_blue),
+                DashboardItemCor("Crop Advisory", "ipsum dolor sit amet", R.drawable.bg_green),
+                DashboardItemCor("Market Price", "Avg. Price\n6800", R.drawable.bg_orange),
+                DashboardItemCor("SOP", "ipsum dolor sit amet", R.drawable.bg_red),
+                DashboardItemCor("Soil Health Card", "N:20 P:30 K:40", R.drawable.bg_yellow),
+            )
+        )
+
+        // ✅ Avoid re-creating adapter
+        if (::dashboardAdapter.isInitialized.not()) {
+            dashboardAdapter = DashboardCorAdapter(items, this)
+            corBinding.viewPager.adapter = dashboardAdapter
+        } else {
+            dashboardAdapter.notifyDataSetChanged()
+        }
+
+        corBinding.viewPager.apply {
+            offscreenPageLimit = 2
+            clipToPadding = false
+            clipChildren = false
+
+            val startPosition = 1000 * items.size
+
+            // ✅ Prevent resetting position every time
+            if (currentItem == 0) {
+                setCurrentItem(startPosition, false)
+            }
+
+            val paddingPx = 120 * resources.displayMetrics.density
+            setPadding(paddingPx.toInt(), 0, paddingPx.toInt(), 0)
+        }
+
+        (corBinding.viewPager.getChildAt(0) as RecyclerView).overScrollMode =
+            RecyclerView.OVER_SCROLL_NEVER
+
+        // ✅ FIXED PageTransformer (no unwanted transparency)
+        corBinding.viewPager.setPageTransformer { page, position ->
+
+            val absPosition = kotlin.math.abs(position)
+
+            if (absPosition > 2f) {
+                page.alpha = 1f
+                page.scaleX = 0.85f
+                page.scaleY = 0.85f
+                page.translationX = 0f
+                page.z = -1f
+                return@setPageTransformer
+            }
+
+            val scale = 1f - (absPosition * 0.15f)
+            page.scaleX = scale
+            page.scaleY = scale
+
+            val overlapPx = -60 * page.resources.displayMetrics.density
+            page.translationX = position * overlapPx
+
+            page.z = (2 - absPosition)
+
+            // 🔥 Removed fade issue
+            page.alpha = 1f
+        }
+
+        // ✅ Remove old callback (VERY IMPORTANT)
+        if (::pageChangeCallback.isInitialized) {
+            corBinding.viewPager.unregisterOnPageChangeCallback(pageChangeCallback)
+        }
+
+        pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
+
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                val actualPosition = position % items.size
+                setupDots(items.size, actualPosition)
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+                super.onPageScrollStateChanged(state)
+
+                when (state) {
+                    ViewPager2.SCROLL_STATE_DRAGGING -> {
+                        autoScrollHandler.removeCallbacks(autoScrollRunnable!!)
+                    }
+
+                    ViewPager2.SCROLL_STATE_IDLE -> {
+                        autoScrollHandler.removeCallbacks(autoScrollRunnable!!)
+                        autoScrollHandler.postDelayed(autoScrollRunnable!!, 2500)
+                    }
+                }
+            }
+        }
+
+        corBinding.viewPager.registerOnPageChangeCallback(pageChangeCallback)
+
+        // ✅ AUTO SCROLL (fixed)
+        autoScrollRunnable = object : Runnable {
+            override fun run() {
+                val nextItem = corBinding.viewPager.currentItem + 1
+                corBinding.viewPager.setCurrentItem(nextItem, true)
+
+                autoScrollHandler.postDelayed(this, 2500)
+            }
+        }
+
+        // ✅ Clear old callbacks before starting
+        autoScrollHandler.removeCallbacksAndMessages(null)
+        autoScrollHandler.postDelayed(autoScrollRunnable!!, 2500)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        autoScrollRunnable?.let {
+            autoScrollHandler.removeCallbacks(it)
+        }
+    }
+
+    private fun setupDots(total: Int, currentPosition: Int) {
+        val corBinding = binding.appBarMain.dashboardScreen
+        val dotsLayout = corBinding.dotsLayout
+        dotsLayout.removeAllViews() // Clear old dots
+
+        for (i in 0 until total) {
+            val dot = ImageView(this).apply {
+                setImageResource(
+                    if (i == currentPosition) R.drawable.dot_active
+                    else R.drawable.dot_inactive
+                )
+                val params = LinearLayout.LayoutParams(20, 20) // width, height in px
+                params.marginStart = 8
+                params.marginEnd = 8
+                layoutParams = params
+            }
+            dotsLayout.addView(dot)
+        }
+    }
+
+    private fun updateCarousalData(carousalItemArray: JSONArray?) {
+
+        val pageToIndex = mapOf(
+            "weather" to 0,
+            "advisory" to 1,
+            "market" to 2,
+            "sop" to 3,
+            "soil" to 4,
+        )
+
+        carousalItemArray?.let { array ->
+
+            for (i in 0 until array.length()) {
+
+                val obj = array.getJSONObject(i)
+
+                val page = obj.optString("page")
+                val index = pageToIndex[page] ?: continue
+
+                val title = if (languageToLoad == "en")
+                    obj.optString("title", items[index].title)
+                else
+                    obj.optString("title_mr", items[index].title)
+
+                val data = if (languageToLoad == "en")
+                    obj.optString("data", items[index].value)
+                else
+                    obj.optString("data_mr", items[index].value)
+
+                items[index] = items[index].copy(title = title, value = data)
+            }
+
+            // ✅ THIS WILL NOW WORK
+            dashboardAdapter.notifyDataSetChanged()
+        }
+    }
+
+
+    override fun onCorItemClick(position: Int) {
+        Log.d("TAGGER", "onItemClick: $position")
+        when (position) {
+
+            0 -> {
+                startActivity(Intent(this, WeatherActivity::class.java))
+            }
+
+            1 -> {
+                val intent = Intent(this, AdvisoryCropActivity::class.java)
+                intent.putExtra("id", savedCropId)
+                intent.putExtra("wotr_crop_id", savedCropWoTRId)
+                intent.putExtra("mUrl", savedCropImageUrl)
+                intent.putExtra("sowingDate", savedCropSowingDate)
+                intent.putExtra("mName", savedCropName)
+                startActivity(intent)
+            }
+
+            2 -> {
+//                startActivity(Intent(this, MarketPrice::class.java))
+                openYouTube(this, "https://youtube.com/shorts/clw__QUpPk8?si=9hvXrWRsk2oA3f3T")
+            }
+
+            3 -> {
+                val intent = Intent(this, SOPActivity::class.java)
+                intent.putExtra("id", savedCropId)
+                intent.putExtra("wotr_crop_id", savedCropWoTRId)
+                intent.putExtra("mUrl", savedCropImageUrl)
+                intent.putExtra("mName", savedCropName)
+                startActivity(intent)
+            }
+
+            4 -> {
+                startActivity(Intent(this, SoilHealthCardActivity::class.java))
+            }
+        }
+    }
+
+    private fun checkForUpdate() {
+        farmerViewModel.getAppVersion()
     }
 }
