@@ -42,14 +42,14 @@ class Warehouse : AppCompatActivity(), AlertListEventListener, OnMultiRecyclerIt
     lateinit var binding: ActivityWarehouseBinding
     private var warehouseAvailabilityJSONArray: JSONArray? = null
     private var districtJSONArray: JSONArray? = null
-    private val farmerViewModel: FarmerViewModel by viewModels()
     private val leaderboardViewModel: LeaderboardViewModel by viewModels()
+    private val farmerViewModel: FarmerViewModel by viewModels()
     private lateinit var districtName: String
     private var districtID: Int = 0
     private var talukaID: Int = 0
     private lateinit var totalWareHouse: String
     private lateinit var totalAvailableWareHouse: String
-    lateinit var languageToLoad: String
+    private lateinit var languageToLoad: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,16 +81,12 @@ class Warehouse : AppCompatActivity(), AlertListEventListener, OnMultiRecyclerIt
         binding.tvSourceInformation.text = getString(R.string.source_info_market)
         binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.wareHouse)
         binding.textViewDistrict.text = getString(R.string.farmer_select_district)
-
-        binding.tvWareHouseName.text = getString(R.string.warehouse_details)
-        binding.tvTotalAvailableCapacity.text = getString(R.string.total_available_capacity)
-        binding.tvRecordDate.text = getString(R.string.record_date)
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun init() {
-        binding.wareHousereport.setHasFixedSize(false)
-        binding.wareHousereport.isNestedScrollingEnabled = true
+        binding.wareHouseReportRecycleView.setHasFixedSize(false)
+        binding.wareHouseReportRecycleView.isNestedScrollingEnabled = true
         farmerViewModel.getDistrictData(this, languageToLoad)
         farmerViewModel.fetchWarehouseData(this, districtID, languageToLoad)
         binding.chatbotIcon.setOnTouchListener(DraggableTouchListener {
@@ -152,28 +148,12 @@ class Warehouse : AppCompatActivity(), AlertListEventListener, OnMultiRecyclerIt
                 if (response.status) {
                     warehouseAvailabilityJSONArray = response.dataArrays
                     if (warehouseAvailabilityJSONArray?.length() != 0) {
-                        binding.wareHousereport.visibility = View.VISIBLE
+                        binding.wareHouseReportRecycleView.visibility = View.VISIBLE
                         binding.wareHouseEmptyTextView.visibility = View.GONE
                         totalWareHouse = response.total_available_capacity()
                         totalAvailableWareHouse = response.getTotalAvailableWareHouse()
-                        binding.textTotalWarehouse.text =
-                            buildString {
-                                append(resources.getString(R.string.total_warehouse))
-                                append(" ")
-                                append(totalWareHouse)
-                            }
-                        binding.textAvailableCapacity.text =
-                            buildString {
-                                append(resources.getString(R.string.total_available_capacity))
-                                append(" ")
-                                append(totalAvailableWareHouse)
-                                append(" ")
-                                append(
-                                    resources.getString(
-                                        R.string.tonnes
-                                    )
-                                )
-                            }
+                        binding.textTotalWarehouse.text = totalWareHouse
+                        binding.textAvailableCapacity.text = "$totalAvailableWareHouse MT"
                         if (warehouseAvailabilityJSONArray !== null) {
                             if (warehouseAvailabilityJSONArray?.length()!! > 0) {
                                 val adaptorWaterBudgetReport =
@@ -182,23 +162,24 @@ class Warehouse : AppCompatActivity(), AlertListEventListener, OnMultiRecyclerIt
                                         this,
                                         warehouseAvailabilityJSONArray
                                     )
-                                binding.wareHousereport.setLayoutManager(
+                                binding.wareHouseReportRecycleView.setLayoutManager(
                                     LinearLayoutManager(
                                         this,
                                         LinearLayoutManager.VERTICAL,
                                         false
                                     )
                                 )
-                                binding.wareHousereport.adapter = adaptorWaterBudgetReport
+                                binding.wareHouseReportRecycleView.adapter =
+                                    adaptorWaterBudgetReport
                                 adaptorWaterBudgetReport.notifyDataSetChanged()
                             }
                         } else {
-                            binding.wareHousereport.visibility = View.GONE
+                            binding.wareHouseReportRecycleView.visibility = View.GONE
                             binding.wareHouseEmptyTextView.visibility = View.VISIBLE
                             resetValuesForWareHouse()
                         }
                     } else {
-                        binding.wareHousereport.visibility = View.GONE
+                        binding.wareHouseReportRecycleView.visibility = View.GONE
                         binding.wareHouseEmptyTextView.visibility = View.VISIBLE
                         resetValuesForWareHouse()
                     }

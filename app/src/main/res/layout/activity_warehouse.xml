@@ -26,21 +26,33 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_10sdp"
-            android:backgroundTint="@color/card_background_color_figma"
+            android:backgroundTint="@color/soft_blue"
             app:cardCornerRadius="@dimen/_5sdp">
 
             <TextView
                 android:id="@+id/tv_source_information"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/_50sdp"
                 android:paddingHorizontal="@dimen/_4sdp"
-                android:paddingVertical="@dimen/_8sdp"
+                android:paddingVertical="@dimen/_4sdp"
                 android:text="@string/source_info_market"
-                android:textColor="@color/gray_light"
-                android:textSize="@dimen/text16"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10sdp"
                 android:visibility="visible" />
         </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/textView72"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/district"
+            android:textSize="@dimen/_10sdp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_5sdp"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -73,100 +85,103 @@
                 android:contentDescription="@string/app_name"
                 app:srcCompat="@drawable/ic_baseline_arrow_drop_down_24"
                 tools:ignore="VectorDrawableCompat" />
-        </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_10sdp"
-            android:layout_marginTop="@dimen/_6sdp"
-            android:layout_marginBottom="@dimen/_3sdp"
-            android:background="@color/gradient_bottom_figma"
-            android:elevation="@dimen/height5"
-            android:padding="15dp">
-
-            <TextView
-                android:id="@+id/textTotalWarehouse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="@string/total_warehouse"
-                android:textSize="12sp"
-                android:textStyle="bold">
-
-            </TextView>
-
-            <TextView
-                android:id="@+id/textAvailableCapacity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textTotalWarehouse"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="@dimen/text8"
-                android:text="@string/total_available_capacity"
-                android:textSize="@dimen/text12"
-                android:textStyle="bold" />
         </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_34sdp"
-            android:layout_marginHorizontal="@dimen/_10sdp"
-            android:layout_marginTop="@dimen/height5"
-            android:background="@color/black"
+            android:layout_height="@dimen/_60sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@drawable/card_green_border_background"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tv_ware_house_name"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="0.5dp"
                 android:layout_weight="1"
-                android:background="@color/card_background_color_figma"
-                android:gravity="center"
-                android:padding="1dp"
-                android:text="@string/warehouse_details"
-                android:textColor="@color/black"
-                android:textSize="10sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/_10sdp">
 
+                <ImageView
+                    android:layout_width="@dimen/_35sdp"
+                    android:layout_height="@dimen/_35sdp"
+                    android:layout_gravity="center"
+                    android:padding="@dimen/_5sdp"
+                    app:srcCompat="@drawable/warehouse_count_ic" />
 
-            <TextView
-                android:id="@+id/tv_Total_available_Capacity"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Total Warehouse"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <TextView
+                        android:id="@+id/textTotalWarehouse"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="4"
+                        android:textColor="@color/actionbar_color_figma"
+                        android:textSize="@dimen/_12sdp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="@dimen/_10sdp"
+                android:background="?android:attr/listDivider" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="0.5dp"
                 android:layout_weight="1"
-                android:background="@color/card_background_color_figma"
-                android:gravity="center"
-                android:padding="1dp"
-                android:text="@string/total_available_capacity"
-                android:textColor="@color/black"
-                android:textSize="10sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/_10sdp">
 
+                <ImageView
+                    android:layout_width="@dimen/_35sdp"
+                    android:layout_height="@dimen/_35sdp"
+                    android:layout_gravity="center"
+                    android:padding="@dimen/_5sdp"
+                    app:srcCompat="@drawable/warehouse_avail_cap" />
 
-            <TextView
-                android:id="@+id/tv_record_date"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="0.5dp"
-                android:layout_weight="1"
-                android:background="@color/card_background_color_figma"
-                android:gravity="center"
-                android:padding="1dp"
-                android:text="@string/record_date"
-                android:textColor="@color/black"
-                android:textSize="10sp"
-                android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Total Available Capacity"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <TextView
+                        android:id="@+id/textAvailableCapacity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="25578 MT"
+                        android:textColor="@color/actionbar_color_figma"
+                        android:textSize="@dimen/_12sdp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/wareHousereport"
+            android:id="@+id/wareHouseReportRecycleView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_10sdp"
             android:layout_marginBottom="@dimen/_10sdp"
             android:scrollbarAlwaysDrawHorizontalTrack="true"
             android:scrollbarStyle="insideOverlay"
