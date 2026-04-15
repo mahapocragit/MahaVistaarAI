@@ -5,11 +5,12 @@ import `in`.gov.mahapocra.mahavistaarai.BuildConfig
 class AppEnvironment(val baseUrl: String?) {
     companion object {
         val DBT_BASE_URL: AppEnvironment = AppEnvironment("https://dbt-ndksp.mahapocra.gov.in:8021/")
-        val FARMER: AppEnvironment = AppEnvironment(BuildConfig.BASE_URL)  //Live
+        val FARMER: AppEnvironment = AppEnvironment(BuildConfig.BASE_URL)
         val WOTR: AppEnvironment = AppEnvironment("https://kisan.wotr.org.in/")
         val GIS: AppEnvironment = AppEnvironment("https://gis.mahapocra.gov.in/")
         val PANI_FOUNDATION: AppEnvironment = AppEnvironment("https://ianm-preprod.wadhwaniai.org/")
         val VISTAAR: AppEnvironment = AppEnvironment("https://vistaar.maharashtra.gov.in/")
         val BOT_URL: AppEnvironment = AppEnvironment("https://prodaskvistaar.mahapocra.gov.in/?token=")
+        val PREDICT_URL: AppEnvironment = AppEnvironment( BuildConfig.PREDICT_URL)
     }
 }

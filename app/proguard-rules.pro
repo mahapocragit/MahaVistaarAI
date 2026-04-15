@@ -1,21 +1,107 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+#############################################
+# BASIC ANDROID RULES
+#############################################
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Keep R classes
 -keep class **.R$* { *; }
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Keep BuildConfig
+-keep class **.BuildConfig { *; }
+
+# Keep Kotlin metadata
+-keep class kotlin.Metadata { *; }
+
+# Keep annotations (important for Retrofit, Gson, etc.)
+-keepattributes *Annotation*
+-keepattributes Signature
+-keepattributes Exceptions
+
+#############################################
+# GSON (CRITICAL FOR YOUR APP)
+#############################################
+
+# Keep Gson library
+-keep class com.google.gson.** { *; }
+-dontwarn com.google.gson.internal.$Gson$Types
+
+# Keep your model classes (VERY IMPORTANT)
+-keep class in.gov.mahapocra.mahavistaarai.data.model.** { *; }
+
+#############################################
+# RETROFIT
+#############################################
+
+-keep class retrofit2.** { *; }
+-keep interface retrofit2.** { *; }
+
+#############################################
+# OKHTTP
+#############################################
+
+-dontwarn okhttp3.**
+-dontwarn okio.**
+
+#############################################
+# FIREBASE
+#############################################
+
+-dontwarn com.google.firebase.**
+
+#############################################
+# GLIDE
+#############################################
+
+-keep public class * implements com.bumptech.glide.module.GlideModule
+
+#############################################
+# PICASSO
+#############################################
+
+-dontwarn com.squareup.picasso.**
+
+#############################################
+# CAMERAX
+#############################################
+
+-dontwarn androidx.camera.**
+
+#############################################
+# OSM DROID (MAPS)
+#############################################
+
+-keep class org.osmdroid.** { *; }
+-dontwarn org.osmdroid.**
+
+#############################################
+# RXJAVA
+#############################################
+
+-dontwarn io.reactivex.**
+
+#############################################
+# FAST ANDROID NETWORKING
+#############################################
+
+-keep class com.androidnetworking.** { *; }
+
+#############################################
+# CALLIGRAPHY (FONTS)
+#############################################
+
+-keep class uk.co.chrisjenx.calligraphy.** { *; }
+
+#############################################
+# DATABINDING / VIEWBINDING
+#############################################
+
+-keep class androidx.databinding.** { *; }
+
+#############################################
+# OPTIONAL SAFETY (KEEP IF USING REFLECTION)
+#############################################
+
+# Keep enums (safe)
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}

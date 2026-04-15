@@ -178,7 +178,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         setContentView(binding.root)
         askForPermissions()
         observeResponse()
-//        setUpCarousal()
+        setUpCarousal()
         init()
         setUpListeners()
         FirebaseHelper(this)
@@ -1132,8 +1132,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         topicsArray = topicJsonArray
                         val topicsToSubArray = data.optJSONArray("topics_to_subscribe")
                         val topicsToDeleteArray = data.optJSONArray("topics_to_delete")
-//                        carousalItemArray = data.optJSONArray("cust_dash")
-//                        updateCarousalData(carousalItemArray)
+                        carousalItemArray = data.optJSONArray("cust_dash")
+                        updateCarousalData(carousalItemArray)
                         if (topicsToSubArray != null && topicsToSubArray.length() > 0) {
                             val total = topicsToSubArray.length()
                             var completed = 0
@@ -2069,8 +2069,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             "weather" to 0,
             "advisory" to 1,
             "market" to 2,
-            "sop" to 3,
-            "soil" to 4,
+            "warehouse" to 3,
+            "shc" to 4,
         )
 
         carousalItemArray?.let { array ->
@@ -2120,17 +2120,11 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             }
 
             2 -> {
-//                startActivity(Intent(this, MarketPrice::class.java))
-                openYouTube(this, "https://youtube.com/shorts/clw__QUpPk8?si=9hvXrWRsk2oA3f3T")
+                startActivity(Intent(this, MarketPrice::class.java))
             }
 
             3 -> {
-                val intent = Intent(this, SOPActivity::class.java)
-                intent.putExtra("id", savedCropId)
-                intent.putExtra("wotr_crop_id", savedCropWoTRId)
-                intent.putExtra("mUrl", savedCropImageUrl)
-                intent.putExtra("mName", savedCropName)
-                startActivity(intent)
+                startActivity(Intent(this, Warehouse::class.java))
             }
 
             4 -> {
