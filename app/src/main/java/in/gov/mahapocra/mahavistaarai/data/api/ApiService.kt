@@ -192,11 +192,11 @@ interface ApiService {
         @Body params: RequestBody
     ): Call<JsonObject>
 
-    @POST(ApiConstants.kUserLogin)
+    @POST("jwtServices/LoginCheck")
     fun getUserLoginPassword(
         @Header("MobileNo") mobileNo: String,
         @Header("Password") password: String,
-        @Body params: RequestBody
+        @Header("fcmToken") fcmToken: String
     ): Call<JsonObject>
 
     @POST(ApiConstants.kRefreshTokenLogin)

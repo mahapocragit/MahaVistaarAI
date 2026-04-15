@@ -51,6 +51,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.toSHA512
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.OtpRateLimiter.provideValidEncryptedString
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONException
 import org.json.JSONObject
@@ -514,12 +515,14 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         )
                     val retrofit: Retrofit = api.getRetrofitInstance()
                     val apiRequest = retrofit.create(ApiService::class.java)
-                    Log.d(TAG, "callLoginAPI: true")
+                    val crypt = CryptoHelper.encryptField(userPass).toString()
+                    val decrypt = CryptoHelper.decryptField(crypt)
+                    Log.d(TAG, "callLoginAPI: crpt: $crypt and decrypt: $decrypt")
                     val responseCall: Call<JsonObject> =
                         apiRequest.getUserLoginPassword(
-                            mobileNo.trim { it <= ' ' },
+                            CryptoHelper.encryptField(mobileNo.trim { it <= ' ' }).toString(),
                             toSHA512(userPass),
-                            requestBody
+                            fcmToken = fcmToken
                         )
                     api.postRequest(responseCall, this, 2)
                 } catch (e: JSONException) {
@@ -838,7 +841,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         checkForUpdate()
     }
 
-    private fun checkForUpdate(){
+    private fun checkForUpdate() {
         farmerViewModel.getAppVersionResponse.observe(this) { state ->
             when (state) {
                 is UiState.Loading -> {}

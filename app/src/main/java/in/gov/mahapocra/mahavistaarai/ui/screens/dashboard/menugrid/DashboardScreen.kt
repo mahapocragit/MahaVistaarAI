@@ -108,6 +108,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.ApUtil
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SideNavMenuHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper.shrinkToCenter
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.subscribeToTopic
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.unSubscribeToTopic
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
@@ -183,6 +184,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         setUpListeners()
         FirebaseHelper(this)
         checkForUpdate()
+
+
         binding.appBarMain.dashboardScreen.progressBar.visibility = View.VISIBLE
         binding.appBarMain.dashboardScreen.temperatureTextView.visibility = View.GONE
 
@@ -538,6 +541,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         binding.appBarMain.imgLangChange.setOnClickListener { openChangeLangPopup() }
 
         binding.appBarMain.dashboardScreen.takePictureButton.setOnClickListener {
+            val encryptedText = CryptoHelper.encryptField("9049502125")
+            Log.d(TAG, "onCreate encrypt: $encryptedText")
+            val decryptText = CryptoHelper.decryptField(encryptedText)
+            Log.d(TAG, "onCreate decrypt: $decryptText")
             startActivity(Intent(this, PestIdentificationActivity::class.java))
         }
 

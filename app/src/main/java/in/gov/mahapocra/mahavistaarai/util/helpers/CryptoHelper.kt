@@ -1,48 +1,86 @@
 package `in`.gov.mahapocra.mahavistaarai.util.helpers
 
 import android.util.Base64
-import java.security.MessageDigest
+import java.security.SecureRandom
 import javax.crypto.Cipher
-import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 object CryptoHelper {
 
-    private const val START: String = "w7t7k"
-    private const val MIDDLE: String = "xamzee"
-    private const val END: String = "fh58v"
-    private const val SECRET = START + MIDDLE + END
+    fun encryptField(value: String?): String? {
+        if (value.isNullOrEmpty()) return null
 
-    private fun getKey(): SecretKeySpec {
-        val decoded = Base64.decode(SECRET, Base64.DEFAULT)
+        return try {
+            // Base64 decode key (must be 32 bytes for AES-256)
+            val base64Key = "WROMmOQutvHhEIzU2dVZUvNytH3I6R11CoXb+nQ8N6g="
+            val keyBytes = Base64.decode(base64Key, Base64.DEFAULT)
+            val keySpec = SecretKeySpec(keyBytes, "AES")
 
-        // Ensure 32 bytes key (AES-256)
-        val sha = MessageDigest.getInstance("SHA-256")
-        val key = sha.digest(decoded)
+            // Generate 12-byte IV
+            val iv = ByteArray(12)
+            SecureRandom().nextBytes(iv)
 
-        return SecretKeySpec(key, "AES")
+            // Cipher setup
+            val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+            val spec = GCMParameterSpec(128, iv) // 128-bit auth tag
+            cipher.init(Cipher.ENCRYPT_MODE, keySpec, spec)
+
+            // Encrypt
+            val ciphertextWithTag = cipher.doFinal(value.toByteArray(Charsets.UTF_8))
+
+            // In Java/Kotlin, GCM appends tag to ciphertext → split manually
+            val tagLength = 16
+            val ciphertext = ciphertextWithTag.copyOfRange(0, ciphertextWithTag.size - tagLength)
+            val tag = ciphertextWithTag.copyOfRange(ciphertextWithTag.size - tagLength, ciphertextWithTag.size)
+
+            // Combine iv + tag + ciphertext (same as PHP)
+            val combined = iv + tag + ciphertext
+
+            Base64.encodeToString(combined, Base64.NO_WRAP)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 
-    private fun getIV(): IvParameterSpec {
-        val ivBytes = SECRET.toByteArray(Charsets.UTF_8)
-        return IvParameterSpec(ivBytes.copyOf(16)) // must be 16 bytes
-    }
+    fun decryptField(encrypted: String?): String? {
+        if (encrypted.isNullOrEmpty()) return null
 
-    fun encrypt(value: String): String {
-        val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
-        cipher.init(Cipher.ENCRYPT_MODE, getKey(), getIV())
+        return try {
+            // Decode key (must be same as encryption key)
+            val base64Key = "WROMmOQutvHhEIzU2dVZUvNytH3I6R11CoXb+nQ8N6g="
+            val keyBytes = Base64.decode(base64Key, Base64.DEFAULT)
+            val keySpec = SecretKeySpec(keyBytes, "AES")
 
-        val encrypted = cipher.doFinal(value.toByteArray(Charsets.UTF_8))
-        return Base64.encodeToString(encrypted, Base64.NO_WRAP)
-    }
+            // Decode input
+            val data = Base64.decode(encrypted, Base64.DEFAULT)
 
-    fun decrypt(value: String): String {
-        val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
-        cipher.init(Cipher.DECRYPT_MODE, getKey(), getIV())
+            // Minimum length check (12 IV + 16 TAG)
+            if (data.size < 28) return null
 
-        val decoded = Base64.decode(value, Base64.DEFAULT)
-        val decrypted = cipher.doFinal(decoded)
+            // Extract parts
+            val iv = data.copyOfRange(0, 12)
+            val tag = data.copyOfRange(12, 28)
+            val ciphertext = data.copyOfRange(28, data.size)
 
-        return String(decrypted, Charsets.UTF_8)
+            // In Kotlin/Java, tag must be appended to ciphertext
+            val ciphertextWithTag = ciphertext + tag
+
+            // Setup cipher
+            val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+            val spec = GCMParameterSpec(128, iv)
+            cipher.init(Cipher.DECRYPT_MODE, keySpec, spec)
+
+            // Decrypt
+            val decryptedBytes = cipher.doFinal(ciphertextWithTag)
+
+            String(decryptedBytes, Charsets.UTF_8)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 }
