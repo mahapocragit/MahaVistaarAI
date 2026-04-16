@@ -18,6 +18,8 @@ import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.toSHA512
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -48,7 +50,8 @@ class AuthViewModel : ViewModel() {
     val updateFarmerDetailsByIdResponse: LiveData<JsonObject> = _updateFarmerDetailsByIdResponse
 
     private val _getRegisteredDeviceCountByDeviceIdResponse = MutableLiveData<UiState<JsonObject>>()
-    val getRegisteredDeviceCountByDeviceIdResponse: LiveData<UiState<JsonObject>> = _getRegisteredDeviceCountByDeviceIdResponse
+    val getRegisteredDeviceCountByDeviceIdResponse: LiveData<UiState<JsonObject>> =
+        _getRegisteredDeviceCountByDeviceIdResponse
 
     private val _userDetailsState = MutableLiveData<UiState<JsonObject>>()
     val userDetailsState: LiveData<UiState<JsonObject>> = _userDetailsState
@@ -61,6 +64,9 @@ class AuthViewModel : ViewModel() {
 
     private val _agristackLoginResponse = MutableLiveData<JsonObject>()
     val agristackLoginResponse: LiveData<JsonObject> = _agristackLoginResponse
+
+    private val _loginViaMobilePassResponse = MutableLiveData<UiState<JsonObject>>()
+    val loginViaMobilePassResponse: LiveData<UiState<JsonObject>> = _loginViaMobilePassResponse
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -89,6 +95,31 @@ class AuthViewModel : ViewModel() {
                     else -> e.localizedMessage ?: "Unknown error"
                 }
                 _error.value = message
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun loginViaMobilePass(mobile: String, password: String, fcmToken: String) {
+        viewModelScope.launch {
+            _loginViaMobilePassResponse.value = UiState.Loading
+            try {
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val api = retrofit.create(ApiService::class.java)
+                val response = api.getUserLoginPassword(
+                    CryptoHelper.encryptField(mobile.trim { it <= ' ' }).toString(),
+                    toSHA512(password),
+                    fcmToken = fcmToken
+                )
+                _loginViaMobilePassResponse.value = UiState.Success(response)
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _loginViaMobilePassResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -270,21 +301,15 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    fun fetchUserInformation(farmerRegistrationID: Int) {
+    fun fetchUserInformation(accessToken: String) {
         viewModelScope.launch {
             _userDetailsState.value = UiState.Loading
             try {
-                val jsonObject = JSONObject().apply {
-                    put("SecurityKey", ApiConstants.SSO_KEY)
-                }
-
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
-
-                val response = apiRequest.getGetRegistration(farmerRegistrationID, requestBody)
-
-                // Handle success
+                val response = apiRequest.getGetRegistration(
+                    "Bearer $accessToken"
+                )
                 _userDetailsState.value = UiState.Success(response)
 
             } catch (e: Exception) {

@@ -4,6 +4,7 @@ object AppConstants {
     const val TAG = "MAHAVISTAAR_AI_TAG"
     const val kAPP_BUILD_VERSION: String = "kAPP_BUILD_VERSION"
     const val fREGISTER_ID: String = "fREGISTER_ID"
+    const val ACCESS_TOKEN: String = "ACCESS_TOKEN"
     const val IS_USER_GUEST: String = "IS_USER_GUEST"
     const val uName: String = "USER_NAME"
 

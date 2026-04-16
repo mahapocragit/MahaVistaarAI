@@ -1,6 +1,7 @@
-package `in`.gov.mahapocra.mahavistaarai.util
+package `in`.gov.mahapocra.mahavistaarai.util.helpers
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -52,7 +53,7 @@ class AppHelper(private val context: Context) {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
             )
-        } catch (e: android.content.ActivityNotFoundException) {
+        } catch (e: ActivityNotFoundException) {
             // Fallback to browser if Play Store app not found
             context.startActivity(
                 Intent(

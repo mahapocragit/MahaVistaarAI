@@ -43,7 +43,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
-import `in`.gov.mahapocra.mahavistaarai.util.AppHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
@@ -215,6 +215,58 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             }
         }
 
+        authViewModel.loginViaMobilePassResponse.observe(this){state->
+            when(state){
+                is UiState.Loading->{
+                    ProgressHelper.showProgressDialog(this)
+                }
+                is UiState.Success->{
+                    ProgressHelper.disableProgressDialog(this)
+                    val jSONObject = JSONObject(state.data.toString())
+                    if (jSONObject.optInt("status") == 200) {
+                        AppPreferenceManager(this).saveBoolean("show_overlay", true)
+
+                        val message = jSONObject.getString("response")
+                        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+
+                        val accessToken = jSONObject.optString("access_token")
+                        Log.d(TAG, "observeResponse: access token: $accessToken and response: $jSONObject")
+
+                        if (loginOption != OTP_VERIFY) {
+                            farmerRegisteredID = jSONObject.getInt("FAAPRegistrationID")
+                        }
+
+                        AppSettings.getInstance()
+                            .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisteredID)
+
+                        AppPreferenceManager(this)
+                            .saveString(AppConstants.ACCESS_TOKEN, accessToken)
+
+                        appPreferenceManager.saveBoolean(AppConstant.IS_FIRST_LOGIN, true)
+
+                        val intent = Intent(this, DashboardScreen::class.java).apply {
+                            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                                    Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                                    Intent.FLAG_ACTIVITY_NEW_TASK)
+                        }
+
+                        startActivity(intent)
+
+                        if (loginOption != OTP_VERIFY) {
+                            finish()
+                        }
+                    } else {
+                        val message: String = jSONObject.getString("Message")
+                        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                    }
+                }
+                is UiState.Error->{
+                    ProgressHelper.disableProgressDialog(this)
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
         authViewModel.compareOtpResponse.observe(this) { state ->
             when (state) {
                 is UiState.Loading -> {
@@ -378,18 +430,6 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             return
         }
 
-        // Check OTP Rate Limit before proceeding
-//        if (!OtpRateLimiter.canSendOtp(mobile)) {
-//            val timeLeftMillis = OtpRateLimiter.getBlockedTimeLeft(mobile)
-//            val minutesLeft = (timeLeftMillis / 60000).toInt()
-//            val secondsLeft = ((timeLeftMillis % 60000) / 1000).toInt()
-//            UIToastMessage.show(
-//                this,
-//                "OTP limit reached. Try again in ${minutesLeft}m ${secondsLeft}s."
-//            )
-//            return
-//        }
-
         val jsonObject = JSONObject()
         try {
             jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
@@ -499,35 +539,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     e.printStackTrace()
                 }
             } else {
-                val jsonObject = JSONObject()
-                try {
-                    jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
-                    jsonObject.put("refresh_token", strToken)
-
-                    val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                    val api =
-                        AppInventorApi(
-                            this,
-                            AppEnvironment.FARMER.baseUrl,
-                            "",
-                            AppString(this).getkMSG_WAIT(),
-                            true
-                        )
-                    val retrofit: Retrofit = api.getRetrofitInstance()
-                    val apiRequest = retrofit.create(ApiService::class.java)
-                    val crypt = CryptoHelper.encryptField(userPass).toString()
-                    val decrypt = CryptoHelper.decryptField(crypt)
-                    Log.d(TAG, "callLoginAPI: crpt: $crypt and decrypt: $decrypt")
-                    val responseCall: Call<JsonObject> =
-                        apiRequest.getUserLoginPassword(
-                            CryptoHelper.encryptField(mobileNo.trim { it <= ' ' }).toString(),
-                            toSHA512(userPass),
-                            fcmToken = fcmToken
-                        )
-                    api.postRequest(responseCall, this, 2)
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
+                authViewModel.loginViaMobilePass(mobileNo,userPass, fcmToken)
             }
         }
     }
@@ -620,43 +632,6 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
                 }
             }
-        }
-        if (i == 2) {
-            if (jSONObject != null) {
-                if (jSONObject.optInt("status") == 200) {
-                    AppPreferenceManager(this).saveBoolean("show_overlay", true)
-                    if (loginOption == OTP_VERIFY) {
-                        val message: String = jSONObject.getString("response")
-                        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-                        farmerRegisteredID = jSONObject.getInt("FAAPRegistrationID")
-                        AppSettings.getInstance()
-                            .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisteredID)
-                        appPreferenceManager.saveBoolean(AppConstant.IS_FIRST_LOGIN, true)
-                        val intent = Intent(this, DashboardScreen::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(intent)
-                    } else {
-                        val message: String = jSONObject.getString("response")
-                        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-                        farmerRegisteredID = jSONObject.getInt("FAAPRegistrationID")
-                        AppSettings.getInstance()
-                            .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisteredID)
-                        appPreferenceManager.saveBoolean(AppConstant.IS_FIRST_LOGIN, true)
-                        val intent = Intent(this, DashboardScreen::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(intent)
-                        finish()
-                    }
-                } else {
-                    val message: String = jSONObject.getString("Message")
-                    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-                }
-            }
-
         }
     }
 

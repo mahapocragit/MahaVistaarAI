@@ -41,8 +41,7 @@ interface ApiService {
 
     @POST(ApiConstants.kGetRegistration)
     suspend fun getGetRegistration(
-        @Header("FAAPRegistrationID") registrationId: Int,
-        @Body params: RequestBody
+        @Header("Authorization") bearerToken: String
     ): JsonObject
 
     @POST(ApiConstants.kGetSOPByList)
@@ -193,11 +192,11 @@ interface ApiService {
     ): Call<JsonObject>
 
     @POST("jwtServices/LoginCheck")
-    fun getUserLoginPassword(
+    suspend fun getUserLoginPassword(
         @Header("MobileNo") mobileNo: String,
         @Header("Password") password: String,
         @Header("fcmToken") fcmToken: String
-    ): Call<JsonObject>
+    ): JsonObject
 
     @POST(ApiConstants.kRefreshTokenLogin)
     fun getRefreshTokenLoginViaOTP(

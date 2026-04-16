@@ -98,7 +98,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
-import `in`.gov.mahapocra.mahavistaarai.util.AppHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -232,13 +232,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName)
         val userNumber: String =
             AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
-        val hView = binding.navView.getHeaderView(0)
-        navUserName = hView.findViewById(R.id.tv_farmerName)
-        navUserPhone = hView.findViewById(R.id.tv_famerPhoneNumber)
         if (userName != "USER_NAME") {
-            val capitalizeStrName: String = ApUtil.getCamelCaseStreing(userName)
-            navUserName.text = capitalizeStrName.ifEmpty { userName }
-            navUserPhone.text = userNumber
+            val capitalizeStrName: String = ApUtil.getCamelCaseStreing(CryptoHelper.decryptField(userName))
+            navUserName.text = capitalizeStrName.ifEmpty { CryptoHelper.decryptField(userName) }
+            navUserPhone.text = CryptoHelper.decryptField(userNumber)
         }
 
         setupDashboardRecyclerView()
@@ -1091,7 +1088,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         val data = jsonObject.optJSONObject("data") ?: return@observe
 
                         val name = data.optString("Name", "")
-                        binding.appBarMain.dashboardScreen.userFullNameTextView.text = name
+                        binding.appBarMain.dashboardScreen.userFullNameTextView.text = CryptoHelper.decryptField(name)
                         val mobNo = data.optString("MobileNo", "")
                         val emailId = data.optString("EmailId", "")
                         val ffaReg = data.optInt("FAAPRegistrationID", -1)
@@ -1276,12 +1273,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                             AppSettings.getInstance().getValue(this, AppConstants.uName, "")
                         val userNumber =
                             AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, "")
-                        val headerView = binding.navView.getHeaderView(0)
-                        navUserName = headerView.findViewById(R.id.tv_farmerName)
-                        navUserPhone = headerView.findViewById(R.id.tv_famerPhoneNumber)
-
-                        navUserName.text = ApUtil.getCamelCaseStreing(userName).ifEmpty { userName }
-                        navUserPhone.text = userNumber
+                        navUserName.text = ApUtil.getCamelCaseStreing(CryptoHelper.decryptField(userName)).ifEmpty { CryptoHelper.decryptField(userName) }
+                        navUserPhone.text = CryptoHelper.decryptField(userNumber)
                         farmerViewModel.fetchWeatherDetails(talukaId, languageToLoad)
                         if (agristack_id != "null" && farmerId != null) {
                             if (!consent) {
@@ -1603,10 +1596,15 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
 
     private fun init() {
+        val hView = binding.navView.getHeaderView(0)
+        navUserName = hView.findViewById(R.id.tv_farmerName)
+        navUserPhone = hView.findViewById(R.id.tv_famerPhoneNumber)
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
+        val accessToken = AppPreferenceManager(this).getString(AppConstants.ACCESS_TOKEN).toString()
+        Log.d(TAG, "init: $accessToken")
         if (farmerId > 0) {
             if (NetworkUtils.isInternetAvailable(this)) {
-                authViewModel.fetchUserInformation(farmerId)
+                authViewModel.fetchUserInformation(accessToken)
             } else {
                 LocalCustom.createSnackbar(binding.root, "Internet not available!")
             }
