@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<incidents format="6" by="lint 8.13.0" type="conditional_incidents">
+
+    <incident
+        id="NewApi"
+        severity="error"
+        message="">
+        <fix-data minSdk="16-∞" requiresApi="19-∞"/>
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AppUtility.java"
+            line="956"
+            column="46"
+            startOffset="37312"
+            endLine="956"
+            endColumn="68"
+            endOffset="37334"/>
+        <map>
+            <entry
+                name="message"
+                string="Field requires API level 19 (current min is %1$s): `java.nio.charset.StandardCharsets#UTF_8`"/>
+            <api-levels id="minSdk"
+                value="16-∞"/>
+            <entry
+                name="name"
+                string="UTF_8"/>
+            <entry
+                name="owner"
+                string="java.nio.charset.StandardCharsets"/>
+            <api-levels id="requiresApi"
+                value="19-∞"/>
+        </map>
+    </incident>
+
+    <incident
+        id="NewApi"
+        severity="error"
+        message="">
+        <fix-data minSdk="16-∞" requiresApi="19-∞"/>
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AppUtility.java"
+            line="956"
+            column="71"
+            startOffset="37337"
+            endLine="956"
+            endColumn="93"
+            endOffset="37359"/>
+        <map>
+            <entry
+                name="message"
+                string="Field requires API level 19 (current min is %1$s): `java.nio.charset.StandardCharsets#UTF_8`"/>
+            <api-levels id="minSdk"
+                value="16-∞"/>
+            <entry
+                name="name"
+                string="UTF_8"/>
+            <entry
+                name="owner"
+                string="java.nio.charset.StandardCharsets"/>
+            <api-levels id="requiresApi"
+                value="19-∞"/>
+        </map>
+    </incident>
+
+    <incident
+        id="NewApi"
+        severity="error"
+        message="">
+        <fix-data minSdk="16-∞" requiresApi="19-∞"/>
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AppUtility.java"
+            line="1370"
+            column="74"
+            startOffset="53387"
+            endLine="1370"
+            endColumn="96"
+            endOffset="53409"/>
+        <map>
+            <entry
+                name="message"
+                string="Field requires API level 19 (current min is %1$s): `java.nio.charset.StandardCharsets#UTF_8`"/>
+            <api-levels id="minSdk"
+                value="16-∞"/>
+            <entry
+                name="name"
+                string="UTF_8"/>
+            <entry
+                name="owner"
+                string="java.nio.charset.StandardCharsets"/>
+            <api-levels id="requiresApi"
+                value="19-∞"/>
+        </map>
+    </incident>
+
+    <incident
+        id="NewApi"
+        severity="error"
+        message="">
+        <fix-data minSdk="16-∞" requiresApi="19-∞"/>
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AppUtility.java"
+            line="1809"
+            column="53"
+            startOffset="68773"
+            endLine="1809"
+            endColumn="75"
+            endOffset="68795"/>
+        <map>
+            <entry
+                name="message"
+                string="Field requires API level 19 (current min is %1$s): `java.nio.charset.StandardCharsets#UTF_8`"/>
+            <api-levels id="minSdk"
+                value="16-∞"/>
+            <entry
+                name="name"
+                string="UTF_8"/>
+            <entry
+                name="owner"
+                string="java.nio.charset.StandardCharsets"/>
+            <api-levels id="requiresApi"
+                value="19-∞"/>
+        </map>
+    </incident>
+
+    <incident
+        id="NewApi"
+        severity="error"
+        message="">
+        <fix-data minSdk="16-∞" requiresApi="19-∞"/>
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AppUtility.java"
+            line="1813"
+            column="63"
+            startOffset="68923"
+            endLine="1813"
+            endColumn="85"
+            endOffset="68945"/>
+        <map>
+            <entry
+                name="message"
+                string="Field requires API level 19 (current min is %1$s): `java.nio.charset.StandardCharsets#UTF_8`"/>
+            <api-levels id="minSdk"
+                value="16-∞"/>
+            <entry
+                name="name"
+                string="UTF_8"/>
+            <entry
+                name="owner"
+                string="java.nio.charset.StandardCharsets"/>
+            <api-levels id="requiresApi"
+                value="19-∞"/>
+        </map>
+    </incident>
+
+    <incident
+        id="NewApi"
+        severity="error"
+        message="">
+        <fix-data minSdk="16-∞" requiresApi="19-∞"/>
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AppUtility.java"
+            line="1822"
+            column="46"
+            startOffset="69260"
+            endLine="1822"
+            endColumn="68"
+            endOffset="69282"/>
+        <map>
+            <entry
+                name="message"
+                string="Field requires API level 19 (current min is %1$s): `java.nio.charset.StandardCharsets#UTF_8`"/>
+            <api-levels id="minSdk"
+                value="16-∞"/>
+            <entry
+                name="name"
+                string="UTF_8"/>
+            <entry
+                name="owner"
+                string="java.nio.charset.StandardCharsets"/>
+            <api-levels id="requiresApi"
+                value="19-∞"/>
+        </map>
+    </incident>
+
+    <incident
+        id="TrulyRandom"
+        severity="warning"
+        message="Potentially insecure random numbers on Android 4.3 and older. Read https://android-developers.blogspot.com/2013/08/some-securerandom-thoughts.html for more info.">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/api/AppInventorApi.java"
+            line="122"
+            column="68"
+            startOffset="4692"
+            endLine="122"
+            endColumn="80"
+            endOffset="4704"/>
+        <map>
+            <condition minLT="19-∞"/>
+        </map>
+    </incident>
+
+    <incident
+        id="ObsoleteSdkInt"
+        severity="warning"
+        message="Unnecessary; `SDK_INT` is always >= 16">
+        <fix-replace
+            description="Delete @TargetApi"
+            replacement=""
+            priority="0">
+            <range
+                file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/widget/UITouchImageView.java"
+                startOffset="23292"
+                endOffset="23306"/>
+        </fix-replace>
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/widget/UITouchImageView.java"
+            line="593"
+            column="5"
+            startOffset="23292"
+            endLine="593"
+            endColumn="19"
+            endOffset="23306"/>
+        <map>
+            <condition minGE="16-∞"/>
+        </map>
+    </incident>
+
+    <incident
+        id="ObsoleteSdkInt"
+        severity="warning"
+        message="Unnecessary; `SDK_INT` is always >= 9">
+        <fix-replace
+            description="Delete @TargetApi"
+            replacement=""
+            priority="0">
+            <range
+                file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/widget/UITouchImageView.java"
+                startOffset="36039"
+                endOffset="36052"/>
+        </fix-replace>
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/widget/UITouchImageView.java"
+            line="871"
+            column="5"
+            startOffset="36039"
+            endLine="871"
+            endColumn="18"
+            endOffset="36052"/>
+        <map>
+            <condition minGE="9-∞"/>
+        </map>
+    </incident>
+
+</incidents>

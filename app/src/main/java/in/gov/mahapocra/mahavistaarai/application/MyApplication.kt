@@ -14,6 +14,7 @@ import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager
 import org.osmdroid.config.Configuration
 import java.io.File
 
@@ -22,7 +23,7 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
-
+        TokenSessionManager.init(this)
         initAppSettings()
         initNetworking()
         initFirebase()
@@ -41,7 +42,6 @@ class MyApplication : Application() {
     private fun initNetworking() {
         AndroidNetworking.initialize(applicationContext)
     }
-
     private fun initFirebase() {
         FirebaseApp.initializeApp(this)
     }
@@ -96,7 +96,7 @@ class MyApplication : Application() {
 
     companion object {
         @Volatile
-        var instance: MyApplication? = null
+        lateinit var instance: MyApplication   // ✅ NON-NULL
             private set
     }
 }

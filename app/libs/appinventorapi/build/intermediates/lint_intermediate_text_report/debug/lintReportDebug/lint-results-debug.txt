@@ -1,0 +1,449 @@
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\settings\AppSettings.java:82: Warning: Consider using apply() instead; commit writes its data to persistent storage immediately, whereas apply will handle it in the background [ApplySharedPref]
+        editor.commit();
+               ~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\settings\AppSettings.java:94: Warning: Consider using apply() instead; commit writes its data to persistent storage immediately, whereas apply will handle it in the background [ApplySharedPref]
+        prefs.edit().clear().commit();
+                             ~~~~~~~~
+
+   Explanation for issues of type "ApplySharedPref":
+   Consider using apply() instead of commit on shared preferences. Whereas
+   commit blocks and writes its data to persistent storage immediately, apply
+   will handle it in the background.
+
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java:216: Warning: Implicitly using the default locale is a common source of bugs: Use toUpperCase(Locale) instead. For strings meant to be internal use Locale.ROOT, otherwise Locale.getDefault(). [DefaultLocale]
+        String alphas = "abcdefghijklmnopqrstuvwxyz".toUpperCase() + "abcdefghijklmnopqrstuvwxyz";
+                                                     ~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java:1969: Warning: Implicitly using the default locale is a common source of bugs: Use toLowerCase(Locale) instead. For strings meant to be internal use Locale.ROOT, otherwise Locale.getDefault(). [DefaultLocale]
+        StringBuilder sb = new StringBuilder(name.toLowerCase());
+                                                  ~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\util\FileUtils.java:35: Warning: Implicitly using the default locale is a common source of bugs: Use toLowerCase(Locale) instead. For strings meant to be internal use Locale.ROOT, otherwise Locale.getDefault(). [DefaultLocale]
+            return f1.getName().toLowerCase().compareTo(f2.getName().toLowerCase());
+                                ~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\util\FileUtils.java:35: Warning: Implicitly using the default locale is a common source of bugs: Use toLowerCase(Locale) instead. For strings meant to be internal use Locale.ROOT, otherwise Locale.getDefault(). [DefaultLocale]
+            return f1.getName().toLowerCase().compareTo(f2.getName().toLowerCase());
+                                                                     ~~~~~~~~~~~
+
+   Explanation for issues of type "DefaultLocale":
+   Calling String#toLowerCase() or #toUpperCase() without specifying an
+   explicit locale is a common source of bugs. The reason for that is that
+   those methods will use the current locale on the user's device, and even
+   though the code appears to work correctly when you are developing the app,
+   it will fail in some locales. For example, in the Turkish locale, the
+   uppercase replacement for i is not I.
+
+   If you want the methods to just perform ASCII replacement, for example to
+   convert an enum name, call String#toUpperCase(Locale.ROOT) instead. If you
+   really want to use the current locale, call
+   String#toUpperCase(Locale.getDefault()) instead.
+
+   https://developer.android.com/reference/java/util/Locale.html#default_locale
+
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\image\AIImageCompressionAsyncTask.java:10: Warning: Avoid using android.media.ExifInterface; use androidx.exifinterface.media.ExifInterface instead [ExifInterface]
+import android.media.ExifInterface;
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\image\AIImageCompressionAsyncTaskInterface.java:8: Warning: Avoid using android.media.ExifInterface; use androidx.exifinterface.media.ExifInterface instead [ExifInterface]
+import android.media.ExifInterface;
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\image\AIImageCompressionAsyncTasks.java:18: Warning: Avoid using android.media.ExifInterface; use androidx.exifinterface.media.ExifInterface instead [ExifInterface]
+import android.media.ExifInterface;
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\image\AIImageUtils.java:8: Warning: Avoid using android.media.ExifInterface; use androidx.exifinterface.media.ExifInterface instead [ExifInterface]
+import android.media.ExifInterface;
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "ExifInterface":
+   The android.media.ExifInterface implementation has some known security bugs
+   in older versions of Android. There is a new implementation available of
+   this library in the support library, which is preferable.
+
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java:984: Warning: Calling setData after calling setType will clear the type: Call setDataAndType instead? [IntentReset]
+        i.setData(Uri.parse("mailto:" + recepientEmail));
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java:979: Originally set here
+
+   Explanation for issues of type "IntentReset":
+   Intent provides the following APIs: setData(Uri) and setType(String).
+   Unfortunately, setting one clears the other. If you want to set both, you
+   should call setDataAndType(Uri, String) instead.
+
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\util\Screen.java:12: Warning: Using internal inset dimension resource status_bar_height is not supported [InternalInsetResource]
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", AppConstants.kDEVICE_TYPE);
+                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "InternalInsetResource":
+   The internal inset dimension resources are not a supported way to retrieve
+   the relevant insets for your application. The insets are dynamic values
+   that can change while your app is visible, and your app's window may not
+   intersect with the system UI. To get the relevant value for your app and
+   listen to updates, use androidx.core.view.WindowInsetsCompat and related
+   APIs.
+
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java:956: Error: Field requires API level 19, or core library desugaring (current min is 16): java.nio.charset.StandardCharsets#UTF_8 [NewApi]
+        utf8tweet = new String(text.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+                                             ~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java:956: Error: Field requires API level 19, or core library desugaring (current min is 16): java.nio.charset.StandardCharsets#UTF_8 [NewApi]
+        utf8tweet = new String(text.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+                                                                      ~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java:1370: Error: Field requires API level 19, or core library desugaring (current min is 16): java.nio.charset.StandardCharsets#UTF_8 [NewApi]
+            String decodedString = new String(Base64.decode(encoded, 2), StandardCharsets.UTF_8);
+                                                                         ~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java:1809: Error: Field requires API level 19, or core library desugaring (current min is 16): java.nio.charset.StandardCharsets#UTF_8 [NewApi]
+        return Base64.encodeToString(param.getBytes(StandardCharsets.UTF_8), 0);
+                                                    ~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java:1813: Error: Field requires API level 19, or core library desugaring (current min is 16): java.nio.charset.StandardCharsets#UTF_8 [NewApi]
+        return new String(Base64.decode(param.getBytes(), 0), StandardCharsets.UTF_8);
+                                                              ~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java:1822: Error: Field requires API level 19, or core library desugaring (current min is 16): java.nio.charset.StandardCharsets#UTF_8 [NewApi]
+            String json = new String(buffer, StandardCharsets.UTF_8);
+                                             ~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "NewApi":
+   This check scans through all the Android API calls in the application and
+   warns about any calls that are not available on all versions targeted by
+   this application (according to its minimum SDK attribute in the manifest).
+
+   If you really want to use this API and don't need to support older devices
+   just set the minSdkVersion in your build.gradle or AndroidManifest.xml
+   files.
+
+   If your code is deliberately accessing newer APIs, and you have ensured
+   (e.g. with conditional execution) that this code will only ever be called
+   on a supported platform, then you can annotate your class or method with
+   the @TargetApi annotation specifying the local minimum SDK to apply, such
+   as @TargetApi(11), such that this check considers 11 rather than your
+   manifest file's minimum SDK as the required API level.
+
+   If you are deliberately setting android: attributes in style definitions,
+   make sure you place this in a values-vNN folder in order to avoid running
+   into runtime conflicts on certain devices where manufacturers have added
+   custom attributes whose ids conflict with the new ones on later platforms.
+
+   Similarly, you can use tools:targetApi="11" in an XML file to indicate that
+   the element will only be inflated in an adequate context.
+
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\util\RealPathUtil.java:34: Error: Value must be ≥ 0 but getColumnIndex can be -1 [Range]
+            return cursor2.getString(cursor2.getColumnIndex("_data"));
+                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "Range":
+   Some parameters are required to be in a particular numerical range; this
+   check makes sure that arguments passed fall within the range. For arrays,
+   Strings and collections this refers to the size or length.
+
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java:1585: Warning: Expected duration Toast.LENGTH_SHORT or Toast.LENGTH_LONG, a custom duration value is not supported [ShowToast]
+        Toast.makeText(activity, "Email app not found", 1).show();
+                                                        ~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\UIToastMessage.java:51: Warning: Expected duration Toast.LENGTH_SHORT or Toast.LENGTH_LONG, a custom duration value is not supported [ShowToast]
+        Toast toast = Toast.makeText(mContext, message, 0);
+                                                        ~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\UIToastMessage.java:68: Warning: Expected duration Toast.LENGTH_SHORT or Toast.LENGTH_LONG, a custom duration value is not supported [ShowToast]
+        Toast toast = Toast.makeText(mContext, message, 1);
+                                                        ~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\UIToastMessage.java:85: Warning: Expected duration Toast.LENGTH_SHORT or Toast.LENGTH_LONG, a custom duration value is not supported [ShowToast]
+        @SuppressLint("WrongConstant") Toast toast = Toast.makeText(mContext, message, 0);
+                                                                                       ~
+
+   Explanation for issues of type "ShowToast":
+   Toast.makeText() creates a Toast but does not show it. You must call show()
+   on the resulting object to actually make the Toast appear.
+
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\image\AIImageCompressionAsyncTask.java:144: Warning: To get local formatting use getDateInstance(), getDateTimeInstance(), or getTimeInstance(), or use new SimpleDateFormat(String template, Locale locale) with for example Locale.US for ASCII dates. [SimpleDateFormat]
+        String mFormat = new SimpleDateFormat("dd-MM-yy hh:mm EEEE").format(new Date());
+                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java:653: Warning: To get local formatting use getDateInstance(), getDateTimeInstance(), or getTimeInstance(), or use new SimpleDateFormat(String template, Locale locale) with for example Locale.US for ASCII dates. [SimpleDateFormat]
+        SimpleDateFormat format = new SimpleDateFormat("dd/mm/yyyy");
+                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java:685: Warning: To get local formatting use getDateInstance(), getDateTimeInstance(), or getTimeInstance(), or use new SimpleDateFormat(String template, Locale locale) with for example Locale.US for ASCII dates. [SimpleDateFormat]
+        SimpleDateFormat format = new SimpleDateFormat("dd/mm/yyyy");
+                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\image\ImageWaterMarking.java:27: Warning: To get local formatting use getDateInstance(), getDateTimeInstance(), or getTimeInstance(), or use new SimpleDateFormat(String template, Locale locale) with for example Locale.US for ASCII dates. [SimpleDateFormat]
+        String mFormat = new SimpleDateFormat("dd-MM-yy hh:mm EEEE").format(new Date());
+                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "SimpleDateFormat":
+   Almost all callers should use getDateInstance(), getDateTimeInstance(), or
+   getTimeInstance() to get a ready-made instance of SimpleDateFormat suitable
+   for the user's locale. The main reason you'd create an instance this class
+   directly is because you need to format/parse a specific machine-readable
+   format, in which case you almost certainly want to explicitly ask for US to
+   ensure that you get ASCII digits (rather than, say, Arabic digits).
+
+   Therefore, you should either use the form of the SimpleDateFormat
+   constructor where you pass in an explicit locale, such as Locale.US, or use
+   one of the get instance methods, or suppress this error if really know what
+   you are doing.
+
+   https://developer.android.com/reference/java/text/SimpleDateFormat.html
+
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AIAppHelper.java:62: Error: Must be one of: MeasureSpec.UNSPECIFIED, MeasureSpec.EXACTLY, MeasureSpec.AT_MOST [WrongConstant]
+        recyclerView.measure(View.MeasureSpec.makeMeasureSpec(recyclerView.getWidth(), 1073741824), View.MeasureSpec.makeMeasureSpec(0, 0));
+                                                                                       ~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AIAppHelper.java:62: Error: Must be one of: MeasureSpec.UNSPECIFIED, MeasureSpec.EXACTLY, MeasureSpec.AT_MOST [WrongConstant]
+        recyclerView.measure(View.MeasureSpec.makeMeasureSpec(recyclerView.getWidth(), 1073741824), View.MeasureSpec.makeMeasureSpec(0, 0));
+                                                                                                                                        ~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\image\AIImageLoadingUtils.java:24: Error: Must be one of: TypedValue.COMPLEX_UNIT_PX, TypedValue.COMPLEX_UNIT_DIP, TypedValue.COMPLEX_UNIT_SP, TypedValue.COMPLEX_UNIT_PT, TypedValue.COMPLEX_UNIT_IN, TypedValue.COMPLEX_UNIT_MM [WrongConstant]
+        return (int) TypedValue.applyDimension(1, dips, this.mContext.getResources().getDisplayMetrics());
+                                               ~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\ExpandableHeightGridView.java:33: Error: Must be one of: MeasureSpec.UNSPECIFIED, MeasureSpec.EXACTLY, MeasureSpec.AT_MOST [WrongConstant]
+            super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(16777215, Integer.MIN_VALUE));
+                                                                                    ~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\ExpandableHeightListView.java:33: Error: Must be one of: MeasureSpec.UNSPECIFIED, MeasureSpec.EXACTLY, MeasureSpec.AT_MOST [WrongConstant]
+            super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(16777215, Integer.MIN_VALUE));
+                                                                                    ~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "WrongConstant":
+   Ensures that when parameter in a method only allows a specific set of
+   constants, calls obey those rules.
+
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle:6: Warning: A newer version of compileSdkVersion than 33 is available: 36 [GradleDependency]
+    compileSdkVersion 33
+    ~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle:38: Warning: A newer version of org.jetbrains.kotlin:kotlin-stdlib than 2.2.10 is available: 2.2.21 [GradleDependency]
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle:39: Warning: A newer version of androidx.core:core-ktx than 1.3.2 is available: 1.18.0 [GradleDependency]
+    implementation 'androidx.core:core-ktx:1.3.2'
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle:40: Warning: A newer version of androidx.appcompat:appcompat than 1.2.0 is available: 1.7.1 [GradleDependency]
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle:41: Warning: A newer version of com.google.android.material:material than 1.3.0 is available: 1.13.0 [GradleDependency]
+    implementation 'com.google.android.material:material:1.3.0'
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle:42: Warning: A newer version of androidx.constraintlayout:constraintlayout than 2.0.4 is available: 2.2.1 [GradleDependency]
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle:45: Warning: A newer version of androidx.test.ext:junit than 1.1.2 is available: 1.3.0 [GradleDependency]
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle:46: Warning: A newer version of androidx.test.espresso:espresso-core than 3.3.0 is available: 3.7.0 [GradleDependency]
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle:50: Warning: A newer version of com.android.volley:volley than 1.2.0 is available: 1.2.1 [GradleDependency]
+    implementation 'com.android.volley:volley:1.2.0'
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "GradleDependency":
+   This detector looks for usages of libraries where the version you are using
+   is not the current stable release. Using older versions is fine, and there
+   are cases where you deliberately want to stick with an older version.
+   However, you may simply not be aware that a more recent version is
+   available, and that is what this lint check helps find.
+
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle:44: Warning: Avoid using + in version numbers; can lead to unpredictable and unrepeatable builds (junit:junit:4.+) [GradleDynamicVersion]
+    testImplementation 'junit:junit:4.+'
+                       ~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "GradleDynamicVersion":
+   Using + in dependencies lets you automatically pick up the latest available
+   version rather than a specific, named version. However, this is not
+   recommended; your builds are not repeatable; you may have tested with a
+   slightly different version than what the build server used. (Using a
+   dynamic version as the major version number is more problematic than using
+   it in the minor version position.)
+
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle:47: Warning: A newer version of com.squareup.retrofit2:converter-gson than 2.3.0 is available: 3.0.0 [NewerVersionAvailable]
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle:48: Warning: A newer version of com.google.code.gson:gson than 2.8.6 is available: 2.13.2 [NewerVersionAvailable]
+    implementation 'com.google.code.gson:gson:2.8.6'
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle:49: Warning: A newer version of com.loopj.android:android-async-http than 1.4.9 is available: 1.4.11 [NewerVersionAvailable]
+    implementation 'com.loopj.android:android-async-http:1.4.9'
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "NewerVersionAvailable":
+   This detector checks with a central repository to see if there are newer
+   versions available for the dependencies used by this project. This is
+   similar to the GradleDependency check, which checks for newer versions
+   available in the Android SDK tools and libraries, but this works with any
+   MavenCentral dependency, and connects to the library every time, which
+   makes it more flexible but also much slower.
+
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\util\Screen.java:12: Warning: Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. R.foo.bar) than by name (e.g. getIdentifier("bar", "foo", null)). [DiscouragedApi]
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", AppConstants.kDEVICE_TYPE);
+                                                ~~~~~~~~~~~~~
+
+   Explanation for issues of type "DiscouragedApi":
+   Discouraged APIs are allowed and are not deprecated, but they may be unfit
+   for common use (e.g. due to slow performance or subtle behavior).
+
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\UITouchImageView.java:593: Warning: Use @RequiresApi(16) instead of @TargetApi` to propagate the requirement to callers of compatPostOnAnimation [UseRequiresApi]
+    @TargetApi(16)
+    ~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\UITouchImageView.java:871: Warning: Use @RequiresApi(9) instead of @TargetApi` to propagate the requirement to users of CompatScroller [UseRequiresApi]
+    @TargetApi(9)
+    ~~~~~~~~~~~~~
+
+   Explanation for issues of type "UseRequiresApi":
+   The @TargetApi annotation only suppresses API warnings locally.
+   @RequiresApi on the other hand will propagate the requirement out to any
+   callers of this API, making sure that they either perform API level checks
+   (using for example SDK_INT), or defining @RequiresApi annotations
+   themselves.
+
+   (The @TargetApi annotation predates @RequiresApi, and was introduced as an
+   early way to suppress lint API warnings for a particular API level.
+   Accidentally using @TargetApi can lead to crashes since there is no check
+   that other calls to this method actually check that the call is safe.)
+
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\AppInventorApi.java:122: Warning: Potentially insecure random numbers on Android 4.3 and older. Read https://android-developers.blogspot.com/2013/08/some-securerandom-thoughts.html for more info. [TrulyRandom]
+            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+                                                                   ~~~~~~~~~~~~
+
+   Explanation for issues of type "TrulyRandom":
+   Key generation, signing, encryption, and random number generation may not
+   receive cryptographically strong values due to improper initialization of
+   the underlying PRNG on Android 4.3 and below.
+
+   If your application relies on cryptographically secure random number
+   generation you should apply the workaround described in
+   https://android-developers.blogspot.com/2013/08/some-securerandom-thoughts.
+   html .
+
+   This lint rule is mostly informational; it does not accurately detect
+   whether cryptographically secure RNG is required, or whether the workaround
+   has already been applied. After reading the blog entry and updating your
+   code if necessary, you can disable this lint issue.
+
+   https://goo.gle/TrulyRandom
+   https://android-developers.blogspot.com/2013/08/some-securerandom-thoughts.html
+
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java:1015: Warning: Using getString to get device identifiers is not recommended [HardwareIds]
+        return Settings.Secure.getString(context.getContentResolver(), "android_id");
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "HardwareIds":
+   Using these device identifiers is not recommended other than for high value
+   fraud prevention and advanced telephony use-cases. For advertising
+   use-cases, use AdvertisingIdClient$Info#getId and for analytics, use
+   InstanceId#getId.
+
+   https://developer.android.com/training/articles/user-data-ids.html
+
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\AppInventorApi.java:104: Warning: checkClientTrusted is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers [TrustAllX509TrustManager]
+                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String
+                                    ~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\AppInventorApi.java:109: Warning: checkServerTrusted is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers [TrustAllX509TrustManager]
+                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String
+                                    ~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\MyCustomSSLFactory.java:39: Warning: checkClientTrusted is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers [TrustAllX509TrustManager]
+            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                        ~~~~~~~~~~~~~~~~~~
+C:\Users\HP\.gradle\caches\modules-2\files-2.1\com.loopj.android\android-async-http\1.4.9\386a4339ffe52d5d63e80f9bed8d2b1d1a418249\android-async-http-1.4.9.jar: Warning: checkClientTrusted is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers [TrustAllX509TrustManager]
+C:\Users\HP\.gradle\caches\modules-2\files-2.1\com.loopj.android\android-async-http\1.4.9\386a4339ffe52d5d63e80f9bed8d2b1d1a418249\android-async-http-1.4.9.jar: Warning: checkServerTrusted is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers [TrustAllX509TrustManager]
+
+   Explanation for issues of type "TrustAllX509TrustManager":
+   This check looks for X509TrustManager implementations whose
+   checkServerTrusted or checkClientTrusted methods do nothing (thus trusting
+   any certificate chain) which could result in insecure network traffic
+   caused by trusting arbitrary TLS/SSL certificates presented by peers.
+
+   https://goo.gle/TrustAllX509TrustManager
+
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\AppInventorApi.java:102: Warning: Implementing a custom X509TrustManager is error-prone and likely to be insecure. It is likely to disable certificate validation altogether, and is non-trivial to implement correctly without calling Android's default implementation. [CustomX509TrustManager]
+                    new X509TrustManager() {
+                        ~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\MyCustomSSLFactory.java:38: Warning: Implementing a custom X509TrustManager is error-prone and likely to be insecure. It is likely to disable certificate validation altogether, and is non-trivial to implement correctly without calling Android's default implementation. [CustomX509TrustManager]
+        X509TrustManager tm = new X509TrustManager() {
+                                  ~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "CustomX509TrustManager":
+   This check looks for custom X509TrustManager implementations.
+
+   https://goo.gle/CustomX509TrustManager
+
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\util\RealPathUtil.java:29: Warning: This Cursor should be freed up after use with #close() [Recycle]
+            Cursor cursor2 = context.getContentResolver().query(uri, (String[]) null, (String) null, (String[]) null, (String) null);
+                                                          ~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\util\RealPathUtil.java:50: Warning: This Cursor should be freed up after use with #close() [Recycle]
+        Cursor cursor = context.getContentResolver().query(contentUri, new String[]{"_data"}, (String) null, (String[]) null, (String) null);
+                                                     ~~~~~
+
+   Explanation for issues of type "Recycle":
+   Many resources, such as TypedArrays, VelocityTrackers, etc., should be
+   recycled (with a recycle() call) after use. This lint check looks for
+   missing recycle() calls.
+
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\util\RealPathUtil.java:57: Warning: Unnecessary; SDK_INT is never < 16 [ObsoleteSdkInt]
+        if (Build.VERSION.SDK_INT < 11) {
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\UITouchImageView.java:593: Warning: Unnecessary; SDK_INT is always >= 16 [ObsoleteSdkInt]
+    @TargetApi(16)
+    ~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\UITouchImageView.java:595: Warning: Unnecessary; SDK_INT is always >= 16 [ObsoleteSdkInt]
+        if (Build.VERSION.SDK_INT >= 16) {
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\UITouchImageView.java:871: Warning: Unnecessary; SDK_INT is always >= 9 [ObsoleteSdkInt]
+    @TargetApi(9)
+    ~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\UITouchImageView.java:879: Warning: Unnecessary; Build.VERSION.SDK_INT < 9 is never true here [ObsoleteSdkInt]
+            if (Build.VERSION.SDK_INT < 9) {
+                ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "ObsoleteSdkInt":
+   This check flags version checks that are not necessary, because the
+   minSdkVersion (or surrounding known API level) is already at least as high
+   as the version checked for.
+
+   Similarly, it also looks for resources in -vNN folders, such as values-v14
+   where the version qualifier is less than or equal to the minSdkVersion,
+   where the contents should be merged into the best folder.
+
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\image\AIImageCompressionAsyncTask.java:31: Warning: This field leaks a context object [StaticFieldLeak]
+    private Context context;
+    ~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\AppInventorApi.java:37: Warning: Do not place Android context classes in static fields (static reference to AppInventorApi which has field mContext pointing to Context); this is a memory leak [StaticFieldLeak]
+    private static final AppInventorApi ourInstance = new AppInventorApi();
+            ~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\AppinventorIncAPI.java:47: Warning: Do not place Android context classes in static fields (static reference to AppinventorIncAPI which has field mContext pointing to Context); this is a memory leak [StaticFieldLeak]
+    private static final AppinventorIncAPI ourInstance = new AppinventorIncAPI();
+            ~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\AppinventorIncSDK.java:47: Warning: Do not place Android context classes in static fields (static reference to AppinventorIncSDK which has field mContext pointing to Context); this is a memory leak [StaticFieldLeak]
+    private static final AppinventorIncSDK ourInstance = new AppinventorIncSDK();
+            ~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\AppinventorNativeApi.java:29: Warning: Do not place Android context classes in static fields (static reference to AppinventorNativeApi which has field mContext pointing to Context); this is a memory leak [StaticFieldLeak]
+    private static final AppinventorNativeApi ourInstance = new AppinventorNativeApi();
+            ~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\AppinventorSoapApi.java:29: Warning: Do not place Android context classes in static fields (static reference to AppinventorSoapApi which has field mContext pointing to Context); this is a memory leak [StaticFieldLeak]
+    private static final AppinventorSoapApi ourInstance = new AppinventorSoapApi();
+            ~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\VolleySingleton.java:14: Warning: Do not place Android context classes in static fields; this is a memory leak [StaticFieldLeak]
+    private static Context mCtx;
+            ~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\VolleySingleton.java:15: Warning: Do not place Android context classes in static fields (static reference to VolleySingleton which has field mCtx pointing to Context); this is a memory leak [StaticFieldLeak]
+    private static VolleySingleton mInstance;
+            ~~~~~~
+
+   Explanation for issues of type "StaticFieldLeak":
+   A static field will leak contexts.
+
+   Non-static inner classes have an implicit reference to their outer class.
+   If that outer class is for example a Fragment or Activity, then this
+   reference means that the long-running handler/loader/task will hold a
+   reference to the activity which prevents it from getting garbage
+   collected.
+
+   Similarly, direct field references to activities and fragments from these
+   longer running instances can cause leaks.
+
+   ViewModel classes should never point to Views or non-application Contexts.
+
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\swipe\OnSwipeTouchListener.java:16: Warning: OnSwipeTouchListener#onTouch should call View#performClick when a click is detected [ClickableViewAccessibility]
+    public boolean onTouch(View v, MotionEvent event) {
+                   ~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\UITouchImageView.java:130: Warning: Custom view `AppCompatImageView` has setOnTouchListener called on it but does not override performClick [ClickableViewAccessibility]
+        UITouchImageView.super.setOnTouchListener(new PrivateOnTouchListener(this, (C00871) null));
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\UITouchImageView.java:669: Warning: PrivateOnTouchListener#onTouch should call View#performClick when a click is detected [ClickableViewAccessibility]
+        public boolean onTouch(View v, MotionEvent event) {
+                       ~~~~~~~
+
+   Explanation for issues of type "ClickableViewAccessibility":
+   If a View that overrides onTouchEvent or uses an OnTouchListener does not
+   also implement performClick and call it when clicks are detected, the View
+   may not handle accessibility actions properly. Logic handling the click
+   actions should ideally be placed in View#performClick as some accessibility
+   services invoke performClick when a click action should occur.
+
+12 errors, 63 warnings

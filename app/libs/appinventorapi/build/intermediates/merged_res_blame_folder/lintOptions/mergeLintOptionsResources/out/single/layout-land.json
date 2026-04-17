@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "in.co.appinventor.appinventorapi-lintOptions-14:/layout-land/material_timepicker.xml",
+        "source": "in.co.appinventor.appinventorapi-material-1.3.0-4:/layout-land/material_timepicker.xml"
+    },
+    {
+        "merged": "in.co.appinventor.appinventorapi-lintOptions-14:/layout-land/mtrl_picker_header_dialog.xml",
+        "source": "in.co.appinventor.appinventorapi-material-1.3.0-4:/layout-land/mtrl_picker_header_dialog.xml"
+    },
+    {
+        "merged": "in.co.appinventor.appinventorapi-lintOptions-14:/layout-land/material_clock_period_toggle_land.xml",
+        "source": "in.co.appinventor.appinventorapi-material-1.3.0-4:/layout-land/material_clock_period_toggle_land.xml"
+    }
+]

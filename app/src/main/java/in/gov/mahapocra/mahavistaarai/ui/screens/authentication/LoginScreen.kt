@@ -50,6 +50,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.toSHA512
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.OtpRateLimiter.provideValidEncryptedString
+import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
@@ -241,6 +242,8 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
                         AppPreferenceManager(this)
                             .saveString(AppConstants.ACCESS_TOKEN, accessToken)
+
+                        TokenSessionManager.saveTokens(accessToken, refreshToken)
 
                         appPreferenceManager.saveBoolean(AppConstant.IS_FIRST_LOGIN, true)
 
