@@ -46,7 +46,7 @@ class PredictRepository(private val context: Context) {
                 .predictPest(cropIdPart, cropPart, datePart, imagePart)
         }
 
-    suspend fun submitFeedback(responseId: Int, feedbackStr: String) =
+    suspend fun submitFeedback(bearerToken: String, responseId: Int, feedbackStr: String) =
         withContext(Dispatchers.IO) {
 
             // Prepare text parts
@@ -55,7 +55,7 @@ class PredictRepository(private val context: Context) {
 
             // Call API
             //RetrofitClient.getInstance(AppEnvironment.DBT_BASE_URL.baseUrl).submitFeedback(cropIdPart,cropPart)
-            RetrofitClient.getInstance(AppEnvironment.FARMER.baseUrl).submitFeedback(cropIdPart, cropPart)
+            RetrofitClient.getInstance(AppEnvironment.FARMER.baseUrl).submitFeedback(bearerToken, cropIdPart, cropPart)
         }
 
     suspend fun fetchCropList(accessToken: String) = withContext(Dispatchers.IO) {

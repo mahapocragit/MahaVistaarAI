@@ -1600,9 +1600,9 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         navUserName = hView.findViewById(R.id.tv_farmerName)
         navUserPhone = hView.findViewById(R.id.tv_famerPhoneNumber)
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-        val accessToken = AppPreferenceManager(this).getString(AppConstants.ACCESS_TOKEN).toString()
+        val accessToken = AppPreferenceManager(this).getString(AppConstants.ACCESS_TOKEN)?:""
         Log.d(TAG, "init: $accessToken")
-        if (farmerId > 0) {
+        if (accessToken.isNotEmpty()) {
             if (NetworkUtils.isInternetAvailable(this)) {
                 authViewModel.fetchUserInformation(accessToken)
             } else {

@@ -23,6 +23,7 @@ interface ApiService {
     @Multipart
     @POST("/pestdetectionServices/store-feedback")
     suspend fun submitFeedback(
+        @Header("Authorization") bearerToken: String,
         @Part("id") predictResponseId: RequestBody,
         @Part("feedback") feedbackStr: RequestBody,
     ): Response<JsonObject>

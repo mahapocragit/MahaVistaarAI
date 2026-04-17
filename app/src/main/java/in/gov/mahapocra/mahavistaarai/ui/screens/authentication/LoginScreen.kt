@@ -43,7 +43,6 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
-import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
@@ -51,7 +50,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.toSHA512
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.OtpRateLimiter.provideValidEncryptedString
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
-import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONException
 import org.json.JSONObject
@@ -215,12 +214,13 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             }
         }
 
-        authViewModel.loginViaMobilePassResponse.observe(this){state->
-            when(state){
-                is UiState.Loading->{
+        authViewModel.loginViaOTPResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
                     ProgressHelper.showProgressDialog(this)
                 }
-                is UiState.Success->{
+
+                is UiState.Success -> {
                     ProgressHelper.disableProgressDialog(this)
                     val jSONObject = JSONObject(state.data.toString())
                     if (jSONObject.optInt("status") == 200) {
@@ -230,7 +230,10 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 
                         val accessToken = jSONObject.optString("access_token")
-                        Log.d(TAG, "observeResponse: access token: $accessToken and response: $jSONObject")
+                        Log.d(
+                            TAG,
+                            "observeResponse: access token: $accessToken and response: $jSONObject"
+                        )
 
                         if (loginOption != OTP_VERIFY) {
                             farmerRegisteredID = jSONObject.getInt("FAAPRegistrationID")
@@ -245,9 +248,11 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         appPreferenceManager.saveBoolean(AppConstant.IS_FIRST_LOGIN, true)
 
                         val intent = Intent(this, DashboardScreen::class.java).apply {
-                            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or
-                                    Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                                    Intent.FLAG_ACTIVITY_NEW_TASK)
+                            addFlags(
+                                Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                                        Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                                        Intent.FLAG_ACTIVITY_NEW_TASK
+                            )
                         }
 
                         startActivity(intent)
@@ -260,7 +265,67 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
                     }
                 }
-                is UiState.Error->{
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog(this)
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        authViewModel.loginViaMobilePassResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
+                }
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog(this)
+                    val jSONObject = JSONObject(state.data.toString())
+                    if (jSONObject.optInt("status") == 200) {
+                        AppPreferenceManager(this).saveBoolean("show_overlay", true)
+
+                        val message = jSONObject.getString("response")
+                        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+
+                        val accessToken = jSONObject.optString("access_token")
+                        Log.d(
+                            TAG,
+                            "observeResponse: access token: $accessToken and response: $jSONObject"
+                        )
+
+                        if (loginOption != OTP_VERIFY) {
+                            farmerRegisteredID = jSONObject.getInt("FAAPRegistrationID")
+                        }
+
+                        AppSettings.getInstance()
+                            .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisteredID)
+
+                        AppPreferenceManager(this)
+                            .saveString(AppConstants.ACCESS_TOKEN, accessToken)
+
+                        appPreferenceManager.saveBoolean(AppConstant.IS_FIRST_LOGIN, true)
+
+                        val intent = Intent(this, DashboardScreen::class.java).apply {
+                            addFlags(
+                                Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                                        Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                                        Intent.FLAG_ACTIVITY_NEW_TASK
+                            )
+                        }
+
+                        startActivity(intent)
+
+                        if (loginOption != OTP_VERIFY) {
+                            finish()
+                        }
+                    } else {
+                        val message: String = jSONObject.getString("Message")
+                        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                    }
+                }
+
+                is UiState.Error -> {
                     ProgressHelper.disableProgressDialog(this)
                     Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                 }
@@ -509,65 +574,11 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         }
     }
 
-    private fun callLoginAPI(strToken: String, otp: String) {
-        if (mobileNo.isEmpty()) {
-            binding.userIdEditText.error = resources.getString(R.string.lgn_register_phone_error)
-            binding.userIdEditText.requestFocus()
+    private fun callLoginAPI(otp: String) {
+        if (otp != "") {
+            authViewModel.loginViaOTP(mobileNo.trim { it <= ' ' }, otp, fcmToken)
         } else {
-            if (otp != "") {
-                val jsonObject = JSONObject()
-                try {
-                    jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
-                    jsonObject.put("refresh_token", strToken)
-
-                    val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                    val api =
-                        AppInventorApi(
-                            this,
-                            AppEnvironment.FARMER.baseUrl,
-                            "",
-                            AppString(this).getkMSG_WAIT(),
-                            true
-                        )
-                    val retrofit: Retrofit = api.getRetrofitInstance()
-                    val apiRequest = retrofit.create(ApiService::class.java)
-                    Log.d(TAG, "callLoginAPI: true")
-                    val responseCall: Call<JsonObject> =
-                        apiRequest.getUserLoginOTP(mobileNo.trim { it <= ' ' }, otp, requestBody)
-                    api.postRequest(responseCall, this, 2)
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
-            } else {
-                authViewModel.loginViaMobilePass(mobileNo,userPass, fcmToken)
-            }
-        }
-    }
-
-    private fun callLoginAPIForFarmer(strToken: String, otp: String = "") {
-
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
-            jsonObject.put("refresh_token", strToken)
-
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-            val api =
-                AppInventorApi(
-                    this,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(this).getkMSG_WAIT(),
-                    true
-                )
-            val retrofit: Retrofit = api.getRetrofitInstance()
-            val apiRequest = retrofit.create(ApiService::class.java)
-            Log.d(TAG, "callLoginAPIForFarmer: true")
-            val responseCall: Call<JsonObject> =
-                apiRequest.getUserLoginOTP(agriStackMobile.trim { it <= ' ' }, otp, requestBody)
-            api.postRequest(responseCall, this, 2)
-        } catch (e: JSONException) {
-            e.printStackTrace()
+            authViewModel.loginViaMobilePass(mobileNo, userPass, fcmToken)
         }
     }
 
@@ -623,9 +634,19 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 if (jSONObject.optInt("status") == 200) {
                     refreshToken = jSONObject.getString("refresh_token")
                     if (agriStackMobile != "") {
-                        callLoginAPIForFarmer(refreshToken, enteredOTP)
+                        authViewModel.loginViaOTP(
+                            agriStackMobile.trim { it <= ' ' },
+                            enteredOTP,
+                            fcmToken
+                        )
                     } else {
-                        callLoginAPI(refreshToken, enteredOTP)
+                        if (mobileNo.isEmpty()) {
+                            binding.userIdEditText.error =
+                                resources.getString(R.string.lgn_register_phone_error)
+                            binding.userIdEditText.requestFocus()
+                        } else {
+                            callLoginAPI(enteredOTP)
+                        }
                     }
                 } else {
                     val message: String = jSONObject.getString("response")

@@ -185,13 +185,13 @@ interface ApiService {
     ): JsonObject
 
     @POST(ApiConstants.kUserLogin)
-    fun getUserLoginOTP(
+    suspend fun getUserLoginOTP(
         @Header("MobileNo") mobileNo: String,
         @Header("otp") enteredOTP: String,
-        @Body params: RequestBody
-    ): Call<JsonObject>
+        @Header("fcmToken") fcmToken: String
+    ): JsonObject
 
-    @POST("jwtServices/LoginCheck")
+    @POST(ApiConstants.kUserLogin)
     suspend fun getUserLoginPassword(
         @Header("MobileNo") mobileNo: String,
         @Header("Password") password: String,

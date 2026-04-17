@@ -51,10 +51,10 @@ class SplashScreenActivity : AppCompatActivity() {
         }
         // Get Farmer ID
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-
+        val accessToken = AppPreferenceManager(this).getString(AppConstants.ACCESS_TOKEN)?:""
         // Navigate to the appropriate screen after delay
         Handler(Looper.getMainLooper()).postDelayed({
-            val targetActivity = if (farmerId > 0) {
+            val targetActivity = if (accessToken.isNotEmpty()) {
                 DashboardScreen::class.java
             } else {
                 LoginScreen::class.java
