@@ -58,21 +58,21 @@ class PredictRepository(private val context: Context) {
             RetrofitClient.getInstance(AppEnvironment.FARMER.baseUrl).submitFeedback(cropIdPart, cropPart)
         }
 
-    suspend fun fetchCropList() = withContext(Dispatchers.IO) {
-        RetrofitClient.getInstance(AppEnvironment.FARMER.baseUrl).fetchCropList()
+    suspend fun fetchCropList(accessToken: String) = withContext(Dispatchers.IO) {
+        RetrofitClient.getInstance(AppEnvironment.FARMER.baseUrl).fetchCropList("Bearer $accessToken")
     }
 
-    suspend fun getPestAdvisory(pestId: String) = withContext(Dispatchers.IO) {
+    suspend fun getPestAdvisory(pestId: String, bearerToken: String) = withContext(Dispatchers.IO) {
         val part = MultipartBody.Part.createFormData(
             name = "pd_id",
             value = pestId
         )
         RetrofitClient
             .getInstance(AppEnvironment.FARMER.baseUrl)
-            .getPestAdvisory(part)
+            .getPestAdvisory("Bearer $bearerToken", part)
     }
 
-    suspend fun storeResponse(
+    suspend fun storeResponse(bearerToken: String,
         farmerId: Int,
         cropId: String,
         sowingDate: String,
@@ -110,6 +110,7 @@ class PredictRepository(private val context: Context) {
 
             // Call API
             RetrofitClient.getInstance(AppEnvironment.FARMER.baseUrl).storeResponseAgainstCropImage(
+                "Bearer $bearerToken",
                 imagePart,
                 farmerId,
                 cropPart,

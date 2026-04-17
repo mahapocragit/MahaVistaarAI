@@ -82,10 +82,10 @@ class MainViewModel(private val repo: PredictRepository) : ViewModel() {
         }
     }
 
-    fun fetchCropList() {
+    fun fetchCropList(accessToken: String) {
         viewModelScope.launch {
             try {
-                val response = repo.fetchCropList()
+                val response = repo.fetchCropList(accessToken)
                 if (response.isSuccessful) {
                     _getCropListResponse.value =
                         response.body()?.toString() ?: """{"success":true,"message":"Success"}"""
@@ -108,6 +108,7 @@ class MainViewModel(private val repo: PredictRepository) : ViewModel() {
     }
 
     fun storeResponse(
+        bearerToken: String,
         farmerId: Int,
         cropId: String,
         sowingDate: String,
@@ -119,6 +120,7 @@ class MainViewModel(private val repo: PredictRepository) : ViewModel() {
         viewModelScope.launch {
             try {
                 val response = repo.storeResponse(
+                    bearerToken,
                     farmerId,
                     cropId,
                     sowingDate,
@@ -149,11 +151,11 @@ class MainViewModel(private val repo: PredictRepository) : ViewModel() {
         }
     }
 
-    fun getPestAdvisory(context: Context, pestId: String) {
+    fun getPestAdvisory(context: Context, pestId: String, bearerToken: String) {
         ProgressHelper.showProgressDialog(context)
         viewModelScope.launch {
             try {
-                val response = repo.getPestAdvisory(pestId)
+                val response = repo.getPestAdvisory(pestId, bearerToken)
                 if (response.isSuccessful) {
                     ProgressHelper.disableProgressDialog()
                     _pestAdvisoryResponse.value =

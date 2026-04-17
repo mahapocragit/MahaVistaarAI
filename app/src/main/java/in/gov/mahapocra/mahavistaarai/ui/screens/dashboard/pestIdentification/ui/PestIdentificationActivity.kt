@@ -35,11 +35,11 @@ import com.google.firebase.messaging.FirebaseMessaging
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityPestIdentificationBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.CropAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.CropModel
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.data.model.AnalysisData
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.data.repository.PredictRepository
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -124,7 +124,8 @@ class PestIdentificationActivity : AppCompatActivity() {
         setContentView(binding.root)
         uiResponsive(binding.root)
 
-        binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.pest_identification_text)
+        binding.relativeLayoutTopBar.textViewHeaderTitle.text =
+            getString(R.string.pest_identification_text)
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
             startActivity(Intent(this, DashboardScreen::class.java))
@@ -230,7 +231,9 @@ class PestIdentificationActivity : AppCompatActivity() {
                 val predictionArray = dataJSONObject?.optJSONArray("predictions")
                 val predictionObject = predictionArray?.get(0) as JSONObject
                 val diseaseId = predictionObject.optString("disease_id")
-                viewModel.getPestAdvisory(this, diseaseId)
+
+                val accessToken = AppPreferenceManager(this).getString(AppConstants.ACCESS_TOKEN).toString()
+                viewModel.getPestAdvisory(this, diseaseId, accessToken)
                 cameraImageUri?.let { uri ->
                     val compressedUri = compressImageUri(uri, 70)
                     if (compressedUri != null) {
@@ -341,7 +344,11 @@ class PestIdentificationActivity : AppCompatActivity() {
     private fun setUpListeners() {
         binding.cameraLayout.setOnClickListener { checkCameraPermission() }
         binding.galleryLayout.setOnClickListener { pickImage.launch("image/*") }
-        binding.editCropName.setOnClickListener { viewModel.fetchCropList() }
+        binding.editCropName.setOnClickListener {
+            val accessToken =
+                AppPreferenceManager(this).getString(AppConstants.ACCESS_TOKEN).toString()
+            viewModel.fetchCropList(accessToken)
+        }
         binding.editSowingDate.setOnClickListener { openDatePicker() }
 
         binding.deleteImageView.setOnClickListener {
