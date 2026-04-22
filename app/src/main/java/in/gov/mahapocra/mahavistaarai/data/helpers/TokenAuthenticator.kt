@@ -16,6 +16,7 @@ import okhttp3.Response
 import okhttp3.Route
 import okhttp3.internal.http2.Http2Reader
 import org.json.JSONObject
+import java.util.concurrent.TimeUnit
 
 
 class TokenAuthenticator(private val context: Context) : Authenticator {
@@ -56,10 +57,16 @@ class TokenAuthenticator(private val context: Context) : Authenticator {
 
     fun refreshToken(): Pair<String, String>? {
         return try {
-            val client = OkHttpClient()
+
+            val refreshToken = TokenSessionManager.getRefreshToken() ?: return null
+
+            val client = OkHttpClient.Builder()
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build()
 
             val requestBody = FormBody.Builder()
-                .add("refresh_token", TokenSessionManager.getRefreshToken() ?: "")
+                .add("refresh_token", refreshToken)
                 .build()
 
             val request = Request.Builder()
@@ -68,20 +75,29 @@ class TokenAuthenticator(private val context: Context) : Authenticator {
                 .build()
 
             val response = client.newCall(request).execute()
+            val responseBody = response.body?.string()
+
             Log.d("REFRESH_API", "code: ${response.code}")
-            Log.d("REFRESH_API", "body: $response")
+            Log.d("REFRESH_API", "body: $responseBody")
 
-            if (response.isSuccessful) {
-                val json = JSONObject(response.body?.string() ?: "")
-                val newAccess = json.getString("access_token")
-                val newRefresh = json.getString("refresh_token")
+            if (response.code == 200 && !responseBody.isNullOrEmpty()) {
 
-                Pair(newAccess, newRefresh)
-            } else {
-                null
+                val json = JSONObject(responseBody)
+                val status = json.optInt("status")
+                if (status == 200) {
+                    val newAccess = json.optString("access_token")
+
+                    if (newAccess.isNotEmpty()) {
+                        // ✅ reuse OLD refresh token
+                        return Pair(newAccess, refreshToken)
+                    }
+                }
             }
 
+            null
+
         } catch (e: Exception) {
+            e.printStackTrace()
             null
         }
     }

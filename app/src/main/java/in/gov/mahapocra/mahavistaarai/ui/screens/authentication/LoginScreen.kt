@@ -233,6 +233,9 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         val accessToken = jSONObject.optString("access_token")
                         Log.d(TAG, "observeResponse: access token: $accessToken and response: $jSONObject")
 
+                        val refreshToken = jSONObject.optString("refresh_token")
+                        Log.d(TAG, "observeResponse: refresh token: $accessToken and response: $jSONObject")
+
                         if (loginOption != OTP_VERIFY) {
                             farmerRegisteredID = jSONObject.getInt("FAAPRegistrationID")
                         }
