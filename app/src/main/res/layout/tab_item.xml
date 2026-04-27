@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="@dimen/_90sdp"
+    android:minHeight="@dimen/_80sdp"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="@dimen/_8sdp"
+    android:background="@drawable/tab_bg_selector">
+
+    <ImageView
+        android:id="@+id/tabIcon"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="0dp"
+        android:layout_weight="6"
+        android:src="@drawable/ic_agri_services_md"
+        android:scaleType="fitCenter"/>
+
+    <TextView
+        android:id="@+id/tabText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:text="Agri Services"
+        android:textSize="@dimen/_10sdp"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/_4sdp"/>
+</LinearLayout>
