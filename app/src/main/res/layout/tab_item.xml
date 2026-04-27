@@ -24,7 +24,7 @@
         android:layout_height="0dp"
         android:layout_weight="4"
         android:gravity="center"
-        android:textColor="@color/white"
+        android:textColor="@color/off_white"
         android:text="Agri Services"
         android:textSize="@dimen/_10sdp"
         android:textStyle="bold"

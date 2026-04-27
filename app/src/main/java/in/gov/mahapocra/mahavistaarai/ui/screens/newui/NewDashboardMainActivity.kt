@@ -1,7 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -25,13 +24,14 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
-import androidx.drawerlayout.widget.DrawerLayout
 import com.example.mhvui.ViewPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityNewDashboardMainBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DrawerMenuAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
@@ -42,6 +42,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.cost
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.experts.ExpertsCornerFarmerActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.leaderboard.LeaderboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.news.NewsListActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
@@ -50,11 +51,12 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SideNavMenuHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.unSubscribeToTopic
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONArray
 import org.json.JSONException
-import kotlin.getValue
+import org.json.JSONObject
 
 class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
 
@@ -104,7 +106,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
         navUserName = hView.findViewById(R.id.tv_farmerName)
         navUserPhone = hView.findViewById(R.id.tv_famerPhoneNumber)
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-        val accessToken = AppPreferenceManager(this).getString(AppConstants.ACCESS_TOKEN)?:""
+        val accessToken = AppPreferenceManager(this).getString(AppConstants.ACCESS_TOKEN) ?: ""
         Log.d(TAG, "init: $accessToken")
         if (accessToken.isNotEmpty()) {
             if (NetworkUtils.isInternetAvailable(this)) {
@@ -120,6 +122,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
         setSupportActionBar(toolbar)
         setUpDrawerMenu()
         setVersion()
+        observeResponse()
 
         val toggle = ActionBarDrawerToggle(
             this@NewDashboardMainActivity,
@@ -147,7 +150,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                 view.isSelected = true
 
                 val text = view.findViewById<TextView>(R.id.tabText)
-                text.setTextColor(Color.BLACK)
+                text.setTextColor(getColor(R.color.off_black))
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab) {
@@ -155,7 +158,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                 view.isSelected = false
 
                 val text = view.findViewById<TextView>(R.id.tabText)
-                text.setTextColor(Color.WHITE)
+                text.setTextColor(getColor(R.color.off_white))
             }
 
             override fun onTabReselected(tab: TabLayout.Tab) {}
@@ -181,9 +184,18 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
 
         binding.toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.action_language -> { true }
-                R.id.action_notification -> { true }
-                R.id.action_call -> { true }
+                R.id.action_language -> {
+                    true
+                }
+
+                R.id.action_notification -> {
+                    true
+                }
+
+                R.id.action_call -> {
+                    true
+                }
+
                 else -> false
             }
         }
@@ -342,9 +354,8 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     )
                 }
             }
-            val drawer = findViewById<DrawerLayout>(R.id.drawer_layout1)
-            if (drawer.isDrawerOpen(GravityCompat.START)) {
-                drawer.closeDrawer(GravityCompat.START)
+            if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
             }
         } catch (e: JSONException) {
             e.printStackTrace()
@@ -393,5 +404,86 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
         ProgressHelper.disableProgressDialog()
         farmerViewModel.updateFCMToken(farmerId, "NA")
         appPreferenceManager.clearAll()
+    }
+
+    private fun observeResponse() {
+
+        authViewModel.userDetailsState.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
+                }
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    val jsonResponse = JSONObject(state.data.toString())
+                    val dataObject = jsonResponse.optJSONObject("data")
+                    val name = CryptoHelper.decryptField(dataObject?.optString("Name"))
+                    val firstName = name?.split(" ")[0] ?: ""
+                    binding.nameTextView.text = "Hello, $firstName"
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        farmerViewModel.updateFCMTokenResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
+                }
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    AppPreferenceManager(this).saveBoolean("FCM_VALIDATED", true)
+                    val jsonObject = JSONObject(state.data.toString())
+                    val response = jsonObject.optString("response")
+                    if (response == "FCM Cleared") {
+                        AppSettings.getInstance()
+                            .setValue(this, AppConstants.uName, AppConstants.uName)
+                        AppSettings.getInstance()
+                            .setValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
+                        AppSettings.getInstance()
+                            .setValue(this, AppConstants.uEmail, AppConstants.uEmail)
+                        AppSettings.getInstance()
+                            .setIntValue(this, AppConstants.fREGISTER_ID, 0)
+                        AppSettings.getInstance()
+                            .setValue(this, AppConstants.uDIST, AppConstants.uDIST)
+                        AppSettings.getInstance().setIntValue(this, AppConstants.uDISTId, 0)
+                        AppSettings.getInstance()
+                            .setValue(this, AppConstants.uTALUKA, AppConstants.uTALUKA)
+                        AppSettings.getInstance().setIntValue(this, AppConstants.uTALUKAID, 0)
+                        AppSettings.getInstance()
+                            .setValue(this, AppConstants.uVILLAGE, AppConstants.uVILLAGE)
+                        AppSettings.getInstance().setIntValue(this, AppConstants.uVILLAGEID, 0)
+                        AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null)
+                        AppUtility.getInstance()
+                            .clearAppSharedPrefData(this, AppConstants.kSHARED_PREF)
+                        AppSettings.getInstance()
+                            .setBooleanValue(this, AppConstants.userDataSaved, false)
+                        val intent = Intent(
+                            this@NewDashboardMainActivity,
+                            SplashScreenActivity::class.java
+                        )
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Log.d(TAG, "logoutFromApp: $response")
+                    }
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 }

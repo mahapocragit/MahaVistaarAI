@@ -33,7 +33,7 @@ android {
 
     defaultConfig {
         applicationId "in.gov.mahapocra.mahavistaarai"
-        minSdkVersion 23
+        minSdk = 24
         targetSdkVersion 36
         versionCode 51
         versionName "2.0.9"

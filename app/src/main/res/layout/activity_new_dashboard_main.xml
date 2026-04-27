@@ -54,7 +54,7 @@
             android:paddingStart="@dimen/_10sdp">
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/nameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -102,8 +102,7 @@
         android:layout_gravity="start"
         android:paddingTop="?attr/actionBarSize"
         android:background="@drawable/bg_nav_rounded_right"
-        app:headerLayout="@layout/nav_header_main"
-        app:itemIconTint="#000">
+        app:headerLayout="@layout/nav_header_main">
 
         <ListView
             android:id="@+id/menuListView"

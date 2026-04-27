@@ -51,7 +51,6 @@
         <activity
             android:name=".ui.screens.dashboard.magazine.MagazineDashboardActivity"
             android:exported="false" />
-        <!-- ================= ACTIVITIES ================= -->
         <activity
             android:name=".ui.screens.dashboard.pestIdentification.ui.CameraActivity"
             android:exported="false" />
@@ -109,12 +108,12 @@
         <activity android:name=".ui.screens.dashboard.forum.ForumViewActivity" />
         <activity android:name=".ui.screens.dashboard.forum.ForumActivity" />
         <activity android:name=".ui.screens.dashboard.chc.CHCenterActivity" />
+        <activity android:name=".ui.screens.dashboard.menugrid.DashboardScreen"/>
+        <activity android:name=".ui.screens.newui.NewDashboardMainActivity"/>
+        <activity android:name=".ui.screens.authentication.ProfileScreen" />
         <activity android:name=".ui.screens.dashboard.menugrid.dbt.pocra.PocraSchemesDetailsActivity" />
         <activity android:name=".ui.screens.dashboard.menugrid.soilhealthcard.DetailedSoilHealthCardActivity" />
         <activity android:name=".ui.screens.dashboard.menugrid.ChatbotActivity" />
-        <activity
-            android:name=".ui.screens.dashboard.weather.WeatherActivity"
-            android:theme="@style/WeatherTheme" />
         <activity android:name=".ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity" />
         <activity android:name=".ui.screens.dashboard.menugrid.FertilizerCalculatorActivity" />
         <activity android:name=".ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages" />
@@ -130,10 +129,14 @@
         <activity android:name=".ui.screens.dashboard.menugrid.dbt.pocra.PocraDbtSchemes" />
         <activity android:name=".ui.screens.dashboard.menugrid.soilhealthcard.SoilHealthCardActivity" />
         <activity android:name=".ui.screens.dashboard.menugrid.Warehouse" />
+        <activity android:name=".ui.screens.authentication.Registration" />
         <activity android:name=".ui.screens.notification.NotificationActivity" />
         <activity
+            android:name=".ui.screens.dashboard.weather.WeatherActivity"
+            android:theme="@style/WeatherTheme" />
+        <activity
             android:name=".ui.screens.authentication.LoginScreen"
-            android:windowSoftInputMode="adjustPan|stateHidden" /> <!-- ===== FIREBASE MESSAGING ===== -->
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <service
             android:name=".data.services.FBaseMessagingService"
             android:exported="true">
@@ -150,14 +153,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.screens.dashboard.menugrid.DashboardScreen"
-            android:label="@string/app_name" />
-        <activity
-            android:name=".ui.screens.newui.NewDashboardMainActivity"
-            android:label="@string/app_name" />
-        <activity android:name=".ui.screens.authentication.ProfileScreen" />
-        <activity android:name=".ui.screens.authentication.Registration" /> <!-- ===== FILE PROVIDER ===== -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.android.fileprovider"
