@@ -30,6 +30,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.MARKET_PRICE_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
@@ -95,7 +96,7 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
 
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(Intent(this@MarketPrice, DashboardScreen::class.java))
+                AppHelper(this@MarketPrice).redirectToHome()
             }
         })
         onClick()
@@ -128,11 +129,7 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
     private fun onClick() {
 
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
-            val intent = Intent(this, DashboardScreen::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
+            AppHelper(this@MarketPrice).redirectToHome()
         }
         binding.textViewDistrict.setOnClickListener {
             showDistrict()

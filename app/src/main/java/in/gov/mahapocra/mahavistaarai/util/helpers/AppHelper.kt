@@ -8,6 +8,8 @@ import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.NewDashboardMainActivity
 
 class AppHelper(private val context: Context) {
 
@@ -63,6 +65,14 @@ class AppHelper(private val context: Context) {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
             )
+        }
+    }
+
+    fun redirectToHome(isNewUiRedirectionEnabled: Boolean = true){
+        if (isNewUiRedirectionEnabled){
+            context.startActivity(Intent(context, NewDashboardMainActivity::class.java))
+        }else{
+            context.startActivity(Intent(context, DashboardScreen::class.java))
         }
     }
 }

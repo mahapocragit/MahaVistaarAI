@@ -6,23 +6,18 @@
     android:padding="16dp"
     android:background="?attr/selectableItemBackground">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/iconContainer"
+    <ImageView
+        android:id="@+id/containerIcon"
         android:layout_width="48dp"
         android:layout_height="48dp"
         app:cardCornerRadius="24dp"
         app:cardElevation="0dp"
+        android:layout_gravity="center"
         app:cardBackgroundColor="#F0F4FF"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_market_price_sf" />
-    </com.google.android.material.card.MaterialCardView>
+        android:src="@drawable/ic_market_price_sf"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
         android:id="@+id/txtTitle"
@@ -32,11 +27,12 @@
         android:text="Real-Time Market Prices"
         android:textStyle="bold"
         android:textColor="#34495E"
-        app:layout_constraintStart_toEndOf="@id/iconContainer"
+        app:layout_constraintStart_toEndOf="@id/containerIcon"
         app:layout_constraintEnd_toStartOf="@id/imgArrow"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/shortDescriptionTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Live rates from 200+ Mandis"

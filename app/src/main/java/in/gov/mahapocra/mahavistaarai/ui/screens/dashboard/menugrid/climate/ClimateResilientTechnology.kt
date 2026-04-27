@@ -20,7 +20,6 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityClimateResilintTechnologyBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ClimateResilientTechnologyAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -28,6 +27,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -82,7 +82,7 @@ class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClick
 
         binding.relativeLayoutTopBar.imgBackArrow.apply {
             visibility = View.VISIBLE
-            setOnClickListener { navigateToDashboard() }
+            setOnClickListener { AppHelper(this@ClimateResilientTechnology).redirectToHome() }
         }
     }
 
@@ -158,25 +158,15 @@ class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClick
     @SuppressLint("ClickableViewAccessibility")
     private fun setupChatbotDrag() {
         binding.chatbotIcon.setOnTouchListener(DraggableTouchListener {
-                startActivity(Intent(this, ChatbotActivity::class.java))
-            }
-        )
-    }
-
-    private fun navigateToDashboard() {
-        startActivity(
-            Intent(this, DashboardScreen::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK or
-                        Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            }
+            startActivity(Intent(this, ChatbotActivity::class.java))
+        }
         )
     }
 
     private fun setupBackPressed() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                navigateToDashboard()
+                AppHelper(this@ClimateResilientTechnology).redirectToHome()
             }
         })
     }

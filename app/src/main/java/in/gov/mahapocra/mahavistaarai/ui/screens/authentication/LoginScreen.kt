@@ -247,15 +247,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
                         appPreferenceManager.saveBoolean(AppConstant.IS_FIRST_LOGIN, true)
 
-                        val intent = Intent(this, DashboardScreen::class.java).apply {
-                            addFlags(
-                                Intent.FLAG_ACTIVITY_CLEAR_TASK or
-                                        Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                                        Intent.FLAG_ACTIVITY_NEW_TASK
-                            )
-                        }
-
-                        startActivity(intent)
+                        AppHelper(this@LoginScreen).redirectToHome()
 
                         if (loginOption != OTP_VERIFY) {
                             finish()
@@ -305,17 +297,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                             .saveString(AppConstants.ACCESS_TOKEN, accessToken)
 
                         appPreferenceManager.saveBoolean(AppConstant.IS_FIRST_LOGIN, true)
-
-                        val intent = Intent(this, DashboardScreen::class.java).apply {
-                            addFlags(
-                                Intent.FLAG_ACTIVITY_CLEAR_TASK or
-                                        Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                                        Intent.FLAG_ACTIVITY_NEW_TASK
-                            )
-                        }
-
-                        startActivity(intent)
-
+                        AppHelper(this@LoginScreen).redirectToHome()
                         if (loginOption != OTP_VERIFY) {
                             finish()
                         }

@@ -3,6 +3,8 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -13,6 +15,8 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -58,6 +62,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
     private lateinit var appPreferenceManager: AppPreferenceManager
     private val farmerViewModel: FarmerViewModel by viewModels()
     private val authViewModel: AuthViewModel by viewModels()
+    private var doubleBackToExitPressedOnce = false
     private var languageToLoad: String = "en"
     private lateinit var navUserName: TextView
     private lateinit var navUserPhone: TextView
@@ -182,6 +187,30 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                 else -> false
             }
         }
+
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+
+                    if (doubleBackToExitPressedOnce) {
+                        finishAffinity()
+                        return
+                    }
+
+                    doubleBackToExitPressedOnce = true
+                    Toast.makeText(
+                        this@NewDashboardMainActivity,
+                        "Swipe again to exit",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        doubleBackToExitPressedOnce = false
+                    }, 2000)
+                }
+            }
+        )
     }
 
     private fun setUpDrawerMenu() {

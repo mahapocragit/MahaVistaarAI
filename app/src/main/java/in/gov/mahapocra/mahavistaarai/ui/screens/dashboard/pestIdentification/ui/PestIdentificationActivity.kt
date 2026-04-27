@@ -35,7 +35,6 @@ import com.google.firebase.messaging.FirebaseMessaging
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityPestIdentificationBinding
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.CropAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.CropModel
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.data.model.AnalysisData
@@ -45,6 +44,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONArray
 import org.json.JSONObject
@@ -62,7 +62,6 @@ class PestIdentificationActivity : AppCompatActivity() {
     private var cropList = ArrayList<CropModel>()
     private var selectedCropId: Int? = null
     private var farmerId = 0
-    private var predictRespStoredId: Int = 0
     private lateinit var predictResult: String
     var languageToLoad = "mr"
     private var analysisData = AnalysisData(0, "", "", false, "", "", "")
@@ -128,7 +127,7 @@ class PestIdentificationActivity : AppCompatActivity() {
             getString(R.string.pest_identification_text)
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
-            startActivity(Intent(this, DashboardScreen::class.java))
+            AppHelper(this@PestIdentificationActivity).redirectToHome()
         }
 
         FirebaseMessaging.getInstance().unsubscribeFromTopic("generic_notifications")
@@ -181,7 +180,7 @@ class PestIdentificationActivity : AppCompatActivity() {
     private fun handleBackPress() {
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(Intent(this@PestIdentificationActivity, DashboardScreen::class.java))
+                AppHelper(this@PestIdentificationActivity).redirectToHome()
             }
         })
     }

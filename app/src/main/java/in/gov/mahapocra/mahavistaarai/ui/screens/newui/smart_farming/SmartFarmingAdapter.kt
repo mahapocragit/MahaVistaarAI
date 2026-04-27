@@ -3,10 +3,12 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.smart_farming
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import `in`.co.appinventor.services_api.listener.OnRecyclerItemClickListener
 import `in`.gov.mahapocra.mahavistaarai.databinding.ItemSmartFarmingBinding
 
 class SmartFarmingAdapter(
-    private val list: List<SmartFarmingModel>
+    private val list: List<SmartFarmingModel>,
+    private val listener:OnRecyclerItemClickListener
 ) : RecyclerView.Adapter<SmartFarmingAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: ItemSmartFarmingBinding) :
@@ -25,6 +27,9 @@ class SmartFarmingAdapter(
         val item = list[position]
         holder.binding.imageView.setImageDrawable(item.drawable)
         holder.binding.textView.text = item.title
+        holder.itemView.setOnClickListener {
+            listener.onRecyclerViewItemClick(item)
+        }
     }
 
     override fun getItemCount(): Int = list.size

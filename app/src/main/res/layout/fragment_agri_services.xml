@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -189,9 +188,10 @@
                 android:layout_height="@dimen/_150sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:backgroundTint="@color/pale_aqua"
+                app:cardCornerRadius="@dimen/_15sdp"
+                app:cardElevation="0dp"
                 app:strokeColor="@color/white"
-                app:strokeWidth="1dp"
-                app:cardCornerRadius="@dimen/_15sdp">
+                app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -375,21 +375,27 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <include layout="@layout/item_market_row" />
+                    <include
+                        android:id="@+id/marketPriceLayout"
+                        layout="@layout/item_market_row" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="#EEEEEE" />
 
-                    <include layout="@layout/item_market_row" />
+                    <include
+                        android:id="@+id/warehouseLayout"
+                        layout="@layout/item_market_row" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="#EEEEEE" />
 
-                    <include layout="@layout/item_market_row" />
+                    <include
+                        android:id="@+id/chcCentreLayout"
+                        layout="@layout/item_market_row" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -401,6 +407,7 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/fertilizerCalculatorCard"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/_80sdp"
                     android:layout_marginEnd="8dp"
@@ -419,22 +426,22 @@
                             android:id="@+id/tvTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:lineSpacingExtra="2dp"
                             android:text="Fertilizer\nCalculator"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/_12sdp"
-                            android:textStyle="bold"
-                            android:lineSpacingExtra="2dp"/>
+                            android:textStyle="bold" />
 
                         <!-- Subtitle -->
                         <TextView
                             android:id="@+id/tvSubtitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@id/tvTitle"
+                            android:layout_marginTop="6dp"
                             android:text="Feed Crops Right"
                             android:textColor="#BFE7D0"
-                            android:textSize="@dimen/_10sdp"
-                            android:layout_below="@id/tvTitle"
-                            android:layout_marginTop="6dp"/>
+                            android:textSize="@dimen/_10sdp" />
 
                         <!-- Icon Background -->
                         <ImageView
@@ -443,7 +450,7 @@
                             android:layout_height="40dp"
                             android:layout_alignParentEnd="true"
                             android:padding="@dimen/_4sdp"
-                            android:src="@drawable/bg_icon_container"/>
+                            android:src="@drawable/bg_icon_container" />
 
                     </RelativeLayout>
 
@@ -468,21 +475,21 @@
                             android:id="@+id/costCalculatorTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:lineSpacingExtra="2dp"
                             android:text="Cost\nCalculator"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/_12sdp"
-                            android:textStyle="bold"
-                            android:lineSpacingExtra="2dp"/>
+                            android:textStyle="bold" />
 
                         <!-- Subtitle -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@id/costCalculatorTitle"
+                            android:layout_marginTop="6dp"
                             android:text="Predicts Profit"
                             android:textColor="#BFE7D0"
-                            android:textSize="@dimen/_10sdp"
-                            android:layout_below="@id/costCalculatorTitle"
-                            android:layout_marginTop="6dp"/>
+                            android:textSize="@dimen/_10sdp" />
 
                         <!-- Icon Background -->
                         <ImageView
@@ -490,7 +497,7 @@
                             android:layout_height="40dp"
                             android:layout_alignParentEnd="true"
                             android:padding="@dimen/_4sdp"
-                            android:src="@drawable/bg_icon_cost_cal"/>
+                            android:src="@drawable/bg_icon_cost_cal" />
 
                     </RelativeLayout>
 
