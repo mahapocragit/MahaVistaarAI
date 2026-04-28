@@ -4,17 +4,26 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.FragmentMyDashboardBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
+import org.json.JSONObject
+import kotlin.getValue
 
 class MyDashboardFragment : Fragment() {
 
     private var _binding: FragmentMyDashboardBinding? = null
+    private val farmerViewModel: FarmerViewModel by viewModels()
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -80,6 +89,33 @@ class MyDashboardFragment : Fragment() {
                 adapter = myAdapter
 
                 PagerSnapHelper().attachToRecyclerView(this)
+            }
+        }
+        observeResponse()
+        farmerViewModel.getFarmDetails("79335694125")
+    }
+
+    private fun observeResponse(){
+        farmerViewModel.getFarmDetailsResponse.observe(viewLifecycleOwner){ state ->
+            when(state){
+                is UiState.Loading->{
+                    context?.let { ProgressHelper.showProgressDialog(it) }
+                }
+                is UiState.Success->{
+                    ProgressHelper.disableProgressDialog()
+                    val jsonResponse = JSONObject(state.data.toString())
+                    val dataObject = jsonResponse.optJSONObject("data")
+                    val farmArea = dataObject.optDouble("total_plot_area")
+                    val farmCount = dataObject.optInt("total_farms")
+                    val totalVillages = dataObject.optInt("total_villages")
+                    binding.totalAreaTextView.text = farmArea.toString()
+                    binding.totalFarmTextView.text = farmCount.toString()
+                    binding.totalVillagesTextView.text = "Villages: $totalVillages"
+                }
+                is UiState.Error->{
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

@@ -390,4 +390,7 @@ interface ApiService {
     @GET("/get_app_version")
     suspend fun getAppVersion(): JsonObject
 
+    @POST("/farmDairyService/get-farmer-summary")
+    suspend fun getFarmDetails(@Body params: RequestBody): JsonObject
+
 }

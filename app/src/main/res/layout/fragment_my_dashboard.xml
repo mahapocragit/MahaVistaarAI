@@ -44,6 +44,7 @@
                     app:layout_constraintTop_toTopOf="@+id/tvTitle">
 
                     <TextView
+                        android:id="@+id/totalVillagesTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_village_badge"
@@ -77,6 +78,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/totalAreaTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="4.71"
@@ -121,6 +123,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/totalFarmTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="4"

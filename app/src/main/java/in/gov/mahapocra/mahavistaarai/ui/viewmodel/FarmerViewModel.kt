@@ -84,13 +84,15 @@ class FarmerViewModel : ViewModel() {
     val getNotificationResponse: LiveData<UiState<JsonObject>> = _getNotificationResponse
 
     private val _getNotificationDetailedResponse = MutableLiveData<UiState<JsonObject>>()
-    val getNotificationDetailedResponse: LiveData<UiState<JsonObject>> = _getNotificationDetailedResponse
+    val getNotificationDetailedResponse: LiveData<UiState<JsonObject>> =
+        _getNotificationDetailedResponse
 
     private val _updateNotificationStatusResponse = MutableLiveData<JsonObject>()
     val updateNotificationStatusResponse: LiveData<JsonObject> = _updateNotificationStatusResponse
 
     private val _addNotificationFeedbackResponse = MutableLiveData<UiState<JsonObject>>()
-    val addNotificationFeedbackResponse: LiveData<UiState<JsonObject>> = _addNotificationFeedbackResponse
+    val addNotificationFeedbackResponse: LiveData<UiState<JsonObject>> =
+        _addNotificationFeedbackResponse
 
     private val _updateFCMTokenResponse = MutableLiveData<UiState<JsonObject>>()
     val updateFCMTokenResponse: LiveData<UiState<JsonObject>> = _updateFCMTokenResponse
@@ -111,7 +113,8 @@ class FarmerViewModel : ViewModel() {
     val saveSubscribedTopicResponse: LiveData<UiState<JsonObject>> = _saveSubscribedTopicResponse
 
     private val _deleteSubscribedTopicResponse = MutableLiveData<UiState<JsonObject>>()
-    val deleteSubscribedTopicResponse: LiveData<UiState<JsonObject>> = _deleteSubscribedTopicResponse
+    val deleteSubscribedTopicResponse: LiveData<UiState<JsonObject>> =
+        _deleteSubscribedTopicResponse
 
     private val _getMagazineDetailsResponse = MutableLiveData<UiState<JsonObject>>()
     val getMagazineDetailsResponse: LiveData<UiState<JsonObject>> = _getMagazineDetailsResponse
@@ -121,6 +124,9 @@ class FarmerViewModel : ViewModel() {
 
     private val _getAppVersionResponse = MutableLiveData<UiState<JsonObject>>()
     val getAppVersionResponse: LiveData<UiState<JsonObject>> = _getAppVersionResponse
+
+    private val _getFarmDetailsResponse = MutableLiveData<UiState<JsonObject>>()
+    val getFarmDetailsResponse: LiveData<UiState<JsonObject>> = _getFarmDetailsResponse
 
 
     private val _error = MutableLiveData<String>()
@@ -638,7 +644,7 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun updateNotificationStatus(userId:Int, notificationID: Long, notificationType: String) {
+    fun updateNotificationStatus(userId: Int, notificationID: Long, notificationType: String) {
         viewModelScope.launch {
             val jsonObject = JSONObject().apply {
                 put("notification_id", notificationID)
@@ -984,6 +990,33 @@ class FarmerViewModel : ViewModel() {
                 }
 
                 _getAppVersionResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getFarmDetails(farmerId:String) {
+        viewModelScope.launch {
+            _getFarmDetailsResponse.value = UiState.Loading
+            try {
+                val retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val api = retrofit.create(ApiService::class.java)
+                val jsonObject = JSONObject().apply {
+                    put("farmer_id", farmerId)
+                }
+                val requestBody =
+                    AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val response = api.getFarmDetails(requestBody)
+                _getFarmDetailsResponse.value = UiState.Success(response)
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _getFarmDetailsResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }

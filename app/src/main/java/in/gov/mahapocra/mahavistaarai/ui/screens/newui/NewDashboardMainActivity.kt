@@ -419,7 +419,10 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     val jsonResponse = JSONObject(state.data.toString())
                     val dataObject = jsonResponse.optJSONObject("data")
                     val name = CryptoHelper.decryptField(dataObject?.optString("Name"))
+                    val mobile = CryptoHelper.decryptField(dataObject?.optString("MobileNo"))
                     val firstName = name?.split(" ")[0] ?: ""
+                    navUserName.text = name
+                    navUserPhone.text = mobile
                     binding.nameTextView.text = "Hello, $firstName"
                 }
 
