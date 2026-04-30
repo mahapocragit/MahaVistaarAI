@@ -1,0 +1,1235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.13.0">
+
+    <issue
+        id="ApplySharedPref"
+        severity="Warning"
+        message="Consider using `apply()` instead; `commit` writes its data to persistent storage immediately, whereas `apply` will handle it in the background"
+        category="Correctness"
+        priority="6"
+        summary="Use `apply()` on `SharedPreferences`"
+        explanation="Consider using `apply()` instead of `commit` on shared preferences. Whereas `commit` blocks and writes its data to persistent storage immediately, `apply` will handle it in the background."
+        errorLine1="        editor.commit();"
+        errorLine2="               ~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\settings\AppSettings.java"
+            line="82"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="ApplySharedPref"
+        severity="Warning"
+        message="Consider using `apply()` instead; `commit` writes its data to persistent storage immediately, whereas `apply` will handle it in the background"
+        category="Correctness"
+        priority="6"
+        summary="Use `apply()` on `SharedPreferences`"
+        explanation="Consider using `apply()` instead of `commit` on shared preferences. Whereas `commit` blocks and writes its data to persistent storage immediately, `apply` will handle it in the background."
+        errorLine1="        prefs.edit().clear().commit();"
+        errorLine2="                             ~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\settings\AppSettings.java"
+            line="94"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        severity="Warning"
+        message="Implicitly using the default locale is a common source of bugs: Use `toUpperCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        category="Correctness"
+        priority="6"
+        summary="Implied default locale in case conversion"
+        explanation="Calling `String#toLowerCase()` or `#toUpperCase()` **without specifying an explicit locale** is a common source of bugs. The reason for that is that those methods will use the current locale on the user&apos;s device, and even though the code appears to work correctly when you are developing the app, it will fail in some locales. For example, in the Turkish locale, the uppercase replacement for `i` is **not** `I`.&#xA;&#xA;If you want the methods to just perform ASCII replacement, for example to convert an enum name, call `String#toUpperCase(Locale.ROOT)` instead. If you really want to use the current locale, call `String#toUpperCase(Locale.getDefault())` instead."
+        url="https://developer.android.com/reference/java/util/Locale.html#default_locale"
+        urls="https://developer.android.com/reference/java/util/Locale.html#default_locale"
+        errorLine1="        String alphas = &quot;abcdefghijklmnopqrstuvwxyz&quot;.toUpperCase() + &quot;abcdefghijklmnopqrstuvwxyz&quot;;"
+        errorLine2="                                                     ~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java"
+            line="216"
+            column="54"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        severity="Warning"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        category="Correctness"
+        priority="6"
+        summary="Implied default locale in case conversion"
+        explanation="Calling `String#toLowerCase()` or `#toUpperCase()` **without specifying an explicit locale** is a common source of bugs. The reason for that is that those methods will use the current locale on the user&apos;s device, and even though the code appears to work correctly when you are developing the app, it will fail in some locales. For example, in the Turkish locale, the uppercase replacement for `i` is **not** `I`.&#xA;&#xA;If you want the methods to just perform ASCII replacement, for example to convert an enum name, call `String#toUpperCase(Locale.ROOT)` instead. If you really want to use the current locale, call `String#toUpperCase(Locale.getDefault())` instead."
+        url="https://developer.android.com/reference/java/util/Locale.html#default_locale"
+        urls="https://developer.android.com/reference/java/util/Locale.html#default_locale"
+        errorLine1="        StringBuilder sb = new StringBuilder(name.toLowerCase());"
+        errorLine2="                                                  ~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java"
+            line="1969"
+            column="51"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        severity="Warning"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        category="Correctness"
+        priority="6"
+        summary="Implied default locale in case conversion"
+        explanation="Calling `String#toLowerCase()` or `#toUpperCase()` **without specifying an explicit locale** is a common source of bugs. The reason for that is that those methods will use the current locale on the user&apos;s device, and even though the code appears to work correctly when you are developing the app, it will fail in some locales. For example, in the Turkish locale, the uppercase replacement for `i` is **not** `I`.&#xA;&#xA;If you want the methods to just perform ASCII replacement, for example to convert an enum name, call `String#toUpperCase(Locale.ROOT)` instead. If you really want to use the current locale, call `String#toUpperCase(Locale.getDefault())` instead."
+        url="https://developer.android.com/reference/java/util/Locale.html#default_locale"
+        urls="https://developer.android.com/reference/java/util/Locale.html#default_locale"
+        errorLine1="            return f1.getName().toLowerCase().compareTo(f2.getName().toLowerCase());"
+        errorLine2="                                ~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\util\FileUtils.java"
+            line="35"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        severity="Warning"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        category="Correctness"
+        priority="6"
+        summary="Implied default locale in case conversion"
+        explanation="Calling `String#toLowerCase()` or `#toUpperCase()` **without specifying an explicit locale** is a common source of bugs. The reason for that is that those methods will use the current locale on the user&apos;s device, and even though the code appears to work correctly when you are developing the app, it will fail in some locales. For example, in the Turkish locale, the uppercase replacement for `i` is **not** `I`.&#xA;&#xA;If you want the methods to just perform ASCII replacement, for example to convert an enum name, call `String#toUpperCase(Locale.ROOT)` instead. If you really want to use the current locale, call `String#toUpperCase(Locale.getDefault())` instead."
+        url="https://developer.android.com/reference/java/util/Locale.html#default_locale"
+        urls="https://developer.android.com/reference/java/util/Locale.html#default_locale"
+        errorLine1="            return f1.getName().toLowerCase().compareTo(f2.getName().toLowerCase());"
+        errorLine2="                                                                     ~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\util\FileUtils.java"
+            line="35"
+            column="70"/>
+    </issue>
+
+    <issue
+        id="ExifInterface"
+        severity="Warning"
+        message="Avoid using `android.media.ExifInterface`; use `androidx.exifinterface.media.ExifInterface` instead"
+        category="Correctness"
+        priority="6"
+        summary="Using `android.media.ExifInterface`"
+        explanation="The `android.media.ExifInterface` implementation has some known security bugs in older versions of Android. There is a new implementation available of this library in the support library, which is preferable."
+        errorLine1="import android.media.ExifInterface;"
+        errorLine2="       ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\image\AIImageCompressionAsyncTask.java"
+            line="10"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="ExifInterface"
+        severity="Warning"
+        message="Avoid using `android.media.ExifInterface`; use `androidx.exifinterface.media.ExifInterface` instead"
+        category="Correctness"
+        priority="6"
+        summary="Using `android.media.ExifInterface`"
+        explanation="The `android.media.ExifInterface` implementation has some known security bugs in older versions of Android. There is a new implementation available of this library in the support library, which is preferable."
+        errorLine1="import android.media.ExifInterface;"
+        errorLine2="       ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\image\AIImageCompressionAsyncTaskInterface.java"
+            line="8"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="ExifInterface"
+        severity="Warning"
+        message="Avoid using `android.media.ExifInterface`; use `androidx.exifinterface.media.ExifInterface` instead"
+        category="Correctness"
+        priority="6"
+        summary="Using `android.media.ExifInterface`"
+        explanation="The `android.media.ExifInterface` implementation has some known security bugs in older versions of Android. There is a new implementation available of this library in the support library, which is preferable."
+        errorLine1="import android.media.ExifInterface;"
+        errorLine2="       ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\image\AIImageCompressionAsyncTasks.java"
+            line="18"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="ExifInterface"
+        severity="Warning"
+        message="Avoid using `android.media.ExifInterface`; use `androidx.exifinterface.media.ExifInterface` instead"
+        category="Correctness"
+        priority="6"
+        summary="Using `android.media.ExifInterface`"
+        explanation="The `android.media.ExifInterface` implementation has some known security bugs in older versions of Android. There is a new implementation available of this library in the support library, which is preferable."
+        errorLine1="import android.media.ExifInterface;"
+        errorLine2="       ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\image\AIImageUtils.java"
+            line="8"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="IntentReset"
+        severity="Warning"
+        message="Calling `setData` after calling `setType` will clear the type: Call `setDataAndType` instead?"
+        category="Correctness"
+        priority="6"
+        summary="Suspicious mix of `setType` and `setData`"
+        explanation="Intent provides the following APIs: `setData(Uri)` and `setType(String)`. Unfortunately, setting one clears the other. If you want to set both, you should call `setDataAndType(Uri, String)` instead."
+        errorLine1="        i.setData(Uri.parse(&quot;mailto:&quot; + recepientEmail));"
+        errorLine2="          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java"
+            line="984"
+            column="11"/>
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java"
+            line="979"
+            column="9"
+            message="Originally set here"/>
+    </issue>
+
+    <issue
+        id="InternalInsetResource"
+        severity="Warning"
+        message="Using internal inset dimension resource `status_bar_height` is not supported"
+        category="Correctness"
+        priority="6"
+        summary="Using internal inset dimension resource"
+        explanation="The internal inset dimension resources are not a supported way to retrieve the relevant insets for your application. The insets are dynamic values that can change while your app is visible, and your app&apos;s window may not intersect with the system UI. To get the relevant value for your app and listen to updates, use `androidx.core.view.WindowInsetsCompat` and related APIs."
+        errorLine1="        int resourceId = context.getResources().getIdentifier(&quot;status_bar_height&quot;, &quot;dimen&quot;, AppConstants.kDEVICE_TYPE);"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\util\Screen.java"
+            line="12"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        severity="Error"
+        message="Field requires API level 19, or core library desugaring (current min is 16): `java.nio.charset.StandardCharsets#UTF_8`"
+        category="Correctness"
+        priority="6"
+        summary="Calling new methods on older versions"
+        explanation="This check scans through all the Android API calls in the application and warns about any calls that are not available on **all** versions targeted by this application (according to its minimum SDK attribute in the manifest).&#xA;&#xA;If you really want to use this API and don&apos;t need to support older devices just set the `minSdkVersion` in your `build.gradle` or `AndroidManifest.xml` files.&#xA;&#xA;If your code is **deliberately** accessing newer APIs, and you have ensured (e.g. with conditional execution) that this code will only ever be called on a supported platform, then you can annotate your class or method with the `@TargetApi` annotation specifying the local minimum SDK to apply, such as `@TargetApi(11)`, such that this check considers 11 rather than your manifest file&apos;s minimum SDK as the required API level.&#xA;&#xA;If you are deliberately setting `android:` attributes in style definitions, make sure you place this in a `values-v`*NN* folder in order to avoid running into runtime conflicts on certain devices where manufacturers have added custom attributes whose ids conflict with the new ones on later platforms.&#xA;&#xA;Similarly, you can use tools:targetApi=&quot;11&quot; in an XML file to indicate that the element will only be inflated in an adequate context."
+        errorLine1="        utf8tweet = new String(text.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);"
+        errorLine2="                                             ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java"
+            line="956"
+            column="46"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        severity="Error"
+        message="Field requires API level 19, or core library desugaring (current min is 16): `java.nio.charset.StandardCharsets#UTF_8`"
+        category="Correctness"
+        priority="6"
+        summary="Calling new methods on older versions"
+        explanation="This check scans through all the Android API calls in the application and warns about any calls that are not available on **all** versions targeted by this application (according to its minimum SDK attribute in the manifest).&#xA;&#xA;If you really want to use this API and don&apos;t need to support older devices just set the `minSdkVersion` in your `build.gradle` or `AndroidManifest.xml` files.&#xA;&#xA;If your code is **deliberately** accessing newer APIs, and you have ensured (e.g. with conditional execution) that this code will only ever be called on a supported platform, then you can annotate your class or method with the `@TargetApi` annotation specifying the local minimum SDK to apply, such as `@TargetApi(11)`, such that this check considers 11 rather than your manifest file&apos;s minimum SDK as the required API level.&#xA;&#xA;If you are deliberately setting `android:` attributes in style definitions, make sure you place this in a `values-v`*NN* folder in order to avoid running into runtime conflicts on certain devices where manufacturers have added custom attributes whose ids conflict with the new ones on later platforms.&#xA;&#xA;Similarly, you can use tools:targetApi=&quot;11&quot; in an XML file to indicate that the element will only be inflated in an adequate context."
+        errorLine1="        utf8tweet = new String(text.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);"
+        errorLine2="                                                                      ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java"
+            line="956"
+            column="71"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        severity="Error"
+        message="Field requires API level 19, or core library desugaring (current min is 16): `java.nio.charset.StandardCharsets#UTF_8`"
+        category="Correctness"
+        priority="6"
+        summary="Calling new methods on older versions"
+        explanation="This check scans through all the Android API calls in the application and warns about any calls that are not available on **all** versions targeted by this application (according to its minimum SDK attribute in the manifest).&#xA;&#xA;If you really want to use this API and don&apos;t need to support older devices just set the `minSdkVersion` in your `build.gradle` or `AndroidManifest.xml` files.&#xA;&#xA;If your code is **deliberately** accessing newer APIs, and you have ensured (e.g. with conditional execution) that this code will only ever be called on a supported platform, then you can annotate your class or method with the `@TargetApi` annotation specifying the local minimum SDK to apply, such as `@TargetApi(11)`, such that this check considers 11 rather than your manifest file&apos;s minimum SDK as the required API level.&#xA;&#xA;If you are deliberately setting `android:` attributes in style definitions, make sure you place this in a `values-v`*NN* folder in order to avoid running into runtime conflicts on certain devices where manufacturers have added custom attributes whose ids conflict with the new ones on later platforms.&#xA;&#xA;Similarly, you can use tools:targetApi=&quot;11&quot; in an XML file to indicate that the element will only be inflated in an adequate context."
+        errorLine1="            String decodedString = new String(Base64.decode(encoded, 2), StandardCharsets.UTF_8);"
+        errorLine2="                                                                         ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java"
+            line="1370"
+            column="74"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        severity="Error"
+        message="Field requires API level 19, or core library desugaring (current min is 16): `java.nio.charset.StandardCharsets#UTF_8`"
+        category="Correctness"
+        priority="6"
+        summary="Calling new methods on older versions"
+        explanation="This check scans through all the Android API calls in the application and warns about any calls that are not available on **all** versions targeted by this application (according to its minimum SDK attribute in the manifest).&#xA;&#xA;If you really want to use this API and don&apos;t need to support older devices just set the `minSdkVersion` in your `build.gradle` or `AndroidManifest.xml` files.&#xA;&#xA;If your code is **deliberately** accessing newer APIs, and you have ensured (e.g. with conditional execution) that this code will only ever be called on a supported platform, then you can annotate your class or method with the `@TargetApi` annotation specifying the local minimum SDK to apply, such as `@TargetApi(11)`, such that this check considers 11 rather than your manifest file&apos;s minimum SDK as the required API level.&#xA;&#xA;If you are deliberately setting `android:` attributes in style definitions, make sure you place this in a `values-v`*NN* folder in order to avoid running into runtime conflicts on certain devices where manufacturers have added custom attributes whose ids conflict with the new ones on later platforms.&#xA;&#xA;Similarly, you can use tools:targetApi=&quot;11&quot; in an XML file to indicate that the element will only be inflated in an adequate context."
+        errorLine1="        return Base64.encodeToString(param.getBytes(StandardCharsets.UTF_8), 0);"
+        errorLine2="                                                    ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java"
+            line="1809"
+            column="53"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        severity="Error"
+        message="Field requires API level 19, or core library desugaring (current min is 16): `java.nio.charset.StandardCharsets#UTF_8`"
+        category="Correctness"
+        priority="6"
+        summary="Calling new methods on older versions"
+        explanation="This check scans through all the Android API calls in the application and warns about any calls that are not available on **all** versions targeted by this application (according to its minimum SDK attribute in the manifest).&#xA;&#xA;If you really want to use this API and don&apos;t need to support older devices just set the `minSdkVersion` in your `build.gradle` or `AndroidManifest.xml` files.&#xA;&#xA;If your code is **deliberately** accessing newer APIs, and you have ensured (e.g. with conditional execution) that this code will only ever be called on a supported platform, then you can annotate your class or method with the `@TargetApi` annotation specifying the local minimum SDK to apply, such as `@TargetApi(11)`, such that this check considers 11 rather than your manifest file&apos;s minimum SDK as the required API level.&#xA;&#xA;If you are deliberately setting `android:` attributes in style definitions, make sure you place this in a `values-v`*NN* folder in order to avoid running into runtime conflicts on certain devices where manufacturers have added custom attributes whose ids conflict with the new ones on later platforms.&#xA;&#xA;Similarly, you can use tools:targetApi=&quot;11&quot; in an XML file to indicate that the element will only be inflated in an adequate context."
+        errorLine1="        return new String(Base64.decode(param.getBytes(), 0), StandardCharsets.UTF_8);"
+        errorLine2="                                                              ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java"
+            line="1813"
+            column="63"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        severity="Error"
+        message="Field requires API level 19, or core library desugaring (current min is 16): `java.nio.charset.StandardCharsets#UTF_8`"
+        category="Correctness"
+        priority="6"
+        summary="Calling new methods on older versions"
+        explanation="This check scans through all the Android API calls in the application and warns about any calls that are not available on **all** versions targeted by this application (according to its minimum SDK attribute in the manifest).&#xA;&#xA;If you really want to use this API and don&apos;t need to support older devices just set the `minSdkVersion` in your `build.gradle` or `AndroidManifest.xml` files.&#xA;&#xA;If your code is **deliberately** accessing newer APIs, and you have ensured (e.g. with conditional execution) that this code will only ever be called on a supported platform, then you can annotate your class or method with the `@TargetApi` annotation specifying the local minimum SDK to apply, such as `@TargetApi(11)`, such that this check considers 11 rather than your manifest file&apos;s minimum SDK as the required API level.&#xA;&#xA;If you are deliberately setting `android:` attributes in style definitions, make sure you place this in a `values-v`*NN* folder in order to avoid running into runtime conflicts on certain devices where manufacturers have added custom attributes whose ids conflict with the new ones on later platforms.&#xA;&#xA;Similarly, you can use tools:targetApi=&quot;11&quot; in an XML file to indicate that the element will only be inflated in an adequate context."
+        errorLine1="            String json = new String(buffer, StandardCharsets.UTF_8);"
+        errorLine2="                                             ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java"
+            line="1822"
+            column="46"/>
+    </issue>
+
+    <issue
+        id="Range"
+        severity="Error"
+        message="Value must be ≥ 0 but `getColumnIndex` can be -1"
+        category="Correctness"
+        priority="6"
+        summary="Outside Range"
+        explanation="Some parameters are required to be in a particular numerical range; this check makes sure that arguments passed fall within the range. For arrays, Strings and collections this refers to the size or length."
+        errorLine1="            return cursor2.getString(cursor2.getColumnIndex(&quot;_data&quot;));"
+        errorLine2="                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\util\RealPathUtil.java"
+            line="34"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="ShowToast"
+        severity="Warning"
+        message="Expected duration `Toast.LENGTH_SHORT` or `Toast.LENGTH_LONG`, a custom duration value is not supported"
+        category="Correctness"
+        priority="6"
+        summary="Toast created but not shown"
+        explanation="`Toast.makeText()` creates a `Toast` but does **not** show it. You must call `show()` on the resulting object to actually make the `Toast` appear."
+        errorLine1="        Toast.makeText(activity, &quot;Email app not found&quot;, 1).show();"
+        errorLine2="                                                        ~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java"
+            line="1585"
+            column="57"/>
+    </issue>
+
+    <issue
+        id="ShowToast"
+        severity="Warning"
+        message="Expected duration `Toast.LENGTH_SHORT` or `Toast.LENGTH_LONG`, a custom duration value is not supported"
+        category="Correctness"
+        priority="6"
+        summary="Toast created but not shown"
+        explanation="`Toast.makeText()` creates a `Toast` but does **not** show it. You must call `show()` on the resulting object to actually make the `Toast` appear."
+        errorLine1="        Toast toast = Toast.makeText(mContext, message, 0);"
+        errorLine2="                                                        ~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\UIToastMessage.java"
+            line="51"
+            column="57"/>
+    </issue>
+
+    <issue
+        id="ShowToast"
+        severity="Warning"
+        message="Expected duration `Toast.LENGTH_SHORT` or `Toast.LENGTH_LONG`, a custom duration value is not supported"
+        category="Correctness"
+        priority="6"
+        summary="Toast created but not shown"
+        explanation="`Toast.makeText()` creates a `Toast` but does **not** show it. You must call `show()` on the resulting object to actually make the `Toast` appear."
+        errorLine1="        Toast toast = Toast.makeText(mContext, message, 1);"
+        errorLine2="                                                        ~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\UIToastMessage.java"
+            line="68"
+            column="57"/>
+    </issue>
+
+    <issue
+        id="ShowToast"
+        severity="Warning"
+        message="Expected duration `Toast.LENGTH_SHORT` or `Toast.LENGTH_LONG`, a custom duration value is not supported"
+        category="Correctness"
+        priority="6"
+        summary="Toast created but not shown"
+        explanation="`Toast.makeText()` creates a `Toast` but does **not** show it. You must call `show()` on the resulting object to actually make the `Toast` appear."
+        errorLine1="        @SuppressLint(&quot;WrongConstant&quot;) Toast toast = Toast.makeText(mContext, message, 0);"
+        errorLine2="                                                                                       ~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\UIToastMessage.java"
+            line="85"
+            column="88"/>
+    </issue>
+
+    <issue
+        id="SimpleDateFormat"
+        severity="Warning"
+        message="To get local formatting use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()`, or use `new SimpleDateFormat(String template, Locale locale)` with for example `Locale.US` for ASCII dates."
+        category="Correctness"
+        priority="6"
+        summary="Implied locale in date format"
+        explanation="Almost all callers should use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()` to get a ready-made instance of SimpleDateFormat suitable for the user&apos;s locale. The main reason you&apos;d create an instance this class directly is because you need to format/parse a specific machine-readable format, in which case you almost certainly want to explicitly ask for US to ensure that you get ASCII digits (rather than, say, Arabic digits).&#xA;&#xA;Therefore, you should either use the form of the SimpleDateFormat constructor where you pass in an explicit locale, such as Locale.US, or use one of the get instance methods, or suppress this error if really know what you are doing."
+        url="https://developer.android.com/reference/java/text/SimpleDateFormat.html"
+        urls="https://developer.android.com/reference/java/text/SimpleDateFormat.html"
+        errorLine1="        String mFormat = new SimpleDateFormat(&quot;dd-MM-yy hh:mm EEEE&quot;).format(new Date());"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\image\AIImageCompressionAsyncTask.java"
+            line="144"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="SimpleDateFormat"
+        severity="Warning"
+        message="To get local formatting use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()`, or use `new SimpleDateFormat(String template, Locale locale)` with for example `Locale.US` for ASCII dates."
+        category="Correctness"
+        priority="6"
+        summary="Implied locale in date format"
+        explanation="Almost all callers should use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()` to get a ready-made instance of SimpleDateFormat suitable for the user&apos;s locale. The main reason you&apos;d create an instance this class directly is because you need to format/parse a specific machine-readable format, in which case you almost certainly want to explicitly ask for US to ensure that you get ASCII digits (rather than, say, Arabic digits).&#xA;&#xA;Therefore, you should either use the form of the SimpleDateFormat constructor where you pass in an explicit locale, such as Locale.US, or use one of the get instance methods, or suppress this error if really know what you are doing."
+        url="https://developer.android.com/reference/java/text/SimpleDateFormat.html"
+        urls="https://developer.android.com/reference/java/text/SimpleDateFormat.html"
+        errorLine1="        SimpleDateFormat format = new SimpleDateFormat(&quot;dd/mm/yyyy&quot;);"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java"
+            line="653"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="SimpleDateFormat"
+        severity="Warning"
+        message="To get local formatting use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()`, or use `new SimpleDateFormat(String template, Locale locale)` with for example `Locale.US` for ASCII dates."
+        category="Correctness"
+        priority="6"
+        summary="Implied locale in date format"
+        explanation="Almost all callers should use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()` to get a ready-made instance of SimpleDateFormat suitable for the user&apos;s locale. The main reason you&apos;d create an instance this class directly is because you need to format/parse a specific machine-readable format, in which case you almost certainly want to explicitly ask for US to ensure that you get ASCII digits (rather than, say, Arabic digits).&#xA;&#xA;Therefore, you should either use the form of the SimpleDateFormat constructor where you pass in an explicit locale, such as Locale.US, or use one of the get instance methods, or suppress this error if really know what you are doing."
+        url="https://developer.android.com/reference/java/text/SimpleDateFormat.html"
+        urls="https://developer.android.com/reference/java/text/SimpleDateFormat.html"
+        errorLine1="        SimpleDateFormat format = new SimpleDateFormat(&quot;dd/mm/yyyy&quot;);"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java"
+            line="685"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="SimpleDateFormat"
+        severity="Warning"
+        message="To get local formatting use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()`, or use `new SimpleDateFormat(String template, Locale locale)` with for example `Locale.US` for ASCII dates."
+        category="Correctness"
+        priority="6"
+        summary="Implied locale in date format"
+        explanation="Almost all callers should use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()` to get a ready-made instance of SimpleDateFormat suitable for the user&apos;s locale. The main reason you&apos;d create an instance this class directly is because you need to format/parse a specific machine-readable format, in which case you almost certainly want to explicitly ask for US to ensure that you get ASCII digits (rather than, say, Arabic digits).&#xA;&#xA;Therefore, you should either use the form of the SimpleDateFormat constructor where you pass in an explicit locale, such as Locale.US, or use one of the get instance methods, or suppress this error if really know what you are doing."
+        url="https://developer.android.com/reference/java/text/SimpleDateFormat.html"
+        urls="https://developer.android.com/reference/java/text/SimpleDateFormat.html"
+        errorLine1="        String mFormat = new SimpleDateFormat(&quot;dd-MM-yy hh:mm EEEE&quot;).format(new Date());"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\image\ImageWaterMarking.java"
+            line="27"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="WrongConstant"
+        severity="Error"
+        message="Must be one of: MeasureSpec.UNSPECIFIED, MeasureSpec.EXACTLY, MeasureSpec.AT_MOST"
+        category="Correctness"
+        priority="6"
+        summary="Incorrect constant"
+        explanation="Ensures that when parameter in a method only allows a specific set of constants, calls obey those rules."
+        errorLine1="        recyclerView.measure(View.MeasureSpec.makeMeasureSpec(recyclerView.getWidth(), 1073741824), View.MeasureSpec.makeMeasureSpec(0, 0));"
+        errorLine2="                                                                                       ~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AIAppHelper.java"
+            line="62"
+            column="88"/>
+    </issue>
+
+    <issue
+        id="WrongConstant"
+        severity="Error"
+        message="Must be one of: MeasureSpec.UNSPECIFIED, MeasureSpec.EXACTLY, MeasureSpec.AT_MOST"
+        category="Correctness"
+        priority="6"
+        summary="Incorrect constant"
+        explanation="Ensures that when parameter in a method only allows a specific set of constants, calls obey those rules."
+        errorLine1="        recyclerView.measure(View.MeasureSpec.makeMeasureSpec(recyclerView.getWidth(), 1073741824), View.MeasureSpec.makeMeasureSpec(0, 0));"
+        errorLine2="                                                                                                                                        ~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AIAppHelper.java"
+            line="62"
+            column="137"/>
+    </issue>
+
+    <issue
+        id="WrongConstant"
+        severity="Error"
+        message="Must be one of: TypedValue.COMPLEX_UNIT_PX, TypedValue.COMPLEX_UNIT_DIP, TypedValue.COMPLEX_UNIT_SP, TypedValue.COMPLEX_UNIT_PT, TypedValue.COMPLEX_UNIT_IN, TypedValue.COMPLEX_UNIT_MM"
+        category="Correctness"
+        priority="6"
+        summary="Incorrect constant"
+        explanation="Ensures that when parameter in a method only allows a specific set of constants, calls obey those rules."
+        errorLine1="        return (int) TypedValue.applyDimension(1, dips, this.mContext.getResources().getDisplayMetrics());"
+        errorLine2="                                               ~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\image\AIImageLoadingUtils.java"
+            line="24"
+            column="48"/>
+    </issue>
+
+    <issue
+        id="WrongConstant"
+        severity="Error"
+        message="Must be one of: MeasureSpec.UNSPECIFIED, MeasureSpec.EXACTLY, MeasureSpec.AT_MOST"
+        category="Correctness"
+        priority="6"
+        summary="Incorrect constant"
+        explanation="Ensures that when parameter in a method only allows a specific set of constants, calls obey those rules."
+        errorLine1="            super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(16777215, Integer.MIN_VALUE));"
+        errorLine2="                                                                                    ~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\ExpandableHeightGridView.java"
+            line="33"
+            column="85"/>
+    </issue>
+
+    <issue
+        id="WrongConstant"
+        severity="Error"
+        message="Must be one of: MeasureSpec.UNSPECIFIED, MeasureSpec.EXACTLY, MeasureSpec.AT_MOST"
+        category="Correctness"
+        priority="6"
+        summary="Incorrect constant"
+        explanation="Ensures that when parameter in a method only allows a specific set of constants, calls obey those rules."
+        errorLine1="            super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(16777215, Integer.MIN_VALUE));"
+        errorLine2="                                                                                    ~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\ExpandableHeightListView.java"
+            line="33"
+            column="85"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of `compileSdkVersion` than 33 is available: 36"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    compileSdkVersion 33"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle"
+            line="6"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of org.jetbrains.kotlin:kotlin-stdlib than 2.2.10 is available: 2.2.21"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation &quot;org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version&quot;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle"
+            line="38"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.core:core-ktx than 1.3.2 is available: 1.18.0"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation &apos;androidx.core:core-ktx:1.3.2&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle"
+            line="39"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.appcompat:appcompat than 1.2.0 is available: 1.7.1"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation &apos;androidx.appcompat:appcompat:1.2.0&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle"
+            line="40"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of com.google.android.material:material than 1.3.0 is available: 1.13.0"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation &apos;com.google.android.material:material:1.3.0&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle"
+            line="41"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.constraintlayout:constraintlayout than 2.0.4 is available: 2.2.1"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation &apos;androidx.constraintlayout:constraintlayout:2.0.4&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle"
+            line="42"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.test.ext:junit than 1.1.2 is available: 1.3.0"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    androidTestImplementation &apos;androidx.test.ext:junit:1.1.2&apos;"
+        errorLine2="                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle"
+            line="45"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.test.espresso:espresso-core than 3.3.0 is available: 3.7.0"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    androidTestImplementation &apos;androidx.test.espresso:espresso-core:3.3.0&apos;"
+        errorLine2="                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle"
+            line="46"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of com.android.volley:volley than 1.2.0 is available: 1.2.1"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation &apos;com.android.volley:volley:1.2.0&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle"
+            line="50"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDynamicVersion"
+        severity="Warning"
+        message="Avoid using + in version numbers; can lead to unpredictable and unrepeatable builds (junit:junit:4.+)"
+        category="Correctness"
+        priority="4"
+        summary="Gradle Dynamic Version"
+        explanation="Using `+` in dependencies lets you automatically pick up the latest available version rather than a specific, named version. However, this is not recommended; your builds are not repeatable; you may have tested with a slightly different version than what the build server used. (Using a dynamic version as the major version number is more problematic than using it in the minor version position.)"
+        errorLine1="    testImplementation &apos;junit:junit:4.+&apos;"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle"
+            line="44"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        severity="Warning"
+        message="A newer version of com.squareup.retrofit2:converter-gson than 2.3.0 is available: 3.0.0"
+        category="Correctness"
+        priority="4"
+        summary="Newer Library Versions Available"
+        explanation="This detector checks with a central repository to see if there are newer versions available for the dependencies used by this project. This is similar to the `GradleDependency` check, which checks for newer versions available in the Android SDK tools and libraries, but this works with any MavenCentral dependency, and connects to the library every time, which makes it more flexible but also **much** slower."
+        errorLine1="    implementation &apos;com.squareup.retrofit2:converter-gson:2.3.0&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle"
+            line="47"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        severity="Warning"
+        message="A newer version of com.google.code.gson:gson than 2.8.6 is available: 2.13.2"
+        category="Correctness"
+        priority="4"
+        summary="Newer Library Versions Available"
+        explanation="This detector checks with a central repository to see if there are newer versions available for the dependencies used by this project. This is similar to the `GradleDependency` check, which checks for newer versions available in the Android SDK tools and libraries, but this works with any MavenCentral dependency, and connects to the library every time, which makes it more flexible but also **much** slower."
+        errorLine1="    implementation &apos;com.google.code.gson:gson:2.8.6&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle"
+            line="48"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        severity="Warning"
+        message="A newer version of com.loopj.android:android-async-http than 1.4.9 is available: 1.4.11"
+        category="Correctness"
+        priority="4"
+        summary="Newer Library Versions Available"
+        explanation="This detector checks with a central repository to see if there are newer versions available for the dependencies used by this project. This is similar to the `GradleDependency` check, which checks for newer versions available in the Android SDK tools and libraries, but this works with any MavenCentral dependency, and connects to the library every time, which makes it more flexible but also **much** slower."
+        errorLine1="    implementation &apos;com.loopj.android:android-async-http:1.4.9&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\build.gradle"
+            line="49"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        severity="Warning"
+        message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`)."
+        category="Correctness"
+        priority="2"
+        summary="Using discouraged APIs"
+        explanation="Discouraged APIs are allowed and are not deprecated, but they may be unfit for common use (e.g. due to slow performance or subtle behavior)."
+        errorLine1="        int resourceId = context.getResources().getIdentifier(&quot;status_bar_height&quot;, &quot;dimen&quot;, AppConstants.kDEVICE_TYPE);"
+        errorLine2="                                                ~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\util\Screen.java"
+            line="12"
+            column="49"/>
+    </issue>
+
+    <issue
+        id="UseRequiresApi"
+        severity="Warning"
+        message="Use `@RequiresApi(16) instead of `@TargetApi` to propagate the requirement to callers of `compatPostOnAnimation`"
+        category="Correctness"
+        priority="2"
+        summary="Use `@RequiresApi` instead of `@TargetApi`"
+        explanation="The `@TargetApi` annotation only *suppresses* API warnings locally. `@RequiresApi` on the other hand will propagate the requirement out to any *callers* of this API, making sure that they either perform API level checks (using for example `SDK_INT`), or defining `@RequiresApi` annotations themselves.&#xA;&#xA;(The `@TargetApi` annotation predates `@RequiresApi`, and was introduced as an early way to *suppress* lint API warnings for a particular API level. Accidentally using `@TargetApi` can lead to crashes since there is no check that other calls to this method actually check that the call is safe.)"
+        errorLine1="    @TargetApi(16)"
+        errorLine2="    ~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\UITouchImageView.java"
+            line="593"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="UseRequiresApi"
+        severity="Warning"
+        message="Use `@RequiresApi(9) instead of `@TargetApi` to propagate the requirement to users of `CompatScroller`"
+        category="Correctness"
+        priority="2"
+        summary="Use `@RequiresApi` instead of `@TargetApi`"
+        explanation="The `@TargetApi` annotation only *suppresses* API warnings locally. `@RequiresApi` on the other hand will propagate the requirement out to any *callers* of this API, making sure that they either perform API level checks (using for example `SDK_INT`), or defining `@RequiresApi` annotations themselves.&#xA;&#xA;(The `@TargetApi` annotation predates `@RequiresApi`, and was introduced as an early way to *suppress* lint API warnings for a particular API level. Accidentally using `@TargetApi` can lead to crashes since there is no check that other calls to this method actually check that the call is safe.)"
+        errorLine1="    @TargetApi(9)"
+        errorLine2="    ~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\UITouchImageView.java"
+            line="871"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="TrulyRandom"
+        severity="Warning"
+        message="Potentially insecure random numbers on Android 4.3 and older. Read https://android-developers.blogspot.com/2013/08/some-securerandom-thoughts.html for more info."
+        category="Security"
+        priority="9"
+        summary="Weak RNG"
+        explanation="Key generation, signing, encryption, and random number generation may not receive cryptographically strong values due to improper initialization of the underlying PRNG on Android 4.3 and below.&#xA;&#xA;If your application relies on cryptographically secure random number generation you should apply the workaround described in https://android-developers.blogspot.com/2013/08/some-securerandom-thoughts.html .&#xA;&#xA;This lint rule is mostly informational; it does not accurately detect whether cryptographically secure RNG is required, or whether the workaround has already been applied. After reading the blog entry and updating your code if necessary, you can disable this lint issue."
+        url="https://goo.gle/TrulyRandom"
+        urls="https://goo.gle/TrulyRandom,https://android-developers.blogspot.com/2013/08/some-securerandom-thoughts.html"
+        errorLine1="            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());"
+        errorLine2="                                                                   ~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\AppInventorApi.java"
+            line="122"
+            column="68"/>
+    </issue>
+
+    <issue
+        id="HardwareIds"
+        severity="Warning"
+        message="Using `getString` to get device identifiers is not recommended"
+        category="Security"
+        priority="6"
+        summary="Hardware Id Usage"
+        explanation="Using these device identifiers is not recommended other than for high value fraud prevention and advanced telephony use-cases. For advertising use-cases, use `AdvertisingIdClient$Info#getId` and for analytics, use `InstanceId#getId`."
+        url="https://developer.android.com/training/articles/user-data-ids.html"
+        urls="https://developer.android.com/training/articles/user-data-ids.html"
+        errorLine1="        return Settings.Secure.getString(context.getContentResolver(), &quot;android_id&quot;);"
+        errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\app_util\AppUtility.java"
+            line="1015"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="TrustAllX509TrustManager"
+        severity="Warning"
+        message="`checkClientTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers"
+        category="Security"
+        priority="6"
+        summary="Insecure TLS/SSL trust manager"
+        explanation="This check looks for X509TrustManager implementations whose `checkServerTrusted` or `checkClientTrusted` methods do nothing (thus trusting any certificate chain) which could result in insecure network traffic caused by trusting arbitrary TLS/SSL certificates presented by peers."
+        url="https://goo.gle/TrustAllX509TrustManager"
+        urls="https://goo.gle/TrustAllX509TrustManager"
+        errorLine1="                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\AppInventorApi.java"
+            line="104"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="TrustAllX509TrustManager"
+        severity="Warning"
+        message="`checkServerTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers"
+        category="Security"
+        priority="6"
+        summary="Insecure TLS/SSL trust manager"
+        explanation="This check looks for X509TrustManager implementations whose `checkServerTrusted` or `checkClientTrusted` methods do nothing (thus trusting any certificate chain) which could result in insecure network traffic caused by trusting arbitrary TLS/SSL certificates presented by peers."
+        url="https://goo.gle/TrustAllX509TrustManager"
+        urls="https://goo.gle/TrustAllX509TrustManager"
+        errorLine1="                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\AppInventorApi.java"
+            line="109"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="TrustAllX509TrustManager"
+        severity="Warning"
+        message="`checkClientTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers"
+        category="Security"
+        priority="6"
+        summary="Insecure TLS/SSL trust manager"
+        explanation="This check looks for X509TrustManager implementations whose `checkServerTrusted` or `checkClientTrusted` methods do nothing (thus trusting any certificate chain) which could result in insecure network traffic caused by trusting arbitrary TLS/SSL certificates presented by peers."
+        url="https://goo.gle/TrustAllX509TrustManager"
+        urls="https://goo.gle/TrustAllX509TrustManager"
+        errorLine1="            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\MyCustomSSLFactory.java"
+            line="39"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="TrustAllX509TrustManager"
+        severity="Warning"
+        message="`checkClientTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers"
+        category="Security"
+        priority="6"
+        summary="Insecure TLS/SSL trust manager"
+        explanation="This check looks for X509TrustManager implementations whose `checkServerTrusted` or `checkClientTrusted` methods do nothing (thus trusting any certificate chain) which could result in insecure network traffic caused by trusting arbitrary TLS/SSL certificates presented by peers."
+        url="https://goo.gle/TrustAllX509TrustManager"
+        urls="https://goo.gle/TrustAllX509TrustManager">
+        <location
+            file="C:\Users\HP\.gradle\caches\modules-2\files-2.1\com.loopj.android\android-async-http\1.4.9\386a4339ffe52d5d63e80f9bed8d2b1d1a418249\android-async-http-1.4.9.jar"/>
+    </issue>
+
+    <issue
+        id="TrustAllX509TrustManager"
+        severity="Warning"
+        message="`checkServerTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers"
+        category="Security"
+        priority="6"
+        summary="Insecure TLS/SSL trust manager"
+        explanation="This check looks for X509TrustManager implementations whose `checkServerTrusted` or `checkClientTrusted` methods do nothing (thus trusting any certificate chain) which could result in insecure network traffic caused by trusting arbitrary TLS/SSL certificates presented by peers."
+        url="https://goo.gle/TrustAllX509TrustManager"
+        urls="https://goo.gle/TrustAllX509TrustManager">
+        <location
+            file="C:\Users\HP\.gradle\caches\modules-2\files-2.1\com.loopj.android\android-async-http\1.4.9\386a4339ffe52d5d63e80f9bed8d2b1d1a418249\android-async-http-1.4.9.jar"/>
+    </issue>
+
+    <issue
+        id="CustomX509TrustManager"
+        severity="Warning"
+        message="Implementing a custom `X509TrustManager` is error-prone and likely to be insecure. It is likely to disable certificate validation altogether, and is non-trivial to implement correctly without calling Android&apos;s default implementation."
+        category="Security"
+        priority="5"
+        summary="Implements custom TLS trust manager"
+        explanation="This check looks for custom `X509TrustManager` implementations."
+        url="https://goo.gle/CustomX509TrustManager"
+        urls="https://goo.gle/CustomX509TrustManager"
+        errorLine1="                    new X509TrustManager() {"
+        errorLine2="                        ~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\AppInventorApi.java"
+            line="102"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="CustomX509TrustManager"
+        severity="Warning"
+        message="Implementing a custom `X509TrustManager` is error-prone and likely to be insecure. It is likely to disable certificate validation altogether, and is non-trivial to implement correctly without calling Android&apos;s default implementation."
+        category="Security"
+        priority="5"
+        summary="Implements custom TLS trust manager"
+        explanation="This check looks for custom `X509TrustManager` implementations."
+        url="https://goo.gle/CustomX509TrustManager"
+        urls="https://goo.gle/CustomX509TrustManager"
+        errorLine1="        X509TrustManager tm = new X509TrustManager() {"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\MyCustomSSLFactory.java"
+            line="38"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        severity="Warning"
+        message="This `Cursor` should be freed up after use with `#close()`"
+        category="Performance"
+        priority="7"
+        summary="Missing `recycle()` calls"
+        explanation="Many resources, such as TypedArrays, VelocityTrackers, etc., should be recycled (with a `recycle()` call) after use. This lint check looks for missing `recycle()` calls."
+        errorLine1="            Cursor cursor2 = context.getContentResolver().query(uri, (String[]) null, (String) null, (String[]) null, (String) null);"
+        errorLine2="                                                          ~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\util\RealPathUtil.java"
+            line="29"
+            column="59"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        severity="Warning"
+        message="This `Cursor` should be freed up after use with `#close()`"
+        category="Performance"
+        priority="7"
+        summary="Missing `recycle()` calls"
+        explanation="Many resources, such as TypedArrays, VelocityTrackers, etc., should be recycled (with a `recycle()` call) after use. This lint check looks for missing `recycle()` calls."
+        errorLine1="        Cursor cursor = context.getContentResolver().query(contentUri, new String[]{&quot;_data&quot;}, (String) null, (String[]) null, (String) null);"
+        errorLine2="                                                     ~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\util\RealPathUtil.java"
+            line="50"
+            column="54"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        severity="Warning"
+        message="Unnecessary; `SDK_INT` is never &lt; 16"
+        category="Performance"
+        priority="6"
+        summary="Obsolete SDK_INT Version Check"
+        explanation="This check flags version checks that are not necessary, because the `minSdkVersion` (or surrounding known API level) is already at least as high as the version checked for.&#xA;&#xA;Similarly, it also looks for resources in `-vNN` folders, such as `values-v14` where the version qualifier is less than or equal to the `minSdkVersion`, where the contents should be merged into the best folder."
+        errorLine1="        if (Build.VERSION.SDK_INT &lt; 11) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\util\RealPathUtil.java"
+            line="57"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        severity="Warning"
+        message="Unnecessary; `SDK_INT` is always >= 16"
+        category="Performance"
+        priority="6"
+        summary="Obsolete SDK_INT Version Check"
+        explanation="This check flags version checks that are not necessary, because the `minSdkVersion` (or surrounding known API level) is already at least as high as the version checked for.&#xA;&#xA;Similarly, it also looks for resources in `-vNN` folders, such as `values-v14` where the version qualifier is less than or equal to the `minSdkVersion`, where the contents should be merged into the best folder."
+        errorLine1="    @TargetApi(16)"
+        errorLine2="    ~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\UITouchImageView.java"
+            line="593"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        severity="Warning"
+        message="Unnecessary; `SDK_INT` is always >= 16"
+        category="Performance"
+        priority="6"
+        summary="Obsolete SDK_INT Version Check"
+        explanation="This check flags version checks that are not necessary, because the `minSdkVersion` (or surrounding known API level) is already at least as high as the version checked for.&#xA;&#xA;Similarly, it also looks for resources in `-vNN` folders, such as `values-v14` where the version qualifier is less than or equal to the `minSdkVersion`, where the contents should be merged into the best folder."
+        errorLine1="        if (Build.VERSION.SDK_INT >= 16) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\UITouchImageView.java"
+            line="595"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        severity="Warning"
+        message="Unnecessary; `SDK_INT` is always >= 9"
+        category="Performance"
+        priority="6"
+        summary="Obsolete SDK_INT Version Check"
+        explanation="This check flags version checks that are not necessary, because the `minSdkVersion` (or surrounding known API level) is already at least as high as the version checked for.&#xA;&#xA;Similarly, it also looks for resources in `-vNN` folders, such as `values-v14` where the version qualifier is less than or equal to the `minSdkVersion`, where the contents should be merged into the best folder."
+        errorLine1="    @TargetApi(9)"
+        errorLine2="    ~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\UITouchImageView.java"
+            line="871"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        severity="Warning"
+        message="Unnecessary; `Build.VERSION.SDK_INT &lt; 9` is never true here"
+        category="Performance"
+        priority="6"
+        summary="Obsolete SDK_INT Version Check"
+        explanation="This check flags version checks that are not necessary, because the `minSdkVersion` (or surrounding known API level) is already at least as high as the version checked for.&#xA;&#xA;Similarly, it also looks for resources in `-vNN` folders, such as `values-v14` where the version qualifier is less than or equal to the `minSdkVersion`, where the contents should be merged into the best folder."
+        errorLine1="            if (Build.VERSION.SDK_INT &lt; 9) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\UITouchImageView.java"
+            line="879"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        severity="Warning"
+        message="This field leaks a context object"
+        category="Performance"
+        priority="6"
+        summary="Static Field Leaks"
+        explanation="A static field will leak contexts.&#xA;&#xA;Non-static inner classes have an implicit reference to their outer class. If that outer class is for example a `Fragment` or `Activity`, then this reference means that the long-running handler/loader/task will hold a reference to the activity which prevents it from getting garbage collected.&#xA;&#xA;Similarly, direct field references to activities and fragments from these longer running instances can cause leaks.&#xA;&#xA;ViewModel classes should never point to Views or non-application Contexts."
+        errorLine1="    private Context context;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\image\AIImageCompressionAsyncTask.java"
+            line="31"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        severity="Warning"
+        message="Do not place Android context classes in static fields (static reference to `AppInventorApi` which has field `mContext` pointing to `Context`); this is a memory leak"
+        category="Performance"
+        priority="6"
+        summary="Static Field Leaks"
+        explanation="A static field will leak contexts.&#xA;&#xA;Non-static inner classes have an implicit reference to their outer class. If that outer class is for example a `Fragment` or `Activity`, then this reference means that the long-running handler/loader/task will hold a reference to the activity which prevents it from getting garbage collected.&#xA;&#xA;Similarly, direct field references to activities and fragments from these longer running instances can cause leaks.&#xA;&#xA;ViewModel classes should never point to Views or non-application Contexts."
+        errorLine1="    private static final AppInventorApi ourInstance = new AppInventorApi();"
+        errorLine2="            ~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\AppInventorApi.java"
+            line="37"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        severity="Warning"
+        message="Do not place Android context classes in static fields (static reference to `AppinventorIncAPI` which has field `mContext` pointing to `Context`); this is a memory leak"
+        category="Performance"
+        priority="6"
+        summary="Static Field Leaks"
+        explanation="A static field will leak contexts.&#xA;&#xA;Non-static inner classes have an implicit reference to their outer class. If that outer class is for example a `Fragment` or `Activity`, then this reference means that the long-running handler/loader/task will hold a reference to the activity which prevents it from getting garbage collected.&#xA;&#xA;Similarly, direct field references to activities and fragments from these longer running instances can cause leaks.&#xA;&#xA;ViewModel classes should never point to Views or non-application Contexts."
+        errorLine1="    private static final AppinventorIncAPI ourInstance = new AppinventorIncAPI();"
+        errorLine2="            ~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\AppinventorIncAPI.java"
+            line="47"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        severity="Warning"
+        message="Do not place Android context classes in static fields (static reference to `AppinventorIncSDK` which has field `mContext` pointing to `Context`); this is a memory leak"
+        category="Performance"
+        priority="6"
+        summary="Static Field Leaks"
+        explanation="A static field will leak contexts.&#xA;&#xA;Non-static inner classes have an implicit reference to their outer class. If that outer class is for example a `Fragment` or `Activity`, then this reference means that the long-running handler/loader/task will hold a reference to the activity which prevents it from getting garbage collected.&#xA;&#xA;Similarly, direct field references to activities and fragments from these longer running instances can cause leaks.&#xA;&#xA;ViewModel classes should never point to Views or non-application Contexts."
+        errorLine1="    private static final AppinventorIncSDK ourInstance = new AppinventorIncSDK();"
+        errorLine2="            ~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\AppinventorIncSDK.java"
+            line="47"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        severity="Warning"
+        message="Do not place Android context classes in static fields (static reference to `AppinventorNativeApi` which has field `mContext` pointing to `Context`); this is a memory leak"
+        category="Performance"
+        priority="6"
+        summary="Static Field Leaks"
+        explanation="A static field will leak contexts.&#xA;&#xA;Non-static inner classes have an implicit reference to their outer class. If that outer class is for example a `Fragment` or `Activity`, then this reference means that the long-running handler/loader/task will hold a reference to the activity which prevents it from getting garbage collected.&#xA;&#xA;Similarly, direct field references to activities and fragments from these longer running instances can cause leaks.&#xA;&#xA;ViewModel classes should never point to Views or non-application Contexts."
+        errorLine1="    private static final AppinventorNativeApi ourInstance = new AppinventorNativeApi();"
+        errorLine2="            ~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\AppinventorNativeApi.java"
+            line="29"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        severity="Warning"
+        message="Do not place Android context classes in static fields (static reference to `AppinventorSoapApi` which has field `mContext` pointing to `Context`); this is a memory leak"
+        category="Performance"
+        priority="6"
+        summary="Static Field Leaks"
+        explanation="A static field will leak contexts.&#xA;&#xA;Non-static inner classes have an implicit reference to their outer class. If that outer class is for example a `Fragment` or `Activity`, then this reference means that the long-running handler/loader/task will hold a reference to the activity which prevents it from getting garbage collected.&#xA;&#xA;Similarly, direct field references to activities and fragments from these longer running instances can cause leaks.&#xA;&#xA;ViewModel classes should never point to Views or non-application Contexts."
+        errorLine1="    private static final AppinventorSoapApi ourInstance = new AppinventorSoapApi();"
+        errorLine2="            ~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\AppinventorSoapApi.java"
+            line="29"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        severity="Warning"
+        message="Do not place Android context classes in static fields; this is a memory leak"
+        category="Performance"
+        priority="6"
+        summary="Static Field Leaks"
+        explanation="A static field will leak contexts.&#xA;&#xA;Non-static inner classes have an implicit reference to their outer class. If that outer class is for example a `Fragment` or `Activity`, then this reference means that the long-running handler/loader/task will hold a reference to the activity which prevents it from getting garbage collected.&#xA;&#xA;Similarly, direct field references to activities and fragments from these longer running instances can cause leaks.&#xA;&#xA;ViewModel classes should never point to Views or non-application Contexts."
+        errorLine1="    private static Context mCtx;"
+        errorLine2="            ~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\VolleySingleton.java"
+            line="14"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        severity="Warning"
+        message="Do not place Android context classes in static fields (static reference to `VolleySingleton` which has field `mCtx` pointing to `Context`); this is a memory leak"
+        category="Performance"
+        priority="6"
+        summary="Static Field Leaks"
+        explanation="A static field will leak contexts.&#xA;&#xA;Non-static inner classes have an implicit reference to their outer class. If that outer class is for example a `Fragment` or `Activity`, then this reference means that the long-running handler/loader/task will hold a reference to the activity which prevents it from getting garbage collected.&#xA;&#xA;Similarly, direct field references to activities and fragments from these longer running instances can cause leaks.&#xA;&#xA;ViewModel classes should never point to Views or non-application Contexts."
+        errorLine1="    private static VolleySingleton mInstance;"
+        errorLine2="            ~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\api\VolleySingleton.java"
+            line="15"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        severity="Warning"
+        message="`OnSwipeTouchListener#onTouch` should call `View#performClick` when a click is detected"
+        category="Accessibility"
+        priority="6"
+        summary="Accessibility in Custom Views"
+        explanation="If a `View` that overrides `onTouchEvent` or uses an `OnTouchListener` does not also implement `performClick` and call it when clicks are detected, the `View` may not handle accessibility actions properly. Logic handling the click actions should ideally be placed in `View#performClick` as some accessibility services invoke `performClick` when a click action should occur."
+        errorLine1="    public boolean onTouch(View v, MotionEvent event) {"
+        errorLine2="                   ~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\swipe\OnSwipeTouchListener.java"
+            line="16"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        severity="Warning"
+        message="Custom view ``AppCompatImageView`` has `setOnTouchListener` called on it but does not override `performClick`"
+        category="Accessibility"
+        priority="6"
+        summary="Accessibility in Custom Views"
+        explanation="If a `View` that overrides `onTouchEvent` or uses an `OnTouchListener` does not also implement `performClick` and call it when clicks are detected, the `View` may not handle accessibility actions properly. Logic handling the click actions should ideally be placed in `View#performClick` as some accessibility services invoke `performClick` when a click action should occur."
+        errorLine1="        UITouchImageView.super.setOnTouchListener(new PrivateOnTouchListener(this, (C00871) null));"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\UITouchImageView.java"
+            line="130"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        severity="Warning"
+        message="`PrivateOnTouchListener#onTouch` should call `View#performClick` when a click is detected"
+        category="Accessibility"
+        priority="6"
+        summary="Accessibility in Custom Views"
+        explanation="If a `View` that overrides `onTouchEvent` or uses an `OnTouchListener` does not also implement `performClick` and call it when clicks are detected, the `View` may not handle accessibility actions properly. Logic handling the click actions should ideally be placed in `View#performClick` as some accessibility services invoke `performClick` when a click action should occur."
+        errorLine1="        public boolean onTouch(View v, MotionEvent event) {"
+        errorLine2="                       ~~~~~~~">
+        <location
+            file="C:\Users\HP\AndroidStudioProjects\pocra_git_project\Android_MahaVistar_AI\app\libs\appinventorapi\src\main\java\in\co\appinventor\services_api\widget\UITouchImageView.java"
+            line="669"
+            column="24"/>
+    </issue>
+
+</issues>

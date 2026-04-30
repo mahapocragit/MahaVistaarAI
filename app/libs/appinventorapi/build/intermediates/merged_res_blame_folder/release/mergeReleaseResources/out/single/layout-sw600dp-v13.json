@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "in.co.appinventor.appinventorapi-release-14:/layout-sw600dp-v13/design_layout_snackbar.xml",
+        "source": "in.co.appinventor.appinventorapi-material-1.3.0-4:/layout-sw600dp-v13/design_layout_snackbar.xml"
+    },
+    {
+        "merged": "in.co.appinventor.appinventorapi-release-14:/layout-sw600dp-v13/mtrl_layout_snackbar.xml",
+        "source": "in.co.appinventor.appinventorapi-material-1.3.0-4:/layout-sw600dp-v13/mtrl_layout_snackbar.xml"
+    }
+]

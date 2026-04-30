@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<incidents format="6" by="lint 8.13.0" type="partial_results">
+    <map id="UnsafeImplicitIntentLaunch">
+            <map id="actionsSent">
+                    <map id="android.intent.action.CALL (used to start an activity)">
+                        <location id="0"
+                            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AppUtility.java"
+                            line="383"
+                            column="25"
+                            startOffset="13454"
+                            endLine="383"
+                            endColumn="65"
+                            endOffset="13494"/>
+                    </map>
+                    <map id="android.intent.action.VIEW (used to start an activity)">
+                        <location id="0"
+                            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AppUtility.java"
+                            line="391"
+                            column="28"
+                            startOffset="13804"
+                            endLine="391"
+                            endColumn="68"
+                            endOffset="13844"/>
+                        <location id="1"
+                            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AppUtility.java"
+                            line="397"
+                            column="27"
+                            startOffset="14070"
+                            endLine="397"
+                            endColumn="177"
+                            endOffset="14220"/>
+                        <location id="2"
+                            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AppUtility.java"
+                            line="1037"
+                            column="35"
+                            startOffset="40373"
+                            endLine="1037"
+                            endColumn="123"
+                            endOffset="40461"/>
+                        <location id="3"
+                            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AppUtility.java"
+                            line="1039"
+                            column="35"
+                            startOffset="40546"
+                            endLine="1039"
+                            endColumn="158"
+                            endOffset="40669"/>
+                        <location id="4"
+                            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AppUtility.java"
+                            line="1046"
+                            column="35"
+                            startOffset="40855"
+                            endLine="1046"
+                            endColumn="132"
+                            endOffset="40952"/>
+                        <location id="5"
+                            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AppUtility.java"
+                            line="1048"
+                            column="35"
+                            startOffset="41037"
+                            endLine="1048"
+                            endColumn="158"
+                            endOffset="41160"/>
+                    </map>
+                    <map id="android.settings.APPLICATION_DETAILS_SETTINGS (used to start an activity)">
+                        <location id="0"
+                            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AppUtility.java"
+                            line="1599"
+                            column="13"
+                            startOffset="61820"
+                            endLine="1599"
+                            endColumn="73"
+                            endOffset="61880"/>
+                    </map>
+            </map>
+    </map>
+    <map id="UnusedResources">
+        <entry
+            name="model"
+            string="string[app_name(R)];;;;"/>
+    </map>
+
+</incidents>

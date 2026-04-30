@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "in.co.appinventor.appinventorapi-release-14:/layout-v26/abc_screen_toolbar.xml",
+        "source": "in.co.appinventor.appinventorapi-appcompat-1.2.0-7:/layout-v26/abc_screen_toolbar.xml"
+    },
+    {
+        "merged": "in.co.appinventor.appinventorapi-release-14:/layout-v26/mtrl_calendar_month.xml",
+        "source": "in.co.appinventor.appinventorapi-material-1.3.0-4:/layout-v26/mtrl_calendar_month.xml"
+    }
+]

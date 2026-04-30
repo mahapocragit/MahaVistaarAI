@@ -49,6 +49,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.toSHA512
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.OtpRateLimiter.provideValidEncryptedString
+import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
@@ -235,6 +236,9 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                             "observeResponse: access token: $accessToken and response: $jSONObject"
                         )
 
+                        val refreshToken = jSONObject.optString("refresh_token")
+                        Log.d(TAG, "observeResponse: refresh token: $accessToken and response: $jSONObject")
+
                         if (loginOption != OTP_VERIFY) {
                             farmerRegisteredID = jSONObject.getInt("FAAPRegistrationID")
                         }
@@ -244,6 +248,8 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
                         AppPreferenceManager(this)
                             .saveString(AppConstants.ACCESS_TOKEN, accessToken)
+
+                        TokenSessionManager.saveTokens(accessToken, refreshToken)
 
                         appPreferenceManager.saveBoolean(AppConstant.IS_FIRST_LOGIN, true)
 

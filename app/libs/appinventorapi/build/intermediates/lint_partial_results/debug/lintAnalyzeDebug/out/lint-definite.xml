@@ -1,0 +1,1120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<incidents format="6" by="lint 8.13.0" type="incidents">
+
+    <incident
+        id="ApplySharedPref"
+        severity="warning"
+        message="Consider using `apply()` instead; `commit` writes its data to persistent storage immediately, whereas `apply` will handle it in the background">
+        <fix-replace
+            description="Replace commit() with apply()"
+            oldPattern="(commit)\s*\("
+            replacement="apply"
+            priority="0"/>
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/settings/AppSettings.java"
+            line="82"
+            column="16"
+            startOffset="3736"
+            endLine="82"
+            endColumn="24"
+            endOffset="3744"/>
+    </incident>
+
+    <incident
+        id="ApplySharedPref"
+        severity="warning"
+        message="Consider using `apply()` instead; `commit` writes its data to persistent storage immediately, whereas `apply` will handle it in the background">
+        <fix-replace
+            description="Replace commit() with apply()"
+            oldPattern="(commit)\s*\("
+            replacement="apply"
+            priority="0"/>
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/settings/AppSettings.java"
+            line="94"
+            column="30"
+            startOffset="4164"
+            endLine="94"
+            endColumn="38"
+            endOffset="4172"/>
+    </incident>
+
+    <incident
+        id="DefaultLocale"
+        severity="warning"
+        message="Implicitly using the default locale is a common source of bugs: Use `toUpperCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`.">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AppUtility.java"
+            line="216"
+            column="54"
+            startOffset="7449"
+            endLine="216"
+            endColumn="65"
+            endOffset="7460"/>
+    </incident>
+
+    <incident
+        id="DefaultLocale"
+        severity="warning"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`.">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AppUtility.java"
+            line="1969"
+            column="51"
+            startOffset="75484"
+            endLine="1969"
+            endColumn="62"
+            endOffset="75495"/>
+    </incident>
+
+    <incident
+        id="DefaultLocale"
+        severity="warning"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`.">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/util/FileUtils.java"
+            line="35"
+            column="33"
+            startOffset="1307"
+            endLine="35"
+            endColumn="44"
+            endOffset="1318"/>
+    </incident>
+
+    <incident
+        id="DefaultLocale"
+        severity="warning"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`.">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/util/FileUtils.java"
+            line="35"
+            column="70"
+            startOffset="1344"
+            endLine="35"
+            endColumn="81"
+            endOffset="1355"/>
+    </incident>
+
+    <incident
+        id="ExifInterface"
+        severity="warning"
+        message="Avoid using `android.media.ExifInterface`; use `androidx.exifinterface.media.ExifInterface` instead">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/image/AIImageCompressionAsyncTask.java"
+            line="10"
+            column="8"
+            startOffset="283"
+            endLine="10"
+            endColumn="35"
+            endOffset="310"/>
+    </incident>
+
+    <incident
+        id="ExifInterface"
+        severity="warning"
+        message="Avoid using `android.media.ExifInterface`; use `androidx.exifinterface.media.ExifInterface` instead">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/image/AIImageCompressionAsyncTaskInterface.java"
+            line="8"
+            column="8"
+            startOffset="220"
+            endLine="8"
+            endColumn="35"
+            endOffset="247"/>
+    </incident>
+
+    <incident
+        id="ExifInterface"
+        severity="warning"
+        message="Avoid using `android.media.ExifInterface`; use `androidx.exifinterface.media.ExifInterface` instead">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/image/AIImageCompressionAsyncTasks.java"
+            line="18"
+            column="8"
+            startOffset="546"
+            endLine="18"
+            endColumn="35"
+            endOffset="573"/>
+    </incident>
+
+    <incident
+        id="ExifInterface"
+        severity="warning"
+        message="Avoid using `android.media.ExifInterface`; use `androidx.exifinterface.media.ExifInterface` instead">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/image/AIImageUtils.java"
+            line="8"
+            column="8"
+            startOffset="220"
+            endLine="8"
+            endColumn="35"
+            endOffset="247"/>
+    </incident>
+
+    <incident
+        id="IntentReset"
+        severity="warning"
+        message="Calling `setData` after calling `setType` will clear the type: Call `setDataAndType` instead?">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AppUtility.java"
+            line="984"
+            column="11"
+            startOffset="38555"
+            endLine="984"
+            endColumn="57"
+            endOffset="38601"/>
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AppUtility.java"
+            line="979"
+            column="9"
+            startOffset="38216"
+            endLine="979"
+            endColumn="36"
+            endOffset="38243"
+            message="Originally set here"/>
+    </incident>
+
+    <incident
+        id="InternalInsetResource"
+        severity="warning"
+        message="Using internal inset dimension resource `status_bar_height` is not supported">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/util/Screen.java"
+            line="12"
+            column="26"
+            startOffset="382"
+            endLine="12"
+            endColumn="119"
+            endOffset="475"/>
+    </incident>
+
+    <incident
+        id="Range"
+        severity="error"
+        message="Value must be ≥ 0 but `getColumnIndex` can be -1">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/util/RealPathUtil.java"
+            line="34"
+            column="38"
+            startOffset="1446"
+            endLine="34"
+            endColumn="69"
+            endOffset="1477"/>
+    </incident>
+
+    <incident
+        id="ShowToast"
+        severity="warning"
+        message="Expected duration `Toast.LENGTH_SHORT` or `Toast.LENGTH_LONG`, a custom duration value is not supported">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AppUtility.java"
+            line="1585"
+            column="57"
+            startOffset="61297"
+            endLine="1585"
+            endColumn="58"
+            endOffset="61298"/>
+    </incident>
+
+    <incident
+        id="ShowToast"
+        severity="warning"
+        message="Expected duration `Toast.LENGTH_SHORT` or `Toast.LENGTH_LONG`, a custom duration value is not supported">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/widget/UIToastMessage.java"
+            line="51"
+            column="57"
+            startOffset="1912"
+            endLine="51"
+            endColumn="58"
+            endOffset="1913"/>
+    </incident>
+
+    <incident
+        id="ShowToast"
+        severity="warning"
+        message="Expected duration `Toast.LENGTH_SHORT` or `Toast.LENGTH_LONG`, a custom duration value is not supported">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/widget/UIToastMessage.java"
+            line="68"
+            column="57"
+            startOffset="2630"
+            endLine="68"
+            endColumn="58"
+            endOffset="2631"/>
+    </incident>
+
+    <incident
+        id="ShowToast"
+        severity="warning"
+        message="Expected duration `Toast.LENGTH_SHORT` or `Toast.LENGTH_LONG`, a custom duration value is not supported">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/widget/UIToastMessage.java"
+            line="85"
+            column="88"
+            startOffset="3383"
+            endLine="85"
+            endColumn="89"
+            endOffset="3384"/>
+    </incident>
+
+    <incident
+        id="SimpleDateFormat"
+        severity="warning"
+        message="To get local formatting use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()`, or use `new SimpleDateFormat(String template, Locale locale)` with for example `Locale.US` for ASCII dates.">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/image/AIImageCompressionAsyncTask.java"
+            line="144"
+            column="26"
+            startOffset="5782"
+            endLine="144"
+            endColumn="69"
+            endOffset="5825"/>
+    </incident>
+
+    <incident
+        id="SimpleDateFormat"
+        severity="warning"
+        message="To get local formatting use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()`, or use `new SimpleDateFormat(String template, Locale locale)` with for example `Locale.US` for ASCII dates.">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AppUtility.java"
+            line="653"
+            column="35"
+            startOffset="26418"
+            endLine="653"
+            endColumn="69"
+            endOffset="26452"/>
+    </incident>
+
+    <incident
+        id="SimpleDateFormat"
+        severity="warning"
+        message="To get local formatting use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()`, or use `new SimpleDateFormat(String template, Locale locale)` with for example `Locale.US` for ASCII dates.">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AppUtility.java"
+            line="685"
+            column="35"
+            startOffset="27727"
+            endLine="685"
+            endColumn="69"
+            endOffset="27761"/>
+    </incident>
+
+    <incident
+        id="SimpleDateFormat"
+        severity="warning"
+        message="To get local formatting use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()`, or use `new SimpleDateFormat(String template, Locale locale)` with for example `Locale.US` for ASCII dates.">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/image/ImageWaterMarking.java"
+            line="27"
+            column="26"
+            startOffset="771"
+            endLine="27"
+            endColumn="69"
+            endOffset="814"/>
+    </incident>
+
+    <incident
+        id="WrongConstant"
+        severity="error"
+        message="Must be one of: MeasureSpec.UNSPECIFIED, MeasureSpec.EXACTLY, MeasureSpec.AT_MOST">
+        <fix-alternatives>
+            <fix-replace
+                description="Change to MeasureSpec.EXACTLY (1073741824)"
+                replacement="android.view.View.MeasureSpec.EXACTLY"
+                shortenNames="true"
+                priority="0"/>
+            <fix-replace
+                description="Change to MeasureSpec.UNSPECIFIED"
+                replacement="android.view.View.MeasureSpec.UNSPECIFIED"
+                shortenNames="true"
+                priority="0"/>
+            <fix-replace
+                description="Change to MeasureSpec.AT_MOST"
+                replacement="android.view.View.MeasureSpec.AT_MOST"
+                shortenNames="true"
+                priority="0"/>
+        </fix-alternatives>
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AIAppHelper.java"
+            line="62"
+            column="88"
+            startOffset="1958"
+            endLine="62"
+            endColumn="98"
+            endOffset="1968"/>
+    </incident>
+
+    <incident
+        id="WrongConstant"
+        severity="error"
+        message="Must be one of: MeasureSpec.UNSPECIFIED, MeasureSpec.EXACTLY, MeasureSpec.AT_MOST">
+        <fix-alternatives>
+            <fix-replace
+                description="Change to MeasureSpec.UNSPECIFIED (0)"
+                replacement="android.view.View.MeasureSpec.UNSPECIFIED"
+                shortenNames="true"
+                priority="0"/>
+            <fix-replace
+                description="Change to MeasureSpec.EXACTLY"
+                replacement="android.view.View.MeasureSpec.EXACTLY"
+                shortenNames="true"
+                priority="0"/>
+            <fix-replace
+                description="Change to MeasureSpec.AT_MOST"
+                replacement="android.view.View.MeasureSpec.AT_MOST"
+                shortenNames="true"
+                priority="0"/>
+        </fix-alternatives>
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AIAppHelper.java"
+            line="62"
+            column="137"
+            startOffset="2007"
+            endLine="62"
+            endColumn="138"
+            endOffset="2008"/>
+    </incident>
+
+    <incident
+        id="WrongConstant"
+        severity="error"
+        message="Must be one of: TypedValue.COMPLEX_UNIT_PX, TypedValue.COMPLEX_UNIT_DIP, TypedValue.COMPLEX_UNIT_SP, TypedValue.COMPLEX_UNIT_PT, TypedValue.COMPLEX_UNIT_IN, TypedValue.COMPLEX_UNIT_MM">
+        <fix-alternatives>
+            <fix-replace
+                description="Change to TypedValue.COMPLEX_UNIT_DIP (1)"
+                replacement="android.util.TypedValue.COMPLEX_UNIT_DIP"
+                shortenNames="true"
+                priority="0"/>
+            <fix-replace
+                description="Change to TypedValue.COMPLEX_UNIT_PX"
+                replacement="android.util.TypedValue.COMPLEX_UNIT_PX"
+                shortenNames="true"
+                priority="0"/>
+            <fix-replace
+                description="Change to TypedValue.COMPLEX_UNIT_SP"
+                replacement="android.util.TypedValue.COMPLEX_UNIT_SP"
+                shortenNames="true"
+                priority="0"/>
+            <fix-replace
+                description="Change to TypedValue.COMPLEX_UNIT_PT"
+                replacement="android.util.TypedValue.COMPLEX_UNIT_PT"
+                shortenNames="true"
+                priority="0"/>
+            <fix-replace
+                description="Change to TypedValue.COMPLEX_UNIT_IN"
+                replacement="android.util.TypedValue.COMPLEX_UNIT_IN"
+                shortenNames="true"
+                priority="0"/>
+            <fix-replace
+                description="Change to TypedValue.COMPLEX_UNIT_MM"
+                replacement="android.util.TypedValue.COMPLEX_UNIT_MM"
+                shortenNames="true"
+                priority="0"/>
+        </fix-alternatives>
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/image/AIImageLoadingUtils.java"
+            line="24"
+            column="48"
+            startOffset="673"
+            endLine="24"
+            endColumn="49"
+            endOffset="674"/>
+    </incident>
+
+    <incident
+        id="WrongConstant"
+        severity="error"
+        message="Must be one of: MeasureSpec.UNSPECIFIED, MeasureSpec.EXACTLY, MeasureSpec.AT_MOST">
+        <fix-alternatives>
+            <fix-replace
+                description="Change to MeasureSpec.AT_MOST (-2147483648)"
+                replacement="android.view.View.MeasureSpec.AT_MOST"
+                shortenNames="true"
+                priority="0"/>
+            <fix-replace
+                description="Change to MeasureSpec.UNSPECIFIED"
+                replacement="android.view.View.MeasureSpec.UNSPECIFIED"
+                shortenNames="true"
+                priority="0"/>
+            <fix-replace
+                description="Change to MeasureSpec.EXACTLY"
+                replacement="android.view.View.MeasureSpec.EXACTLY"
+                shortenNames="true"
+                priority="0"/>
+        </fix-alternatives>
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/widget/ExpandableHeightGridView.java"
+            line="33"
+            column="85"
+            startOffset="1000"
+            endLine="33"
+            endColumn="102"
+            endOffset="1017"/>
+    </incident>
+
+    <incident
+        id="WrongConstant"
+        severity="error"
+        message="Must be one of: MeasureSpec.UNSPECIFIED, MeasureSpec.EXACTLY, MeasureSpec.AT_MOST">
+        <fix-alternatives>
+            <fix-replace
+                description="Change to MeasureSpec.AT_MOST (-2147483648)"
+                replacement="android.view.View.MeasureSpec.AT_MOST"
+                shortenNames="true"
+                priority="0"/>
+            <fix-replace
+                description="Change to MeasureSpec.UNSPECIFIED"
+                replacement="android.view.View.MeasureSpec.UNSPECIFIED"
+                shortenNames="true"
+                priority="0"/>
+            <fix-replace
+                description="Change to MeasureSpec.EXACTLY"
+                replacement="android.view.View.MeasureSpec.EXACTLY"
+                shortenNames="true"
+                priority="0"/>
+        </fix-alternatives>
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/widget/ExpandableHeightListView.java"
+            line="33"
+            column="85"
+            startOffset="1000"
+            endLine="33"
+            endColumn="102"
+            endOffset="1017"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of `compileSdkVersion` than 33 is available: 36">
+        <fix-replace
+            description="Set compileSdkVersion to 36"
+            oldString="33"
+            replacement="36"
+            priority="0"/>
+        <location
+            file="${:app:libs:appinventorapi*projectDir}/build.gradle"
+            line="6"
+            column="5"
+            startOffset="61"
+            endLine="6"
+            endColumn="25"
+            endOffset="81"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of org.jetbrains.kotlin:kotlin-stdlib than 2.2.10 is available: 2.2.21">
+        <location
+            file="${:app:libs:appinventorapi*projectDir}/build.gradle"
+            line="38"
+            column="20"
+            startOffset="800"
+            endLine="38"
+            endColumn="72"
+            endOffset="852"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.core:core-ktx than 1.3.2 is available: 1.18.0">
+        <fix-replace
+            description="Change to 1.18.0"
+            family="Update versions"
+            oldString="1.3.2"
+            replacement="1.18.0"
+            priority="0"/>
+        <location
+            file="${:app:libs:appinventorapi*projectDir}/build.gradle"
+            line="39"
+            column="20"
+            startOffset="873"
+            endLine="39"
+            endColumn="50"
+            endOffset="903"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.appcompat:appcompat than 1.2.0 is available: 1.7.1">
+        <fix-replace
+            description="Change to 1.7.1"
+            family="Update versions"
+            oldString="1.2.0"
+            replacement="1.7.1"
+            priority="0"/>
+        <location
+            file="${:app:libs:appinventorapi*projectDir}/build.gradle"
+            line="40"
+            column="20"
+            startOffset="924"
+            endLine="40"
+            endColumn="56"
+            endOffset="960"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of com.google.android.material:material than 1.3.0 is available: 1.13.0">
+        <fix-replace
+            description="Change to 1.13.0"
+            family="Update versions"
+            oldString="1.3.0"
+            replacement="1.13.0"
+            priority="0"/>
+        <location
+            file="${:app:libs:appinventorapi*projectDir}/build.gradle"
+            line="41"
+            column="20"
+            startOffset="981"
+            endLine="41"
+            endColumn="64"
+            endOffset="1025"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.constraintlayout:constraintlayout than 2.0.4 is available: 2.2.1">
+        <fix-replace
+            description="Change to 2.2.1"
+            family="Update versions"
+            oldString="2.0.4"
+            replacement="2.2.1"
+            priority="0"/>
+        <location
+            file="${:app:libs:appinventorapi*projectDir}/build.gradle"
+            line="42"
+            column="20"
+            startOffset="1046"
+            endLine="42"
+            endColumn="70"
+            endOffset="1096"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.test.ext:junit than 1.1.2 is available: 1.3.0">
+        <fix-replace
+            description="Change to 1.3.0"
+            family="Update versions"
+            oldString="1.1.2"
+            replacement="1.3.0"
+            priority="0"/>
+        <location
+            file="${:app:libs:appinventorapi*projectDir}/build.gradle"
+            line="45"
+            column="31"
+            startOffset="1172"
+            endLine="45"
+            endColumn="62"
+            endOffset="1203"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.test.espresso:espresso-core than 3.3.0 is available: 3.7.0">
+        <fix-replace
+            description="Change to 3.7.0"
+            family="Update versions"
+            oldString="3.3.0"
+            replacement="3.7.0"
+            priority="0"/>
+        <location
+            file="${:app:libs:appinventorapi*projectDir}/build.gradle"
+            line="46"
+            column="31"
+            startOffset="1235"
+            endLine="46"
+            endColumn="75"
+            endOffset="1279"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of com.android.volley:volley than 1.2.0 is available: 1.2.1">
+        <fix-replace
+            description="Change to 1.2.1"
+            family="Update versions"
+            oldString="1.2.0"
+            replacement="1.2.1"
+            priority="0"/>
+        <location
+            file="${:app:libs:appinventorapi*projectDir}/build.gradle"
+            line="50"
+            column="20"
+            startOffset="1485"
+            endLine="50"
+            endColumn="53"
+            endOffset="1518"/>
+    </incident>
+
+    <incident
+        id="GradleDynamicVersion"
+        severity="warning"
+        message="Avoid using + in version numbers; can lead to unpredictable and unrepeatable builds (junit:junit:4.+)">
+        <fix-data coordinate="junit:junit:4.+" revision="4.+"/>
+        <location
+            file="${:app:libs:appinventorapi*projectDir}/build.gradle"
+            line="44"
+            column="24"
+            startOffset="1123"
+            endLine="44"
+            endColumn="41"
+            endOffset="1140"/>
+    </incident>
+
+    <incident
+        id="NewerVersionAvailable"
+        severity="warning"
+        message="A newer version of com.squareup.retrofit2:converter-gson than 2.3.0 is available: 3.0.0">
+        <fix-replace
+            description="Change to 3.0.0"
+            family="Update versions"
+            oldString="2.3.0"
+            replacement="3.0.0"
+            priority="0"/>
+        <location
+            file="${:app:libs:appinventorapi*projectDir}/build.gradle"
+            line="47"
+            column="20"
+            startOffset="1300"
+            endLine="47"
+            endColumn="65"
+            endOffset="1345"/>
+    </incident>
+
+    <incident
+        id="NewerVersionAvailable"
+        severity="warning"
+        message="A newer version of com.google.code.gson:gson than 2.8.6 is available: 2.13.2">
+        <fix-replace
+            description="Change to 2.13.2"
+            family="Update versions"
+            oldString="2.8.6"
+            replacement="2.13.2"
+            priority="0"/>
+        <location
+            file="${:app:libs:appinventorapi*projectDir}/build.gradle"
+            line="48"
+            column="20"
+            startOffset="1366"
+            endLine="48"
+            endColumn="53"
+            endOffset="1399"/>
+    </incident>
+
+    <incident
+        id="NewerVersionAvailable"
+        severity="warning"
+        message="A newer version of com.loopj.android:android-async-http than 1.4.9 is available: 1.4.11">
+        <fix-replace
+            description="Change to 1.4.11"
+            family="Update versions"
+            oldString="1.4.9"
+            replacement="1.4.11"
+            priority="0"/>
+        <location
+            file="${:app:libs:appinventorapi*projectDir}/build.gradle"
+            line="49"
+            column="20"
+            startOffset="1420"
+            endLine="49"
+            endColumn="64"
+            endOffset="1464"/>
+    </incident>
+
+    <incident
+        id="DiscouragedApi"
+        severity="warning"
+        message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`).">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/util/Screen.java"
+            line="12"
+            column="49"
+            startOffset="405"
+            endLine="12"
+            endColumn="62"
+            endOffset="418"/>
+    </incident>
+
+    <incident
+        id="UseRequiresApi"
+        severity="warning"
+        message="Use `@RequiresApi(16) instead of `@TargetApi` to propagate the requirement to callers of `compatPostOnAnimation`">
+        <fix-replace
+            description="Replace with `@RequiresApi`"
+            robot="true"
+            independent="true"
+            oldPattern="(TargetApi)"
+            replacement="androidx.annotation.RequiresApi"
+            shortenNames="true"
+            priority="0"/>
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/widget/UITouchImageView.java"
+            line="593"
+            column="5"
+            startOffset="23292"
+            endLine="593"
+            endColumn="19"
+            endOffset="23306"/>
+    </incident>
+
+    <incident
+        id="UseRequiresApi"
+        severity="warning"
+        message="Use `@RequiresApi(9) instead of `@TargetApi` to propagate the requirement to users of `CompatScroller`">
+        <fix-replace
+            description="Replace with `@RequiresApi`"
+            robot="true"
+            independent="true"
+            oldPattern="(TargetApi)"
+            replacement="androidx.annotation.RequiresApi"
+            shortenNames="true"
+            priority="0"/>
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/widget/UITouchImageView.java"
+            line="871"
+            column="5"
+            startOffset="36039"
+            endLine="871"
+            endColumn="18"
+            endOffset="36052"/>
+    </incident>
+
+    <incident
+        id="HardwareIds"
+        severity="warning"
+        message="Using `getString` to get device identifiers is not recommended">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/app_util/AppUtility.java"
+            line="1015"
+            column="16"
+            startOffset="39586"
+            endLine="1015"
+            endColumn="85"
+            endOffset="39655"/>
+    </incident>
+
+    <incident
+        id="TrustAllX509TrustManager"
+        severity="warning"
+        message="`checkClientTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/api/AppInventorApi.java"
+            line="104"
+            column="37"
+            startOffset="3878"
+            endLine="104"
+            endColumn="55"
+            endOffset="3896"/>
+    </incident>
+
+    <incident
+        id="TrustAllX509TrustManager"
+        severity="warning"
+        message="`checkServerTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/api/AppInventorApi.java"
+            line="109"
+            column="37"
+            startOffset="4089"
+            endLine="109"
+            endColumn="55"
+            endOffset="4107"/>
+    </incident>
+
+    <incident
+        id="TrustAllX509TrustManager"
+        severity="warning"
+        message="`checkClientTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/api/MyCustomSSLFactory.java"
+            line="39"
+            column="25"
+            startOffset="1742"
+            endLine="39"
+            endColumn="43"
+            endOffset="1760"/>
+    </incident>
+
+    <incident
+        id="TrustAllX509TrustManager"
+        severity="warning"
+        message="`checkClientTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers">
+        <location
+            file="$GRADLE_USER_HOME/caches/modules-2/files-2.1/com.loopj.android/android-async-http/1.4.9/386a4339ffe52d5d63e80f9bed8d2b1d1a418249/android-async-http-1.4.9.jar"/>
+    </incident>
+
+    <incident
+        id="TrustAllX509TrustManager"
+        severity="warning"
+        message="`checkServerTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers">
+        <location
+            file="$GRADLE_USER_HOME/caches/modules-2/files-2.1/com.loopj.android/android-async-http/1.4.9/386a4339ffe52d5d63e80f9bed8d2b1d1a418249/android-async-http-1.4.9.jar"/>
+    </incident>
+
+    <incident
+        id="CustomX509TrustManager"
+        severity="warning"
+        message="Implementing a custom `X509TrustManager` is error-prone and likely to be insecure. It is likely to disable certificate validation altogether, and is non-trivial to implement correctly without calling Android&apos;s default implementation.">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/api/AppInventorApi.java"
+            line="102"
+            column="25"
+            startOffset="3787"
+            endLine="102"
+            endColumn="41"
+            endOffset="3803"/>
+    </incident>
+
+    <incident
+        id="CustomX509TrustManager"
+        severity="warning"
+        message="Implementing a custom `X509TrustManager` is error-prone and likely to be insecure. It is likely to disable certificate validation altogether, and is non-trivial to implement correctly without calling Android&apos;s default implementation.">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/api/MyCustomSSLFactory.java"
+            line="38"
+            column="35"
+            startOffset="1697"
+            endLine="38"
+            endColumn="51"
+            endOffset="1713"/>
+    </incident>
+
+    <incident
+        id="Recycle"
+        severity="warning"
+        message="This `Cursor` should be freed up after use with `#close()`">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/util/RealPathUtil.java"
+            line="29"
+            column="59"
+            startOffset="1211"
+            endLine="29"
+            endColumn="64"
+            endOffset="1216"/>
+    </incident>
+
+    <incident
+        id="Recycle"
+        severity="warning"
+        message="This `Cursor` should be freed up after use with `#close()`">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/util/RealPathUtil.java"
+            line="50"
+            column="54"
+            startOffset="2126"
+            endLine="50"
+            endColumn="59"
+            endOffset="2131"/>
+    </incident>
+
+    <incident
+        id="ObsoleteSdkInt"
+        severity="warning"
+        message="Unnecessary; `SDK_INT` is never &lt; 16">
+        <fix-data conditional="false"/>
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/util/RealPathUtil.java"
+            line="57"
+            column="13"
+            startOffset="2447"
+            endLine="57"
+            endColumn="39"
+            endOffset="2473"/>
+    </incident>
+
+    <incident
+        id="ObsoleteSdkInt"
+        severity="warning"
+        message="Unnecessary; `SDK_INT` is always >= 16">
+        <fix-data conditional="true"/>
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/widget/UITouchImageView.java"
+            line="595"
+            column="13"
+            startOffset="23378"
+            endLine="595"
+            endColumn="40"
+            endOffset="23405"/>
+    </incident>
+
+    <incident
+        id="ObsoleteSdkInt"
+        severity="warning"
+        message="Unnecessary; `Build.VERSION.SDK_INT &lt; 9` is never true here">
+        <fix-data conditional="false"/>
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/widget/UITouchImageView.java"
+            line="879"
+            column="17"
+            startOffset="36344"
+            endLine="879"
+            endColumn="42"
+            endOffset="36369"/>
+    </incident>
+
+    <incident
+        id="StaticFieldLeak"
+        severity="warning"
+        message="This field leaks a context object">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/image/AIImageCompressionAsyncTask.java"
+            line="31"
+            column="5"
+            startOffset="959"
+            endLine="31"
+            endColumn="29"
+            endOffset="983"/>
+    </incident>
+
+    <incident
+        id="StaticFieldLeak"
+        severity="warning"
+        message="Do not place Android context classes in static fields (static reference to `AppInventorApi` which has field `mContext` pointing to `Context`); this is a memory leak">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/api/AppInventorApi.java"
+            line="37"
+            column="13"
+            startOffset="1023"
+            endLine="37"
+            endColumn="19"
+            endOffset="1029"/>
+    </incident>
+
+    <incident
+        id="StaticFieldLeak"
+        severity="warning"
+        message="Do not place Android context classes in static fields (static reference to `AppinventorIncAPI` which has field `mContext` pointing to `Context`); this is a memory leak">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/api/AppinventorIncAPI.java"
+            line="47"
+            column="13"
+            startOffset="1630"
+            endLine="47"
+            endColumn="19"
+            endOffset="1636"/>
+    </incident>
+
+    <incident
+        id="StaticFieldLeak"
+        severity="warning"
+        message="Do not place Android context classes in static fields (static reference to `AppinventorIncSDK` which has field `mContext` pointing to `Context`); this is a memory leak">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/api/AppinventorIncSDK.java"
+            line="47"
+            column="13"
+            startOffset="1625"
+            endLine="47"
+            endColumn="19"
+            endOffset="1631"/>
+    </incident>
+
+    <incident
+        id="StaticFieldLeak"
+        severity="warning"
+        message="Do not place Android context classes in static fields (static reference to `AppinventorNativeApi` which has field `mContext` pointing to `Context`); this is a memory leak">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/api/AppinventorNativeApi.java"
+            line="29"
+            column="13"
+            startOffset="1026"
+            endLine="29"
+            endColumn="19"
+            endOffset="1032"/>
+    </incident>
+
+    <incident
+        id="StaticFieldLeak"
+        severity="warning"
+        message="Do not place Android context classes in static fields (static reference to `AppinventorSoapApi` which has field `mContext` pointing to `Context`); this is a memory leak">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/api/AppinventorSoapApi.java"
+            line="29"
+            column="13"
+            startOffset="899"
+            endLine="29"
+            endColumn="19"
+            endOffset="905"/>
+    </incident>
+
+    <incident
+        id="StaticFieldLeak"
+        severity="warning"
+        message="Do not place Android context classes in static fields; this is a memory leak">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/api/VolleySingleton.java"
+            line="14"
+            column="13"
+            startOffset="419"
+            endLine="14"
+            endColumn="19"
+            endOffset="425"/>
+    </incident>
+
+    <incident
+        id="StaticFieldLeak"
+        severity="warning"
+        message="Do not place Android context classes in static fields (static reference to `VolleySingleton` which has field `mCtx` pointing to `Context`); this is a memory leak">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/api/VolleySingleton.java"
+            line="15"
+            column="13"
+            startOffset="452"
+            endLine="15"
+            endColumn="19"
+            endOffset="458"/>
+    </incident>
+
+    <incident
+        id="ClickableViewAccessibility"
+        severity="warning"
+        message="`OnSwipeTouchListener#onTouch` should call `View#performClick` when a click is detected">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/swipe/OnSwipeTouchListener.java"
+            line="16"
+            column="20"
+            startOffset="527"
+            endLine="16"
+            endColumn="27"
+            endOffset="534"/>
+    </incident>
+
+    <incident
+        id="ClickableViewAccessibility"
+        severity="warning"
+        message="Custom view ``AppCompatImageView`` has `setOnTouchListener` called on it but does not override `performClick`">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/widget/UITouchImageView.java"
+            line="130"
+            column="9"
+            startOffset="4751"
+            endLine="130"
+            endColumn="99"
+            endOffset="4841"/>
+    </incident>
+
+    <incident
+        id="ClickableViewAccessibility"
+        severity="warning"
+        message="`PrivateOnTouchListener#onTouch` should call `View#performClick` when a click is detected">
+        <location
+            file="${:app:libs:appinventorapi*debug*MAIN*sourceProvider*0*javaDir*0}/in/co/appinventor/services_api/widget/UITouchImageView.java"
+            line="669"
+            column="24"
+            startOffset="26282"
+            endLine="669"
+            endColumn="31"
+            endOffset="26289"/>
+    </incident>
+
+</incidents>
