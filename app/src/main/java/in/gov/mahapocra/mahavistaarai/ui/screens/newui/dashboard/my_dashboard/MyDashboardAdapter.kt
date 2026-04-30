@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.my_dashboard
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.my_dashboard
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

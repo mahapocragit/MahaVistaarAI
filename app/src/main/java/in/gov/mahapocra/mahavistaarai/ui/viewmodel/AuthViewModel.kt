@@ -71,6 +71,10 @@ class AuthViewModel : ViewModel() {
     private val _loginViaOTPResponse = MutableLiveData<UiState<JsonObject>>()
     val loginViaOTPResponse: LiveData<UiState<JsonObject>> = _loginViaOTPResponse
 
+
+    private val _getCustomisedDashboardResponse = MutableLiveData<UiState<JsonObject>>()
+    val getCustomisedDashboardResponse: LiveData<UiState<JsonObject>> =
+        _getCustomisedDashboardResponse
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
@@ -103,19 +107,19 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    fun loginViaOTP(mobile: String, otp: String, fcmToken: String){
+    fun loginViaOTP(mobile: String, otp: String, fcmToken: String) {
         viewModelScope.launch {
             _loginViaOTPResponse.value = UiState.Loading
             try {
                 val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val api = retrofit.create(ApiService::class.java)
                 val response = api.getUserLoginOTP(
-                    CryptoHelper.encryptField(mobile)?:"",
-                    CryptoHelper.encryptField(otp)?:"",
+                    CryptoHelper.encryptField(mobile) ?: "",
+                    CryptoHelper.encryptField(otp) ?: "",
                     fcmToken
                 )
                 _loginViaOTPResponse.value = UiState.Success(response)
-            }catch (e: Exception) {
+            } catch (e: Exception) {
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
@@ -431,6 +435,27 @@ class AuthViewModel : ViewModel() {
                     else -> e.localizedMessage ?: "Unknown error"
                 }
                 _error.value = message
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getCustomisedDashboardList(farmerId: String, authToken: String) {
+        viewModelScope.launch {
+            _getCustomisedDashboardResponse.value = UiState.Loading
+            try {
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.getCustomizedDashboard(farmerId, "Bearer $authToken")
+                _getCustomisedDashboardResponse.value = UiState.Success(response)
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _getCustomisedDashboardResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }

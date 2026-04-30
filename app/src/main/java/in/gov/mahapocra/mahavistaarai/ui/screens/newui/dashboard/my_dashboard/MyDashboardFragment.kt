@@ -1,29 +1,38 @@
-package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.my_dashboard
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.my_dashboard
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.FragmentMyDashboardBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.GridSpacingItemDecoration
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.FarmDetailsActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONObject
-import kotlin.getValue
 
 class MyDashboardFragment : Fragment() {
 
     private var _binding: FragmentMyDashboardBinding? = null
     private val farmerViewModel: FarmerViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -91,17 +100,27 @@ class MyDashboardFragment : Fragment() {
                 PagerSnapHelper().attachToRecyclerView(this)
             }
         }
+
+        binding.farmSummeryCardView.setOnClickListener {
+            startActivity(Intent(context, FarmDetailsActivity::class.java))
+        }
         observeResponse()
-        farmerViewModel.getFarmDetails("79335694125")
+        farmerViewModel.getFarmSummery("79335694125")
+        val accessToken =
+            context?.let { AppPreferenceManager(it).getString(AppConstants.ACCESS_TOKEN) }
+        val farmerRegId =
+            context?.let { AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0) }
+        authViewModel.getCustomisedDashboardList(CryptoHelper.encryptField(farmerRegId.toString()).toString(), accessToken.toString())
     }
 
-    private fun observeResponse(){
-        farmerViewModel.getFarmDetailsResponse.observe(viewLifecycleOwner){ state ->
-            when(state){
-                is UiState.Loading->{
+    private fun observeResponse() {
+        farmerViewModel.getFarmSummeryResponse.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
                     context?.let { ProgressHelper.showProgressDialog(it) }
                 }
-                is UiState.Success->{
+
+                is UiState.Success -> {
                     ProgressHelper.disableProgressDialog()
                     val jsonResponse = JSONObject(state.data.toString())
                     val dataObject = jsonResponse.optJSONObject("data")
@@ -112,11 +131,32 @@ class MyDashboardFragment : Fragment() {
                     binding.totalFarmTextView.text = farmCount.toString()
                     binding.totalVillagesTextView.text = "Villages: $totalVillages"
                 }
-                is UiState.Error->{
+
+                is UiState.Error -> {
                     ProgressHelper.disableProgressDialog()
                     Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+
+        authViewModel.getCustomisedDashboardResponse.observe(viewLifecycleOwner){ state->
+            when(state){
+                is UiState.Loading -> {
+                    context?.let { ProgressHelper.showProgressDialog(it) }
+                }
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    val jsonResponse = JSONObject(state.data.toString())
+                    Log.d(TAG, "observeResponse getCustomisedDashboardResponse: $jsonResponse")
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+
         }
     }
 

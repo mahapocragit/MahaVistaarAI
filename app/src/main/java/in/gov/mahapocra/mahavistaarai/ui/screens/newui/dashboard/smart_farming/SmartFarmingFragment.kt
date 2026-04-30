@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.smart_farming
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.smart_farming
 
 import android.content.Intent
 import android.os.Bundle

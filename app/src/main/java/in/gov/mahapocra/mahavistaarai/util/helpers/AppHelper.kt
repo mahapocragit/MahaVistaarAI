@@ -9,7 +9,7 @@ import android.os.Build
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.NewDashboardMainActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.NewDashboardMainActivity
 
 class AppHelper(private val context: Context) {
 

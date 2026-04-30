@@ -159,7 +159,7 @@
                         android:layout_height="@dimen/_20sdp"
                         android:background="@color/yeellowies"
                         android:orientation="horizontal"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <ImageView
                             android:id="@+id/imageView14"

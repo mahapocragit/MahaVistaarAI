@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +24,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.Pests
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.sop.SOPActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.CostCalculatorDashboardActivity
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import org.json.JSONArray
@@ -81,76 +83,64 @@ class CropStageDetailsAdapter(
             holder.videosImage.setOnClickListener {
                 val source =
                     context?.let { it1 -> AppPreferenceManager(it1).getString(AppConstants.ACTION_FROM_DASHBOARD) }
-                val redirectToCostCalculator =
-                    AppPreferenceManager(context!!).getBoolean("COST_CALCULATOR_REDIRECT")
-                if (redirectToCostCalculator) {
-                    context?.startActivity(
-                        Intent(
-                            context,
-                            CostCalculatorDashboardActivity::class.java
-                        ).apply {
+                when (source) {
+                    AppConstants.PEST_AND_DISEASES_STAGES -> {
+                        Intent(context, PestsAndDiseasesStages::class.java).apply {
                             putExtra("id", jsonObject.optInt("id"))
-                        }
-                    )
-                } else {
-                    when (source) {
-                        AppConstants.PEST_AND_DISEASES_STAGES -> {
-                            Intent(context, PestsAndDiseasesStages::class.java).apply {
-                                putExtra("id", jsonObject.optInt("id"))
-                                putExtra("wotr_crop_id", jsonObject.optInt("wotr_crop_id"))
-                                putExtra("mUrl", jsonObject.optString("image"))
-                                putExtra("mName", jsonObject.optString("name"))
-                            }.also { context?.startActivity(it) }
-                        }
+                            putExtra("wotr_crop_id", jsonObject.optInt("wotr_crop_id"))
+                            putExtra("mUrl", jsonObject.optString("image"))
+                            putExtra("mName", jsonObject.optString("name"))
+                        }.also { context?.startActivity(it) }
+                    }
 
-                        AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD -> {
-                            Intent(context, AdvisoryCropActivity::class.java).apply {
-                                putCommonExtras(this, jsonObject)
-                                putExtra("editCrop", "NoEditCrop")
-                            }.also { context?.startActivity(it) }
-                        }
+                    AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD -> {
+                        Intent(context, AdvisoryCropActivity::class.java).apply {
+                            putCommonExtras(this, jsonObject)
+                            putExtra("editCrop", "NoEditCrop")
+                        }.also { context?.startActivity(it) }
+                    }
 
-                        AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD -> {
-                            Intent(context, FertilizerCalculatorActivity::class.java).apply {
-                                putCommonExtras(this, jsonObject)
-                                putExtra("editCrop", "NoEditCrop")
-                            }.also { context?.startActivity(it) }
-                        }
+                    AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD -> {
+                        Intent(context, FertilizerCalculatorActivity::class.java).apply {
+                            putCommonExtras(this, jsonObject)
+                            putExtra("editCrop", "NoEditCrop")
+                        }.also { context?.startActivity(it) }
+                    }
 
-                        AppConstants.SOP_FROM_DASHBOARD -> {
-                            Intent(context, SOPActivity::class.java).apply {
-                                putExtra("id", jsonObject.optInt("id"))
-                                putExtra("wotr_crop_id", jsonObject.optInt("wotr_crop_id"))
-                                putExtra("mUrl", jsonObject.optString("image"))
-                                putExtra("mName", jsonObject.optString("name"))
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                    putExtra(
-                                        "sowingDate",
-                                        LocalCustom.getSowingDateWithYear(jsonObject.optString("sowing_date"))
-                                    )
-                                }
-                                putExtra("editCrop", "NoEditCrop")
-                            }.also { context?.startActivity(it) }
-                        }
-
-                        else -> {
-                            if (callerActivity == "costCalculator") {
-                                context?.startActivity(
-                                    Intent(
-                                        context,
-                                        CostCalculatorDashboardActivity::class.java
-                                    ).apply {
-                                        putExtra("id", jsonObject.optInt("id"))
-                                    }
+                    AppConstants.SOP_FROM_DASHBOARD -> {
+                        Intent(context, SOPActivity::class.java).apply {
+                            putExtra("id", jsonObject.optInt("id"))
+                            putExtra("wotr_crop_id", jsonObject.optInt("wotr_crop_id"))
+                            putExtra("mUrl", jsonObject.optString("image"))
+                            putExtra("mName", jsonObject.optString("name"))
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                putExtra(
+                                    "sowingDate",
+                                    LocalCustom.getSowingDateWithYear(jsonObject.optString("sowing_date"))
                                 )
-                            } else {
-                                listener.onMultiRecyclerViewItemClick(1, JSONObject().apply {
-                                    put("id", jsonObject.optInt("id"))
-                                    put("wotr_crop_id", jsonObject.optInt("wotr_crop_id"))
-                                    put("mUrl", jsonObject.optString("image"))
-                                    put("mName", jsonObject.optString("name"))
-                                })
                             }
+                            putExtra("editCrop", "NoEditCrop")
+                        }.also { context?.startActivity(it) }
+                    }
+
+                    else -> {
+                        Log.d(TAG, "onBindViewHolder: ${callerActivity.toString()}")
+                        if (callerActivity == "costCalculator") {
+                            context?.startActivity(
+                                Intent(
+                                    context,
+                                    CostCalculatorDashboardActivity::class.java
+                                ).apply {
+                                    putExtra("id", jsonObject.optInt("id"))
+                                }
+                            )
+                        } else {
+                            listener.onMultiRecyclerViewItemClick(1, JSONObject().apply {
+                                put("id", jsonObject.optInt("id"))
+                                put("wotr_crop_id", jsonObject.optInt("wotr_crop_id"))
+                                put("mUrl", jsonObject.optString("image"))
+                                put("mName", jsonObject.optString("name"))
+                            })
                         }
                     }
                 }

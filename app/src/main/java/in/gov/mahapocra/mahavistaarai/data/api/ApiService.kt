@@ -391,6 +391,15 @@ interface ApiService {
     suspend fun getAppVersion(): JsonObject
 
     @POST("/farmDairyService/get-farmer-summary")
+    suspend fun getFarmSummery(@Body params: RequestBody): JsonObject
+
+    @POST("/farmDairyService/get-farmer-farm-details")
     suspend fun getFarmDetails(@Body params: RequestBody): JsonObject
+
+    @POST("/authService/getCustomDashboardInfo")
+    suspend fun getCustomizedDashboard(
+        @Header("FAAPRegistrationID") farmerID: String,
+        @Header("Authorization") authToken: String
+    ): JsonObject
 
 }

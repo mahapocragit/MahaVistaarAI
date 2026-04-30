@@ -233,16 +233,28 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
     override fun onDateSelected(i: Int, day: Int, month: Int, year: Int) {
         if (i == 1) {
             sowingDate = "$day-$month-$year"
-            cropId?.let { viewModel.saveFarmerSelectedCrop(this, sowingDate, it) }
-            viewModel.saveFarmerSelectedCrop.observe(this) {
-                if (it != null) {
-                    if (it.get("status").toString() == "200") {
-                        viewModel.getCropStagesAndAdvisory(
-                            farmerId,
-                            cropId,
-                            sowingDate,
-                            languageToLoad
-                        )
+            cropId?.let { viewModel.saveFarmerSelectedCrop(farmerId, sowingDate, it) }
+            viewModel.saveFarmerSelectedCrop.observe(this) { state ->
+                when(state){
+                    is UiState.Loading->{
+                        ProgressHelper.showProgressDialog(this)
+                    }
+                    is UiState.Success->{
+                        ProgressHelper.disableProgressDialog()
+                        val dataObject = JSONObject(state.data.toString())
+                        val status = dataObject.optInt("status")
+                        if (status == 200) {
+                            viewModel.getCropStagesAndAdvisory(
+                                farmerId,
+                                cropId,
+                                sowingDate,
+                                languageToLoad
+                            )
+                        }
+                    }
+                    is UiState.Error->{
+                        ProgressHelper.disableProgressDialog()
+                        Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                     }
                 }
             }

@@ -49,6 +49,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FarmerApp">
         <activity
+            android:name=".ui.screens.newui.farmdetails.DetailedFarmActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.screens.newui.farmdetails.FarmDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.screens.dashboard.magazine.MagazineDashboardActivity"
             android:exported="false" />
         <activity
@@ -108,8 +114,8 @@
         <activity android:name=".ui.screens.dashboard.forum.ForumViewActivity" />
         <activity android:name=".ui.screens.dashboard.forum.ForumActivity" />
         <activity android:name=".ui.screens.dashboard.chc.CHCenterActivity" />
-        <activity android:name=".ui.screens.dashboard.menugrid.DashboardScreen"/>
-        <activity android:name=".ui.screens.newui.NewDashboardMainActivity"/>
+        <activity android:name=".ui.screens.dashboard.menugrid.DashboardScreen" />
+        <activity android:name=".ui.screens.newui.dashboard.NewDashboardMainActivity" />
         <activity android:name=".ui.screens.authentication.ProfileScreen" />
         <activity android:name=".ui.screens.dashboard.menugrid.dbt.pocra.PocraSchemesDetailsActivity" />
         <activity android:name=".ui.screens.dashboard.menugrid.soilhealthcard.DetailedSoilHealthCardActivity" />
@@ -137,6 +143,7 @@
         <activity
             android:name=".ui.screens.authentication.LoginScreen"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+
         <service
             android:name=".data.services.FBaseMessagingService"
             android:exported="true">
@@ -153,6 +160,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.android.fileprovider"

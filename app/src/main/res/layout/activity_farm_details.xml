@@ -6,23 +6,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/status_colored_background"
-    tools:context=".ui.screens.dashboard.etl.AgriStackAdvisoryActivity">
+    tools:context=".ui.screens.newui.farmdetails.FarmDetailsActivity">
 
     <include
         android:id="@+id/relativeLayoutTopBar"
         layout="@layout/layout_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/agriStackRecyclerView"
+        android:id="@+id/farmDetailsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginHorizontal="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayoutTopBar"
-        android:paddingTop="@dimen/_10sdp"
-        tools:listitem="@layout/item_view_etl" />
+        app:layout_constraintTop_toBottomOf="@id/relativeLayoutTopBar" />
 </androidx.constraintlayout.widget.ConstraintLayout>

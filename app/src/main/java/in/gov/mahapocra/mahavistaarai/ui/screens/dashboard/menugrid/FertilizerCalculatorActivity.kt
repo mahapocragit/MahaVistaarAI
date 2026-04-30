@@ -14,6 +14,7 @@ import android.view.View
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -34,6 +35,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
+import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityFertilizerCalculatorActivityBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.FertilizersRecyclerAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
@@ -50,6 +52,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.showDisabledFutureDatePicker
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -155,15 +158,12 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                     }
                     .create()
 
-                dialog.setOnKeyListener { _, keyCode, _ ->
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                onBackPressedDispatcher.addCallback(this) {
+                    if (dialog.isShowing) {
                         dialog.dismiss()
-
-                        // trigger your back logic manually
-                        onBackPressedDispatcher.onBackPressed()
-
-                        true
-                    } else false
+                    } else {
+                        finish() // or default back behavior
+                    }
                 }
 
                 dialog.show()
@@ -373,15 +373,12 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                         }
                         .create()
 
-                    dialog.setOnKeyListener { _, keyCode, _ ->
-                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    onBackPressedDispatcher.addCallback(this) {
+                        if (dialog.isShowing) {
                             dialog.dismiss()
-
-                            // trigger your back logic manually
-                            onBackPressedDispatcher.onBackPressed()
-
-                            true
-                        } else false
+                        } else {
+                            finish() // or default back behavior
+                        }
                     }
 
                     dialog.show()
@@ -875,11 +872,23 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     override fun onDateSelected(i: Int, day: Int, month: Int, year: Int) {
         if (i == 1) {
             sowingDate = "$day-$month-$year"
-            cropId?.let { farmerViewModel.saveFarmerSelectedCrop(this, sowingDate!!, it) }
-            farmerViewModel.saveFarmerSelectedCrop.observe(this) {
-                if (it != null) {
-                    if (it.get("status").toString() == "200") {
-                        binding.sowingInfoLayout.sowingDateTextView.text = sowingDate
+            cropId?.let { farmerViewModel.saveFarmerSelectedCrop(farmerId, sowingDate!!, it) }
+            farmerViewModel.saveFarmerSelectedCrop.observe(this) { state ->
+                when(state){
+                    is UiState.Loading->{
+                        ProgressHelper.showProgressDialog(this)
+                    }
+                    is UiState.Success->{
+                        ProgressHelper.disableProgressDialog()
+                        val dataObject = JSONObject(state.data.toString())
+                        val status = dataObject.optInt("status")
+                        if (status == 200) {
+                            binding.sowingInfoLayout.sowingDateTextView.text = sowingDate
+                        }
+                    }
+                    is UiState.Error->{
+                        ProgressHelper.disableProgressDialog()
+                        Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                     }
                 }
             }
