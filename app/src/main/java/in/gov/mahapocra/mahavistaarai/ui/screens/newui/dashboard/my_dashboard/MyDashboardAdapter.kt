@@ -3,10 +3,12 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.my_dashboard
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ItemMyDashboardBinding
+import org.json.JSONArray
 
 class MyDashboardAdapter(
-    private val list: List<MyDashboardModel>
+    private val jsonArray: JSONArray
 ) : RecyclerView.Adapter<MyDashboardAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: ItemMyDashboardBinding) :
@@ -22,15 +24,41 @@ class MyDashboardAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = list[position]
+        val item = jsonArray.optJSONObject(position)
+
         val displayMetrics = holder.itemView.context.resources.displayMetrics
         val screenWidth = displayMetrics.widthPixels
 
-        holder.itemView.layoutParams.width = screenWidth / 2
-        holder.binding.imageView.setImageDrawable(item.drawable)
-        holder.binding.titleTextView.text = item.title
-        holder.binding.descriptionTextView.text = item.description
+// convert 16dp padding (8dp start + 8dp end) to px
+        val padding = (16 * displayMetrics.density).toInt()
+
+// convert item margins (approx 12dp total)
+        val itemMargin = (12 * displayMetrics.density).toInt()
+
+        val availableWidth = screenWidth - padding - itemMargin
+
+        val params = holder.itemView.layoutParams
+        params.width = availableWidth / 2
+        holder.itemView.layoutParams = params
+
+        val title = item.optString("title")
+        val description = item.optString("data")
+        val imageName = item.optString("image")
+
+        holder.binding.titleTextView.text = title
+        holder.binding.descriptionTextView.text = description
+
+        val context = holder.itemView.context
+        val resId = context.resources.getIdentifier(
+            imageName,
+            "drawable",
+            context.packageName
+        )
+
+        holder.binding.imageView.setImageResource(
+            if (resId != 0) resId else R.drawable.ic_weather_mp
+        )
     }
 
-    override fun getItemCount(): Int = list.size
+    override fun getItemCount(): Int = jsonArray.length()
 }

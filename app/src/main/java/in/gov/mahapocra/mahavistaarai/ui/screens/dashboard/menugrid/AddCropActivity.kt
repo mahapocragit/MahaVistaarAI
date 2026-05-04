@@ -27,6 +27,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.unSubscribeToTopic
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import kotlinx.coroutines.CoroutineScope
@@ -98,7 +99,7 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
         }
 
         imageMenuShow.setOnClickListener {
-            startActivity(Intent(this, DashboardScreen::class.java))
+            AppHelper(this).redirectToHome()
         }
     }
 

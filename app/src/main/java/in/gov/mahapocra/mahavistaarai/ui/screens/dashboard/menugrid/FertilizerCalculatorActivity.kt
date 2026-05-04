@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
 import android.widget.RadioButton
 import android.widget.Toast
@@ -49,6 +48,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.DeleteApi
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.showDisabledFutureDatePicker
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
@@ -112,7 +112,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         observeResponse()
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
-            startActivity(Intent(this, DashboardScreen::class.java))
+            AppHelper(this).redirectToHome()
         }
 
         AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
@@ -155,6 +155,8 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                         isShowing = false
                         startActivity(sharing)
                         dialogInterface.dismiss()
+                    }.setNegativeButton(R.string.cancel) { _, _ ->
+                        AppHelper(this).redirectToHome()
                     }
                     .create()
 
@@ -316,12 +318,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
 
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(
-                    Intent(
-                        this@FertilizerCalculatorActivity,
-                        DashboardScreen::class.java
-                    )
-                )
+                AppHelper(this@FertilizerCalculatorActivity).redirectToHome()
             }
         })
     }
@@ -874,11 +871,12 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             sowingDate = "$day-$month-$year"
             cropId?.let { farmerViewModel.saveFarmerSelectedCrop(farmerId, sowingDate!!, it) }
             farmerViewModel.saveFarmerSelectedCrop.observe(this) { state ->
-                when(state){
-                    is UiState.Loading->{
+                when (state) {
+                    is UiState.Loading -> {
                         ProgressHelper.showProgressDialog(this)
                     }
-                    is UiState.Success->{
+
+                    is UiState.Success -> {
                         ProgressHelper.disableProgressDialog()
                         val dataObject = JSONObject(state.data.toString())
                         val status = dataObject.optInt("status")
@@ -886,7 +884,8 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                             binding.sowingInfoLayout.sowingDateTextView.text = sowingDate
                         }
                     }
-                    is UiState.Error->{
+
+                    is UiState.Error -> {
                         ProgressHelper.disableProgressDialog()
                         Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                     }

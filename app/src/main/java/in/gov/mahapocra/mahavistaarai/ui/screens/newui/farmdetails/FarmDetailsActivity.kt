@@ -14,7 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityFarmDetailsBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
+import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager.getAccessToken
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONObject
@@ -52,7 +55,7 @@ class FarmDetailsActivity : AppCompatActivity() {
             }
         })
         binding.farmDetailsRecyclerView.layoutManager = LinearLayoutManager(this)
-        farmerViewModel.getFarmDetails("79335694125")
+        farmerViewModel.getFarmDetails()
     }
 
     private fun observeResponse() {

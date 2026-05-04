@@ -24,7 +24,6 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityChangePwdTempBinding
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.isStrongPassword
@@ -32,6 +31,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.toSHA512
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
@@ -201,11 +201,11 @@ class ConfirmPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode
                     Toast.makeText(this, notificationCountValue, Toast.LENGTH_LONG).show();
                     val farmerId =
                         AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-                    var intent = Intent(this, LoginScreen::class.java)
                     if (farmerId != 0) {
-                        intent = Intent(this, DashboardScreen::class.java)
+                        AppHelper(this).redirectToHome()
+                    }else{
+                        startActivity(Intent(this, LoginScreen::class.java))
                     }
-                    startActivity(intent)
                 } else {
                     val notificationCountValue: String = jSONObject.getString("response")
                     Toast.makeText(this, notificationCountValue, Toast.LENGTH_LONG).show();

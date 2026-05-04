@@ -24,7 +24,6 @@ import `in`.gov.mahapocra.mahavistaarai.ui.adapters.StageAdvisoryAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.StageAdvisoryDetailAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
@@ -35,6 +34,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.showDisabledFutureDatePicker
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
@@ -94,7 +94,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         }
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(Intent(this@AdvisoryCropActivity, DashboardScreen::class.java))
+                AppHelper(this@AdvisoryCropActivity).redirectToHome()
                 finish()
             }
         })
@@ -135,7 +135,7 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
         binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.crop_advisory)
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
-            startActivity(Intent(this, DashboardScreen::class.java))
+            AppHelper(this).redirectToHome()
         }
         viewModel.getCropStagesAndAdvisory(farmerId, cropId, sowingDate, languageToLoad)
         binding.chatbotIcon.setOnTouchListener(DraggableTouchListener {

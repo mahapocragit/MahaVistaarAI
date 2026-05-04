@@ -26,10 +26,9 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityResultBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.data.model.AnalysisData
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.data.repository.PredictRepository
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager.getAccessToken
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONArray
 import org.json.JSONObject
@@ -89,8 +88,7 @@ class ResultActivity : AppCompatActivity() {
         }
         analysisData?.let {
             if (it.farmerId != 0) {
-                val accessToken =
-                    AppPreferenceManager(this).getString(AppConstants.ACCESS_TOKEN).toString()
+                val accessToken = getAccessToken().toString()
                 viewModel.storeResponse(
                     accessToken,
                     it.farmerId,

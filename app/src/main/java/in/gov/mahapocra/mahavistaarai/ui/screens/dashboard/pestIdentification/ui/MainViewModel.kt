@@ -9,8 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.data.repository.PredictRepository
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
+import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager.getAccessToken
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -59,8 +58,7 @@ class MainViewModel(private val repo: PredictRepository) : ViewModel() {
         ProgressHelper.showProgressDialog(context)
         viewModelScope.launch {
             try {
-                val accessToken =
-                    AppPreferenceManager(context).getString(AppConstants.ACCESS_TOKEN).toString()
+                val accessToken = getAccessToken().toString()
                 val response = repo.submitFeedback("Bearer $accessToken", responseId, feedbackStr)
                 if (response.isSuccessful) {
                     ProgressHelper.disableProgressDialog()

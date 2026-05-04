@@ -44,6 +44,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager.getAccessToken
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONArray
@@ -231,7 +232,7 @@ class PestIdentificationActivity : AppCompatActivity() {
                 val predictionObject = predictionArray?.get(0) as JSONObject
                 val diseaseId = predictionObject.optString("disease_id")
 
-                val accessToken = AppPreferenceManager(this).getString(AppConstants.ACCESS_TOKEN).toString()
+                val accessToken = getAccessToken().toString()
                 viewModel.getPestAdvisory(this, diseaseId, accessToken)
                 cameraImageUri?.let { uri ->
                     val compressedUri = compressImageUri(uri, 70)
@@ -344,8 +345,7 @@ class PestIdentificationActivity : AppCompatActivity() {
         binding.cameraLayout.setOnClickListener { checkCameraPermission() }
         binding.galleryLayout.setOnClickListener { pickImage.launch("image/*") }
         binding.editCropName.setOnClickListener {
-            val accessToken =
-                AppPreferenceManager(this).getString(AppConstants.ACCESS_TOKEN).toString()
+            val accessToken = getAccessToken().toString()
             viewModel.fetchCropList(accessToken)
         }
         binding.editSowingDate.setOnClickListener { openDatePicker() }

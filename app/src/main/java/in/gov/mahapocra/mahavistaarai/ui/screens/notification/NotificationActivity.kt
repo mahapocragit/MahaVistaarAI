@@ -14,7 +14,6 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityNotificationBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.NotificationAdapter
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom

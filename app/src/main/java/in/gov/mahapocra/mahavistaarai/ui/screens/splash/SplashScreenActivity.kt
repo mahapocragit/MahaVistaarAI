@@ -20,6 +20,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager.getAccessToken
 
 class SplashScreenActivity : AppCompatActivity() {
 
@@ -51,7 +52,7 @@ class SplashScreenActivity : AppCompatActivity() {
         }
         // Get Farmer ID
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-        val accessToken = AppPreferenceManager(this).getString(AppConstants.ACCESS_TOKEN)?:""
+        val accessToken = getAccessToken() ?: ""
         // Navigate to the appropriate screen after delay
         Handler(Looper.getMainLooper()).postDelayed({
             val targetActivity = if (accessToken.isNotEmpty()) {

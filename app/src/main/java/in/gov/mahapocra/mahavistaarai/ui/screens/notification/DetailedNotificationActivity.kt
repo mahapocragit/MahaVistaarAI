@@ -21,7 +21,6 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.DialogFeedbackNotificationsB
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.QuestionsAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.etl.AgriStackAdvisoryActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.FertilizerCalculatorActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.Warehouse
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
@@ -34,6 +33,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.sop.SOPAct
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.NewDashboardMainActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
@@ -449,9 +449,9 @@ class DetailedNotificationActivity : AppCompatActivity() {
             "customhire" -> Intent(this, CHCenterActivity::class.java)
             "videos" -> Intent(this, VideosActivity::class.java)
             "dbtschemes" -> Intent(this, DBTActivity::class.java)
-            "dashboard" -> Intent(this, DashboardScreen::class.java)
+            "dashboard" -> Intent(this, NewDashboardMainActivity::class.java)
             "etl_page" -> Intent(this, AgriStackAdvisoryActivity::class.java)
-            else -> Intent(this, DashboardScreen::class.java)
+            else -> Intent(this, NewDashboardMainActivity::class.java)
         }
         startActivity(targetIntent)
     }

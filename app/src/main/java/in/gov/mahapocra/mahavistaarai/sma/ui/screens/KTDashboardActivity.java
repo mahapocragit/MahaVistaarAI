@@ -54,7 +54,6 @@ import in.gov.mahapocra.mahavistaarai.sma.data.helper.EncryptAES;
 import in.gov.mahapocra.mahavistaarai.sma.data.models.ProfileModel;
 import in.gov.mahapocra.mahavistaarai.sma.domain.APIRequest;
 import in.gov.mahapocra.mahavistaarai.sma.ui.adapters.KTDashboardAdapter;
-import in.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen;
 import in.gov.mahapocra.mahavistaarai.util.app_util.AppString;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -284,9 +283,8 @@ public class KTDashboardActivity extends AppCompatActivity implements OnMultiRec
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, DashboardScreen.class);
-        startActivity(intent);
-
+        in.gov.mahapocra.mahavistaarai.util.helpers.AppHelper appHelper = new in.gov.mahapocra.mahavistaarai.util.helpers.AppHelper(this);
+        appHelper.redirectToHome(true);
 //        AppString appString = new AppString(this);
 //
 //        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);

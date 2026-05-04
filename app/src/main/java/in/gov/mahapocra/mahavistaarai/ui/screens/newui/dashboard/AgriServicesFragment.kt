@@ -146,7 +146,14 @@ class AgriServicesFragment : Fragment(), OnMultiRecyclerItemClickListener {
         }
 
         binding.fertilizerCalculatorCard.setOnClickListener {
-            startActivity(Intent(context, FertilizerCalculatorActivity::class.java))
+            savedCropWoTRId = if (savedCropWoTRId == "") "0" else savedCropWoTRId
+            val intent = Intent(requireContext(), FertilizerCalculatorActivity::class.java)
+            intent.putExtra("id", savedCropId)
+            intent.putExtra("wotr_crop_id", savedCropWoTRId?.toInt())
+            intent.putExtra("mUrl", savedCropImageUrl)
+            intent.putExtra("mName", savedCropName)
+            intent.putExtra("sowingDate", savedCropSowingDate)
+            startActivity(intent)
         }
         val farmerRegId =
             AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)

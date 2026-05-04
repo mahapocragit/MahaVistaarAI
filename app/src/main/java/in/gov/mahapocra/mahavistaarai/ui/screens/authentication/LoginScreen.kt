@@ -38,7 +38,6 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLoginScreenBinding
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
@@ -231,13 +230,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 
                         val accessToken = jSONObject.optString("access_token")
-                        Log.d(
-                            TAG,
-                            "observeResponse: access token: $accessToken and response: $jSONObject"
-                        )
-
                         val refreshToken = jSONObject.optString("refresh_token")
-                        Log.d(TAG, "observeResponse: refresh token: $accessToken and response: $jSONObject")
 
                         if (loginOption != OTP_VERIFY) {
                             farmerRegisteredID = jSONObject.getInt("FAAPRegistrationID")
@@ -246,13 +239,8 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         AppSettings.getInstance()
                             .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisteredID)
 
-                        AppPreferenceManager(this)
-                            .saveString(AppConstants.ACCESS_TOKEN, accessToken)
-
                         TokenSessionManager.saveTokens(accessToken, refreshToken)
-
                         appPreferenceManager.saveBoolean(AppConstant.IS_FIRST_LOGIN, true)
-
                         AppHelper(this@LoginScreen).redirectToHome()
 
                         if (loginOption != OTP_VERIFY) {
@@ -287,10 +275,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 
                         val accessToken = jSONObject.optString("access_token")
-                        Log.d(
-                            TAG,
-                            "observeResponse: access token: $accessToken and response: $jSONObject"
-                        )
+                        val refreshToken = jSONObject.optString("refresh_token")
 
                         if (loginOption != OTP_VERIFY) {
                             farmerRegisteredID = jSONObject.getInt("FAAPRegistrationID")
@@ -299,8 +284,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                         AppSettings.getInstance()
                             .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisteredID)
 
-                        AppPreferenceManager(this)
-                            .saveString(AppConstants.ACCESS_TOKEN, accessToken)
+                        TokenSessionManager.saveTokens(accessToken, refreshToken)
 
                         appPreferenceManager.saveBoolean(AppConstant.IS_FIRST_LOGIN, true)
                         AppHelper(this@LoginScreen).redirectToHome()

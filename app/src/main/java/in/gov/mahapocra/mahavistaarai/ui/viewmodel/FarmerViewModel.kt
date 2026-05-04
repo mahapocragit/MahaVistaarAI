@@ -988,19 +988,14 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun getFarmSummery(farmerId:String) {
+    fun getFarmSummery() {
         viewModelScope.launch {
             _getFarmSummeryResponse.value = UiState.Loading
             try {
                 val retrofit =
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val api = retrofit.create(ApiService::class.java)
-                val jsonObject = JSONObject().apply {
-                    put("farmer_id", farmerId)
-                }
-                val requestBody =
-                    AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val response = api.getFarmSummery(requestBody)
+                val response = api.getFarmSummery()
                 _getFarmSummeryResponse.value = UiState.Success(response)
             } catch (e: Exception) {
                 val message = when (e) {
@@ -1015,19 +1010,14 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun getFarmDetails(farmerId:String) {
+    fun getFarmDetails() {
         viewModelScope.launch {
             _getFarmDetailsResponse.value = UiState.Loading
             try {
                 val retrofit =
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val api = retrofit.create(ApiService::class.java)
-                val jsonObject = JSONObject().apply {
-                    put("farmer_id", farmerId)
-                }
-                val requestBody =
-                    AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val response = api.getFarmDetails(requestBody)
+                val response = api.getFarmDetails()
                 _getFarmDetailsResponse.value = UiState.Success(response)
             } catch (e: Exception) {
                 val message = when (e) {

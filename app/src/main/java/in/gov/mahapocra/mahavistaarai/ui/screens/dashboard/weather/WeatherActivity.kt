@@ -18,7 +18,6 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityWeatherHomeTempBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.TemperatureAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
@@ -29,6 +28,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
@@ -80,12 +80,12 @@ class WeatherActivity : AppCompatActivity() {
         }
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
-            startActivity(Intent(this, DashboardScreen::class.java))
+            AppHelper(this).redirectToHome()
         }
 
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(Intent(this@WeatherActivity, DashboardScreen::class.java))
+                AppHelper(this@WeatherActivity).redirectToHome()
             }
         })
         Log.d(TAG, "onCreate: ${containsFarmerId(this)}")

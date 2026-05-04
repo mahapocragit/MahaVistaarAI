@@ -21,7 +21,6 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityMarketPriceBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.MarketPriceAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.GeoViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MarketPriceViewModel

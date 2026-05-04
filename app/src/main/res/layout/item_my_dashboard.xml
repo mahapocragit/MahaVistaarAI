@@ -6,9 +6,10 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_110sdp"
-        android:layout_margin="@dimen/_5sdp"
-        app:cardCornerRadius="@dimen/_10sdp"
+        android:layout_height="@dimen/_120sdp"
+        app:cardCornerRadius="@dimen/_12sdp"
+        android:layout_margin="@dimen/_6sdp"
+        app:cardElevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -17,36 +18,48 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/_10sdp"
-            android:orientation="vertical">
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/_10sdp">
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:padding="@dimen/_5sdp"
-                app:srcCompat="@drawable/ic_climate_resilient_sf" />
+            <!-- Circular Icon Background -->
+            <FrameLayout
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_circle_light"
+                android:gravity="center">
 
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_weather_mp" />
+            </FrameLayout>
+
+            <!-- Title -->
             <TextView
                 android:id="@+id/titleTextView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="4"
-                android:gravity="center"
-                android:text="Climate Resilent"
-                android:textSize="@dimen/_10sdp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:text="Weather"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/_12sdp"
                 android:textStyle="bold" />
 
+            <!-- Description -->
             <TextView
                 android:id="@+id/descriptionTextView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="4"
-                android:gravity="center"
-                android:text="Climate Resilent"
-                android:textSize="@dimen/_10sdp"
-                android:textStyle="bold" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="22.6 / 29.8"
+                android:textColor="@color/gray"
+                android:textSize="@dimen/_11sdp" />
+
         </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

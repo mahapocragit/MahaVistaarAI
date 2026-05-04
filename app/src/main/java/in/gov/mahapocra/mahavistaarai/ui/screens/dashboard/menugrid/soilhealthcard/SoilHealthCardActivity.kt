@@ -27,7 +27,6 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityHealthCardBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.SoilHealthCardAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.RegistrationViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
@@ -36,6 +35,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -106,12 +106,12 @@ class SoilHealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEv
             getString(R.string.soil_health_card)
         binding.relativeLayoutToolbar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutToolbar.imgBackArrow.setOnClickListener {
-            startActivity(Intent(this, DashboardScreen::class.java))
+            AppHelper(this).redirectToHome()
         }
 
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(Intent(this@SoilHealthCardActivity, DashboardScreen::class.java))
+                AppHelper(this@SoilHealthCardActivity).redirectToHome()
             }
         })
 

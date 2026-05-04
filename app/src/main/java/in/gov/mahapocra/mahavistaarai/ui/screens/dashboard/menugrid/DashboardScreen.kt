@@ -105,6 +105,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getLatestAdvisoriesAsJsonArray
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
+import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager.getAccessToken
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.ApUtil
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SideNavMenuHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper.shrinkToCenter
@@ -1600,7 +1601,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         navUserName = hView.findViewById(R.id.tv_farmerName)
         navUserPhone = hView.findViewById(R.id.tv_famerPhoneNumber)
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-        val accessToken = AppPreferenceManager(this).getString(AppConstants.ACCESS_TOKEN)?:""
+        val accessToken = getAccessToken().toString()
         Log.d(TAG, "init: $accessToken")
         if (accessToken.isNotEmpty()) {
             if (NetworkUtils.isInternetAvailable(this)) {
