@@ -6,7 +6,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_120sdp"
+        android:layout_height="@dimen/_100sdp"
         app:cardCornerRadius="@dimen/_12sdp"
         android:layout_margin="@dimen/_6sdp"
         app:cardElevation="4dp"
@@ -24,8 +24,8 @@
 
             <!-- Circular Icon Background -->
             <FrameLayout
-                android:layout_width="@dimen/_40sdp"
-                android:layout_height="@dimen/_40sdp"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
                 android:layout_gravity="center"
                 android:background="@drawable/bg_circle_light"
                 android:gravity="center">
@@ -42,8 +42,9 @@
             <!-- Title -->
             <TextView
                 android:id="@+id/titleTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:layout_marginTop="@dimen/_6sdp"
                 android:text="Weather"
                 android:textColor="@android:color/black"
@@ -53,11 +54,13 @@
             <!-- Description -->
             <TextView
                 android:id="@+id/descriptionTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="1"
                 android:text="22.6 / 29.8"
                 android:textColor="@color/gray"
-                android:textSize="@dimen/_11sdp" />
+                android:textSize="@dimen/_10sdp" />
 
         </LinearLayout>
 

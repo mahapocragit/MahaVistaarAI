@@ -17,20 +17,37 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.FragmentMyDashboardBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.etl.AgriStackAdvisoryActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.FertilizerCalculatorActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.Warehouse
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.DBTActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.marketprice.MarketPrice
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard.SoilHealthCardActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.sop.SOPActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.GridSpacingItemDecoration
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.NewDashboardMainActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.FarmDetailsActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager.getAccessToken
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONArray
 import org.json.JSONObject
 
-class MyDashboardFragment : Fragment() {
+class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
 
     private var _binding: FragmentMyDashboardBinding? = null
     private val binding get() = _binding!!
@@ -70,7 +87,7 @@ class MyDashboardFragment : Fragment() {
         binding.myDashboardRecyclerView.layoutManager = layoutManager
 
         // empty adapter initially
-        myAdapter = MyDashboardAdapter(JSONArray())
+        myAdapter = MyDashboardAdapter(JSONArray(), this)
         binding.myDashboardRecyclerView.adapter = myAdapter
 
         // OPTIONAL → only if you want snapping
@@ -173,7 +190,7 @@ class MyDashboardFragment : Fragment() {
                     val customisedDashboardList = dataObject.optJSONArray("cust_dash")
 
                     // ✅ update adapter (no re-setup RecyclerView)
-                    myAdapter = MyDashboardAdapter(customisedDashboardList)
+                    myAdapter = MyDashboardAdapter(customisedDashboardList, this)
                     binding.myDashboardRecyclerView.adapter = myAdapter
                 }
 
@@ -188,5 +205,34 @@ class MyDashboardFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onRecyclerItemClick(i: Int, obj: Any) {
+        val jSONObject = obj as JSONObject
+        val redirect = jSONObject.optString("page")
+        redirectToScreen(redirect)
+        Log.d(TAG, "onRecyclerItemClick: $redirect")
+    }
+
+    private fun redirectToScreen(testValue: String) {
+        val targetIntent = when (testValue.lowercase()) {
+            "advisory" -> Intent(requireContext(), AdvisoryCropActivity::class.java)
+            "sop" -> Intent(requireContext(), SOPActivity::class.java)
+            "fertilizer" -> Intent(requireContext(), FertilizerCalculatorActivity::class.java)
+            "pestdisease" -> Intent(requireContext(), PestsAndDiseasesStages::class.java)
+            "weather" -> Intent(requireContext(), WeatherActivity::class.java)
+            "shc" -> Intent(requireContext(), SoilHealthCardActivity::class.java)
+            "climatetech" -> Intent(requireContext(), ClimateResilientTechnology::class.java)
+            "market" -> Intent(requireContext(), MarketPrice::class.java)
+            "shetishala" -> Intent(requireContext(), ShetishalaActivity::class.java)
+            "warehouse" -> Intent(requireContext(), Warehouse::class.java)
+            "customhire" -> Intent(requireContext(), CHCenterActivity::class.java)
+            "videos" -> Intent(requireContext(), VideosActivity::class.java)
+            "dbtschemes" -> Intent(requireContext(), DBTActivity::class.java)
+            "dashboard" -> Intent(requireContext(), NewDashboardMainActivity::class.java)
+            "etl_page" -> Intent(requireContext(), AgriStackAdvisoryActivity::class.java)
+            else -> Intent(requireContext(), NewDashboardMainActivity::class.java)
+        }
+        startActivity(targetIntent)
     }
 }

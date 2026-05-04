@@ -5,10 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ItemMyDashboardBinding
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
 import org.json.JSONArray
 
 class MyDashboardAdapter(
-    private val jsonArray: JSONArray
+    private val jsonArray: JSONArray,
+    private val itemClickListener: RecyclerItemClickListener
 ) : RecyclerView.Adapter<MyDashboardAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: ItemMyDashboardBinding) :
@@ -58,6 +60,9 @@ class MyDashboardAdapter(
         holder.binding.imageView.setImageResource(
             if (resId != 0) resId else R.drawable.ic_weather_mp
         )
+        holder.binding.root.setOnClickListener {
+            itemClickListener.onRecyclerItemClick(position, item)
+        }
     }
 
     override fun getItemCount(): Int = jsonArray.length()

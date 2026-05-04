@@ -116,4 +116,5 @@
     <color name="nav_unselected">#B0BEC5</color> <!-- Light gray -->
     <color name="bottom_icon_tint">#64748B</color> <!-- Light gray -->
     <color name="nav_text">#263238</color> <!-- Dark gray for text -->
+    <color name="gray_dark_colour_text">#4B5563</color>
 </resources>
