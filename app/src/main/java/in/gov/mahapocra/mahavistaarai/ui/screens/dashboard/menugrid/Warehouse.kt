@@ -25,11 +25,13 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.WAREHOUSE_POINT
+import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
@@ -46,8 +48,8 @@ class Warehouse : AppCompatActivity(), AlertListEventListener, OnMultiRecyclerIt
     private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     private val farmerViewModel: FarmerViewModel by viewModels()
     private lateinit var districtName: String
-    private var districtID: Int = 0
-    private var talukaID: Int = 0
+    private var districtCode: Int = 0
+    private var talukaCode: Int = 0
     private lateinit var totalWareHouse: String
     private lateinit var totalAvailableWareHouse: String
     private lateinit var languageToLoad: String
@@ -62,7 +64,12 @@ class Warehouse : AppCompatActivity(), AlertListEventListener, OnMultiRecyclerIt
         binding = ActivityWarehouseBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
-        districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
+        districtCode =
+            CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.DISTRICT_CODE))
+                .toString().toInt()
+        talukaCode =
+            CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.TALUKA_CODE))
+                .toString().toInt()
         setUpObserver()
         init()
         onClick()
@@ -89,7 +96,7 @@ class Warehouse : AppCompatActivity(), AlertListEventListener, OnMultiRecyclerIt
         binding.wareHouseReportRecycleView.setHasFixedSize(false)
         binding.wareHouseReportRecycleView.isNestedScrollingEnabled = true
         farmerViewModel.getDistrictData(this, languageToLoad)
-        farmerViewModel.fetchWarehouseData(this, districtID, languageToLoad)
+        farmerViewModel.fetchWarehouseData(this, this@Warehouse.districtCode, languageToLoad)
         binding.chatbotIcon.setOnTouchListener(DraggableTouchListener {
             startActivity(Intent(this, ChatbotActivity::class.java))
         })
@@ -124,7 +131,7 @@ class Warehouse : AppCompatActivity(), AlertListEventListener, OnMultiRecyclerIt
                             val name = districtObject.getString("name")
 
                             // Check if the current id matches districtID
-                            if (id == districtID) {
+                            if (id == districtCode) {
                                 // Set the text in textViewDistrict if a match is found
                                 binding.textViewDistrict.text = name
                                 break // No need to continue looping once the matching district is found
@@ -244,14 +251,14 @@ class Warehouse : AppCompatActivity(), AlertListEventListener, OnMultiRecyclerIt
 
     override fun didSelectListItem(i: Int, s: String?, s1: String?) {
         if (i == 1) {
-            districtID = s1!!.toInt()
+            districtCode = s1!!.toInt()
             if (s != null) {
                 districtName = s
-                farmerViewModel.fetchWarehouseData(this, districtID, languageToLoad)
+                farmerViewModel.fetchWarehouseData(this, districtCode, languageToLoad)
             }
             binding.textViewDistrict.text = s
             warehouseAvailabilityJSONArray = null
-            talukaID = 0
+            talukaCode = 0
         }
     }
 

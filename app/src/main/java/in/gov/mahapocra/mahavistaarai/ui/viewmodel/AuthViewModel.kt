@@ -333,15 +333,13 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    fun fetchUserInformation(accessToken: String) {
+    fun fetchUserInformation() {
         viewModelScope.launch {
             _userDetailsState.value = UiState.Loading
             try {
                 val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
-                val response = apiRequest.getGetRegistration(
-                    "Bearer $accessToken"
-                )
+                val response = apiRequest.getGetRegistration()
                 _userDetailsState.value = UiState.Success(response)
 
             } catch (e: Exception) {

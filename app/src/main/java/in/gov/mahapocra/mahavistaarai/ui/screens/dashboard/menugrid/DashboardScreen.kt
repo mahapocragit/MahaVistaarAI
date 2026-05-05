@@ -98,17 +98,16 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
-import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getLatestAdvisoriesAsJsonArray
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
-import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager.getAccessToken
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.ApUtil
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SideNavMenuHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper.shrinkToCenter
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.subscribeToTopic
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.unSubscribeToTopic
@@ -234,7 +233,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         val userNumber: String =
             AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
         if (userName != "USER_NAME") {
-            val capitalizeStrName: String = ApUtil.getCamelCaseStreing(CryptoHelper.decryptField(userName))
+            val capitalizeStrName: String =
+                ApUtil.getCamelCaseStreing(CryptoHelper.decryptField(userName))
             navUserName.text = capitalizeStrName.ifEmpty { CryptoHelper.decryptField(userName) }
             navUserPhone.text = CryptoHelper.decryptField(userNumber)
         }
@@ -1089,7 +1089,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         val data = jsonObject.optJSONObject("data") ?: return@observe
 
                         val name = data.optString("Name", "")
-                        binding.appBarMain.dashboardScreen.userFullNameTextView.text = CryptoHelper.decryptField(name)
+                        binding.appBarMain.dashboardScreen.userFullNameTextView.text =
+                            CryptoHelper.decryptField(name)
                         val mobNo = data.optString("MobileNo", "")
                         val emailId = data.optString("EmailId", "")
                         val ffaReg = data.optInt("FAAPRegistrationID", -1)
@@ -1274,7 +1275,9 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                             AppSettings.getInstance().getValue(this, AppConstants.uName, "")
                         val userNumber =
                             AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, "")
-                        navUserName.text = ApUtil.getCamelCaseStreing(CryptoHelper.decryptField(userName)).ifEmpty { CryptoHelper.decryptField(userName) }
+                        navUserName.text =
+                            ApUtil.getCamelCaseStreing(CryptoHelper.decryptField(userName))
+                                .ifEmpty { CryptoHelper.decryptField(userName) }
                         navUserPhone.text = CryptoHelper.decryptField(userNumber)
                         farmerViewModel.fetchWeatherDetails(talukaId, languageToLoad)
                         if (agristack_id != "null" && farmerId != null) {
@@ -1601,14 +1604,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         navUserName = hView.findViewById(R.id.tv_farmerName)
         navUserPhone = hView.findViewById(R.id.tv_famerPhoneNumber)
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-        val accessToken = getAccessToken().toString()
-        Log.d(TAG, "init: $accessToken")
-        if (accessToken.isNotEmpty()) {
-            if (NetworkUtils.isInternetAvailable(this)) {
-                authViewModel.fetchUserInformation(accessToken)
-            } else {
-                LocalCustom.createSnackbar(binding.root, "Internet not available!")
-            }
+        if (NetworkUtils.isInternetAvailable(this)) {
+            authViewModel.fetchUserInformation()
+        } else {
+            LocalCustom.createSnackbar(binding.root, "Internet not available!")
         }
     }
 

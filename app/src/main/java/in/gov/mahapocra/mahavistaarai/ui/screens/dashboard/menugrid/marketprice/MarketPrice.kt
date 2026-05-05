@@ -27,9 +27,11 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MarketPriceViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.MARKET_PRICE_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
@@ -52,9 +54,9 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
     private var marketJSONArray: JSONArray? = null
     private var marketPriceDetailsJSONArray: JSONArray = JSONArray()
     private lateinit var districtName: String
-    private var districtID: Int = 0
+    private var districtCode: Int = 0
     private lateinit var talukaName: String
-    private var talukaID: Int = 0
+    private var talukaCode: Int = 0
     private var marketName: String? = null
     private lateinit var languageToLoad: String
     private var marketPriceDate: String = ""
@@ -103,20 +105,21 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
     }
 
     private fun setConfiguration() {
-        districtName = getLocalizedValue(
-            AppConstants.uDISTMR,
-            AppConstants.uDIST,
-            getString(R.string.farmer_select_district)
-        )
+        districtName = CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.DISTRICT_NAME))
+                .toString()
         talukaName = getLocalizedValue(
             AppConstants.uTALUKAMR,
             AppConstants.uTALUKA,
             getString(R.string.farmer_select_taluka)
         )
-        districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
-        talukaID = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
+        districtCode =
+            CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.DISTRICT_CODE))
+                .toString().toInt()
+        talukaCode =
+            CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.TALUKA_CODE))
+                .toString().toInt()
         geoViewModel.getDistrictData(this, languageToLoad)
-        marketViewModel.getMarketAndMarketName(this@MarketPrice, districtID, languageToLoad)
+        marketViewModel.getMarketAndMarketName(this@MarketPrice, districtCode, languageToLoad)
     }
 
     private fun getLocalizedValue(mrKey: String, enKey: String, default: String): String {
@@ -137,7 +140,7 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
             binding.calenderLayout.visibility = View.GONE
             binding.tvMarketDate.text = ""
             marketPriceDate = ""
-            marketViewModel.fetchMarketList(this, languageToLoad, districtID)
+            marketViewModel.fetchMarketList(this, languageToLoad, districtCode)
             ProgressHelper.showProgressDialog(this)
         }
 
@@ -218,7 +221,7 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
                             val name = districtObject.getString("name")
 
                             // Check if the current id matches districtID
-                            if (id == districtID) {
+                            if (id == districtCode) {
                                 // Set the text in textViewDistrict if a match is found
                                 binding.textViewDistrict.text = name
                                 break // No need to continue looping once the matching district is found
@@ -359,16 +362,16 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
 
     override fun didSelectListItem(i: Int, s: String?, s1: String?) {
         if (i == 1) {
-            districtID = s1!!.toInt()
+            districtCode = s1!!.toInt()
             if (s != null) {
                 districtName = s
             }
             binding.textViewDistrict.text = s
-            if (districtID > 0) {
-                marketViewModel.getMarketAndMarketName(this@MarketPrice, districtID, languageToLoad)
+            if (districtCode > 0) {
+                marketViewModel.getMarketAndMarketName(this@MarketPrice, districtCode, languageToLoad)
             }
             marketPriceDetailsJSONArray = JSONArray()
-            talukaID = 0
+            talukaCode = 0
             binding.tvMarketDetails.visibility = View.VISIBLE
             binding.tvMarketDetails.text = buildString {
                 append(districtName)
@@ -383,7 +386,7 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
             binding.textViewMarket.setHintTextColor(Color.GRAY)
         }
         if (i == 2) {
-            talukaID = s1!!.toInt()
+            talukaCode = s1!!.toInt()
             if (s != null) {
                 talukaName = s
             }

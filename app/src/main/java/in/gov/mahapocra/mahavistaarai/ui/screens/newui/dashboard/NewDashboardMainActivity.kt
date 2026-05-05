@@ -57,7 +57,6 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
-import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager.getAccessToken
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SideNavMenuHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.unSubscribeToTopic
@@ -118,15 +117,12 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
         navUserName = hView.findViewById(R.id.tv_farmerName)
         navUserPhone = hView.findViewById(R.id.tv_famerPhoneNumber)
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-        val accessToken = getAccessToken().toString()
-        Log.d(TAG, "init: $accessToken")
-        if (accessToken.isNotEmpty()) {
-            if (NetworkUtils.isInternetAvailable(this)) {
-                authViewModel.fetchUserInformation(accessToken)
-            } else {
-                LocalCustom.createSnackbar(binding.root, "Internet not available!")
-            }
+        if (NetworkUtils.isInternetAvailable(this)) {
+            authViewModel.fetchUserInformation()
+        } else {
+            LocalCustom.createSnackbar(binding.root, "Internet not available!")
         }
+
 
         val drawerLayout = binding.drawerLayout
         val toolbar = binding.toolbar
@@ -493,8 +489,15 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     ProgressHelper.disableProgressDialog()
                     val jsonResponse = JSONObject(state.data.toString())
                     val dataObject = jsonResponse.optJSONObject("data")
+                    Log.d(TAG, "observeResponse: $dataObject")
                     val name = CryptoHelper.decryptField(dataObject?.optString("Name"))
                     val mobile = CryptoHelper.decryptField(dataObject?.optString("MobileNo"))
+                    val talukaCode = dataObject?.optString("TalukaCode")
+                    val districtCode = dataObject?.optString("DistrictCode")
+                    val districtName = dataObject?.optString("DistrictName")
+                    AppPreferenceManager(this).saveString(AppConstants.TALUKA_CODE, talukaCode)
+                    AppPreferenceManager(this).saveString(AppConstants.DISTRICT_CODE, districtCode)
+                    AppPreferenceManager(this).saveString(AppConstants.DISTRICT_NAME, districtName)
                     val firstName = name?.split(" ")[0] ?: ""
                     navUserName.text = name
                     navUserPhone.text = mobile

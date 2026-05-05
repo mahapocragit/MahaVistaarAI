@@ -194,7 +194,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_market_details"
+                android:id="@+id/tvMarketDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -209,7 +209,7 @@
                 android:id="@+id/recyclerViewMarketPriceList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_market_details"
+                android:layout_below="@+id/tvMarketDetails"
                 android:layout_marginTop="5dp"
                 android:padding="@dimen/height5" />
 

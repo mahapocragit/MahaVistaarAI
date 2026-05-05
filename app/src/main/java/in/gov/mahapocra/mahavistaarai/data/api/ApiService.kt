@@ -40,9 +40,7 @@ interface ApiService {
     suspend fun getWeatherDetails(@Body params: RequestBody): JsonObject
 
     @POST(ApiConstants.kGetRegistration)
-    suspend fun getGetRegistration(
-        @Header("Authorization") bearerToken: String
-    ): JsonObject
+    suspend fun getGetRegistration(): JsonObject
 
     @POST(ApiConstants.kGetSOPByList)
     suspend fun getSOPByList(@Body params: RequestBody): JsonObject
