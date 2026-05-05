@@ -33,7 +33,10 @@ object AppConstants {
     const val kSHARED_PREF: String = "pocra_krishi_farmerApp"
     const val tmpCROPNAME: String = "tmpCROPNAME"
     const val WEATHER_RESPONSE: String = "WEATHER_RESPONSE"
+    const val VILLAGE_CODE: String = "VILLAGE_CODE"
+    const val VILLAGE_NAME: String = "VILLAGE_NAME"
     const val TALUKA_CODE: String = "TALUKA_CODE"
+    const val TALUKA_NAME: String = "TALUKA_NAME"
     const val DISTRICT_CODE: String = "DISTRICT_CODE"
     const val DISTRICT_NAME: String = "DISTRICT_NAME"
 

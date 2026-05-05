@@ -30,12 +30,14 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotAct
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.RegistrationViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -48,13 +50,13 @@ class SoilHealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEv
     private lateinit var languageToLoad: String
     private lateinit var binding: ActivityHealthCardBinding
     private val registrationViewModel: RegistrationViewModel by viewModels()
-    private lateinit var districtName: String
-    private var districtID: Int = 0
+    private var districtName: String = ""
+    private var districtCode: Int = 0
     private lateinit var talukaName: String
-    private var talukaID: Int = 0
+    private var talukaCode: Int = 0
     private lateinit var villageName: String
     private lateinit var farmerAdapter: SoilHealthCardAdapter
-    private var villageID: Int = 0
+    private var villageCode: Int = 0
     private var districtJSONArray: JSONArray? = null
     private var talukaJSONArray: JSONArray? = null
     private var villageJSONArray: JSONArray? = null
@@ -75,32 +77,28 @@ class SoilHealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEv
         setUpObservers()
         setUpListeners()
 
-        districtName = getLocalizedValue(
-            AppConstants.uDISTMR,
-            AppConstants.uDIST,
-            getString(R.string.farmer_select_district)
-        )
-        talukaName = getLocalizedValue(
-            AppConstants.uTALUKAMR,
-            AppConstants.uTALUKA,
-            getString(R.string.farmer_select_taluka)
-        )
-        villageName = getLocalizedValue(
-            AppConstants.uVILLAGEMR,
-            AppConstants.uVILLAGE,
-            getString(R.string.farmer_select_village)
-        )
+        districtName = CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.DISTRICT_NAME))
+            .toString()
+        talukaName = CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.TALUKA_NAME))
+            .toString()
+        villageName = CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.VILLAGE_NAME))
+            .toString()
 
-        districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
-        talukaID = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
-        villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
+        districtCode =
+            CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.DISTRICT_CODE))
+                .toString().toInt()
+        talukaCode =
+            CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.TALUKA_CODE))
+                .toString().toInt()
+        villageCode = CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.VILLAGE_CODE))
+            .toString().toInt()
 
         binding.textViewDist.text =
-            if (districtName == "USER_DIST") getString(R.string.farmer_select_district) else districtName
+            if (districtName == "") getString(R.string.farmer_select_district) else districtName
         binding.textViewTaluka.text =
-            if (talukaName == "USER_TALUKA") getString(R.string.farmer_select_taluka) else talukaName
+            if (talukaName == "") getString(R.string.farmer_select_taluka) else talukaName
         binding.textViewVillage.text =
-            if (villageName == "uVILLAGE") getString(R.string.farmer_select_village) else villageName
+            if (villageName == "") getString(R.string.farmer_select_village) else villageName
 
         binding.relativeLayoutToolbar.textViewHeaderTitle.text =
             getString(R.string.soil_health_card)
@@ -130,11 +128,6 @@ class SoilHealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEv
         farmerViewModel.getDistrictData(this, languageToLoad)
     }
 
-    private fun getLocalizedValue(mrKey: String, enKey: String, default: String): String {
-        val key = if (languageToLoad == "mr") mrKey else enKey
-        return AppSettings.getInstance().getValue(this, key, default)
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     private fun setUpListeners() {
         binding.chatbotIcon.setOnTouchListener(DraggableTouchListener {
@@ -155,7 +148,7 @@ class SoilHealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEv
 
         binding.submitButton.setOnClickListener {
             val surveyNo = binding.edtSurveyNo.text.toString()
-            if (villageID != null) {
+            if (villageCode != null) {
                 if (surveyNo.isNotEmpty()) {
                     fetchData(surveyNo.toInt())
                 } else {
@@ -190,7 +183,7 @@ class SoilHealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEv
                 val response = ResponseModel(jSONObject)
                 if (response.status) {
                     talukaJSONArray = response.getdataArray()
-                    registrationViewModel.getVillageList(this, languageToLoad, talukaID)
+                    registrationViewModel.getVillageList(this, languageToLoad, talukaCode)
                 } else {
                     UIToastMessage.show(this, response.response)
                 }
@@ -220,7 +213,7 @@ class SoilHealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEv
         )
         val apiRequest = api.getRetrofitInstance().create(ApiService::class.java)
         val jsonObject = JSONObject().apply {
-            put("vincode", villageID)
+            put("vincode", villageCode)
             put("survey_number", surveyNumber)
         }
         val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
@@ -281,7 +274,7 @@ class SoilHealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEv
 
     private fun showTaluka() {
         if (talukaJSONArray == null) {
-            if (districtID > 0) {
+            if (districtCode > 0) {
                 farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
             } else {
                 UIToastMessage.show(
@@ -305,8 +298,8 @@ class SoilHealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEv
 
     private fun showVillage() {
         if (villageJSONArray == null) {
-            if (talukaID > 0) {
-                registrationViewModel.getVillageList(this, languageToLoad, talukaID)
+            if (talukaCode > 0) {
+                registrationViewModel.getVillageList(this, languageToLoad, talukaCode)
             } else {
                 UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_taluka))
             }
@@ -328,23 +321,23 @@ class SoilHealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEv
 
         if (i == 1) {
             if (s1 != null) {
-                districtID = s1.toInt()
+                districtCode = s1.toInt()
             }
 
             if (s != null) {
                 districtName = s
             }
             binding.textViewDist.text = s
-            if (districtID > 0) {
-                AppSettings.getInstance().setIntValue(this, AppConstants.uDISTId, districtID)
+            if (districtCode > 0) {
+                AppSettings.getInstance().setIntValue(this, AppConstants.uDISTId, districtCode)
                 farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
             }
-            talukaID = 0
+            talukaCode = 0
             binding.textViewTaluka.text = ""
             binding.textViewTaluka.hint = resources.getString(R.string.farmer_select_taluka)
             binding.textViewTaluka.setHintTextColor(Color.GRAY)
 
-            villageID = 0
+            villageCode = 0
             binding.textViewVillage.text = ""
             binding.textViewVillage.hint = resources.getString(R.string.farmer_select_village)
             binding.textViewVillage.setHintTextColor(Color.GRAY)
@@ -353,17 +346,17 @@ class SoilHealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEv
 
         if (i == 2) {
             if (s1 != "") {
-                talukaID = s1!!.toInt()
+                talukaCode = s1!!.toInt()
             }
             if (s != null) {
                 talukaName = s
             }
             binding.textViewTaluka.text = s
             villageJSONArray = null
-            if (talukaID > 0) {
-                registrationViewModel.getVillageList(this, languageToLoad, talukaID)
+            if (talukaCode > 0) {
+                registrationViewModel.getVillageList(this, languageToLoad, talukaCode)
             }
-            villageID = 0
+            villageCode = 0
             binding.textViewVillage.text = ""
             binding.textViewVillage.hint = resources.getString(R.string.farmer_select_village)
             binding.textViewVillage.setHintTextColor(Color.GRAY)
@@ -371,7 +364,7 @@ class SoilHealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEv
 
         if (i == 3) {
             if (s1 != "") {
-                villageID = s1!!.toInt()
+                villageCode = s1!!.toInt()
             }
 
             villageName = s.toString()

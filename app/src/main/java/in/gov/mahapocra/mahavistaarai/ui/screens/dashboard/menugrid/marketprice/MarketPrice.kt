@@ -107,11 +107,8 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
     private fun setConfiguration() {
         districtName = CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.DISTRICT_NAME))
                 .toString()
-        talukaName = getLocalizedValue(
-            AppConstants.uTALUKAMR,
-            AppConstants.uTALUKA,
-            getString(R.string.farmer_select_taluka)
-        )
+        talukaName = CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.TALUKA_NAME))
+            .toString()
         districtCode =
             CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.DISTRICT_CODE))
                 .toString().toInt()
