@@ -58,6 +58,13 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
     private lateinit var myAdapter: MyDashboardAdapter
     private lateinit var layoutManager: GridLayoutManager
 
+    private lateinit var appPreferenceManager: AppPreferenceManager
+    private var savedCropId = 0
+    private var savedCropName = ""
+    private var savedCropSowingDate: String? = null
+    private var savedCropWoTRId: String? = null
+    private var savedCropImageUrl: String? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -108,6 +115,12 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
 
     // ✅ Arrow click logic
     private fun setUpListeners() {
+        appPreferenceManager = AppPreferenceManager(requireContext())
+        savedCropId = appPreferenceManager.getInt("CROP_ID_SAVED")
+        savedCropName = appPreferenceManager.getString("CROP_NAME_SAVED").toString()
+        savedCropSowingDate = appPreferenceManager.getString("CROP_SOWING_DATE_SAVED").toString()
+        savedCropWoTRId = appPreferenceManager.getString("CROP_WOTR_ID_SAVED")
+        savedCropImageUrl = appPreferenceManager.getString("CROP_IMAGE_SAVED")
 
         binding.navigateLeft.isEnabled = false
 
@@ -216,7 +229,13 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
 
     private fun redirectToScreen(testValue: String) {
         val targetIntent = when (testValue.lowercase()) {
-            "advisory" -> Intent(requireContext(), AdvisoryCropActivity::class.java)
+            "advisory" -> Intent(requireContext(), AdvisoryCropActivity::class.java).apply {
+                putExtra("id", savedCropId)
+                putExtra("wotr_crop_id", savedCropWoTRId?.toInt())
+                putExtra("mUrl", savedCropImageUrl)
+                putExtra("mName", savedCropName)
+                putExtra("sowingDate", savedCropSowingDate)
+            }
             "sop" -> Intent(requireContext(), SOPActivity::class.java)
             "fertilizer" -> Intent(requireContext(), FertilizerCalculatorActivity::class.java)
             "pestdisease" -> Intent(requireContext(), PestsAndDiseasesStages::class.java)

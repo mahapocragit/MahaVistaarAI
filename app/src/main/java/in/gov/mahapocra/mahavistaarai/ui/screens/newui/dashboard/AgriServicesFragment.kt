@@ -67,11 +67,12 @@ class AgriServicesFragment : Fragment(), OnMultiRecyclerItemClickListener {
             languageToLoad = "en"
         }
         showToast = true
+
+        observeResponse()
         setUpListeners()
     }
 
     private fun setUpListeners() {
-        observeResponse()
         farmerId =
             AppSettings.getInstance().getIntValue(requireContext(), AppConstants.fREGISTER_ID, 0)
         appPreferenceManager = AppPreferenceManager(requireContext())
