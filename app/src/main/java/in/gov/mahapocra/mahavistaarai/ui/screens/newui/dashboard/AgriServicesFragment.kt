@@ -32,9 +32,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.cost
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
-import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
-import org.json.JSONArray
 import org.json.JSONObject
 
 
@@ -85,16 +83,22 @@ class AgriServicesFragment : Fragment(), OnMultiRecyclerItemClickListener {
         })
 
         binding.addCropCardView.setOnClickListener {
+            AppPreferenceManager(requireContext()).saveString(
+                AppConstants.ACTION_FROM_DASHBOARD,
+                AppConstants.CHANGE_CROP_DASHBOARD
+            )
             val intent = Intent(
                 requireContext(),
                 AddCropActivity::class.java
-            ).putExtra(
-                "callerActivity", "DashboardCallerActivity"
             )
             startActivity(intent)
         }
 
         binding.changeCropText.setOnClickListener {
+            AppPreferenceManager(requireContext()).saveString(
+                AppConstants.ACTION_FROM_DASHBOARD,
+                AppConstants.CHANGE_CROP_DASHBOARD
+            )
             val intent = Intent(
                 requireContext(),
                 AddCropActivity::class.java
@@ -223,7 +227,10 @@ class AgriServicesFragment : Fragment(), OnMultiRecyclerItemClickListener {
                         appPreferenceManager.saveInt("CROP_ID_SAVED", savedCropId)
                         appPreferenceManager.saveString("CROP_NAME_SAVED", savedCropName)
                         appPreferenceManager.saveString("CROP_IMAGE_SAVED", savedCropImageUrl)
-                        appPreferenceManager.saveString("CROP_SOWING_DATE_SAVED", savedCropSowingDate)
+                        appPreferenceManager.saveString(
+                            "CROP_SOWING_DATE_SAVED",
+                            savedCropSowingDate
+                        )
                         appPreferenceManager.saveString("CROP_WOTR_ID_SAVED", savedCropWoTRId)
                         selectedCropList?.add(
                             CropsCategName(
@@ -261,10 +268,14 @@ class AgriServicesFragment : Fragment(), OnMultiRecyclerItemClickListener {
 
                     if (deleteResponse.getStatus()) {
                         if (showToast) {
-                            UIToastMessage.show(requireContext(), getString(R.string.selected_crop_deleted))
+                            UIToastMessage.show(
+                                requireContext(),
+                                getString(R.string.selected_crop_deleted)
+                            )
                         }
 
-                        AppSettings.getInstance().setList(requireContext(), AppConstants.kFarmerCrop, null)
+                        AppSettings.getInstance()
+                            .setList(requireContext(), AppConstants.kFarmerCrop, null)
                         selectedCropList?.clear()
                         farmerViewModel.getFarmerSelectedCrop(farmerId, languageToLoad)
                         savedCropName = ""

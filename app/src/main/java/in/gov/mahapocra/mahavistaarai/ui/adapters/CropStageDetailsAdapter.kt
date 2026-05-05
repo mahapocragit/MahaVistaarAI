@@ -6,13 +6,11 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.makeramen.roundedimageview.RoundedTransformationBuilder
 import com.squareup.picasso.Picasso
@@ -22,9 +20,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.Fertilizer
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.sop.SOPActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.CostCalculatorDashboardActivity
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import org.json.JSONArray
@@ -35,8 +31,7 @@ import org.json.JSONObject
 class CropStageDetailsAdapter(
     private var context: Context? = null,
     private var cropStageDetailsJsonArray: JSONArray,
-    private var listener: OnMultiRecyclerItemClickListener,
-    private var callerActivity: String
+    private var listener: OnMultiRecyclerItemClickListener
 ) : RecyclerView.Adapter<CropStageDetailsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -44,7 +39,7 @@ class CropStageDetailsAdapter(
         viewType: Int
     ): ViewHolder {
         val view: View = LayoutInflater.from(parent.context).inflate(
-            R.layout.videos_images_details_layout,
+            R.layout.crop_view_item_layout,
             parent,
             false
         )
@@ -56,8 +51,8 @@ class CropStageDetailsAdapter(
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val videosImage: ImageView = itemView.findViewById(R.id.videosImags)
-        val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
+        val cropImageView: ImageView = itemView.findViewById(R.id.cropImageView)
+        val cropNameTextView: TextView = itemView.findViewById(R.id.cropNameTextView)
         val closeImag: ImageView = itemView.findViewById(R.id.closeImag)
     }
 
@@ -66,7 +61,7 @@ class CropStageDetailsAdapter(
 
         try {
             val jsonObject = cropStageDetailsJsonArray.getJSONObject(position) as JSONObject
-            holder.titleTextView.text = jsonObject.optString("name")
+            holder.cropNameTextView.text = jsonObject.optString("name")
             val transformation = RoundedTransformationBuilder()
                 .borderColor(Color.WHITE)
                 .borderWidthDp(2f)
@@ -79,8 +74,8 @@ class CropStageDetailsAdapter(
                 .transform(transformation)
                 .resize(180, 180)
                 .centerCrop()
-                .into(holder.videosImage)
-            holder.videosImage.setOnClickListener {
+                .into(holder.cropImageView)
+            holder.cropImageView.setOnClickListener {
                 val source =
                     context?.let { it1 -> AppPreferenceManager(it1).getString(AppConstants.ACTION_FROM_DASHBOARD) }
                 when (source) {
@@ -123,49 +118,23 @@ class CropStageDetailsAdapter(
                         }.also { context?.startActivity(it) }
                     }
 
-                    else -> {
-                        Log.d(TAG, "onBindViewHolder: ${callerActivity.toString()}")
-                        if (callerActivity == "costCalculator") {
-                            context?.startActivity(
-                                Intent(
-                                    context,
-                                    CostCalculatorDashboardActivity::class.java
-                                ).apply {
-                                    putExtra("id", jsonObject.optInt("id"))
-                                }
-                            )
-                        } else {
+                    AppConstants.CHANGE_CROP_DASHBOARD -> {
                             listener.onMultiRecyclerViewItemClick(1, JSONObject().apply {
                                 put("id", jsonObject.optInt("id"))
                                 put("wotr_crop_id", jsonObject.optInt("wotr_crop_id"))
                                 put("mUrl", jsonObject.optString("image"))
                                 put("mName", jsonObject.optString("name"))
                             })
-                        }
                     }
-                }
-            }
-            if (callerActivity == "dashboardScreen") {
-                holder.closeImag.visibility = View.VISIBLE
-                holder.closeImag.setOnClickListener {
-                    val dialog = AlertDialog.Builder(context!!)
-                        .setCancelable(false)
-                        .setTitle("Delete Crop")
-                        .setMessage("Are you sure you want to delete?")
-                        .setPositiveButton(
-                            "Yes"
-                        ) { _, _ ->
-                            listener.onMultiRecyclerViewItemClick(
-                                2,
-                                jsonObject.optInt("id")
-                            )
-                        }.setNegativeButton(
-                            "No, thanks"
-                        ) { dialog, _ ->
-                            dialog.dismiss()
-                        }.create()
-                    dialog.setCanceledOnTouchOutside(false)
-                    dialog.show()
+
+                    else -> {
+                            listener.onMultiRecyclerViewItemClick(1, JSONObject().apply {
+                                put("id", jsonObject.optInt("id"))
+                                put("wotr_crop_id", jsonObject.optInt("wotr_crop_id"))
+                                put("mUrl", jsonObject.optString("image"))
+                                put("mName", jsonObject.optString("name"))
+                            })
+                    }
                 }
             }
         } catch (e: JSONException) {

@@ -18,6 +18,7 @@ object AppConstants {
     const val PEST_AND_DISEASES_STAGES: String = "PEST_AND_DISEASES_STAGES"
     const val FERTILIZER_CALCULATOR_FROM_DASHBOARD: String = "FERTILIZER_CALCULATOR_FROM_DASHBOARD"
     const val SOP_FROM_DASHBOARD: String = "SOP_FROM_DASHBOARD"
+    const val CHANGE_CROP_DASHBOARD: String = "CHANGE_CROP_DASHBOARD"
     const val uMobileNo: String = "USER_MOBILE"
     const val uEmail: String = "USER_EMAIL"
     const val uDIST: String = "USER_DIST"

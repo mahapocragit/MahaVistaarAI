@@ -54,7 +54,6 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
     private val viewModel: FarmerViewModel by viewModels()
     private var languageToLoad: String = "mr"
     private var cropId: Int = 0
-    private var cropToken = ""
     private val uiScope = CoroutineScope(Dispatchers.Main + Job())
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,14 +72,8 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
         setupRecyclerView()
 
         // --- Load data in background ---
-        uiScope.launch {
-            ProgressHelper.showProgressDialog(this@AddCropActivity)
-            withContext(Dispatchers.IO) {
-                viewModel.getCropCategoriesAndCropDetails(languageToLoad)
-            }
-        }
-
         observeResponse()
+        viewModel.getCropCategoriesAndCropDetails(languageToLoad)
     }
 
     // -----------------------------
@@ -124,21 +117,18 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
                 is UiState.Success -> {
                     ProgressHelper.disableProgressDialog()
                     val jsonObject = JSONObject(state.data.toString())
-                    val jsonDataArray = jsonObject.getJSONArray("data")
-                    val callerActivityString = intent.getStringExtra("callerActivity")
-                    if (callerActivityString != null) {
+                    val cropCategoryArray = jsonObject.getJSONArray("data")
                         uiScope.launch(Dispatchers.Default) {
                             val adapter = CropCategoriesAdapter(
                                 this@AddCropActivity,
-                                jsonDataArray,
-                                callerActivityString,
+                                cropCategoryArray,
                                 this@AddCropActivity
                             )
                             withContext(Dispatchers.Main) {
                                 binding.mainRecyclerView.adapter = adapter
                             }
                         }
-                    }
+
                 }
 
                 is UiState.Error -> {
@@ -146,29 +136,9 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
                     Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                 }
             }
-        }
-
-        viewModel.deleteSubscribedTopicResponse.observe(this) { state ->
-            when (state) {
-                is UiState.Loading -> {
-                    ProgressHelper.showProgressDialog(this)
-                }
-
-                is UiState.Success -> {
-                    ProgressHelper.disableProgressDialog()
-                    safeStartActivity()
-                }
-
-                is UiState.Error -> {
-                    ProgressHelper.disableProgressDialog()
-                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
-                }
-            }
-
         }
 
         viewModel.saveFarmerSelectedCrop.observe(this) { state ->
-
             when(state){
                 is UiState.Loading->{
                     ProgressHelper.showProgressDialog(this)
@@ -229,7 +199,6 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
         if (i == 1) {
             val sowingDate = "$day-${month + 1}-$year"
             cropId = receivedJson.optInt("id")
-            cropToken = "crop_$cropId"
             viewModel.saveFarmerSelectedCrop(farmerId, sowingDate, cropId)
         }
     }

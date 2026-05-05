@@ -14,7 +14,7 @@
         android:layout_marginRight="2dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/videosImags"
+            android:id="@+id/cropImageView"
             app:civ_border_width="1dp"
             app:civ_border_color="@color/arrow_color_figma"
             android:scaleType="centerCrop"
@@ -34,7 +34,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/titleTextView"
+        android:id="@+id/cropNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/cardview1"

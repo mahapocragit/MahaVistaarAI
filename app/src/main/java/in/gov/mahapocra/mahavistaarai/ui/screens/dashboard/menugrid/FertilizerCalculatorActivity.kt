@@ -49,6 +49,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.DeleteApi
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.showDisabledFutureDatePicker
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
@@ -74,7 +75,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     private var soilTestOption: Int = 0
     private lateinit var languageToLoad: String
-    private var villageID: Int = 0
+    private var villageCode: Int = 0
     private var cropId: Int? = 0
     private var wotrCropId: String? = null
     private var mUrl: String? = null
@@ -212,7 +213,8 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             )
         }
 
-        villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
+        villageCode = CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.VILLAGE_CODE))
+            .toString().toInt()
         binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.fertilizer_calculator)
 
         binding.yesRadioButton.setOnClickListener {
@@ -546,7 +548,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                 val responseCall: Call<JsonObject> = apiRequest.getFertilizerCalculatedData(
                     wotrCropId, finalSowingDate, soilTestOption.toString(),
                     nitrogenValue, phosphorusValue, potassiumValue,
-                    villageID.toString(), edtFYMValue, "0",
+                    villageCode.toString(), edtFYMValue, "0",
                     totalAcrArea.toString(), plotUnitCode.toString(), token
                 )
                 api.postRequest(responseCall, this@FertilizerCalculatorActivity, 1)
