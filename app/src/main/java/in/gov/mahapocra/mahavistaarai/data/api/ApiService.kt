@@ -401,9 +401,14 @@ interface ApiService {
 
     //DCS
     @POST("farmDairyService/save-farmer-crop")
-    suspend fun saveFarmerCropForDCS(
-        @Header("crop-id") cropId:Int,
+    suspend fun saveFarmCropForDCS(
+        @Header("crop-id") cropId: String,
         @Header("sowing-date") sowingDate: String,
+        @Header("farm-id") farmId:String
+    ): JsonObject
+
+    @POST("farmDairyService/get-farmer-crop")
+    suspend fun getFarmCropForDCS(
         @Header("farm-id") farmId:String
     ): JsonObject
 

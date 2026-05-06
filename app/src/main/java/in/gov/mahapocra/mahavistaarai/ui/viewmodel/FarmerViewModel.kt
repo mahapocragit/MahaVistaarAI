@@ -132,6 +132,12 @@ class FarmerViewModel : ViewModel() {
     private val _getFarmDetailsResponse = MutableLiveData<UiState<JsonObject>>()
     val getFarmDetailsResponse: LiveData<UiState<JsonObject>> = _getFarmDetailsResponse
 
+    private val _saveFarmCropDCSResponse = MutableLiveData<UiState<JsonObject>>()
+    val saveFarmCropDCSResponse: LiveData<UiState<JsonObject>> = _saveFarmCropDCSResponse
+
+    private val _getFarmCropDCSResponse = MutableLiveData<UiState<JsonObject>>()
+    val getFarmCropDCSResponse: LiveData<UiState<JsonObject>> = _getFarmCropDCSResponse
+
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -761,8 +767,7 @@ class FarmerViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 _consentResponse.value = UiState.Loading
-                val api = retrofit.create(ApiService::class.java)
-                val response = api.updateConsent(farmerId, consentValue)
+                val response = apiRequest.updateConsent(farmerId, consentValue)
                 _consentResponse.value = UiState.Success(response)
             } catch (e: Exception) {
                 val message = when (e) {
@@ -785,8 +790,7 @@ class FarmerViewModel : ViewModel() {
                 jsonObject.put("user_id", farmerId)
                 jsonObject.put("topic", topic)
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api = retrofit.create(ApiService::class.java)
-                val response = api.saveSubscribedTopic(requestBody)
+                val response = apiRequest.saveSubscribedTopic(requestBody)
                 _saveSubscribedTopicResponse.value = UiState.Success(response)
             } catch (e: Exception) {
                 val message = when (e) {
@@ -816,9 +820,7 @@ class FarmerViewModel : ViewModel() {
                 val requestBody =
                     AppUtility.getInstance().getRequestBody(jsonObject.toString())
 
-                val api = retrofit.create(ApiService::class.java)
-
-                val response = api.deleteSubscribedTopic(requestBody)
+                val response = apiRequest.deleteSubscribedTopic(requestBody)
 
                 _deleteSubscribedTopicResponse.value = UiState.Success(response)
 
@@ -931,6 +933,48 @@ class FarmerViewModel : ViewModel() {
                     else -> e.localizedMessage ?: "Unknown error"
                 }
                 _getFarmDetailsResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun saveFarmCropDCS(cropId: String, sowingDate: String, farmId: String) {
+        viewModelScope.launch {
+            _saveFarmCropDCSResponse.value = UiState.Loading
+            try {
+                val response = apiRequest.saveFarmCropForDCS(
+                    cropId = cropId,
+                    sowingDate = sowingDate,
+                    farmId = farmId
+                )
+                _saveFarmCropDCSResponse.value = UiState.Success(response)
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _saveFarmCropDCSResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getFarmCropDCS(farmId: String) {
+        viewModelScope.launch {
+            _getFarmCropDCSResponse.value = UiState.Loading
+            try {
+                val response = apiRequest.getFarmCropForDCS(farmId = farmId)
+                _getFarmCropDCSResponse.value = UiState.Success(response)
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _getFarmCropDCSResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
