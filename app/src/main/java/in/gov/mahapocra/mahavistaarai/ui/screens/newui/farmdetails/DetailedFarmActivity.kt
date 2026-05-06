@@ -10,17 +10,20 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDetailedFarmBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
+import org.json.JSONArray
 import org.json.JSONObject
 
 class DetailedFarmActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailedFarmBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
+    private var adapter = FarmDetailsAdapter(JSONArray())
     private var farmId = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +64,12 @@ class DetailedFarmActivity : AppCompatActivity() {
 
                 is UiState.Success -> {
                     ProgressHelper.disableProgressDialog()
-                    Log.d(TAG, "observeResponse  getFarmCropDCSResponse: ${state.data}")
+                    val jSONObject = JSONObject(state.data.toString())
+                    val dataObject = jSONObject.optJSONObject("data")
+                    val cropsArray = dataObject?.optJSONArray("crops")
+                    adapter = FarmDetailsAdapter(cropsArray ?: JSONArray())
+                    binding.cropDSCRecyclerView.adapter = adapter
+                    Log.d(TAG, "observeResponse  getFarmCropDCSResponse: ${cropsArray}")
                 }
 
                 is UiState.Error -> {
@@ -86,7 +94,7 @@ class DetailedFarmActivity : AppCompatActivity() {
 
         binding.addCropForFarmLayout.setOnClickListener {
             farmerViewModel.saveFarmCropDCS(
-                cropId = CryptoHelper.encryptField("68").toString(),
+                cropId = CryptoHelper.encryptField("25").toString(),
                 sowingDate = CryptoHelper.encryptField("2026-04-30").toString(),
                 farmId = CryptoHelper.encryptField(farmId).toString()
             )
@@ -114,6 +122,9 @@ class DetailedFarmActivity : AppCompatActivity() {
             }
             binding.villageNameTextView.text = villageName
         }
+
+        binding.cropDSCRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.cropDSCRecyclerView.adapter = adapter
 
         farmerViewModel.getFarmCropDCS(CryptoHelper.encryptField(farmId).toString())
     }
