@@ -256,6 +256,7 @@
                     android:textSize="13sp" />
 
                 <LinearLayout
+                    android:id="@+id/addCropForFarmLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_green_button"

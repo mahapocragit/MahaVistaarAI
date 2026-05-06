@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_12sdp"
+    app:cardCornerRadius="@dimen/_16sdp"
+    app:cardElevation="@dimen/_2sdp"
+    app:cardBackgroundColor="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/_16sdp">
+
+        <!-- Top Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="MH002546577126"
+                android:textStyle="bold"
+                android:textSize="@dimen/_14sdp"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pagote"
+                android:paddingHorizontal="@dimen/_12sdp"
+                android:paddingVertical="@dimen/_4sdp"
+                android:textSize="@dimen/_10sdp"
+                android:background="@drawable/bg_chip"
+                android:textColor="@color/black"/>
+        </LinearLayout>
+
+        <!-- Sub Text -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Survey No. 45/2A | 2.5 Ha"
+            android:textSize="@dimen/_11sdp"
+            android:textColor="@color/gray"
+            android:layout_marginTop="@dimen/_4sdp"/>
+
+        <!-- Crop Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="@dimen/_12sdp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_chip_light"
+                android:padding="@dimen/_10sdp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cotton"
+                    android:textSize="@dimen/_12sdp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="  Sown on 04/05/2024"
+                    android:textSize="@dimen/_11sdp"
+                    android:textColor="@color/gray"/>
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:src="@drawable/edit_dcs_crop_ic"
+                android:layout_marginStart="@dimen/_8sdp"/>
+
+            <ImageView
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:src="@drawable/delete_dcs_crop_ic"
+                android:layout_marginStart="@dimen/_8sdp"/>
+        </LinearLayout>
+
+        <!-- Select Crop -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Crop"
+            android:textSize="@dimen/_12sdp"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/_16sdp"/>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:background="@drawable/bg_input"/>
+
+        <!-- Sowing Date -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sowing Date"
+            android:textSize="@dimen/_12sdp"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/_16sdp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:background="@drawable/bg_input"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/_12sdp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="04 / 05 / 2026"
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/black"/>
+
+            <ImageView
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
+                android:src="@drawable/ic_calendar"/>
+        </LinearLayout>
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/_18sdp">
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_44sdp"
+                android:layout_weight="1"
+                android:text="Cancel"
+                app:cornerRadius="@dimen/_24sdp"
+                android:textSize="@dimen/_12sdp"
+                android:backgroundTint="#6B7280"
+                android:textColor="@color/white"/>
+
+            <Space
+                android:layout_width="@dimen/_12sdp"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_44sdp"
+                android:layout_weight="1"
+                android:text="Save"
+                app:cornerRadius="@dimen/_24sdp"
+                android:textSize="@dimen/_12sdp"
+                android:backgroundTint="#16A34A"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

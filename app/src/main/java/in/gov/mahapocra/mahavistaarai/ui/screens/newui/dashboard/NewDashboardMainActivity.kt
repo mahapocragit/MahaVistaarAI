@@ -59,6 +59,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SideNavMenuHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.subscribeToTopic
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.unSubscribeToTopic
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONArray
@@ -498,6 +499,10 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     val talukaName = dataObject?.optString("TalukaName")
                     val districtCode = dataObject?.optString("DistrictCode")
                     val districtName = dataObject?.optString("DistrictName")
+
+                    val topicJsonArray = dataObject?.optJSONArray("topics")?: JSONArray()
+                    val topicsToSubArray = dataObject?.optJSONArray("topics_to_subscribe")?: JSONArray()
+                    val topicsToDeleteArray = dataObject?.optJSONArray("topics_to_delete")?: JSONArray()
                     AppPreferenceManager(this).saveString(AppConstants.VILLAGE_CODE, villageCode)
                     AppPreferenceManager(this).saveString(AppConstants.VILLAGE_NAME, villageName)
                     AppPreferenceManager(this).saveString(AppConstants.TALUKA_CODE, talukaCode)
@@ -508,6 +513,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     navUserName.text = name
                     navUserPhone.text = mobile
                     binding.nameTextView.text = "Hello, $firstName"
+                    topicsOperations(topicJsonArray, topicsToSubArray, topicsToDeleteArray)
                 }
 
                 is UiState.Error -> {
@@ -569,6 +575,75 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                 is UiState.Error -> {
                     ProgressHelper.disableProgressDialog()
                     Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun topicsOperations(
+        topicJsonArray: JSONArray,
+        topicsToSubArray: JSONArray,
+        topicsToDeleteArray: JSONArray
+    ) {
+        if (topicsToSubArray != null && topicsToSubArray.length() > 0) {
+            val total = topicsToSubArray.length()
+            var completed = 0
+
+            for (i in 0 until total) {
+                val topic = topicsToSubArray.optString(i)
+
+                subscribeToTopic(topic) { subscribed ->
+                    if (subscribed) {
+                        topicJsonArray.put(topic)
+                        farmerViewModel.saveSubscribedTopic(farmerId, topic)
+                    }
+                    completed++
+                    if (completed == total) {
+                        Log.d(TAG, "Final topicJsonArray: $topicJsonArray")
+                        topicsArray = topicJsonArray
+                        appPreferenceManager.saveString(
+                            "topic_saved_fcm",
+                            topicJsonArray.toString()
+                        )
+                    }
+                }
+            }
+        }
+        if (topicsToDeleteArray != null && topicsToDeleteArray.length() > 0) {
+
+            val total = topicsToDeleteArray.length()
+            var completed = 0
+
+            val topicsToDelete = mutableListOf<String>()
+
+            for (i in 0 until total) {
+                val topic = topicsToDeleteArray.optString(i)
+
+                unSubscribeToTopic(topic) { unsubscribed ->
+                    if (unsubscribed) {
+                        topicsToDelete.add(topic)
+                    }
+
+                    completed++
+
+                    if (completed == total) {
+                        // Call API ONCE with all topics
+                        if (topicsToDelete.isNotEmpty()) {
+                            farmerViewModel.deleteSubscribedTopics(
+                                farmerId = farmerId,
+                                topics = topicsToDelete
+                            )
+                        }
+
+                        // Save updated topics list
+                        val updatedArray = JSONArray()
+                        topicsToDelete.forEach { updatedArray.put(it) }
+
+                        appPreferenceManager.saveString(
+                            "topic_saved_fcm",
+                            updatedArray.toString()
+                        )
+                    }
                 }
             }
         }

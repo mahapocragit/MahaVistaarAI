@@ -399,4 +399,12 @@ interface ApiService {
         @Header("FAAPRegistrationID") farmerID: String
     ): JsonObject
 
+    //DCS
+    @POST("farmDairyService/save-farmer-crop")
+    suspend fun saveFarmerCropForDCS(
+        @Header("crop-id") cropId:Int,
+        @Header("sowing-date") sowingDate: String,
+        @Header("farm-id") farmId:String
+    ): JsonObject
+
 }

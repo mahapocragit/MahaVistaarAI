@@ -1109,6 +1109,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         val pocraRoles = mutableListOf<PocraRole>()
                         val rolesArray = data.optJSONArray("pocra_roles")
                         val topicJsonArray = data.optJSONArray("topics")
+                        val topicsToSubArray = data.optJSONArray("topics_to_subscribe")
+                        val topicsToDeleteArray = data.optJSONArray("topics_to_delete")
                         val isFirstLogin =
                             appPreferenceManager.getBoolean(AppConstant.IS_FIRST_LOGIN)
 
@@ -1136,8 +1138,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                             }
                         }
                         topicsArray = topicJsonArray
-                        val topicsToSubArray = data.optJSONArray("topics_to_subscribe")
-                        val topicsToDeleteArray = data.optJSONArray("topics_to_delete")
                         carousalItemArray = data.optJSONArray("cust_dash")
                         updateCarousalData(carousalItemArray)
                         if (topicsToSubArray != null && topicsToSubArray.length() > 0) {

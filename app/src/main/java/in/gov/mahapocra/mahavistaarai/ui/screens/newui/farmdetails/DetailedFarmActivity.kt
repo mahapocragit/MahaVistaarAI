@@ -24,7 +24,12 @@ class DetailedFarmActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        observeResponse()
         init()
+    }
+
+    private fun observeResponse() {
+        TODO("Not yet implemented")
     }
 
     private fun init() {
@@ -39,6 +44,10 @@ class DetailedFarmActivity : AppCompatActivity() {
                 startActivity(Intent(this@DetailedFarmActivity, FarmDetailsActivity::class.java))
             }
         })
+
+        binding.addCropForFarmLayout.setOnClickListener {
+
+        }
 
         val farmData = intent.getStringExtra("FARM_DETAIL_DATA")
         if (farmData != null) {
