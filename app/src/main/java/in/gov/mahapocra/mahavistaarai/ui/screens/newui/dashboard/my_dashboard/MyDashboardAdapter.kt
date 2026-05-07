@@ -61,7 +61,7 @@ class MyDashboardAdapter(
             if (resId != 0) resId else R.drawable.ic_weather_mp
         )
         holder.binding.root.setOnClickListener {
-            itemClickListener.onRecyclerItemClick(position, item)
+            itemClickListener.onRecyclerItemClick(1, item)
         }
     }
 

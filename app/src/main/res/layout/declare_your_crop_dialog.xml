@@ -8,9 +8,8 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/_300sdp"
         android:maxHeight="@dimen/_400sdp"
-        android:layout_margin="@dimen/_10sdp"
+        android:layout_margin="@dimen/_5sdp"
         app:cardCornerRadius="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,7 +38,7 @@
                     android:textSize="@dimen/_12sdp" />
 
                 <ImageView
-                    android:id="@+id/imageView38"
+                    android:id="@+id/dialogCancelImageView"
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
                     app:srcCompat="@drawable/ic_cross" />

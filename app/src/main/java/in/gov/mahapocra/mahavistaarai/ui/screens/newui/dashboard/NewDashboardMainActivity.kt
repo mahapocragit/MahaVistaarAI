@@ -1,6 +1,7 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard
 
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -56,6 +57,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SideNavMenuHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
@@ -87,6 +89,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
         if (AppSettings.getLanguage(this@NewDashboardMainActivity).equals("1", ignoreCase = true)) {
             languageToLoad = "en"
         }
+        switchLanguage(this, languageToLoad)
         binding = ActivityNewDashboardMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.toolbar) { view, insets ->
@@ -647,5 +650,15 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                 }
             }
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 }

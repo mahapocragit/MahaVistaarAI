@@ -395,9 +395,7 @@ interface ApiService {
     suspend fun getFarmDetails(): JsonObject
 
     @POST("/authService/getCustomDashboardInfo")
-    suspend fun getCustomizedDashboard(
-        @Header("FAAPRegistrationID") farmerID: String
-    ): JsonObject
+    suspend fun getCustomizedDashboard(): JsonObject
 
     //DCS
     @POST("farmDairyService/save-farmer-crop")
@@ -422,5 +420,8 @@ interface ApiService {
     suspend fun deleteFarmCropForDCS(
         @Header("declaration-id") declaringId:String
     ): JsonObject
+
+    @GET("farmDairyService/crop-master")
+    suspend fun fetchCropsForDCS(): JsonObject
 
 }

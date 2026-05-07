@@ -438,13 +438,13 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    fun getCustomisedDashboardList(farmerId: String) {
+    fun getCustomisedDashboardList() {
         viewModelScope.launch {
             _getCustomisedDashboardResponse.value = UiState.Loading
             try {
                 val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
-                val response = apiRequest.getCustomizedDashboard(farmerId)
+                val response = apiRequest.getCustomizedDashboard()
                 _getCustomisedDashboardResponse.value = UiState.Success(response)
             } catch (e: Exception) {
                 val message = when (e) {
