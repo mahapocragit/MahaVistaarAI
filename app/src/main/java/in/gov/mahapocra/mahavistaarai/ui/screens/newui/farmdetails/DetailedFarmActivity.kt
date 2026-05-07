@@ -97,6 +97,11 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
 
                 is UiState.Error -> {
                     ProgressHelper.disableProgressDialog()
+                    Log.d(TAG, "observeResponse: ${state.message}")
+                    if (state.message == "HTTP 404 Not Found"){
+                        adapter = FarmDetailsAdapter(JSONArray(), this)
+                        binding.cropDSCRecyclerView.adapter = adapter
+                    }
                 }
             }
         }

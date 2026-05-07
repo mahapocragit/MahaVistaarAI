@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
@@ -103,6 +104,36 @@
             </RelativeLayout>
 
             <!-- SELECT CROP -->
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/savedCropsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:listitem="@layout/dcs_crop_info_item">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <LinearLayout
+                android:id="@+id/addCropLayout"
+                android:layout_marginVertical="@dimen/_5sdp"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_30sdp"
+                android:background="@drawable/bg_add_crop_dashed"
+                android:gravity="center"
+                android:visibility="gone"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+ Add Crop"
+                    android:textColor="#374151"
+                    android:textSize="@dimen/_10sdp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/selectCropTextView"
                 android:layout_width="wrap_content"
