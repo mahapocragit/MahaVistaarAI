@@ -38,12 +38,11 @@ class FarmDetailsActivity : AppCompatActivity() {
             insets
         }
 
+        observeResponse()
         init()
-
     }
 
     private fun init() {
-        observeResponse()
         binding.relativeLayoutTopBar.textViewHeaderTitle.text = "Farm lands & crops"
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {

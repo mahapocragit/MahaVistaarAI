@@ -42,12 +42,14 @@
         </LinearLayout>
 
         <ImageView
+            android:id="@+id/updateCropImageView"
             android:layout_width="@dimen/_20sdp"
             android:layout_height="@dimen/_20sdp"
             android:layout_marginStart="@dimen/_8sdp"
             android:src="@drawable/edit_dcs_crop_ic" />
 
         <ImageView
+            android:id="@+id/deleteCropImageView"
             android:layout_width="@dimen/_20sdp"
             android:layout_height="@dimen/_20sdp"
             android:layout_marginStart="@dimen/_8sdp"

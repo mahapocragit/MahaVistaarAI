@@ -138,6 +138,12 @@ class FarmerViewModel : ViewModel() {
     private val _getFarmCropDCSResponse = MutableLiveData<UiState<JsonObject>>()
     val getFarmCropDCSResponse: LiveData<UiState<JsonObject>> = _getFarmCropDCSResponse
 
+    private val _updateFarmCropDCSResponse = MutableLiveData<UiState<JsonObject>>()
+    val updateFarmCropDCSResponse: LiveData<UiState<JsonObject>> = _updateFarmCropDCSResponse
+
+    private val _deleteFarmCropDCSResponse = MutableLiveData<UiState<JsonObject>>()
+    val deleteFarmCropDCSResponse: LiveData<UiState<JsonObject>> = _deleteFarmCropDCSResponse
+
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -975,6 +981,44 @@ class FarmerViewModel : ViewModel() {
                     else -> e.localizedMessage ?: "Unknown error"
                 }
                 _getFarmCropDCSResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun updateFarmCropForDCS(declaringId:String,sowingDate:String) {
+        viewModelScope.launch {
+            _updateFarmCropDCSResponse.value = UiState.Loading
+            try {
+                val response = apiRequest.updateFarmCropForDCS(declaringId = declaringId, sowingDate = sowingDate)
+                _updateFarmCropDCSResponse.value = UiState.Success(response)
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _updateFarmCropDCSResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun deleteFarmCropForDCS(declaringId:String) {
+        viewModelScope.launch {
+            _deleteFarmCropDCSResponse.value = UiState.Loading
+            try {
+                val response = apiRequest.deleteFarmCropForDCS(declaringId = declaringId)
+                _deleteFarmCropDCSResponse.value = UiState.Success(response)
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _deleteFarmCropDCSResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }

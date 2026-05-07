@@ -412,4 +412,15 @@ interface ApiService {
         @Header("farm-id") farmId:String
     ): JsonObject
 
+    @POST("farmDairyService/update-farmer-crop")
+    suspend fun updateFarmCropForDCS(
+        @Header("declaration-id") declaringId:String,
+        @Header("sowing-date") sowingDate:String
+    ): JsonObject
+
+    @POST("farmDairyService/delete-farmer-crop")
+    suspend fun deleteFarmCropForDCS(
+        @Header("declaration-id") declaringId:String
+    ): JsonObject
+
 }

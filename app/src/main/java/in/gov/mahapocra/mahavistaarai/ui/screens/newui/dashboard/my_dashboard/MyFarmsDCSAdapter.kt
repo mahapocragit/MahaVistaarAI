@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.my_dashboard
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -8,25 +8,24 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.DetailedFarmActivity
 import org.json.JSONArray
 
-class LandAdapter(
+class MyFarmsDCSAdapter(
     private val jsonArray: JSONArray
-) : RecyclerView.Adapter<LandAdapter.LandViewHolder>() {
+) : RecyclerView.Adapter<MyFarmsDCSAdapter.LandViewHolder>() {
 
     inner class LandViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val villageNameTextView = view.findViewById<TextView>(R.id.villageNameTextView)
+        val farmIdTextView = view.findViewById<TextView>(R.id.farmIdTextView)
         val ownerNameTextView = view.findViewById<TextView>(R.id.ownerNameTextView)
         val surveyNumberTextView = view.findViewById<TextView>(R.id.surveyNumberTextView)
         val totalPlotAreaTextView = view.findViewById<TextView>(R.id.totalPlotAreaTextView)
         val viewFarmDetailButton = view.findViewById<TextView>(R.id.viewFarmDetailButton)
-        //        val khata = view.findViewById<TextView>(R.id.tvKhata)
-        //        val cultivatedArea = view.findViewById<TextView>(R.id.tvCultivatedArea)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LandViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_view_farm_details, parent, false)
+            .inflate(R.layout.my_farms_item_view, parent, false)
         return LandViewHolder(view)
     }
 
@@ -39,7 +38,7 @@ class LandAdapter(
         val survey = obj.optString("survey_no")
         val totalArea = obj.optString("total_plot_area")
 
-        holder.villageNameTextView.text = village
+        holder.farmIdTextView.text = village
         holder.surveyNumberTextView.text = survey
         holder.totalPlotAreaTextView.text = "$totalArea acre"
         holder.ownerNameTextView.text = ownerName

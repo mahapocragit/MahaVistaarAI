@@ -15,15 +15,16 @@ import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDetailedFarmBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONArray
 import org.json.JSONObject
 
-class DetailedFarmActivity : AppCompatActivity() {
+class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
     private lateinit var binding: ActivityDetailedFarmBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
-    private var adapter = FarmDetailsAdapter(JSONArray())
+    private var adapter = FarmDetailsAdapter(JSONArray(), this)
     private var farmId = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,9 +68,42 @@ class DetailedFarmActivity : AppCompatActivity() {
                     val jSONObject = JSONObject(state.data.toString())
                     val dataObject = jSONObject.optJSONObject("data")
                     val cropsArray = dataObject?.optJSONArray("crops")
-                    adapter = FarmDetailsAdapter(cropsArray ?: JSONArray())
+                    adapter = FarmDetailsAdapter(cropsArray ?: JSONArray(), this)
                     binding.cropDSCRecyclerView.adapter = adapter
-                    Log.d(TAG, "observeResponse  getFarmCropDCSResponse: ${cropsArray}")
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                }
+            }
+        }
+        farmerViewModel.updateFarmCropDCSResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
+                }
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    val jSONObject = JSONObject(state.data.toString())
+                    Log.d(TAG, "observeResponse: $jSONObject")
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                }
+            }
+        }
+        farmerViewModel.deleteFarmCropDCSResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
+                }
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    val jSONObject = JSONObject(state.data.toString())
+                    Log.d(TAG, "observeResponse deleteFarmCropDCSResponse: $jSONObject")
                 }
 
                 is UiState.Error -> {
@@ -127,5 +161,29 @@ class DetailedFarmActivity : AppCompatActivity() {
         binding.cropDSCRecyclerView.adapter = adapter
 
         farmerViewModel.getFarmCropDCS(CryptoHelper.encryptField(farmId).toString())
+    }
+
+    override fun onRecyclerItemClick(flag: Int, jsonObject: Any) {
+        val dataObject = jsonObject as JSONObject
+        val declarationId = dataObject.optInt("declaration_id").toString()
+        when (flag) {
+            UPDATE_CROP -> {
+                farmerViewModel.updateFarmCropForDCS(
+                    CryptoHelper.encryptField(declarationId).toString(),
+                    CryptoHelper.encryptField("2026-03-01").toString()
+                )
+            }
+
+            DELETE_CROP -> {
+                farmerViewModel.deleteFarmCropForDCS(
+                    CryptoHelper.encryptField(declarationId).toString()
+                )
+            }
+        }
+    }
+
+    companion object {
+        const val UPDATE_CROP = 1
+        const val DELETE_CROP = 2
     }
 }

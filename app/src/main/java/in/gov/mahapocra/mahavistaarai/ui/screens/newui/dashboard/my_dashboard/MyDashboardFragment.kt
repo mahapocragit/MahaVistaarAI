@@ -107,10 +107,10 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
             .getIntValue(requireContext(), AppConstants.fREGISTER_ID, 0)
 
         farmerViewModel.getFarmSummery()
-
         authViewModel.getCustomisedDashboardList(
             CryptoHelper.encryptField(farmerRegId.toString()).toString()
         )
+        farmerViewModel.getFarmDetails()
     }
 
     // ✅ Arrow click logic
@@ -210,6 +210,27 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                 is UiState.Error -> {
                     ProgressHelper.disableProgressDialog()
                     Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        farmerViewModel.getFarmDetailsResponse.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(requireContext())
+                }
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    val jsonObject = JSONObject(state.data.toString())
+                    val dataObject = jsonObject.optJSONObject("data")
+                    val farmsArray = dataObject?.optJSONArray("farm_details")
+
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
