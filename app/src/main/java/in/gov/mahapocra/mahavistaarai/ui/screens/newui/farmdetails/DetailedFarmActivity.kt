@@ -44,7 +44,6 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
     private var cropsJsonArray = JSONArray()
     private var adapter = FarmDetailsAdapter(JSONArray(), this)
     private var farmId = ""
-    private var myFarmsAdapter: MyFarmsDCSAdapter? = null
     private var selectedCropIdForDCS = 0
     private var selectedCropSowingDateForDCS = ""
 
@@ -91,6 +90,13 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
                     val jSONObject = JSONObject(state.data.toString())
                     val dataObject = jSONObject.optJSONObject("data")
                     val cropsArray = dataObject?.optJSONArray("crops")
+                    if (cropsArray?.length()==2){
+                        binding.addCropForFarmLayout.visibility = View.GONE
+                        binding.cropTitleTextView.text = "You have already added Maximum amount of Crops."
+                    }else{
+                        binding.addCropForFarmLayout.visibility = View.VISIBLE
+                        binding.cropTitleTextView.text = "Please add the crops for the current season to proceed."
+                    }
                     adapter = FarmDetailsAdapter(cropsArray ?: JSONArray(), this)
                     binding.cropDSCRecyclerView.adapter = adapter
                 }

@@ -322,7 +322,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                 // dashboard click
 
                 val redirect = jsonObject.optString("page")
-
+                Log.d(TAG, "onRecyclerItemClick: $redirect")
                 redirectToScreen(redirect)
             }
 
