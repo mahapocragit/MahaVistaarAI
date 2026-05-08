@@ -39,6 +39,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.Shetisha
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.NewDashboardMainActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.DetailedFarmActivity.Companion.DELETE_CROP
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.FarmDetailsActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
@@ -57,7 +58,9 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
 
     private var _binding: FragmentMyDashboardBinding? = null
     private val binding get() = _binding!!
-
+    private var selectedFarmPosition = -1
+    private var selectedDeletedCropPosition = -1
+    private var selectedFarmObject: JSONObject? = null
     private val farmerViewModel: FarmerViewModel by viewModels()
     private val authViewModel: AuthViewModel by viewModels()
 
@@ -230,7 +233,9 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                     val jsonObject = JSONObject(state.data.toString())
                     val dataObject = jsonObject.optJSONObject("data")
                     val farmsArray = dataObject?.optJSONArray("farm_details")
-                    showDialogForDCS(farmsArray ?: JSONArray())
+                    if ((farmsArray?.length() ?: 0) > 0) {
+                        showDialogForDCS(farmsArray ?: JSONArray())
+                    }
                 }
 
                 is UiState.Error -> {
@@ -269,6 +274,124 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
 
                 is UiState.Success -> {
                     ProgressHelper.disableProgressDialog()
+                    try {
+                        val farmObject =
+                            selectedFarmObject ?: return@observe
+                        // Existing crops
+                        val cropsArray =
+                            farmObject.optJSONArray("crops")
+                                ?: JSONArray()
+                        // Create new crop object
+                        val newCropObject = JSONObject().apply {
+                            put(
+                                "crop_name",
+                                farmObject.optString(
+                                    "selected_crop_name"
+                                )
+                            )
+                            put(
+                                "sowing_date",
+                                farmObject.optString(
+                                    "selected_sowing_date"
+                                )
+                            )
+                        }
+
+                        // Add new crop locally
+                        cropsArray.put(newCropObject)
+
+                        // Update original object
+                        farmObject.put(
+                            "crops",
+                            cropsArray
+                        )
+
+                        // Reset selection fields
+                        farmObject.put(
+                            "selected_crop_name",
+                            "Select Crop"
+                        )
+
+                        farmObject.put(
+                            "selected_sowing_date",
+                            "Select Date"
+                        )
+
+                        // Refresh only one item
+                        myFarmsAdapter?.notifyItemChanged(
+                            selectedFarmPosition
+                        )
+
+                        Toast.makeText(
+                            requireContext(),
+                            "Crop saved successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                    } catch (e: Exception) {
+
+                        e.printStackTrace()
+                    }
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                }
+            }
+        }
+
+        farmerViewModel.deleteFarmCropDCSResponse.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(requireContext())
+                }
+
+                is UiState.Success -> {
+
+                    ProgressHelper.disableProgressDialog()
+
+                    try {
+
+                        val farmObject =
+                            selectedFarmObject ?: return@observe
+
+                        val cropsArray =
+                            farmObject.optJSONArray("crops")
+                                ?: return@observe
+
+                        val updatedArray = JSONArray()
+
+                        for (i in 0 until cropsArray.length()) {
+
+                            if (i != selectedDeletedCropPosition) {
+
+                                updatedArray.put(
+                                    cropsArray.getJSONObject(i)
+                                )
+                            }
+                        }
+
+                        // Update original farm object
+                        farmObject.put(
+                            "crops",
+                            updatedArray
+                        )
+
+                        // Refresh parent item
+                        myFarmsAdapter?.notifyItemChanged(
+                            selectedFarmPosition
+                        )
+
+                        Toast.makeText(
+                            requireContext(),
+                            "Crop deleted successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                    } catch (e: Exception) {
+
+                        e.printStackTrace()
+                    }
                 }
 
                 is UiState.Error -> {
@@ -416,13 +539,52 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                 }
             }
 
-            SAVE_CROP_FOR_DCS->{
+            SAVE_CROP_FOR_DCS -> {
+
                 Log.d(TAG, "onRecyclerItemClick: $jsonObject")
-                val farmId = jsonObject.optString("farm_id")
+
+                selectedFarmPosition =
+                    jsonObject.optInt("adapter_position")
+
+                selectedFarmObject =
+                    jsonObject
+
+                val farmId =
+                    jsonObject.optString("farm_id")
+
                 farmerViewModel.saveFarmCropDCS(
-                    CryptoHelper.encryptField(selectedCropIdForDCS.toString()).toString(),
-                    CryptoHelper.encryptField(selectedCropSowingDateForDCS).toString(),
-                    CryptoHelper.encryptField(farmId.toString()).toString(),
+                    CryptoHelper.encryptField(
+                        selectedCropIdForDCS.toString()
+                    ).toString(),
+
+                    CryptoHelper.encryptField(
+                        selectedCropSowingDateForDCS
+                    ).toString(),
+
+                    CryptoHelper.encryptField(
+                        farmId
+                    ).toString()
+                )
+            }
+
+            DELETE_CROP_FOR_DCS -> {
+                selectedFarmObject =
+                    jsonObject.optJSONObject("farm_object")
+
+                selectedFarmPosition =
+                    jsonObject.optInt("parent_position")
+
+                selectedDeletedCropPosition =
+                    jsonObject.optInt("crop_position")
+
+                val declarationId =
+                    jsonObject.optString("declaration_id")
+
+                Log.d(TAG, "onRecyclerItemClick DELETE: $jsonObject and $declarationId")
+                farmerViewModel.deleteFarmCropForDCS(
+                    CryptoHelper.encryptField(
+                        declarationId
+                    ).toString()
                 )
             }
         }
@@ -517,5 +679,6 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         const val CROP_SELECTION_DCS = 2
         const val SOWING_DATE_SELECTION_DCS = 3
         const val SAVE_CROP_FOR_DCS = 4
+        const val DELETE_CROP_FOR_DCS = 5
     }
 }

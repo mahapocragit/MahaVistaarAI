@@ -7,10 +7,13 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.DcsCropInfoHorzItemBinding
 import `in`.gov.mahapocra.mahavistaarai.databinding.DcsCropInfoItemBinding
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
 import org.json.JSONArray
+import org.json.JSONObject
 
 class CropListDetailsAdapter(
     private val jsonArray: JSONArray,
-    private val listener: RecyclerItemClickListener
+    private val listener: RecyclerItemClickListener,
+    private val parentFarmObject: JSONObject,
+    private val parentPosition: Int
 ) : RecyclerView.Adapter<CropListDetailsAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: DcsCropInfoHorzItemBinding) :
@@ -33,7 +36,33 @@ class CropListDetailsAdapter(
             listener.onRecyclerItemClick(1, item)
         }
         holder.binding.deleteCropImageView.setOnClickListener {
-            listener.onRecyclerItemClick(2, item)
+
+            val deleteObject = JSONObject()
+
+            deleteObject.put(
+                "crop_position",
+                position
+            )
+
+            deleteObject.put(
+                "parent_position",
+                parentPosition
+            )
+
+            deleteObject.put(
+                "farm_object",
+                parentFarmObject
+            )
+
+            deleteObject.put(
+                "declaration_id",
+                item.optString("declaration_id")
+            )
+
+            listener.onRecyclerItemClick(
+                5,
+                deleteObject
+            )
         }
     }
 

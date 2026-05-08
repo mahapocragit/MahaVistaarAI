@@ -308,10 +308,41 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
         val declarationId = dataObject.optInt("declaration_id").toString()
         when (flag) {
             UPDATE_CROP -> {
-                farmerViewModel.updateFarmCropForDCS(
-                    CryptoHelper.encryptField(declarationId).toString(),
-                    CryptoHelper.encryptField("2026-03-01").toString()
+                val calendar = Calendar.getInstance()
+                val datePickerDialog = DatePickerDialog(
+                    this,
+                    { _, selectedYear, selectedMonth, selectedDay ->
+
+                        val selectedCalendar = Calendar.getInstance()
+
+                        selectedCalendar.set(
+                            selectedYear,
+                            selectedMonth,
+                            selectedDay
+                        )
+
+                        val formattedDate = SimpleDateFormat(
+                            "yyyy-MM-dd",
+                            Locale.ENGLISH
+                        ).format(selectedCalendar.time)
+
+                        // update json
+                        jsonObject.put(
+                            "selected_sowing_date",
+                            formattedDate
+                        )
+                        selectedCropSowingDateForDCS = formattedDate
+                        farmerViewModel.updateFarmCropForDCS(
+                            CryptoHelper.encryptField(declarationId).toString(),
+                            CryptoHelper.encryptField(selectedCropSowingDateForDCS).toString()
+                        )
+                    },
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
                 )
+
+                datePickerDialog.show()
             }
 
             DELETE_CROP -> {

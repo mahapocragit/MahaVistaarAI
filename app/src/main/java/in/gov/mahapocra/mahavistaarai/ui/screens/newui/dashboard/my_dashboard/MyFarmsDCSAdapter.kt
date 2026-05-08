@@ -12,17 +12,18 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 class MyFarmsDCSAdapter(
-    private val jsonArray: JSONArray,
+    private var jsonArray: JSONArray,
     private val listener: RecyclerItemClickListener
 ) : RecyclerView.Adapter<MyFarmsDCSAdapter.LandViewHolder>() {
 
     // Expand / Collapse Saved Crops Recycler
     private val expandedItems = mutableSetOf<Int>()
+    private var showAddCropButton = true
 
     // Expand / Collapse Add Crop Form
     private val expandedCropFormItems = mutableSetOf<Int>()
 
-    inner class LandViewHolder(
+    class LandViewHolder(
         val binding: MyFarmsItemViewBinding
     ) : RecyclerView.ViewHolder(binding.root)
 
@@ -65,7 +66,8 @@ class MyFarmsDCSAdapter(
 
         setupSavedCropsRecycler(
             binding,
-            farmObject
+            farmObject,
+            position
         )
     }
 
@@ -230,7 +232,11 @@ class MyFarmsDCSAdapter(
 
         binding.addCropLayout.visibility =
             if (expanded) {
-                View.VISIBLE
+                if (showAddCropButton) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
             } else {
                 View.GONE
             }
@@ -294,23 +300,35 @@ class MyFarmsDCSAdapter(
 
     private fun setupSavedCropsRecycler(
         binding: MyFarmsItemViewBinding,
-        obj: JSONObject
+        obj: JSONObject,
+        position: Int
     ) {
 
         val cropsArray =
             obj.optJSONArray("crops")
                 ?: JSONArray()
 
-        binding.savedCropsRecyclerView.layoutManager =
-            LinearLayoutManager(
-                binding.root.context
-            )
+        showAddCropButton = cropsArray.length() < 2
+        if (!showAddCropButton){
+            binding.addCropLayout.visibility = View.GONE
+        }
+        binding.savedCropsRecyclerView.apply {
 
-        binding.savedCropsRecyclerView.adapter =
-            CropListDetailsAdapter(
-                cropsArray,
-                listener
-            )
+            layoutManager =
+                LinearLayoutManager(context)
+
+            setHasFixedSize(true)
+
+            isNestedScrollingEnabled = false
+
+            adapter =
+                CropListDetailsAdapter(
+                    cropsArray,
+                    listener,
+                    obj,
+                    position
+                )
+        }
     }
 
     override fun getItemCount(): Int {

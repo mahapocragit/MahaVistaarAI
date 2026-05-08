@@ -291,6 +291,7 @@
             android:id="@+id/cropDSCRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            tools:itemCount="2"
             tools:listitem="@layout/dcs_crop_info_item"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
