@@ -58,6 +58,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
+import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SideNavMenuHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.subscribeToTopic
@@ -476,6 +477,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
 
     private fun completeLogout() {
         ProgressHelper.disableProgressDialog()
+        Log.d(TAG, "completeLogout: $farmerId")
         farmerViewModel.updateFCMToken(farmerId, "NA")
         appPreferenceManager.clearAll()
     }
@@ -537,6 +539,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     val jsonObject = JSONObject(state.data.toString())
                     val response = jsonObject.optString("response")
                     if (response == "FCM Cleared") {
+                        AppPreferenceManager(this).clearAll()
                         AppSettings.getInstance()
                             .setValue(this, AppConstants.uName, AppConstants.uName)
                         AppSettings.getInstance()
@@ -559,6 +562,8 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                             .clearAppSharedPrefData(this, AppConstants.kSHARED_PREF)
                         AppSettings.getInstance()
                             .setBooleanValue(this, AppConstants.userDataSaved, false)
+                        TokenSessionManager.saveTokens("", "")
+                        TokenSessionManager.clear()
                         val intent = Intent(
                             this@NewDashboardMainActivity,
                             SplashScreenActivity::class.java
