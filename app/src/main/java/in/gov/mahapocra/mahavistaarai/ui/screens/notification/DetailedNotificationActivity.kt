@@ -63,7 +63,6 @@ class DetailedNotificationActivity : AppCompatActivity() {
     private var sowingDate: String = ""
     private var notificationId = ""
     private var notificationType = ""
-    private var isFeedbackGiven = false
     private var questionJsonObject: JSONObject? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -103,8 +102,6 @@ class DetailedNotificationActivity : AppCompatActivity() {
                             binding.feedbackFAB.visibility = View.GONE
                         } else {
                             questionJsonObject = questionsJsonArray?.get(0) as JSONObject
-                            Log.d(TAG, "onCreate: $questionJsonObject")
-                            isFeedbackGiven = jsonObject.optBoolean("is_answered")
                         }
                     }
 
@@ -137,8 +134,6 @@ class DetailedNotificationActivity : AppCompatActivity() {
                             binding.feedbackFAB.visibility = View.GONE
                         } else {
                             questionJsonObject = questionsJsonArray?.get(0) as JSONObject
-                            Log.d(TAG, "onCreate: $questionJsonObject")
-                            isFeedbackGiven = jsonObject.optBoolean("is_answered")
                         }
                         fetchCropList(flatCropId)
                     }
@@ -405,10 +400,15 @@ class DetailedNotificationActivity : AppCompatActivity() {
         content.setSpan(UnderlineSpan(), 0, content.length, 0)
         binding.redirectTextView.text = content
         binding.redirectTextView.setOnClickListener {
-            if (!isFeedbackGiven && questionJsonObject != null) {
-                try {
-                    setUpFeedbackDialog(notificationType, notificationId, questionJsonObject!!)
-                } catch (e: Exception) {
+            if (questionJsonObject != null) {
+                val isAnswered = questionJsonObject?.optBoolean("is_answered", false)
+                if (isAnswered == false) {
+                    try {
+                        setUpFeedbackDialog(notificationType, notificationId, questionJsonObject!!)
+                    } catch (e: Exception) {
+                        redirectToScreen(page)
+                    }
+                } else {
                     redirectToScreen(page)
                 }
             } else {
@@ -479,15 +479,25 @@ class DetailedNotificationActivity : AppCompatActivity() {
     }
 
     private fun safelyNavigateToPreviousScreen() {
-        Log.d(TAG, "safelyNavigateToPreviousScreen: $isFeedbackGiven")
-        if (!isFeedbackGiven && questionJsonObject != null) {
-            try {
-                setUpFeedbackDialog(
-                    notificationType,
-                    notificationId,
-                    questionJsonObject!!
-                )
-            } catch (e: Exception) {
+        if (questionJsonObject != null) {
+            val isAnswered = questionJsonObject?.optBoolean("is_answered", false)
+            if (isAnswered == false) {
+                Log.d(TAG, "safelyNavigateToPreviousScreen: $isAnswered")
+                try {
+                    setUpFeedbackDialog(
+                        notificationType,
+                        notificationId,
+                        questionJsonObject!!
+                    )
+                } catch (e: Exception) {
+                    startActivity(
+                        Intent(
+                            this@DetailedNotificationActivity,
+                            NotificationActivity::class.java
+                        )
+                    )
+                }
+            } else {
                 startActivity(
                     Intent(
                         this@DetailedNotificationActivity,
