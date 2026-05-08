@@ -311,6 +311,12 @@ class MyFarmsDCSAdapter(
         showAddCropButton = cropsArray.length() < 2
         if (!showAddCropButton){
             binding.addCropLayout.visibility = View.GONE
+        }else{
+            val isExpanded =
+            expandedItems.contains(position)
+            if (isExpanded){
+                binding.addCropLayout.visibility = View.VISIBLE
+            }
         }
         binding.savedCropsRecyclerView.apply {
 
@@ -329,6 +335,15 @@ class MyFarmsDCSAdapter(
                     position
                 )
         }
+    }
+
+    fun updateEntireData(
+        updatedArray: JSONArray
+    ) {
+
+        jsonArray = updatedArray
+
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {

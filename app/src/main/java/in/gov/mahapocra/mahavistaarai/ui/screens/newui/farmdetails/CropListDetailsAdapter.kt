@@ -33,7 +33,38 @@ class CropListDetailsAdapter(
         holder.binding.cropNameTextView.text = item.optString("crop_name")
         holder.binding.sowingDateTextView.text = "Sown on ${item.optString("sowing_date")}"
         holder.binding.updateCropImageView.setOnClickListener {
-            listener.onRecyclerItemClick(1, item)
+
+            val updateObject = JSONObject()
+
+            updateObject.put(
+                "crop_position",
+                position
+            )
+
+            updateObject.put(
+                "parent_position",
+                parentPosition
+            )
+
+            updateObject.put(
+                "farm_object",
+                parentFarmObject
+            )
+
+            updateObject.put(
+                "declaration_id",
+                item.optString("declaration_id")
+            )
+
+            updateObject.put(
+                "crop_object",
+                item
+            )
+
+            listener.onRecyclerItemClick(
+                6,
+                updateObject
+            )
         }
         holder.binding.deleteCropImageView.setOnClickListener {
 

@@ -60,6 +60,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
     private val binding get() = _binding!!
     private var selectedFarmPosition = -1
     private var selectedDeletedCropPosition = -1
+    private var selectedUpdateParentPosition = -1
     private var selectedFarmObject: JSONObject? = null
     private val farmerViewModel: FarmerViewModel by viewModels()
     private val authViewModel: AuthViewModel by viewModels()
@@ -234,7 +235,16 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                     val dataObject = jsonObject.optJSONObject("data")
                     val farmsArray = dataObject?.optJSONArray("farm_details")
                     if ((farmsArray?.length() ?: 0) > 0) {
-                        showDialogForDCS(farmsArray ?: JSONArray())
+
+                        if (myFarmsAdapter == null) {
+                            showDialogForDCS(
+                                farmsArray ?: JSONArray()
+                            )
+                        } else {
+                            myFarmsAdapter?.updateEntireData(
+                                farmsArray ?: JSONArray()
+                            )
+                        }
                     }
                 }
 
@@ -273,65 +283,17 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                 }
 
                 is UiState.Success -> {
+
                     ProgressHelper.disableProgressDialog()
-                    try {
-                        val farmObject =
-                            selectedFarmObject ?: return@observe
-                        // Existing crops
-                        val cropsArray =
-                            farmObject.optJSONArray("crops")
-                                ?: JSONArray()
-                        // Create new crop object
-                        val newCropObject = JSONObject().apply {
-                            put(
-                                "crop_name",
-                                farmObject.optString(
-                                    "selected_crop_name"
-                                )
-                            )
-                            put(
-                                "sowing_date",
-                                farmObject.optString(
-                                    "selected_sowing_date"
-                                )
-                            )
-                        }
 
-                        // Add new crop locally
-                        cropsArray.put(newCropObject)
+                    Toast.makeText(
+                        requireContext(),
+                        "Crop saved successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
 
-                        // Update original object
-                        farmObject.put(
-                            "crops",
-                            cropsArray
-                        )
-
-                        // Reset selection fields
-                        farmObject.put(
-                            "selected_crop_name",
-                            "Select Crop"
-                        )
-
-                        farmObject.put(
-                            "selected_sowing_date",
-                            "Select Date"
-                        )
-
-                        // Refresh only one item
-                        myFarmsAdapter?.notifyItemChanged(
-                            selectedFarmPosition
-                        )
-
-                        Toast.makeText(
-                            requireContext(),
-                            "Crop saved successfully",
-                            Toast.LENGTH_SHORT
-                        ).show()
-
-                    } catch (e: Exception) {
-
-                        e.printStackTrace()
-                    }
+                    // Reload farms from backend
+                    farmerViewModel.getFarmDetails()
                 }
 
                 is UiState.Error -> {
@@ -395,6 +357,40 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                 }
 
                 is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                }
+            }
+        }
+
+        farmerViewModel.updateFarmCropDCSResponse.observe(
+            viewLifecycleOwner
+        ) { state ->
+
+            when(state) {
+
+                is UiState.Loading -> {
+
+                    ProgressHelper.showProgressDialog(
+                        requireContext()
+                    )
+                }
+
+                is UiState.Success -> {
+
+                    ProgressHelper.disableProgressDialog()
+
+                    Toast.makeText(
+                        requireContext(),
+                        "Crop updated successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    // Reload farms API
+                    farmerViewModel.getFarmDetails()
+                }
+
+                is UiState.Error -> {
+
                     ProgressHelper.disableProgressDialog()
                 }
             }
@@ -587,6 +583,54 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                     ).toString()
                 )
             }
+
+            UPDATE_CROP_FOR_DCS -> {
+
+                selectedFarmObject =
+                    jsonObject.optJSONObject("farm_object")
+
+                selectedUpdateParentPosition =
+                    jsonObject.optInt("parent_position")
+
+                val selectedUpdateDeclarationId =
+                    jsonObject.optString("declaration_id")
+
+                val calendar = Calendar.getInstance()
+                val datePickerDialog = DatePickerDialog(
+                    requireContext(),
+                    { _, selectedYear, selectedMonth, selectedDay ->
+
+                        val selectedCalendar = Calendar.getInstance()
+
+                        selectedCalendar.set(
+                            selectedYear,
+                            selectedMonth,
+                            selectedDay
+                        )
+
+                        val formattedDate = SimpleDateFormat(
+                            "yyyy-MM-dd",
+                            Locale.ENGLISH
+                        ).format(selectedCalendar.time)
+
+                        // update json
+                        jsonObject.put(
+                            "selected_sowing_date",
+                            formattedDate
+                        )
+                        selectedCropSowingDateForDCS = formattedDate
+                        farmerViewModel.updateFarmCropForDCS(
+                            CryptoHelper.encryptField(selectedUpdateDeclarationId).toString(),
+                            CryptoHelper.encryptField(selectedCropSowingDateForDCS).toString()
+                        )
+                    },
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+                )
+
+                datePickerDialog.show()
+            }
         }
     }
 
@@ -680,5 +724,6 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         const val SOWING_DATE_SELECTION_DCS = 3
         const val SAVE_CROP_FOR_DCS = 4
         const val DELETE_CROP_FOR_DCS = 5
+        const val UPDATE_CROP_FOR_DCS = 6
     }
 }
