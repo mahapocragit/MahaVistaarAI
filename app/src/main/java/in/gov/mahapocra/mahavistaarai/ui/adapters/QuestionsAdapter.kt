@@ -26,7 +26,7 @@ class QuestionsAdapter(
 
         val questionObject = questionsArray?.getJSONObject(position)
 
-        holder.tvQuestion.text = "प्र. क्र. ${position+1}) ${questionObject?.getString("question")}"
+        holder.tvQuestion.text = questionObject?.getString("question")
 
         // Remove old listener to avoid unwanted triggers
         holder.rgAnswer.setOnCheckedChangeListener(null)

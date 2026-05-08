@@ -571,17 +571,14 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun getNotificationDetails(userId: Int, notificationID: Long, notificationType: String?) {
+    fun getNotificationDetails(notificationID: String, notificationType: String?) {
         viewModelScope.launch {
             _getNotificationDetailedResponse.value = UiState.Loading
             try {
-                val jsonObject = JSONObject().apply {
-                    put("notification_id", notificationID)
-                    put("user_id", userId)
-                    put("type", notificationType)
-                }
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val response = apiRequest.getNotificationDetails(requestBody)
+                val response = apiRequest.getNotificationDetails(
+                    notificationType = notificationType.toString(),
+                    notificationId = notificationID
+                )
                 _getNotificationDetailedResponse.value = UiState.Success(response)
             } catch (e: Exception) {
                 val message = when (e) {
@@ -596,11 +593,11 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun updateNotificationStatus(userId: Int, notificationID: Long, notificationType: String) {
+    fun updateNotificationStatus(userId: Int, notificationId: String, type: String) {
         viewModelScope.launch {
             val jsonObject = JSONObject().apply {
-                put("notification_id", notificationID)
-                put("type", notificationType)
+                put("notification_id", notificationId)
+                put("type", type)
                 put("user_id", userId)
             }
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
@@ -648,22 +645,26 @@ class FarmerViewModel : ViewModel() {
     }
 
     fun addNotificationFeedback(
-        userId: Int,
-        customId: String,
-        type: String,
-        feedbackArray: JSONArray
+        remarks: String,
+        notificationType: String,
+        notificationID: String,
+        feedbackId: String,
+        answerId: String
     ) {
         viewModelScope.launch {
             _addNotificationFeedbackResponse.value = UiState.Loading
             try {
-                val jsonObject = JSONObject().apply {
-                    put("user_id", userId)
-                    put("notification_id", customId)
-                    put("type", type)
+                val feedbackArray = JSONArray()
+                val feedbackObject = JSONObject().apply {
+                    put("id", feedbackId)
+                    put("answer", answerId)
+                }
+                feedbackArray.put(feedbackObject)
+                val mainObject = JSONObject().apply {
                     put("feedback", feedbackArray)
                 }
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val response = apiRequest.addNotificationFeedback(requestBody)
+                val requestBody = AppUtility.getInstance().getRequestBody(mainObject.toString())
+                val response = apiRequest.addNotificationFeedback(remarks, notificationType, notificationID,requestBody)
                 _addNotificationFeedbackResponse.value = UiState.Success(response)
             } catch (e: Exception) {
                 val message = when (e) {
@@ -989,11 +990,14 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun updateFarmCropForDCS(declaringId:String,sowingDate:String) {
+    fun updateFarmCropForDCS(declaringId: String, sowingDate: String) {
         viewModelScope.launch {
             _updateFarmCropDCSResponse.value = UiState.Loading
             try {
-                val response = apiRequest.updateFarmCropForDCS(declaringId = declaringId, sowingDate = sowingDate)
+                val response = apiRequest.updateFarmCropForDCS(
+                    declaringId = declaringId,
+                    sowingDate = sowingDate
+                )
                 _updateFarmCropDCSResponse.value = UiState.Success(response)
             } catch (e: Exception) {
                 val message = when (e) {
@@ -1008,7 +1012,7 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun deleteFarmCropForDCS(declaringId:String) {
+    fun deleteFarmCropForDCS(declaringId: String) {
         viewModelScope.launch {
             _deleteFarmCropDCSResponse.value = UiState.Loading
             try {

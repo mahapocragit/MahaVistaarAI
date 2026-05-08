@@ -120,4 +120,7 @@
     <!--    NEW UI-->
     <color name="gray_dark_colour_text">#4B5563</color>
     <color name="background_colour_nui">#F8FAFC</color>
+    <color name="positive_feedback_color">#00A651</color>
+    <color name="negative_feedback_color">#D7D7D7</color>
+    <color name="button_feedback_tint">#3A4354</color>
 </resources>

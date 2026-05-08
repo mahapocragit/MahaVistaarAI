@@ -137,7 +137,10 @@ interface ApiService {
     suspend fun getNotificationList(@Header("userid") userId: Int): JsonObject
 
     @POST("notificationServices/fetch-notifications-indetail")
-    suspend fun getNotificationDetails(@Body params: RequestBody): JsonObject
+    suspend fun getNotificationDetails(
+        @Header("type") notificationType: String,
+        @Header("notification-id") notificationId: String
+    ): JsonObject
 
     @POST("notificationServices/update-notification-read-status")
     suspend fun updateNotificationStatus(@Body params: RequestBody): JsonObject
@@ -146,7 +149,11 @@ interface ApiService {
     suspend fun updateNotificationStatusForChatbot(@Body params: RequestBody): JsonObject
 
     @POST("notificationServices/add-notification-feedback")
-    suspend fun addNotificationFeedback(@Body params: RequestBody): JsonObject
+    suspend fun addNotificationFeedback(
+        @Header("remarks") remarks: String,
+        @Header("type") notificationType: String,
+        @Header("notification-id") notificationId: String,
+        @Body params: RequestBody): JsonObject
 
     @POST("authService/updateFcmToken")
     suspend fun updateFCMToken(

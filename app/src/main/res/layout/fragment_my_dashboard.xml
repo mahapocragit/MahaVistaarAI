@@ -29,7 +29,7 @@
                     android:id="@+id/tvTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_5sdp"
+                    android:layout_margin="@dimen/_2sdp"
                     android:fontFamily="@font/poppins_regular_font"
                     android:textFontWeight="800"
                     android:textStyle="normal"
@@ -55,7 +55,7 @@
                         android:background="@drawable/bg_village_badge"
                         android:paddingHorizontal="12dp"
                         android:paddingVertical="4dp"
-                        android:text="Villages: 1"
+                        android:text="Villages: 0"
                         android:textColor="#166534"
                         android:textSize="14sp" />
 
@@ -70,7 +70,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="@dimen/_2sdp"
                     android:baselineAligned="false"
                     android:orientation="horizontal"
                     app:layout_constraintTop_toBottomOf="@id/tvTitle">
@@ -86,7 +86,7 @@
                             android:id="@+id/totalAreaTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="4.71"
+                            android:text="0"
                             android:textColor="#334155"
                             android:textSize="@dimen/_16sdp"
                             android:textStyle="bold" />
@@ -131,7 +131,7 @@
                             android:id="@+id/totalFarmTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="4"
+                            android:text="0"
                             android:textColor="#334155"
                             android:textSize="@dimen/_16sdp"
                             android:textStyle="bold" />

@@ -192,7 +192,10 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
 
                 is UiState.Error -> {
                     ProgressHelper.disableProgressDialog()
-                    Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+                    Log.d(TAG, "observeResponse: ${state.message}")
+                    if (state.message != "HTTP 404 Not Found") {
+                        Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
@@ -250,7 +253,10 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
 
                 is UiState.Error -> {
                     ProgressHelper.disableProgressDialog()
-                    Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                    Log.d(TAG, "observeResponse: ${state.message}")
+                    if (state.message != "HTTP 404 Not Found") {
+                        Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
