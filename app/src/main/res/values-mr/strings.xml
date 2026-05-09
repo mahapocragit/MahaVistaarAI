@@ -570,4 +570,8 @@
     <string name="message_promo">निवडलेल्या पिकासाठी ही सुविधा उपलब्ध नाही. कृपया दुसरे पीक निवडा आणि पुन्हा प्रयत्न करा.</string>
     <string name="ok_promo">ठीक आहे</string>
     <string name="my_dashboard">माझे डॅशबोर्ड</string>
+    <string name="agri_services">कृषी सेवा</string>
+    <string name="smart_farming">स्मार्ट शेती</string>
+    <string name="welcome_back_to_your_dashboard">तुमच्या डॅशबोर्डमध्ये पुन्हा स्वागत आहे</string>
+    <string name="my_farms">माझी शेती</string>
 </resources>

@@ -30,8 +30,10 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.microsoft.clarity.Clarity
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
@@ -41,12 +43,16 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityNewDashboardMainBind
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DrawerMenuAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.ProfileScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.AboutActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.CreditsActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.CostCalculatorDashboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.experts.ExpertsCornerFarmerActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.leaderboard.LeaderboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.news.NewsListActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.NotificationActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
@@ -60,10 +66,13 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SideNavMenuHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper.shrinkToCenter
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.subscribeToTopic
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.unSubscribeToTopic
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -133,6 +142,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
 
         setSupportActionBar(toolbar)
         setUpDrawerMenu()
+        bubbleAnimationChatbot()
         setVersion()
         observeResponse()
 
@@ -148,8 +158,13 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
         toggle.syncState()
 
         val adapter = ViewPagerAdapter(this)
+        binding.viewPager.isUserInputEnabled = false
         binding.viewPager.adapter = adapter
-        val titles = listOf("My Dashboard", "Agri Services", "Smart Farming")
+        val titles = listOf(
+            getString(R.string.my_dashboard),
+            getString(R.string.agri_services),
+            getString(R.string.smart_farming)
+        )
         val icons = listOf(
             R.drawable.ic_dashboard_md,
             R.drawable.ic_agri_services_md,
@@ -193,6 +208,57 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
         }.attach()
 
         binding.toolbar.inflateMenu(R.menu.toolbar_menu)
+
+        binding.chatbotIcon.setOnClickListener {
+            Clarity.sendCustomEvent("VISTAAR_AI_BUTTON_CLICKED")
+            if (NetworkUtils.isInternetAvailable(this)) {
+                startActivity(Intent(this, ChatbotActivity::class.java))
+            } else {
+                LocalCustom.createSnackbar(binding.root, "Internet not available!")
+            }
+        }
+
+        binding.customNavBottom.navChc.setOnClickListener {
+            Clarity.sendCustomEvent("CHC_BUTTON_CLICKED")
+            if (NetworkUtils.isInternetAvailable(this)) {
+                startActivity(
+                    Intent(
+                        this@NewDashboardMainActivity,
+                        CHCenterActivity::class.java
+                    )
+                )
+            } else {
+                LocalCustom.createSnackbar(binding.root, "Internet not available!")
+            }
+        }
+
+        binding.customNavBottom.navVideos.setOnClickListener {
+            Clarity.sendCustomEvent("VIDEOS_BUTTON_CLICKED")
+            if (NetworkUtils.isInternetAvailable(this)) {
+                startActivity(
+                    Intent(
+                        this@NewDashboardMainActivity,
+                        VideosActivity::class.java
+                    )
+                )
+            } else {
+                LocalCustom.createSnackbar(binding.root, "Internet not available!")
+            }
+        }
+
+        binding.customNavBottom.navShetishala.setOnClickListener {
+            Clarity.sendCustomEvent("DBT_BUTTON_CLICKED")
+            if (NetworkUtils.isInternetAvailable(this)) {
+                startActivity(
+                    Intent(
+                        this@NewDashboardMainActivity,
+                        ShetishalaActivity::class.java
+                    )
+                )
+            } else {
+                LocalCustom.createSnackbar(binding.root, "Internet not available!")
+            }
+        }
 
         binding.toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
@@ -504,9 +570,11 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     val districtCode = dataObject?.optString("DistrictCode")
                     val districtName = dataObject?.optString("DistrictName")
 
-                    val topicJsonArray = dataObject?.optJSONArray("topics")?: JSONArray()
-                    val topicsToSubArray = dataObject?.optJSONArray("topics_to_subscribe")?: JSONArray()
-                    val topicsToDeleteArray = dataObject?.optJSONArray("topics_to_delete")?: JSONArray()
+                    val topicJsonArray = dataObject?.optJSONArray("topics") ?: JSONArray()
+                    val topicsToSubArray =
+                        dataObject?.optJSONArray("topics_to_subscribe") ?: JSONArray()
+                    val topicsToDeleteArray =
+                        dataObject?.optJSONArray("topics_to_delete") ?: JSONArray()
                     AppPreferenceManager(this).saveString(AppConstants.VILLAGE_CODE, villageCode)
                     AppPreferenceManager(this).saveString(AppConstants.VILLAGE_NAME, villageName)
                     AppPreferenceManager(this).saveString(AppConstants.TALUKA_CODE, talukaCode)
@@ -655,6 +723,23 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
             }
         }
     }
+
+    private fun bubbleAnimationChatbot() {
+        lifecycleScope.launch {
+            delay(5000) // 5 seconds
+            binding.chatBubbleImageView.animate()
+                .alpha(0f)
+                .setDuration(500) // animation duration in ms
+                .withEndAction {
+                    binding.chatBubbleImageView.visibility = View.GONE
+                    binding.chatBubbleImageView.alpha =
+                        1f // reset alpha in case you show it again
+                }
+                .start()
+        }
+        shrinkToCenter(binding.chatBubbleImageView)
+    }
+
 
     override fun attachBaseContext(newBase: Context) {
         languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {

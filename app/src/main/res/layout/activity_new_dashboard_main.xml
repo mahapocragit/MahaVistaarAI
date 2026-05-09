@@ -7,94 +7,138 @@
     android:layout_height="match_parent">
 
     <!-- ✅ MAIN CONTENT FIRST -->
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:background="@color/background_colour_nui">
 
-        <!-- ✅ Toolbar -->
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/actionbar_color_figma"
-            app:contentInsetStartWithNavigation="0dp">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="@dimen/_30sdp"
-                    android:layout_height="@dimen/_30sdp"
-                    android:src="@drawable/krishi_vibhag_logo"
-                    android:contentDescription="App Logo" />
-
-                <TextView
-                    android:layout_width="@dimen/_160sdp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_8sdp"
-                    android:text="MahaVISTAAR-AI"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_10sdp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-        </androidx.appcompat.widget.Toolbar>
-
-        <!-- ✅ Header -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_50sdp"
-            android:background="@color/actionbar_color_figma"
+            android:layout_height="0dp"
             android:orientation="vertical"
-            android:paddingStart="@dimen/_10sdp">
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout13"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/nameTextView"
+            <!-- ✅ Toolbar -->
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="bottom"
-                android:text="Hello Mahesh, "
-                android:textColor="@color/white"
-                android:textSize="@dimen/_14sdp"
-                android:textStyle="bold" />
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/actionbar_color_figma"
+                app:contentInsetStartWithNavigation="0dp">
 
-            <TextView
-                android:id="@+id/textView3"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:src="@drawable/krishi_vibhag_logo" />
+
+                    <TextView
+                        android:layout_width="@dimen/_300sdp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_8sdp"
+                        android:layout_weight="1"
+                        android:maxLines="1"
+                        android:text="@string/app_name_label"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_10sdp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+            </androidx.appcompat.widget.Toolbar>
+
+            <!-- ✅ Header -->
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="top"
-                android:text="Welcome back to your dashboard"
-                android:textColor="@color/white" />
+                android:layout_height="@dimen/_50sdp"
+                android:background="@color/actionbar_color_figma"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/_10sdp">
+
+                <TextView
+                    android:id="@+id/nameTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Hello Mahesh, "
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14sdp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="top"
+                    android:text="@string/welcome_back_to_your_dashboard"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+            <!-- ✅ Tabs -->
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_55sdp"
+                android:background="@color/actionbar_color_figma"
+                app:tabIndicatorHeight="0dp"
+                app:tabMode="fixed"
+                app:tabPaddingEnd="0dp"
+                app:tabPaddingStart="0dp"
+                app:tabRippleColor="@null" />
+
+            <!-- ✅ ViewPager -->
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/background_colour_nui"
+                android:paddingTop="@dimen/_5sdp" />
+
         </LinearLayout>
 
-        <!-- ✅ Tabs -->
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayout"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_55sdp"
-            android:background="@color/actionbar_color_figma"
-            app:tabIndicatorHeight="0dp"
-            app:tabMode="fixed"
-            app:tabPaddingEnd="0dp"
-            app:tabPaddingStart="0dp"
-            app:tabRippleColor="@null" />
+        <ImageView
+            android:id="@+id/chatbotIcon"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginBottom="@dimen/_20sdp"
+            app:layout_constraintBottom_toBottomOf="@+id/linearLayout13"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/linearLayout13"
+            app:srcCompat="@drawable/chatbot_icon" />
 
-        <!-- ✅ ViewPager -->
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewPager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="@dimen/_5sdp"
-            android:background="@color/background_colour_nui"/>
+        <ImageView
+            android:id="@+id/chatBubbleImageView"
+            android:layout_width="@dimen/_60sdp"
+            android:layout_height="@dimen/_60sdp"
+            android:layout_marginBottom="@dimen/_40sdp"
+            app:layout_constraintBottom_toBottomOf="@+id/chatbotIcon"
+            app:layout_constraintEnd_toEndOf="@+id/chatbotIcon"
+            app:layout_constraintStart_toStartOf="@+id/chatbotIcon"
+            app:srcCompat="@drawable/center_bubble" />
 
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/linearLayout13"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <include
+                android:id="@+id/customNavBottom"
+                layout="@layout/custom_bottom_nav" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- ✅ DRAWER LAST -->
     <com.google.android.material.navigation.NavigationView

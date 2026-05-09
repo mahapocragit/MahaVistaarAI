@@ -5,10 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/_10sdp"
+    android:layout_margin="@dimen/_6sdp"
     app:cardBackgroundColor="@android:color/white"
-    app:cardCornerRadius="@dimen/_24sdp"
-    app:cardElevation="@dimen/_4sdp">
+    app:cardCornerRadius="@dimen/_16sdp"
+    app:cardElevation="@dimen/_2sdp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/_10sdp">
+            android:padding="@dimen/_6sdp">
 
             <!-- Header -->
             <RelativeLayout
@@ -33,13 +33,13 @@
                     android:layout_height="wrap_content"
                     android:text="Give your Feedback"
                     android:textColor="#2F3A4A"
-                    android:textSize="@dimen/_18sdp"
+                    android:textSize="@dimen/_16sdp"
                     android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/ivClose"
-                    android:layout_width="@dimen/_22sdp"
-                    android:layout_height="@dimen/_22sdp"
+                    android:layout_width="@dimen/_18sdp"
+                    android:layout_height="@dimen/_18sdp"
                     android:layout_alignParentEnd="true"
                     android:src="@android:drawable/ic_menu_close_clear_cancel"
                     app:tint="#707070" />
@@ -49,7 +49,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_3sdp"
                 android:background="#E6E6E6" />
 
             <!-- Question -->
@@ -57,28 +57,28 @@
                 android:id="@+id/questionTitleTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_3sdp"
                 android:text="Was this feature helpful?"
                 android:textColor="#3A4354"
-                android:textSize="@dimen/_15sdp"
+                android:textSize="@dimen/_13sdp"
                 android:textStyle="bold" />
 
             <!-- Buttons -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_6sdp"
                 android:orientation="horizontal">
 
                 <!-- Helpful -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardHelpful"
                     android:layout_width="0dp"
-                    android:layout_height="@dimen/_100sdp"
+                    android:layout_height="@dimen/_80sdp"
                     android:layout_weight="1"
-                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:layout_marginEnd="@dimen/_6sdp"
                     app:cardBackgroundColor="#FFFFFF"
-                    app:cardCornerRadius="@dimen/_14sdp"
+                    app:cardCornerRadius="@dimen/_12sdp"
                     app:strokeColor="@color/negative_feedback_color"
                     app:strokeWidth="@dimen/_2sdp">
 
@@ -90,18 +90,18 @@
 
                         <ImageView
                             android:id="@+id/iconHelpful"
-                            android:layout_width="@dimen/_28sdp"
-                            android:layout_height="@dimen/_28sdp"
+                            android:layout_width="@dimen/_22sdp"
+                            android:layout_height="@dimen/_22sdp"
                             android:src="@drawable/ic_thumb_up"
                             app:tint="@color/button_feedback_tint" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/_10sdp"
+                            android:layout_marginTop="@dimen/_6sdp"
                             android:text="Helpful"
                             android:textColor="#2F3A4A"
-                            android:textSize="@dimen/_13sdp"
+                            android:textSize="@dimen/_12sdp"
                             android:textStyle="bold" />
 
                     </LinearLayout>
@@ -112,11 +112,11 @@
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardNotHelpful"
                     android:layout_width="0dp"
-                    android:layout_height="@dimen/_100sdp"
+                    android:layout_height="@dimen/_80sdp"
                     android:layout_weight="1"
-                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_marginStart="@dimen/_6sdp"
                     app:cardBackgroundColor="#FFFFFF"
-                    app:cardCornerRadius="@dimen/_14sdp"
+                    app:cardCornerRadius="@dimen/_12sdp"
                     app:strokeColor="#D7D7D7"
                     app:strokeWidth="@dimen/_2sdp">
 
@@ -128,18 +128,18 @@
 
                         <ImageView
                             android:id="@+id/iconNotHelpful"
-                            android:layout_width="@dimen/_28sdp"
-                            android:layout_height="@dimen/_28sdp"
+                            android:layout_width="@dimen/_22sdp"
+                            android:layout_height="@dimen/_22sdp"
                             android:src="@drawable/ic_thumb_down"
                             app:tint="#3A4354" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/_10sdp"
+                            android:layout_marginTop="@dimen/_6sdp"
                             android:text="Not Helpful"
                             android:textColor="#2F3A4A"
-                            android:textSize="@dimen/_13sdp"
+                            android:textSize="@dimen/_12sdp"
                             android:textStyle="bold" />
 
                     </LinearLayout>
@@ -152,23 +152,22 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_8sdp"
                 android:text="Tell us more (optional)"
                 android:textColor="#3A4354"
-                android:textSize="@dimen/_14sdp"
+                android:textSize="@dimen/_13sdp"
                 android:textStyle="bold" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/remarkEditText"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_140sdp"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_height="@dimen/_100sdp"
+                android:layout_marginTop="@dimen/_3sdp"
                 android:background="@drawable/bg_text_box"
                 android:hint="Write your suggestions here"
-                android:textSize="@dimen/_12sdp"
+                android:textSize="@dimen/_11sdp"
                 android:gravity="start"
-                android:padding="@dimen/_10sdp"
-                />
+                android:padding="@dimen/_6sdp" />
 
         </LinearLayout>
 
@@ -176,21 +175,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/_5sdp"
-            android:paddingHorizontal="@dimen/_10sdp"
+            android:paddingBottom="@dimen/_4sdp"
+            android:paddingHorizontal="@dimen/_6sdp"
             android:background="#FAFAFA">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSubmit"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_50sdp"
+                android:layout_height="@dimen/_44sdp"
                 android:text="Submit Feedback"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/_14sdp"
+                android:textSize="@dimen/_13sdp"
                 android:textStyle="bold"
                 app:backgroundTint="#00A651"
-                app:cornerRadius="@dimen/_30sdp" />
+                app:cornerRadius="@dimen/_22sdp" />
 
         </LinearLayout>
 

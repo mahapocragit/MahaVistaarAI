@@ -1,6 +1,7 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -21,6 +22,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDetailedFarmBinding
@@ -29,6 +31,8 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.my_dashboard.
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.my_dashboard.MyFarmsDCSAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
@@ -44,12 +48,18 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
     private var cropsJsonArray = JSONArray()
     private var adapter = FarmDetailsAdapter(JSONArray(), this)
     private var farmId = ""
+    private var languageToLoad: String = "en"
     private var selectedCropIdForDCS = 0
     private var selectedCropSowingDateForDCS = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        languageToLoad = "mr"
+        if (AppSettings.getLanguage(this@DetailedFarmActivity).equals("1", ignoreCase = true)) {
+            languageToLoad = "en"
+        }
+        switchLanguage(this, languageToLoad)
         binding = ActivityDetailedFarmBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
@@ -411,5 +421,15 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
     companion object {
         const val UPDATE_CROP = 1
         const val DELETE_CROP = 2
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 }

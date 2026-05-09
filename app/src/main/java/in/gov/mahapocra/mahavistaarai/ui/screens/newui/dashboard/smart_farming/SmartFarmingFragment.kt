@@ -35,19 +35,19 @@ class SmartFarmingFragment : Fragment(), OnRecyclerItemClickListener {
         val dataList = listOf(
             SmartFarmingModel(
                 ContextCompat.getDrawable(requireContext(), R.drawable.ic_climate_resilient_sf)!!,
-                "Climate Resilient"
+                getString(R.string.climateTechnology)
             ),
             SmartFarmingModel(
                 ContextCompat.getDrawable(requireContext(), R.drawable.ic_videos_sf)!!,
-                "Videos"
+                getString(R.string.videos)
             ),
             SmartFarmingModel(
                 ContextCompat.getDrawable(requireContext(), R.drawable.ic_shetishala_sf)!!,
-                "Shetishala"
+                getString(R.string.shetishala)
             ),
             SmartFarmingModel(
                 ContextCompat.getDrawable(requireContext(), R.drawable.ic_magazine_sf)!!,
-                "Magazine"
+                getString(R.string.magazine)
             )
         )
 

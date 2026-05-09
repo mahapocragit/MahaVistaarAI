@@ -201,7 +201,7 @@ class LeaderboardActivity : AppCompatActivity() {
     fun highlightUi(taluka: Int = 0, district: Int = 0, state: Int = 0) {
         val normalColor = ContextCompat.getColor(this, R.color.font_color_figma)
         val highlightColor = ContextCompat.getColor(this, R.color.actionbar_color_figma)
-        val customFont = ResourcesCompat.getFont(this, R.font.poppins_regular)
+        val customFont = ResourcesCompat.getFont(this, R.font.inter_regular)
         // Reset all to normal (color + style)
         listOf(binding.talukaTextView, binding.districtTextView, binding.stateTextView).forEach {
             it.setTextColor(normalColor)

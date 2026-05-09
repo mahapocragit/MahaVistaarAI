@@ -571,4 +571,8 @@
     <string name="message_promo">This feature is not available for the selected crop. Please choose a different crop and try again.</string>
     <string name="ok_promo">OK</string>
     <string name="my_dashboard">My Dashboard</string>
+    <string name="agri_services">Agri Services</string>
+    <string name="smart_farming">Smart Farming</string>
+    <string name="welcome_back_to_your_dashboard">Welcome back to your dashboard</string>
+    <string name="my_farms">My Farms</string>
 </resources>

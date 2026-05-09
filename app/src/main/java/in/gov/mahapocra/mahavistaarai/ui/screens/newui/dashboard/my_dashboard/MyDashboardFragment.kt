@@ -130,11 +130,11 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         savedCropSowingDate = appPreferenceManager.getString("CROP_SOWING_DATE_SAVED").toString()
         savedCropWoTRId = appPreferenceManager.getString("CROP_WOTR_ID_SAVED")
         savedCropImageUrl = appPreferenceManager.getString("CROP_IMAGE_SAVED")
-
+        updateNavigationButtons()
         binding.navigateLeft.isEnabled = false
 
         binding.navigateRight.setOnClickListener {
-            val firstVisible = layoutManager.findFirstVisibleItemPosition()
+            val firstVisible = layoutManager.findFirstCompletelyVisibleItemPosition()
             val nextPosition = firstVisible + 4
 
             if (nextPosition < myAdapter.itemCount) {
@@ -143,7 +143,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         }
 
         binding.navigateLeft.setOnClickListener {
-            val firstVisible = layoutManager.findFirstVisibleItemPosition()
+            val firstVisible = layoutManager.findFirstCompletelyVisibleItemPosition()
             val prevPosition = (firstVisible - 4).coerceAtLeast(0)
 
             binding.myDashboardRecyclerView.smoothScrollToPosition(prevPosition)
@@ -153,17 +153,31 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
             RecyclerView.OnScrollListener() {
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val first = layoutManager.findFirstVisibleItemPosition()
-                val last = layoutManager.findLastVisibleItemPosition()
+                super.onScrolled(recyclerView, dx, dy)
 
-                binding.navigateLeft.isEnabled = first > 0
-                binding.navigateRight.isEnabled = last < myAdapter.itemCount - 1
+                val firstVisible = layoutManager.findFirstCompletelyVisibleItemPosition()
+
+                // Enable left only if not at start
+                binding.navigateLeft.isEnabled = firstVisible > 0
+
+                // Enable right only if more items exist ahead
+                binding.navigateRight.isEnabled =
+                    firstVisible + 4 < myAdapter.itemCount
             }
         })
 
         binding.farmSummeryCardView.setOnClickListener {
             startActivity(Intent(context, FarmDetailsActivity::class.java))
         }
+    }
+
+    private fun updateNavigationButtons() {
+        val firstVisible = layoutManager.findFirstCompletelyVisibleItemPosition()
+
+        binding.navigateLeft.isEnabled = firstVisible > 0
+
+        binding.navigateRight.isEnabled =
+            firstVisible + 4 < myAdapter.itemCount
     }
 
     // ✅ Observers
