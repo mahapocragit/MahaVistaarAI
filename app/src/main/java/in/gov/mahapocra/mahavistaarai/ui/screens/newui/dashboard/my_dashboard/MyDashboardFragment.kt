@@ -198,9 +198,11 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                     val farmArea = dataObject.optDouble("total_plot_area")
                     val farmCount = dataObject.optInt("total_farms")
                     val totalVillages = dataObject.optInt("total_villages")
+                    val totalCrops = dataObject.optInt("total_crops")
 
                     binding.totalAreaTextView.text = farmArea.toString()
                     binding.totalFarmTextView.text = farmCount.toString()
+                    binding.totalCropsTextView.text = totalCrops.toString()
                     binding.totalVillagesTextView.text = "Villages: $totalVillages"
                 }
 
