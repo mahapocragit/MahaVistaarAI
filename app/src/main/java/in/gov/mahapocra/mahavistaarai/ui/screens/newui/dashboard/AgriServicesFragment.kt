@@ -116,8 +116,9 @@ class AgriServicesFragment : Fragment(), OnMultiRecyclerItemClickListener {
             startActivity(Intent(context, PestIdentificationActivity::class.java))
         }
 
-        binding.marketPriceLayout.txtTitle.text = "Real-Time Market Prices"
-        binding.marketPriceLayout.shortDescriptionTextView.text = "Live rates from 200+ Mandis"
+        binding.marketPriceLayout.txtTitle.text = getString(R.string.real_time_market_prices)
+        binding.marketPriceLayout.shortDescriptionTextView.text =
+            getString(`in`.gov.mahapocra.mahavistaarai.R.string.live_rates_from_200_mandis)
         binding.marketPriceLayout.root.setOnClickListener {
             startActivity(Intent(context, MarketPrice::class.java))
         }
@@ -128,8 +129,10 @@ class AgriServicesFragment : Fragment(), OnMultiRecyclerItemClickListener {
                 R.drawable.warehouse_bubble_as
             )
         })
-        binding.warehouseLayout.txtTitle.text = "Warehouse Availability"
-        binding.warehouseLayout.shortDescriptionTextView.text = "Find storage space near you"
+        binding.warehouseLayout.txtTitle.text =
+            getString(`in`.gov.mahapocra.mahavistaarai.R.string.warehouse_availability)
+        binding.warehouseLayout.shortDescriptionTextView.text =
+            getString(`in`.gov.mahapocra.mahavistaarai.R.string.find_storage_space_near_you)
         binding.warehouseLayout.root.setOnClickListener {
             startActivity(Intent(context, Warehouse::class.java))
         }
@@ -140,8 +143,10 @@ class AgriServicesFragment : Fragment(), OnMultiRecyclerItemClickListener {
                 R.drawable.chc_bubble_as
             )
         })
-        binding.chcCentreLayout.txtTitle.text = "CHC Center"
-        binding.chcCentreLayout.shortDescriptionTextView.text = "Find local trading hubs"
+        binding.chcCentreLayout.txtTitle.text =
+            getString(`in`.gov.mahapocra.mahavistaarai.R.string.chc_center)
+        binding.chcCentreLayout.shortDescriptionTextView.text =
+            getString(`in`.gov.mahapocra.mahavistaarai.R.string.find_local_trading_hubs)
         binding.chcCentreLayout.root.setOnClickListener {
             startActivity(Intent(context, CHCenterActivity::class.java))
         }

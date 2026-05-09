@@ -364,7 +364,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/_5sdp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
-                android:text="Market &amp; Logistics"
+                android:text="@string/market_amp_logistics"
                 android:textColor="#2C3E50"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -435,7 +435,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:lineSpacingExtra="2dp"
-                            android:text="Fertilizer\nCalculator"
+                            android:text="@string/fertilizer_ncalculator"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/_12sdp"
                             android:textStyle="bold" />
@@ -447,7 +447,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/tvTitle"
                             android:layout_marginTop="6dp"
-                            android:text="Feed Crops Right"
+                            android:text="@string/feed_crops_right"
                             android:textColor="#BFE7D0"
                             android:textSize="@dimen/_10sdp" />
 
@@ -484,7 +484,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:lineSpacingExtra="2dp"
-                            android:text="Cost\nCalculator"
+                            android:text="@string/cost_ncalculator"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/_12sdp"
                             android:textStyle="bold" />
@@ -495,7 +495,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/costCalculatorTitle"
                             android:layout_marginTop="6dp"
-                            android:text="Predicts Profit"
+                            android:text="@string/predicts_profit"
                             android:textColor="#BFE7D0"
                             android:textSize="@dimen/_10sdp" />
 

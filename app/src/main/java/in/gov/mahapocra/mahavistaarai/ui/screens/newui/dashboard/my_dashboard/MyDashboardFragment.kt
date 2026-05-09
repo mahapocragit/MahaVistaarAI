@@ -20,6 +20,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.DeclareYourCropDialogBinding
@@ -65,6 +66,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
     private val farmerViewModel: FarmerViewModel by viewModels()
     private val authViewModel: AuthViewModel by viewModels()
 
+    private var languageToLoad: String = "en"
     private var cropsJsonArray = JSONArray()
     private lateinit var myAdapter: MyDashboardAdapter
     private lateinit var layoutManager: GridLayoutManager
@@ -108,7 +110,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         binding.myDashboardRecyclerView.layoutManager = layoutManager
 
         // empty adapter initially
-        myAdapter = MyDashboardAdapter(JSONArray(), this)
+        myAdapter = MyDashboardAdapter(languageToLoad, JSONArray(), this)
         binding.myDashboardRecyclerView.adapter = myAdapter
 
         // OPTIONAL → only if you want snapping
@@ -124,6 +126,12 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
 
     // ✅ Arrow click logic
     private fun setUpListeners() {
+
+        languageToLoad = "mr"
+        if (AppSettings.getLanguage(requireContext()).equals("1", ignoreCase = true)) {
+            languageToLoad = "en"
+        }
+
         appPreferenceManager = AppPreferenceManager(requireContext())
         savedCropId = appPreferenceManager.getInt("CROP_ID_SAVED")
         savedCropName = appPreferenceManager.getString("CROP_NAME_SAVED").toString()
@@ -231,7 +239,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                     val customisedDashboardList = dataObject.optJSONArray("cust_dash")
 
                     // ✅ update adapter (no re-setup RecyclerView)
-                    myAdapter = MyDashboardAdapter(customisedDashboardList, this)
+                    myAdapter = MyDashboardAdapter(languageToLoad, customisedDashboardList, this)
                     binding.myDashboardRecyclerView.adapter = myAdapter
                 }
 

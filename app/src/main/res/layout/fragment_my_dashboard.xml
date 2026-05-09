@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_colour_nui">
@@ -16,9 +15,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="@android:color/white">
+            app:cardElevation="4dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -31,11 +30,11 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_2sdp"
                     android:fontFamily="@font/inter_regular_font"
-                    android:textFontWeight="800"
-                    android:textStyle="normal"
                     android:text="@string/my_farms"
                     android:textColor="#334155"
+                    android:textFontWeight="800"
                     android:textSize="@dimen/_14sdp"
+                    android:textStyle="normal"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -94,7 +93,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="acres"
+                            android:text="@string/acres_mdash"
                             android:textColor="#000000"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -109,9 +108,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_5sdp"
-                            android:textSize="@dimen/_10sdp"
-                            android:text="Plot Area"
-                            android:textColor="#64748b" />
+                            android:text="@string/plot_area_mdash"
+                            android:textColor="#64748b"
+                            android:textSize="@dimen/_10sdp" />
                     </LinearLayout>
 
                     <View
@@ -137,19 +136,27 @@
                             android:textStyle="bold" />
 
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="#000000"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
                         <ImageView
                             android:layout_width="@dimen/_20sdp"
                             android:layout_height="@dimen/_20sdp"
-                            android:layout_marginTop="28dp"
+                            android:layout_marginTop="@dimen/_5sdp"
                             android:src="@drawable/ic_total_farms_mp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_5sdp"
-                            android:textSize="@dimen/_10sdp"
-                            android:text="Total Farms"
-                            android:textColor="#64748b" />
+                            android:text="@string/total_farms_mdash"
+                            android:textColor="#64748b"
+                            android:textSize="@dimen/_10sdp" />
                     </LinearLayout>
 
                     <View
@@ -174,19 +181,28 @@
                             android:textSize="@dimen/_16sdp"
                             android:textStyle="bold" />
 
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="#000000"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
                         <ImageView
                             android:layout_width="@dimen/_20sdp"
                             android:layout_height="@dimen/_20sdp"
-                            android:layout_marginTop="28dp"
-                            android:src="@drawable/ic_total_crops_mp"/>
+                            android:layout_marginTop="@dimen/_5sdp"
+                            android:src="@drawable/ic_total_crops_mp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_5sdp"
-                            android:textSize="@dimen/_10sdp"
-                            android:text="Total Crops"
-                            android:textColor="#64748b" />
+                            android:text="@string/total_crops_mdash"
+                            android:textColor="#64748b"
+                            android:textSize="@dimen/_10sdp" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -204,9 +220,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:text="@string/production_tools"
                 android:textSize="@dimen/_14sdp"
-                android:textStyle="bold"
-                android:text="Production Tools" />
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="@dimen/_100sdp"
@@ -224,7 +240,7 @@
 
                 <Space
                     android:layout_width="@dimen/_20sdp"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent" />
 
                 <ImageView
                     android:id="@+id/navigateRight"
@@ -240,7 +256,7 @@
             android:id="@+id/myDashboardRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:layout_marginHorizontal="@dimen/_10sdp" />
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:clipToPadding="false" />
     </LinearLayout>
 </FrameLayout>

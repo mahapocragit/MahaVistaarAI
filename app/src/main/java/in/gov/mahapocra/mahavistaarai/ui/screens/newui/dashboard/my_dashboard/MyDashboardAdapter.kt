@@ -9,6 +9,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
 import org.json.JSONArray
 
 class MyDashboardAdapter(
+    private val language: String,
     private val jsonArray: JSONArray,
     private val itemClickListener: RecyclerItemClickListener
 ) : RecyclerView.Adapter<MyDashboardAdapter.ViewHolder>() {
@@ -44,11 +45,14 @@ class MyDashboardAdapter(
         holder.itemView.layoutParams = params
 
         val title = item.optString("title")
+        val titleMr = item.optString("title_mr")
         val description = item.optString("data")
+        val descriptionMr = item.optString("data_mr")
         val imageName = item.optString("image")
 
-        holder.binding.titleTextView.text = title
-        holder.binding.descriptionTextView.text = description
+        holder.binding.titleTextView.text = if (language == "en") title else titleMr
+        holder.binding.descriptionTextView.text =
+            if (language == "en") description else descriptionMr
 
         val context = holder.itemView.context
         val resId = context.resources.getIdentifier(

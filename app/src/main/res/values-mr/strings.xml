@@ -574,4 +574,21 @@
     <string name="smart_farming">स्मार्ट शेती</string>
     <string name="welcome_back_to_your_dashboard">तुमच्या डॅशबोर्डमध्ये पुन्हा स्वागत आहे</string>
     <string name="my_farms">माझी शेती</string>
+    <string name="plot_area_mdash">क्षेत्रफळ</string>
+    <string name="total_farms_mdash">शेतजमिनी</string>
+    <string name="total_crops_mdash">एकूण पिके</string>
+    <string name="production_tools">उत्पादन साधने</string>
+    <string name="acres_mdash">एकर</string>
+    <string name="market_amp_logistics">बाजारपेठ आणि लॉजिस्टिक्स</string>
+    <string name="fertilizer_ncalculator">खत\nकॅल्क्युलेटर</string>
+    <string name="cost_ncalculator">खर्च\nकॅल्क्युलेटर</string>
+    <string name="feed_crops_right">पिकांना योग्य पोषण द्या</string>
+    <string name="predicts_profit">नफा अंदाज</string>
+    <string name="real_time_market_prices">प्रत्यक्ष बाजारभाव</string>
+    <string name="live_rates_from_200_mandis">२००+ मंड्यांमधून थेट दर</string>
+    <string name="warehouse_availability">गोदाम उपलब्धता</string>
+    <string name="find_storage_space_near_you">तुमच्या जवळील साठवण जागा शोधा</string>
+    <string name="chc_center">सीएचसी केंद्र</string>
+    <string name="find_local_trading_hubs">स्थानिक व्यापार केंद्रे शोधा</string>
+    <string name="hello">नमस्कार</string>
 </resources>

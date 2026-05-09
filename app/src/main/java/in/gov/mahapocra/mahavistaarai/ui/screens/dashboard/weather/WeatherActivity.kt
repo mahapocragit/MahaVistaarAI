@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -23,7 +22,6 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotAct
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.WEATHER_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -49,7 +47,7 @@ class WeatherActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWeatherHomeTempBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
     private val leaderboardViewModel: LeaderboardViewModel by viewModels()
-    private var recyclerAdapter =  TemperatureAdapter(JSONArray())
+    private var recyclerAdapter = TemperatureAdapter(JSONArray())
     private var jsonArrayForecast = JSONArray()
     private var jsonArrayPrevious = JSONArray()
     private lateinit var languageToLoad: String
@@ -87,7 +85,6 @@ class WeatherActivity : AppCompatActivity() {
             CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.TALUKA_CODE))
                 ?: "0"
         farmerViewModel.fetchWeatherDetails(talukaCode.toInt(), languageToLoad)
-        farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
         binding.tabLayout.visibility = View.GONE
         binding.viewPager.visibility = View.GONE
         binding.timestampTV.text = getFormattedTimestamp()
@@ -97,7 +94,9 @@ class WeatherActivity : AppCompatActivity() {
         binding.chatbotIcon.setOnTouchListener(DraggableTouchListener {
             startActivity(Intent(this@WeatherActivity, ChatbotActivity::class.java))
         })
-
+        binding.weatherTalukaTV.text =
+            CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.TALUKA_NAME))
+                .toString()
         binding.nextSevenDayTV.setOnClickListener {
             binding.tabLayout.visibility = View.GONE
             binding.viewPager.visibility = View.GONE
@@ -217,21 +216,6 @@ class WeatherActivity : AppCompatActivity() {
                 is UiState.Error -> {
                     ProgressHelper.disableProgressDialog()
                     Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-
-        farmerViewModel.talukaList.observe(this) {
-            if (it != null) {
-                val jSONObject = JSONObject(it.toString())
-                val talukaID: Int =
-                    AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
-                val talukaArray = jSONObject.optJSONArray("data")
-                for (i in 0 until talukaArray!!.length()) {
-                    val talukaIDJson = talukaArray.getJSONObject(i)
-                    if (talukaID == talukaIDJson.optInt("code")) {
-                        binding.weatherTalukaTV.text = talukaIDJson.optString("name")
-                    }
                 }
             }
         }

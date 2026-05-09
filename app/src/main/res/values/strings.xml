@@ -575,4 +575,21 @@
     <string name="smart_farming">Smart Farming</string>
     <string name="welcome_back_to_your_dashboard">Welcome back to your dashboard</string>
     <string name="my_farms">My Farms</string>
+    <string name="plot_area_mdash">Plot Area</string>
+    <string name="total_farms_mdash">Total Farms</string>
+    <string name="total_crops_mdash">Total Crops</string>
+    <string name="production_tools">Production Tools</string>
+    <string name="acres_mdash">acres</string>
+    <string name="market_amp_logistics"><![CDATA[Market & Logistics]]></string>
+    <string name="fertilizer_ncalculator">Fertilizer\nCalculator</string>
+    <string name="cost_ncalculator">Cost\nCalculator</string>
+    <string name="feed_crops_right">Feed Crops Right</string>
+    <string name="predicts_profit">Predicts Profit</string>
+    <string name="real_time_market_prices">Real-Time Market Prices</string>
+    <string name="live_rates_from_200_mandis">Live rates from 200+ Mandis</string>
+    <string name="warehouse_availability">Warehouse Availability</string>
+    <string name="find_storage_space_near_you">Find storage space near you</string>
+    <string name="chc_center">CHC Center</string>
+    <string name="find_local_trading_hubs">Find local trading hubs</string>
+    <string name="hello">Hello, </string>
 </resources>
