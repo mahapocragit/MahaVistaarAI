@@ -68,16 +68,16 @@ class SmartFarmingFragment : Fragment(), OnRecyclerItemClickListener {
         if (obj != null) {
             val receivedObject = obj as SmartFarmingModel
             when (receivedObject.title) {
-                "Climate Resilient" -> {
+                getString(R.string.climateTechnology) -> {
                     startActivity(Intent(context, ClimateResilientTechnology::class.java))
                 }
-                "Videos" -> {
+                getString(R.string.videos) -> {
                     startActivity(Intent(context, VideosActivity::class.java))
                 }
-                "Shetishala" -> {
+                getString(R.string.shetishala) -> {
                     startActivity(Intent(context, ShetishalaActivity::class.java))
                 }
-                "Magazine" -> {
+                getString(R.string.magazine) -> {
                     startActivity(Intent(context, MagazineDashboardActivity::class.java))
                 }
             }

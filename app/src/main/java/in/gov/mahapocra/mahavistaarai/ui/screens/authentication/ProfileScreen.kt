@@ -47,12 +47,12 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SessionManager
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.unSubscribeToTopic
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-
 
 class ProfileScreen : AppCompatActivity(), AlertListEventListener {
     private lateinit var binding: ActivityProfileScreenBinding
@@ -65,11 +65,11 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
     private lateinit var registerMob: String
     private lateinit var emailid: String
     private lateinit var districtName: String
-    private var districtID: Int = 0
+    private var districtCode: Int = 0
     private lateinit var talukaName: String
-    private var talukaID: Int = 0
+    private var talukaCode: Int = 0
     private lateinit var villageName: String
-    private var villageID: Int = 0
+    private var villageCode: Int = 0
     private var agristackId: String = ""
     private var fAAPRegistrationID: String = ""
     private var farmerId = 0
@@ -331,42 +331,33 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
         }
     }
 
-    private fun getLocalizedValue(mrKey: String, enKey: String, default: String): String {
-        val key = if (languageToLoad == "mr") mrKey else enKey
-        return AppSettings.getInstance().getValue(this, key, default)
-    }
-
     private fun setConfiguration() {
         farmerRegisterID = intent.getIntExtra("FAAPRegistrationID", 0)
         if (farmerRegisterID > 0) {
             binding.submitButton.text = getString(R.string.update_profile_text)
             fAAPRegistrationID = farmerRegisterID.toString()
             mobileNumberStatus = true
-            userName =
-                AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName)
-            registerMob = AppSettings.getInstance()
-                .getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
-            Log.d(TAG, "setConfiguration: $registerMob")
+            val userName = AppPreferenceManager(this).getString(AppConstants.USER_NAME)
+            val userMobile = AppPreferenceManager(this).getString(AppConstants.USER_MOBILE)
             emailid =
                 AppSettings.getInstance().getValue(this, AppConstants.uEmail, AppConstants.uEmail)
-            districtName = getLocalizedValue(
-                AppConstants.uDISTMR,
-                AppConstants.uDIST,
-                getString(R.string.farmer_select_district)
-            )
-            talukaName = getLocalizedValue(
-                AppConstants.uTALUKAMR,
-                AppConstants.uTALUKA,
-                getString(R.string.farmer_select_taluka)
-            )
-            villageName = getLocalizedValue(
-                AppConstants.uVILLAGEMR,
-                AppConstants.uVILLAGE,
-                getString(R.string.farmer_select_village)
-            )
-            districtID = AppSettings.getInstance().getIntValue(this, AppConstants.uDISTId, 0)
-            talukaID = AppSettings.getInstance().getIntValue(this, AppConstants.uTALUKAID, 0)
-            villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
+            districtName = CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.DISTRICT_NAME))
+                .toString()
+            talukaName = CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.TALUKA_NAME))
+                .toString()
+            villageName = CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.VILLAGE_NAME))
+                .toString()
+            districtCode =
+                CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.DISTRICT_CODE))
+                    .toString().toInt()
+            CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.TALUKA_CODE))?.let {
+                talukaCode =
+                    it.toInt()
+            }
+            villageCode =
+                CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.VILLAGE_CODE))
+                    ?.toInt()
+                    .toString().toInt()
             val rawValue = AppSettings.getInstance().getSavedValue(this, AppConstants.AGRISTACKID)
             agristackId = if (rawValue.isNullOrEmpty() || rawValue == "null") "" else rawValue
             if (agristackId != "") {
@@ -375,8 +366,8 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
                     showDialogForConsent()
                 }
             }
-            binding.nameEditText.setText(userName)
-            binding.mobNoEditText.setText(registerMob)
+            binding.nameEditText.setText(CryptoHelper.decryptField(userName))
+            binding.mobNoEditText.setText(CryptoHelper .decryptField(userMobile))
             binding.textViewDist.text = districtName
             binding.textViewTaluka.text = talukaName
             binding.textViewVillage.text = villageName
@@ -495,7 +486,7 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
 
     private fun showTaluka() {
         if (talukaJSONArray == null) {
-            if (districtID > 0) {
+            if (districtCode > 0) {
                 farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
             } else {
                 UIToastMessage.show(
@@ -519,8 +510,8 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
 
     private fun showVillage() {
         if (villageJSONArray == null) {
-            if (talukaID > 0) {
-                registrationViewModel.getVillageList(this, languageToLoad, talukaID)
+            if (talukaCode > 0) {
+                registrationViewModel.getVillageList(this, languageToLoad, talukaCode)
             } else {
                 UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_taluka))
             }
@@ -584,11 +575,11 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
         } else if (!mobileNumberStatus) {
             binding.mobNoEditText.error = resources.getString(R.string.regist_mob_verify_err)
             binding.mobNoEditText.requestFocus()
-        } else if (districtID == 0) {
+        } else if (districtCode == 0) {
             UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_district))
-        } else if (talukaID == 0) {
+        } else if (talukaCode == 0) {
             UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_taluka))
-        } else if (villageID == 0) {
+        } else if (villageCode == 0) {
             UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_village))
         } else {
             val jsonObject = JSONObject()
@@ -596,11 +587,11 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
                 jsonObject.put("Name", userName)
                 jsonObject.put("EmailId", emailid)
                 jsonObject.put("DistrictName", districtName)
-                jsonObject.put("DistrictCode", districtID)
+                jsonObject.put("DistrictCode", districtCode)
                 jsonObject.put("TalukaName", talukaName)
-                jsonObject.put("TalukaCode", talukaID)
+                jsonObject.put("TalukaCode", talukaCode)
                 jsonObject.put("VillageName", villageName)
-                jsonObject.put("VillageCode", villageID)
+                jsonObject.put("VillageCode", villageCode)
                 jsonObject.put("Status", "Active")
                 jsonObject.put("version_number", versionName)
                 jsonObject.put("fcm_token", token)
@@ -749,23 +740,23 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
     override fun didSelectListItem(i: Int, s: String?, s1: String?) {
         if (i == 1) {
             if (s1 != null) {
-                districtID = s1.toInt()
+                districtCode = s1.toInt()
             }
 
             if (s != null) {
                 districtName = s
             }
             binding.textViewDist.text = s
-            if (districtID > 0) {
-                AppSettings.getInstance().setIntValue(this, AppConstants.uDISTId, districtID)
+            if (districtCode > 0) {
+                AppSettings.getInstance().setIntValue(this, AppConstants.uDISTId, districtCode)
                 farmerViewModel.fetchTalukaMasterData(this, languageToLoad)
             }
-            talukaID = 0
+            talukaCode = 0
             binding.textViewTaluka.text = ""
             binding.textViewTaluka.hint = resources.getString(R.string.farmer_select_taluka)
             binding.textViewTaluka.setHintTextColor(Color.GRAY)
 
-            villageID = 0
+            villageCode = 0
             binding.textViewVillage.text = ""
             binding.textViewVillage.hint = resources.getString(R.string.farmer_select_village)
             binding.textViewVillage.setHintTextColor(Color.GRAY)
@@ -774,18 +765,18 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
 
         if (i == 2) {
             if (s1 != "") {
-                talukaID = s1!!.toInt()
-                talukaToken = "taluka_$talukaID"
+                talukaCode = s1!!.toInt()
+                talukaToken = "taluka_$talukaCode"
             }
             if (s != null) {
                 talukaName = s
             }
             binding.textViewTaluka.text = s
             villageJSONArray = null
-            if (talukaID > 0) {
-                registrationViewModel.getVillageList(this, languageToLoad, talukaID)
+            if (talukaCode > 0) {
+                registrationViewModel.getVillageList(this, languageToLoad, talukaCode)
             }
-            villageID = 0
+            villageCode = 0
             binding.textViewVillage.text = ""
             binding.textViewVillage.hint = resources.getString(R.string.farmer_select_village)
             binding.textViewVillage.setHintTextColor(Color.GRAY)
@@ -793,7 +784,7 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
 
         if (i == 3) {
             if (s1 != "") {
-                villageID = s1!!.toInt()
+                villageCode = s1!!.toInt()
             }
             villageName = s.toString()
             binding.textViewVillage.text = s

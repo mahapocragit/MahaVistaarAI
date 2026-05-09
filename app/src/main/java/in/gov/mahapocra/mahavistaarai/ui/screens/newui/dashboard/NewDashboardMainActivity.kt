@@ -561,8 +561,8 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     val jsonResponse = JSONObject(state.data.toString())
                     val dataObject = jsonResponse.optJSONObject("data")
                     Log.d(TAG, "observeResponse: $dataObject")
-                    val name = CryptoHelper.decryptField(dataObject?.optString("Name"))
-                    val mobile = CryptoHelper.decryptField(dataObject?.optString("MobileNo"))
+                    val name = dataObject?.optString("Name")
+                    val mobile = dataObject?.optString("MobileNo")
                     val villageCode = dataObject?.optString("VillageCode")
                     val villageName = dataObject?.optString("VillageName")
                     val talukaCode = dataObject?.optString("TalukaCode")
@@ -575,16 +575,20 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                         dataObject?.optJSONArray("topics_to_subscribe") ?: JSONArray()
                     val topicsToDeleteArray =
                         dataObject?.optJSONArray("topics_to_delete") ?: JSONArray()
+                    AppPreferenceManager(this).saveString(AppConstants.USER_NAME, name)
+                    AppPreferenceManager(this).saveString(AppConstants.USER_MOBILE, mobile)
                     AppPreferenceManager(this).saveString(AppConstants.VILLAGE_CODE, villageCode)
                     AppPreferenceManager(this).saveString(AppConstants.VILLAGE_NAME, villageName)
                     AppPreferenceManager(this).saveString(AppConstants.TALUKA_CODE, talukaCode)
                     AppPreferenceManager(this).saveString(AppConstants.TALUKA_NAME, talukaName)
                     AppPreferenceManager(this).saveString(AppConstants.DISTRICT_CODE, districtCode)
                     AppPreferenceManager(this).saveString(AppConstants.DISTRICT_NAME, districtName)
-                    val firstName = name?.split(" ")[0] ?: ""
-                    navUserName.text = name
-                    navUserPhone.text = mobile
-                    binding.nameTextView.text = "Hello, $firstName"
+                    navUserName.text = CryptoHelper.decryptField(name)?.split(" ")[0] ?: ""
+                    navUserPhone.text = CryptoHelper.decryptField(mobile)
+                    binding.nameTextView.text = buildString {
+                        append("Hello, ")
+                        append(CryptoHelper.decryptField(name)?.split(" ")[0] ?: "")
+                    }
                     topicsOperations(topicJsonArray, topicsToSubArray, topicsToDeleteArray)
                 }
 

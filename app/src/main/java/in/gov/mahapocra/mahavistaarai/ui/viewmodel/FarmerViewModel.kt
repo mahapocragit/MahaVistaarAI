@@ -383,13 +383,7 @@ class FarmerViewModel : ViewModel() {
     fun fetchDataForCHC(context: Context, latitude: Double, longitude: Double) {
         viewModelScope.launch {
             try {
-                val jsonObject = JSONObject()
-                jsonObject.put("api_key", ApiConstants.SSO_KEY)
-                jsonObject.put("lat", latitude)
-                jsonObject.put("lon", longitude)
-
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val response = apiRequest.getCHCInformation(requestBody)
+                val response = apiRequest.getCHCInformation(latitude.toString(), longitude.toString())
                 _chcCentersResponse.value = response
             } catch (e: Exception) {
                 val message = when (e) {
@@ -722,17 +716,11 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun fetchWarehouseData(context: Context, districtID: Int, languageToLoad: String) {
+    fun fetchWarehouseData(context: Context, districtID: Int, language: String) {
         ProgressHelper.showProgressDialog(context)
         viewModelScope.launch {
             try {
-                val jsonObject = JSONObject()
-                jsonObject.put("api_key", APIKeys.SSO_PROD)
-                jsonObject.put("district_code", districtID)
-                jsonObject.put("lang", languageToLoad)
-
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val response = apiRequest.getWareHouseDetails(requestBody)
+                val response = apiRequest.getWareHouseDetails(districtID, language)
                 ProgressHelper.disableProgressDialog()
                 _warehouseDetailsResponse.value = response
             } catch (e: Exception) {

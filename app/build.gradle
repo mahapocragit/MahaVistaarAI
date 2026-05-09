@@ -93,6 +93,10 @@ android {
         }
     }
 
+    firebaseCrashlytics {
+        mappingFileUploadEnabled false
+    }
+
     buildFeatures {
         viewBinding true
         dataBinding true

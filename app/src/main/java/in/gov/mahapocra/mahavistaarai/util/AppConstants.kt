@@ -40,6 +40,8 @@ object AppConstants {
     const val TALUKA_NAME: String = "TALUKA_NAME"
     const val DISTRICT_CODE: String = "DISTRICT_CODE"
     const val DISTRICT_NAME: String = "DISTRICT_NAME"
+    const val USER_NAME: String = "USER_NAME"
+    const val USER_MOBILE: String = "USER_MOBILE"
 
     //Constants for point system
     const val CROP_ADVISORY_POINT = 1

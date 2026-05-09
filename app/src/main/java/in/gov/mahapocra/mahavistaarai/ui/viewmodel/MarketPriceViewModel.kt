@@ -12,6 +12,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
+import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -21,103 +22,73 @@ import java.net.SocketException
 import java.net.SocketTimeoutException
 
 class MarketPriceViewModel : ViewModel() {
+    val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+    val apiRequest = retrofit.create(ApiService::class.java)
 
+    private val _getMarketAndMarketNameResponse = MutableLiveData< UiState<JsonObject>>()
+    val getMarketAndMarketNameResponse: LiveData<UiState<JsonObject>> = _getMarketAndMarketNameResponse
 
-    private val _getMarketPriceDetailsResponse = MutableLiveData<JsonObject>()
-    val getMarketPriceDetailsResponse: LiveData<JsonObject> = _getMarketPriceDetailsResponse
+    private val _getMarketListResponse = MutableLiveData<UiState<JsonObject>>()
+    val getMarketListResponse: LiveData<UiState<JsonObject>> = _getMarketListResponse
 
-    private val _responseMarketList = MutableLiveData<JsonObject>()
-    val responseMarketList: LiveData<JsonObject> = _responseMarketList
-
-    private val _getMarketAndMarketNameResponse = MutableLiveData<JsonObject>()
-    val getMarketAndMarketNameResponse: LiveData<JsonObject> = _getMarketAndMarketNameResponse
+    private val _getMarketPriceDetailsResponse = MutableLiveData<UiState<JsonObject>>()
+    val getMarketPriceDetailsResponse: LiveData<UiState<JsonObject>> = _getMarketPriceDetailsResponse
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
-    fun getMarketAndMarketName(context: Context, districtID: Int, language: String) {
+    fun getMarketAndMarketName(districtID: Int, language: String) {
         viewModelScope.launch {
-            ProgressHelper.showProgressDialog(context)
+            _getMarketAndMarketNameResponse.value = UiState.Loading
             try {
-                val jsonObject = JSONObject().apply {
-                    put("api_key", APIKeys.SSO_PROD)
-                    put("district_code", districtID)
-                    put("lang", language)
-                }
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val api = retrofit.create(ApiService::class.java)
-                val response = api.getMarketAndMarketName(requestBody)
-                ProgressHelper.disableProgressDialog()
-                _getMarketAndMarketNameResponse.value = response
+                val response = apiRequest.getMarketAndMarketName(districtID, language)
+                _getMarketAndMarketNameResponse.value = UiState.Success(response)
             } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
+                _getMarketAndMarketNameResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
 
-    fun fetchMarketList(context: Context, languageToLoad: String, districtCode: Int) {
+    fun fetchMarketList(languageToLoad: String, districtCode: Int) {
         viewModelScope.launch {
-            ProgressHelper.showProgressDialog(context)
+            _getMarketListResponse.value = UiState.Loading
             try {
-                val jsonObject = JSONObject()
-                jsonObject.put("lang", languageToLoad)
-                jsonObject.put("api_key", APIKeys.SSO_PROD)
-                jsonObject.put("district_code", districtCode)
-
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
-                val response = apiRequest.getMarketList(requestBody)
-                ProgressHelper.disableProgressDialog()
-                _responseMarketList.value = response
+                val response = apiRequest.getMarketList(languageToLoad, districtCode)
+                _getMarketListResponse.value = UiState.Success(response)
             } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
+                _getMarketListResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
 
-    fun getMarketPriceDetails(context: Context, mandiId: Int, language: String) {
+    fun getMarketPriceDetails(mandiId: Int, language: String) {
         viewModelScope.launch {
-            ProgressHelper.showProgressDialog(context)
+            _getMarketPriceDetailsResponse.value = UiState.Loading
             try {
-                val jsonObject = JSONObject().apply {
-                    put("api_key", APIKeys.SSO_PROD)
-                    put("apmc_id", mandiId)
-                    put("lang", language)
-                }
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val api = retrofit.create(ApiService::class.java)
-                val response = api.getMarketPriceDetails(requestBody)
-                ProgressHelper.disableProgressDialog()
-                _getMarketPriceDetailsResponse.value = response
+                val response = apiRequest.getMarketPriceDetails(language, mandiId)
+                _getMarketPriceDetailsResponse.value = UiState.Success(response)
             } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
+                _getMarketPriceDetailsResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
