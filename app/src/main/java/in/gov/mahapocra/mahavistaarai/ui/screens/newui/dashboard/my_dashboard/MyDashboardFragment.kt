@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -81,6 +82,9 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
     private var selectedCropIdForDCS = 0
     private var selectedCropSowingDateForDCS = ""
 
+    private var totalPages = 0
+    private var currentPage = 0
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -112,7 +116,6 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         // empty adapter initially
         myAdapter = MyDashboardAdapter(languageToLoad, JSONArray(), this)
         binding.myDashboardRecyclerView.adapter = myAdapter
-
         // OPTIONAL → only if you want snapping
         // PagerSnapHelper().attachToRecyclerView(binding.myDashboardRecyclerView)
     }
@@ -165,10 +168,14 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
 
                 val firstVisible = layoutManager.findFirstCompletelyVisibleItemPosition()
 
-                // Enable left only if not at start
-                binding.navigateLeft.isEnabled = firstVisible > 0
+                val newPage = firstVisible / 4
 
-                // Enable right only if more items exist ahead
+                if (newPage != currentPage) {
+                    updateIndicator(newPage)
+                    currentPage = newPage
+                }
+
+                binding.navigateLeft.isEnabled = firstVisible > 0
                 binding.navigateRight.isEnabled =
                     firstVisible + 4 < myAdapter.itemCount
             }
@@ -241,6 +248,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                     // ✅ update adapter (no re-setup RecyclerView)
                     myAdapter = MyDashboardAdapter(languageToLoad, customisedDashboardList, this)
                     binding.myDashboardRecyclerView.adapter = myAdapter
+                    setupPageIndicator(myAdapter.itemCount)
                 }
 
                 is UiState.Error -> {
@@ -746,6 +754,49 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
             else -> Intent(requireContext(), NewDashboardMainActivity::class.java)
         }
         startActivity(targetIntent)
+    }
+
+    private fun setupPageIndicator(itemCount: Int) {
+
+        val itemsPerPage = 4
+        if (itemCount == 0) return
+
+        val pageCount = (itemCount + itemsPerPage - 1) / itemsPerPage
+
+        binding.pageIndicatorLayout.removeAllViews()
+
+        for (i in 0 until pageCount) {
+
+            val indicator = ImageView(requireContext())
+
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+
+            params.marginEnd = 8
+            indicator.layoutParams = params
+
+            indicator.setImageResource(R.drawable.dot_unselected)
+
+            binding.pageIndicatorLayout.addView(indicator)
+        }
+
+        updateIndicator(0)
+    }
+
+    private fun updateIndicator(position: Int) {
+
+        for (i in 0 until binding.pageIndicatorLayout.childCount) {
+
+            val dot = binding.pageIndicatorLayout.getChildAt(i) as ImageView
+
+            if (i == position) {
+                dot.setImageResource(R.drawable.dot_selected)
+            } else {
+                dot.setImageResource(R.drawable.dot_unselected)
+            }
+        }
     }
 
     companion object {
