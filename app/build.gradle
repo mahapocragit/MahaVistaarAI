@@ -187,4 +187,7 @@ dependencies {
 
     // Calligraphy (optional)
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
+
+    //Encrypted Shared Preference
+    implementation "androidx.security:security-crypto:1.1.0-alpha06"
 }

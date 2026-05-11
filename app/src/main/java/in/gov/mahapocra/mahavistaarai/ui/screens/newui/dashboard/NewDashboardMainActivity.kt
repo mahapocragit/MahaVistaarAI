@@ -586,7 +586,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     navUserName.text = CryptoHelper.decryptField(name)?.split(" ")[0] ?: ""
                     navUserPhone.text = CryptoHelper.decryptField(mobile)
                     binding.nameTextView.text = buildString {
-                        append("${getString(R.string.hello)}, ")
+                        append("${getString(R.string.hello)} ")
                         append(CryptoHelper.decryptField(name)?.split(" ")[0] ?: "")
                     }
                     topicsOperations(topicJsonArray, topicsToSubArray, topicsToDeleteArray)

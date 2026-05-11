@@ -13,13 +13,22 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.FragmentSmartFarmingBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.magazine.MagazineDashboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.sop.SOPActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
+import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 
 class SmartFarmingFragment : Fragment(), OnRecyclerItemClickListener {
 
     private var _binding: FragmentSmartFarmingBinding? = null
     private val binding get() = _binding!!
+
+    private var savedCropId = 0
+    private var savedCropName = ""
+    private var savedCropImageUrl = ""
+    private var savedCropSowingDate = ""
+    private var savedCropWoTRId = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +40,13 @@ class SmartFarmingFragment : Fragment(), OnRecyclerItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        savedCropId = AppPreferenceManager(requireContext()).getInt("CROP_ID_SAVED")
+        savedCropName = AppPreferenceManager(requireContext()).getString("CROP_NAME_SAVED")?:""
+        savedCropImageUrl = AppPreferenceManager(requireContext()).getString("CROP_IMAGE_SAVED")?:""
+        savedCropSowingDate = AppPreferenceManager(requireContext()).getString("CROP_SOWING_DATE_SAVED")?:""
+        savedCropWoTRId = AppPreferenceManager(requireContext()).getString("CROP_WOTR_ID_SAVED")?:""
 
         val dataList = listOf(
             SmartFarmingModel(
@@ -48,6 +64,14 @@ class SmartFarmingFragment : Fragment(), OnRecyclerItemClickListener {
             SmartFarmingModel(
                 ContextCompat.getDrawable(requireContext(), R.drawable.ic_magazine_sf)!!,
                 getString(R.string.magazine)
+            ),
+            SmartFarmingModel(
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_pest_disease_sf)!!,
+                getString(R.string.pests_n_diseases)
+            ),
+            SmartFarmingModel(
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_sop_sf)!!,
+                getString(R.string.sop_title)
             )
         )
 
@@ -79,6 +103,23 @@ class SmartFarmingFragment : Fragment(), OnRecyclerItemClickListener {
                 }
                 getString(R.string.magazine) -> {
                     startActivity(Intent(context, MagazineDashboardActivity::class.java))
+                }
+                getString(R.string.pests_n_diseases)->{
+                    val intent = Intent(requireContext(), PestsAndDiseasesStages::class.java)
+                    intent.putExtra("id", savedCropId)
+                    intent.putExtra("wotr_crop_id", savedCropWoTRId)
+                    intent.putExtra("sowingDate", savedCropSowingDate)
+                    intent.putExtra("mUrl", savedCropImageUrl)
+                    intent.putExtra("mName", savedCropName)
+                    startActivity(intent)
+                }
+                getString(R.string.sop_title)->{
+                    val intent = Intent(requireContext(), SOPActivity::class.java)
+                    intent.putExtra("id", savedCropId)
+                    intent.putExtra("wotr_crop_id", savedCropWoTRId)
+                    intent.putExtra("mUrl", savedCropImageUrl)
+                    intent.putExtra("mName", savedCropName)
+                    startActivity(intent)
                 }
             }
         }
