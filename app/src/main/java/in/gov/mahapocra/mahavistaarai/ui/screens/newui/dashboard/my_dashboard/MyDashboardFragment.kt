@@ -8,10 +8,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -30,6 +32,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.DeclareYourCropDialogBinding
 import `in`.gov.mahapocra.mahavistaarai.databinding.EtlCrossedDialogBinding
 import `in`.gov.mahapocra.mahavistaarai.databinding.FragmentMyDashboardBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropRecyclerSapAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.AuthenticateFarmerIdActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.etl.AgriStackAdvisoryActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.FertilizerCalculatorActivity
@@ -190,10 +193,44 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         })
 
         binding.farmSummeryCardView.setOnClickListener {
-            startActivity(Intent(context, FarmDetailsActivity::class.java))
+            val rawValue =
+                CryptoHelper.decryptField(
+                    AppPreferenceManager(requireContext()).getString(
+                        AppConstants.AGRISTACKID
+                    )
+                ).toString()
+            val agristackId = if (rawValue.isEmpty() || rawValue == "null") "" else rawValue
+            if (agristackId != "") {
+                startActivity(Intent(context, FarmDetailsActivity::class.java))
+            }else{
+                showAgristackLinkingDialog()
+            }
         }
 
         setETLAlertDialog()
+    }
+
+    private fun showAgristackLinkingDialog() {
+        val context = ContextThemeWrapper(requireContext(), R.style.Theme_FarmerApp)
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.famer_id_login_dialog, null)
+        val agristackLoginDialog = AlertDialog.Builder(context)
+            .setView(dialogView)
+            .create()
+
+        val confirmButton = dialogView.findViewById<Button>(R.id.confirmButton)
+        val cancelButton = dialogView.findViewById<Button>(R.id.cancelButton)
+
+        confirmButton.setOnClickListener {
+            startActivity(Intent(requireContext(), AuthenticateFarmerIdActivity::class.java))
+            agristackLoginDialog.dismiss()
+        }
+
+        cancelButton.setOnClickListener {
+            appPreferenceManager.saveBoolean("AGRISTACK_LOGIN_DIALOG", true)
+            agristackLoginDialog.dismiss()
+        }
+
+        agristackLoginDialog.show()
     }
 
     private fun updateNavigationButtons() {
