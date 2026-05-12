@@ -44,7 +44,7 @@
                     <TextView
                         android:layout_height="match_parent"
                         android:layout_width="match_parent"
-                        android:text="Village"
+                        android:text="@string/village"
                         android:textColor="#777777"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -57,7 +57,7 @@
                     android:background="@drawable/bg_owner_chip"
                     android:paddingHorizontal="12dp"
                     android:paddingVertical="4dp"
-                    android:text="Owner"
+                    android:text="@string/owner"
                     android:textColor="#2E7D32"
                     android:textSize="12sp" />
             </RelativeLayout>
@@ -80,7 +80,7 @@
                     <TextView
                         android:layout_height="match_parent"
                         android:layout_width="match_parent"
-                        android:text="Khata No."
+                        android:text="@string/survey_no"
                         android:textColor="#777777"
                         android:textSize="12sp" />
 
@@ -103,7 +103,7 @@
                     <TextView
                         android:layout_height="match_parent"
                         android:layout_width="match_parent"
-                        android:text="Land Owner Name"
+                        android:text="@string/land_owner_name"
                         android:textColor="#777777"
                         android:textSize="12sp" />
 
@@ -138,7 +138,7 @@
                     <TextView
                         android:layout_height="match_parent"
                         android:layout_width="match_parent"
-                        android:text="Total Area"
+                        android:text="@string/total_area"
                         android:textColor="#666666"
                         android:textSize="12sp" />
 
@@ -157,6 +157,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
                     android:layout_weight="1"
+                    android:visibility="gone"
                     android:background="@drawable/bg_light_green_box"
                     android:orientation="vertical"
                     android:padding="12dp">
@@ -187,7 +188,7 @@
                 android:background="@drawable/bg_green_button"
                 android:gravity="center"
                 android:padding="14dp"
-                android:text="View Details →"
+                android:text="@string/view_details"
                 android:textColor="@android:color/white"
                 android:textStyle="bold" />
 

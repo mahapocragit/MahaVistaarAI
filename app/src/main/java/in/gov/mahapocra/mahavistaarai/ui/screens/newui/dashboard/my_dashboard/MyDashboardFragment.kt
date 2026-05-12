@@ -11,11 +11,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -25,7 +27,9 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.DeclareYourCropDialogBinding
+import `in`.gov.mahapocra.mahavistaarai.databinding.EtlCrossedDialogBinding
 import `in`.gov.mahapocra.mahavistaarai.databinding.FragmentMyDashboardBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropRecyclerSapAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.etl.AgriStackAdvisoryActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.FertilizerCalculatorActivity
@@ -41,12 +45,14 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.Shetisha
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.NewDashboardMainActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.DetailedFarmActivity.Companion.DELETE_CROP
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.FarmDetailsActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.adapters.CropSelectionAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getLatestAdvisoriesAsJsonArray
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
@@ -66,12 +72,10 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
     private var selectedFarmObject: JSONObject? = null
     private val farmerViewModel: FarmerViewModel by viewModels()
     private val authViewModel: AuthViewModel by viewModels()
-
     private var languageToLoad: String = "en"
     private var cropsJsonArray = JSONArray()
     private lateinit var myAdapter: MyDashboardAdapter
     private lateinit var layoutManager: GridLayoutManager
-
     private lateinit var appPreferenceManager: AppPreferenceManager
     private var savedCropId = 0
     private var savedCropName = ""
@@ -81,9 +85,8 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
     private var myFarmsAdapter: MyFarmsDCSAdapter? = null
     private var selectedCropIdForDCS = 0
     private var selectedCropSowingDateForDCS = ""
-
-    private var totalPages = 0
     private var currentPage = 0
+    private var etlAdvisoryJsonArray: JSONArray = JSONArray()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -116,8 +119,6 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         // empty adapter initially
         myAdapter = MyDashboardAdapter(languageToLoad, JSONArray(), this)
         binding.myDashboardRecyclerView.adapter = myAdapter
-        // OPTIONAL → only if you want snapping
-        // PagerSnapHelper().attachToRecyclerView(binding.myDashboardRecyclerView)
     }
 
     private fun hitApis() {
@@ -141,6 +142,13 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         savedCropSowingDate = appPreferenceManager.getString("CROP_SOWING_DATE_SAVED").toString()
         savedCropWoTRId = appPreferenceManager.getString("CROP_WOTR_ID_SAVED")
         savedCropImageUrl = appPreferenceManager.getString("CROP_IMAGE_SAVED")
+        val etlJsonString = appPreferenceManager.getString(AppConstants.ETL_ADVISORY_ARRAY)
+        try {
+            etlAdvisoryJsonArray = JSONArray(etlJsonString)
+        } catch (_: Exception) {
+        }
+        binding.etlWarningCard.visibility =
+            if (etlAdvisoryJsonArray.length() != 0) View.VISIBLE else View.GONE
         updateNavigationButtons()
         binding.navigateLeft.isEnabled = false
 
@@ -184,6 +192,8 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         binding.farmSummeryCardView.setOnClickListener {
             startActivity(Intent(context, FarmDetailsActivity::class.java))
         }
+
+        setETLAlertDialog()
     }
 
     private fun updateNavigationButtons() {
@@ -218,7 +228,8 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                     binding.totalAreaTextView.text = farmArea.toString()
                     binding.totalFarmTextView.text = farmCount.toString()
                     binding.totalCropsTextView.text = totalCrops.toString()
-                    binding.totalVillagesTextView.text = "Villages: $totalVillages"
+                    binding.totalVillagesTextView.text =
+                        "${getString(R.string.villages)} $totalVillages"
                 }
 
                 is UiState.Error -> {
@@ -404,7 +415,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
             viewLifecycleOwner
         ) { state ->
 
-            when(state) {
+            when (state) {
 
                 is UiState.Loading -> {
 
@@ -458,7 +469,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
             LinearLayoutManager(requireContext())
 
         myFarmsAdapter =
-            MyFarmsDCSAdapter(myFarmsJsonArray, this)
+            MyFarmsDCSAdapter(myFarmsJsonArray, this, languageToLoad)
 
         binding.myFarmsRecyclerView.adapter =
             myFarmsAdapter
@@ -496,12 +507,15 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                     val cropName =
                         selectedCrop.optString("name")
 
+                    val cropNameMr =
+                        selectedCrop.optString("name_mr")
+
                     selectedCropIdForDCS = cropId
 
                     // update JSON directly
                     jsonObject.put(
                         "selected_crop_name",
-                        cropName
+                        if (languageToLoad == "en") cropName else cropNameMr
                     )
 
                     // refresh only one item
@@ -701,7 +715,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
 
         ivClose.setOnClickListener {
             dialog.dismiss()
@@ -783,6 +797,73 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         }
 
         updateIndicator(0)
+    }
+
+    private fun setETLAlertDialog() {
+        binding.etlWarningCard.setOnClickListener {
+
+            // Use ViewBinding instead of manual inflate
+            val dialogBinding =
+                EtlCrossedDialogBinding.inflate(LayoutInflater.from(requireContext()))
+
+            val cropRecyclerSapAdapter =
+                CropRecyclerSapAdapter(getLatestAdvisoriesAsJsonArray(etlAdvisoryJsonArray))
+
+            dialogBinding.cropSapRecyclerView.apply {
+                setHasFixedSize(true)
+                layoutManager = LinearLayoutManager(requireContext())
+                adapter = cropRecyclerSapAdapter
+            }
+
+            val dialog = AlertDialog.Builder(requireContext())
+                .setView(dialogBinding.root)
+                .create()
+
+            dialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
+
+            // Close button
+            dialogBinding.closeIcon.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            // Redirect button
+            dialogBinding.redirectToETLButton.setOnClickListener {
+                dialog.dismiss()
+                startActivity(
+                    Intent(requireContext(), AgriStackAdvisoryActivity::class.java)
+                )
+            }
+
+            // Adjust RecyclerView height (max 3 items)
+            dialogBinding.cropSapRecyclerView.viewTreeObserver
+                .addOnGlobalLayoutListener(object :
+                    ViewTreeObserver.OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+
+                        dialogBinding.cropSapRecyclerView.viewTreeObserver
+                            .removeOnGlobalLayoutListener(this)
+
+                        val itemCount = cropRecyclerSapAdapter.itemCount
+                        val visibleItems = minOf(itemCount, 3)
+
+                        val itemView =
+                            dialogBinding.cropSapRecyclerView
+                                .findViewHolderForAdapterPosition(0)
+                                ?.itemView
+
+                        itemView?.let {
+                            val itemHeight = it.height
+                            val maxHeight = itemHeight * visibleItems
+
+                            dialogBinding.cropSapRecyclerView.layoutParams.height =
+                                maxHeight
+                            dialogBinding.cropSapRecyclerView.requestLayout()
+                        }
+                    }
+                })
+
+            dialog.show()
+        }
     }
 
     private fun updateIndicator(position: Int) {

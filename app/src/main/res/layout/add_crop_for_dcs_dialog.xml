@@ -32,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
-                android:text="Select Crop"
+                android:text="@string/select_crop"
                 android:textColor="#374151"
                 android:textSize="@dimen/_12sdp"
                 android:visibility="visible" />
@@ -68,7 +68,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginStart="@dimen/_12sdp"
                         android:layout_toEndOf="@id/imgSearch"
-                        android:text="Soybean"
+                        android:text="@string/select_crop"
                         android:textColor="#4B5563"
                         android:textSize="@dimen/_11sdp" />
 
@@ -91,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="sans-serif-medium"
-                android:text="Sowing Date"
+                android:text="@string/sowing_date"
                 android:textColor="#374151"
                 android:textSize="@dimen/_12sdp"
                 android:visibility="visible" />
@@ -117,7 +117,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="04/05/2026"
+                        android:text="@string/select_sowing_date"
                         android:textColor="#4B5563"
                         android:textSize="@dimen/_11sdp" />
 
@@ -148,7 +148,7 @@
                     android:layout_width="0dp"
                     android:layout_height="@dimen/_42sdp"
                     android:layout_weight="1"
-                    android:text="Cancel"
+                    android:text="@string/cancel_it"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/_11sdp"
@@ -164,7 +164,7 @@
                     android:layout_width="0dp"
                     android:layout_height="@dimen/_42sdp"
                     android:layout_weight="1"
-                    android:text="Save"
+                    android:text="@string/save_farm"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/_11sdp"

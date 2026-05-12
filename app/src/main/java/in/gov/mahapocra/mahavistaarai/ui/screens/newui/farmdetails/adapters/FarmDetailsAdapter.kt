@@ -1,4 +1,4 @@
-package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

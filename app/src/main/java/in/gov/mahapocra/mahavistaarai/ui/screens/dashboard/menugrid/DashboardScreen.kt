@@ -713,7 +713,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             val cropSapRecyclerView =
                 dialogView.findViewById<RecyclerView>(R.id.cropSapRecyclerView)
             val redirectToETLAdvisoryTextView =
-                dialogView.findViewById<TextView>(R.id.redirectToETLAdvisoryTextView)
+                dialogView.findViewById<TextView>(R.id.redirectToETLButton)
             val cropRecyclerSapAdapter =
                 CropRecyclerSapAdapter(getLatestAdvisoriesAsJsonArray(etlAdvisoryJsonArray))
             cropSapRecyclerView.apply {

@@ -42,6 +42,7 @@ object AppConstants {
     const val DISTRICT_NAME: String = "DISTRICT_NAME"
     const val USER_NAME: String = "USER_NAME"
     const val USER_MOBILE: String = "USER_MOBILE"
+    const val ETL_ADVISORY_ARRAY: String = "ETL_ADVISORY_ARRAY"
 
     //Constants for point system
     const val CROP_ADVISORY_POINT = 1

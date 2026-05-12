@@ -118,7 +118,7 @@ class AgriServicesFragment : Fragment(), OnMultiRecyclerItemClickListener {
 
         binding.marketPriceLayout.txtTitle.text = getString(R.string.real_time_market_prices)
         binding.marketPriceLayout.shortDescriptionTextView.text =
-            getString(`in`.gov.mahapocra.mahavistaarai.R.string.live_rates_from_200_mandis)
+            getString(R.string.live_rates_from_200_mandis)
         binding.marketPriceLayout.root.setOnClickListener {
             startActivity(Intent(context, MarketPrice::class.java))
         }
@@ -130,9 +130,9 @@ class AgriServicesFragment : Fragment(), OnMultiRecyclerItemClickListener {
             )
         })
         binding.warehouseLayout.txtTitle.text =
-            getString(`in`.gov.mahapocra.mahavistaarai.R.string.warehouse_availability)
+            getString(R.string.warehouse_availability)
         binding.warehouseLayout.shortDescriptionTextView.text =
-            getString(`in`.gov.mahapocra.mahavistaarai.R.string.find_storage_space_near_you)
+            getString(R.string.find_storage_space_near_you)
         binding.warehouseLayout.root.setOnClickListener {
             startActivity(Intent(context, Warehouse::class.java))
         }
@@ -144,9 +144,9 @@ class AgriServicesFragment : Fragment(), OnMultiRecyclerItemClickListener {
             )
         })
         binding.chcCentreLayout.txtTitle.text =
-            getString(`in`.gov.mahapocra.mahavistaarai.R.string.chc_center)
+            getString(R.string.chc_center)
         binding.chcCentreLayout.shortDescriptionTextView.text =
-            getString(`in`.gov.mahapocra.mahavistaarai.R.string.find_local_trading_hubs)
+            getString(R.string.find_local_trading_hubs)
         binding.chcCentreLayout.root.setOnClickListener {
             startActivity(Intent(context, CHCenterActivity::class.java))
         }

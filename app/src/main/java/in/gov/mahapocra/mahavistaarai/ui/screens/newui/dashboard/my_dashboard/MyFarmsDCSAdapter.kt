@@ -1,19 +1,23 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.my_dashboard
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.MyFarmsItemViewBinding
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.CropListDetailsAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.adapters.CropListDetailsAdapter
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
 import org.json.JSONArray
 import org.json.JSONObject
 
 class MyFarmsDCSAdapter(
     private var jsonArray: JSONArray,
-    private val listener: RecyclerItemClickListener
+    private val listener: RecyclerItemClickListener,
+    private val language: String
 ) : RecyclerView.Adapter<MyFarmsDCSAdapter.LandViewHolder>() {
 
     // Expand / Collapse Saved Crops Recycler
@@ -80,14 +84,23 @@ class MyFarmsDCSAdapter(
         obj: JSONObject
     ) {
 
+        val context = binding.root.context
         binding.farmIdTextView.text =
             obj.optString("farm_id")
 
         binding.surveyNumberTextView.text =
-            "Survey No. ${obj.optString("survey_no")}"
+            buildString {
+                append(context.getString(R.string.survey_no))
+                append(" ")
+                append(obj.optString("survey_no"))
+            }
 
         binding.areaTextView.text =
-            "${obj.optString("total_plot_area")} Acre"
+            buildString {
+                append(obj.optString("total_plot_area"))
+                append(" ")
+                append(context.getString(R.string.acre))
+            }
     }
 
     // ---------------------------------------------------
@@ -99,19 +112,20 @@ class MyFarmsDCSAdapter(
         obj: JSONObject,
         position: Int
     ) {
-
+        Log.d(TAG, "setupCropSection: $obj")
         // Selected Crop
         binding.cropNameForDCSTextView.text =
             obj.optString(
                 "selected_crop_name",
-                "Select Crop"
+                binding.root.context.getString(R.string.select_crop)
             )
-
+        val villageName = obj.optString("village_name")
+        val villageNameMr = obj.optString("village_name_mr")
         // Selected Date
         binding.sowingDateCropDCSTextView.text =
             obj.optString(
                 "selected_sowing_date",
-                "Select Date"
+                binding.root.context.getString(R.string.farmer_select_date)
             )
 
         // Restore Form State
@@ -122,6 +136,8 @@ class MyFarmsDCSAdapter(
             binding,
             isCropFormExpanded
         )
+
+        binding.villageName.text = if (language == "en") villageName else villageNameMr
 
         // Select Crop
         binding.selectCropCardView.setOnClickListener {
@@ -309,12 +325,12 @@ class MyFarmsDCSAdapter(
                 ?: JSONArray()
 
         showAddCropButton = cropsArray.length() < 2
-        if (!showAddCropButton){
+        if (!showAddCropButton) {
             binding.addCropLayout.visibility = View.GONE
-        }else{
+        } else {
             val isExpanded =
-            expandedItems.contains(position)
-            if (isExpanded){
+                expandedItems.contains(position)
+            if (isExpanded) {
                 binding.addCropLayout.visibility = View.VISIBLE
             }
         }

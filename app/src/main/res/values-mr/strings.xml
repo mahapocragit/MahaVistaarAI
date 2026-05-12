@@ -439,7 +439,7 @@
     <string name="etl_crossed_click_here_for_advisory">किड आणि रोगांचा इशारा</string>
     <string name="etl_crop_advisory">पिकांच्या कीड व रोगावरील तज्ञांचा सल्ला</string>
     <string name="dashboard_magazine">महापशुधन वार्ता</string>
-    <string name="click_here_to_view_full_advisory">पूर्ण सल्ला पाहण्यासाठी येथे क्लिक करा.</string>
+    <string name="click_here_to_view_full_advisory">पूर्ण सल्ला पाहा</string>
     <string name="date_etl">दि.: </string>
     <string name="cost_calculator">खर्च गणक</string>
     <string name="no_notification_right_now">सध्या कोणतीही सूचना नाही!!</string>
@@ -591,4 +591,17 @@
     <string name="chc_center">सीएचसी केंद्र</string>
     <string name="find_local_trading_hubs">स्थानिक व्यापार केंद्रे शोधा</string>
     <string name="hello">नमस्कार</string>
+    <string name="declare_your_crop">पीक जाहीर करा</string>
+    <string name="add_crop_plus">+ पीक जोडा</string>
+    <string name="survey_no">सर्व्हे क्रमांक</string>
+    <string name="farm_lands_crops">शेतीची जमीन आणि पिके</string>
+    <string name="please_add_the_crops_message">कृपया पुढील प्रक्रियेसाठी सध्याच्या हंगामातील पिकांची नोंद करा.</string>
+    <string name="total_area">एकूण क्षेत्रफळ</string>
+    <string name="area_cultivated">लागवड केलेले क्षेत्रफळ</string>
+    <string name="max_crop_limit_added">आपण आधीच पिकांची कमाल संख्या जोडली आहे.</string>
+    <string name="owner">मालक</string>
+    <string name="view_details">तपशील पहा →</string>
+    <string name="land_owner_name">जमीन मालकाचे नाव</string>
+    <string name="farmid">शेती ओळख क्रमांक</string>
+    <string name="villages">गावे:</string>
 </resources>

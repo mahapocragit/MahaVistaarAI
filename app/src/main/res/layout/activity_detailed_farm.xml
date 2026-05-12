@@ -61,7 +61,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:text="Village"
+                            android:text="@string/village"
                             android:textColor="#777"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -74,7 +74,7 @@
                         android:background="@drawable/bg_owner_chip"
                         android:paddingHorizontal="12dp"
                         android:paddingVertical="4dp"
-                        android:text="Owner"
+                        android:text="@string/owner"
                         android:textColor="#2E7D32"
                         android:textSize="12sp" />
                 </RelativeLayout>
@@ -120,6 +120,7 @@
                             android:src="@drawable/farm_irrigation" />
 
                         <TextView
+                            android:id="@+id/farmIdTextView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginStart="8dp"
@@ -149,23 +150,6 @@
                     </LinearLayout>
 
                     <!-- Khata -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:src="@drawable/farm_khata" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="8dp"
-                            android:text="Khata No. 7790"
-                            android:textSize="13sp" />
-                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -188,7 +172,8 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:text="Total Area"
+                            android:text="@string/total_area"
+                            android:gravity="center"
                             android:textColor="#666"
                             android:textSize="12sp" />
 
@@ -196,6 +181,7 @@
                             android:id="@+id/totalAreaTextView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:gravity="center"
                             android:text="10.00 ac"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -206,6 +192,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="6dp"
                         android:layout_weight="1"
+                        android:visibility="gone"
                         android:background="@drawable/bg_light_green_box"
                         android:orientation="vertical"
                         android:padding="12dp">
@@ -213,7 +200,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:text="Area Cultivated"
+                            android:text="@string/area_cultivated"
                             android:textColor="#666"
                             android:textSize="12sp" />
 
@@ -252,7 +239,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Please add the crops for the current season to proceed."
+                    android:text="@string/please_add_the_crops_message"
                     android:textColor="#555"
                     android:textSize="13sp" />
 
@@ -278,7 +265,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginStart="6dp"
                         android:gravity="center_vertical"
-                        android:text="Add Crop"
+                        android:text="@string/add_Crop"
                         android:textColor="@android:color/white"
                         android:textStyle="bold" />
                 </LinearLayout>

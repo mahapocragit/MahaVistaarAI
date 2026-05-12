@@ -3,6 +3,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -119,6 +120,8 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
         binding.textViewTaluka.isEnabled = false
         binding.textViewVillage.isEnabled = false
         binding.submitButton.isEnabled = false
+        binding.submitButton.backgroundTintList =
+            ColorStateList.valueOf(ContextCompat.getColor(this, android.R.color.darker_gray))
     }
 
     private fun enableView() {
@@ -129,6 +132,12 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
         binding.textViewTaluka.isEnabled = true
         binding.textViewVillage.isEnabled = true
         binding.submitButton.isEnabled = true
+        binding.submitButton.backgroundTintList = ColorStateList.valueOf(
+            ContextCompat.getColor(
+                this,
+                R.color.actionbar_color_figma
+            )
+        )
     }
 
     private fun observeResponse() {
@@ -292,7 +301,7 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
 
                         if (isUserLoggedIn) {
                             AppHelper(this@ProfileScreen).redirectToHome()
-                        }else{
+                        } else {
                             val intent = Intent(this, LoginScreen::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -341,33 +350,40 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
             val userMobile = AppPreferenceManager(this).getString(AppConstants.USER_MOBILE)
             emailid =
                 AppSettings.getInstance().getValue(this, AppConstants.uEmail, AppConstants.uEmail)
-            districtName = CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.DISTRICT_NAME))
-                .toString()
-            talukaName = CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.TALUKA_NAME))
-                .toString()
-            villageName = CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.VILLAGE_NAME))
-                .toString()
+            districtName =
+                CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.DISTRICT_NAME))
+                    .toString()
+            talukaName =
+                CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.TALUKA_NAME))
+                    .toString()
+            villageName =
+                CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.VILLAGE_NAME))
+                    .toString()
             districtCode =
                 CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.DISTRICT_CODE))
                     .toString().toInt()
-            CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.TALUKA_CODE))?.let {
-                talukaCode =
-                    it.toInt()
-            }
+            CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.TALUKA_CODE))
+                ?.let {
+                    talukaCode =
+                        it.toInt()
+                }
             villageCode =
                 CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.VILLAGE_CODE))
                     ?.toInt()
                     .toString().toInt()
-            val rawValue = AppSettings.getInstance().getSavedValue(this, AppConstants.AGRISTACKID)
-            agristackId = if (rawValue.isNullOrEmpty() || rawValue == "null") "" else rawValue
+            val rawValue =
+                CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.AGRISTACKID))
+                    .toString()
+            agristackId = if (rawValue.isEmpty() || rawValue == "null") "" else rawValue
             if (agristackId != "") {
                 binding.consentLayout.visibility = View.VISIBLE
                 binding.consentLayout.setOnClickListener {
                     showDialogForConsent()
                 }
             }
+            Log.d(TAG, "setConfiguration: $agristackId")
             binding.nameEditText.setText(CryptoHelper.decryptField(userName))
-            binding.mobNoEditText.setText(CryptoHelper .decryptField(userMobile))
+            binding.mobNoEditText.setText(CryptoHelper.decryptField(userMobile))
             binding.textViewDist.text = districtName
             binding.textViewTaluka.text = talukaName
             binding.textViewVillage.text = villageName

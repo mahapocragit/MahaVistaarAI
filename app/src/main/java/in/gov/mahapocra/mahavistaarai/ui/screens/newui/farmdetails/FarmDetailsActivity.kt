@@ -1,5 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,13 +12,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityFarmDetailsBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.adapters.LandAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
-import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
-import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager.getAccessToken
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONObject
@@ -26,10 +28,15 @@ class FarmDetailsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFarmDetailsBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
+    private var languageToLoad: String = "en"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        languageToLoad = "mr"
+        if (AppSettings.getLanguage(this@FarmDetailsActivity).equals("1", ignoreCase = true)) {
+            languageToLoad = "en"
+        }
         binding = ActivityFarmDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
@@ -43,7 +50,8 @@ class FarmDetailsActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        binding.relativeLayoutTopBar.textViewHeaderTitle.text = "Farm lands & crops"
+        binding.relativeLayoutTopBar.textViewHeaderTitle.text =
+            getString(R.string.farm_lands_crops)
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
             AppHelper(this).redirectToHome()
@@ -69,7 +77,12 @@ class FarmDetailsActivity : AppCompatActivity() {
                     val jsonObject = JSONObject(state.data.toString())
                     val dataObject = jsonObject.optJSONObject("data")
                     val farmsArray = dataObject?.optJSONArray("farm_details")
-                    binding.farmDetailsRecyclerView.adapter = farmsArray?.let { LandAdapter(it) }
+                    binding.farmDetailsRecyclerView.adapter = farmsArray?.let {
+                        LandAdapter(
+                            it,
+                            languageToLoad
+                        )
+                    }
                     Log.d(TAG, "observeResponse: $farmsArray")
                 }
 
@@ -79,5 +92,15 @@ class FarmDetailsActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
+            "en"
+        } else {
+            "mr"
+        }
+        val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
+        super.attachBaseContext(updatedContext)
     }
 }

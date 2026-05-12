@@ -80,7 +80,7 @@
 
                 <!-- TAG -->
                 <TextView
-                    android:id="@+id/tvTag"
+                    android:id="@+id/villageName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -88,15 +88,15 @@
                     android:background="@drawable/bg_tag"
                     android:paddingHorizontal="@dimen/_10sdp"
                     android:paddingVertical="@dimen/_4sdp"
-                    android:text="Pagote"
+                    android:text=""
                     android:textColor="#374151"
                     android:textSize="@dimen/_10sdp" />
 
                 <!-- ARROW -->
                 <ImageView
                     android:id="@+id/expandOperationImageView"
-                    android:layout_width="@dimen/_18sdp"
-                    android:layout_height="@dimen/_18sdp"
+                    android:layout_width="@dimen/_12sdp"
+                    android:layout_height="@dimen/_12sdp"
                     android:layout_alignParentEnd="true"
                     android:src="@drawable/down_arrow_figma"
                     app:tint="#4B5563" />
@@ -116,18 +116,18 @@
 
             <LinearLayout
                 android:id="@+id/addCropLayout"
-                android:layout_marginVertical="@dimen/_5sdp"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_30sdp"
+                android:layout_marginVertical="@dimen/_5sdp"
                 android:background="@drawable/bg_add_crop_dashed"
                 android:gravity="center"
-                android:visibility="gone"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="+ Add Crop"
+                    android:text="@string/add_crop_plus"
                     android:textColor="#374151"
                     android:textSize="@dimen/_10sdp"
                     android:textStyle="bold" />
@@ -140,7 +140,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_18sdp"
                 android:fontFamily="sans-serif-medium"
-                android:text="Select Crop"
+                android:text="@string/select_crop"
                 android:textColor="#374151"
                 android:textSize="@dimen/_12sdp"
                 android:visibility="gone" />
@@ -176,7 +176,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginStart="@dimen/_12sdp"
                         android:layout_toEndOf="@id/imgSearch"
-                        android:text="Soybean"
+                        android:text=""
                         android:textColor="#4B5563"
                         android:textSize="@dimen/_11sdp" />
 
@@ -199,7 +199,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_16sdp"
                 android:fontFamily="sans-serif-medium"
-                android:text="Sowing Date"
+                android:text="@string/sowing_date"
                 android:textColor="#374151"
                 android:textSize="@dimen/_12sdp"
                 android:visibility="gone" />
@@ -225,7 +225,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="04/05/2026"
+                        android:text=""
                         android:textColor="#4B5563"
                         android:textSize="@dimen/_11sdp" />
 
@@ -256,7 +256,7 @@
                     android:layout_width="0dp"
                     android:layout_height="@dimen/_42sdp"
                     android:layout_weight="1"
-                    android:text="Cancel"
+                    android:text="@string/cancel_it"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/_11sdp"
@@ -272,7 +272,7 @@
                     android:layout_width="0dp"
                     android:layout_height="@dimen/_42sdp"
                     android:layout_weight="1"
-                    android:text="Save"
+                    android:text="@string/save_farm"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/_11sdp"

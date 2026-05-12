@@ -27,8 +27,8 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDetailedFarmBinding
 import `in`.gov.mahapocra.mahavistaarai.databinding.AddCropForDcsDialogBinding
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.my_dashboard.CropSelectionAdapter
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.my_dashboard.MyFarmsDCSAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.adapters.CropSelectionAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.adapters.FarmDetailsAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -100,12 +100,14 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
                     val jSONObject = JSONObject(state.data.toString())
                     val dataObject = jSONObject.optJSONObject("data")
                     val cropsArray = dataObject?.optJSONArray("crops")
-                    if (cropsArray?.length()==2){
+                    if (cropsArray?.length() == 2) {
                         binding.addCropForFarmLayout.visibility = View.GONE
-                        binding.cropTitleTextView.text = "You have already added Maximum amount of Crops."
-                    }else{
+                        binding.cropTitleTextView.text =
+                            getString(R.string.max_crop_limit_added)
+                    } else {
                         binding.addCropForFarmLayout.visibility = View.VISIBLE
-                        binding.cropTitleTextView.text = "Please add the crops for the current season to proceed."
+                        binding.cropTitleTextView.text =
+                            getString(R.string.please_add_the_crops_message)
                     }
                     adapter = FarmDetailsAdapter(cropsArray ?: JSONArray(), this)
                     binding.cropDSCRecyclerView.adapter = adapter
@@ -114,7 +116,7 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
                 is UiState.Error -> {
                     ProgressHelper.disableProgressDialog()
                     Log.d(TAG, "observeResponse: ${state.message}")
-                    if (state.message == "HTTP 404 Not Found"){
+                    if (state.message == "HTTP 404 Not Found") {
                         adapter = FarmDetailsAdapter(JSONArray(), this)
                         binding.cropDSCRecyclerView.adapter = adapter
                     }
@@ -182,7 +184,8 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
 
     private fun init() {
 
-        binding.relativeLayoutTopBar.textViewHeaderTitle.text = "Farm lands & crops"
+        binding.relativeLayoutTopBar.textViewHeaderTitle.text =
+            getString(R.string.farm_lands_crops)
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
             startActivity(Intent(this@DetailedFarmActivity, FarmDetailsActivity::class.java))
@@ -200,20 +203,26 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
             val ownerName = jsonObject.optString("owner_name")
             val surveyNumber = jsonObject.optString("survey_no")
             val villageName = jsonObject.optString("village_name")
+            val villageNameMr = jsonObject.optString("village_name_mr")
             val totalArea = jsonObject.optDouble("total_plot_area")
             binding.nameTextView.text = buildString {
-                append("Name")
+                append("${getString(R.string.name)}: ")
                 append(" $ownerName")
             }
             binding.surveyNumberTextView.text = buildString {
-                append("Survey/LPM/Compartment No.")
+                append("${getString(R.string.survey_no)}: ")
                 append(" $surveyNumber")
             }
             binding.totalAreaTextView.text = buildString {
-                append(totalArea)
-                append(" acre")
+                append("$totalArea: ")
+                append(getString(R.string.acre))
             }
-            binding.villageNameTextView.text = villageName
+            binding.farmIdTextView.text = buildString {
+                append("${getString(R.string.farmid)}: ")
+                append(farmId)
+            }
+            binding.villageNameTextView.text =
+                if (languageToLoad == "en") villageName else villageNameMr
         }
 
         binding.cropDSCRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -258,6 +267,7 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
                         Locale.ENGLISH
                     ).format(selectedCalendar.time)
                     selectedCropSowingDateForDCS = formattedDate
+                    dialogBinding.sowingDateCropDCSTextView.text = formattedDate.toString()
                     Log.d("DATE", formattedDate)
 
                 },
@@ -288,12 +298,16 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
         }
         dialogBinding.selectCropCardView.setOnClickListener {
             showCropSelectionDialog(cropsJsonArray) { selectedCrop ->
+                Log.d(TAG, "openDialogForSavingCropForDCS: $selectedCrop")
                 val cropId =
                     selectedCrop.optInt("id")
                 val cropName =
                     selectedCrop.optString("name")
+                val cropNameMr =
+                    selectedCrop.optString("name_mr")
                 selectedCropIdForDCS = cropId
-                dialogBinding.cropNameForDCSTextView.text = cropName
+                dialogBinding.cropNameForDCSTextView.text =
+                    if (languageToLoad == "en") cropName else cropNameMr
             }
         }
 

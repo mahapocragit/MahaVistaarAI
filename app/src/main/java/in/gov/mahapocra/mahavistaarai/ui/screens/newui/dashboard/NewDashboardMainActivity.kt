@@ -563,6 +563,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     Log.d(TAG, "observeResponse: $dataObject")
                     val name = dataObject?.optString("Name")
                     val mobile = dataObject?.optString("MobileNo")
+                    val agristackId = dataObject?.optString("farmer_id")
                     val villageCode = dataObject?.optString("VillageCode")
                     val villageName = dataObject?.optString("VillageName")
                     val talukaCode = dataObject?.optString("TalukaCode")
@@ -583,12 +584,14 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     AppPreferenceManager(this).saveString(AppConstants.TALUKA_NAME, talukaName)
                     AppPreferenceManager(this).saveString(AppConstants.DISTRICT_CODE, districtCode)
                     AppPreferenceManager(this).saveString(AppConstants.DISTRICT_NAME, districtName)
+                    AppPreferenceManager(this).saveString(AppConstants.AGRISTACKID, agristackId)
                     navUserName.text = CryptoHelper.decryptField(name)?.split(" ")[0] ?: ""
                     navUserPhone.text = CryptoHelper.decryptField(mobile)
                     binding.nameTextView.text = buildString {
                         append("${getString(R.string.hello)} ")
                         append(CryptoHelper.decryptField(name)?.split(" ")[0] ?: "")
                     }
+                    farmerViewModel.getCropSapAdvisory(CryptoHelper.decryptField(villageCode).toString().toInt())
                     topicsOperations(topicJsonArray, topicsToSubArray, topicsToDeleteArray)
                 }
 
@@ -648,6 +651,28 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                         finish()
                     } else {
                         Log.d(TAG, "logoutFromApp: $response")
+                    }
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        farmerViewModel.getCropSapAdvisoryResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
+                }
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    val jsonObject = JSONObject(state.data.toString())
+                    val jsonArray = jsonObject.optJSONArray("advisory")
+                    if (jsonArray?.length() != 0) {
+                        appPreferenceManager.saveString(AppConstants.ETL_ADVISORY_ARRAY, jsonArray?.toString())
                     }
                 }
 

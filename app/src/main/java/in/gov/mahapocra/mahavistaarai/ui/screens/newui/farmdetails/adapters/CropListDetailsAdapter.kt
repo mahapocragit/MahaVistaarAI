@@ -1,10 +1,9 @@
-package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails
+package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.mahavistaarai.databinding.DcsCropInfoHorzItemBinding
-import `in`.gov.mahapocra.mahavistaarai.databinding.DcsCropInfoItemBinding
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
 import org.json.JSONArray
 import org.json.JSONObject
