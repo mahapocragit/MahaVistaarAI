@@ -3,6 +3,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.my_dashboard
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ItemMyDashboardBinding
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
@@ -32,10 +33,7 @@ class MyDashboardAdapter(
         val displayMetrics = holder.itemView.context.resources.displayMetrics
         val screenWidth = displayMetrics.widthPixels
 
-// convert 16dp padding (8dp start + 8dp end) to px
         val padding = (16 * displayMetrics.density).toInt()
-
-// convert item margins (approx 12dp total)
         val itemMargin = (12 * displayMetrics.density).toInt()
 
         val availableWidth = screenWidth - padding - itemMargin
@@ -48,22 +46,16 @@ class MyDashboardAdapter(
         val titleMr = item.optString("title_mr")
         val description = item.optString("data")
         val descriptionMr = item.optString("data_mr")
-        val imageName = item.optString("image")
+        val icon = item.optString("icon")
 
         holder.binding.titleTextView.text = if (language == "en") title else titleMr
         holder.binding.descriptionTextView.text =
             if (language == "en") description else descriptionMr
 
-        val context = holder.itemView.context
-        val resId = context.resources.getIdentifier(
-            imageName,
-            "drawable",
-            context.packageName
-        )
-
-        holder.binding.imageView.setImageResource(
-            if (resId != 0) resId else R.drawable.ic_weather_mp
-        )
+        Glide.with(holder.itemView.context)
+            .load(icon)
+            .error(R.drawable.ic_weather_mp)
+            .into(holder.binding.imageView)
         holder.binding.root.setOnClickListener {
             itemClickListener.onRecyclerItemClick(1, item)
         }
