@@ -312,11 +312,32 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
         }
 
         dialogBinding.saveCropButton.setOnClickListener {
+
+            // 1️⃣ Validate Crop Selection
+            if (selectedCropIdForDCS == null || selectedCropIdForDCS == 0) {
+                Toast.makeText(this, "Please select crop", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // 2️⃣ Validate Sowing Date
+            if (selectedCropSowingDateForDCS.isNullOrEmpty()) {
+                Toast.makeText(this, "Please select sowing date", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // 3️⃣ Validate Farm ID (extra safety)
+            if (farmId.isNullOrEmpty()) {
+                Toast.makeText(this, "Farm not found", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // 4️⃣ If everything is valid → Call API
             farmerViewModel.saveFarmCropDCS(
                 CryptoHelper.encryptField(selectedCropIdForDCS.toString()).toString(),
                 CryptoHelper.encryptField(selectedCropSowingDateForDCS).toString(),
                 CryptoHelper.encryptField(farmId).toString(),
             )
+
             dialog.dismiss()
         }
 

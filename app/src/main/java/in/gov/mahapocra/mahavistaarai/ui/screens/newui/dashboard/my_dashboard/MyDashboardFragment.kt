@@ -25,10 +25,12 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.DeclareYourCropDialogBinding
+import `in`.gov.mahapocra.mahavistaarai.databinding.DialogPromotionalPopupBinding
 import `in`.gov.mahapocra.mahavistaarai.databinding.EtlCrossedDialogBinding
 import `in`.gov.mahapocra.mahavistaarai.databinding.FragmentMyDashboardBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropRecyclerSapAdapter
@@ -44,6 +46,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.marketpric
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard.SoilHealthCardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.sop.SOPActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.ui.PestIdentificationActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
@@ -59,6 +62,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getLatestAdvisoriesAsJs
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.UriFileHelper.openYouTube
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -68,6 +72,7 @@ import java.util.Locale
 class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
 
     private var _binding: FragmentMyDashboardBinding? = null
+    private var isPromoDialogShowing = false
     private val binding get() = _binding!!
     private var selectedFarmPosition = -1
     private var selectedDeletedCropPosition = -1
@@ -125,10 +130,21 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
     }
 
     private fun hitApis() {
+        val rawValue =
+            CryptoHelper.decryptField(
+                AppPreferenceManager(requireContext()).getString(
+                    AppConstants.AGRISTACKID
+                )
+            ).toString()
+        val agristackId = if (rawValue.isEmpty() || rawValue == "null") "" else rawValue
         farmerViewModel.getFarmSummery()
         authViewModel.getCustomisedDashboardList()
-        farmerViewModel.getFarmDetails()
-        farmerViewModel.fetchCropsForDCS()
+        if (agristackId != "") {
+            farmerViewModel.getFarmDetails()
+            farmerViewModel.fetchCropsForDCS()
+        } else {
+            farmerViewModel.getPromoBanner()
+        }
     }
 
     // ✅ Arrow click logic
@@ -202,7 +218,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
             val agristackId = if (rawValue.isEmpty() || rawValue == "null") "" else rawValue
             if (agristackId != "") {
                 startActivity(Intent(context, FarmDetailsActivity::class.java))
-            }else{
+            } else {
                 showAgristackLinkingDialog()
             }
         }
@@ -481,6 +497,72 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                 }
             }
         }
+
+        farmerViewModel.getPromoBannerResponse.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                }
+
+                is UiState.Success -> {
+                    val jsonObject = JSONObject(state.data.toString())
+                    val dataObject = jsonObject.optJSONObject("data")
+                    if (dataObject != null) {
+                        val imageUrl = dataObject.optString("url")
+                        val page = dataObject.optString("page")
+                        if (page == "youtube") {
+                            val youtubeUrl = dataObject.optString("video_url")
+                            showPromotionalDialog(imageUrl, page, youtubeUrl)
+                        } else {
+                            showPromotionalDialog(imageUrl, page)
+                        }
+                    }
+
+                }
+
+                is UiState.Error -> {
+                    Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun showPromotionalDialog(
+        imageUrl: String,
+        page: String,
+        videoUrl: String = ""
+    ) {
+
+        if (!isAdded) return
+
+        val promoView = DialogPromotionalPopupBinding.inflate(layoutInflater)
+
+        val dialogPromo = AlertDialog.Builder(requireContext())
+            .setView(promoView.root)
+            .create()
+
+        dialogPromo.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        dialogPromo.setOnShowListener {
+
+            Glide.with(this)
+                .load(imageUrl)
+                .into(promoView.previewImage)
+        }
+
+        promoView.closeImage.setOnClickListener {
+            dialogPromo.dismiss()
+        }
+
+        promoView.previewImage.setOnClickListener {
+            if (videoUrl.isEmpty()) {
+                redirectToScreen(page)
+            } else {
+                openYouTube(requireContext(), videoUrl)
+            }
+            dialogPromo.dismiss()
+        }
+
+        dialogPromo.show()
     }
 
     private fun showDialogForDCS(
@@ -626,16 +708,27 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
 
             SAVE_CROP_FOR_DCS -> {
 
-                Log.d(TAG, "onRecyclerItemClick: $jsonObject")
+                selectedFarmPosition = jsonObject.optInt("adapter_position")
+                selectedFarmObject = jsonObject
 
-                selectedFarmPosition =
-                    jsonObject.optInt("adapter_position")
+                val farmId = jsonObject.optString("farm_id")
+                if (selectedCropIdForDCS == null || selectedCropIdForDCS == 0) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Please select crop",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return
+                }
 
-                selectedFarmObject =
-                    jsonObject
-
-                val farmId =
-                    jsonObject.optString("farm_id")
+                if (selectedCropSowingDateForDCS.isNullOrEmpty()) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Please select sowing date",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return
+                }
 
                 farmerViewModel.saveFarmCropDCS(
                     CryptoHelper.encryptField(
@@ -793,8 +886,10 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
             "pestdisease" -> Intent(requireContext(), PestsAndDiseasesStages::class.java)
             "weather" -> Intent(requireContext(), WeatherActivity::class.java)
             "shc" -> Intent(requireContext(), SoilHealthCardActivity::class.java)
+            "soilcard" -> Intent(requireContext(), SoilHealthCardActivity::class.java)
             "climatetech" -> Intent(requireContext(), ClimateResilientTechnology::class.java)
             "market" -> Intent(requireContext(), MarketPrice::class.java)
+            "marketPrice" -> Intent(requireContext(), MarketPrice::class.java)
             "shetishala" -> Intent(requireContext(), ShetishalaActivity::class.java)
             "warehouse" -> Intent(requireContext(), Warehouse::class.java)
             "customhire" -> Intent(requireContext(), CHCenterActivity::class.java)
@@ -802,6 +897,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
             "dbtschemes" -> Intent(requireContext(), DBTActivity::class.java)
             "dashboard" -> Intent(requireContext(), NewDashboardMainActivity::class.java)
             "etl_page" -> Intent(requireContext(), AgriStackAdvisoryActivity::class.java)
+            "pestDetection" -> Intent(requireContext(), PestIdentificationActivity::class.java)
             else -> Intent(requireContext(), NewDashboardMainActivity::class.java)
         }
         startActivity(targetIntent)

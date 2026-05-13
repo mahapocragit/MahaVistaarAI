@@ -77,7 +77,7 @@ class CameraActivity : AppCompatActivity() {
                 }
                 .show()
         }
-        startCamera()
+//        startCamera()
         setupClicks()
     }
 
@@ -87,30 +87,30 @@ class CameraActivity : AppCompatActivity() {
         btnConfirm.setOnClickListener { confirmImage() }
     }
 
-    private fun startCamera() {
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
-
-        cameraProviderFuture.addListener({
-            val cameraProvider = cameraProviderFuture.get()
-
-            val preview = Preview.Builder().build().apply {
-                setSurfaceProvider(binding.previewView.surfaceProvider)
-            }
-
-            imageCapture = ImageCapture.Builder()
-                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-                .build()
-
-            cameraProvider.unbindAll()
-            cameraProvider.bindToLifecycle(
-                this,
-                CameraSelector.DEFAULT_BACK_CAMERA,
-                preview,
-                imageCapture
-            )
-
-        }, ContextCompat.getMainExecutor(this))
-    }
+//    private fun startCamera() {
+//        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+//
+//        cameraProviderFuture.addListener({
+//            val cameraProvider = cameraProviderFuture.get()
+//
+//            val preview = Preview.Builder().build().apply {
+//                setSurfaceProvider(binding.previewView.surfaceProvider)
+//            }
+//
+//            imageCapture = ImageCapture.Builder()
+//                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+//                .build()
+//
+//            cameraProvider.unbindAll()
+//            cameraProvider.bindToLifecycle(
+//                this,
+//                CameraSelector.DEFAULT_BACK_CAMERA,
+//                preview,
+//                imageCapture
+//            )
+//
+//        }, ContextCompat.getMainExecutor(this))
+//    }
 
     private fun captureImage() {
         tempFile = File(cacheDir, "temp_${System.currentTimeMillis()}.jpg")

@@ -33,7 +33,7 @@ android {
 
     defaultConfig {
         applicationId "in.gov.mahapocra.mahavistaarai"
-        minSdk = 24
+        minSdk = 28
         targetSdkVersion 36
         versionCode 51
         versionName "2.0.9"
@@ -83,13 +83,14 @@ android {
 
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled true
     }
 
     kotlin {
         compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8)
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
         }
     }
 
@@ -190,4 +191,9 @@ dependencies {
 
     //Encrypted Shared Preference
     implementation "androidx.security:security-crypto:1.1.0-alpha06"
+
+    //Map Module Integration
+    implementation files('libs/android_wrapper_release.aar')
+    implementation "com.vassar.mahanidan.embed.fluttermodule:flutter_release:1.0"
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.1.5"
 }

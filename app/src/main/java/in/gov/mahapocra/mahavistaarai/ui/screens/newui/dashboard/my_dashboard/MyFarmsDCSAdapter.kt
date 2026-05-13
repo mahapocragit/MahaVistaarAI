@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.mahavistaarai.R
@@ -186,8 +187,38 @@ class MyFarmsDCSAdapter(
         // Save Crop
         binding.saveCropButton.setOnClickListener {
 
-            expandedCropFormItems.remove(position)
+            val selectedCropName =
+                obj.optString("selected_crop_name")
 
+            val selectedSowingDate =
+                obj.optString("selected_sowing_date")
+
+            // 🔴 Validate Crop
+            if (selectedCropName.isNullOrEmpty() ||
+                selectedCropName == binding.root.context.getString(R.string.select_crop)
+            ) {
+                Toast.makeText(
+                    binding.root.context,
+                    "Please select crop",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+
+            // 🔴 Validate Date
+            if (selectedSowingDate.isNullOrEmpty() ||
+                selectedSowingDate == binding.root.context.getString(R.string.farmer_select_date)
+            ) {
+                Toast.makeText(
+                    binding.root.context,
+                    "Please select sowing date",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+
+            // If valid → call listener
+            expandedCropFormItems.remove(position)
             notifyItemChanged(position)
 
             listener.onRecyclerItemClick(

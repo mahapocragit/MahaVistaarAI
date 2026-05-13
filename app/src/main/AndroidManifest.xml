@@ -36,6 +36,8 @@
         android:name="android.hardware.telephony"
         android:required="false" />
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:name=".application.MyApplication"
         android:allowBackup="false"
@@ -47,7 +49,8 @@
         android:pageSizeCompat="enabled"
         android:roundIcon="@mipmap/ic_launcher_store_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FarmerApp">
+        android:theme="@style/Theme.FarmerApp"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".ui.screens.newui.farmdetails.DetailedFarmActivity"
             android:exported="false" />
@@ -70,6 +73,7 @@
         <activity android:name=".sma.ui.screens.KTReportActivity" />
         <activity android:name=".sma.ui.screens.KTActivity" />
         <activity android:name=".sma.ui.screens.KTProjectInformation" />
+        <activity android:name=".ui.maps_sample.MainActivity" />
         <activity
             android:name=".sma.ui.screens.KTReportDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar" />

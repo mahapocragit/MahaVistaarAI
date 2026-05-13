@@ -1,10 +1,13 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard
 
+import android.Manifest
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -25,10 +28,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.get
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayout
@@ -45,6 +51,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.ProfileScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.AboutActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.CreditsActivity
@@ -101,6 +108,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
         switchLanguage(this, languageToLoad)
         binding = ActivityNewDashboardMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        askForPermissions()
         ViewCompat.setOnApplyWindowInsetsListener(binding.toolbar) { view, insets ->
             val topInset = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
 
@@ -146,6 +154,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
         setVersion()
         observeResponse()
 
+        farmerViewModel.getNotificationList(farmerId)
         val toggle = ActionBarDrawerToggle(
             this@NewDashboardMainActivity,
             drawerLayout,
@@ -260,6 +269,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
             }
         }
 
+        binding.toolbar.menu.get(0).icon
         binding.toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.action_language -> {
@@ -311,6 +321,39 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                 }
             }
         )
+    }
+
+    private fun askForPermissions() {
+        val permissionsNeeded = mutableListOf<String>()
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            permissionsNeeded.add(Manifest.permission.RECORD_AUDIO)
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            permissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+
+        // Only check POST_NOTIFICATIONS for Android 13 and above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                permissionsNeeded.add(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+
+        if (permissionsNeeded.isNotEmpty()) {
+            ActivityCompat.requestPermissions(
+                this,
+                permissionsNeeded.toTypedArray(),
+                PERMISSION_REQUEST_CODE
+            )
+        }
     }
 
     private fun setUpDrawerMenu() {
@@ -682,6 +725,47 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                 }
             }
         }
+
+        farmerViewModel.getNotificationResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
+                }
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    val jsonObject = JSONObject(state.data.toString())
+                    val notificationJsonArray = jsonObject.optJSONArray("notifications")
+                    var unreadCount = 0
+                    if (notificationJsonArray != null) {
+                        for (i in 0 until notificationJsonArray.length()) {
+                            val notification = notificationJsonArray.getJSONObject(i)
+                            if (notification.optInt("is_read", 1) == 0) {
+                                unreadCount++
+                            }
+                        }
+                    }
+                    updateNotificationCount(unreadCount)
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun updateNotificationCount(unreadNotificationsCount: Int) {
+        if (unreadNotificationsCount > 0) {
+            //bg change not icon
+            val menuItem = binding.toolbar.menu.findItem(R.id.action_notification)
+            menuItem.icon?.setTint(ContextCompat.getColor(this, R.color.dusk_yellow))
+        } else {
+            //bg not for change not icon
+            val menuItem = binding.toolbar.menu.findItem(R.id.action_notification)
+            menuItem.icon?.clearColorFilter()
+        }
     }
 
     private fun topicsOperations(
@@ -769,6 +853,14 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
         shrinkToCenter(binding.chatBubbleImageView)
     }
 
+    companion object {
+        private const val PERMISSION_REQUEST_CODE = 100
+    }
+
+    override fun onResume() {
+        super.onResume()
+        farmerViewModel.getNotificationList(farmerId)
+    }
 
     override fun attachBaseContext(newBase: Context) {
         languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) {
@@ -778,5 +870,31 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
         }
         val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
         super.attachBaseContext(updatedContext)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            for ((index, _) in permissions.withIndex()) {
+                if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
+                    UIToastMessage.show(
+                        this@NewDashboardMainActivity,
+                        "Access Permission Granted"
+                    )
+                    // Perform the related action (e.g., accessing the camera) if needed
+                } else {
+                    UIToastMessage.show(
+                        this@NewDashboardMainActivity,
+                        "Access Permission Denied"
+                    )
+                    // Optionally handle specific denied permission cases here
+                }
+            }
+        }
     }
 }
