@@ -16,7 +16,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityAgriStackAdvisoryBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropRecyclerSapAdapter
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.NewDashboardMainActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
@@ -52,18 +52,23 @@ class AgriStackAdvisoryActivity : AppCompatActivity() {
         )
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
-            startActivity(Intent(this, DashboardScreen::class.java))
+            startActivity(Intent(this, NewDashboardMainActivity::class.java))
         }
 
-        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(Intent(this@AgriStackAdvisoryActivity, DashboardScreen::class.java))
+                startActivity(
+                    Intent(
+                        this@AgriStackAdvisoryActivity,
+                        NewDashboardMainActivity::class.java
+                    )
+                )
             }
         })
 
         observeResponse()
         val villageCode = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
-        if (villageCode!=0) {
+        if (villageCode != 0) {
             farmerViewModel.getCropSapAdvisory(villageCode)
         }
     }
@@ -71,12 +76,12 @@ class AgriStackAdvisoryActivity : AppCompatActivity() {
     private fun observeResponse() {
         farmerViewModel.getCropSapAdvisoryResponse.observe(this) { state ->
 
-            when(state){
-                is UiState.Loading->{
+            when (state) {
+                is UiState.Loading -> {
                     ProgressHelper.showProgressDialog(this)
                 }
 
-                is UiState.Success->{
+                is UiState.Success -> {
                     ProgressHelper.disableProgressDialog()
                     val jsonObject = JSONObject(state.data.toString())
                     val jsonArray = jsonObject.optJSONArray("advisory")
@@ -89,7 +94,7 @@ class AgriStackAdvisoryActivity : AppCompatActivity() {
                     }
                 }
 
-                is UiState.Error->{
+                is UiState.Error -> {
                     ProgressHelper.disableProgressDialog()
                     Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                 }

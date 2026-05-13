@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityFarmerDetailsConfirmationBinding
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.NewDashboardMainActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -101,7 +101,7 @@ class FarmerDetailsConfirmationActivity : AppCompatActivity() {
                 if (status == 200) {
                     // Save preference
                     appPreferenceManager.saveBoolean("AGRISTACK_LOGIN_DIALOG", true)
-                    startActivity(Intent(this, DashboardScreen::class.java))
+                    startActivity(Intent(this, NewDashboardMainActivity::class.java))
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                 } else {
                     startActivity(Intent(this, AuthenticateFarmerIdActivity::class.java))

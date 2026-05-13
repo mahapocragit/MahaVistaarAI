@@ -72,7 +72,7 @@ class AppHelper(private val context: Context) {
         if (isNewUiRedirectionEnabled){
             context.startActivity(Intent(context, NewDashboardMainActivity::class.java))
         }else{
-            context.startActivity(Intent(context, DashboardScreen::class.java))
+            context.startActivity(Intent(context, NewDashboardMainActivity::class.java))
         }
     }
 }

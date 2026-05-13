@@ -92,6 +92,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.lead
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.news.NewsListActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.NewDashboardMainActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.NotificationActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
@@ -359,7 +360,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             "customhire" -> Intent(this, CHCenterActivity::class.java)
             "videos" -> Intent(this, VideosActivity::class.java)
             "dbtschemes" -> Intent(this, DBTActivity::class.java)
-            "dashboard" -> Intent(this, DashboardScreen::class.java)
+            "dashboard" -> Intent(this, NewDashboardMainActivity::class.java)
             "etl_page" -> Intent(this, AgriStackAdvisoryActivity::class.java)
             "pestDetection" -> Intent(this, PestIdentificationActivity::class.java)
             else -> Intent(this, DashboardScreen::class.java)
@@ -646,7 +647,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             startActivity(
                 Intent(
                     this@DashboardScreen,
-                    DashboardScreen::class.java
+                    NewDashboardMainActivity::class.java
                 )
             )
         }
