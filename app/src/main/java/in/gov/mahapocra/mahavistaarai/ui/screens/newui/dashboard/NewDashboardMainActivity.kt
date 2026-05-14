@@ -109,25 +109,6 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
         binding = ActivityNewDashboardMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         askForPermissions()
-        ViewCompat.setOnApplyWindowInsetsListener(binding.toolbar) { view, insets ->
-            val topInset = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
-
-            view.updateLayoutParams<ViewGroup.LayoutParams> {
-                height = resources.getDimensionPixelSize(
-                    R.dimen.m3_appbar_size_compact
-                ) + topInset
-            }
-
-            view.setPadding(
-                view.paddingLeft,
-                topInset,
-                view.paddingRight,
-                view.paddingBottom
-            )
-
-            insets
-        }
-
         init()
     }
 

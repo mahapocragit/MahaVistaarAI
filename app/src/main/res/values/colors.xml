@@ -123,4 +123,5 @@
     <color name="positive_feedback_color">#00A651</color>
     <color name="negative_feedback_color">#D7D7D7</color>
     <color name="button_feedback_tint">#3A4354</color>
+    <color name="text_colour_adv">#D97706</color>
 </resources>

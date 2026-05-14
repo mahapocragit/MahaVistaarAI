@@ -14,7 +14,6 @@ import `in`.co.appinventor.services_api.listener.AlertListEventListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
@@ -177,7 +176,7 @@ class Registration : AppCompatActivity(), AlertListEventListener {
                         Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                         if (isUserLoggedIn) {
                             AppHelper(this).redirectToHome()
-                        }else{
+                        } else {
                             startActivity(Intent(this, LoginScreen::class.java))
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -323,22 +322,14 @@ class Registration : AppCompatActivity(), AlertListEventListener {
         } else {
             val jsonObject = JSONObject()
             try {
-                jsonObject.put("Name", userName)
-                jsonObject.put("DistrictName", districtName)
-                jsonObject.put("DistrictCode", districtID)
-                jsonObject.put("TalukaName", talukaName)
-                jsonObject.put("TalukaCode", talukaID)
-                jsonObject.put("VillageName", villageName)
-                jsonObject.put("VillageCode", villageID)
-                jsonObject.put("Status", "Active")
-                jsonObject.put("version_number", versionName)
-                jsonObject.put("fcm_token", token)
-                jsonObject.put("device_id", machineId)
-                jsonObject.put("FAAPRegistrationID", fAAPRegistrationID)
-                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
                 registrationViewModel.getRegistrationRequest(
-                    mob.trim { it <= ' ' },
-                    mob.trim { it <= ' ' }, jsonObject
+                    name = userName,
+                    registerMob = mob.trim { it <= ' ' },
+                    updatedMobile = mob.trim { it <= ' ' },
+                    villageCode = villageID.toString(),
+                    fcmToken = token ?: "",
+                    versionNumber = versionName ?: "",
+                    deviceId = machineId.toString()
                 )
             } catch (e: JSONException) {
                 e.printStackTrace()

@@ -598,27 +598,15 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
         } else if (villageCode == 0) {
             UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_village))
         } else {
-            val jsonObject = JSONObject()
             try {
-                jsonObject.put("Name", userName)
-                jsonObject.put("EmailId", emailid)
-                jsonObject.put("DistrictName", districtName)
-                jsonObject.put("DistrictCode", districtCode)
-                jsonObject.put("TalukaName", talukaName)
-                jsonObject.put("TalukaCode", talukaCode)
-                jsonObject.put("VillageName", villageName)
-                jsonObject.put("VillageCode", villageCode)
-                jsonObject.put("Status", "Active")
-                jsonObject.put("version_number", versionName)
-                jsonObject.put("fcm_token", token)
-                jsonObject.put("device_id", machineId)
-                jsonObject.put("FAAPRegistrationID", fAAPRegistrationID)
-                jsonObject.put("Password", "")
-                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
                 registrationViewModel.getRegistrationRequest(
-                    registerMob,
-                    mob.trim { it <= ' ' },
-                    jsonObject
+                    name = userName,
+                    registerMob = registerMob,
+                    updatedMobile = mob.trim { it <= ' ' },
+                    villageCode = villageCode.toString(),
+                    fcmToken = token ?: "",
+                    versionNumber = versionName ?: "",
+                    deviceId = machineId.toString()
                 )
             } catch (e: JSONException) {
                 e.printStackTrace()

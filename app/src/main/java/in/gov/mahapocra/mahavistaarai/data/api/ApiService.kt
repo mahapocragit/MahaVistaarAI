@@ -26,8 +26,7 @@ interface ApiService {
 
     @POST(ApiConstants.kLoginViaFarmerId)
     suspend fun farmerLoginBasedOnID(
-        @Header("FarmerID") farmerId: String,
-        @Body params: RequestBody
+        @Header("FarmerID") farmerId: String
     ): JsonObject
 
     @POST(ApiConstants.kGetCropCategorywise)
@@ -81,14 +80,14 @@ interface ApiService {
     @POST(ApiConstants.kCompareOtp)
     suspend fun compareOtp(
         @Header("MobileNo") mobileNo: String,
-        @Header("timestamp") timestamp: Long,
-        @Body params: RequestBody
+        @Header("otp") otp: String,
+        @Header("timestamp") timestamp: String
     ): JsonObject
 
     @POST(ApiConstants.kCompareOtpReg)
     suspend fun compareOtpReg(
         @Header("MobileNo") mobileNo: String,
-        @Body params: RequestBody
+        @Header("otp") otp: String
     ): JsonObject
 
     @GET(ApiConstants.kRevampedDBTSchemes)
@@ -173,20 +172,17 @@ interface ApiService {
 
     @POST(ApiConstants.kOTPRequest)
     fun getOTPRequest(
-        @Header("MobileNo") mobileNo: String,
-        @Body params: RequestBody
+        @Header("MobileNo") mobileNo: String
     ): Call<JsonObject>
 
     @POST(ApiConstants.kOTPRequest)
     suspend fun sendOtpToMobile(
-        @Header("MobileNo") mobileNo: String,
-        @Body params: RequestBody
+        @Header("MobileNo") mobileNo: String
     ): Response<JsonObject>
 
     @POST(ApiConstants.kOTPRegisterRequest)
     suspend fun getOTPRegisterRequest(
-        @Header("MobileNo") mobileNo: String,
-        @Body params: RequestBody
+        @Header("MobileNo") mobileNo: String
     ): JsonObject
 
     @POST(ApiConstants.kRegistrationRequest)
@@ -194,6 +190,18 @@ interface ApiService {
         @Header("MobileNo") mobileNo: String,
         @Header("NewMobileNo") updatedMobileNo: String,
         @Body params: RequestBody
+    ): JsonObject
+
+    @POST(ApiConstants.kRegistrationRequest)
+    suspend fun registerUser(
+        @Header("Name") name: String,
+        @Header("MobileNo") mobileNo: String,
+        @Header("NewMobileNo") reMobileNo: String,
+        @Header("VillageCode") villageCode: String,
+        @Header("fcmToken") fcmToken: String,
+        @Header("versionNumber") versionNumber: String,
+        @Header("deviceId") deviceId: String,
+        @Header("Password") password: String,
     ): JsonObject
 
     @POST(ApiConstants.kUserLogin)
@@ -377,10 +385,9 @@ interface ApiService {
     suspend fun compareOtpToFarmerIdRegistration(
         @Header("FarmerID") farmerID: String,
         @Header("otp") otp: String,
-        @Header("timestamp") timestamp: Long,
+        @Header("timestamp") timestamp: String,
         @Header("versionNumber") versionNumber: String,
-        @Header("deviceId") deviceId: String,
-        @Body params: RequestBody
+        @Header("deviceId") deviceId: String
     ): JsonObject
 
     @POST("authService/update_farmer_id")

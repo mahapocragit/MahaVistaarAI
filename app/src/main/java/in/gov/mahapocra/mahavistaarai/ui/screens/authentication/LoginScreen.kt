@@ -51,6 +51,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.OtpRateLimiter.provideValidEncrypte
 import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONException
 import org.json.JSONObject
@@ -358,7 +359,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                     val jSONObject = JSONObject(state.data.toString())
                     val response = jSONObject.optString("response")
                     if (calculatedResponse != response) {
-                        callRefreshTokenAPI(mobileNo, userPass, enteredOTP)
+                        callLoginAPI(enteredOTP)
                         dialog.dismiss()
                     } else {
                         Toast.makeText(this, "Invalid OTP", Toast.LENGTH_LONG).show()
@@ -466,11 +467,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             binding.userIdEditText.requestFocus()
             return
         }
-
-        val jsonObject = JSONObject()
         try {
-            jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             val api = AppInventorApi(
                 this,
                 AppEnvironment.FARMER.baseUrl,
@@ -481,7 +478,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             val retrofit: Retrofit = api.getRetrofitInstance()
             val apiRequest = retrofit.create(ApiService::class.java)
             val responseCall: Call<JsonObject> =
-                apiRequest.getOTPRequest(mobile.trim(), requestBody)
+                apiRequest.getOTPRequest(CryptoHelper.encryptField(mobile.trim()).toString())
             api.postRequest(responseCall, this, 1)
         } catch (e: JSONException) {
             e.printStackTrace()

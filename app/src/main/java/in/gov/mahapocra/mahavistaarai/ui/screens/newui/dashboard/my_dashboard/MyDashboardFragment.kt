@@ -22,6 +22,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -60,9 +62,12 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getLatestAdvisoriesAsJsonArray
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.UriFileHelper.openYouTube
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -94,6 +99,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
     private var selectedCropIdForDCS = 0
     private var selectedCropSowingDateForDCS = ""
     private var currentPage = 0
+    private var isPromoFetched = false
     private var etlAdvisoryJsonArray: JSONArray = JSONArray()
 
     override fun onCreateView(
@@ -110,6 +116,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         setupRecyclerView()
         observeResponse()
         setUpListeners()
+        checkForUpdate()
         hitApis()
     }
 
@@ -130,21 +137,8 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
     }
 
     private fun hitApis() {
-        val rawValue =
-            CryptoHelper.decryptField(
-                AppPreferenceManager(requireContext()).getString(
-                    AppConstants.AGRISTACKID
-                )
-            ).toString()
-        val agristackId = if (rawValue.isEmpty() || rawValue == "null") "" else rawValue
         farmerViewModel.getFarmSummery()
         authViewModel.getCustomisedDashboardList()
-        if (agristackId != "") {
-            farmerViewModel.getFarmDetails()
-            farmerViewModel.fetchCropsForDCS()
-        } else {
-            farmerViewModel.getPromoBanner()
-        }
     }
 
     // ✅ Arrow click logic
@@ -336,6 +330,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                     if ((farmsArray?.length() ?: 0) > 0) {
 
                         if (myFarmsAdapter == null) {
+
                             showDialogForDCS(
                                 farmsArray ?: JSONArray()
                             )
@@ -524,6 +519,40 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                 }
             }
         }
+
+        farmerViewModel.getAppVersionResponse.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {}
+                is UiState.Success -> {
+                    val appHelper = AppHelper(requireContext())
+                    val jsonResponse = JSONObject(state.data.toString())
+                    val remoteAppVersion = jsonResponse.optInt("version_code")
+                    val currentAppVersion = appHelper.getCurrentAppVersion()
+                    if (remoteAppVersion > currentAppVersion) {
+                        appHelper.showUpdateDialog()
+                    } else {
+                        if (appPreferenceManager.getBoolean("SHOW_PROMO_DIALOG") && !isPromoFetched) {
+                            isPromoFetched = true
+                            val rawValue =
+                                CryptoHelper.decryptField(
+                                    AppPreferenceManager(requireContext()).getString(
+                                        AppConstants.AGRISTACKID
+                                    )
+                                ).toString()
+                            val agristackId = if (rawValue.isEmpty() || rawValue == "null") "" else rawValue
+                            if (agristackId != "") {
+                                farmerViewModel.getFarmDetails()
+                                farmerViewModel.fetchCropsForDCS()
+                            } else {
+                                farmerViewModel.getPromoBanner()
+                            }
+                        }
+                    }
+                }
+
+                is UiState.Error -> {}
+            }
+        }
     }
 
     private fun showPromotionalDialog(
@@ -531,27 +560,31 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         page: String,
         videoUrl: String = ""
     ) {
+        if (isPromoDialogShowing || !isAdded) return
 
-        if (!isAdded) return
+        appPreferenceManager.saveBoolean("SHOW_PROMO_DIALOG", false)
 
         val promoView = DialogPromotionalPopupBinding.inflate(layoutInflater)
 
-        val dialogPromo = AlertDialog.Builder(requireContext())
+       val promoDialog = AlertDialog.Builder(requireContext())
             .setView(promoView.root)
             .create()
 
-        dialogPromo.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        promoDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
-        dialogPromo.setOnShowListener {
+        isPromoDialogShowing = true
 
-            Glide.with(this)
-                .load(imageUrl)
-                .into(promoView.previewImage)
+        promoDialog.setOnDismissListener {
+            isPromoDialogShowing = false
         }
 
         promoView.closeImage.setOnClickListener {
-            dialogPromo.dismiss()
+            promoDialog.dismiss()
         }
+
+        Glide.with(this) // 👈 use Fragment as lifecycle owner
+            .load(imageUrl)
+            .into(promoView.previewImage)
 
         promoView.previewImage.setOnClickListener {
             if (videoUrl.isEmpty()) {
@@ -559,10 +592,22 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
             } else {
                 openYouTube(requireContext(), videoUrl)
             }
-            dialogPromo.dismiss()
+            promoDialog.dismiss()
         }
 
-        dialogPromo.show()
+        viewLifecycleOwner.lifecycleScope.launch {
+            delay(1000)
+
+            if (isAdded && viewLifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+                promoDialog.show()
+            }
+
+            delay(10_000)
+
+            if (promoDialog.isShowing) {
+                promoDialog.dismiss()
+            }
+        }
     }
 
     private fun showDialogForDCS(
@@ -572,6 +617,8 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         val binding =
             DeclareYourCropDialogBinding.inflate(layoutInflater)
 
+
+        appPreferenceManager.saveBoolean("SHOW_PROMO_DIALOG", false)
         val dialog = AlertDialog.Builder(requireContext())
             .setView(binding.root)
             .create()
@@ -1012,6 +1059,12 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
             }
         }
     }
+
+
+    private fun checkForUpdate() {
+        farmerViewModel.getAppVersion()
+    }
+
 
     companion object {
         const val CUSTOMISED_DASHBOARD_REDIRECTION = 1

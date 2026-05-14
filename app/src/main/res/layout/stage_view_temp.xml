@@ -18,52 +18,60 @@
         android:id="@+id/stage"
         android:layout_width="@dimen/_18sdp"
         android:layout_height="@dimen/_18sdp"
-        android:layout_marginTop="@dimen/_24sdp"
+        android:layout_marginTop="@dimen/_10sdp"
         android:background="@drawable/pending_round_backgroud_stages"
         app:layout_constraintEnd_toEndOf="@+id/stepLine"
         app:layout_constraintStart_toStartOf="@+id/stepLine"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"/>
 
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/titleTextView"
-        android:layout_width="0dp"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="@dimen/_250sdp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_14sdp"
-        android:text="TextView"
-        android:layout_marginEnd="@dimen/_2sdp"
-        android:textSize="@dimen/_10sdp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/stage"
-        app:layout_constraintEnd_toStartOf="@+id/seeMoreTextView"
+        android:layout_marginBottom="@dimen/_2sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        app:cardCornerRadius="@dimen/_20sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/stage"
-        app:layout_constraintTop_toTopOf="@+id/stage" />
+        app:layout_constraintTop_toTopOf="@+id/stage">
 
-    <TextView
-        android:id="@+id/seeMoreTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/_20sdp"
-        android:layout_marginStart="3dp"
-        android:layout_marginEnd="20dp"
-        android:background="@drawable/background_for_chat_request"
-        android:gravity="center"
-        android:paddingHorizontal="@dimen/_5sdp"
-        android:text="@string/see_more"
-        android:textColor="@color/blue_light"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/titleTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/titleTextView"
-        app:layout_constraintTop_toTopOf="@+id/titleTextView" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_10sdp">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/cropStagesInfoRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_48sdp"
-        android:layout_marginTop="@dimen/_5sdp"
-        android:layout_marginEnd="@dimen/_10sdp"
-        app:layout_constraintStart_toStartOf="@+id/titleTextView"
-        app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
+            <TextView
+                android:id="@+id/titleTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textSize="@dimen/_10sdp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/seeMoreTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_20sdp"
+                android:background="@drawable/background_previous_adv"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/_5sdp"
+                android:text="@string/see_more"
+                android:textColor="@color/actionbar_color_figma"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/titleTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/titleTextView" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/cropStagesInfoRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/seeMoreTextView" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

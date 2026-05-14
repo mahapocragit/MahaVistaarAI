@@ -10,7 +10,6 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.settings.AppSettings
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
@@ -161,15 +160,11 @@ class AuthViewModel : ViewModel() {
         viewModelScope.launch {
             ProgressHelper.showProgressDialog(context)
             try {
-                val jsonObject = JSONObject().apply {
-                    put("SecurityKey", ApiConstants.SSO_KEY)
-                }
-
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val api = retrofit.create(ApiService::class.java)
 
-                val response = api.sendOtpToMobile(mobile, requestBody)
+                val response =
+                    api.sendOtpToMobile(CryptoHelper.encryptField(mobile.trim()).toString())
 
                 ProgressHelper.disableProgressDialog()
 
@@ -240,19 +235,14 @@ class AuthViewModel : ViewModel() {
                 Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
             val versionNumber = LocalCustom.getVersionName(context)
             try {
-                val jsonObject = JSONObject().apply {
-                    put("SecurityKey", ApiConstants.SSO_KEY)
-                }
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val api = retrofit.create(ApiService::class.java)
                 val response = api.compareOtpToFarmerIdRegistration(
-                    farmerId,
-                    otp,
-                    timestamp,
-                    versionNumber,
-                    deviceId,
-                    requestBody
+                    CryptoHelper.encryptField(farmerId).toString(),
+                    CryptoHelper.encryptField(otp).toString(),
+                    CryptoHelper.encryptField(timestamp.toString()).toString(),
+                    CryptoHelper.encryptField(versionNumber).toString(),
+                    CryptoHelper.encryptField(deviceId).toString(),
                 )
                 ProgressHelper.disableProgressDialog()
                 _compareOtpToFarmerIdRegistrationResponse.value = response
@@ -359,16 +349,15 @@ class AuthViewModel : ViewModel() {
         viewModelScope.launch {
             _compareOtpResponse.value = UiState.Loading
             try {
-                val jsonObject = JSONObject().apply {
-                    put("SecurityKey", ApiConstants.SSO_KEY)
-                    put("otp", enteredOTP)
-                }
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit: Retrofit =
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response =
-                    apiRequest.compareOtp(mobile.trim { it <= ' ' }, timestamp, requestBody)
+                    apiRequest.compareOtp(
+                        CryptoHelper.encryptField(mobile.trim { it <= ' ' }).toString(),
+                        CryptoHelper.encryptField(enteredOTP).toString(),
+                        CryptoHelper.encryptField(timestamp.toString()).toString()
+                    )
                 _compareOtpResponse.value = UiState.Success(response)
             } catch (e: Exception) {
                 val message = when (e) {
@@ -385,16 +374,16 @@ class AuthViewModel : ViewModel() {
 
     fun compareOtpReg(mobile: String, enteredOTP: String) {
         viewModelScope.launch {
-            val jsonObject = JSONObject()
             try {
-                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
-                jsonObject.put("otp", enteredOTP)
-
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit: Retrofit =
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
-                val response = apiRequest.compareOtpReg(mobile.trim { it <= ' ' }, requestBody)
+                val response =
+                    apiRequest.compareOtpReg(
+                        CryptoHelper.encryptField(mobile.trim { it <= ' ' })
+                        .toString(),
+                        CryptoHelper.encryptField(enteredOTP).toString()
+                    )
                 _compareOtpResponseReg.value = response
             } catch (e: Exception) {
                 val message = when (e) {
@@ -413,14 +402,12 @@ class AuthViewModel : ViewModel() {
         viewModelScope.launch {
             ProgressHelper.showProgressDialog(context)
             try {
-                val jsonObject = JSONObject().apply {
-                    put("SecurityKey", APIKeys.SSO_PROD)
-                }
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
 
-                val response = apiRequest.farmerLoginBasedOnID(agristackID, requestBody)
+                val response = apiRequest.farmerLoginBasedOnID(
+                    CryptoHelper.encryptField(agristackID).toString()
+                )
                 ProgressHelper.disableProgressDialog()
                 // You can handle the result however you want, for example:
                 _agristackLoginResponse.value = response

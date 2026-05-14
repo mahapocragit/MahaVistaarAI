@@ -73,7 +73,6 @@
         <activity android:name=".sma.ui.screens.KTReportActivity" />
         <activity android:name=".sma.ui.screens.KTActivity" />
         <activity android:name=".sma.ui.screens.KTProjectInformation" />
-        <activity android:name=".ui.maps_sample.MainActivity" />
         <activity
             android:name=".sma.ui.screens.KTReportDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -119,7 +118,7 @@
         <activity android:name=".ui.screens.dashboard.forum.ForumActivity" />
         <activity android:name=".ui.screens.dashboard.chc.CHCenterActivity" />
         <activity android:name=".ui.screens.dashboard.menugrid.DashboardScreen" />
-        <activity android:name=".ui.screens.newui.dashboard.NewDashboardMainActivity" />
+        <activity android:name=".ui.screens.newui.dashboard.NewDashboardMainActivity"/>
         <activity android:name=".ui.screens.authentication.ProfileScreen" />
         <activity android:name=".ui.screens.dashboard.menugrid.dbt.pocra.PocraSchemesDetailsActivity" />
         <activity android:name=".ui.screens.dashboard.menugrid.soilhealthcard.DetailedSoilHealthCardActivity" />

@@ -14,7 +14,6 @@ import com.microsoft.clarity.models.LogLevel
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
-import `in`.gov.mahapocra.mahavistaarai.ui.maps_sample.MainActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.NewDashboardMainActivity
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
@@ -59,7 +58,6 @@ class SplashScreenActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             val targetActivity = if (accessToken.isNotEmpty()) {
                 NewDashboardMainActivity::class.java
-//                MainActivity::class.java
             } else {
                 LoginScreen::class.java
             }
