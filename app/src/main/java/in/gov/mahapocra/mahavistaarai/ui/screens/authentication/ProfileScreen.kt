@@ -341,13 +341,14 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
     }
 
     private fun setConfiguration() {
-        farmerRegisterID = intent.getIntExtra("FAAPRegistrationID", 0)
-        if (farmerRegisterID > 0) {
+        val farmerRegId = AppPreferenceManager(this).getString(AppConstants.FARMER_REG_ID)
+        if (farmerRegId!="") {
             binding.submitButton.text = getString(R.string.update_profile_text)
             fAAPRegistrationID = farmerRegisterID.toString()
             mobileNumberStatus = true
             val userName = AppPreferenceManager(this).getString(AppConstants.USER_NAME)
             val userMobile = AppPreferenceManager(this).getString(AppConstants.USER_MOBILE)
+            Log.d(TAG, "setConfiguration: $userName and $userMobile")
             emailid =
                 AppSettings.getInstance().getValue(this, AppConstants.uEmail, AppConstants.uEmail)
             districtName =

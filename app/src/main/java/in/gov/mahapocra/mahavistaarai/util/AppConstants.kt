@@ -13,6 +13,7 @@ object AppConstants {
     const val pocraRoles: String = "POCRA_ROLES"
     const val userDataSaved: String = "USER_DATA_SAVED"
     const val AGRISTACKID: String = "AGRISTACK_ID"
+    const val FARMER_REG_ID: String = "FARMER_REG_ID"
     const val ACTION_FROM_DASHBOARD: String = "ACTION_FROM_DASHBOARD"
     const val PEST_AND_DISEASES_FROM_DASHBOARD: String = "PEST_AND_DISEASES_FROM_DASHBOARD"
     const val PEST_AND_DISEASES_STAGES: String = "PEST_AND_DISEASES_STAGES"

@@ -594,6 +594,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     val talukaName = dataObject?.optString("TalukaName")
                     val districtCode = dataObject?.optString("DistrictCode")
                     val districtName = dataObject?.optString("DistrictName")
+                    val farmerRegId = dataObject?.optString("FAAPRegistrationID")
 
                     val topicJsonArray = dataObject?.optJSONArray("topics") ?: JSONArray()
                     val topicsToSubArray =
@@ -609,6 +610,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     AppPreferenceManager(this).saveString(AppConstants.DISTRICT_CODE, districtCode)
                     AppPreferenceManager(this).saveString(AppConstants.DISTRICT_NAME, districtName)
                     AppPreferenceManager(this).saveString(AppConstants.AGRISTACKID, agristackId)
+                    AppPreferenceManager(this).saveString(AppConstants.FARMER_REG_ID, farmerRegId)
                     navUserName.text = CryptoHelper.decryptField(name)?.split(" ")[0] ?: ""
                     navUserPhone.text = CryptoHelper.decryptField(mobile)
                     binding.nameTextView.text = buildString {
