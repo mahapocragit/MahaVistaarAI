@@ -3,6 +3,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.DcsCropInfoHorzItemBinding
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
 import org.json.JSONArray
@@ -12,7 +13,8 @@ class CropListDetailsAdapter(
     private val jsonArray: JSONArray,
     private val listener: RecyclerItemClickListener,
     private val parentFarmObject: JSONObject,
-    private val parentPosition: Int
+    private val parentPosition: Int,
+    private val language: String
 ) : RecyclerView.Adapter<CropListDetailsAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: DcsCropInfoHorzItemBinding) :
@@ -29,8 +31,8 @@ class CropListDetailsAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = jsonArray.optJSONObject(position)
-        holder.binding.cropNameTextView.text = item.optString("crop_name")
-        holder.binding.sowingDateTextView.text = "Sown on ${item.optString("sowing_date")}"
+        holder.binding.cropNameTextView.text = if (language=="en")item.optString("crop_name") else item.optString("crop_name_mr")
+        holder.binding.sowingDateTextView.text = "${holder.itemView.context.getString(R.string.sown_on)} ${item.optString("sowing_date")}"
         holder.binding.updateCropImageView.setOnClickListener {
 
             val updateObject = JSONObject()

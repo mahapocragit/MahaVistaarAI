@@ -572,7 +572,7 @@
     <string name="my_dashboard">माझा डॅशबोर्ड</string>
     <string name="agri_services">कृषी सेवा</string>
     <string name="smart_farming">स्मार्ट शेती</string>
-    <string name="welcome_back_to_your_dashboard">तुमच्या डॅशबोर्डमध्ये पुन्हा स्वागत आहे</string>
+    <string name="welcome_back_to_your_dashboard">आपले डॅशबोर्डमध्ये पुन्हा स्वागत आहे</string>
     <string name="my_farms">माझी शेती</string>
     <string name="plot_area_mdash">क्षेत्रफळ</string>
     <string name="total_farms_mdash">शेतजमिनी</string>
@@ -606,4 +606,5 @@
     <string name="villages">गावे:</string>
     <string name="smart_solutions_for_modern_farming">आधुनिक शेतीसाठी स्मार्ट उपाय</string>
     <string name="services_amp_information">सेवा व माहिती</string>
+    <string name="sown_on">पेरणी दिनांक</string>
 </resources>

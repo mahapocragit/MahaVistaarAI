@@ -5,8 +5,11 @@ import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.widget.Toast
+import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
+import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager
 import okhttp3.Authenticator
 import okhttp3.FormBody
@@ -43,14 +46,20 @@ class TokenAuthenticator(private val context: Context) : Authenticator {
         } else {
             // ❌ Refresh token also expired → logout
             TokenSessionManager.clear()
-
+            AppPreferenceManager(context).clearAll()
+            AppSettings.getInstance().clearAllPreferences(context)
 //            // Navigate to Login (must be on main thread)
             Handler(Looper.getMainLooper()).post {
+                Toast.makeText(
+                    context,
+                    "Your session has expired. Please login again.",
+                    Toast.LENGTH_LONG
+                ).show()
+
                 val intent = Intent(context, LoginScreen::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 context.startActivity(intent)
             }
-
             null
         }
     }

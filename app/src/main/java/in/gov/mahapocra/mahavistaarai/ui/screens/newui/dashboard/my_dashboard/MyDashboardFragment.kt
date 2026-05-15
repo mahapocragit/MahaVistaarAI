@@ -19,7 +19,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -31,7 +30,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.model.CropsCategName
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.DeclareYourCropDialogBinding
 import `in`.gov.mahapocra.mahavistaarai.databinding.DialogPromotionalPopupBinding
@@ -60,6 +58,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.FarmDetails
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.adapters.CropSelectionAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MahavistaarViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
@@ -79,6 +78,7 @@ import java.util.Locale
 class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
 
     private var _binding: FragmentMyDashboardBinding? = null
+    private val mahavistaarViewModel: MahavistaarViewModel by viewModels()
     private var isPromoDialogShowing = false
     private val binding get() = _binding!!
     private var selectedFarmPosition = -1
@@ -125,14 +125,8 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
     private fun showDialogs() {
         if (appPreferenceManager.getBoolean("SHOW_PROMO_DIALOG") && !isPromoFetched) {
             isPromoFetched = true
-            val rawValue =
-                CryptoHelper.decryptField(
-                    AppPreferenceManager(requireContext()).getString(
-                        AppConstants.AGRISTACKID
-                    )
-                ).toString()
-            val agristackId = if (rawValue.isEmpty() || rawValue == "null") "" else rawValue
-            if (agristackId != "") {
+            val rawValue = appPreferenceManager.getString("FARMER_POPUP_ID").toString()
+            if (rawValue != "null" && rawValue != null) {
                 farmerViewModel.getFarmDetails()
                 farmerViewModel.fetchCropsForDCS()
             } else {
@@ -150,9 +144,8 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
             false
         )
 
-        binding.myDashboardRecyclerView.layoutManager = layoutManager
-
         // empty adapter initially
+        binding.myDashboardRecyclerView.layoutManager = layoutManager
         myAdapter = MyDashboardAdapter(languageToLoad, JSONArray(), this)
         binding.myDashboardRecyclerView.adapter = myAdapter
     }
@@ -172,6 +165,12 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         }
 
         appPreferenceManager = AppPreferenceManager(requireContext())
+        savedCropId = appPreferenceManager.getInt("CROP_ID_SAVED")
+        savedCropName = appPreferenceManager.getString("CROP_NAME_SAVED").toString()
+        savedCropSowingDate = appPreferenceManager.getString("CROP_SOWING_DATE_SAVED").toString()
+        savedCropWoTRId = appPreferenceManager.getString("CROP_WOTR_ID_SAVED")
+        Log.d(TAG, "setUpListeners: ${savedCropWoTRId ?: "wtf"}")
+        savedCropImageUrl = appPreferenceManager.getString("CROP_IMAGE_SAVED")
         val etlJsonString = appPreferenceManager.getString(AppConstants.ETL_ADVISORY_ARRAY)
         try {
             etlAdvisoryJsonArray = JSONArray(etlJsonString)
@@ -220,14 +219,9 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         })
 
         binding.farmSummeryCardView.setOnClickListener {
-            val rawValue =
-                CryptoHelper.decryptField(
-                    AppPreferenceManager(requireContext()).getString(
-                        AppConstants.AGRISTACKID
-                    )
-                ).toString()
-            val agristackId = if (rawValue.isEmpty() || rawValue == "null") "" else rawValue
-            if (agristackId != "") {
+
+            val rawValue = appPreferenceManager.getString("FARMER_POPUP_ID").toString()
+            if (rawValue != "null" && rawValue != null) {
                 startActivity(Intent(context, FarmDetailsActivity::class.java))
             } else {
                 showAgristackLinkingDialog()
@@ -294,6 +288,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                     binding.totalCropsTextView.text = totalCrops.toString()
                     binding.totalVillagesTextView.text =
                         "${getString(R.string.villages)} $totalVillages"
+                    appPreferenceManager.saveBoolean("IS_A_FARMER", true)
                 }
 
                 is UiState.Error -> {
@@ -302,6 +297,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                     if (state.message != "HTTP 404 Not Found") {
                         Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
                     }
+                    appPreferenceManager.saveBoolean("IS_A_FARMER", false)
                 }
             }
         }
@@ -956,7 +952,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                 } else {
                     Intent(requireContext(), AdvisoryCropActivity::class.java).apply {
                         putExtra("id", savedCropId)
-                        putExtra("wotr_crop_id", savedCropWoTRId?.toInt())
+                        putExtra("wotr_crop_id", savedCropWoTRId ?: "0".toInt())
                         putExtra("mUrl", savedCropImageUrl)
                         putExtra("mName", savedCropName)
                         putExtra("sowingDate", savedCropSowingDate)

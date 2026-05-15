@@ -692,6 +692,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     AppPreferenceManager(this).saveString(AppConstants.DISTRICT_CODE, districtCode)
                     AppPreferenceManager(this).saveString(AppConstants.DISTRICT_NAME, districtName)
                     AppPreferenceManager(this).saveString(AppConstants.AGRISTACKID, agristackId)
+                   appPreferenceManager.saveString("FARMER_POPUP_ID", agristackId)
                     AppPreferenceManager(this).saveString(AppConstants.FARMER_REG_ID, farmerRegId)
                     navUserName.text = CryptoHelper.decryptField(name)?.split(" ")[0] ?: ""
                     navUserPhone.text = CryptoHelper.decryptField(mobile)
@@ -751,7 +752,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                         TokenSessionManager.clear()
                         val intent = Intent(
                             this@NewDashboardMainActivity,
-                            SplashScreenActivity::class.java
+                            LoginScreen::class.java
                         )
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)

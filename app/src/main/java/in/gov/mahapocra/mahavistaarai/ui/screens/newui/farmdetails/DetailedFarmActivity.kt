@@ -46,9 +46,9 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
     private lateinit var binding: ActivityDetailedFarmBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
     private var cropsJsonArray = JSONArray()
-    private var adapter = FarmDetailsAdapter(JSONArray(), this)
-    private var farmId = ""
     private var languageToLoad: String = "en"
+    private var adapter = FarmDetailsAdapter(languageToLoad, JSONArray(), this)
+    private var farmId = ""
     private var selectedCropIdForDCS = 0
     private var selectedCropSowingDateForDCS = ""
 
@@ -81,7 +81,7 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
                 is UiState.Success -> {
                     ProgressHelper.disableProgressDialog()
                     val jSONObject = JSONObject(state.data.toString())
-                    val response = jSONObject.optString("response")?:"Crop Saved Successfully"
+                    val response = jSONObject.optString("response") ?: "Crop Saved Successfully"
                     Toast.makeText(this, response, Toast.LENGTH_SHORT).show()
                     farmerViewModel.getFarmCropDCS(CryptoHelper.encryptField(farmId).toString())
                 }
@@ -112,7 +112,7 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
                         binding.cropTitleTextView.text =
                             getString(R.string.please_add_the_crops_message)
                     }
-                    adapter = FarmDetailsAdapter(cropsArray ?: JSONArray(), this)
+                    adapter = FarmDetailsAdapter(languageToLoad, cropsArray ?: JSONArray(), this)
                     binding.cropDSCRecyclerView.adapter = adapter
                 }
 
@@ -120,7 +120,7 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
                     ProgressHelper.disableProgressDialog()
                     Log.d(TAG, "observeResponse: ${state.message}")
                     if (state.message == "HTTP 404 Not Found") {
-                        adapter = FarmDetailsAdapter(JSONArray(), this)
+                        adapter = FarmDetailsAdapter(languageToLoad, JSONArray(), this)
                         binding.cropDSCRecyclerView.adapter = adapter
                     }
                 }
@@ -154,7 +154,7 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
                 is UiState.Success -> {
                     ProgressHelper.disableProgressDialog()
                     val jSONObject = JSONObject(state.data.toString())
-                    val response = jSONObject.optString("response")?:"Crop Deleted Successfully"
+                    val response = jSONObject.optString("response") ?: "Crop Deleted Successfully"
                     Toast.makeText(this, response, Toast.LENGTH_SHORT).show()
                     farmerViewModel.getFarmCropDCS(CryptoHelper.encryptField(farmId).toString())
                 }
@@ -219,7 +219,7 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
                 append(" $surveyNumber")
             }
             binding.totalAreaTextView.text = buildString {
-                append("$totalArea: ")
+                append("$totalArea ")
                 append(getString(R.string.acre))
             }
             binding.farmIdTextView.text = buildString {

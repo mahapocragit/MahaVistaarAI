@@ -379,7 +379,8 @@ class MyFarmsDCSAdapter(
                     cropsArray,
                     listener,
                     obj,
-                    position
+                    position,
+                    language
                 )
         }
     }

@@ -53,7 +53,7 @@ class LeaderboardActivity : AppCompatActivity() {
         LocalCustom.uiResponsive(binding.root)
         ProgressHelper.showProgressDialog(this)
         observeViewModel()
-        mahavistaarViewModel.requestUrlForChatBot(this)
+        mahavistaarViewModel.requestUrlForChatBot("", "")
         setUpViews()
     }
 

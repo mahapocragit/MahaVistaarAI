@@ -22,7 +22,7 @@ object RetrofitHelper {
         val gson = GsonBuilder().create()
         return Retrofit.Builder()
             .baseUrl(baseURL)
-            .client(getSafeOkHttpClient())
+            .client(getUnsafeOkHttpClient())
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }
