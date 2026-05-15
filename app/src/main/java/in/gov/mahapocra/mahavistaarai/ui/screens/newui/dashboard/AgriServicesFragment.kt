@@ -167,7 +167,7 @@ class AgriServicesFragment : Fragment(), OnMultiRecyclerItemClickListener {
         }
         val farmerRegId =
             AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
-        farmerViewModel.getFarmerSelectedCrop(farmerRegId, "en")
+        farmerViewModel.getFarmerSelectedCrop(languageToLoad)
     }
 
     private fun deleteDialog() {
@@ -283,7 +283,7 @@ class AgriServicesFragment : Fragment(), OnMultiRecyclerItemClickListener {
                         AppSettings.getInstance()
                             .setList(requireContext(), AppConstants.kFarmerCrop, null)
                         selectedCropList?.clear()
-                        farmerViewModel.getFarmerSelectedCrop(farmerId, languageToLoad)
+                        farmerViewModel.getFarmerSelectedCrop( languageToLoad)
                         savedCropName = ""
                         AppPreferenceManager(requireContext()).saveInt("CROP_ID_SAVED", 0)
                         AppPreferenceManager(requireContext()).clearPreference("CROP_NAME_SAVED")
@@ -318,5 +318,15 @@ class AgriServicesFragment : Fragment(), OnMultiRecyclerItemClickListener {
 
     override fun onMultiRecyclerViewItemClick(i: Int, obj: Any?) {
         TODO("Not yet implemented")
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val farmerRegId =
+            AppSettings.getInstance()
+                .getIntValue(context, AppConstants.fREGISTER_ID, 0)
+
+        farmerViewModel.getFarmerSelectedCrop( languageToLoad)
     }
 }

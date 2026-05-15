@@ -590,7 +590,7 @@
     <string name="find_storage_space_near_you">तुमच्या जवळील साठवण जागा शोधा</string>
     <string name="chc_center">सीएचसी केंद्र</string>
     <string name="find_local_trading_hubs">स्थानिक व्यापार केंद्रे शोधा</string>
-    <string name="hello">नमस्कार</string>
+    <string name="hello">नमस्कार,</string>
     <string name="declare_your_crop">पीक जाहीर करा</string>
     <string name="add_crop_plus">+ पीक जोडा</string>
     <string name="survey_no">सर्व्हे क्रमांक</string>

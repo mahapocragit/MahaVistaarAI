@@ -75,4 +75,14 @@ class AppHelper(private val context: Context) {
             context.startActivity(Intent(context, NewDashboardMainActivity::class.java))
         }
     }
+
+    fun redirectToPage(redirectionPage:Int){
+        val intent = Intent(context, NewDashboardMainActivity::class.java)
+        intent.putExtra("selected_tab", redirectionPage)
+        intent.flags =
+            Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                    Intent.FLAG_ACTIVITY_SINGLE_TOP
+
+        context.startActivity(intent)
+    }
 }

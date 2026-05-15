@@ -27,16 +27,15 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.view.GravityCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.get
-import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.microsoft.clarity.Clarity
@@ -45,6 +44,7 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
+import `in`.gov.mahapocra.mahavistaarai.data.model.CropsCategName
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityNewDashboardMainBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DrawerMenuAdapter
@@ -52,7 +52,6 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.ProfileScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.AboutActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.CreditsActivity
@@ -99,6 +98,13 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
     private var jsonArray: JSONArray? = null
     private var topicsArray = JSONArray()
     private var isPromoFetched = false
+
+    private var savedCropId = 0
+    private var savedCropName = ""
+    private var savedCropSowingDate: String? = null
+    private var savedCropWoTRId: String? = null
+    private var savedCropImageUrl: String? = null
+    private var selectedCropList: ArrayList<CropsCategName>? = null
     private var farmerId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -138,7 +144,11 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
         bubbleAnimationChatbot()
         setVersion()
         observeResponse()
-
+        val name = AppPreferenceManager(this).getString(AppConstants.USER_NAME, "")
+        binding.nameTextView.text = buildString {
+            append("${getString(R.string.hello)} ")
+            append(CryptoHelper.decryptField(name)?.split(" ")[0] ?: "")
+        }
         farmerViewModel.getNotificationList(farmerId)
         val toggle = ActionBarDrawerToggle(
             this@NewDashboardMainActivity,
@@ -166,7 +176,14 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
         )
 
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+
             override fun onTabSelected(tab: TabLayout.Tab) {
+
+                appPreferenceManager.saveInt(
+                    AppConstants.REDIRECT_TO_TAB,
+                    tab.position
+                )
+
                 val view = tab.customView!!
                 view.isSelected = true
 
@@ -200,6 +217,25 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
             tab.customView = view
 
         }.attach()
+
+
+        val selectedTabFromIntent = intent.getIntExtra("selected_tab", -1)
+
+        if (selectedTabFromIntent != -1) {
+
+            // TEMPORARY NAVIGATION CASE
+            binding.viewPager.setCurrentItem(selectedTabFromIntent, false)
+
+        } else {
+
+            // NORMAL APP OPEN CASE
+            val savedTab = appPreferenceManager.getInt(
+                AppConstants.REDIRECT_TO_TAB,
+                0
+            )
+
+            binding.viewPager.setCurrentItem(savedTab, false)
+        }
 
         binding.toolbar.inflateMenu(R.menu.toolbar_menu)
 
@@ -306,6 +342,22 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                 }
             }
         )
+
+        binding.viewPager.registerOnPageChangeCallback(
+            object : ViewPager2.OnPageChangeCallback() {
+
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+
+                    appPreferenceManager.saveInt(
+                        AppConstants.REDIRECT_TO_TAB,
+                        position
+                    )
+                }
+            }
+        )
+
+        farmerViewModel.getFarmerSelectedCrop(languageToLoad)
     }
 
     private fun askForPermissions() {
@@ -397,7 +449,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
             startActivity(intent)
 
             dialog.dismiss()
-            farmerViewModel.getFarmerSelectedCrop(farmerId, languageToLoad)
+            farmerViewModel.getFarmerSelectedCrop(languageToLoad)
         }
 
         tvMarathi.setOnClickListener {
@@ -409,7 +461,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
             startActivity(intent)
 
             dialog.dismiss()
-            farmerViewModel.getFarmerSelectedCrop(farmerId, languageToLoad)
+            farmerViewModel.getFarmerSelectedCrop(languageToLoad)
         }
 
         dialog.show()
@@ -509,7 +561,19 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     )
                 }
 
-                7 -> logoutFromApp()
+                7 -> {
+                    AlertDialog.Builder(this)
+                        .setTitle("Logout")
+                        .setMessage("Do you want to logout?")
+                        .setPositiveButton("Yes") { dialog, _ ->
+                            logoutFromApp()
+                            dialog.dismiss()
+                        }
+                        .setNegativeButton("No") { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        .show()
+                }
 
                 8 -> {
                     startActivity(
@@ -635,7 +699,9 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                         append("${getString(R.string.hello)} ")
                         append(CryptoHelper.decryptField(name)?.split(" ")[0] ?: "")
                     }
-                    farmerViewModel.getCropSapAdvisory(CryptoHelper.decryptField(villageCode).toString().toInt())
+                    farmerViewModel.getCropSapAdvisory(
+                        CryptoHelper.decryptField(villageCode).toString().toInt()
+                    )
                     topicsOperations(topicJsonArray, topicsToSubArray, topicsToDeleteArray)
                 }
 
@@ -716,7 +782,10 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     val jsonObject = JSONObject(state.data.toString())
                     val jsonArray = jsonObject.optJSONArray("advisory")
                     if (jsonArray?.length() != 0) {
-                        appPreferenceManager.saveString(AppConstants.ETL_ADVISORY_ARRAY, jsonArray?.toString())
+                        appPreferenceManager.saveString(
+                            AppConstants.ETL_ADVISORY_ARRAY,
+                            jsonArray?.toString()
+                        )
                     }
                 }
 
@@ -747,6 +816,56 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                         }
                     }
                     updateNotificationCount(unreadCount)
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        farmerViewModel.getFarmerSelectedCrop.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
+                }
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+
+                    val jsonObject = JSONObject(state.data.toString())
+                    val selectedCrops = jsonObject.optJSONArray("Data")
+
+                    if (selectedCrops != null && selectedCrops.length() > 0) {
+                        selectedCropList = ArrayList()
+                        for (i in 0 until selectedCrops.length()) {
+                            val selectedCrop = selectedCrops.getJSONObject(i)
+                            savedCropId = selectedCrop.getInt("crop_id")
+                            savedCropName = selectedCrop.getString("name")
+                            savedCropImageUrl = selectedCrop.getString("image")
+                            savedCropSowingDate = selectedCrop.getString("sowing_date")
+                            savedCropWoTRId = selectedCrop.getString("wotr_crop_id")
+                        }
+                        appPreferenceManager.saveInt("CROP_ID_SAVED", savedCropId)
+                        appPreferenceManager.saveString("CROP_NAME_SAVED", savedCropName)
+                        appPreferenceManager.saveString("CROP_IMAGE_SAVED", savedCropImageUrl)
+                        appPreferenceManager.saveString(
+                            "CROP_SOWING_DATE_SAVED",
+                            savedCropSowingDate
+                        )
+                        appPreferenceManager.saveString("CROP_WOTR_ID_SAVED", savedCropWoTRId)
+                        selectedCropList?.add(
+                            CropsCategName(
+                                savedCropId,
+                                savedCropName,
+                                savedCropImageUrl,
+                                savedCropWoTRId
+                            )
+                        )
+                    }
+
+                    Log.d("TAGGER", "observeResponse: $jsonObject")
                 }
 
                 is UiState.Error -> {
@@ -898,4 +1017,12 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
             }
         }
     }
+
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        val tab = intent.getIntExtra("selected_tab", 0) ?: 0
+        binding.viewPager.currentItem = tab
+    }
+
 }

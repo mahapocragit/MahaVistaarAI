@@ -179,14 +179,12 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun getFarmerSelectedCrop(farmerId: Int, language: String?) {
+    fun getFarmerSelectedCrop(language: String?) {
         viewModelScope.launch {
             _getFarmerSelectedCrop.value = UiState.Loading
             try {
                 val jsonObject = JSONObject()
-                jsonObject.put("api_key", APIKeys.SSO_PROD)
                 jsonObject.put("lang", language)
-                jsonObject.put("farmer_id", farmerId)
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val response = apiRequest.getFarmersSelectedCrop(requestBody)
                 _getFarmerSelectedCrop.value = UiState.Success(response)

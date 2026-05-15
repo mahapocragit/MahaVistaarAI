@@ -149,7 +149,8 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
                     Log.d(TAG, "observeResponse: $dataObject")
                     val status = dataObject.optInt("status")
                     if (status == 200) {
-                        safeStartActivity()
+                        AppHelper(this).redirectToPage(1)
+                        finish()
                     }
                 }
                 is UiState.Error->{
@@ -209,6 +210,7 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
             Toast.makeText(this, R.string.selected_crop_saved, Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, NewDashboardMainActivity::class.java).apply {
                 putExtra("savedCropResponse", "200")
+                intent.putExtra("selected_tab", 1)
             })
         }
     }

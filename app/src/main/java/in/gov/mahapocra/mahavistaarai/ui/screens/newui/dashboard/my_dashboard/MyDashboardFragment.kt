@@ -19,6 +19,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -30,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.model.CropsCategName
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.DeclareYourCropDialogBinding
 import `in`.gov.mahapocra.mahavistaarai.databinding.DialogPromotionalPopupBinding
@@ -39,6 +41,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropRecyclerSapAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.AuthenticateFarmerIdActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.chc.CHCenterActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.etl.AgriStackAdvisoryActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.FertilizerCalculatorActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.Warehouse
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.AdvisoryCropActivity
@@ -62,7 +65,6 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getLatestAdvisoriesAsJsonArray
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
-import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.UriFileHelper.openYouTube
@@ -158,6 +160,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
     private fun hitApis() {
         farmerViewModel.getFarmSummery()
         authViewModel.getCustomisedDashboardList()
+        farmerViewModel.getFarmerSelectedCrop(languageToLoad)
     }
 
     // ✅ Arrow click logic
@@ -169,11 +172,6 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         }
 
         appPreferenceManager = AppPreferenceManager(requireContext())
-        savedCropId = appPreferenceManager.getInt("CROP_ID_SAVED")
-        savedCropName = appPreferenceManager.getString("CROP_NAME_SAVED").toString()
-        savedCropSowingDate = appPreferenceManager.getString("CROP_SOWING_DATE_SAVED").toString()
-        savedCropWoTRId = appPreferenceManager.getString("CROP_WOTR_ID_SAVED")
-        savedCropImageUrl = appPreferenceManager.getString("CROP_IMAGE_SAVED")
         val etlJsonString = appPreferenceManager.getString(AppConstants.ETL_ADVISORY_ARRAY)
         try {
             etlAdvisoryJsonArray = JSONArray(etlJsonString)
@@ -402,11 +400,10 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
 
                     ProgressHelper.disableProgressDialog()
 
-                    Toast.makeText(
-                        requireContext(),
-                        "Crop saved successfully",
-                        Toast.LENGTH_SHORT
-                    ).show()
+
+                    val jSONObject = JSONObject(state.data.toString())
+                    val response = jSONObject.optString("response") ?: "Crop Saved Successfully"
+                    Toast.makeText(requireContext(), response, Toast.LENGTH_SHORT).show()
 
                     // Reload farms from backend
                     farmerViewModel.getFarmDetails()
@@ -460,11 +457,10 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                             selectedFarmPosition
                         )
 
-                        Toast.makeText(
-                            requireContext(),
-                            "Crop deleted successfully",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        val jSONObject = JSONObject(state.data.toString())
+                        val response =
+                            jSONObject.optString("response") ?: "Crop Deleted Successfully"
+                        Toast.makeText(requireContext(), response, Toast.LENGTH_SHORT).show()
 
                     } catch (e: Exception) {
 
@@ -538,6 +534,39 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                 }
             }
         }
+
+        farmerViewModel.getFarmerSelectedCrop.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    context?.let { ProgressHelper.showProgressDialog(it) }
+                }
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+
+                    val jsonObject = JSONObject(state.data.toString())
+                    val selectedCrops = jsonObject.optJSONArray("Data")
+
+                    if (selectedCrops != null && selectedCrops.length() > 0) {
+                        for (i in 0 until selectedCrops.length()) {
+                            val selectedCrop = selectedCrops.getJSONObject(i)
+                            savedCropId = selectedCrop.getInt("crop_id")
+                            savedCropName = selectedCrop.getString("name")
+                            savedCropImageUrl = selectedCrop.getString("image")
+                            savedCropSowingDate = selectedCrop.getString("sowing_date")
+                            savedCropWoTRId = selectedCrop.getString("wotr_crop_id")
+                        }
+                    }
+
+                    Log.d("TAGGER", "observeResponse: $jsonObject")
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     private fun showPromotionalDialog(
@@ -551,7 +580,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
 
         val promoView = DialogPromotionalPopupBinding.inflate(layoutInflater)
 
-       val promoDialog = AlertDialog.Builder(requireContext())
+        val promoDialog = AlertDialog.Builder(requireContext())
             .setView(promoView.root)
             .create()
 
@@ -790,12 +819,21 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                 val declarationId =
                     jsonObject.optString("declaration_id")
 
-                Log.d(TAG, "onRecyclerItemClick DELETE: $jsonObject and $declarationId")
-                farmerViewModel.deleteFarmCropForDCS(
-                    CryptoHelper.encryptField(
-                        declarationId
-                    ).toString()
-                )
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Delete Crop")
+                    .setMessage("Do you really want to delete the crop?")
+                    .setPositiveButton("Delete") { dialog, _ ->
+
+                        // DELETE LOGIC HERE
+                        farmerViewModel.deleteFarmCropForDCS(
+                            CryptoHelper.encryptField(declarationId).toString()
+                        )
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
             }
 
             UPDATE_CROP_FOR_DCS -> {
@@ -905,33 +943,71 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
 
     private fun redirectToScreen(testValue: String) {
         val targetIntent = when (testValue.lowercase()) {
-            "advisory" -> Intent(requireContext(), AdvisoryCropActivity::class.java).apply {
-                putExtra("id", savedCropId)
-                putExtra("wotr_crop_id", savedCropWoTRId?.toInt())
-                putExtra("mUrl", savedCropImageUrl)
-                putExtra("mName", savedCropName)
-                putExtra("sowingDate", savedCropSowingDate)
-            }
+
+            "advisory" ->
+                if (savedCropName.isEmpty()) {
+                    appPreferenceManager.saveString(
+                        AppConstants.ACTION_FROM_DASHBOARD,
+                        AppConstants.PEST_AND_DISEASES_FROM_DASHBOARD
+                    )
+
+                    Intent(requireContext(), AddCropActivity::class.java)
+
+                } else {
+                    Intent(requireContext(), AdvisoryCropActivity::class.java).apply {
+                        putExtra("id", savedCropId)
+                        putExtra("wotr_crop_id", savedCropWoTRId?.toInt())
+                        putExtra("mUrl", savedCropImageUrl)
+                        putExtra("mName", savedCropName)
+                        putExtra("sowingDate", savedCropSowingDate)
+                    }
+                }
 
             "sop" -> Intent(requireContext(), SOPActivity::class.java)
+
             "fertilizer" -> Intent(requireContext(), FertilizerCalculatorActivity::class.java)
+
             "pestdisease" -> Intent(requireContext(), PestsAndDiseasesStages::class.java)
+
             "weather" -> Intent(requireContext(), WeatherActivity::class.java)
-            "shc" -> Intent(requireContext(), SoilHealthCardActivity::class.java)
-            "soilcard" -> Intent(requireContext(), SoilHealthCardActivity::class.java)
-            "climatetech" -> Intent(requireContext(), ClimateResilientTechnology::class.java)
-            "market" -> Intent(requireContext(), MarketPrice::class.java)
-            "marketPrice" -> Intent(requireContext(), MarketPrice::class.java)
-            "shetishala" -> Intent(requireContext(), ShetishalaActivity::class.java)
-            "warehouse" -> Intent(requireContext(), Warehouse::class.java)
-            "customhire" -> Intent(requireContext(), CHCenterActivity::class.java)
-            "videos" -> Intent(requireContext(), VideosActivity::class.java)
-            "dbtschemes" -> Intent(requireContext(), DBTActivity::class.java)
-            "dashboard" -> Intent(requireContext(), NewDashboardMainActivity::class.java)
-            "etl_page" -> Intent(requireContext(), AgriStackAdvisoryActivity::class.java)
-            "pestDetection" -> Intent(requireContext(), PestIdentificationActivity::class.java)
-            else -> Intent(requireContext(), NewDashboardMainActivity::class.java)
+
+            "shc", "soilcard" ->
+                Intent(requireContext(), SoilHealthCardActivity::class.java)
+
+            "climatetech" ->
+                Intent(requireContext(), ClimateResilientTechnology::class.java)
+
+            "market", "marketprice" ->
+                Intent(requireContext(), MarketPrice::class.java)
+
+            "shetishala" ->
+                Intent(requireContext(), ShetishalaActivity::class.java)
+
+            "warehouse" ->
+                Intent(requireContext(), Warehouse::class.java)
+
+            "customhire" ->
+                Intent(requireContext(), CHCenterActivity::class.java)
+
+            "videos" ->
+                Intent(requireContext(), VideosActivity::class.java)
+
+            "dbtschemes" ->
+                Intent(requireContext(), DBTActivity::class.java)
+
+            "dashboard" ->
+                Intent(requireContext(), NewDashboardMainActivity::class.java)
+
+            "etl_page" ->
+                Intent(requireContext(), AgriStackAdvisoryActivity::class.java)
+
+            "pestdetection" ->
+                Intent(requireContext(), PestIdentificationActivity::class.java)
+
+            else ->
+                Intent(requireContext(), NewDashboardMainActivity::class.java)
         }
+
         startActivity(targetIntent)
     }
 
@@ -1052,5 +1128,10 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         const val SAVE_CROP_FOR_DCS = 4
         const val DELETE_CROP_FOR_DCS = 5
         const val UPDATE_CROP_FOR_DCS = 6
+    }
+
+    override fun onResume() {
+        super.onResume()
+        hitApis()
     }
 }

@@ -17,13 +17,14 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.Pests
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.sop.SOPActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 
 class SmartFarmingFragment : Fragment(), OnRecyclerItemClickListener {
 
     private var _binding: FragmentSmartFarmingBinding? = null
     private val binding get() = _binding!!
-
+    private lateinit var appPreferenceManager: AppPreferenceManager
     private var savedCropId = 0
     private var savedCropName = ""
     private var savedCropImageUrl = ""
@@ -54,8 +55,12 @@ class SmartFarmingFragment : Fragment(), OnRecyclerItemClickListener {
                 getString(R.string.climateTechnology)
             ),
             SmartFarmingModel(
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_videos_sf)!!,
-                getString(R.string.videos)
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_pest_disease_sf)!!,
+                getString(R.string.pests_n_diseases)
+            ),
+            SmartFarmingModel(
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_sop_sf)!!,
+                getString(R.string.sop_title)
             ),
             SmartFarmingModel(
                 ContextCompat.getDrawable(requireContext(), R.drawable.ic_shetishala_sf)!!,
@@ -66,13 +71,9 @@ class SmartFarmingFragment : Fragment(), OnRecyclerItemClickListener {
                 getString(R.string.magazine)
             ),
             SmartFarmingModel(
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_pest_disease_sf)!!,
-                getString(R.string.pests_n_diseases)
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_videos_sf)!!,
+                getString(R.string.videos)
             ),
-            SmartFarmingModel(
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_sop_sf)!!,
-                getString(R.string.sop_title)
-            )
         )
 
         val adapter = SmartFarmingAdapter(dataList, this)

@@ -243,7 +243,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         setupDashboardRecyclerView()
         setVersion()
         if (NetworkUtils.isInternetAvailable(this)) {
-            farmerViewModel.getFarmerSelectedCrop(farmerId, languageToLoad)
+            farmerViewModel.getFarmerSelectedCrop(languageToLoad)
         } else {
             LocalCustom.createSnackbar(binding.root, "Internet not available!")
         }
@@ -1014,7 +1014,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
                         AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null)
                         selectedCropList?.clear()
-                        farmerViewModel.getFarmerSelectedCrop(farmerId, languageToLoad)
+                        farmerViewModel.getFarmerSelectedCrop(languageToLoad)
                         savedCropName = ""
                         AppPreferenceManager(this).saveInt("CROP_ID_SAVED", 0)
                         AppPreferenceManager(this).clearPreference("CROP_NAME_SAVED")
@@ -1656,7 +1656,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             startActivity(intent)
 
             dialog.dismiss()
-            farmerViewModel.getFarmerSelectedCrop(farmerId, languageToLoad)
+            farmerViewModel.getFarmerSelectedCrop(languageToLoad)
         }
 
         tvMarathi.setOnClickListener {
@@ -1668,7 +1668,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             startActivity(intent)
 
             dialog.dismiss()
-            farmerViewModel.getFarmerSelectedCrop(farmerId, languageToLoad)
+            farmerViewModel.getFarmerSelectedCrop(languageToLoad)
         }
 
         dialog.show()

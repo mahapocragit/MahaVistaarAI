@@ -39,6 +39,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.CropModel
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.data.model.AnalysisData
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.data.repository.PredictRepository
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.NewDashboardMainActivity
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -128,7 +129,8 @@ class PestIdentificationActivity : AppCompatActivity() {
             getString(R.string.pest_identification_text)
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
-            AppHelper(this@PestIdentificationActivity).redirectToHome()
+            AppHelper(this@PestIdentificationActivity).redirectToPage(1)
+            finish()
         }
 
         FirebaseMessaging.getInstance().unsubscribeFromTopic("generic_notifications")
@@ -181,7 +183,8 @@ class PestIdentificationActivity : AppCompatActivity() {
     private fun handleBackPress() {
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                AppHelper(this@PestIdentificationActivity).redirectToHome()
+                AppHelper(this@PestIdentificationActivity).redirectToPage(1)
+                finish()
             }
         })
     }

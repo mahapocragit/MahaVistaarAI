@@ -80,6 +80,9 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
 
                 is UiState.Success -> {
                     ProgressHelper.disableProgressDialog()
+                    val jSONObject = JSONObject(state.data.toString())
+                    val response = jSONObject.optString("response")?:"Crop Saved Successfully"
+                    Toast.makeText(this, response, Toast.LENGTH_SHORT).show()
                     farmerViewModel.getFarmCropDCS(CryptoHelper.encryptField(farmId).toString())
                 }
 
@@ -151,6 +154,8 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
                 is UiState.Success -> {
                     ProgressHelper.disableProgressDialog()
                     val jSONObject = JSONObject(state.data.toString())
+                    val response = jSONObject.optString("response")?:"Crop Deleted Successfully"
+                    Toast.makeText(this, response, Toast.LENGTH_SHORT).show()
                     farmerViewModel.getFarmCropDCS(CryptoHelper.encryptField(farmId).toString())
                 }
 
@@ -391,9 +396,21 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
             }
 
             DELETE_CROP -> {
-                farmerViewModel.deleteFarmCropForDCS(
-                    CryptoHelper.encryptField(declarationId).toString()
-                )
+                AlertDialog.Builder(this)
+                    .setTitle("Delete Crop")
+                    .setMessage("Do you really want to delete the crop?")
+                    .setPositiveButton("Delete") { dialog, _ ->
+
+                        // DELETE LOGIC HERE
+                        farmerViewModel.deleteFarmCropForDCS(
+                            CryptoHelper.encryptField(declarationId).toString()
+                        )
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
             }
         }
     }
