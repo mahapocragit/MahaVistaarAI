@@ -204,6 +204,14 @@ interface ApiService {
         @Header("Password") password: String,
     ): JsonObject
 
+    @POST("authService/updateProfile")
+    suspend fun updateProfile(
+        @Header("Name") name: String,
+        @Header("MobileNo") mobileNo: String,
+        @Header("NewMobileNo") reMobileNo: String,
+        @Header("VillageCode") villageCode: String,
+    ): JsonObject
+
     @POST(ApiConstants.kUserLogin)
     suspend fun getUserLoginOTP(
         @Header("MobileNo") mobileNo: String,
@@ -270,8 +278,11 @@ interface ApiService {
     @POST(ApiConstants.kGetFertilizerSavedFormula)
     fun getFertilizerSavedFormula(@Body params: RequestBody): Call<JsonObject>
 
-    @POST(ApiConstants.kResetPassword)
-    fun getNewPassword(@Body params: RequestBody): Call<JsonObject>
+    @POST("authService/resetPassword")
+    suspend fun getNewPassword(
+        @Header("MobileNo") mobile: String,
+        @Header("Password") password: String
+    ): JsonObject
 
     @POST(ApiConstants.kGetTokenFromWotr)
     fun getTokenFromWotr(

@@ -518,7 +518,7 @@
     <string name="points">Points</string>
 
     <string name="agristack_title">Link Your Farmer ID</string>
-    <string name="agristack_request">Dear Farmer Friends, you can now link your Farmer ID in the MahaVistar app! This will automatically fill in your information and help you access various schemes, guidance, and services more easily. \n👉 Please click on the ‘Link Farmer ID’ option and complete the process by entering the required details. Your participation is the path to your progress!</string>
+    <string name="agristack_request">Dear Farmer Friends, you can now link your Farmer ID in the MahaVistar app! This will automatically fill in your information and help you access various schemes, guidance, and services more easily. \n👉 Please click on the ‘Link Now’ option and complete the process by entering the required details. Your participation is the path to your progress!</string>
     <string name="btn_cancel">Cancel</string>
     <string name="btn_link">Link Now</string>
     <string name="overwrite_data">Overwrite Data?</string>
@@ -606,4 +606,5 @@
     <string name="farmid">Farm Id</string>
     <string name="villages">Villages:</string>
     <string name="smart_solutions_for_modern_farming">Smart solutions for modern farming</string>
+    <string name="services_amp_information"><![CDATA[Services & Information]]></string>
 </resources>

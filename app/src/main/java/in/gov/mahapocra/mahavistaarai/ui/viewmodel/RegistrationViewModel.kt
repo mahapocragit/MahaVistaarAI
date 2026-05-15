@@ -30,6 +30,9 @@ class RegistrationViewModel : ViewModel() {
     private val _getRegistrationResponse = MutableLiveData<UiState<JsonObject>>()
     val getRegistrationResponse: LiveData<UiState<JsonObject>> = _getRegistrationResponse
 
+    private val _getUpdateProfileResponse = MutableLiveData<UiState<JsonObject>>()
+    val getUpdateProfileResponse: LiveData<UiState<JsonObject>> = _getUpdateProfileResponse
+
     private val _getVillageListResponse = MutableLiveData<JsonObject>()
     val getVillageListResponse: LiveData<JsonObject> = _getVillageListResponse
 
@@ -87,6 +90,33 @@ class RegistrationViewModel : ViewModel() {
                     else -> e.localizedMessage ?: "Unknown error"
                 }
                 _getRegistrationResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun updateProfile(name:String, registerMob: String, updatedMobile: String, villageCode: String) {
+        viewModelScope.launch {
+            _getUpdateProfileResponse.value = UiState.Loading
+            try {
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response: JsonObject = apiRequest.updateProfile(
+                    CryptoHelper.encryptField(name).toString(),
+                    CryptoHelper.encryptField(registerMob).toString(),
+                    CryptoHelper.encryptField(updatedMobile).toString(),
+                    CryptoHelper.encryptField(villageCode).toString()
+                )
+                _getUpdateProfileResponse.value = UiState.Success(response)
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _getUpdateProfileResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }

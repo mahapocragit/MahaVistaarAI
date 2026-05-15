@@ -116,8 +116,27 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         setupRecyclerView()
         observeResponse()
         setUpListeners()
-        checkForUpdate()
         hitApis()
+        showDialogs()
+    }
+
+    private fun showDialogs() {
+        if (appPreferenceManager.getBoolean("SHOW_PROMO_DIALOG") && !isPromoFetched) {
+            isPromoFetched = true
+            val rawValue =
+                CryptoHelper.decryptField(
+                    AppPreferenceManager(requireContext()).getString(
+                        AppConstants.AGRISTACKID
+                    )
+                ).toString()
+            val agristackId = if (rawValue.isEmpty() || rawValue == "null") "" else rawValue
+            if (agristackId != "") {
+                farmerViewModel.getFarmDetails()
+                farmerViewModel.fetchCropsForDCS()
+            } else {
+                farmerViewModel.getPromoBanner()
+            }
+        }
     }
 
     // ✅ Setup RecyclerView only once
@@ -517,40 +536,6 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                 is UiState.Error -> {
                     Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
                 }
-            }
-        }
-
-        farmerViewModel.getAppVersionResponse.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                is UiState.Loading -> {}
-                is UiState.Success -> {
-                    val appHelper = AppHelper(requireContext())
-                    val jsonResponse = JSONObject(state.data.toString())
-                    val remoteAppVersion = jsonResponse.optInt("version_code")
-                    val currentAppVersion = appHelper.getCurrentAppVersion()
-                    if (remoteAppVersion > currentAppVersion) {
-                        appHelper.showUpdateDialog()
-                    } else {
-                        if (appPreferenceManager.getBoolean("SHOW_PROMO_DIALOG") && !isPromoFetched) {
-                            isPromoFetched = true
-                            val rawValue =
-                                CryptoHelper.decryptField(
-                                    AppPreferenceManager(requireContext()).getString(
-                                        AppConstants.AGRISTACKID
-                                    )
-                                ).toString()
-                            val agristackId = if (rawValue.isEmpty() || rawValue == "null") "" else rawValue
-                            if (agristackId != "") {
-                                farmerViewModel.getFarmDetails()
-                                farmerViewModel.fetchCropsForDCS()
-                            } else {
-                                farmerViewModel.getPromoBanner()
-                            }
-                        }
-                    }
-                }
-
-                is UiState.Error -> {}
             }
         }
     }
@@ -1059,12 +1044,6 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
             }
         }
     }
-
-
-    private fun checkForUpdate() {
-        farmerViewModel.getAppVersion()
-    }
-
 
     companion object {
         const val CUSTOMISED_DASHBOARD_REDIRECTION = 1

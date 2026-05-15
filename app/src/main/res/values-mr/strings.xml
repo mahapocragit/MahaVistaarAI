@@ -308,7 +308,7 @@
 
     <string name="wrong_OTP">तुम्ही चुकीचा OTP टाकला आहे</string>
     <string name="request_for_mobile">मोबाईल नंबरची विनंती करा</string>
-    <string name="weather_title">वातावरण</string>
+    <string name="weather_title">हवामान</string>
     <string name="rain">पर्जन्यमान</string>
     <string name="humidity">आर्द्रता</string>
     <string name="wind">वाऱ्याचा वेग</string>
@@ -517,7 +517,7 @@
     <string name="points">गुण</string>
 
     <string name="agristack_title">शेतकरी आयडी लिंक करा</string>
-    <string name="agristack_request">प्रिय शेतकरी बंधूंनो, महाविस्तार ॲपमध्ये आता तुम्ही तुमचा शेतकरी आयडी लिंक करू शकता! यामुळे तुमची माहिती आपोआप भरली जाईल आणि विविध योजना, मार्गदर्शन व सुविधा अधिक सुलभपणे मिळतील. \n👉 कृपया ‘शेतकरी आयडी लिंक करा’ या पर्यायावर क्लिक करा आणि आवश्यक माहिती भरून प्रक्रिया पूर्ण करा. आपला सहभागच आपल्या प्रगतीचा मार्ग आहे!</string>
+    <string name="agristack_request">प्रिय शेतकरी बंधूंनो, महाविस्तार ॲपमध्ये आता तुम्ही तुमचा शेतकरी आयडी लिंक करू शकता! यामुळे तुमची माहिती आपोआप भरली जाईल आणि विविध योजना, मार्गदर्शन व सुविधा अधिक सुलभपणे मिळतील. \n👉 कृपया शेतकरी आयडी लिंक करण्यासाठी खालील ‘लिंक करा’ या पर्यायावर क्लिक करा आणि आवश्यक माहिती भरून प्रक्रिया पूर्ण करा. आपला सहभागच आपल्या प्रगतीचा मार्ग आहे!</string>
     <string name="btn_cancel">रद्द करा</string>
     <string name="btn_link">लिंक करा</string>
     <string name="overwrite_data">डेटा ओव्हरराईट करायचा का?</string>
@@ -569,7 +569,7 @@
     <string name="notice_promo">सूचना</string>
     <string name="message_promo">निवडलेल्या पिकासाठी ही सुविधा उपलब्ध नाही. कृपया दुसरे पीक निवडा आणि पुन्हा प्रयत्न करा.</string>
     <string name="ok_promo">ठीक आहे</string>
-    <string name="my_dashboard">माझे डॅशबोर्ड</string>
+    <string name="my_dashboard">माझा डॅशबोर्ड</string>
     <string name="agri_services">कृषी सेवा</string>
     <string name="smart_farming">स्मार्ट शेती</string>
     <string name="welcome_back_to_your_dashboard">तुमच्या डॅशबोर्डमध्ये पुन्हा स्वागत आहे</string>
@@ -594,7 +594,7 @@
     <string name="declare_your_crop">पीक जाहीर करा</string>
     <string name="add_crop_plus">+ पीक जोडा</string>
     <string name="survey_no">सर्व्हे क्रमांक</string>
-    <string name="farm_lands_crops">शेतीची जमीन आणि पिके</string>
+    <string name="farm_lands_crops">शेतजमीन आणि पिके</string>
     <string name="please_add_the_crops_message">कृपया पुढील प्रक्रियेसाठी सध्याच्या हंगामातील पिकांची नोंद करा.</string>
     <string name="total_area">एकूण क्षेत्रफळ</string>
     <string name="area_cultivated">लागवड केलेले क्षेत्रफळ</string>
@@ -602,7 +602,8 @@
     <string name="owner">मालक</string>
     <string name="view_details">तपशील पहा →</string>
     <string name="land_owner_name">जमीन मालकाचे नाव</string>
-    <string name="farmid">शेती ओळख क्रमांक</string>
+    <string name="farmid">शेत ओळख क्रमांक</string>
     <string name="villages">गावे:</string>
     <string name="smart_solutions_for_modern_farming">आधुनिक शेतीसाठी स्मार्ट उपाय</string>
+    <string name="services_amp_information">सेवा व माहिती</string>
 </resources>

@@ -29,7 +29,6 @@ import `in`.co.appinventor.services_api.listener.AlertListEventListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
@@ -49,7 +48,6 @@ import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SessionManager
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
-import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.unSubscribeToTopic
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONArray
 import org.json.JSONException
@@ -286,7 +284,7 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
             }
         }
 
-        registrationViewModel.getRegistrationResponse.observe(this) { state ->
+        registrationViewModel.getUpdateProfileResponse.observe(this) { state ->
             when (state) {
                 is UiState.Loading -> {
                     ProgressHelper.showProgressDialog(this)
@@ -342,13 +340,13 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
 
     private fun setConfiguration() {
         val farmerRegId = AppPreferenceManager(this).getString(AppConstants.FARMER_REG_ID)
-        if (farmerRegId!="") {
+        if (farmerRegId != "") {
             binding.submitButton.text = getString(R.string.update_profile_text)
             fAAPRegistrationID = farmerRegisterID.toString()
             mobileNumberStatus = true
             val userName = AppPreferenceManager(this).getString(AppConstants.USER_NAME)
             val userMobile = AppPreferenceManager(this).getString(AppConstants.USER_MOBILE)
-            Log.d(TAG, "setConfiguration: $userName and $userMobile")
+            registerMob = CryptoHelper.decryptField(userMobile).toString()
             emailid =
                 AppSettings.getInstance().getValue(this, AppConstants.uEmail, AppConstants.uEmail)
             districtName =
@@ -437,52 +435,9 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
             }
         })
         binding.submitButton.setOnClickListener {
-            machineId = getMachineId()
-            if (farmerRegisterID > 0) {
-                isUserLoggedIn = true
-                val prefManager = AppPreferenceManager(this)
-                val jsonStr = prefManager.getString("topic_saved_fcm")
-                val jsonArray = if (!jsonStr.isNullOrBlank()) {
-                    JSONArray(jsonStr)
-                } else {
-                    JSONArray()
-                }
+            isUserLoggedIn = true
+            userValidationAndUpdateProfile()
 
-                val topics = (0 until jsonArray.length()).map { jsonArray.optString(it) }
-                val talukaTopic = topics.firstOrNull { it.startsWith("taluka_") }
-                when {
-                    // ✅ No taluka topic saved
-                    talukaTopic == null -> {
-                        userValidationAndUpdateProfile()
-                    }
-                    // ✅ Same taluka topic
-                    talukaTopic == talukaToken -> {
-                        userValidationAndUpdateProfile()
-                    }
-                    // ✅ Different taluka topic
-                    else -> {
-                        unSubscribeToTopic(talukaTopic) { unsubscribed ->
-                            if (unsubscribed) {
-                                farmerViewModel.deleteSubscribedTopics(
-                                    farmerId = farmerId,
-                                    topics = listOf(talukaTopic)
-                                )
-                                val updatedArray = JSONArray()
-                                topics.forEach {
-                                    if (it != talukaTopic) {
-                                        updatedArray.put(it)
-                                    }
-                                }
-                                prefManager.saveString(
-                                    "topic_saved_fcm",
-                                    updatedArray.toString()
-                                )
-                            }
-                            userValidationAndUpdateProfile()
-                        }
-                    }
-                }
-            }
         }
         binding.textViewVerify.setOnClickListener {
             sendOTP()
@@ -600,14 +555,11 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
             UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_village))
         } else {
             try {
-                registrationViewModel.getRegistrationRequest(
+                registrationViewModel.updateProfile(
                     name = userName,
                     registerMob = registerMob,
                     updatedMobile = mob.trim { it <= ' ' },
-                    villageCode = villageCode.toString(),
-                    fcmToken = token ?: "",
-                    versionNumber = versionName ?: "",
-                    deviceId = machineId.toString()
+                    villageCode = villageCode.toString()
                 )
             } catch (e: JSONException) {
                 e.printStackTrace()

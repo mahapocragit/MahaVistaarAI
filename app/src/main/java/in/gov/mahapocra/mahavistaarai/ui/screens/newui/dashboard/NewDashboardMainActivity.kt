@@ -44,6 +44,7 @@ import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityNewDashboardMainBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DrawerMenuAdapter
@@ -74,6 +75,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SideNavMenuHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper.shrinkToCenter
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.subscribeToTopic
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.unSubscribeToTopic
@@ -96,6 +98,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
     private lateinit var navUserPhone: TextView
     private var jsonArray: JSONArray? = null
     private var topicsArray = JSONArray()
+    private var isPromoFetched = false
     private var farmerId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,6 +113,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
         setContentView(binding.root)
         askForPermissions()
         init()
+        FirebaseHelper(this)
     }
 
     private fun init() {
@@ -454,16 +458,13 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     startActivity(intent)
                 }
 
-                1 -> if (farmerId > 0) {
+                1 ->
                     startActivity(
                         Intent(
                             this@NewDashboardMainActivity,
                             AboutActivity::class.java
                         )
                     )
-                } else {
-                    UIToastMessage.show(this@NewDashboardMainActivity, "Please Login First...")
-                }
 
                 2 -> {
                     val notificationIntent = Intent(
@@ -536,7 +537,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
 
         ProgressHelper.showProgressDialog(this)
 
-        if (topicsArray == null || topicsArray.length() == 0) {
+        if (topicsArray.length() == 0) {
             completeLogout()
             return
         }
@@ -573,6 +574,23 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
     }
 
     private fun observeResponse() {
+
+        farmerViewModel.getAppVersionResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {}
+                is UiState.Success -> {
+                    val appHelper = AppHelper(this@NewDashboardMainActivity)
+                    val jsonResponse = JSONObject(state.data.toString())
+                    val remoteAppVersion = jsonResponse.optInt("version_code")
+                    val currentAppVersion = appHelper.getCurrentAppVersion()
+                    if (remoteAppVersion > currentAppVersion) {
+                        appHelper.showUpdateDialog()
+                    }
+                }
+
+                is UiState.Error -> {}
+            }
+        }
 
         authViewModel.userDetailsState.observe(this) { state ->
             when (state) {
@@ -756,7 +774,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
         topicsToSubArray: JSONArray,
         topicsToDeleteArray: JSONArray
     ) {
-        if (topicsToSubArray != null && topicsToSubArray.length() > 0) {
+        if (topicsToSubArray.length() > 0) {
             val total = topicsToSubArray.length()
             var completed = 0
 
@@ -780,7 +798,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                 }
             }
         }
-        if (topicsToDeleteArray != null && topicsToDeleteArray.length() > 0) {
+        if (topicsToDeleteArray.length() > 0) {
 
             val total = topicsToDeleteArray.length()
             var completed = 0

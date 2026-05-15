@@ -1,10 +1,11 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.viewmodel
 
+import android.app.Application
 import android.content.Context
 import android.provider.Settings
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
@@ -15,6 +16,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.my_dashboard.DashboardCache
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.toSHA512
@@ -27,7 +29,9 @@ import java.io.IOException
 import java.net.SocketException
 import java.net.SocketTimeoutException
 
-class AuthViewModel : ViewModel() {
+class AuthViewModel(
+    application: Application
+) : AndroidViewModel(application) {
 
     private val _sendOtpToMobileResponse = MutableLiveData<JsonObject>()
     val sendOtpToMobileResponse: LiveData<JsonObject> = _sendOtpToMobileResponse
@@ -74,6 +78,10 @@ class AuthViewModel : ViewModel() {
     private val _getCustomisedDashboardResponse = MutableLiveData<UiState<JsonObject>>()
     val getCustomisedDashboardResponse: LiveData<UiState<JsonObject>> =
         _getCustomisedDashboardResponse
+
+    private val _resetPasswordResponse = MutableLiveData<UiState<JsonObject>>()
+    val resetPasswordResponse: LiveData<UiState<JsonObject>> =
+        _resetPasswordResponse
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
@@ -426,13 +434,88 @@ class AuthViewModel : ViewModel() {
     }
 
     fun getCustomisedDashboardList() {
+
         viewModelScope.launch {
-            _getCustomisedDashboardResponse.value = UiState.Loading
+
+            _getCustomisedDashboardResponse.value =
+                UiState.Loading
+
+            try {
+
+                val retrofit =
+                    RetrofitHelper.createRetrofitInstance(
+                        AppEnvironment.FARMER.baseUrl
+                    )
+
+                val apiRequest =
+                    retrofit.create(ApiService::class.java)
+
+                val response =
+                    apiRequest.getCustomizedDashboard()
+
+                // SAVE API RESPONSE
+                DashboardCache.saveDashboard(
+                    getApplication(),
+                    response
+                )
+
+                // SHOW API DATA
+                _getCustomisedDashboardResponse.value =
+                    UiState.Success(response)
+
+            } catch (e: Exception) {
+
+                // LOAD CACHED DATA
+                val cachedData =
+                    DashboardCache.getDashboard(
+                        getApplication()
+                    )
+
+                if (cachedData != null) {
+
+                    // SHOW OFFLINE DATA
+                    _getCustomisedDashboardResponse.value =
+                        UiState.Success(cachedData)
+
+                } else {
+
+                    val message = when (e) {
+
+                        is SocketTimeoutException ->
+                            "Request timed out. Please try again."
+
+                        is SocketException ->
+                            "Connection lost. Please check your internet."
+
+                        is IOException ->
+                            "Network error occurred."
+
+                        else ->
+                            e.localizedMessage ?: "Unknown error"
+                    }
+
+                    _getCustomisedDashboardResponse.value =
+                        UiState.Error(message)
+                }
+
+                FirebaseCrashlytics.getInstance()
+                    .recordException(e)
+            }
+        }
+    }
+
+    fun resetPassword(userMobileNo: String, password: String) {
+        viewModelScope.launch {
+            _resetPasswordResponse.value = UiState.Loading
             try {
                 val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
-                val response = apiRequest.getCustomizedDashboard()
-                _getCustomisedDashboardResponse.value = UiState.Success(response)
+                val response = apiRequest.getNewPassword(
+                    CryptoHelper.encryptField(userMobileNo.trim { it <= ' ' })
+                        .toString(),
+                    toSHA512(password)
+                )
+                _resetPasswordResponse.value = UiState.Success(response)
             } catch (e: Exception) {
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
@@ -440,7 +523,7 @@ class AuthViewModel : ViewModel() {
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _getCustomisedDashboardResponse.value = UiState.Error(message)
+                _resetPasswordResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
