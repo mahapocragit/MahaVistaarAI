@@ -82,7 +82,8 @@ class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClick
 
         binding.relativeLayoutTopBar.imgBackArrow.apply {
             visibility = View.VISIBLE
-            setOnClickListener { AppHelper(this@ClimateResilientTechnology).redirectToHome() }
+            setOnClickListener { AppHelper(this@ClimateResilientTechnology).redirectToPage(2)
+            finish()}
         }
     }
 
@@ -166,7 +167,8 @@ class ClimateResilientTechnology : AppCompatActivity(), OnMultiRecyclerItemClick
     private fun setupBackPressed() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                AppHelper(this@ClimateResilientTechnology).redirectToHome()
+                AppHelper(this@ClimateResilientTechnology).redirectToPage(1)
+                finish()
             }
         })
     }

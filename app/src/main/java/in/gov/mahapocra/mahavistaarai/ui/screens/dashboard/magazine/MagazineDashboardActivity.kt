@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -50,8 +51,17 @@ class MagazineDashboardActivity : AppCompatActivity() {
         )
         binding.toolbar.imgBackArrow.visibility = View.VISIBLE
         binding.toolbar.imgBackArrow.setOnClickListener {
-            AppHelper(this@MagazineDashboardActivity).redirectToHome()
+            AppHelper(this@MagazineDashboardActivity).redirectToPage(2)
+            finish()
         }
+
+        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                AppHelper(this@MagazineDashboardActivity).redirectToPage(2)
+                finish()
+            }
+
+        })
 
         binding.magazineRecyclerView.layoutManager = GridLayoutManager(this, 2)
         farmerViewModel.getMagazineDetailsResponse.observe(this) { state ->

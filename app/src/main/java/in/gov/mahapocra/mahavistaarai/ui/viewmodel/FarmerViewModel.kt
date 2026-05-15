@@ -778,12 +778,11 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun saveSubscribedTopic(farmerId: Int, topic: String) {
+    fun saveSubscribedTopic(topic: String) {
         viewModelScope.launch {
             _saveSubscribedTopicResponse.value = UiState.Loading
             try {
                 val jsonObject = JSONObject()
-                jsonObject.put("user_id", farmerId)
                 jsonObject.put("topic", topic)
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val response = apiRequest.saveSubscribedTopic(requestBody)
@@ -801,16 +800,13 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun deleteSubscribedTopics(farmerId: Int, topics: List<String>) {
+    fun deleteSubscribedTopics(topics: List<String>) {
         viewModelScope.launch {
             _deleteSubscribedTopicResponse.value = UiState.Loading
             try {
                 val jsonObject = JSONObject()
-                jsonObject.put("user_id", farmerId)
-
                 val jsonArray = JSONArray()
                 topics.forEach { jsonArray.put(it) }
-
                 jsonObject.put("topic", jsonArray)
 
                 val requestBody =

@@ -96,7 +96,8 @@ class SOPActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener {
 
         binding.toolbar.imgBackArrow.visibility = View.VISIBLE
         binding.toolbar.imgBackArrow.setOnClickListener {
-            AppHelper(this).redirectToHome()
+            AppHelper(this).redirectToPage(2)
+            finish()
         }
         binding.toolbar.textViewHeaderTitle.text = getString(R.string.sop_title)
 
@@ -132,7 +133,8 @@ class SOPActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener {
 
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                AppHelper(this@SOPActivity).redirectToHome()
+                AppHelper(this@SOPActivity).redirectToPage(2)
+                finish()
             }
         })
     }

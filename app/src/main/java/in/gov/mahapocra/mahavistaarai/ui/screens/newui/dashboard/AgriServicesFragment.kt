@@ -156,17 +156,20 @@ class AgriServicesFragment : Fragment(), OnMultiRecyclerItemClickListener {
         }
 
         binding.fertilizerCalculatorCard.setOnClickListener {
-            savedCropWoTRId = if (savedCropWoTRId == "") "0" else savedCropWoTRId
-            val intent = Intent(requireContext(), FertilizerCalculatorActivity::class.java)
-            intent.putExtra("id", savedCropId)
-            intent.putExtra("wotr_crop_id", savedCropWoTRId?.toInt())
-            intent.putExtra("mUrl", savedCropImageUrl)
-            intent.putExtra("mName", savedCropName)
-            intent.putExtra("sowingDate", savedCropSowingDate)
-            startActivity(intent)
+            if (savedCropName.isEmpty()) {
+                appPreferenceManager.saveString(AppConstants.ACTION_FROM_DASHBOARD, AppConstants.FERTILIZER_CALCULATOR_FROM_DASHBOARD)
+                startActivity(Intent(requireContext(), AddCropActivity::class.java))
+            } else {
+                savedCropWoTRId = if (savedCropWoTRId == "") "0" else savedCropWoTRId
+                val intent = Intent(requireContext(), FertilizerCalculatorActivity::class.java)
+                intent.putExtra("id", savedCropId)
+                intent.putExtra("wotr_crop_id", savedCropWoTRId?.toInt())
+                intent.putExtra("mUrl", savedCropImageUrl)
+                intent.putExtra("mName", savedCropName)
+                intent.putExtra("sowingDate", savedCropSowingDate)
+                startActivity(intent)
+            }
         }
-        val farmerRegId =
-            AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
         farmerViewModel.getFarmerSelectedCrop(languageToLoad)
     }
 

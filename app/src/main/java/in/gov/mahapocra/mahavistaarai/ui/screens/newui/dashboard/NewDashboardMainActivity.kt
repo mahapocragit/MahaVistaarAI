@@ -615,7 +615,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
             val topic = topicsArray.optString(i)
 
             unSubscribeToTopic(topic) { unsubscribed ->
-
+                Log.d(TAG, "logoutFromApp: $topic")
                 completedCount++
 
                 if (unsubscribed) {
@@ -623,7 +623,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                 }
 
                 if (completedCount == totalTopics) {
-                    farmerViewModel.deleteSubscribedTopics(farmerId, topicList)
+                    farmerViewModel.deleteSubscribedTopics(topicList)
                     completeLogout()
                 }
             }
@@ -889,71 +889,99 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
     }
 
     private fun topicsOperations(
-        topicJsonArray: JSONArray,
+        currentTopics: JSONArray,
         topicsToSubArray: JSONArray,
         topicsToDeleteArray: JSONArray
     ) {
-        if (topicsToSubArray.length() > 0) {
-            val total = topicsToSubArray.length()
-            var completed = 0
 
-            for (i in 0 until total) {
+        lifecycleScope.launch {
+
+            val finalTopics = mutableSetOf<String>()
+
+            // Existing topics
+            for (i in 0 until currentTopics.length()) {
+                finalTopics.add(currentTopics.optString(i))
+            }
+
+            // =========================
+            // SUBSCRIBE NEW TOPICS
+            // =========================
+
+            for (i in 0 until topicsToSubArray.length()) {
+
                 val topic = topicsToSubArray.optString(i)
 
-                subscribeToTopic(topic) { subscribed ->
-                    if (subscribed) {
-                        topicJsonArray.put(topic)
-                        farmerViewModel.saveSubscribedTopic(farmerId, topic)
-                    }
-                    completed++
-                    if (completed == total) {
-                        Log.d(TAG, "Final topicJsonArray: $topicJsonArray")
-                        topicsArray = topicJsonArray
-                        appPreferenceManager.saveString(
-                            "topic_saved_fcm",
-                            topicJsonArray.toString()
-                        )
-                    }
-                }
-            }
-        }
-        if (topicsToDeleteArray.length() > 0) {
+                kotlinx.coroutines.suspendCancellableCoroutine<Unit> { cont ->
 
-            val total = topicsToDeleteArray.length()
-            var completed = 0
+                    subscribeToTopic(topic) { subscribed ->
 
-            val topicsToDelete = mutableListOf<String>()
+                        if (subscribed) {
 
-            for (i in 0 until total) {
-                val topic = topicsToDeleteArray.optString(i)
+                            finalTopics.add(topic)
 
-                unSubscribeToTopic(topic) { unsubscribed ->
-                    if (unsubscribed) {
-                        topicsToDelete.add(topic)
-                    }
-
-                    completed++
-
-                    if (completed == total) {
-                        // Call API ONCE with all topics
-                        if (topicsToDelete.isNotEmpty()) {
-                            farmerViewModel.deleteSubscribedTopics(
-                                farmerId = farmerId,
-                                topics = topicsToDelete
+                            farmerViewModel.saveSubscribedTopic(
+                                topic
                             )
                         }
 
-                        // Save updated topics list
-                        val updatedArray = JSONArray()
-                        topicsToDelete.forEach { updatedArray.put(it) }
-
-                        appPreferenceManager.saveString(
-                            "topic_saved_fcm",
-                            updatedArray.toString()
-                        )
+                        cont.resume(Unit) {}
                     }
                 }
             }
+
+            // =========================
+            // DELETE TOPICS
+            // =========================
+
+            val deletedTopics = mutableListOf<String>()
+
+            for (i in 0 until topicsToDeleteArray.length()) {
+
+                val topic = topicsToDeleteArray.optString(i)
+
+                kotlinx.coroutines.suspendCancellableCoroutine<Unit> { cont ->
+
+                    unSubscribeToTopic(topic) { unsubscribed ->
+
+                        if (unsubscribed) {
+
+                            finalTopics.remove(topic)
+
+                            deletedTopics.add(topic)
+                        }
+
+                        cont.resume(Unit) {}
+                    }
+                }
+            }
+
+            // =========================
+            // DELETE FROM SERVER
+            // =========================
+
+            if (deletedTopics.isNotEmpty()) {
+
+                farmerViewModel.deleteSubscribedTopics(
+                    topics = deletedTopics
+                )
+            }
+
+            // =========================
+            // SAVE FINAL TOPICS
+            // =========================
+
+            val finalJsonArray = JSONArray()
+
+            finalTopics.forEach {
+                finalJsonArray.put(it)
+            }
+
+            topicsArray = finalJsonArray
+
+            appPreferenceManager.saveString(
+                "topic_saved_fcm",
+                finalJsonArray.toString()
+            )
         }
     }
 

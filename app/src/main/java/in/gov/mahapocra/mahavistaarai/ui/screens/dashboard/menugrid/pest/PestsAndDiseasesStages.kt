@@ -72,7 +72,8 @@ class PestsAndDiseasesStages : AppCompatActivity() {
 
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
-            AppHelper(this).redirectToHome()
+            AppHelper(this).redirectToPage(2)
+            finish()
         }
 
         AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
@@ -128,7 +129,8 @@ class PestsAndDiseasesStages : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                AppHelper(this@PestsAndDiseasesStages).redirectToHome()
+                AppHelper(this@PestsAndDiseasesStages).redirectToPage(2)
+                finish()
             }
         })
     }

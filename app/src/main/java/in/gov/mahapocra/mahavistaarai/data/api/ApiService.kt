@@ -379,17 +379,13 @@ interface ApiService {
 
     @POST("authService/update_farmer_id_send_otp")
     suspend fun sendOtpToFarmerId(
-        @Header("FarmerID") farmerID: String,
-        @Header("userid") userId: Int,
-        @Body params: RequestBody
+        @Header("FarmerID") farmerID: String
     ): JsonObject
 
     @POST("authService/farmer_id_compare_otp")
     suspend fun compareOtpToFarmerId(
         @Header("FarmerID") farmerID: String,
-        @Header("userid") userId: Int,
-        @Header("otp") otp: String,
-        @Body params: RequestBody
+        @Header("otp") otp: String
     ): JsonObject
 
     @POST("authService/farmerid_reg_compare_otp")
@@ -404,11 +400,9 @@ interface ApiService {
     @POST("authService/update_farmer_id")
     suspend fun updateFarmerDetailsById(
         @Header("FarmerID") farmerID: String,
-        @Header("userid") userId: Int,
         @Header("name") name: String,
         @Header("mobile") mobile: String,
-        @Header("villageCode") villageCode: String,
-        @Body params: RequestBody
+        @Header("villageCode") villageCode: String
     ): JsonObject
 
     @POST("authService/get_device_id_count")

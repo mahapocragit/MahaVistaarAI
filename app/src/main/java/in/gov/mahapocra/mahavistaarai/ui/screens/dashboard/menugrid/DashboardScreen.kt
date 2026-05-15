@@ -1151,11 +1151,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                                 subscribeToTopic(topic) { subscribed ->
                                     if (subscribed) {
                                         topicJsonArray.put(topic)
-                                        farmerViewModel.saveSubscribedTopic(farmerId, topic)
+                                        farmerViewModel.saveSubscribedTopic(topic)
                                     }
                                     completed++
                                     if (completed == total) {
-                                        Log.d(TAG, "Final topicJsonArray: $topicJsonArray")
                                         topicsArray = topicJsonArray
                                         appPreferenceManager.saveString(
                                             "topic_saved_fcm",
@@ -1186,7 +1185,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                                         // Call API ONCE with all topics
                                         if (topicsToDelete.isNotEmpty()) {
                                             farmerViewModel.deleteSubscribedTopics(
-                                                farmerId = farmerId,
                                                 topics = topicsToDelete
                                             )
                                         }
@@ -1808,7 +1806,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 }
 
                 if (completedCount == totalTopics) {
-                    farmerViewModel.deleteSubscribedTopics(farmerId, topicList)
+                    farmerViewModel.deleteSubscribedTopics(topicList)
                     completeLogout()
                 }
             }

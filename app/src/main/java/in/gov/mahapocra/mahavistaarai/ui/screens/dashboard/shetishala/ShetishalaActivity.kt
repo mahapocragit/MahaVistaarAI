@@ -44,12 +44,14 @@ class ShetishalaActivity : AppCompatActivity() {
         }
         binding.toolbar.textViewHeaderTitle.text = getString(R.string.shetishala)
         binding.toolbar.imgBackArrow.setOnClickListener {
-            AppHelper(this@ShetishalaActivity).redirectToHome()
+            AppHelper(this@ShetishalaActivity).redirectToPage(2)
+            finish()
         }
 
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                AppHelper(this@ShetishalaActivity).redirectToHome()
+                AppHelper(this@ShetishalaActivity).redirectToPage(2)
+                finish()
             }
         })
         binding.scheduleCardView.setOnClickListener {

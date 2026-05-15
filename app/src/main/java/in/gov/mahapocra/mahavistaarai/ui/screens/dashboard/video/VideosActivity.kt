@@ -49,12 +49,14 @@ class VideosActivity : AppCompatActivity() {
         binding.toolbar.textViewHeaderTitle.text = getString(R.string.videos_bottom)
         binding.toolbar.imgBackArrow.visibility = View.VISIBLE
         binding.toolbar.imgBackArrow.setOnClickListener {
-            AppHelper(this@VideosActivity).redirectToHome()
+            AppHelper(this@VideosActivity).redirectToPage(2)
+            finish()
         }
 
         onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
-                AppHelper(this@VideosActivity).redirectToHome()
+                AppHelper(this@VideosActivity).redirectToPage(2)
+                finish()
             }
         })
         ProgressHelper.showProgressDialog(this)
