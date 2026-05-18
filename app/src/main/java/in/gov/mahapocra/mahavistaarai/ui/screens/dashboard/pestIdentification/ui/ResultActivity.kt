@@ -28,6 +28,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.data.repository.PredictRepository
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager.getAccessToken
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONArray
 import org.json.JSONObject
@@ -61,7 +62,8 @@ class ResultActivity : AppCompatActivity() {
             insets
         }
 
-        binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.analysis_result_text)
+        binding.relativeLayoutTopBar.textViewHeaderTitle.text =
+            getString(R.string.analysis_result_text)
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
             stopTtsAndNavigate()
@@ -86,7 +88,9 @@ class ResultActivity : AppCompatActivity() {
         }
         analysisData?.let {
             if (it.farmerId != 0) {
+                val accessToken = getAccessToken().toString()
                 viewModel.storeResponse(
+                    accessToken,
                     it.farmerId,
                     it.cropId,
                     it.sowingDate,
@@ -204,7 +208,8 @@ class ResultActivity : AppCompatActivity() {
                 }
                 binding.noteTextView.text = note
                 binding.noteTextView.visibility = if (note == "") View.GONE else View.VISIBLE
-                binding.noteTextView.visibility = if (note.trim().isNotEmpty()) View.VISIBLE else View.GONE
+                binding.noteTextView.visibility =
+                    if (note.trim().isNotEmpty()) View.VISIBLE else View.GONE
 
                 Log.d(
                     "TAGGER",

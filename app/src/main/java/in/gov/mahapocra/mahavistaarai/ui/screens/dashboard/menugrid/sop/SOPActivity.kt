@@ -17,7 +17,6 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivitySopactivityBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.SOPAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
@@ -25,6 +24,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import kotlinx.coroutines.delay
@@ -96,12 +96,8 @@ class SOPActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener {
 
         binding.toolbar.imgBackArrow.visibility = View.VISIBLE
         binding.toolbar.imgBackArrow.setOnClickListener {
-            startActivity(
-                Intent(
-                    this,
-                    DashboardScreen::class.java
-                )
-            )
+            AppHelper(this).redirectToPage(2)
+            finish()
         }
         binding.toolbar.textViewHeaderTitle.text = getString(R.string.sop_title)
 
@@ -137,7 +133,8 @@ class SOPActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener {
 
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(Intent(this@SOPActivity, DashboardScreen::class.java))
+                AppHelper(this@SOPActivity).redirectToPage(2)
+                finish()
             }
         })
     }

@@ -17,10 +17,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/agriStackRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/_40sdp"
+        android:layout_height="0dp"
         android:layout_marginHorizontal="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayoutTopBar"
+        android:paddingTop="@dimen/_10sdp"
+        tools:listitem="@layout/item_view_etl" />
 </androidx.constraintlayout.widget.ConstraintLayout>

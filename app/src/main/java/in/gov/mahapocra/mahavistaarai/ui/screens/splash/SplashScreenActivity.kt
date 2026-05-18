@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.microsoft.clarity.Clarity
@@ -14,12 +15,13 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.NewDashboardMainActivity
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager.getAccessToken
 
 class SplashScreenActivity : AppCompatActivity() {
 
@@ -51,11 +53,11 @@ class SplashScreenActivity : AppCompatActivity() {
         }
         // Get Farmer ID
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-
+        val accessToken = getAccessToken() ?: ""
         // Navigate to the appropriate screen after delay
         Handler(Looper.getMainLooper()).postDelayed({
-            val targetActivity = if (farmerId > 0) {
-                DashboardScreen::class.java
+            val targetActivity = if (accessToken.isNotEmpty()) {
+                NewDashboardMainActivity::class.java
             } else {
                 LoginScreen::class.java
             }

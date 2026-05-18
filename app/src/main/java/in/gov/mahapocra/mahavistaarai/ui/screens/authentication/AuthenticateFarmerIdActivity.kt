@@ -25,7 +25,7 @@ import androidx.core.content.ContextCompat
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityAuthenticateFarmerIdBinding
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.NewDashboardMainActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -68,7 +68,14 @@ class AuthenticateFarmerIdActivity : AppCompatActivity() {
                     }
                 }
 
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             })
 
@@ -99,12 +106,17 @@ class AuthenticateFarmerIdActivity : AppCompatActivity() {
         }
 
         binding.backPressIcon.setOnClickListener {
-            startActivity(Intent(this, DashboardScreen::class.java))
+            startActivity(Intent(this, NewDashboardMainActivity::class.java))
         }
 
-        OnBackPressedDispatcher().addCallback(object: OnBackPressedCallback(true){
+        OnBackPressedDispatcher().addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(Intent(this@AuthenticateFarmerIdActivity, DashboardScreen::class.java))
+                startActivity(
+                    Intent(
+                        this@AuthenticateFarmerIdActivity,
+                        NewDashboardMainActivity::class.java
+                    )
+                )
             }
         })
     }

@@ -1,7 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.leaderboard
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.View
@@ -18,10 +17,10 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLeaderboardBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.LeaderboardNewAdapter
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MahavistaarViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONArray
 import org.json.JSONObject
@@ -54,7 +53,7 @@ class LeaderboardActivity : AppCompatActivity() {
         LocalCustom.uiResponsive(binding.root)
         ProgressHelper.showProgressDialog(this)
         observeViewModel()
-        mahavistaarViewModel.requestUrlForChatBot(this)
+        mahavistaarViewModel.requestUrlForChatBot("", "")
         setUpViews()
     }
 
@@ -152,12 +151,11 @@ class LeaderboardActivity : AppCompatActivity() {
             getString(R.string.leaderboard)
         binding.toolbarLayout.imgBackArrow.visibility = View.VISIBLE
         binding.toolbarLayout.imgBackArrow.setOnClickListener {
-            startActivity(Intent(this, DashboardScreen::class.java))
+            AppHelper(this@LeaderboardActivity).redirectToHome()
         }
-
-        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
-                startActivity(Intent(this@LeaderboardActivity, DashboardScreen::class.java))
+                AppHelper(this@LeaderboardActivity).redirectToHome()
             }
         })
 
@@ -203,7 +201,7 @@ class LeaderboardActivity : AppCompatActivity() {
     fun highlightUi(taluka: Int = 0, district: Int = 0, state: Int = 0) {
         val normalColor = ContextCompat.getColor(this, R.color.font_color_figma)
         val highlightColor = ContextCompat.getColor(this, R.color.actionbar_color_figma)
-        val customFont = ResourcesCompat.getFont(this, R.font.poppins_regular)
+        val customFont = ResourcesCompat.getFont(this, R.font.inter_regular)
         // Reset all to normal (color + style)
         listOf(binding.talukaTextView, binding.districtTextView, binding.stateTextView).forEach {
             it.setTextColor(normalColor)

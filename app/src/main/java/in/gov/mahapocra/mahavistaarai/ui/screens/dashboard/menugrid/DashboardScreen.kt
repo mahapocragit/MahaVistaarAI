@@ -92,13 +92,13 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.lead
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.news.NewsListActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.NewDashboardMainActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.NotificationActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
-import `in`.gov.mahapocra.mahavistaarai.util.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -108,6 +108,8 @@ import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.ApUtil
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SideNavMenuHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper.shrinkToCenter
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.subscribeToTopic
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper.unSubscribeToTopic
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
@@ -178,11 +180,13 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         setContentView(binding.root)
         askForPermissions()
         observeResponse()
-//        setUpCarousal()
+        setUpCarousal()
         init()
         setUpListeners()
         FirebaseHelper(this)
         checkForUpdate()
+
+
         binding.appBarMain.dashboardScreen.progressBar.visibility = View.VISIBLE
         binding.appBarMain.dashboardScreen.temperatureTextView.visibility = View.GONE
 
@@ -229,19 +233,17 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             AppSettings.getInstance().getValue(this, AppConstants.uName, AppConstants.uName)
         val userNumber: String =
             AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, AppConstants.uMobileNo)
-        val hView = binding.navView.getHeaderView(0)
-        navUserName = hView.findViewById(R.id.tv_farmerName)
-        navUserPhone = hView.findViewById(R.id.tv_famerPhoneNumber)
         if (userName != "USER_NAME") {
-            val capitalizeStrName: String = ApUtil.getCamelCaseStreing(userName)
-            navUserName.text = capitalizeStrName.ifEmpty { userName }
-            navUserPhone.text = userNumber
+            val capitalizeStrName: String =
+                ApUtil.getCamelCaseStreing(CryptoHelper.decryptField(userName))
+            navUserName.text = capitalizeStrName.ifEmpty { CryptoHelper.decryptField(userName) }
+            navUserPhone.text = CryptoHelper.decryptField(userNumber)
         }
 
         setupDashboardRecyclerView()
         setVersion()
         if (NetworkUtils.isInternetAvailable(this)) {
-            farmerViewModel.getFarmerSelectedCrop(farmerId, languageToLoad)
+            farmerViewModel.getFarmerSelectedCrop(languageToLoad)
         } else {
             LocalCustom.createSnackbar(binding.root, "Internet not available!")
         }
@@ -358,7 +360,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             "customhire" -> Intent(this, CHCenterActivity::class.java)
             "videos" -> Intent(this, VideosActivity::class.java)
             "dbtschemes" -> Intent(this, DBTActivity::class.java)
-            "dashboard" -> Intent(this, DashboardScreen::class.java)
+            "dashboard" -> Intent(this, NewDashboardMainActivity::class.java)
             "etl_page" -> Intent(this, AgriStackAdvisoryActivity::class.java)
             "pestDetection" -> Intent(this, PestIdentificationActivity::class.java)
             else -> Intent(this, DashboardScreen::class.java)
@@ -538,6 +540,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         binding.appBarMain.imgLangChange.setOnClickListener { openChangeLangPopup() }
 
         binding.appBarMain.dashboardScreen.takePictureButton.setOnClickListener {
+            val encryptedText = CryptoHelper.encryptField("9049502125")
+            Log.d(TAG, "onCreate encrypt: $encryptedText")
+            val decryptText = CryptoHelper.decryptField(encryptedText)
+            Log.d(TAG, "onCreate decrypt: $decryptText")
             startActivity(Intent(this, PestIdentificationActivity::class.java))
         }
 
@@ -641,7 +647,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             startActivity(
                 Intent(
                     this@DashboardScreen,
-                    DashboardScreen::class.java
+                    NewDashboardMainActivity::class.java
                 )
             )
         }
@@ -708,7 +714,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             val cropSapRecyclerView =
                 dialogView.findViewById<RecyclerView>(R.id.cropSapRecyclerView)
             val redirectToETLAdvisoryTextView =
-                dialogView.findViewById<TextView>(R.id.redirectToETLAdvisoryTextView)
+                dialogView.findViewById<TextView>(R.id.redirectToETLButton)
             val cropRecyclerSapAdapter =
                 CropRecyclerSapAdapter(getLatestAdvisoriesAsJsonArray(etlAdvisoryJsonArray))
             cropSapRecyclerView.apply {
@@ -1008,7 +1014,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
                         AppSettings.getInstance().setList(this, AppConstants.kFarmerCrop, null)
                         selectedCropList?.clear()
-                        farmerViewModel.getFarmerSelectedCrop(farmerId, languageToLoad)
+                        farmerViewModel.getFarmerSelectedCrop(languageToLoad)
                         savedCropName = ""
                         AppPreferenceManager(this).saveInt("CROP_ID_SAVED", 0)
                         AppPreferenceManager(this).clearPreference("CROP_NAME_SAVED")
@@ -1084,7 +1090,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         val data = jsonObject.optJSONObject("data") ?: return@observe
 
                         val name = data.optString("Name", "")
-                        binding.appBarMain.dashboardScreen.userFullNameTextView.text = name
+                        binding.appBarMain.dashboardScreen.userFullNameTextView.text =
+                            CryptoHelper.decryptField(name)
                         val mobNo = data.optString("MobileNo", "")
                         val emailId = data.optString("EmailId", "")
                         val ffaReg = data.optInt("FAAPRegistrationID", -1)
@@ -1103,6 +1110,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         val pocraRoles = mutableListOf<PocraRole>()
                         val rolesArray = data.optJSONArray("pocra_roles")
                         val topicJsonArray = data.optJSONArray("topics")
+                        val topicsToSubArray = data.optJSONArray("topics_to_subscribe")
+                        val topicsToDeleteArray = data.optJSONArray("topics_to_delete")
                         val isFirstLogin =
                             appPreferenceManager.getBoolean(AppConstant.IS_FIRST_LOGIN)
 
@@ -1130,10 +1139,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                             }
                         }
                         topicsArray = topicJsonArray
-                        val topicsToSubArray = data.optJSONArray("topics_to_subscribe")
-                        val topicsToDeleteArray = data.optJSONArray("topics_to_delete")
-//                        carousalItemArray = data.optJSONArray("cust_dash")
-//                        updateCarousalData(carousalItemArray)
+                        carousalItemArray = data.optJSONArray("cust_dash")
+                        updateCarousalData(carousalItemArray)
                         if (topicsToSubArray != null && topicsToSubArray.length() > 0) {
                             val total = topicsToSubArray.length()
                             var completed = 0
@@ -1144,11 +1151,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                                 subscribeToTopic(topic) { subscribed ->
                                     if (subscribed) {
                                         topicJsonArray.put(topic)
-                                        farmerViewModel.saveSubscribedTopic(farmerId, topic)
+                                        farmerViewModel.saveSubscribedTopic(topic)
                                     }
                                     completed++
                                     if (completed == total) {
-                                        Log.d(TAG, "Final topicJsonArray: $topicJsonArray")
                                         topicsArray = topicJsonArray
                                         appPreferenceManager.saveString(
                                             "topic_saved_fcm",
@@ -1179,7 +1185,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                                         // Call API ONCE with all topics
                                         if (topicsToDelete.isNotEmpty()) {
                                             farmerViewModel.deleteSubscribedTopics(
-                                                farmerId = farmerId,
                                                 topics = topicsToDelete
                                             )
                                         }
@@ -1269,12 +1274,10 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                             AppSettings.getInstance().getValue(this, AppConstants.uName, "")
                         val userNumber =
                             AppSettings.getInstance().getValue(this, AppConstants.uMobileNo, "")
-                        val headerView = binding.navView.getHeaderView(0)
-                        navUserName = headerView.findViewById(R.id.tv_farmerName)
-                        navUserPhone = headerView.findViewById(R.id.tv_famerPhoneNumber)
-
-                        navUserName.text = ApUtil.getCamelCaseStreing(userName).ifEmpty { userName }
-                        navUserPhone.text = userNumber
+                        navUserName.text =
+                            ApUtil.getCamelCaseStreing(CryptoHelper.decryptField(userName))
+                                .ifEmpty { CryptoHelper.decryptField(userName) }
+                        navUserPhone.text = CryptoHelper.decryptField(userNumber)
                         farmerViewModel.fetchWeatherDetails(talukaId, languageToLoad)
                         if (agristack_id != "null" && farmerId != null) {
                             if (!consent) {
@@ -1596,13 +1599,14 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         }
 
     private fun init() {
+        val hView = binding.navView.getHeaderView(0)
+        navUserName = hView.findViewById(R.id.tv_farmerName)
+        navUserPhone = hView.findViewById(R.id.tv_famerPhoneNumber)
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-        if (farmerId > 0) {
-            if (NetworkUtils.isInternetAvailable(this)) {
-                authViewModel.fetchUserInformation(farmerId)
-            } else {
-                LocalCustom.createSnackbar(binding.root, "Internet not available!")
-            }
+        if (NetworkUtils.isInternetAvailable(this)) {
+            authViewModel.fetchUserInformation()
+        } else {
+            LocalCustom.createSnackbar(binding.root, "Internet not available!")
         }
     }
 
@@ -1650,7 +1654,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             startActivity(intent)
 
             dialog.dismiss()
-            farmerViewModel.getFarmerSelectedCrop(farmerId, languageToLoad)
+            farmerViewModel.getFarmerSelectedCrop(languageToLoad)
         }
 
         tvMarathi.setOnClickListener {
@@ -1662,7 +1666,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             startActivity(intent)
 
             dialog.dismiss()
-            farmerViewModel.getFarmerSelectedCrop(farmerId, languageToLoad)
+            farmerViewModel.getFarmerSelectedCrop(languageToLoad)
         }
 
         dialog.show()
@@ -1802,7 +1806,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 }
 
                 if (completedCount == totalTopics) {
-                    farmerViewModel.deleteSubscribedTopics(farmerId, topicList)
+                    farmerViewModel.deleteSubscribedTopics(topicList)
                     completeLogout()
                 }
             }
@@ -2069,8 +2073,8 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             "weather" to 0,
             "advisory" to 1,
             "market" to 2,
-            "sop" to 3,
-            "soil" to 4,
+            "warehouse" to 3,
+            "shc" to 4,
         )
 
         carousalItemArray?.let { array ->
@@ -2120,17 +2124,11 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             }
 
             2 -> {
-//                startActivity(Intent(this, MarketPrice::class.java))
-                openYouTube(this, "https://youtube.com/shorts/clw__QUpPk8?si=9hvXrWRsk2oA3f3T")
+                startActivity(Intent(this, MarketPrice::class.java))
             }
 
             3 -> {
-                val intent = Intent(this, SOPActivity::class.java)
-                intent.putExtra("id", savedCropId)
-                intent.putExtra("wotr_crop_id", savedCropWoTRId)
-                intent.putExtra("mUrl", savedCropImageUrl)
-                intent.putExtra("mName", savedCropName)
-                startActivity(intent)
+                startActivity(Intent(this, Warehouse::class.java))
             }
 
             4 -> {

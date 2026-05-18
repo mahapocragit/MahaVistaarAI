@@ -2,7 +2,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification
 
 import android.content.Context
 import android.net.Uri
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.AppConstant
+import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.data.api.RetrofitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -42,11 +42,11 @@ class PredictRepository(private val context: Context) {
             val datePart = sowingDate.toRequestBody("text/plain".toMediaType())
 
             // Call API
-            RetrofitClient.getInstance(AppConstant.PREDICT_URL)
+            RetrofitClient.getInstance(AppEnvironment.PREDICT_URL.baseUrl)
                 .predictPest(cropIdPart, cropPart, datePart, imagePart)
         }
 
-    suspend fun submitFeedback(responseId: Int, feedbackStr: String) =
+    suspend fun submitFeedback(bearerToken: String, responseId: Int, feedbackStr: String) =
         withContext(Dispatchers.IO) {
 
             // Prepare text parts
@@ -55,24 +55,24 @@ class PredictRepository(private val context: Context) {
 
             // Call API
             //RetrofitClient.getInstance(AppEnvironment.DBT_BASE_URL.baseUrl).submitFeedback(cropIdPart,cropPart)
-            RetrofitClient.getInstance(AppConstant.MHVA_URL).submitFeedback(cropIdPart, cropPart)
+            RetrofitClient.getInstance(AppEnvironment.FARMER.baseUrl).submitFeedback(bearerToken, cropIdPart, cropPart)
         }
 
-    suspend fun fetchCropList() = withContext(Dispatchers.IO) {
-        RetrofitClient.getInstance(AppConstant.MHVA_URL).fetchCropList()
+    suspend fun fetchCropList(accessToken: String) = withContext(Dispatchers.IO) {
+        RetrofitClient.getInstance(AppEnvironment.FARMER.baseUrl).fetchCropList("Bearer $accessToken")
     }
 
-    suspend fun getPestAdvisory(pestId: String) = withContext(Dispatchers.IO) {
+    suspend fun getPestAdvisory(pestId: String, bearerToken: String) = withContext(Dispatchers.IO) {
         val part = MultipartBody.Part.createFormData(
             name = "pd_id",
             value = pestId
         )
         RetrofitClient
-            .getInstance(AppConstant.MHVA_URL)
-            .getPestAdvisory(part)
+            .getInstance(AppEnvironment.FARMER.baseUrl)
+            .getPestAdvisory("Bearer $bearerToken", part)
     }
 
-    suspend fun storeResponse(
+    suspend fun storeResponse(bearerToken: String,
         farmerId: Int,
         cropId: String,
         sowingDate: String,
@@ -109,7 +109,8 @@ class PredictRepository(private val context: Context) {
             val diseaseIdPart = diseaseId.toRequestBody("text/plain".toMediaType())
 
             // Call API
-            RetrofitClient.getInstance(AppConstant.MHVA_URL).storeResponseAgainstCropImage(
+            RetrofitClient.getInstance(AppEnvironment.FARMER.baseUrl).storeResponseAgainstCropImage(
+                "Bearer $bearerToken",
                 imagePart,
                 farmerId,
                 cropPart,

@@ -7,7 +7,7 @@
 
     <!-- This path defines the main blue background shape -->
     <path
-        android:fillColor="#FFFFFF"
+        android:fillColor="@color/background_colour_nui"
         android:pathData="
             M0,0
             H130

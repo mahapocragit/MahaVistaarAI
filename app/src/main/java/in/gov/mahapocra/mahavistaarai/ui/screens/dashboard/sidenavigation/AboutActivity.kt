@@ -3,6 +3,8 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.OnBackPressedDispatcher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
@@ -13,6 +15,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.adapters.GridAdapter
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 
 class AboutActivity : AppCompatActivity() {
 
@@ -35,8 +38,13 @@ class AboutActivity : AppCompatActivity() {
         }
         binding.toolbarLayout.imgBackArrow.visibility = View.VISIBLE
         binding.toolbarLayout.imgBackArrow.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+            AppHelper(this@AboutActivity).redirectToHome()
         }
+        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                AppHelper(this@AboutActivity).redirectToHome()
+            }
+        })
         binding.toolbarLayout.textViewHeaderTitle.text = getString(R.string.about)
 
         val items = listOf(

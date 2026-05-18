@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
@@ -73,13 +74,40 @@ class StageAdvisoryAdapter(
         if (status.equals("current")) {
             holder.cropStagesInfoRecyclerView.visibility = View.VISIBLE
             holder.seeMoreTextView.text = holder.itemView.context.getString(R.string.see_less)
+            context?.let {
+                holder.seeMoreTextView.setTextColor(
+                    ContextCompat.getColor(
+                        it,
+                        R.color.text_colour_adv
+                    )
+                )
+            }
+            holder.seeMoreTextView.setBackgroundResource(R.drawable.background_current_adv)
             holder.stage.setBackgroundResource(R.drawable.current_round_background_status)
 
         } else if (status.equals("completed")) {
             holder.cropStagesInfoRecyclerView.visibility = View.GONE
+            context?.let {
+                holder.seeMoreTextView.setTextColor(
+                    ContextCompat.getColor(
+                        it,
+                        R.color.actionbar_color_figma
+                    )
+                )
+            }
+            holder.seeMoreTextView.setBackgroundResource(R.drawable.background_previous_adv)
             holder.stage.setBackgroundResource(R.drawable.baseline_check_circle_24)
-        }else{
+        } else {
             holder.cropStagesInfoRecyclerView.visibility = View.GONE
+            holder.seeMoreTextView.setBackgroundResource(R.drawable.background_previous_adv)
+            context?.let {
+                holder.seeMoreTextView.setTextColor(
+                    ContextCompat.getColor(
+                        it,
+                        R.color.actionbar_color_figma
+                    )
+                )
+            }
             holder.stage.setBackgroundResource(R.drawable.pending_round_backgroud_stages)
         }
         holder.titleTextView.text = advisoryJsonDetails.getString("stage")

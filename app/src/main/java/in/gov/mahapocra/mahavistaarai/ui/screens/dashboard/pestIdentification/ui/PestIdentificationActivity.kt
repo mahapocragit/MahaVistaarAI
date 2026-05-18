@@ -39,12 +39,14 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.CropModel
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.data.model.AnalysisData
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.data.repository.PredictRepository
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.NewDashboardMainActivity
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager.getAccessToken
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONArray
 import org.json.JSONObject
@@ -62,7 +64,6 @@ class PestIdentificationActivity : AppCompatActivity() {
     private var cropList = ArrayList<CropModel>()
     private var selectedCropId: Int? = null
     private var farmerId = 0
-    private var predictRespStoredId: Int = 0
     private lateinit var predictResult: String
     var languageToLoad = "mr"
     private var analysisData = AnalysisData(0, "", "", false, "", "", "")
@@ -124,10 +125,12 @@ class PestIdentificationActivity : AppCompatActivity() {
         setContentView(binding.root)
         uiResponsive(binding.root)
 
-        binding.relativeLayoutTopBar.textViewHeaderTitle.text = getString(R.string.pest_identification_text)
+        binding.relativeLayoutTopBar.textViewHeaderTitle.text =
+            getString(R.string.pest_identification_text)
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
-            startActivity(Intent(this, DashboardScreen::class.java))
+            AppHelper(this@PestIdentificationActivity).redirectToPage(1)
+            finish()
         }
 
         FirebaseMessaging.getInstance().unsubscribeFromTopic("generic_notifications")
@@ -180,7 +183,8 @@ class PestIdentificationActivity : AppCompatActivity() {
     private fun handleBackPress() {
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(Intent(this@PestIdentificationActivity, DashboardScreen::class.java))
+                AppHelper(this@PestIdentificationActivity).redirectToPage(1)
+                finish()
             }
         })
     }
@@ -230,7 +234,9 @@ class PestIdentificationActivity : AppCompatActivity() {
                 val predictionArray = dataJSONObject?.optJSONArray("predictions")
                 val predictionObject = predictionArray?.get(0) as JSONObject
                 val diseaseId = predictionObject.optString("disease_id")
-                viewModel.getPestAdvisory(this, diseaseId)
+
+                val accessToken = getAccessToken().toString()
+                viewModel.getPestAdvisory(this, diseaseId, accessToken)
                 cameraImageUri?.let { uri ->
                     val compressedUri = compressImageUri(uri, 70)
                     if (compressedUri != null) {
@@ -341,7 +347,10 @@ class PestIdentificationActivity : AppCompatActivity() {
     private fun setUpListeners() {
         binding.cameraLayout.setOnClickListener { checkCameraPermission() }
         binding.galleryLayout.setOnClickListener { pickImage.launch("image/*") }
-        binding.editCropName.setOnClickListener { viewModel.fetchCropList() }
+        binding.editCropName.setOnClickListener {
+            val accessToken = getAccessToken().toString()
+            viewModel.fetchCropList(accessToken)
+        }
         binding.editSowingDate.setOnClickListener { openDatePicker() }
 
         binding.deleteImageView.setOnClickListener {

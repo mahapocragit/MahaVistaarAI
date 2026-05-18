@@ -3,6 +3,7 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
@@ -10,6 +11,7 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityCreditsBinding
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 
 class CreditsActivity : AppCompatActivity() {
 
@@ -29,8 +31,13 @@ class CreditsActivity : AppCompatActivity() {
 
         binding.toolbarLayout.imgBackArrow.visibility = View.VISIBLE
         binding.toolbarLayout.imgBackArrow.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+            AppHelper(this@CreditsActivity).redirectToHome()
         }
+        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                AppHelper(this@CreditsActivity).redirectToHome()
+            }
+        })
         binding.toolbarLayout.textViewHeaderTitle.text = getString(R.string.credit)
     }
 

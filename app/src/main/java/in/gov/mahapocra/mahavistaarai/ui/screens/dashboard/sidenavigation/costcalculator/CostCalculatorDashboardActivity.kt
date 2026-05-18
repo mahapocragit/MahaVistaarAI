@@ -1,32 +1,40 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator
 
 import android.content.Context
-import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.icu.util.Calendar
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.MenuItem
 import android.view.View
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityCostCalculatorDashboardBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CostCalculatorAdapter
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.adapters.CropSelectionAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.CostCalculatorViewModel
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -34,6 +42,8 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
 
     private lateinit var binding: ActivityCostCalculatorDashboardBinding
     private val costCalculatorViewModel: CostCalculatorViewModel by viewModels()
+    private val farmerViewModel: FarmerViewModel by viewModels()
+    private var cropsJsonArray = JSONArray()
     private lateinit var languageToLoad: String
     private var season = 1
     private var currentYear = 0
@@ -118,8 +128,18 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
             }
         }
 
-        costCalculatorViewModel.deleteCropResponse.observe(this) { response ->
-            if (response != null) {
+        costCalculatorViewModel.deleteCostCalculatorCropResponse.observe(this) { response ->
+            if (response == null) return@observe
+
+            val jsonObject = JSONObject(response.toString())
+            val status = jsonObject.optInt("status")
+            val message = jsonObject.optString("response")
+
+            if (status == 200) {
+
+                Toast.makeText(this, "Crop Deleted successfully", Toast.LENGTH_SHORT).show()
+
+                // Toggle delete UI state
                 isDeleteEnabled = !isDeleteEnabled
                 if (isDeleteEnabled) {
                     binding.toggleDeleteImageView.setImageResource(R.drawable.ic_cross)
@@ -128,18 +148,22 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
                     binding.toggleDeleteImageView.setImageResource(R.drawable.delete_icon)
                     costCalculatorAdapter.setDeleteEnabled(false)
                 }
-                val jSONObject = JSONObject(response.toString())
-                if (jSONObject.optInt("status") == 200) {
-                    Toast.makeText(this, "Crop Deleted successfully", Toast.LENGTH_SHORT).show()
-                    // refresh transactions after deleting crop
-                    getCurrentYearAllTransactions(
-                        currentSeasonForTransaction,
-                        currentYearForTransaction
-                    )
+
+                // Refresh transactions
+                if (currentYearForTransaction != 0) {
+                    binding.yearTextView.text = buildString {
+                        append(getString(R.string.year_text))
+                        append(" ")
+                        append(currentYearForTransaction)
+                    }
+
+                    getCurrentYearAllTransactions(season, currentYearForTransaction)
                 } else {
-                    Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_SHORT)
-                        .show()
+                    getCurrentYearAllTransactions(season, currentYear)
                 }
+
+            } else {
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -170,24 +194,23 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
             }
         }
 
-        costCalculatorViewModel.deleteCropResponse.observe(this) { response ->
-            if (response != null) {
-                val jSONObject = JSONObject(response.toString())
-                if (jSONObject.optInt("status") == 200) {
-                    Toast.makeText(this, "Crop Deleted successfully", Toast.LENGTH_SHORT).show()
-                    if (currentYearForTransaction != 0) {
-                        binding.yearTextView.text = buildString {
-                            append(getString(R.string.year_text))
-                            append(" ")
-                            append(currentYearForTransaction)
-                        }
-                        getCurrentYearAllTransactions(season, currentYearForTransaction)
-                    } else {
-                        getCurrentYearAllTransactions(season, currentYear)
-                    }
-                } else {
-                    Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_SHORT)
-                        .show()
+        farmerViewModel.fetchCropsForDCSResponse.observe(this) { state ->
+            cropsJsonArray = JSONArray()
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
+                }
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    val jsonObject = JSONObject(state.data.toString())
+                    val dataObject = jsonObject.optJSONArray("data")
+                    cropsJsonArray = dataObject ?: JSONArray()
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -204,42 +227,85 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
     private fun setupBackPress() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(
-                    Intent(
-                        this@CostCalculatorDashboardActivity,
-                        DashboardScreen::class.java
-                    )
-                )
+                AppHelper(this@CostCalculatorDashboardActivity).redirectToHome()
             }
         })
     }
 
     private fun setUpListeners() {
-        try {
-            val cropId = intent.getIntExtra("id", 0)
-            if (cropId != 0) {
-                costCalculatorViewModel.addCropForCropCalculation(
-                    this,
-                    cropId = cropId,
-                    season = currentSeasonForTransaction,
-                    year = currentYearForTransaction
-                )
-            }
-        } catch (e: Exception) {
-            Log.d(TAG, "setUpListeners: ${e.message}")
-        }
 
         binding.addCropCardView.setOnClickListener {
-            startActivity(
-                Intent(this, AddCropActivity::class.java).putExtra(
-                    "callerActivity",
-                    "costCalculator"
-                )
-            )
+            showCropSelectionDialog(cropsJsonArray) { selectedCrop ->
+                val cropId = selectedCrop.optInt("id")
+                if (cropId != 0) {
+                    costCalculatorViewModel.addCropForCropCalculation(
+                        this,
+                        cropId = cropId,
+                        season = currentSeasonForTransaction,
+                        year = currentYearForTransaction
+                    )
+                }
+            }
         }
 
         binding.yearLayout.setOnClickListener { showYearPopup() }
         binding.seasonLayout.setOnClickListener { showSeasonPopup() }
+        farmerViewModel.fetchCropsForDCS()
+    }
+
+    private fun showCropSelectionDialog(
+        jsonArray: JSONArray,
+        onItemSelected: (JSONObject) -> Unit
+    ) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_crop_selection, null)
+
+        val etSearch = dialogView.findViewById<EditText>(R.id.etSearch)
+        val ivClose = dialogView.findViewById<ImageView>(R.id.ivClose)
+        val recyclerView = dialogView.findViewById<RecyclerView>(R.id.recyclerView)
+
+        val cropList = mutableListOf<JSONObject>()
+
+        for (i in 0 until jsonArray.length()) {
+            cropList.add(jsonArray.getJSONObject(i))
+        }
+
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+
+        val adapter = CropSelectionAdapter(cropList.toMutableList()) { selectedCrop ->
+            onItemSelected(selectedCrop)
+            dialog.dismiss()
+        }
+
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = adapter
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        ivClose.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val query = s.toString().trim().lowercase()
+
+                val filteredList = cropList.filter {
+                    it.optString("name").lowercase().contains(query) ||
+                            it.optString("name_mr").lowercase().contains(query)
+                }
+
+                adapter.updateList(filteredList)
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+        dialog.show()
     }
 
     fun getCurrentYearAllTransactions(selectedSeason: Int, selectedYear: Int) {
@@ -308,7 +374,7 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
 
     override fun onDeleteClick(cropId: Int, data: JSONObject) {
         if (cropId != 0) {
-            costCalculatorViewModel.deleteCrop(this, cropId)
+            costCalculatorViewModel.deleteCostCalculatorCrop(this, cropId)
         }
     }
 

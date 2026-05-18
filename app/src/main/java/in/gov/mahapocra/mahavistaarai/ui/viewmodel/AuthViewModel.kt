@@ -1,23 +1,26 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.viewmodel
 
+import android.app.Application
 import android.content.Context
 import android.provider.Settings
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.settings.AppSettings
-import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.my_dashboard.DashboardCache
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.toSHA512
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -26,7 +29,9 @@ import java.io.IOException
 import java.net.SocketException
 import java.net.SocketTimeoutException
 
-class AuthViewModel : ViewModel() {
+class AuthViewModel(
+    application: Application
+) : AndroidViewModel(application) {
 
     private val _sendOtpToMobileResponse = MutableLiveData<JsonObject>()
     val sendOtpToMobileResponse: LiveData<JsonObject> = _sendOtpToMobileResponse
@@ -48,7 +53,8 @@ class AuthViewModel : ViewModel() {
     val updateFarmerDetailsByIdResponse: LiveData<JsonObject> = _updateFarmerDetailsByIdResponse
 
     private val _getRegisteredDeviceCountByDeviceIdResponse = MutableLiveData<UiState<JsonObject>>()
-    val getRegisteredDeviceCountByDeviceIdResponse: LiveData<UiState<JsonObject>> = _getRegisteredDeviceCountByDeviceIdResponse
+    val getRegisteredDeviceCountByDeviceIdResponse: LiveData<UiState<JsonObject>> =
+        _getRegisteredDeviceCountByDeviceIdResponse
 
     private val _userDetailsState = MutableLiveData<UiState<JsonObject>>()
     val userDetailsState: LiveData<UiState<JsonObject>> = _userDetailsState
@@ -62,6 +68,20 @@ class AuthViewModel : ViewModel() {
     private val _agristackLoginResponse = MutableLiveData<JsonObject>()
     val agristackLoginResponse: LiveData<JsonObject> = _agristackLoginResponse
 
+    private val _loginViaMobilePassResponse = MutableLiveData<UiState<JsonObject>>()
+    val loginViaMobilePassResponse: LiveData<UiState<JsonObject>> = _loginViaMobilePassResponse
+
+    private val _loginViaOTPResponse = MutableLiveData<UiState<JsonObject>>()
+    val loginViaOTPResponse: LiveData<UiState<JsonObject>> = _loginViaOTPResponse
+
+
+    private val _getCustomisedDashboardResponse = MutableLiveData<UiState<JsonObject>>()
+    val getCustomisedDashboardResponse: LiveData<UiState<JsonObject>> =
+        _getCustomisedDashboardResponse
+
+    private val _resetPasswordResponse = MutableLiveData<UiState<JsonObject>>()
+    val resetPasswordResponse: LiveData<UiState<JsonObject>> =
+        _resetPasswordResponse
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
@@ -69,15 +89,9 @@ class AuthViewModel : ViewModel() {
         viewModelScope.launch {
             ProgressHelper.showProgressDialog(context)
             try {
-                val userId =
-                    AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
-                val jsonObject = JSONObject().apply {
-                    put("SecurityKey", ApiConstants.SSO_KEY)
-                }
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val api = retrofit.create(ApiService::class.java)
-                val response = api.sendOtpToFarmerId(farmerId, userId, requestBody)
+                val response = api.sendOtpToFarmerId(farmerId)
                 ProgressHelper.disableProgressDialog()
                 _sendOtpToFarmerIdResponse.value = response
             } catch (e: Exception) {
@@ -94,19 +108,65 @@ class AuthViewModel : ViewModel() {
         }
     }
 
+    fun loginViaOTP(mobile: String, otp: String, fcmToken: String) {
+        viewModelScope.launch {
+            _loginViaOTPResponse.value = UiState.Loading
+            try {
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val api = retrofit.create(ApiService::class.java)
+                val response = api.getUserLoginOTP(
+                    CryptoHelper.encryptField(mobile) ?: "",
+                    CryptoHelper.encryptField(otp) ?: "",
+                    fcmToken
+                )
+                _loginViaOTPResponse.value = UiState.Success(response)
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _loginViaOTPResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun loginViaMobilePass(mobile: String, password: String, fcmToken: String) {
+        viewModelScope.launch {
+            _loginViaMobilePassResponse.value = UiState.Loading
+            try {
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val api = retrofit.create(ApiService::class.java)
+                val response = api.getUserLoginPassword(
+                    CryptoHelper.encryptField(mobile.trim { it <= ' ' }).toString(),
+                    toSHA512(password),
+                    fcmToken = fcmToken
+                )
+                _loginViaMobilePassResponse.value = UiState.Success(response)
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _loginViaMobilePassResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
     fun sendOtpToMobile(context: Context, mobile: String) {
         viewModelScope.launch {
             ProgressHelper.showProgressDialog(context)
             try {
-                val jsonObject = JSONObject().apply {
-                    put("SecurityKey", ApiConstants.SSO_KEY)
-                }
-
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val api = retrofit.create(ApiService::class.java)
 
-                val response = api.sendOtpToMobile(mobile, requestBody)
+                val response =
+                    api.sendOtpToMobile(CryptoHelper.encryptField(mobile.trim()).toString())
 
                 ProgressHelper.disableProgressDialog()
 
@@ -140,15 +200,9 @@ class AuthViewModel : ViewModel() {
         viewModelScope.launch {
             ProgressHelper.showProgressDialog(context)
             try {
-                val userId =
-                    AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
-                val jsonObject = JSONObject().apply {
-                    put("SecurityKey", ApiConstants.SSO_KEY)
-                }
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val api = retrofit.create(ApiService::class.java)
-                val response = api.compareOtpToFarmerId(farmerId, userId, otp, requestBody)
+                val response = api.compareOtpToFarmerId(farmerId, otp)
                 ProgressHelper.disableProgressDialog()
                 _compareOtpToFarmerIdResponse.value = response
             } catch (e: Exception) {
@@ -177,19 +231,14 @@ class AuthViewModel : ViewModel() {
                 Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
             val versionNumber = LocalCustom.getVersionName(context)
             try {
-                val jsonObject = JSONObject().apply {
-                    put("SecurityKey", ApiConstants.SSO_KEY)
-                }
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val api = retrofit.create(ApiService::class.java)
                 val response = api.compareOtpToFarmerIdRegistration(
-                    farmerId,
-                    otp,
-                    timestamp,
-                    versionNumber,
-                    deviceId,
-                    requestBody
+                    CryptoHelper.encryptField(farmerId).toString(),
+                    CryptoHelper.encryptField(otp).toString(),
+                    CryptoHelper.encryptField(timestamp.toString()).toString(),
+                    CryptoHelper.encryptField(versionNumber).toString(),
+                    CryptoHelper.encryptField(deviceId).toString(),
                 )
                 ProgressHelper.disableProgressDialog()
                 _compareOtpToFarmerIdRegistrationResponse.value = response
@@ -217,21 +266,13 @@ class AuthViewModel : ViewModel() {
         viewModelScope.launch {
             ProgressHelper.showProgressDialog(context)
             try {
-                val userId =
-                    AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
-                val jsonObject = JSONObject().apply {
-                    put("SecurityKey", ApiConstants.SSO_KEY)
-                }
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val api = retrofit.create(ApiService::class.java)
                 val response = api.updateFarmerDetailsById(
                     farmerId,
-                    userId,
                     name,
                     mobile,
-                    villageCode,
-                    requestBody
+                    villageCode
                 )
                 ProgressHelper.disableProgressDialog()
                 _updateFarmerDetailsByIdResponse.value = response
@@ -270,21 +311,13 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    fun fetchUserInformation(farmerRegistrationID: Int) {
+    fun fetchUserInformation() {
         viewModelScope.launch {
             _userDetailsState.value = UiState.Loading
             try {
-                val jsonObject = JSONObject().apply {
-                    put("SecurityKey", ApiConstants.SSO_KEY)
-                }
-
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
-
-                val response = apiRequest.getGetRegistration(farmerRegistrationID, requestBody)
-
-                // Handle success
+                val response = apiRequest.getGetRegistration()
                 _userDetailsState.value = UiState.Success(response)
 
             } catch (e: Exception) {
@@ -304,16 +337,15 @@ class AuthViewModel : ViewModel() {
         viewModelScope.launch {
             _compareOtpResponse.value = UiState.Loading
             try {
-                val jsonObject = JSONObject().apply {
-                    put("SecurityKey", ApiConstants.SSO_KEY)
-                    put("otp", enteredOTP)
-                }
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit: Retrofit =
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
                 val response =
-                    apiRequest.compareOtp(mobile.trim { it <= ' ' }, timestamp, requestBody)
+                    apiRequest.compareOtp(
+                        CryptoHelper.encryptField(mobile.trim { it <= ' ' }).toString(),
+                        CryptoHelper.encryptField(enteredOTP).toString(),
+                        CryptoHelper.encryptField(timestamp.toString()).toString()
+                    )
                 _compareOtpResponse.value = UiState.Success(response)
             } catch (e: Exception) {
                 val message = when (e) {
@@ -330,16 +362,16 @@ class AuthViewModel : ViewModel() {
 
     fun compareOtpReg(mobile: String, enteredOTP: String) {
         viewModelScope.launch {
-            val jsonObject = JSONObject()
             try {
-                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
-                jsonObject.put("otp", enteredOTP)
-
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit: Retrofit =
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
-                val response = apiRequest.compareOtpReg(mobile.trim { it <= ' ' }, requestBody)
+                val response =
+                    apiRequest.compareOtpReg(
+                        CryptoHelper.encryptField(mobile.trim { it <= ' ' })
+                        .toString(),
+                        CryptoHelper.encryptField(enteredOTP).toString()
+                    )
                 _compareOtpResponseReg.value = response
             } catch (e: Exception) {
                 val message = when (e) {
@@ -358,14 +390,12 @@ class AuthViewModel : ViewModel() {
         viewModelScope.launch {
             ProgressHelper.showProgressDialog(context)
             try {
-                val jsonObject = JSONObject().apply {
-                    put("SecurityKey", APIKeys.SSO_PROD)
-                }
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
 
-                val response = apiRequest.farmerLoginBasedOnID(agristackID, requestBody)
+                val response = apiRequest.farmerLoginBasedOnID(
+                    CryptoHelper.encryptField(agristackID).toString()
+                )
                 ProgressHelper.disableProgressDialog()
                 // You can handle the result however you want, for example:
                 _agristackLoginResponse.value = response
@@ -378,6 +408,102 @@ class AuthViewModel : ViewModel() {
                     else -> e.localizedMessage ?: "Unknown error"
                 }
                 _error.value = message
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getCustomisedDashboardList() {
+
+        viewModelScope.launch {
+
+            _getCustomisedDashboardResponse.value =
+                UiState.Loading
+
+            try {
+
+                val retrofit =
+                    RetrofitHelper.createRetrofitInstance(
+                        AppEnvironment.FARMER.baseUrl
+                    )
+
+                val apiRequest =
+                    retrofit.create(ApiService::class.java)
+
+                val response =
+                    apiRequest.getCustomizedDashboard()
+
+                // SAVE API RESPONSE
+                DashboardCache.saveDashboard(
+                    getApplication(),
+                    response
+                )
+
+                // SHOW API DATA
+                _getCustomisedDashboardResponse.value =
+                    UiState.Success(response)
+
+            } catch (e: Exception) {
+
+                // LOAD CACHED DATA
+                val cachedData =
+                    DashboardCache.getDashboard(
+                        getApplication()
+                    )
+
+                if (cachedData != null) {
+
+                    // SHOW OFFLINE DATA
+                    _getCustomisedDashboardResponse.value =
+                        UiState.Success(cachedData)
+
+                } else {
+
+                    val message = when (e) {
+
+                        is SocketTimeoutException ->
+                            "Request timed out. Please try again."
+
+                        is SocketException ->
+                            "Connection lost. Please check your internet."
+
+                        is IOException ->
+                            "Network error occurred."
+
+                        else ->
+                            e.localizedMessage ?: "Unknown error"
+                    }
+
+                    _getCustomisedDashboardResponse.value =
+                        UiState.Error(message)
+                }
+
+                FirebaseCrashlytics.getInstance()
+                    .recordException(e)
+            }
+        }
+    }
+
+    fun resetPassword(userMobileNo: String, password: String) {
+        viewModelScope.launch {
+            _resetPasswordResponse.value = UiState.Loading
+            try {
+                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.getNewPassword(
+                    CryptoHelper.encryptField(userMobileNo.trim { it <= ' ' })
+                        .toString(),
+                    toSHA512(password)
+                )
+                _resetPasswordResponse.value = UiState.Success(response)
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _resetPasswordResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }

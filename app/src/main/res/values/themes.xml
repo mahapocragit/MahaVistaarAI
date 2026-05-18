@@ -12,8 +12,8 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Customize your theme here. -->
         <item name="android:statusBarColor">@color/actionbar_color_figma</item>
-        <item name="android:fontFamily">@font/poppins_regular_font</item>
-        <item name="fontFamily">@font/poppins_regular_font</item>
+        <item name="android:fontFamily">@font/inter_regular_font</item>
+        <item name="fontFamily">@font/inter_regular_font</item>
     </style>
 
     <style name="OtpBoxStyle">
@@ -43,19 +43,19 @@
         <item name="colorPrimary">@color/actionbar_color_figma</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:fontFamily">@font/poppins_regular_font</item>
-        <item name="fontFamily">@font/poppins_regular_font</item>
+        <item name="android:fontFamily">@font/inter_regular_font</item>
+        <item name="fontFamily">@font/inter_regular_font</item>
         <item name="android:statusBarColor">@color/actionbar_color_figma</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <style name="Theme.FarmerApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:fontFamily">@font/poppins_regular_font</item>
-        <item name="fontFamily">@font/poppins_regular_font</item>
+        <item name="android:fontFamily">@font/inter_regular_font</item>
+        <item name="fontFamily">@font/inter_regular_font</item>
     </style>
 
     <style name="Theme.FarmerApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
-        <item name="android:fontFamily">@font/poppins_regular_font</item>
-        <item name="fontFamily">@font/poppins_regular_font</item>
+        <item name="android:fontFamily">@font/inter_regular_font</item>
+        <item name="fontFamily">@font/inter_regular_font</item>
     </style>
 </resources>

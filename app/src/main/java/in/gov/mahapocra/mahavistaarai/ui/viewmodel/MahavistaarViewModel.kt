@@ -1,6 +1,7 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,6 +15,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -29,17 +31,17 @@ class MahavistaarViewModel : ViewModel(){
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
-    fun requestUrlForChatBot(context: Context) {
+    fun requestUrlForChatBot(username: String, mobileNumber: String) {
 
-        val username = AppSettings.getInstance().getValue( context, AppConstants.uName, AppConstants.uName)
-        val mobileNumber = AppSettings.getInstance().getValue( context, AppConstants.uMobileNo, AppConstants.uMobileNo)
+        val username = CryptoHelper.decryptField(username)
+        val mobileNumber = CryptoHelper.decryptField(mobileNumber)
 
         viewModelScope.launch {
             try {
-                ProgressHelper.showProgressDialog(context)
+//                ProgressHelper.showProgressDialog(context)
                 val jsonObject = JSONObject().apply {
-                    put("mobile", mobileNumber)
-                    put("name", username)
+                    put("mobile", username)
+                    put("name", mobileNumber)
                     put("role", "public")
                 }
 
@@ -63,6 +65,7 @@ class MahavistaarViewModel : ViewModel(){
                     else -> e.localizedMessage ?: "Unknown error"
                 }
                 _error.value = message
+                Log.d("TAGGGER", "requestUrlForChatBot: $message")
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }

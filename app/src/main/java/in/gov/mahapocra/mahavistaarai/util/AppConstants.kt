@@ -4,6 +4,7 @@ object AppConstants {
     const val TAG = "MAHAVISTAAR_AI_TAG"
     const val kAPP_BUILD_VERSION: String = "kAPP_BUILD_VERSION"
     const val fREGISTER_ID: String = "fREGISTER_ID"
+    const val ACCESS_TOKEN: String = "ACCESS_TOKEN"
     const val IS_USER_GUEST: String = "IS_USER_GUEST"
     const val uName: String = "USER_NAME"
 
@@ -12,11 +13,14 @@ object AppConstants {
     const val pocraRoles: String = "POCRA_ROLES"
     const val userDataSaved: String = "USER_DATA_SAVED"
     const val AGRISTACKID: String = "AGRISTACK_ID"
+    const val REDIRECT_TO_TAB: String = "AGRISTACK_ID"
+    const val FARMER_REG_ID: String = "FARMER_REG_ID"
     const val ACTION_FROM_DASHBOARD: String = "ACTION_FROM_DASHBOARD"
     const val PEST_AND_DISEASES_FROM_DASHBOARD: String = "PEST_AND_DISEASES_FROM_DASHBOARD"
     const val PEST_AND_DISEASES_STAGES: String = "PEST_AND_DISEASES_STAGES"
     const val FERTILIZER_CALCULATOR_FROM_DASHBOARD: String = "FERTILIZER_CALCULATOR_FROM_DASHBOARD"
     const val SOP_FROM_DASHBOARD: String = "SOP_FROM_DASHBOARD"
+    const val CHANGE_CROP_DASHBOARD: String = "CHANGE_CROP_DASHBOARD"
     const val uMobileNo: String = "USER_MOBILE"
     const val uEmail: String = "USER_EMAIL"
     const val uDIST: String = "USER_DIST"
@@ -32,6 +36,15 @@ object AppConstants {
     const val kSHARED_PREF: String = "pocra_krishi_farmerApp"
     const val tmpCROPNAME: String = "tmpCROPNAME"
     const val WEATHER_RESPONSE: String = "WEATHER_RESPONSE"
+    const val VILLAGE_CODE: String = "VILLAGE_CODE"
+    const val VILLAGE_NAME: String = "VILLAGE_NAME"
+    const val TALUKA_CODE: String = "TALUKA_CODE"
+    const val TALUKA_NAME: String = "TALUKA_NAME"
+    const val DISTRICT_CODE: String = "DISTRICT_CODE"
+    const val DISTRICT_NAME: String = "DISTRICT_NAME"
+    const val USER_NAME: String = "USER_NAME"
+    const val USER_MOBILE: String = "USER_MOBILE"
+    const val ETL_ADVISORY_ARRAY: String = "ETL_ADVISORY_ARRAY"
 
     //Constants for point system
     const val CROP_ADVISORY_POINT = 1

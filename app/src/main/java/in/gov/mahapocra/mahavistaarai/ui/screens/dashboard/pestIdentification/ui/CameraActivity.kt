@@ -152,14 +152,8 @@ class CameraActivity : AppCompatActivity() {
     }
 
     private fun discardImage() {
-        tempFile?.let {
-            Toast.makeText(
-                this,
-                "Discarded: ${it.toUri()}",
-                Toast.LENGTH_SHORT
-            ).show()
-            it.delete()
-        }
+        tempFile?.delete()
+        Toast.makeText(this, "Image discarded successfully", Toast.LENGTH_SHORT).show()
         return resetUI()
     }
 

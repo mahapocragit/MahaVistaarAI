@@ -20,6 +20,13 @@
         </trust-anchors>
     </domain-config>
 
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">mahanidan.vassarlabs.com</domain>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+
     <!-- For these domains, allow user-installed CAs in addition to system -->
     <domain-config cleartextTrafficPermitted="false">
         <domain includeSubdomains="true">nibpp.krishimegh.in</domain>

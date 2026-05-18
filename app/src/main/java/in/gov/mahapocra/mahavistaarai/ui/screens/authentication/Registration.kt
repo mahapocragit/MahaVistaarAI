@@ -14,12 +14,10 @@ import `in`.co.appinventor.services_api.listener.AlertListEventListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityRegistrationBinding
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.RegistrationViewModel
@@ -30,6 +28,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SessionManager
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONArray
 import org.json.JSONException
@@ -175,14 +174,14 @@ class Registration : AppCompatActivity(), AlertListEventListener {
                     if (jSONObject.optInt("status") == 200) {
                         val response: String = jSONObject.getString("response")
                         Toast.makeText(this, response, Toast.LENGTH_LONG).show()
-                        var intent = Intent(this, LoginScreen::class.java)
                         if (isUserLoggedIn) {
-                            intent = Intent(this, DashboardScreen::class.java)
+                            AppHelper(this).redirectToHome()
+                        } else {
+                            startActivity(Intent(this, LoginScreen::class.java))
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         }
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(intent)
                         finish()
                     } else {
                         val response: String =
@@ -323,22 +322,14 @@ class Registration : AppCompatActivity(), AlertListEventListener {
         } else {
             val jsonObject = JSONObject()
             try {
-                jsonObject.put("Name", userName)
-                jsonObject.put("DistrictName", districtName)
-                jsonObject.put("DistrictCode", districtID)
-                jsonObject.put("TalukaName", talukaName)
-                jsonObject.put("TalukaCode", talukaID)
-                jsonObject.put("VillageName", villageName)
-                jsonObject.put("VillageCode", villageID)
-                jsonObject.put("Status", "Active")
-                jsonObject.put("version_number", versionName)
-                jsonObject.put("fcm_token", token)
-                jsonObject.put("device_id", machineId)
-                jsonObject.put("FAAPRegistrationID", fAAPRegistrationID)
-                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
                 registrationViewModel.getRegistrationRequest(
-                    mob.trim { it <= ' ' },
-                    mob.trim { it <= ' ' }, jsonObject
+                    name = userName,
+                    registerMob = mob.trim { it <= ' ' },
+                    updatedMobile = mob.trim { it <= ' ' },
+                    villageCode = villageID.toString(),
+                    fcmToken = token ?: "",
+                    versionNumber = versionName ?: "",
+                    deviceId = machineId.toString()
                 )
             } catch (e: JSONException) {
                 e.printStackTrace()

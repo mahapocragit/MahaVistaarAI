@@ -9,11 +9,11 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -34,6 +34,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
+import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityFertilizerCalculatorActivityBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.FertilizersRecyclerAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
@@ -47,9 +48,12 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.DeleteApi
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DateHelper.showDisabledFutureDatePicker
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -71,7 +75,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     private var soilTestOption: Int = 0
     private lateinit var languageToLoad: String
-    private var villageID: Int = 0
+    private var villageCode: Int = 0
     private var cropId: Int? = 0
     private var wotrCropId: String? = null
     private var mUrl: String? = null
@@ -109,7 +113,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         observeResponse()
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
-            startActivity(Intent(this, DashboardScreen::class.java))
+            AppHelper(this).redirectToHome()
         }
 
         AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
@@ -152,18 +156,17 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                         isShowing = false
                         startActivity(sharing)
                         dialogInterface.dismiss()
+                    }.setNegativeButton(R.string.cancel) { _, _ ->
+                        AppHelper(this).redirectToHome()
                     }
                     .create()
 
-                dialog.setOnKeyListener { _, keyCode, _ ->
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                onBackPressedDispatcher.addCallback(this) {
+                    if (dialog.isShowing) {
                         dialog.dismiss()
-
-                        // trigger your back logic manually
-                        onBackPressedDispatcher.onBackPressed()
-
-                        true
-                    } else false
+                    } else {
+                        finish() // or default back behavior
+                    }
                 }
 
                 dialog.show()
@@ -210,7 +213,8 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
             )
         }
 
-        villageID = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
+        villageCode = CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.VILLAGE_CODE))
+            .toString().toInt()
         binding.relativeLayoutTopBar.textViewHeaderTitle.setText(R.string.fertilizer_calculator)
 
         binding.yesRadioButton.setOnClickListener {
@@ -316,12 +320,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
 
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(
-                    Intent(
-                        this@FertilizerCalculatorActivity,
-                        DashboardScreen::class.java
-                    )
-                )
+                AppHelper(this@FertilizerCalculatorActivity).redirectToHome()
             }
         })
     }
@@ -373,15 +372,12 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                         }
                         .create()
 
-                    dialog.setOnKeyListener { _, keyCode, _ ->
-                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    onBackPressedDispatcher.addCallback(this) {
+                        if (dialog.isShowing) {
                             dialog.dismiss()
-
-                            // trigger your back logic manually
-                            onBackPressedDispatcher.onBackPressed()
-
-                            true
-                        } else false
+                        } else {
+                            finish() // or default back behavior
+                        }
                     }
 
                     dialog.show()
@@ -552,7 +548,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                 val responseCall: Call<JsonObject> = apiRequest.getFertilizerCalculatedData(
                     wotrCropId, finalSowingDate, soilTestOption.toString(),
                     nitrogenValue, phosphorusValue, potassiumValue,
-                    villageID.toString(), edtFYMValue, "0",
+                    villageCode.toString(), edtFYMValue, "0",
                     totalAcrArea.toString(), plotUnitCode.toString(), token
                 )
                 api.postRequest(responseCall, this@FertilizerCalculatorActivity, 1)
@@ -875,11 +871,25 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
     override fun onDateSelected(i: Int, day: Int, month: Int, year: Int) {
         if (i == 1) {
             sowingDate = "$day-$month-$year"
-            cropId?.let { farmerViewModel.saveFarmerSelectedCrop(this, sowingDate!!, it) }
-            farmerViewModel.saveFarmerSelectedCrop.observe(this) {
-                if (it != null) {
-                    if (it.get("status").toString() == "200") {
-                        binding.sowingInfoLayout.sowingDateTextView.text = sowingDate
+            cropId?.let { farmerViewModel.saveFarmerSelectedCrop(farmerId, sowingDate!!, it) }
+            farmerViewModel.saveFarmerSelectedCrop.observe(this) { state ->
+                when (state) {
+                    is UiState.Loading -> {
+                        ProgressHelper.showProgressDialog(this)
+                    }
+
+                    is UiState.Success -> {
+                        ProgressHelper.disableProgressDialog()
+                        val dataObject = JSONObject(state.data.toString())
+                        val status = dataObject.optInt("status")
+                        if (status == 200) {
+                            binding.sowingInfoLayout.sowingDateTextView.text = sowingDate
+                        }
+                    }
+
+                    is UiState.Error -> {
+                        ProgressHelper.disableProgressDialog()
+                        Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                     }
                 }
             }

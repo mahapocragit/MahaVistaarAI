@@ -42,9 +42,9 @@ class CostCalculatorViewModel : ViewModel() {
     val addCropSpecificTransactionsResponse: MutableLiveData<JsonObject> =
         _addCropSpecificTransactionsResponse
 
-    private var _deleteCropResponse = MutableLiveData<JsonObject>()
-    val deleteCropResponse: MutableLiveData<JsonObject> =
-        _deleteCropResponse
+    private var _deleteCostCalculatorCropResponse = MutableLiveData<JsonObject>()
+    val deleteCostCalculatorCropResponse: MutableLiveData<JsonObject> =
+        _deleteCostCalculatorCropResponse
 
     private var _deleteCropTransactionResponse = MutableLiveData<JsonObject>()
     val deleteCropTransactionResponse: MutableLiveData<JsonObject> =
@@ -82,7 +82,7 @@ class CostCalculatorViewModel : ViewModel() {
         context: Context,
         cropId: Int,
         season: Int = 1,
-        year: Int = 2025
+        year: Int = 2026
     ) {
         viewModelScope.launch {
             try {
@@ -240,7 +240,7 @@ class CostCalculatorViewModel : ViewModel() {
         }
     }
 
-    fun deleteCrop(context: Context, cropId: Int) {
+    fun deleteCostCalculatorCrop(context: Context, cropId: Int) {
 
         viewModelScope.launch {
             try {
@@ -252,9 +252,9 @@ class CostCalculatorViewModel : ViewModel() {
                 val retrofit: Retrofit =
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.Companion.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
-                val response = apiRequest.deleteCrop(requestBody)
+                val response = apiRequest.deleteCostCalculatorCrop(requestBody)
                 ProgressHelper.disableProgressDialog()
-                _deleteCropResponse.value = response
+                _deleteCostCalculatorCropResponse.value = response
             } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {

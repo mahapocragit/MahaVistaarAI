@@ -8,7 +8,7 @@ object ApiConstants {
     const val kOTPRequest: String = "authService/SendOTP"
     const val kOTPRegisterRequest: String = "authService/SendOTPRegistration"
     const val kRegistrationRequest: String = "authService/AddEditRegistration"
-    const val kUserLogin: String = "authService/LoginCheck"
+    const val kUserLogin: String = "jwtServices/LoginCheck"
     const val kRefreshTokenLogin: String = "authService/refreshtoken"
     const val getNearestCHCenters: String = "chcService/get-nearest-chc-centers"
     const val getCodeFromCoordinates: String = "webservices/fetch_admin_info_for_location"

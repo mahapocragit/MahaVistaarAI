@@ -16,7 +16,6 @@ import org.json.JSONObject
 class CropCategoriesAdapter(
     private var context: Context,
     private var dataJSONArray: JSONArray,
-    private var callerActivity: String,
     private var multiRecyclerItemClickListener: OnMultiRecyclerItemClickListener
 ) : RecyclerView.Adapter<CropCategoriesAdapter.ViewHolder>(),
     OnMultiRecyclerItemClickListener {
@@ -30,9 +29,9 @@ class CropCategoriesAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         try {
             val jsonObject = dataJSONArray[position] as JSONObject
-            val advisoryArray = jsonObject.optJSONArray("crops")
+            val cropsArray = jsonObject.optJSONArray("crops")?: JSONArray()
             holder.textView.text = jsonObject.optString("type").toString()
-            val cropStageDetailsAdapter = CropStageDetailsAdapter( context, advisoryArray, this, callerActivity)
+            val cropStageDetailsAdapter = CropStageDetailsAdapter( context, cropsArray, this)
             holder.videosRecyclerView.setLayoutManager(
                 GridLayoutManager(context, 4)
             )

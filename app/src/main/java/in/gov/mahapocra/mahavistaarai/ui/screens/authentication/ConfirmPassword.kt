@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
@@ -22,9 +23,11 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
+import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.ResponseModel
+import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityChangePwdTempBinding
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.isStrongPassword
@@ -32,13 +35,17 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.toSHA512
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
 
-class ConfirmPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode {
+class ConfirmPassword : AppCompatActivity() {
 
+    private val authViewModel: AuthViewModel by viewModels()
     private lateinit var binding: ActivityChangePwdTempBinding
     private lateinit var newPwd: String
     private lateinit var confirmPwd: String
@@ -62,7 +69,7 @@ class ConfirmPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode
 
         userMobileNo = intent.getStringExtra("MobileNo").toString()
         val farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-        if (farmerId!=0){
+        if (farmerId != 0) {
             if (languageToLoad == "en") {
                 binding.forgetHeadingText1.text = "Change"
                 binding.forgetHeadingText2.text = "Password"
@@ -71,6 +78,7 @@ class ConfirmPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode
                 binding.forgetHeadingText2.text = "बदला"
             }
         }
+        observeResponse()
         onClick()
         binding.newPasswordEditText.addTextChangedListener(passwordWatcher)
         binding.confirmPasswordEditText.addTextChangedListener(confirmPasswordWatcher)
@@ -150,65 +158,41 @@ class ConfirmPassword : AppCompatActivity(), ApiJSONObjCallback, ApiCallbackCode
             binding.passwordErrorTextView.visibility = View.VISIBLE
             UIToastMessage.show(this, resources.getString(R.string.weak_password))
         } else {
-            val jsonObject = JSONObject()
-            try {
-                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
-                jsonObject.put("MobileNo", userMobileNo.trim { it <= ' ' })
-                jsonObject.put("Password", toSHA512(newPwd))
-
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val api = AppInventorApi(
-                    this,
-                    AppEnvironment.FARMER.baseUrl,
-                    "",
-                    AppString(this).getkMSG_WAIT(),
-                    true
-                )
-                val retrofit: Retrofit = api.getRetrofitInstance()
-                val apiRequest = retrofit.create(ApiService::class.java)
-                val responseCall: Call<JsonObject> = apiRequest.getNewPassword(requestBody)
-                api.postRequest(responseCall, this, 1)
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
+            authViewModel.resetPassword(userMobileNo, newPwd)
         }
     }
 
-
-    override fun onFailure(th: Throwable?, i: Int) {
-        th?.let {
-            Log.e("YourTag", "Request failed: ${it.localizedMessage}", it)
-            FirebaseCrashlytics.getInstance().recordException(it)
-        } ?: Log.e("YourTag", "Request failed with null Throwable, code: $i")
-    }
-
-    override fun onFailure(obj: Any?, th: Throwable?, i: Int) {
-        th?.let {
-            Log.e("YourTag", "Request failed: ${it.localizedMessage}", it)
-            FirebaseCrashlytics.getInstance().recordException(it)
-        } ?: Log.e("YourTag", "Request failed with null Throwable, code: $i")
-    }
-
-    override fun onResponse(jSONObject: JSONObject?, i: Int) {
-        if (i == 1) {
-            if (jSONObject != null) {
-                val response =
-                    ResponseModel(
-                        jSONObject
-                    )
-                if (response.getStatus()) {
-                    val notificationCountValue: String = jSONObject.getString("response")
-                    Toast.makeText(this, notificationCountValue, Toast.LENGTH_LONG).show();
-                    val farmerId =
-                        AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-                    var intent = Intent(this, LoginScreen::class.java)
-                    if (farmerId != 0) {
-                        intent = Intent(this, DashboardScreen::class.java)
+    fun observeResponse(){
+        authViewModel.resetPasswordResponse.observe(this){ state ->
+            when(state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
+                }
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    val jSONObject = JSONObject(state.data.toString())
+                    val response =
+                        ResponseModel(
+                            jSONObject
+                        )
+                    if (response.getStatus()) {
+                        val notificationCountValue: String = jSONObject.getString("response")
+                        Toast.makeText(this, notificationCountValue, Toast.LENGTH_LONG).show();
+                        val farmerId =
+                            AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
+                        if (farmerId != 0) {
+                            AppHelper(this).redirectToHome()
+                        } else {
+                            startActivity(Intent(this, LoginScreen::class.java))
+                        }
+                    } else {
+                        val notificationCountValue: String = jSONObject.getString("response")
+                        Toast.makeText(this, notificationCountValue, Toast.LENGTH_LONG).show();
                     }
-                    startActivity(intent)
-                } else {
-                    val notificationCountValue: String = jSONObject.getString("response")
-                    Toast.makeText(this, notificationCountValue, Toast.LENGTH_LONG).show();
+                }
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
