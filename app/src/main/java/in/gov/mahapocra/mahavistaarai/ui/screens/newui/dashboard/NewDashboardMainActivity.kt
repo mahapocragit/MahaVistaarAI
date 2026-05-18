@@ -45,8 +45,10 @@ import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.CropsCategName
+import `in`.gov.mahapocra.mahavistaarai.data.model.PocraRole
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityNewDashboardMainBinding
+import `in`.gov.mahapocra.mahavistaarai.sma.ui.screens.KTDashboardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.DrawerMenuAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.ProfileScreen
@@ -61,7 +63,6 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.lead
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.news.NewsListActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.NotificationActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
@@ -357,7 +358,76 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
             }
         )
 
+        binding.krishiTaiButton.setOnClickListener {
+
+            val rolesJson = AppSettings.getInstance()
+                .getValue(this, AppConstants.pocraRoles, "[]")
+
+            val pocraRoles = mutableListOf<PocraRole>()
+
+            try {
+                val arr = JSONArray(rolesJson)
+                for (i in 0 until arr.length()) {
+                    val obj = arr.getJSONObject(i)
+                    pocraRoles.add(
+                        PocraRole(
+                            obj.getInt("role_id"),
+                            obj.getString("username"),
+                            obj.getString("role"),
+                            obj.getString("short_name")
+                        )
+                    )
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            // Check only Krishi Tai roles
+            val ktRoles = pocraRoles.filter { it.role_id == 45 }
+
+            if (ktRoles.isEmpty()) {
+                Toast.makeText(this, "You are not authorized for SMA module", Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
+
+            // If only one username → direct login
+            if (ktRoles.size == 1) {
+                val userName = ktRoles[0].username
+                AppSettings.getInstance().setValue(this, AppConstants.smaUsername, userName)
+                Log.d("ROLE_SELECT", "Auto-selected Username = $userName")
+                val intent = Intent(this, KTDashboardActivity::class.java)
+                intent.putExtra("selected_username", userName)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
+            // If multiple usernames → show dialog
+            else {
+                showRoleSelectionDialog(ktRoles)
+            }
+        }
+
         farmerViewModel.getFarmerSelectedCrop(languageToLoad)
+    }
+
+    private fun showRoleSelectionDialog(roles: List<PocraRole>) {
+        val usernames = roles.map { it.username }.toTypedArray()
+        AlertDialog.Builder(this)
+            .setTitle("Select Username")
+            .setItems(usernames) { dialog, which ->
+                val selectedUser = usernames[which]
+                AppSettings.getInstance().setValue(this, AppConstants.smaUsername, selectedUser)
+
+                Log.d("ROLE_SELECT", "Selected Username = $selectedUser")
+
+                val intent = Intent(this, KTDashboardActivity::class.java)
+                intent.putExtra("selected_username", selectedUser)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                dialog.dismiss()
+            }
+            .setCancelable(false)
+            .show()
     }
 
     private fun askForPermissions() {
@@ -677,7 +747,8 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     val districtCode = dataObject?.optString("DistrictCode")
                     val districtName = dataObject?.optString("DistrictName")
                     val farmerRegId = dataObject?.optString("FAAPRegistrationID")
-
+                    val rolesArray = dataObject?.optJSONArray("pocra_roles")
+                    val pocraRoles = mutableListOf<PocraRole>()
                     val topicJsonArray = dataObject?.optJSONArray("topics") ?: JSONArray()
                     val topicsToSubArray =
                         dataObject?.optJSONArray("topics_to_subscribe") ?: JSONArray()
@@ -692,8 +763,38 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     AppPreferenceManager(this).saveString(AppConstants.DISTRICT_CODE, districtCode)
                     AppPreferenceManager(this).saveString(AppConstants.DISTRICT_NAME, districtName)
                     AppPreferenceManager(this).saveString(AppConstants.AGRISTACKID, agristackId)
-                   appPreferenceManager.saveString("FARMER_POPUP_ID", agristackId)
+                    appPreferenceManager.saveString("FARMER_POPUP_ID", agristackId)
                     AppPreferenceManager(this).saveString(AppConstants.FARMER_REG_ID, farmerRegId)
+
+                    val userRoleId = -1
+                    var hasKrishiTaiRole = false   // FLAG
+                    if (rolesArray != null && rolesArray.length() > 0) {
+
+                        // roles exist → parse them
+                        for (i in 0 until rolesArray.length()) {
+                            val roleObj = rolesArray.optJSONObject(i) ?: continue
+                            val roleId = roleObj.optInt("role_id", -1)
+                            val username = roleObj.optString("username", "")
+                            val role = roleObj.optString("role", "")
+                            val shortName = roleObj.optString("short_name", "")
+                            pocraRoles.add(PocraRole(roleId, username, role, shortName))
+                            // ✅ CHECK ROLE 45
+                            if (roleId == 45) {
+                                hasKrishiTaiRole = true
+                            }
+                        }
+                    }
+                    binding.krishiTaiButton.visibility = if (hasKrishiTaiRole) View.VISIBLE else View.GONE
+                    val rolesJsonString = convertRolesToJson(pocraRoles)
+                    AppSettings.getInstance().setValue(
+                        this@NewDashboardMainActivity,
+                        AppConstants.pocraRoles,
+                        rolesJsonString
+                    )
+                    AppSettings.getInstance()
+                        .setIntValue(this@NewDashboardMainActivity, AppConstants.uRole, userRoleId)
+
+
                     navUserName.text = CryptoHelper.decryptField(name)?.split(" ")[0] ?: ""
                     navUserPhone.text = CryptoHelper.decryptField(mobile)
                     binding.nameTextView.text = buildString {
@@ -1045,6 +1146,19 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                 }
             }
         }
+    }
+
+    fun convertRolesToJson(roles: List<PocraRole>): String {
+        val jsonArray = JSONArray()
+        for (role in roles) {
+            val obj = JSONObject()
+            obj.put("role_id", role.role_id)
+            obj.put("username", role.username)
+            obj.put("role", role.role)
+            obj.put("short_name", role.short_name)
+            jsonArray.put(obj)
+        }
+        return jsonArray.toString()
     }
 
 

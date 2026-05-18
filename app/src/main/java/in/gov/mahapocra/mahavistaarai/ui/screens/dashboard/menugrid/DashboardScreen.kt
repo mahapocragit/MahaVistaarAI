@@ -584,7 +584,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             if (ktRoles.size == 1) {
                 val userName = ktRoles[0].username
                 AppSettings.getInstance().setValue(this, AppConstants.smaUsername, userName)
-                Log.d("ROLE_SELECT", "Auto-selected Username = $userName")
                 val intent = Intent(this, KTDashboardActivity::class.java)
                 intent.putExtra("selected_username", userName)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
