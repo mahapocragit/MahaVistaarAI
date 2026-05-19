@@ -252,8 +252,6 @@ class AgriServicesFragment : Fragment(), OnMultiRecyclerItemClickListener {
                     } else {
                         showEmptyCropUI()
                     }
-
-                    Log.d("TAGGER", "observeResponse: $jsonObject")
                 }
 
                 is UiState.Error -> {

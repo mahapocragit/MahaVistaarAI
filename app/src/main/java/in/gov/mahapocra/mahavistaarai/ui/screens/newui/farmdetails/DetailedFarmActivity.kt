@@ -35,6 +35,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONArray
 import org.json.JSONObject
@@ -51,6 +52,7 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
     private var farmId = ""
     private var selectedCropIdForDCS = 0
     private var selectedCropSowingDateForDCS = ""
+    private var actionableCropId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +86,14 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
                     val response = jSONObject.optString("response") ?: "Crop Saved Successfully"
                     Toast.makeText(this, response, Toast.LENGTH_SHORT).show()
                     farmerViewModel.getFarmCropDCS(CryptoHelper.encryptField(farmId).toString())
+                    val topic = "crop_$actionableCropId"
+                    FirebaseTopicHelper.subscribeToTopic(topic) { subscribed ->
+                        if (subscribed) {
+                            farmerViewModel.saveSubscribedTopic(
+                                topic
+                            )
+                        }
+                    }
                 }
 
                 is UiState.Error -> {
@@ -118,7 +128,6 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
 
                 is UiState.Error -> {
                     ProgressHelper.disableProgressDialog()
-                    Log.d(TAG, "observeResponse: ${state.message}")
                     if (state.message == "HTTP 404 Not Found") {
                         adapter = FarmDetailsAdapter(languageToLoad, JSONArray(), this)
                         binding.cropDSCRecyclerView.adapter = adapter
@@ -157,6 +166,14 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
                     val response = jSONObject.optString("response") ?: "Crop Deleted Successfully"
                     Toast.makeText(this, response, Toast.LENGTH_SHORT).show()
                     farmerViewModel.getFarmCropDCS(CryptoHelper.encryptField(farmId).toString())
+                    val topic = "crop_$actionableCropId"
+                    FirebaseTopicHelper.unSubscribeToTopic(topic) { unsubscribed ->
+                        if (unsubscribed) {
+                            farmerViewModel.deleteSubscribedTopics(
+                                listOf(topic)
+                            )
+                        }
+                    }
                 }
 
                 is UiState.Error -> {
@@ -273,7 +290,6 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
                     ).format(selectedCalendar.time)
                     selectedCropSowingDateForDCS = formattedDate
                     dialogBinding.sowingDateCropDCSTextView.text = formattedDate.toString()
-                    Log.d("DATE", formattedDate)
 
                 },
                 calendar.get(Calendar.YEAR),
@@ -303,7 +319,6 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
         }
         dialogBinding.selectCropCardView.setOnClickListener {
             showCropSelectionDialog(cropsJsonArray) { selectedCrop ->
-                Log.d(TAG, "openDialogForSavingCropForDCS: $selectedCrop")
                 val cropId =
                     selectedCrop.optInt("id")
                 val cropName =
@@ -336,6 +351,7 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
                 return@setOnClickListener
             }
 
+            actionableCropId = selectedCropIdForDCS
             // 4️⃣ If everything is valid → Call API
             farmerViewModel.saveFarmCropDCS(
                 CryptoHelper.encryptField(selectedCropIdForDCS.toString()).toString(),
@@ -396,6 +412,7 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
             }
 
             DELETE_CROP -> {
+                actionableCropId = dataObject.optInt("crop_id")
                 AlertDialog.Builder(this)
                     .setTitle("Delete Crop")
                     .setMessage("Do you really want to delete the crop?")

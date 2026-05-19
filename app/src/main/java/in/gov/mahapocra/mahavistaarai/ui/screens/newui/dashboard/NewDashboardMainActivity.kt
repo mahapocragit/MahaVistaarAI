@@ -395,7 +395,6 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
             if (ktRoles.size == 1) {
                 val userName = ktRoles[0].username
                 AppSettings.getInstance().setValue(this, AppConstants.smaUsername, userName)
-                Log.d("ROLE_SELECT", "Auto-selected Username = $userName")
                 val intent = Intent(this, KTDashboardActivity::class.java)
                 intent.putExtra("selected_username", userName)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -417,9 +416,6 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
             .setItems(usernames) { dialog, which ->
                 val selectedUser = usernames[which]
                 AppSettings.getInstance().setValue(this, AppConstants.smaUsername, selectedUser)
-
-                Log.d("ROLE_SELECT", "Selected Username = $selectedUser")
-
                 val intent = Intent(this, KTDashboardActivity::class.java)
                 intent.putExtra("selected_username", selectedUser)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -685,7 +681,6 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
             val topic = topicsArray.optString(i)
 
             unSubscribeToTopic(topic) { unsubscribed ->
-                Log.d(TAG, "logoutFromApp: $topic")
                 completedCount++
 
                 if (unsubscribed) {
@@ -702,7 +697,6 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
 
     private fun completeLogout() {
         ProgressHelper.disableProgressDialog()
-        Log.d(TAG, "completeLogout: $farmerId")
         farmerViewModel.updateFCMToken(farmerId, "NA")
         appPreferenceManager.clearAll()
     }
@@ -736,7 +730,6 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     ProgressHelper.disableProgressDialog()
                     val jsonResponse = JSONObject(state.data.toString())
                     val dataObject = jsonResponse.optJSONObject("data")
-                    Log.d(TAG, "observeResponse: $dataObject")
                     val name = dataObject?.optString("Name")
                     val mobile = dataObject?.optString("MobileNo")
                     val agristackId = dataObject?.optString("farmer_id")
@@ -861,8 +854,6 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         startActivity(intent)
                         finish()
-                    } else {
-                        Log.d(TAG, "logoutFromApp: $response")
                     }
                 }
 
@@ -966,8 +957,6 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                             )
                         )
                     }
-
-                    Log.d("TAGGER", "observeResponse: $jsonObject")
                 }
 
                 is UiState.Error -> {

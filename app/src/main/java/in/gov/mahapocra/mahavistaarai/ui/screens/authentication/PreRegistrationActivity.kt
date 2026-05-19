@@ -101,7 +101,6 @@ class PreRegistrationActivity : AppCompatActivity() {
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 if (jSONObject.optInt("status") == 200) {
-                    Log.d(TAG, "onResponse: $jSONObject")
                     val response: String = jSONObject.getString("response")
                     Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                     addVerificationDialog()

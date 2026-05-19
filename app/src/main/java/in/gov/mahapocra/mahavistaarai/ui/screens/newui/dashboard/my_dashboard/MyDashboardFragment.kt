@@ -65,6 +65,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getLatestAdvisoriesAsJsonArray
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.UriFileHelper.openYouTube
 import kotlinx.coroutines.delay
@@ -78,7 +79,7 @@ import java.util.Locale
 class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
 
     private var _binding: FragmentMyDashboardBinding? = null
-    private val mahavistaarViewModel: MahavistaarViewModel by viewModels()
+    private var actionableCropId = 0
     private var isPromoDialogShowing = false
     private val binding get() = _binding!!
     private var selectedFarmPosition = -1
@@ -169,7 +170,6 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         savedCropName = appPreferenceManager.getString("CROP_NAME_SAVED").toString()
         savedCropSowingDate = appPreferenceManager.getString("CROP_SOWING_DATE_SAVED").toString()
         savedCropWoTRId = appPreferenceManager.getString("CROP_WOTR_ID_SAVED")
-        Log.d(TAG, "setUpListeners: ${savedCropWoTRId ?: "wtf"}")
         savedCropImageUrl = appPreferenceManager.getString("CROP_IMAGE_SAVED")
         val etlJsonString = appPreferenceManager.getString(AppConstants.ETL_ADVISORY_ARRAY)
         try {
@@ -293,7 +293,6 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
 
                 is UiState.Error -> {
                     ProgressHelper.disableProgressDialog()
-                    Log.d(TAG, "observeResponse: ${state.message}")
                     if (state.message != "HTTP 404 Not Found") {
                         Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
                     }
@@ -357,7 +356,6 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
 
                 is UiState.Error -> {
                     ProgressHelper.disableProgressDialog()
-                    Log.d(TAG, "observeResponse: ${state.message}")
                     if (state.message != "HTTP 404 Not Found") {
                         Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
                     }
@@ -400,7 +398,14 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                     val jSONObject = JSONObject(state.data.toString())
                     val response = jSONObject.optString("response") ?: "Crop Saved Successfully"
                     Toast.makeText(requireContext(), response, Toast.LENGTH_SHORT).show()
-
+                    val topic = "crop_$actionableCropId"
+                    FirebaseTopicHelper.subscribeToTopic(topic) { subscribed ->
+                        if (subscribed) {
+                            farmerViewModel.saveSubscribedTopic(
+                                topic
+                            )
+                        }
+                    }
                     // Reload farms from backend
                     farmerViewModel.getFarmDetails()
                 }
@@ -457,7 +462,14 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                         val response =
                             jSONObject.optString("response") ?: "Crop Deleted Successfully"
                         Toast.makeText(requireContext(), response, Toast.LENGTH_SHORT).show()
-
+                        val topic = "crop_$actionableCropId"
+                        FirebaseTopicHelper.unSubscribeToTopic(topic) { unsubscribed ->
+                            if (unsubscribed) {
+                                farmerViewModel.deleteSubscribedTopics(
+                                    listOf(topic)
+                                )
+                            }
+                        }
                     } catch (e: Exception) {
 
                         e.printStackTrace()
@@ -553,8 +565,6 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                             savedCropWoTRId = selectedCrop.getString("wotr_crop_id")
                         }
                     }
-
-                    Log.d("TAGGER", "observeResponse: $jsonObject")
                 }
 
                 is UiState.Error -> {
@@ -664,9 +674,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
 
             CUSTOMISED_DASHBOARD_REDIRECTION -> {
                 // dashboard click
-
                 val redirect = jsonObject.optString("page")
-                Log.d(TAG, "onRecyclerItemClick: $redirect")
                 redirectToScreen(redirect)
             }
 
@@ -711,9 +719,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                 val datePickerDialog = DatePickerDialog(
                     requireContext(),
                     { _, selectedYear, selectedMonth, selectedDay ->
-
                         val selectedCalendar = Calendar.getInstance()
-
                         selectedCalendar.set(
                             selectedYear,
                             selectedMonth,
@@ -733,9 +739,6 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                         selectedCropSowingDateForDCS = formattedDate
                         // refresh only one item
                         myFarmsAdapter?.notifyItemChanged(position)
-
-                        Log.d("DATE", formattedDate)
-
                     },
                     calendar.get(Calendar.YEAR),
                     calendar.get(Calendar.MONTH),
@@ -767,7 +770,6 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
 
                 selectedFarmPosition = jsonObject.optInt("adapter_position")
                 selectedFarmObject = jsonObject
-
                 val farmId = jsonObject.optString("farm_id")
                 if (selectedCropIdForDCS == null || selectedCropIdForDCS == 0) {
                     Toast.makeText(
@@ -778,6 +780,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                     return
                 }
 
+                actionableCropId = selectedCropIdForDCS
                 if (selectedCropSowingDateForDCS.isNullOrEmpty()) {
                     Toast.makeText(
                         requireContext(),
@@ -819,7 +822,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                     .setTitle("Delete Crop")
                     .setMessage("Do you really want to delete the crop?")
                     .setPositiveButton("Delete") { dialog, _ ->
-
+                        actionableCropId = selectedCropIdForDCS
                         // DELETE LOGIC HERE
                         farmerViewModel.deleteFarmCropForDCS(
                             CryptoHelper.encryptField(declarationId).toString()

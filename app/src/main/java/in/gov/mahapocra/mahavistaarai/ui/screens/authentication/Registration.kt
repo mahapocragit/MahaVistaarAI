@@ -334,7 +334,6 @@ class Registration : AppCompatActivity(), AlertListEventListener {
             } catch (e: JSONException) {
                 e.printStackTrace()
             }
-            Log.d(TAG, "userValidationAndRegistration: $jsonObject")
         }
     }
 

@@ -96,7 +96,6 @@ class ShetishalaVideosActivity : AppCompatActivity(), RecyclerItemClickListener 
 
     override fun onRecyclerItemClick(i: Int, obj: Any) {
         if (i == 2) {
-            Log.d(TAG, "onRecyclerItemClick: $obj")
             if (containsFarmerId(this)) {
                 leaderboardViewModel.updateUserPoints(this, SHETISHALA_VIDEO_POINT)
             }

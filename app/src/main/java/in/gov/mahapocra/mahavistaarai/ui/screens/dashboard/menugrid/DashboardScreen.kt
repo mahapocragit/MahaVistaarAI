@@ -540,10 +540,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         binding.appBarMain.imgLangChange.setOnClickListener { openChangeLangPopup() }
 
         binding.appBarMain.dashboardScreen.takePictureButton.setOnClickListener {
-            val encryptedText = CryptoHelper.encryptField("9049502125")
-            Log.d(TAG, "onCreate encrypt: $encryptedText")
-            val decryptText = CryptoHelper.decryptField(encryptedText)
-            Log.d(TAG, "onCreate decrypt: $decryptText")
             startActivity(Intent(this, PestIdentificationActivity::class.java))
         }
 
@@ -719,7 +715,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             cropSapRecyclerView.apply {
                 hasFixedSize()
                 layoutManager = LinearLayoutManager(this@DashboardScreen)
-                Log.d(TAG, "onCreate: ${getLatestAdvisoriesAsJsonArray(etlAdvisoryJsonArray)}")
                 adapter = cropRecyclerSapAdapter
             }
 
@@ -766,9 +761,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
             .setItems(usernames) { dialog, which ->
                 val selectedUser = usernames[which]
                 AppSettings.getInstance().setValue(this, AppConstants.smaUsername, selectedUser)
-
-                Log.d("ROLE_SELECT", "Selected Username = $selectedUser")
-
                 val intent = Intent(this, KTDashboardActivity::class.java)
                 intent.putExtra("selected_username", selectedUser)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -1084,7 +1076,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                 is UiState.Success -> {
                     ProgressHelper.disableProgressDialog()
                     val jsonObject = JSONObject(state.data.toString())
-                    Log.d(TAG, "observeResponse: $jsonObject")
                     if (jsonObject.optInt("status") == 200) {
                         val data = jsonObject.optJSONObject("data") ?: return@observe
 
@@ -1222,17 +1213,12 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
                             if (hasKrishiTaiRole) {
                                 blinkViewFor5Seconds(binding.appBarMain.dashboardScreen.krishiTaiLayout)
-                                Log.d(
-                                    "POCRA_ROLE",
-                                    "roles found → SMA button visible & blinking. Count = ${pocraRoles.size}"
-                                )
                             }
 
                         } else {
                             // No roles → hide SMA button
                             binding.appBarMain.dashboardScreen.krishiTaiLayout.visibility =
                                 View.GONE
-                            Log.d("POCRA_ROLE", "roles empty → SMA button hidden")
                         }
                         farmerViewModel.getCropSapAdvisory(villageId)
                         districtCode = distId
@@ -1263,9 +1249,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                             // Save POCRA roles list
                             val rolesJsonString = convertRolesToJson(pocraRoles)
                             setValue(this@DashboardScreen, AppConstants.pocraRoles, rolesJsonString)
-                            Log.d("SAVE_ROLES", "Saved rolesJsonString = $rolesJsonString")
                             setIntValue(this@DashboardScreen, AppConstants.uRole, userRoleId)
-                            Log.d("POCRA_ROLE", "userRoleId ID = $userRoleId")
                         }
 
                         binding.appBarMain.dashboardScreen.userFullNameTextView.text = name
@@ -1281,8 +1265,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         if (agristack_id != "null" && farmerId != null) {
                             if (!consent) {
                                 showDialogForConsent()
-                            } else {
-                                Log.d(TAG, "observeResponse: consent is given")
                             }
                         } else {
                             val lastDate = appPreferenceManager.getString("AGRISTACK_LAST_DATE")
@@ -1358,8 +1340,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         startActivity(intent)
                         finish()
-                    } else {
-                        Log.d(TAG, "logoutFromApp: $response")
                     }
                 }
 
@@ -2105,7 +2085,6 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
 
 
     override fun onCorItemClick(position: Int) {
-        Log.d("TAGGER", "onItemClick: $position")
         when (position) {
 
             0 -> {

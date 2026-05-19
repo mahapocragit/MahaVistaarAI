@@ -38,6 +38,7 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLoginScreenBinding
+import `in`.gov.mahapocra.mahavistaarai.databinding.DialogActivityVerificationBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
@@ -70,7 +71,7 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
     private lateinit var dialog: Dialog
     private var agristackLoginMethodEnabled = true
     private var userPass = ""
-    var languageToLoad = "mr"
+    private var languageToLoad = "mr"
     private var farmerRegisteredID: Int = 0
     private var loginOption: Int = 1
     private var mobile = ""
@@ -96,27 +97,21 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
         setContentView(binding.root)
         uiResponsive(binding.root)
         FirebaseHelper(this)
-        checkForUpdate()
         appPreferenceManager = AppPreferenceManager(this)
         binding.changeLanguageImageView.setOnClickListener {
             openChangeLangPopup()
         }
-
-        AppSettings.getInstance().clearIntValue(this, AppConstants.fREGISTER_ID)
-
         deviceId = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
         if (intent.getStringExtra("from") != "dashboard") {
             AppSettings.getInstance().setBooleanValue(this, AppConstants.IS_USER_GUEST, false)
         }
         observeResponse()
+        farmerViewModel.getAppVersion()
         authenticationOperations()
 
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 fcmToken = task.result
-                Log.d("FCM Token", "onCreate: $fcmToken")
-            } else {
-                Log.e("FCM Token", "Fetching token failed", task.exception)
             }
         }
 
@@ -374,6 +369,23 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
             }
         }
 
+        farmerViewModel.getAppVersionResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {}
+                is UiState.Success -> {
+                    val appHelper = AppHelper(this@LoginScreen)
+                    val jsonResponse = JSONObject(state.data.toString())
+                    val remoteAppVersion = jsonResponse.optInt("version_code")
+                    val currentAppVersion = appHelper.getCurrentAppVersion()
+                    if (remoteAppVersion > currentAppVersion) {
+                        appHelper.showUpdateDialog()
+                    }
+                }
+
+                is UiState.Error -> {}
+            }
+        }
+
         authViewModel.error.observe(this) {
             if (it == "Correlation ID not found in response") {
                 Toast.makeText(this, R.string.farmer_id_login_text, Toast.LENGTH_SHORT).show()
@@ -627,35 +639,26 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
     private fun addVerificationDialog() {
         if (isFinishing || isDestroyed) return
+        val dialogBinding = DialogActivityVerificationBinding.inflate(layoutInflater)
         dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
-        dialog.setContentView(R.layout.dialog_activity_verification)
+        dialog.setContentView(dialogBinding.root)
         val otpFields = listOf(
-            dialog.findViewById<EditText>(R.id.otp1),
-            dialog.findViewById<EditText>(R.id.otp2),
-            dialog.findViewById<EditText>(R.id.otp3),
-            dialog.findViewById<EditText>(R.id.otp4),
-            dialog.findViewById<EditText>(R.id.otp5),
-            dialog.findViewById<EditText>(R.id.otp6)
+            dialogBinding.otp1, dialogBinding.otp2, dialogBinding.otp3,
+            dialogBinding.otp4, dialogBinding.otp5, dialogBinding.otp6
         )
         setupOtpInputs(otpFields)
         dialog.window!!.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-
-        val dialogTitle = dialog.findViewById<TextView>(R.id.dialogTitle)
-        dialogTitle.text = resources.getString(R.string.enterOtp)
-        val submitButton = dialog.findViewById<Button>(R.id.submitButton)
-        val resendOTP = dialog.findViewById<Button>(R.id.resendOTP)
-        val cancelButton = dialog.findViewById<ImageView>(R.id.imageView_close)
-        otpVerification(resendOTP)
-        cancelButton.setOnClickListener { dialog.dismiss() }
-        submitButton.setOnClickListener {
+        dialogBinding.dialogTitle.text = resources.getString(R.string.enterOtp)
+        otpVerification(dialogBinding.resendOTP)
+        dialogBinding.imageViewClose.setOnClickListener { dialog.dismiss() }
+        dialogBinding.submitButton.setOnClickListener {
             mobileNo = binding.userIdEditText.text.toString()
             enteredOTP = otpFields.joinToString("") { it.text.toString() }
-
             if (enteredOTP.length < 6) {
                 Toast.makeText(this, "Enter valid OTP", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -663,10 +666,8 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
                 timestamp = System.currentTimeMillis()
                 authViewModel.compareOtp(timestamp, mobile, enteredOTP)
             }
-
         }
-
-        resendOTP.setOnClickListener {
+        dialogBinding.resendOTP.setOnClickListener {
             dialog.dismiss()
             sendOTP()
         }
@@ -803,26 +804,6 @@ class LoginScreen : AppCompatActivity(), ApiCallbackCode {
 
     override fun onResume() {
         super.onResume()
-        checkForUpdate()
-    }
-
-    private fun checkForUpdate() {
-        farmerViewModel.getAppVersionResponse.observe(this) { state ->
-            when (state) {
-                is UiState.Loading -> {}
-                is UiState.Success -> {
-                    val appHelper = AppHelper(this@LoginScreen)
-                    val jsonResponse = JSONObject(state.data.toString())
-                    val remoteAppVersion = jsonResponse.optInt("version_code")
-                    val currentAppVersion = appHelper.getCurrentAppVersion()
-                    if (remoteAppVersion > currentAppVersion) {
-                        appHelper.showUpdateDialog()
-                    }
-                }
-
-                is UiState.Error -> {}
-            }
-        }
         farmerViewModel.getAppVersion()
     }
 

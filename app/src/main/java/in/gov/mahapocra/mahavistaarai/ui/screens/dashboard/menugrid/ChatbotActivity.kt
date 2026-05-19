@@ -222,28 +222,19 @@ class ChatbotActivity : AppCompatActivity() {
                     favicon: android.graphics.Bitmap?
                 ) {
                     super.onPageStarted(view, url, favicon)
-
-                    Log.d(TAG, "Page started: $url")
                 }
 
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
-
-                    Log.d(TAG, "Page finished: $url")
-
                     ProgressHelper.disableProgressDialog()
-
                     binding.noInternetAvailableLayout.visibility = View.GONE
-
                     binding.webView.visibility = View.VISIBLE
-
                     binding.webView.animate()
                         .alpha(1f)
                         .setDuration(300)
                         .start()
 
                     if (containsFarmerId(this@ChatbotActivity)) {
-
                         leaderboardViewModel.updateUserPoints(
                             this@ChatbotActivity,
                             CHATBOT_POINT
@@ -329,72 +320,39 @@ class ChatbotActivity : AppCompatActivity() {
                 onChatbotError()
                 return
             }
-
-            Log.d(TAG, "API Response: $response")
-
             val jsonObject = JSONObject(response.toString())
-
             val status = jsonObject.optString("status")
-
             if (status.equals("success", ignoreCase = true)) {
-
                 val jwtToken = jsonObject.optString("token").trim()
-
                 if (jwtToken.isEmpty()) {
-
-                    Log.e(TAG, "JWT Token is empty")
-
                     onChatbotError()
-
                     return
                 }
-
                 val chatBotUrl =
                     "${AppEnvironment.BOT_URL.baseUrl}$jwtToken"
-
-                Log.d(TAG, "Final Chatbot URL: $chatBotUrl")
-
                 loadChatbot(chatBotUrl)
-
             } else {
-
-                Log.e(TAG, "Invalid API status")
-
                 onChatbotError()
             }
 
-        } catch (e: Exception) {
-
-            Log.e(TAG, "Chatbot response parse error", e)
-
+        } catch (_: Exception) {
             onChatbotError()
         }
     }
 
     private fun loadChatbot(chatBotUrl: String) {
-
         try {
-
             Clarity.sendCustomEvent("WEBVIEW_OPENED")
-
             binding.webView.loadUrl(chatBotUrl)
-
-        } catch (e: Exception) {
-
-            Log.e(TAG, "Load URL error", e)
-
+        } catch (_: Exception) {
             onChatbotError()
         }
     }
 
     private fun onChatbotError() {
-
         ProgressHelper.disableProgressDialog()
-
         Clarity.sendCustomEvent("WEBVIEW_STOPPED")
-
         binding.webView.visibility = View.GONE
-
         binding.noInternetAvailableLayout.visibility = View.VISIBLE
     }
 
@@ -409,16 +367,13 @@ class ChatbotActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-
         binding.webView.apply {
             stopLoading()
             clearHistory()
             clearCache(true)
             destroy()
         }
-
         Clarity.sendCustomEvent("WEBVIEW_CLOSED")
-
         super.onDestroy()
     }
 
@@ -433,34 +388,19 @@ class ChatbotActivity : AppCompatActivity() {
             permissions,
             grantResults
         )
-
         if (requestCode == PERMISSION_REQUEST_CODE) {
-
-            permissions.forEachIndexed { index, permission ->
-
-                Log.d(
-                    TAG,
-                    "$permission -> ${
-                        if (grantResults[index] == PackageManager.PERMISSION_GRANTED)
-                            "granted"
-                        else
-                            "denied"
-                    }"
-                )
+            permissions.forEachIndexed { _, _ ->
             }
         }
     }
 
     override fun attachBaseContext(newBase: Context) {
-
         languageToLoad =
             if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true))
                 "en"
             else
                 "mr"
-
         val updatedContext = configureLocale(newBase, languageToLoad)
-
         super.attachBaseContext(updatedContext)
     }
 }

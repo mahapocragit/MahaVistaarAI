@@ -272,7 +272,6 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 if (jSONObject.optInt("status") == 200) {
-                    Log.d(TAG, "onResponse: $jSONObject")
                     val response: String = jSONObject.getString("response")
                     Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                     addVerificationDialog()
@@ -380,7 +379,6 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
                     showDialogForConsent()
                 }
             }
-            Log.d(TAG, "setConfiguration: $agristackId")
             binding.nameEditText.setText(CryptoHelper.decryptField(userName))
             binding.mobNoEditText.setText(CryptoHelper.decryptField(userMobile))
             binding.textViewDist.text = districtName

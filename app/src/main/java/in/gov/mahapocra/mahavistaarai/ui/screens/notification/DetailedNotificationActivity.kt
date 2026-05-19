@@ -127,7 +127,6 @@ class DetailedNotificationActivity : AppCompatActivity() {
                         val jsonObject = JSONObject(state.data.toString())
                         val notificationObject = jsonObject.optJSONObject("notifications")
                         val flatCropId = notificationObject?.optInt("crop")
-                        Log.d(TAG, "onCreate: $flatCropId")
                         setUpPageContent(notificationObject, notificationId)
                         val questionsJsonArray = notificationObject?.optJSONArray("questions")
                         if (questionsJsonArray?.length() == 0) {
@@ -150,12 +149,10 @@ class DetailedNotificationActivity : AppCompatActivity() {
             getString(R.string.detailed_notifications)
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
-            Log.d(TAG, "onCreate: hello")
             safelyNavigateToPreviousScreen()
         }
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                Log.d(TAG, "onCreate: hello1")
                 safelyNavigateToPreviousScreen()
             }
         })
@@ -170,8 +167,6 @@ class DetailedNotificationActivity : AppCompatActivity() {
 
                 is UiState.Success -> {
                     ProgressHelper.disableProgressDialog()
-                    val responseObject = JSONObject(state.data.toString())
-                    Log.d(TAG, "observeResponse: $responseObject")
                     startActivity(
                         Intent(
                             this@DetailedNotificationActivity,
@@ -198,8 +193,6 @@ class DetailedNotificationActivity : AppCompatActivity() {
         notificationId: String,
         questionObject: JSONObject
     ) {
-
-        Log.d(TAG, "setUpFeedbackDialog: $questionObject")
         val feedbackId = questionObject.optInt("id")
         val question = questionObject.optString("question")
         val questionFeedback = questionObject.optInt("answer")
@@ -325,7 +318,6 @@ class DetailedNotificationActivity : AppCompatActivity() {
                             val jsonObject = flatCropsJsonArray.getJSONObject(i)
                             val id = jsonObject.optInt("id")
                             if (id == flatCropId) {
-                                Log.d(TAG, "checkCropIdAndFetchJson: $jsonObject")
                                 cropId = jsonObject.optInt("id")
                                 cropName = jsonObject.optString("name")
                                 sowingDate = jsonObject.optString("sowing_date")
@@ -377,7 +369,6 @@ class DetailedNotificationActivity : AppCompatActivity() {
         }
         val shortDescription = jsonObject.optString("body")
         val url = jsonObject.optString("url") ?: ""
-        Log.d(TAG, "setUpPageContent: $url")
         val notificationDate =
             LocalCustom.convertDateFormat(jsonObject.optString("notification_date"))
         val redirectionText = jsonObject.optString("redirection_text")
@@ -453,7 +444,6 @@ class DetailedNotificationActivity : AppCompatActivity() {
     }
 
     private fun checkAndRedirect(targetClass: Class<*>): Intent {
-        Log.d(TAG, "checkAndRedirect: $cropId")
         val sowingDateFormat = if (
             (targetClass == FertilizerCalculatorActivity::class.java || targetClass == AdvisoryCropActivity::class.java)
             && isShortDateFormat(sowingDate)
@@ -482,7 +472,6 @@ class DetailedNotificationActivity : AppCompatActivity() {
         if (questionJsonObject != null) {
             val isAnswered = questionJsonObject?.optBoolean("is_answered", false)
             if (isAnswered == false) {
-                Log.d(TAG, "safelyNavigateToPreviousScreen: $isAnswered")
                 try {
                     setUpFeedbackDialog(
                         notificationType,

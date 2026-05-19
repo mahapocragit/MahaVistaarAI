@@ -179,7 +179,6 @@ class CHCenterActivity : AppCompatActivity(), OnDeleteClick {
                 val jSONObject = JSONObject(it.toString())
                 dataJsonArray = jSONObject.optJSONArray("data")
                 jSONObject.optJSONArray("data")?.let { data ->
-                    Log.d(TAG, "observeResponse: $data")
                     adapter = CHCenterRecyclerAdapter(data, this)
                     binding.recyclerView.apply {
                         layoutManager = LinearLayoutManager(this@CHCenterActivity)
