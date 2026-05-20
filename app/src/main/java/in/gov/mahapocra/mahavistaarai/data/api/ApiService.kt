@@ -171,9 +171,9 @@ interface ApiService {
     suspend fun checkFcmToken(@Header("userid") farmerId: Int): JsonObject
 
     @POST(ApiConstants.kOTPRequest)
-    fun getOTPRequest(
+    suspend fun getOTPRequest(
         @Header("MobileNo") mobileNo: String
-    ): Call<JsonObject>
+    ): JsonObject
 
     @POST(ApiConstants.kOTPRequest)
     suspend fun sendOtpToMobile(
@@ -416,6 +416,9 @@ interface ApiService {
 
     @GET("otherServices/get_magazine_details")
     suspend fun getMagazineDetails(): JsonObject
+
+    @GET("otherServices/get_farm_magazine_details")
+    suspend fun getFarmMagazineDetails(): JsonObject
 
     @GET("otherServices/get_promo_banner")
     suspend fun getPromoBanner(): JsonObject

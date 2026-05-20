@@ -237,7 +237,7 @@ class DetailedFarmActivity : AppCompatActivity(), RecyclerItemClickListener {
             }
             binding.totalAreaTextView.text = buildString {
                 append("$totalArea ")
-                append(getString(R.string.acre))
+                append(getString(R.string.hectare_mdash))
             }
             binding.farmIdTextView.text = buildString {
                 append("${getString(R.string.farmid)}: ")

@@ -78,7 +78,10 @@ import java.util.Locale
 
 class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
 
+    private lateinit var appPreferenceManager: AppPreferenceManager
     private var _binding: FragmentMyDashboardBinding? = null
+    private val farmerViewModel: FarmerViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
     private var actionableCropId = 0
     private var isPromoDialogShowing = false
     private val binding get() = _binding!!
@@ -86,13 +89,10 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
     private var selectedDeletedCropPosition = -1
     private var selectedUpdateParentPosition = -1
     private var selectedFarmObject: JSONObject? = null
-    private val farmerViewModel: FarmerViewModel by viewModels()
-    private val authViewModel: AuthViewModel by viewModels()
     private var languageToLoad: String = "en"
     private var cropsJsonArray = JSONArray()
     private lateinit var myAdapter: MyDashboardAdapter
     private lateinit var layoutManager: GridLayoutManager
-    private lateinit var appPreferenceManager: AppPreferenceManager
     private var savedCropId = 0
     private var savedCropName = ""
     private var savedCropSowingDate: String? = null
@@ -346,6 +346,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                             showDialogForDCS(
                                 farmsArray ?: JSONArray()
                             )
+                            subscribeAllCrops(farmsArray ?: JSONArray())
                         } else {
                             myFarmsAdapter?.updateEntireData(
                                 farmsArray ?: JSONArray()
@@ -573,6 +574,10 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                 }
             }
         }
+    }
+
+    private fun subscribeAllCrops(array: JSONArray) {
+        Log.d(TAG, "subscribeAllCrops: $array")
     }
 
     private fun showPromotionalDialog(

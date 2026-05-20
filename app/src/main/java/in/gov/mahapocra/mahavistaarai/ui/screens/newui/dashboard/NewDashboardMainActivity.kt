@@ -11,7 +11,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -66,8 +65,8 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.NotificationActi
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
+import `in`.gov.mahapocra.mahavistaarai.util.ConfirmationDialog
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
@@ -628,17 +627,16 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                 }
 
                 7 -> {
-                    AlertDialog.Builder(this)
-                        .setTitle("Logout")
-                        .setMessage("Do you want to logout?")
-                        .setPositiveButton("Yes") { dialog, _ ->
+                    ConfirmationDialog(
+                        context = this,
+                        title = getString(R.string.logout_title),
+                        message = getString(R.string.logout_alert_mr),
+                        positiveText = getString(R.string.yes),
+                        negativeText = getString(R.string.no),
+                        onPositiveClick = {
                             logoutFromApp()
-                            dialog.dismiss()
                         }
-                        .setNegativeButton("No") { dialog, _ ->
-                            dialog.dismiss()
-                        }
-                        .show()
+                    ).show()
                 }
 
                 8 -> {
@@ -777,7 +775,8 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                             }
                         }
                     }
-                    binding.krishiTaiButton.visibility = if (hasKrishiTaiRole) View.VISIBLE else View.GONE
+                    binding.krishiTaiButton.visibility =
+                        if (hasKrishiTaiRole) View.VISIBLE else View.GONE
                     val rolesJsonString = convertRolesToJson(pocraRoles)
                     AppSettings.getInstance().setValue(
                         this@NewDashboardMainActivity,
@@ -968,14 +967,16 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
     }
 
     private fun updateNotificationCount(unreadNotificationsCount: Int) {
+
+        val menuItem = binding.toolbar.menu.findItem(R.id.action_notification)
+
         if (unreadNotificationsCount > 0) {
-            //bg change not icon
-            val menuItem = binding.toolbar.menu.findItem(R.id.action_notification)
-            menuItem.icon?.setTint(ContextCompat.getColor(this, R.color.dusk_yellow))
+            // Change icon when unread notifications exist
+            menuItem.setIcon(R.drawable.ic_notification_active)
         } else {
-            //bg not for change not icon
-            val menuItem = binding.toolbar.menu.findItem(R.id.action_notification)
-            menuItem.icon?.clearColorFilter()
+            // Default notification icon
+            menuItem.setIcon(R.drawable.ic_notification)
+
         }
     }
 

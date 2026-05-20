@@ -52,6 +52,12 @@
         android:theme="@style/Theme.FarmerApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.screens.dashboard.magazine.DashboardMagazineActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.screens.dashboard.magazine.FarmMagazineDashboardActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.screens.newui.farmdetails.DetailedFarmActivity"
             android:exported="false" />
         <activity
@@ -118,7 +124,7 @@
         <activity android:name=".ui.screens.dashboard.forum.ForumActivity" />
         <activity android:name=".ui.screens.dashboard.chc.CHCenterActivity" />
         <activity android:name=".ui.screens.dashboard.menugrid.DashboardScreen" />
-        <activity android:name=".ui.screens.newui.dashboard.NewDashboardMainActivity"/>
+        <activity android:name=".ui.screens.newui.dashboard.NewDashboardMainActivity" />
         <activity android:name=".ui.screens.authentication.ProfileScreen" />
         <activity android:name=".ui.screens.dashboard.menugrid.dbt.pocra.PocraSchemesDetailsActivity" />
         <activity android:name=".ui.screens.dashboard.menugrid.soilhealthcard.DetailedSoilHealthCardActivity" />

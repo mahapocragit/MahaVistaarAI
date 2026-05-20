@@ -23,7 +23,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONObject
 
-class MagazineDashboardActivity : AppCompatActivity() {
+class FarmMagazineDashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMagazineDashboardBinding
     private val farmerViewModel: FarmerViewModel by viewModels()
     private lateinit var languageToLoad: String
@@ -32,7 +32,7 @@ class MagazineDashboardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         languageToLoad = "mr"
-        if (AppSettings.getLanguage(this@MagazineDashboardActivity)
+        if (AppSettings.getLanguage(this@FarmMagazineDashboardActivity)
                 .equals("1", ignoreCase = true)
         ) {
             languageToLoad = "en"
@@ -45,7 +45,7 @@ class MagazineDashboardActivity : AppCompatActivity() {
     }
 
     private fun setUpListeners() {
-        binding.toolbar.textViewHeaderTitle.text = getString(R.string.dashboard_magazine)
+        binding.toolbar.textViewHeaderTitle.text = getString(R.string.dashboard_farm_magazine)
         binding.toolbar.textViewHeaderTitle.setTextSize(
             TypedValue.COMPLEX_UNIT_SP,
             16f
@@ -58,7 +58,7 @@ class MagazineDashboardActivity : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
-                startActivity(Intent(this@MagazineDashboardActivity, DashboardMagazineActivity::class.java))
+                startActivity(Intent(this@FarmMagazineDashboardActivity, DashboardMagazineActivity::class.java))
                 finish()
             }
         })
@@ -83,7 +83,7 @@ class MagazineDashboardActivity : AppCompatActivity() {
                 }
             }
         }
-        farmerViewModel.getMagazineDetails()
+        farmerViewModel.getFarmMagazineDetails()
     }
 
     override fun attachBaseContext(newBase: Context) {

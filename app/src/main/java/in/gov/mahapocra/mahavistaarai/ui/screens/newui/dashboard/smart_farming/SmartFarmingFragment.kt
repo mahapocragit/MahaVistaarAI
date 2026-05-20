@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import `in`.co.appinventor.services_api.listener.OnRecyclerItemClickListener
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.FragmentSmartFarmingBinding
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.magazine.MagazineDashboardActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.magazine.DashboardMagazineActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
@@ -43,7 +43,7 @@ class SmartFarmingFragment : Fragment(), OnRecyclerItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        appPreferenceManager = AppPreferenceManager(requireContext())
         savedCropId = AppPreferenceManager(requireContext()).getInt("CROP_ID_SAVED")
         savedCropName = AppPreferenceManager(requireContext()).getString("CROP_NAME_SAVED") ?: ""
         savedCropImageUrl =
@@ -110,7 +110,7 @@ class SmartFarmingFragment : Fragment(), OnRecyclerItemClickListener {
                 }
 
                 getString(R.string.magazine) -> {
-                    startActivity(Intent(context, MagazineDashboardActivity::class.java))
+                    startActivity(Intent(context, DashboardMagazineActivity::class.java))
                 }
 
                 getString(R.string.pests_n_diseases) -> {

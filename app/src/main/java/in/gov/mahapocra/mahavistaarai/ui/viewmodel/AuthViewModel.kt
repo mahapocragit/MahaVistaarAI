@@ -9,22 +9,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
-import `in`.co.appinventor.services_api.app_util.AppUtility
-import `in`.co.appinventor.services_api.settings.AppSettings
-import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.my_dashboard.DashboardCache
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.toSHA512
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import retrofit2.Retrofit
 import java.io.IOException
 import java.net.SocketException
 import java.net.SocketTimeoutException
@@ -82,6 +77,10 @@ class AuthViewModel(
     private val _resetPasswordResponse = MutableLiveData<UiState<JsonObject>>()
     val resetPasswordResponse: LiveData<UiState<JsonObject>> =
         _resetPasswordResponse
+
+    private val _getOtpRequestResponse = MutableLiveData<UiState<JsonObject>>()
+    val getOtpRequestResponse: LiveData<UiState<JsonObject>> = _getOtpRequestResponse
+
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
@@ -408,6 +407,25 @@ class AuthViewModel(
                     _getCustomisedDashboardResponse.value =
                         UiState.Error(message)
                 }
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getOtpRequest(mobile: String){
+        viewModelScope.launch {
+            _getOtpRequestResponse.value = UiState.Loading
+            try {
+                val response = api.getOTPRequest(CryptoHelper.encryptField(mobile.trim()).toString())
+                _getOtpRequestResponse.value = UiState.Success(response)
+            }catch (e: Exception){
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _getOtpRequestResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
