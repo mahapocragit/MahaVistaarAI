@@ -60,6 +60,7 @@
                 android:text="@string/see_more"
                 android:textColor="@color/actionbar_color_figma"
                 android:textStyle="bold"
+                android:textSize="@dimen/_10sdp"
                 app:layout_constraintBottom_toBottomOf="@+id/titleTextView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/titleTextView" />

@@ -99,6 +99,7 @@
                     android:textColor="@color/black"
                     android:backgroundTint="@color/light_green"
                     app:cornerRadius="@dimen/_16sdp"
+                    android:textSize="@dimen/_10sdp"
                     android:textAllCaps="false"
                     android:text="Krishi Tai" />
 

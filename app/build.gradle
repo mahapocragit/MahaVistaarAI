@@ -85,6 +85,7 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled true
     }
 
     kotlin {
@@ -190,4 +191,9 @@ dependencies {
 
     //Encrypted Shared Preference
     implementation "androidx.security:security-crypto:1.1.0-alpha06"
+
+    //start-over
+    implementation files('libs/android_wrapper_release.aar')
+    implementation "com.vassar.mahanidan.embed.fluttermodule:flutter_release:1.0"
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.1.5"
 }

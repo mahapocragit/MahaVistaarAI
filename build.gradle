@@ -4,7 +4,17 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        gradlePluginPortal()
         maven { url 'https://jitpack.io' }
+        maven {
+            url = uri("C:\\Users\\NDKSP-IT\\Downloads\\Wrapper\\repo\\repo")
+        }
+        maven {
+            url = uri("https://storage.googleapis.com/download.flutter.io")
+        }
+        flatDir {
+            dirs("libs")
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.13.0'
@@ -19,6 +29,15 @@ allprojects {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
+        maven {
+            url = uri("C:\\Users\\NDKSP-IT\\Downloads\\Wrapper\\repo\\repo")
+        }
+        maven {
+            url = uri("https://storage.googleapis.com/download.flutter.io")
+        }
+        flatDir {
+            dirs("libs")
+        }
     }
 
     configurations.configureEach {

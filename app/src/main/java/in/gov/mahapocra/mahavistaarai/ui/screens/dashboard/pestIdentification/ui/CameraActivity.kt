@@ -88,28 +88,28 @@ class CameraActivity : AppCompatActivity() {
     }
 
     private fun startCamera() {
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+//        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+//
+//        cameraProviderFuture.addListener({
+//            val cameraProvider = cameraProviderFuture.get()
+//
+//            val preview = Preview.Builder().build().apply {
+//                setSurfaceProvider(binding.previewView.surfaceProvider)
+//            }
+//
+//            imageCapture = ImageCapture.Builder()
+//                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+//                .build()
+//
+//            cameraProvider.unbindAll()
+//            cameraProvider.bindToLifecycle(
+//                this,
+//                CameraSelector.DEFAULT_BACK_CAMERA,
+//                preview,
+//                imageCapture
+//            )
 
-        cameraProviderFuture.addListener({
-            val cameraProvider = cameraProviderFuture.get()
-
-            val preview = Preview.Builder().build().apply {
-                setSurfaceProvider(binding.previewView.surfaceProvider)
-            }
-
-            imageCapture = ImageCapture.Builder()
-                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-                .build()
-
-            cameraProvider.unbindAll()
-            cameraProvider.bindToLifecycle(
-                this,
-                CameraSelector.DEFAULT_BACK_CAMERA,
-                preview,
-                imageCapture
-            )
-
-        }, ContextCompat.getMainExecutor(this))
+//        }, ContextCompat.getMainExecutor(this))
     }
 
     private fun captureImage() {

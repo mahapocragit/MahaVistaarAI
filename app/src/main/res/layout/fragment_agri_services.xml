@@ -366,7 +366,7 @@
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:text="@string/market_amp_logistics"
                 android:textColor="#2C3E50"
-                android:textSize="18sp"
+                android:textSize="@dimen/_14sdp"
                 android:textStyle="bold" />
 
             <com.google.android.material.card.MaterialCardView

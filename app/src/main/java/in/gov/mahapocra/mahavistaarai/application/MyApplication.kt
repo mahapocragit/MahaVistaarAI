@@ -10,6 +10,7 @@ import com.androidnetworking.AndroidNetworking
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.vassar.mahanidan.embed.MahanidanEmbed
 import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
@@ -24,6 +25,7 @@ class MyApplication : Application() {
         super.onCreate()
         instance = this
         TokenSessionManager.init(this)
+        MahanidanEmbed.prewarm(this)
         initAppSettings()
         initNetworking()
         initFirebase()

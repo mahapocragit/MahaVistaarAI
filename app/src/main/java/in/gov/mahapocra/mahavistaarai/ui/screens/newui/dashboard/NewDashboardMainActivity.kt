@@ -776,7 +776,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                         }
                     }
                     binding.krishiTaiButton.visibility =
-                        if (hasKrishiTaiRole) View.VISIBLE else View.GONE
+                        if (!hasKrishiTaiRole) View.VISIBLE else View.GONE
                     val rolesJsonString = convertRolesToJson(pocraRoles)
                     AppSettings.getInstance().setValue(
                         this@NewDashboardMainActivity,

@@ -71,7 +71,7 @@
                 android:paddingHorizontal="@dimen/padding20"
                 android:text="@string/farmer_select_district"
                 android:textColor="@color/heading"
-                android:textSize="@dimen/text14"
+                android:textSize="@dimen/_10sdp"
                 android:textStyle="normal" />
 
             <ImageView
