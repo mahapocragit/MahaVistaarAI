@@ -152,8 +152,6 @@ class ResultActivity : AppCompatActivity() {
         binding.advisoryCard.visibility =
             if (predictionJsonObject.length() > 0) View.VISIBLE else View.GONE
         binding.advisoryCard.visibility = View.VISIBLE
-
-        Log.d("TAGGER", "onCreate: $predictionJsonObject and $predictionJsonString on the monday")
         binding.edtFeedBack.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 binding.mainScrollView.post {
@@ -211,11 +209,6 @@ class ResultActivity : AppCompatActivity() {
                 binding.noteTextView.visibility =
                     if (note.trim().isNotEmpty()) View.VISIBLE else View.GONE
 
-                Log.d(
-                    "TAGGER",
-                    "onCreate: preventive $preventiveMeasuresTxt and curative $curativeMeasuresTxt"
-                )
-
                 binding.preventiveMeasureTextView.text = preventiveMeasuresTxt
                 binding.preventiveMeasureSoundImageView.visibility =
                     if (preventiveMeasuresTxt.isNotEmpty()) View.VISIBLE else View.GONE
@@ -256,7 +249,6 @@ class ResultActivity : AppCompatActivity() {
 
         viewModel.feedbackResponse.observe(this) { result ->
             ProgressHelper.disableProgressDialog()
-            Log.d("feedbackResponse==", "feedbackResponse: $result")
             val json = JSONObject(result)
             val message = json.optString("message")
             showToast(message)

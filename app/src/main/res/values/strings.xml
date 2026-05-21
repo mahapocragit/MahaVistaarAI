@@ -441,6 +441,7 @@
     <string name="etl_crossed_click_here_for_advisory">Pest and Diseases Alert</string>
     <string name="etl_crop_advisory">Pest and Disease Advisory</string>
     <string name="dashboard_magazine">Mahapashudhan Varta</string>
+    <string name="dashboard_farm_magazine">Farm Magazine</string>
     <string name="click_here_to_view_full_advisory">View Full Advisory</string>
     <string name="date_etl">Date: </string>
     <string name="no_notification_right_now">No notification Right Now!!</string>
@@ -579,7 +580,7 @@
     <string name="total_farms_mdash">Total Farms</string>
     <string name="total_crops_mdash">Total Crops</string>
     <string name="production_tools">Production Tools</string>
-    <string name="acres_mdash">acres</string>
+    <string name="hectare_mdash">Hectare</string>
     <string name="market_amp_logistics"><![CDATA[Market & Logistics]]></string>
     <string name="fertilizer_ncalculator">Fertilizer\nCalculator</string>
     <string name="cost_ncalculator">Cost\nCalculator</string>
@@ -608,4 +609,8 @@
     <string name="smart_solutions_for_modern_farming">Smart solutions for modern farming</string>
     <string name="services_amp_information"><![CDATA[Services & Information]]></string>
     <string name="sown_on">Sown on</string>
+    <string name="logout_title">Logout</string>
+    <string name="logout_desc">Do you want to log out?</string>
+    <string name="farm_magazine">Farm\nMagazine</string>
+    <string name="mahapashudhan_magazine">Mahapashudhan\nMagazine</string>
 </resources>

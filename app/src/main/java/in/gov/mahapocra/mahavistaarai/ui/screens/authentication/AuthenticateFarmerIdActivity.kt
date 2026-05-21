@@ -143,7 +143,6 @@ class AuthenticateFarmerIdActivity : AppCompatActivity() {
         authViewModel.compareOtpToFarmerIdResponse.observe(this) { response ->
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
-                Log.d(TAG, "observe compareOtpToFarmerIdResponse: $jSONObject")
                 val status = jSONObject.optInt("status")
                 val response = jSONObject.optString("response")
                 if (status == 200) {

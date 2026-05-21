@@ -94,7 +94,6 @@ class PestsAndDiseasesStages : AppCompatActivity() {
         cropName = intent.getStringExtra("mName")
         particularStagesDiseases = intent.getStringExtra("ParticularStagesDiseases").toString()
         stagesId = intent.getIntExtra("id", 0)
-        Log.d(TAG, "onCreate---------->: $cropId")
         AppSettings.getInstance()
             .setValue(this, AppConstants.tmpCROPNAME, cropName)
 

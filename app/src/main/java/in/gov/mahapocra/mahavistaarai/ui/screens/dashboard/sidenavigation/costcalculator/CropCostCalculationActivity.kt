@@ -169,7 +169,6 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
         costCalculatorViewModel.deleteCropTransactionResponse.observe(this) { response ->
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
-                Log.d(TAG, "setUpObservers: $jSONObject")
                 val currentSelectedYear =
                     AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION", 2026)
                 val currentSelectedSeason =
@@ -186,7 +185,6 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
         costCalculatorViewModel.updateCropTransactionResponse.observe(this) { response ->
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
-                Log.d(TAG, "setUpObservers: $jSONObject")
                 val currentSelectedYear =
                     AppPreferenceManager(this).getInt("CURRENT_YEAR_FOR_TRANSACTION", 2026)
                 val currentSelectedSeason =
@@ -222,8 +220,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                 season = currentSelectedSeason,
                 year = currentSelectedYear
             )
-        } catch (e: Exception) {
-            Log.d(TAG, "setUpListeners: ${e.message}")
+        } catch (_: Exception) {
         }
 
         binding.addExpenseButton.setOnClickListener {

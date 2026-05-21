@@ -41,7 +41,7 @@
     <string name="delete_crop_title">पीक काढून टाका</string>
     <string name="delete_crop_message">तुम्हाला खात्री आहे की, तुम्ही हटवू इच्छिता?</string>
     <string name="delete_crop_yes">हो</string>
-    <string name="delete_crop_no">नाही, धन्यवाद </string>
+    <string name="delete_crop_no">नाही</string>
 
     <string name="agri_forums"> कृषी मंच </string>
     <string name="forums"> माझे अर्ज </string>
@@ -439,6 +439,7 @@
     <string name="etl_crossed_click_here_for_advisory">किड आणि रोगांचा इशारा</string>
     <string name="etl_crop_advisory">पिकांच्या कीड व रोगावरील तज्ञांचा सल्ला</string>
     <string name="dashboard_magazine">महापशुधन वार्ता</string>
+    <string name="dashboard_farm_magazine">कृषी मासिक</string>
     <string name="click_here_to_view_full_advisory">पूर्ण सल्ला पाहा</string>
     <string name="date_etl">दि.: </string>
     <string name="cost_calculator">खर्च गणक</string>
@@ -578,7 +579,7 @@
     <string name="total_farms_mdash">शेतजमिनी</string>
     <string name="total_crops_mdash">एकूण पिके</string>
     <string name="production_tools">उत्पादन साधने</string>
-    <string name="acres_mdash">एकर</string>
+    <string name="hectare_mdash">हेक्टर</string>
     <string name="market_amp_logistics">बाजारपेठ आणि लॉजिस्टिक्स</string>
     <string name="fertilizer_ncalculator">खत\nकॅल्क्युलेटर</string>
     <string name="cost_ncalculator">खर्च\nकॅल्क्युलेटर</string>
@@ -607,4 +608,8 @@
     <string name="smart_solutions_for_modern_farming">आधुनिक शेतीसाठी स्मार्ट उपाय</string>
     <string name="services_amp_information">सेवा व माहिती</string>
     <string name="sown_on">पेरणी दिनांक</string>
+    <string name="logout_title">लॉगआउट</string>
+    <string name="logout_desc">आपण लॉगआउट करू इच्छिता?</string>
+    <string name="farm_magazine">कृषी\nमासिक</string>
+    <string name="mahapashudhan_magazine">महापशुधन\nमासिक</string>
 </resources>

@@ -43,7 +43,7 @@ class LandAdapter(
 
         holder.villageNameTextView.text = if (language == "en")village else villageMr
         holder.surveyNumberTextView.text = survey
-        holder.totalPlotAreaTextView.text = "$totalArea ${context.getString(R.string.acre)}"
+        holder.totalPlotAreaTextView.text = "$totalArea ${context.getString(R.string.hectare_mdash)}"
         holder.ownerNameTextView.text = ownerName
         holder.viewFarmDetailButton.setOnClickListener {
             context.startActivity(Intent(context, DetailedFarmActivity::class.java).apply {

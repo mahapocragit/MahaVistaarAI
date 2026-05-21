@@ -83,7 +83,6 @@ class FarmDetailsActivity : AppCompatActivity() {
                             languageToLoad
                         )
                     }
-                    Log.d(TAG, "observeResponse: $farmsArray")
                 }
 
                 is UiState.Error -> {

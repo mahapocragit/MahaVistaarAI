@@ -197,7 +197,6 @@ class AdvisoryCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListen
             }
         }
         viewModel.error.observe(this) {
-            Log.d(TAG, "error: $it")
             UIToastMessage.show(this, "Unable to fetch data")
         }
     }

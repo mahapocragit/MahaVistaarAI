@@ -32,6 +32,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.cost
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
+import `in`.gov.mahapocra.mahavistaarai.util.ConfirmationDialog
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONObject
 
@@ -174,21 +175,16 @@ class AgriServicesFragment : Fragment(), OnMultiRecyclerItemClickListener {
     }
 
     private fun deleteDialog() {
-        val dialog: Dialog = AlertDialog.Builder(requireContext())
-            .setCancelable(false)
-            .setTitle(R.string.delete_crop_title)
-            .setMessage(R.string.delete_crop_message)
-            .setPositiveButton(
-                R.string.delete_crop_yes
-            ) { _: DialogInterface?, _: Int ->
+        ConfirmationDialog(
+            context = requireContext(),
+            title = getString(R.string.delete_crop_title),
+            message = getString(R.string.delete_crop_message),
+            positiveText = getString(R.string.delete_crop_yes),
+            negativeText = getString(R.string.delete_crop_no),
+            onPositiveClick = {
                 farmerViewModel.deleteFarmerSelectedCrop(farmerId, cropId)
             }
-            .setNegativeButton(
-                R.string.delete_crop_no
-            ) { dialogInterface: DialogInterface, _: Int -> dialogInterface.dismiss() }
-            .create()
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.show()
+        ).show()
     }
 
     private fun observeResponse() {
@@ -252,8 +248,6 @@ class AgriServicesFragment : Fragment(), OnMultiRecyclerItemClickListener {
                     } else {
                         showEmptyCropUI()
                     }
-
-                    Log.d("TAGGER", "observeResponse: $jsonObject")
                 }
 
                 is UiState.Error -> {

@@ -62,8 +62,6 @@ class DBTDashboard : AppCompatActivity() {
         }
 
         val agristackId = AppSettings.getInstance().getValue(this, AppConstants.AGRISTACKID, "")
-        Log.d(TAG, "loadWebView: $agristackId")
-
         val encodedId = if (!agristackId.isNullOrEmpty() && agristackId != "null") {
             encodeToBase64(agristackId)
         } else ""

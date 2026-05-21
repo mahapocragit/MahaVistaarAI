@@ -146,7 +146,6 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
                 is UiState.Success->{
                     ProgressHelper.disableProgressDialog()
                     val dataObject = JSONObject(state.data.toString())
-                    Log.d(TAG, "observeResponse: $dataObject")
                     val status = dataObject.optInt("status")
                     if (status == 200) {
                         AppHelper(this).redirectToPage(1)

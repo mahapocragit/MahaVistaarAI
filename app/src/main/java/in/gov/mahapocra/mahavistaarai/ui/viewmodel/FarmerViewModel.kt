@@ -851,6 +851,27 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
+    fun getFarmMagazineDetails() {
+        viewModelScope.launch {
+            _getMagazineDetailsResponse.value = UiState.Loading
+            try {
+                val response = apiRequest.getFarmMagazineDetails()
+                _getMagazineDetailsResponse.value = UiState.Success(response)
+
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+
+                _getMagazineDetailsResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
     fun getPromoBanner() {
         viewModelScope.launch {
             _getPromoBannerResponse.value = UiState.Loading

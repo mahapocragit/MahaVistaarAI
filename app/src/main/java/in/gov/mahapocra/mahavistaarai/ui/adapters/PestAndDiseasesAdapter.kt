@@ -9,6 +9,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
@@ -58,19 +60,22 @@ class PestAndDiseasesAdapter (private var context: Context? = null,
         var main_ln: LinearLayout = itemView.findViewById(R.id.main_ln)
     }
 
-    private fun loadImage(climateImage: ImageView?, image_url: String?) {
-        try {
-            Picasso.get().invalidate(image_url)
-            Picasso.get()
-                .load(image_url)
-                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                .networkPolicy(NetworkPolicy.NO_CACHE, NetworkPolicy.NO_STORE)
-                .resize(400, 400)
-                .centerCrop()
-                .into(climateImage)
-        } catch (ex: Exception) {
-            ex.toString()
-        }
+    private fun loadImage(imageView: ImageView?, imageUrl: String?) {
+
+        if (imageView == null || imageUrl.isNullOrEmpty()) return
+        val thumbnailRequest = Glide.with(imageView.context)
+            .load(imageUrl)
+            .override(100, 100)
+        Glide.with(imageView.context)
+            .load(imageUrl)
+            .thumbnail(thumbnailRequest) // Loads low quality preview first
+            .override(400, 400)
+            .centerCrop()
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+            .skipMemoryCache(false)
+            .placeholder(R.drawable.loader) // Optional
+            .dontAnimate() // Faster rendering
+            .into(imageView)
     }
 
 }
