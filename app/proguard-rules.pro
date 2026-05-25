@@ -99,6 +99,10 @@
 # OPTIONAL SAFETY (KEEP IF USING REFLECTION)
 #############################################
 
+#tensor flow
+-keep class org.tensorflow.** { *; }
+-dontwarn org.tensorflow.**
+
 # Keep enums (safe)
 -keepclassmembers enum * {
     public static **[] values();
