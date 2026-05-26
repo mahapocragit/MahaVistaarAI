@@ -175,13 +175,6 @@ class LoginScreen : AppCompatActivity() {
                         val accessToken = jSONObject.optString("access_token")
                         val refreshToken = jSONObject.optString("refresh_token")
 
-                        if (loginOption != OTP_VERIFY) {
-                            farmerRegisteredID = jSONObject.getInt("FAAPRegistrationID")
-                        }
-
-                        AppSettings.getInstance()
-                            .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisteredID)
-
                         TokenSessionManager.saveTokens(accessToken, refreshToken)
                         appPreferenceManager.saveBoolean(AppConstant.IS_FIRST_LOGIN, true)
                         AppHelper(this@LoginScreen).redirectToHome()
@@ -213,22 +206,11 @@ class LoginScreen : AppCompatActivity() {
                     val jSONObject = JSONObject(state.data.toString())
                     if (jSONObject.optInt("status") == 200) {
                         AppPreferenceManager(this).saveBoolean("show_overlay", true)
-
                         val message = jSONObject.getString("response")
                         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-
                         val accessToken = jSONObject.optString("access_token")
                         val refreshToken = jSONObject.optString("refresh_token")
-
-                        if (loginOption != OTP_VERIFY) {
-                            farmerRegisteredID = jSONObject.getInt("FAAPRegistrationID")
-                        }
-
-                        AppSettings.getInstance()
-                            .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisteredID)
-
                         TokenSessionManager.saveTokens(accessToken, refreshToken)
-
                         appPreferenceManager.saveBoolean(AppConstant.IS_FIRST_LOGIN, true)
                         AppHelper(this@LoginScreen).redirectToHome()
                         if (loginOption != OTP_VERIFY) {

@@ -2,7 +2,6 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/_6sdp"
@@ -31,7 +30,7 @@
                     android:id="@+id/tvTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Give your Feedback"
+                    android:text="@string/give_your_feedback"
                     android:textColor="#2F3A4A"
                     android:textSize="@dimen/_16sdp"
                     android:textStyle="bold" />
@@ -99,7 +98,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_6sdp"
-                            android:text="Helpful"
+                            android:text="@string/helpful"
                             android:textColor="#2F3A4A"
                             android:textSize="@dimen/_12sdp"
                             android:textStyle="bold" />
@@ -137,7 +136,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_6sdp"
-                            android:text="Not Helpful"
+                            android:text="@string/not_helpful"
                             android:textColor="#2F3A4A"
                             android:textSize="@dimen/_12sdp"
                             android:textStyle="bold" />
@@ -153,7 +152,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_8sdp"
-                android:text="Tell us more (optional)"
+                android:text="@string/tell_us_more_optional"
                 android:textColor="#3A4354"
                 android:textSize="@dimen/_13sdp"
                 android:textStyle="bold" />
@@ -164,7 +163,7 @@
                 android:layout_height="@dimen/_100sdp"
                 android:layout_marginTop="@dimen/_3sdp"
                 android:background="@drawable/bg_text_box"
-                android:hint="Write your suggestions here"
+                android:hint="@string/write_your_suggestions_here"
                 android:textSize="@dimen/_11sdp"
                 android:gravity="start"
                 android:padding="@dimen/_6sdp" />
@@ -183,7 +182,7 @@
                 android:id="@+id/btnSubmit"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_44sdp"
-                android:text="Submit Feedback"
+                android:text="@string/submit_feedback_not"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/_13sdp"

@@ -28,11 +28,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.vassar.mahanidan.embed.MahanidanCallback
-import com.vassar.mahanidan.embed.MahanidanEmbed
-import com.vassar.mahanidan.embed.MahanidanSession
-import com.vassar.mahanidan.embed.MyFarmsLaunchRequest
-import com.vassar.mahanidan.embed.VillageCropConditionLaunchRequest
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
@@ -67,7 +62,6 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getLatestAdvisoriesAsJsonArray
-import `in`.gov.mahapocra.mahavistaarai.util.MahanidanFarmerAuthClient
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FirebaseTopicHelper
@@ -86,8 +80,6 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
     private lateinit var appPreferenceManager: AppPreferenceManager
     private var _binding: FragmentMyDashboardBinding? = null
     private val farmerViewModel: FarmerViewModel by viewModels()
-    private val authClient = MahanidanFarmerAuthClient()
-    private var session: MahanidanSession? = null
     private val authViewModel: AuthViewModel by viewModels()
     private var actionableCropId = 0
     private var isPromoDialogShowing = false
@@ -123,7 +115,6 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        login()
         setupRecyclerView()
         observeResponse()
         setUpListeners()
@@ -235,41 +226,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                 showAgristackLinkingDialog()
             }
         }
-
-
-        binding.myFarmsButton.setOnClickListener { launchVillageCropCondition() }
-
         setETLAlertDialog()
-    }
-
-    private fun launchVillageCropCondition() {
-        val currentSession = requireSession() ?: return
-        MahanidanEmbed.launchVillageCropCondition(
-            requireActivity(),
-            VillageCropConditionLaunchRequest(
-                session = currentSession,
-                villageUUID = "",
-            ),
-            embedCallback,
-        )
-    }
-
-    private fun requireSession(): MahanidanSession? {
-        val currentSession = session
-        if (currentSession == null) {
-            toast("Login first to create a MahanidanSession")
-        }
-        return currentSession
-    }
-
-    private val embedCallback = object : MahanidanCallback {
-        override fun onClosed(feature: String) {
-            toast("Closed $feature")
-        }
-
-        override fun onAuthExpired() {
-            session = null
-        }
     }
 
     private fun showAgristackLinkingDialog() {
@@ -1164,36 +1121,6 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
             }
         }
     }
-
-    private fun login() {
-        val farmerId = "24"
-        val mpin = "1234"
-        val environment = "prod"
-
-        if (farmerId.isBlank() || mpin.isBlank()) {
-            toast("Farmer ID and MPIN are required")
-            return
-        }
-        lifecycleScope.launch {
-            runCatching {
-                authClient.loginFarmer("24", "1234", "prod")
-            }.onSuccess { loginSession ->
-                session = MahanidanSession(
-                    token = loginSession.token,
-                    refreshToken = loginSession.refreshToken,
-                    userId = loginSession.userId,
-                    loginType = 2,
-                    environment = environment.lowercase(),
-                    language = "English",
-                    cropCatalog = cropCatalog,
-                    farmerCrops = farmerCrops,
-                )
-            }.onFailure { _ ->
-                session = null
-            }
-        }
-    }
-
 
     fun toast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()

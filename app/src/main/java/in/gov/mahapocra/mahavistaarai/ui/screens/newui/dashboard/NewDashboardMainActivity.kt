@@ -32,6 +32,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.view.GravityCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.get
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
@@ -70,6 +74,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.ConfirmationDialog
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SideNavMenuHelper
@@ -115,8 +120,11 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
             languageToLoad = "en"
         }
         switchLanguage(this, languageToLoad)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         binding = ActivityNewDashboardMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.mainLayout)
+        uiResponsive(binding.navView, false)
         askForPermissions()
         init()
         FirebaseHelper(this)

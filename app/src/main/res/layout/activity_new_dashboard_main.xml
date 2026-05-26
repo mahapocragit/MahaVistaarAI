@@ -7,9 +7,10 @@
 
     <!-- ✅ MAIN CONTENT FIRST -->
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="@dimen/_30sdp"
+        android:fitsSystemWindows="false"
         android:background="@drawable/status_colored_background_for_detection">
 
         <LinearLayout

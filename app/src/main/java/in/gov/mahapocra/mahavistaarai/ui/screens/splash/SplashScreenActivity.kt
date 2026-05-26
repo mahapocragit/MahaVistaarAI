@@ -8,12 +8,15 @@ import android.os.Looper
 import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.microsoft.clarity.Clarity
 import com.microsoft.clarity.ClarityConfig
 import com.microsoft.clarity.models.LogLevel
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
+import `in`.gov.mahapocra.mahavistaarai.databinding.ActivitySplashScreenBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.NewDashboardMainActivity
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
@@ -21,10 +24,11 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager.getAccessToken
 
 class SplashScreenActivity : AppCompatActivity() {
-
+    private lateinit var binding: ActivitySplashScreenBinding
     private var farmerId: Int = 0
     private lateinit var languageToLoad: String
     private lateinit var appVersionText: TextView
@@ -37,7 +41,9 @@ class SplashScreenActivity : AppCompatActivity() {
             languageToLoad = "en"
         }
         switchLanguage(this, languageToLoad)
-        setContentView(R.layout.activity_splash_screen)
+        binding= ActivitySplashScreenBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        uiResponsive(binding.root, showBarTop = false)
         appPreferenceManager = AppPreferenceManager(this)
         val config = ClarityConfig(
             projectId = APIKeys.CLARITY_PROD,
