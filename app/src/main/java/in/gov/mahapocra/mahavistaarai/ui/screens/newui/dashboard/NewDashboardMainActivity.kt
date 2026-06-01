@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -69,6 +70,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.NotificationActi
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.ConfirmationDialog
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
@@ -764,7 +766,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     AppPreferenceManager(this).saveString(AppConstants.AGRISTACKID, agristackId)
                     appPreferenceManager.saveString("FARMER_POPUP_ID", agristackId)
                     AppPreferenceManager(this).saveString(AppConstants.FARMER_REG_ID, farmerRegId)
-
+                    Log.d(TAG, "observeResponse: ${CryptoHelper.decryptField(agristackId)}")
                     val userRoleId = -1
                     var hasKrishiTaiRole = false   // FLAG
                     if (rolesArray != null && rolesArray.length() > 0) {
