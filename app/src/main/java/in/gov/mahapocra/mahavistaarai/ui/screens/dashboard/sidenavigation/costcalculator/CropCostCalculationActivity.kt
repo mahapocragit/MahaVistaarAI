@@ -224,6 +224,8 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
         binding.addExpenseButton.setOnClickListener {
             isIncomeSelected = true
             unitMultiplier = 1
+            yieldAmount = 0
+            pricePerUnit = 0
 
             val dialogBinding = DialogAddExpenseLayoutBinding.inflate(layoutInflater)
 
@@ -292,7 +294,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                     val transactionType = if (isIncomeSelected) "income" else "expense"
 
                     if (transactionType == "income") {
-                        var transactionName =
+                        val transactionName =
                             incomeNameEditText.text.toString().ifEmpty { "Income" }
 
                         if (yieldAmount == 0 || pricePerUnit == 0) {
