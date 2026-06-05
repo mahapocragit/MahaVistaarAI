@@ -165,8 +165,9 @@ class LoginScreen : AppCompatActivity() {
                     if (jSONObject.optInt("status") == 200) {
                         AppPreferenceManager(this).saveBoolean("show_overlay", true)
 
-                        val message = jSONObject.getString("response")
-                        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                        val message: String? = jSONObject.getString("Message")
+                        val response: String = jSONObject.getString("response")
+                        Toast.makeText(this, message?:response, Toast.LENGTH_LONG).show()
 
                         val accessToken = jSONObject.optString("access_token")
                         val refreshToken = jSONObject.optString("refresh_token")
@@ -179,8 +180,9 @@ class LoginScreen : AppCompatActivity() {
                             finish()
                         }
                     } else {
-                        val message: String = jSONObject.getString("Message")
-                        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                        val message: String? = jSONObject.getString("Message")
+                        val response: String = jSONObject.getString("response")
+                        Toast.makeText(this, message?:response, Toast.LENGTH_LONG).show()
                     }
                 }
 

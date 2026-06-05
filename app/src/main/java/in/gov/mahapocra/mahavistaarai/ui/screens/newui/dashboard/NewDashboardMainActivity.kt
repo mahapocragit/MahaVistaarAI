@@ -744,7 +744,6 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     val talukaName = dataObject?.optString("TalukaName")
                     val districtCode = dataObject?.optString("DistrictCode")
                     val districtName = dataObject?.optString("DistrictName")
-                    val farmerRegId = dataObject?.optString("FAAPRegistrationID")
                     val rolesArray = dataObject?.optJSONArray("pocra_roles")
                     val pocraRoles = mutableListOf<PocraRole>()
                     val topicJsonArray = dataObject?.optJSONArray("topics") ?: JSONArray()
@@ -762,7 +761,6 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     AppPreferenceManager(this).saveString(AppConstants.DISTRICT_NAME, districtName)
                     AppPreferenceManager(this).saveString(AppConstants.AGRISTACKID, agristackId)
                     appPreferenceManager.saveString("FARMER_POPUP_ID", agristackId)
-                    AppPreferenceManager(this).saveString(AppConstants.FARMER_REG_ID, farmerRegId)
                     Log.d(TAG, "observeResponse: ${CryptoHelper.decryptField(agristackId)}")
                     val userRoleId = -1
                     var hasKrishiTaiRole = false   // FLAG
