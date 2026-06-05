@@ -89,12 +89,22 @@ class CHCenterActivity : AppCompatActivity(), OnDeleteClick {
         }
         binding.toolbar.textViewHeaderTitle.text = getString(R.string.chc_title)
         binding.toolbar.imgBackArrow.setOnClickListener {
-            AppHelper(this@CHCenterActivity).redirectToHome()
+            val screen = intent.getIntExtra("PARSING_SCREEN", 0)
+            if (screen!=0){
+                AppHelper(this@CHCenterActivity).redirectToPage(1)
+            }else{
+                AppHelper(this@CHCenterActivity).redirectToHome()
+            }
         }
 
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                AppHelper(this@CHCenterActivity).redirectToHome()
+                val screen = intent.getIntExtra("PARSING_SCREEN", 0)
+                if (screen!=0){
+                    AppHelper(this@CHCenterActivity).redirectToPage(1)
+                }else{
+                    AppHelper(this@CHCenterActivity).redirectToHome()
+                }
             }
         })
         observeResponse()

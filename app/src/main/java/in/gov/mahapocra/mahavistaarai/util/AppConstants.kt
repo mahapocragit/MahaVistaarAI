@@ -7,7 +7,7 @@ object AppConstants {
     const val ACCESS_TOKEN: String = "ACCESS_TOKEN"
     const val IS_USER_GUEST: String = "IS_USER_GUEST"
     const val uName: String = "USER_NAME"
-
+    const val NOTIFICATION_ID = 1001
     const val uRole: String = "USER_ROLE"
     const val smaUsername: String = "SMA_USERNAME"
     const val pocraRoles: String = "POCRA_ROLES"

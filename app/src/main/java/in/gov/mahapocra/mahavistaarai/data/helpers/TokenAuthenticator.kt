@@ -8,7 +8,6 @@ import android.util.Log
 import android.widget.Toast
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager
 import okhttp3.Authenticator
@@ -17,7 +16,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
-import okhttp3.internal.http2.Http2Reader
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 

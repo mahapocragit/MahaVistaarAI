@@ -1,45 +1,56 @@
 package `in`.gov.mahapocra.mahavistaarai.util.helpers
 
 import android.app.Activity
-import android.app.ProgressDialog
+import android.app.Dialog
 import android.content.Context
-import android.view.WindowManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.view.ViewGroup
+import android.view.Window
+import android.widget.TextView
 import `in`.gov.mahapocra.mahavistaarai.R
 
 object ProgressHelper {
 
-    private var progressDialog: ProgressDialog? = null
+    private var dialog: Dialog? = null
 
-    fun showProgressDialog(context: Context) {
-        // Don't recreate if already showing
-        if (progressDialog == null || progressDialog?.isShowing != true) {
-            progressDialog = ProgressDialog(context).apply {
-                setMessage(context.getString(R.string.please_wait))
-                setCancelable(true)
-                try {
-                    show()
-                } catch (e: WindowManager.BadTokenException) {
-                    e.printStackTrace()
-                    // Activity is likely finishing — ignore
-                }
+    fun showProgressDialog(context: Context, message: String? = null) {
+
+        if (dialog?.isShowing == true) return
+
+        val activity = context as? Activity ?: return
+
+        if (activity.isFinishing || activity.isDestroyed) return
+
+        dialog = Dialog(activity).apply {
+
+            requestWindowFeature(Window.FEATURE_NO_TITLE)
+
+            setContentView(R.layout.dialog_loading)
+
+            setCancelable(false)
+
+            findViewById<TextView>(R.id.tvLoading)?.text =
+                message ?: activity.getString(R.string.please_wait)
+
+            window?.apply {
+                setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                setLayout(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
             }
+
+            show()
         }
     }
 
-    fun disableProgressDialog(context: Context? = null) {
+    fun disableProgressDialog() {
         try {
-            if (progressDialog?.isShowing == true) {
-                if (context is Activity && !context.isFinishing && !context.isDestroyed) {
-                    progressDialog?.dismiss()
-                } else if (context == null) {
-                    // fallback in case we can't check activity state
-                    progressDialog?.dismiss()
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+            dialog?.dismiss()
+        } catch (_: Exception) {
         } finally {
-            progressDialog = null
+            dialog = null
         }
     }
 }

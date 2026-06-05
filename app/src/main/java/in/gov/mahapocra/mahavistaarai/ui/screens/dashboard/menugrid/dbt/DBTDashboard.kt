@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.net.http.SslError
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.webkit.SslErrorHandler
 import android.webkit.ValueCallback
@@ -25,7 +24,6 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityDbtdashboardBinding
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.encodeToBase64
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.getLocationUsingLocationManager
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper

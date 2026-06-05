@@ -203,12 +203,22 @@ class Warehouse : AppCompatActivity(), AlertListEventListener, OnMultiRecyclerIt
 
     private fun onClick() {
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
-            AppHelper(this@Warehouse).redirectToHome()
+            val screen = intent.getIntExtra("PARSING_SCREEN", 0)
+            if (screen!=0){
+                AppHelper(this@Warehouse).redirectToPage(1)
+            }else{
+                AppHelper(this@Warehouse).redirectToHome()
+            }
         }
 
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                AppHelper(this@Warehouse).redirectToHome()
+                val screen = intent.getIntExtra("PARSING_SCREEN", 0)
+                if (screen!=0){
+                    AppHelper(this@Warehouse).redirectToPage(1)
+                }else{
+                    AppHelper(this@Warehouse).redirectToHome()
+                }
             }
         })
 

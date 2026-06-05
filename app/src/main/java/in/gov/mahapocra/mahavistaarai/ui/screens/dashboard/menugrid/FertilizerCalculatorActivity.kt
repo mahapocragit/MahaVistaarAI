@@ -113,7 +113,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         observeResponse()
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
-            AppHelper(this).redirectToHome()
+            AppHelper(this).redirectToPage(1)
         }
 
         AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
@@ -157,7 +157,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                         startActivity(sharing)
                         dialogInterface.dismiss()
                     }.setNegativeButton(R.string.cancel) { _, _ ->
-                        AppHelper(this).redirectToHome()
+                        AppHelper(this).redirectToPage(1)
                     }
                     .create()
 
@@ -320,7 +320,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
 
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                AppHelper(this@FertilizerCalculatorActivity).redirectToHome()
+                AppHelper(this@FertilizerCalculatorActivity).redirectToPage(1)
             }
         })
     }

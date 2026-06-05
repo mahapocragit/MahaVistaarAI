@@ -219,7 +219,12 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
     private fun setupToolbar() {
         binding.toolbarLayout.imgBackArrow.visibility = View.VISIBLE
         binding.toolbarLayout.imgBackArrow.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+            val screen = intent.getIntExtra("PARSING_SCREEN", 0)
+            if (screen!=0){
+                AppHelper(this@CostCalculatorDashboardActivity).redirectToPage(1)
+            }else{
+                AppHelper(this@CostCalculatorDashboardActivity).redirectToHome()
+            }
         }
         binding.toolbarLayout.textViewHeaderTitle.text = getString(R.string.cost_calculator)
     }
@@ -227,7 +232,12 @@ class CostCalculatorDashboardActivity : AppCompatActivity(), OnDeleteClick {
     private fun setupBackPress() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                AppHelper(this@CostCalculatorDashboardActivity).redirectToHome()
+                val screen = intent.getIntExtra("PARSING_SCREEN", 0)
+                if (screen!=0){
+                    AppHelper(this@CostCalculatorDashboardActivity).redirectToPage(1)
+                }else{
+                    AppHelper(this@CostCalculatorDashboardActivity).redirectToHome()
+                }
             }
         })
     }

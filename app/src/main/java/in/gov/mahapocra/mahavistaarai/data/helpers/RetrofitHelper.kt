@@ -66,23 +66,5 @@ object RetrofitHelper {
             }
             .build()
     }
-
-    fun getSafeOkHttpClient(): OkHttpClient {
-        return OkHttpClient.Builder()
-            .connectTimeout(90, TimeUnit.SECONDS)
-            .readTimeout(90, TimeUnit.SECONDS)
-            .writeTimeout(90, TimeUnit.SECONDS)
-            .addInterceptor(AuthInterceptor())
-            .authenticator(TokenAuthenticator(MyApplication.instance))
-            .addInterceptor { chain ->
-                val request = chain.request().newBuilder()
-                    .addHeader("Accept", "application/json;versions=1")
-                    .addHeader("Content-Type", "application/json; charset=UTF-8")
-                    .build()
-
-                chain.proceed(request)
-            }
-            .build()
-    }
 }
 
