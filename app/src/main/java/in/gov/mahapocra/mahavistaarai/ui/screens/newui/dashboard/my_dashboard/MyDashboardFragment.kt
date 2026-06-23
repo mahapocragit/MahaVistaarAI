@@ -46,8 +46,8 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.A
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.DBTActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.marketprice.MarketPrice
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.newshc.HealthCardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard.SoilHealthCardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.sop.SOPActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.ui.PestIdentificationActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
@@ -226,7 +226,6 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                 showAgristackLinkingDialog()
             }
         }
-        setETLAlertDialog()
     }
 
     private fun showAgristackLinkingDialog() {
@@ -973,7 +972,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
             "weather" -> Intent(requireContext(), WeatherActivity::class.java)
 
             "shc", "soilcard" ->
-                Intent(requireContext(), SoilHealthCardActivity::class.java)
+                Intent(requireContext(), HealthCardActivity::class.java)
 
             "climatetech" ->
                 Intent(requireContext(), ClimateResilientTechnology::class.java)

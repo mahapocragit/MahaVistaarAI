@@ -146,6 +146,8 @@
         <activity android:name=".ui.screens.dashboard.menugrid.Warehouse" />
         <activity android:name=".ui.screens.authentication.Registration" />
         <activity android:name=".ui.screens.notification.NotificationActivity" />
+        <activity android:name=".ui.screens.dashboard.menugrid.newshc.HealthCardActivity" />
+        <activity android:name=".ui.screens.dashboard.menugrid.newshc.PdfWebViewActivity" />
         <activity
             android:name=".ui.screens.dashboard.weather.WeatherActivity"
             android:theme="@style/WeatherTheme" />

@@ -70,6 +70,7 @@ android {
         stage {
             dimension "version"
             versionNameSuffix "-dev"
+            applicationIdSuffix ".dev"
             buildConfigField "String", "BASE_URL", "\"https://stage-farmers-app-api.mahapocra.gov.in/\""
             buildConfigField "String", "PREDICT_URL", "\"https://uat-ndksp-tih.mahapocra.gov.in/\""
         }
@@ -189,4 +190,6 @@ dependencies {
 
     //Encrypted Shared Preference
     implementation "androidx.security:security-crypto:1.1.0-alpha06"
+
+    implementation 'com.github.mhiew:android-pdf-viewer:3.2.0-beta.3'
 }
