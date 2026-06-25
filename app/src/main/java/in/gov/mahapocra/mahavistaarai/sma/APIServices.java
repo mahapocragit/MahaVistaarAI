@@ -14,14 +14,14 @@ package in.gov.mahapocra.mahavistaarai.sma;
 public interface APIServices {
 
 // *************** For PROD *************
-   String BASE_API = AppEnv.PROD.instance();
-   String SSO = AppEnv.SSO.instance();
-   String BASE_URL_FORCE_UPDATE = "https://mahapocra.gov.in/";
+//   String BASE_API = AppEnv.PROD.instance();
+//   String SSO = AppEnv.SSO.instance();
+//   String BASE_URL_FORCE_UPDATE = "https://mahapocra.gov.in/";
 
 //   //*************** For UAT *************
-//    String BASE_API = AppEnv.UAT.instance();
-//    String SSO = AppEnv.UAT_SSO.instance();
-//    String BASE_URL_FORCE_UPDATE = "https://mahapocra.gov.in/";
+    String BASE_API = AppEnv.UAT.instance();
+    String SSO = AppEnv.UAT_SSO.instance();
+    String BASE_URL_FORCE_UPDATE = "https://mahapocra.gov.in/";
 
     String SSO_KEY = APIKeys.SSO_PROD.key();
 
@@ -40,10 +40,8 @@ public interface APIServices {
     String kFirstAttemptPassChange = "authService/first-login-password-change";
     String userdetails = "authService/userdetail";
     String kUpdateProfile = "authService/update-profile";
-
     String kUpdateProfilePic = "authService/update-profile-picture";
     String kFacilitatorList = "userService/facilitators";
-
     String kDistrictMaster = BASE_API + "masterService/districts";
     String kTalukaMasters = BASE_API + "masterService/talukas/";
     String kVillageMasters = BASE_API + "masterService/villages/";
