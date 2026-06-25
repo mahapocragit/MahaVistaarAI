@@ -1,6 +1,7 @@
 package `in`.gov.mahapocra.mahavistaarai.data.helpers
 
 import com.google.gson.GsonBuilder
+import `in`.gov.mahapocra.mahavistaarai.application.MyApplication
 import okhttp3.Dns
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -51,6 +52,10 @@ object RetrofitHelper {
             .readTimeout(90, TimeUnit.SECONDS)
             .writeTimeout(90, TimeUnit.SECONDS)
             .dns(dns) // ✅ no cast
+            // ✅ ADD THIS
+            .addInterceptor(AuthInterceptor())
+            // ✅ ADD THIS (MAIN)
+            .authenticator(TokenAuthenticator(MyApplication.instance))
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
                     .addHeader("Accept", "application/json;versions=1")

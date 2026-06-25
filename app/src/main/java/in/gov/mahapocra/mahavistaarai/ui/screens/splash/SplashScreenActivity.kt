@@ -13,18 +13,23 @@ import com.microsoft.clarity.models.LogLevel
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.api.APIKeys
+import `in`.gov.mahapocra.mahavistaarai.databinding.ActivitySplashScreenBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication.LoginScreen
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.NewDashboardMainActivity
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager.getAccessToken
 
 class SplashScreenActivity : AppCompatActivity() {
-
+    private lateinit var binding: ActivitySplashScreenBinding
     private var farmerId: Int = 0
     private lateinit var languageToLoad: String
     private lateinit var appVersionText: TextView
+    private lateinit var appPreferenceManager: AppPreferenceManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,14 +38,16 @@ class SplashScreenActivity : AppCompatActivity() {
             languageToLoad = "en"
         }
         switchLanguage(this, languageToLoad)
-        setContentView(R.layout.activity_splash_screen)
-
+        binding= ActivitySplashScreenBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        uiResponsive(binding.root, showBarTop = false)
+        appPreferenceManager = AppPreferenceManager(this)
         val config = ClarityConfig(
             projectId = APIKeys.CLARITY_PROD,
             logLevel = LogLevel.Verbose
         )
         Clarity.initialize(applicationContext, config)
-
+        appPreferenceManager.saveBoolean("SHOW_PROMO_DIALOG", true)
         appVersionText = findViewById(R.id.appVersionText)
         appVersionText.text = buildString {
             append(getString(R.string.app_version))
@@ -49,11 +56,11 @@ class SplashScreenActivity : AppCompatActivity() {
         }
         // Get Farmer ID
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
-
+        val accessToken = getAccessToken() ?: ""
         // Navigate to the appropriate screen after delay
         Handler(Looper.getMainLooper()).postDelayed({
-            val targetActivity = if (farmerId > 0) {
-                DashboardScreen::class.java
+            val targetActivity = if (accessToken.isNotEmpty()) {
+                NewDashboardMainActivity::class.java
             } else {
                 LoginScreen::class.java
             }

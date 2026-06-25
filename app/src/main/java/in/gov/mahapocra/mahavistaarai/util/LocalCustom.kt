@@ -56,10 +56,12 @@ object LocalCustom {
                 config.setLocale(locale)
                 baseContext.createConfigurationContext(config)
             }
+
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 -> {
                 config.setLocale(locale)
                 baseContext.createConfigurationContext(config)
             }
+
             else -> {
                 @Suppress("DEPRECATION")
                 config.locale = locale
@@ -283,8 +285,14 @@ object LocalCustom {
         val providers = locationManager.getProviders(true)
 
         for (provider in providers.reversed()) {
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            if (ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
             ) {
                 return null
             }
@@ -326,7 +334,7 @@ object LocalCustom {
         return filteredArray
     }
 
-    fun uiResponsive(view: View) {
+    fun uiResponsive(view: View, showBarTop: Boolean = true) {
         val startPadding = view.paddingStart
         val topPadding = view.paddingTop
         val endPadding = view.paddingEnd
@@ -334,9 +342,11 @@ object LocalCustom {
 
         ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val topBar = if (showBarTop) bars.top else 0
+            Log.d(TAG, "uiResponsive: ${bars.top}")
             v.setPadding(
                 bars.left + startPadding,
-                bars.top + topPadding,
+                topBar + topPadding,
                 bars.right + endPadding,
                 bars.bottom + bottomPadding
             )
@@ -396,7 +406,8 @@ object LocalCustom {
             request.setAllowedOverMetered(true)
             request.setAllowedOverRoaming(true)
 
-            val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            val downloadManager =
+                context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             downloadManager.enqueue(request)
 
             Toast.makeText(context, "Downloading: $fileName", Toast.LENGTH_SHORT).show()

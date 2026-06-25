@@ -5,7 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
@@ -20,9 +22,8 @@ import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityPreRegistrationBinding
-import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.RegistrationViewModel
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
@@ -32,11 +33,12 @@ class PreRegistrationActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPreRegistrationBinding
     private val registrationViewModel: RegistrationViewModel by viewModels()
-    private val farmerViewModel: FarmerViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
     private lateinit var languageToLoad: String
     private lateinit var dialog: Dialog
     private var mobile: String = ""
     private var name: String = ""
+    private lateinit var otpFields: List<EditText>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,9 +52,46 @@ class PreRegistrationActivity : AppCompatActivity() {
         binding = ActivityPreRegistrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
-
         observeResponse()
         setUpViews()
+    }
+
+    private fun setupOtpInputs(otpFields: List<EditText>) {
+
+        otpFields.forEachIndexed { index, editText ->
+
+            editText.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    if (s?.length == 1 && index < otpFields.size - 1) {
+                        otpFields[index + 1].requestFocus()
+                    }
+                }
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            })
+
+            editText.setOnKeyListener { _, keyCode, event ->
+                if (keyCode == KeyEvent.KEYCODE_DEL &&
+                    event.action == KeyEvent.ACTION_DOWN &&
+                    editText.text.isEmpty() &&
+                    index > 0
+                ) {
+                    otpFields[index - 1].requestFocus()
+                    otpFields[index - 1].setSelection(
+                        otpFields[index - 1].text.length
+                    )
+                }
+                false
+            }
+        }
     }
 
     private fun observeResponse() {
@@ -60,19 +99,20 @@ class PreRegistrationActivity : AppCompatActivity() {
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 if (jSONObject.optInt("status") == 200) {
-                    Log.d(TAG, "onResponse: $jSONObject")
                     val response: String = jSONObject.getString("response")
                     Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                     addVerificationDialog()
                 } else if (jSONObject.optInt("status") == 201) {
-                    Toast.makeText(this, R.string.otp_error, Toast.LENGTH_LONG).show()
+                    val response: String = jSONObject.getString("response")
+                    Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                 } else if (jSONObject.optInt("status") == 429) {
+                    val response: String = jSONObject.getString("response")
                     Toast.makeText(this, jSONObject.optString("response"), Toast.LENGTH_LONG).show()
                 }
             }
         }
 
-        farmerViewModel.compareOtpResponseReg.observe(this) {
+        authViewModel.compareOtpResponseReg.observe(this) {
             if (it != null) {
                 val jSONObject = JSONObject(it.toString())
                 if (jSONObject.optInt("status") == 200) {
@@ -126,6 +166,15 @@ class PreRegistrationActivity : AppCompatActivity() {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
         dialog.setContentView(R.layout.dialog_activity_verification)
+        val otpFields = listOf(
+            dialog.findViewById<EditText>(R.id.otp1),
+            dialog.findViewById<EditText>(R.id.otp2),
+            dialog.findViewById<EditText>(R.id.otp3),
+            dialog.findViewById<EditText>(R.id.otp4),
+            dialog.findViewById<EditText>(R.id.otp5),
+            dialog.findViewById<EditText>(R.id.otp6)
+        )
+        setupOtpInputs(otpFields)
         dialog.window!!.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
@@ -148,19 +197,18 @@ class PreRegistrationActivity : AppCompatActivity() {
         val dialogTitle = dialog.findViewById<TextView>(R.id.dialogTitle)
         dialogTitle.text = "Enter OTP"
 
-        val receiveOTPEditText = dialog.findViewById<EditText>(R.id.OptEditText)
         val submitButton = dialog.findViewById<Button>(R.id.submitButton)
         val resendOTP = dialog.findViewById<Button>(R.id.resendOTP)
         val cancelButton = dialog.findViewById<ImageView>(R.id.imageView_close)
         cancelButton.setOnClickListener { dialog.dismiss() }
         submitButton.setOnClickListener {
-            val enteredOTP: String = receiveOTPEditText.text.toString()
-            if (enteredOTP.isEmpty()) {
-                receiveOTPEditText.error = resources.getString(R.string.regist_otp_err)
-                receiveOTPEditText.requestFocus()
+            val enteredOTP: String = otpFields.joinToString("") { it.text.toString() }
+
+            if (enteredOTP.length < 6) {
+                Toast.makeText(this, "Enter valid OTP", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             } else {
-                farmerViewModel.compareOtpReg(
-                    this,
+                authViewModel.compareOtpReg(
                     binding.mobNoEditText.text.toString(),
                     enteredOTP
                 )

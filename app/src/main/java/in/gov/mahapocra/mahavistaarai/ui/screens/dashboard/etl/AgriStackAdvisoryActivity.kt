@@ -6,21 +6,24 @@ import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityAgriStackAdvisoryBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropRecyclerSapAdapter
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.NewDashboardMainActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONObject
 
 class AgriStackAdvisoryActivity : AppCompatActivity() {
@@ -49,33 +52,51 @@ class AgriStackAdvisoryActivity : AppCompatActivity() {
         )
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imgBackArrow.setOnClickListener {
-            startActivity(Intent(this, DashboardScreen::class.java))
+            startActivity(Intent(this, NewDashboardMainActivity::class.java))
         }
 
-        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(Intent(this@AgriStackAdvisoryActivity, DashboardScreen::class.java))
+                startActivity(
+                    Intent(
+                        this@AgriStackAdvisoryActivity,
+                        NewDashboardMainActivity::class.java
+                    )
+                )
             }
         })
 
         observeResponse()
         val villageCode = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
-        if (villageCode!=0) {
-            farmerViewModel.getCropSapAdvisory(this, villageCode) //TODO: static villageCode code 537820
+        if (villageCode != 0) {
+            farmerViewModel.getCropSapAdvisory(villageCode)
         }
     }
 
     private fun observeResponse() {
-        farmerViewModel.getCropSapAdvisoryResponse.observe(this) {
-            if (it != null) {
-                val jsonObject = JSONObject(it.toString())
-                val jsonArray = jsonObject.optJSONArray("advisory")
-                if (jsonArray?.length() != 0) {
-                    binding.agriStackRecyclerView.apply {
-                        hasFixedSize()
-                        layoutManager = LinearLayoutManager(this@AgriStackAdvisoryActivity)
-                        adapter = CropRecyclerSapAdapter(jsonArray)
+        farmerViewModel.getCropSapAdvisoryResponse.observe(this) { state ->
+
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
+                }
+
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    val jsonObject = JSONObject(state.data.toString())
+                    val jsonArray = jsonObject.optJSONArray("advisory")
+                    if (jsonArray?.length() != 0) {
+                        binding.agriStackRecyclerView.apply {
+                            hasFixedSize()
+                            layoutManager = LinearLayoutManager(this@AgriStackAdvisoryActivity)
+                            adapter = CropRecyclerSapAdapter(jsonArray)
+                        }
                     }
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }

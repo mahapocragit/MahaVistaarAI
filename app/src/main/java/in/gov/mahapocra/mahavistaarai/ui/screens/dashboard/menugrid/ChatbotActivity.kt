@@ -12,6 +12,8 @@ import android.webkit.GeolocationPermissions
 import android.webkit.PermissionRequest
 import android.webkit.SslErrorHandler
 import android.webkit.WebChromeClient
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -23,103 +25,119 @@ import com.microsoft.clarity.Clarity
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.util.NetworkUtils.isNetworkAvailable
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
+import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityChatbotBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MahavistaarViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.CHATBOT_POINT
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.CROP_ADVISORY_POINT
+import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
-import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 class ChatbotActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChatbotBinding
+
     private val mahavistaarViewModel: MahavistaarViewModel by viewModels()
     private val leaderboardViewModel: LeaderboardViewModel by viewModels()
     private val farmerViewModel: FarmerViewModel by viewModels()
-
+    private var name = ""
+    private var mobile = ""
     private var languageToLoad = "mr"
-    private val PERMISSION_REQUEST_CODE = 1001
-    private var isWebViewLoaded = false
+
+    companion object {
+        private const val TAG = "ChatbotActivity"
+        private const val PERMISSION_REQUEST_CODE = 1001
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         languageToLoad =
-            if (AppSettings.getLanguage(this).equals("1", ignoreCase = true)) "en" else "mr"
+            if (AppSettings.getLanguage(this).equals("1", ignoreCase = true))
+                "en"
+            else
+                "mr"
+
         switchLanguage(this, languageToLoad)
+
         binding = ActivityChatbotBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         uiResponsive(binding.root)
 
-        // --- Toolbar setup ---
-        binding.toolbar.imageViewHeaderBack.visibility = View.VISIBLE
-        binding.toolbar.imageViewHeaderBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-            Clarity.sendCustomEvent("WEBVIEW_CLOSED")
-        }
-        binding.toolbar.textViewHeaderTitle.text = ""
-
+        setupToolbar()
+        setupWebView()
         observeResponse()
         setUpListeners()
-    }
 
-    private fun setUpListeners() {
-        setupWebView()
+        askForPermissions()
+        name = AppPreferenceManager(this).getString(AppConstants.USER_NAME).toString()
+        mobile = AppPreferenceManager(this).getString(AppConstants.USER_MOBILE).toString()
+        // Request chatbot URL
+        ProgressHelper.showProgressDialog(this)
+        mahavistaarViewModel.requestUrlForChatBot(name, mobile)
 
-        // --- Show progress dialog only if load takes time ---
-        CoroutineScope(Dispatchers.Main).launch {
-            delay(300)
-            if (!isWebViewLoaded) ProgressHelper.showProgressDialog(this@ChatbotActivity)
-        }
-
-        // --- Run permission & network in parallel ---
-        CoroutineScope(Dispatchers.Main).launch {
-            val permissionJob = async { askForLocationAndMicrophonePermission() }
-            val urlJob = async { mahavistaarViewModel.requestUrlForChatBot(this@ChatbotActivity) }
-            permissionJob.await()
-            urlJob.await()
-        }
-
-        // --- Retry button ---
-        binding.tryAgainTextView.setOnClickListener {
-            mahavistaarViewModel.requestUrlForChatBot(this)
-            ProgressHelper.showProgressDialog(this)
-        }
-
-        // --- Update notification status (non-blocking) ---
+        // Update notification status
         val notificationId = intent.getLongExtra("id", 0L)
         if (notificationId != 0L) {
             farmerViewModel.updateNotificationStatusForChatbot(this, notificationId)
         }
     }
 
-    private fun askForLocationAndMicrophonePermission() {
+    private fun setupToolbar() {
+        binding.toolbar.imageViewHeaderBack.visibility = View.VISIBLE
+
+        binding.toolbar.imageViewHeaderBack.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+            Clarity.sendCustomEvent("WEBVIEW_CLOSED")
+        }
+
+        binding.toolbar.textViewHeaderTitle.text = ""
+    }
+
+    private fun setUpListeners() {
+
+        binding.tryAgainTextView.setOnClickListener {
+
+            binding.noInternetAvailableLayout.visibility = View.GONE
+
+            ProgressHelper.showProgressDialog(this)
+
+            mahavistaarViewModel.requestUrlForChatBot(name, mobile)
+        }
+    }
+
+    private fun askForPermissions() {
+
         val permissionsNeeded = mutableListOf<String>()
-        if (ContextCompat.checkSelfPermission(
+
+        if (
+            ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.RECORD_AUDIO
             ) != PackageManager.PERMISSION_GRANTED
-        )
+        ) {
             permissionsNeeded.add(Manifest.permission.RECORD_AUDIO)
-        if (ContextCompat.checkSelfPermission(
+        }
+
+        if (
+            ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
-        )
+        ) {
             permissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
 
         if (permissionsNeeded.isNotEmpty()) {
+
             ActivityCompat.requestPermissions(
                 this,
                 permissionsNeeded.toTypedArray(),
@@ -129,22 +147,38 @@ class ChatbotActivity : AppCompatActivity() {
     }
 
     private fun setupWebView() {
+
+        WebView.setWebContentsDebuggingEnabled(true)
+
         val webSettings = binding.webView.settings
+
         webSettings.apply {
+
             javaScriptEnabled = true
             domStorageEnabled = true
-            mediaPlaybackRequiresUserGesture = false
-            loadsImagesAutomatically = true
-            mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
+            databaseEnabled = true
 
-            // ✅ Modern caching
-            cacheMode = WebSettings.LOAD_DEFAULT
-            if (!isNetworkAvailable(this@ChatbotActivity)) {
-                cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
-            }
+            allowFileAccess = true
+            allowContentAccess = true
+
+            javaScriptCanOpenWindowsAutomatically = true
+
+            loadsImagesAutomatically = true
+            mediaPlaybackRequiresUserGesture = false
+
+            mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+
+            cacheMode =
+                if (isNetworkAvailable(this@ChatbotActivity)) {
+                    WebSettings.LOAD_DEFAULT
+                } else {
+                    WebSettings.LOAD_CACHE_ELSE_NETWORK
+                }
 
             userAgentString =
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36"
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
+                        "AppleWebKit/537.36 (KHTML, like Gecko) " +
+                        "Chrome/120.0.0.0 Safari/537.36"
         }
 
         CookieManager.getInstance().apply {
@@ -153,91 +187,147 @@ class ChatbotActivity : AppCompatActivity() {
         }
 
         binding.webView.apply {
+
+            alpha = 0f
             visibility = View.INVISIBLE
 
             webChromeClient = object : WebChromeClient() {
+
                 override fun onPermissionRequest(request: PermissionRequest) {
-                    runOnUiThread { request.grant(request.resources) }
+
+                    runOnUiThread {
+
+                        try {
+                            request.grant(request.resources)
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Permission request error", e)
+                        }
+                    }
                 }
 
                 override fun onGeolocationPermissionsShowPrompt(
                     origin: String?,
                     callback: GeolocationPermissions.Callback?
                 ) {
+
                     callback?.invoke(origin, true, false)
                 }
             }
 
             webViewClient = object : WebViewClient() {
+
+                override fun onPageStarted(
+                    view: WebView?,
+                    url: String?,
+                    favicon: android.graphics.Bitmap?
+                ) {
+                    super.onPageStarted(view, url, favicon)
+                }
+
+                override fun onPageFinished(view: WebView?, url: String?) {
+                    super.onPageFinished(view, url)
+                    ProgressHelper.disableProgressDialog()
+                    binding.noInternetAvailableLayout.visibility = View.GONE
+                    binding.webView.visibility = View.VISIBLE
+                    binding.webView.animate()
+                        .alpha(1f)
+                        .setDuration(300)
+                        .start()
+
+                    if (containsFarmerId(this@ChatbotActivity)) {
+                        leaderboardViewModel.updateUserPoints(
+                            this@ChatbotActivity,
+                            CHATBOT_POINT
+                        )
+                    }
+                }
+
+                override fun onReceivedError(
+                    view: WebView?,
+                    request: WebResourceRequest?,
+                    error: WebResourceError?
+                ) {
+                    super.onReceivedError(view, request, error)
+
+                    Log.e(
+                        TAG,
+                        "WebView Error: ${error?.description}"
+                    )
+
+                    onChatbotError()
+                }
+
                 override fun onReceivedSslError(
                     view: WebView?,
                     handler: SslErrorHandler?,
                     error: SslError?
                 ) {
-                    handler?.cancel()
-                    Clarity.sendCustomEvent("WEBVIEW_STOPPED")
-                    onChatbotError()
-                }
 
-                override fun onPageFinished(view: WebView?, url: String?) {
-                    super.onPageFinished(view, url)
-                    isWebViewLoaded = true
-                    ProgressHelper.disableProgressDialog()
-                    binding.noInternetAvailableLayout.visibility = View.GONE
-                    binding.webView.visibility = View.VISIBLE
-                    binding.webView.animate().alpha(1f).setDuration(250).start()
-                    if (containsFarmerId(this@ChatbotActivity)) {
-                        leaderboardViewModel.updateUserPoints(this@ChatbotActivity, CHATBOT_POINT)
-                    }
+                    Log.e(TAG, "SSL Error: $error")
+
+                    // DO NOT PROCEED IN PRODUCTION
+                    handler?.cancel()
+
+                    onChatbotError()
                 }
             }
         }
     }
 
     private fun observeResponse() {
-        leaderboardViewModel.responseUpdateUserPoints.observe(this) { response ->
-            if (response != null) {
-                val jSONObject = JSONObject(response.toString())
-                val status = jSONObject.optInt("status")
-                if (status == 200) {
-                    ScoreBubbleHelper.showScoreBubble(binding.root, "+100🔥 Points Added")
+        mahavistaarViewModel.responseUrlForChatBot.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
+                }
+
+                is UiState.Success -> {
+                    val response = JSONObject(state.data.toString())
+                    handleChatbotResponse(response)
+                    ProgressHelper.disableProgressDialog()
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    onChatbotError()
                 }
             }
         }
+    }
 
-        // --- Observe API response ---
-        mahavistaarViewModel.responseUrlForChatBot.observe(this) { response ->
-            handleChatbotResponse(response)
-        }
+    private fun handleChatbotResponse(response: Any?) {
 
-        mahavistaarViewModel.error.observe(this) {
+        try {
+
+            if (response == null) {
+                onChatbotError()
+                return
+            }
+            val jsonObject = JSONObject(response.toString())
+            val status = jsonObject.optString("status")
+            if (status.equals("success", ignoreCase = true)) {
+                val jwtToken = jsonObject.optString("token").trim()
+                if (jwtToken.isEmpty()) {
+                    onChatbotError()
+                    return
+                }
+                val chatBotUrl =
+                    "${AppEnvironment.BOT_URL.baseUrl}$jwtToken"
+                loadChatbot(chatBotUrl)
+            } else {
+                onChatbotError()
+            }
+
+        } catch (_: Exception) {
             onChatbotError()
         }
     }
 
     private fun loadChatbot(chatBotUrl: String) {
-        Clarity.sendCustomEvent("WEBVIEW_OPENED")
-        binding.webView.loadUrl(chatBotUrl)
-    }
-
-    private fun handleChatbotResponse(response: Any?) {
-        if (response == null) {
-            onChatbotError()
-            return
-        }
-
         try {
-            val json = JSONObject(response.toString())
-            val status = json.optString("status")
-            if (status.equals("success", ignoreCase = true)) {
-                val jwtToken = json.optString("token").trim()
-                val chatBotUrl = "${AppEnvironment.BOT_URL.baseUrl}$jwtToken"
-                loadChatbot(chatBotUrl)
-            } else {
-                onChatbotError()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+            Clarity.sendCustomEvent("WEBVIEW_OPENED")
+            binding.webView.loadUrl(chatBotUrl)
+        } catch (_: Exception) {
             onChatbotError()
         }
     }
@@ -260,8 +350,14 @@ class ChatbotActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
+        binding.webView.apply {
+            stopLoading()
+            clearHistory()
+            clearCache(true)
+            destroy()
+        }
         Clarity.sendCustomEvent("WEBVIEW_CLOSED")
+        super.onDestroy()
     }
 
     override fun onRequestPermissionsResult(
@@ -269,20 +365,24 @@ class ChatbotActivity : AppCompatActivity() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        super.onRequestPermissionsResult(
+            requestCode,
+            permissions,
+            grantResults
+        )
         if (requestCode == PERMISSION_REQUEST_CODE) {
-            permissions.forEachIndexed { index, permission ->
-                Log.d(
-                    "Permissions",
-                    "$permission -> ${if (grantResults[index] == PackageManager.PERMISSION_GRANTED) "granted" else "denied"}"
-                )
+            permissions.forEachIndexed { _, _ ->
             }
         }
     }
 
     override fun attachBaseContext(newBase: Context) {
         languageToLoad =
-            if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) "en" else "mr"
+            if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true))
+                "en"
+            else
+                "mr"
         val updatedContext = configureLocale(newBase, languageToLoad)
         super.attachBaseContext(updatedContext)
     }

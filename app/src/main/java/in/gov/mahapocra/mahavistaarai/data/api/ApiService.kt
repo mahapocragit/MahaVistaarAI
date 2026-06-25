@@ -3,7 +3,6 @@ package `in`.gov.mahapocra.mahavistaarai.data.api
 import com.google.gson.JsonObject
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -27,8 +26,7 @@ interface ApiService {
 
     @POST(ApiConstants.kLoginViaFarmerId)
     suspend fun farmerLoginBasedOnID(
-        @Header("FarmerID") farmerId: String,
-        @Body params: RequestBody
+        @Header("FarmerID") farmerId: String
     ): JsonObject
 
     @POST(ApiConstants.kGetCropCategorywise)
@@ -41,10 +39,7 @@ interface ApiService {
     suspend fun getWeatherDetails(@Body params: RequestBody): JsonObject
 
     @POST(ApiConstants.kGetRegistration)
-    suspend fun getGetRegistration(
-        @Header("FAAPRegistrationID") registrationId: Int,
-        @Body params: RequestBody
-    ): JsonObject
+    suspend fun getGetRegistration(): JsonObject
 
     @POST(ApiConstants.kGetSOPByList)
     suspend fun getSOPByList(@Body params: RequestBody): JsonObject
@@ -68,25 +63,31 @@ interface ApiService {
     ): JsonObject
 
     @POST(ApiConstants.getNearestCHCenters)
-    suspend fun getCHCInformation(@Body params: RequestBody): JsonObject
+    suspend fun getCHCInformation(
+        @Header("lat") latitude: String,
+        @Header("lon") longitude: String,
+    ): JsonObject
 
     @POST(ApiConstants.getCodeFromCoordinates)
     suspend fun getCodeFromCoordinates(@Body params: RequestBody): JsonObject
 
     @POST(ApiConstants.kGetMarketData)
-    suspend fun getMarketList(@Body params: RequestBody): JsonObject
+    suspend fun getMarketList(
+        @Header("lang") language: String,
+        @Header("district-code") districtCode: Int
+    ): JsonObject
 
     @POST(ApiConstants.kCompareOtp)
     suspend fun compareOtp(
         @Header("MobileNo") mobileNo: String,
-        @Header("timestamp") timestamp: Long,
-        @Body params: RequestBody
+        @Header("otp") otp: String,
+        @Header("timestamp") timestamp: String
     ): JsonObject
 
     @POST(ApiConstants.kCompareOtpReg)
     suspend fun compareOtpReg(
         @Header("MobileNo") mobileNo: String,
-        @Body params: RequestBody
+        @Header("otp") otp: String
     ): JsonObject
 
     @GET(ApiConstants.kRevampedDBTSchemes)
@@ -141,13 +142,24 @@ interface ApiService {
     suspend fun getNotificationList(@Header("userid") userId: Int): JsonObject
 
     @POST("notificationServices/fetch-notifications-indetail")
-    suspend fun getNotificationDetails(@Body params: RequestBody): JsonObject
+    suspend fun getNotificationDetails(
+        @Header("type") notificationType: String,
+        @Header("notification-id") notificationId: String
+    ): JsonObject
 
     @POST("notificationServices/update-notification-read-status")
     suspend fun updateNotificationStatus(@Body params: RequestBody): JsonObject
 
     @POST("notificationServices/update-chatbot-notification-read-status")
     suspend fun updateNotificationStatusForChatbot(@Body params: RequestBody): JsonObject
+
+    @POST("notificationServices/add-notification-feedback")
+    suspend fun addNotificationFeedback(
+        @Header("remarks") remarks: String,
+        @Header("type") notificationType: String,
+        @Header("notification-id") notificationId: String,
+        @Body params: RequestBody
+    ): JsonObject
 
     @POST("authService/updateFcmToken")
     suspend fun updateFCMToken(
@@ -159,21 +171,18 @@ interface ApiService {
     suspend fun checkFcmToken(@Header("userid") farmerId: Int): JsonObject
 
     @POST(ApiConstants.kOTPRequest)
-    fun getOTPRequest(
-        @Header("MobileNo") mobileNo: String,
-        @Body params: RequestBody
-    ): Call<JsonObject>
+    suspend fun getOTPRequest(
+        @Header("MobileNo") mobileNo: String
+    ): JsonObject
 
     @POST(ApiConstants.kOTPRequest)
     suspend fun sendOtpToMobile(
-        @Header("MobileNo") mobileNo: String,
-        @Body params: RequestBody
+        @Header("MobileNo") mobileNo: String
     ): Response<JsonObject>
 
     @POST(ApiConstants.kOTPRegisterRequest)
     suspend fun getOTPRegisterRequest(
-        @Header("MobileNo") mobileNo: String,
-        @Body params: RequestBody
+        @Header("MobileNo") mobileNo: String
     ): JsonObject
 
     @POST(ApiConstants.kRegistrationRequest)
@@ -183,19 +192,39 @@ interface ApiService {
         @Body params: RequestBody
     ): JsonObject
 
-    @POST(ApiConstants.kUserLogin)
-    fun getUserLoginOTP(
+    @POST(ApiConstants.kRegistrationRequest)
+    suspend fun registerUser(
+        @Header("Name") name: String,
         @Header("MobileNo") mobileNo: String,
-        @Header("otp") enteredOTP: String,
-        @Body params: RequestBody
-    ): Call<JsonObject>
+        @Header("NewMobileNo") reMobileNo: String,
+        @Header("VillageCode") villageCode: String,
+        @Header("fcmToken") fcmToken: String,
+        @Header("versionNumber") versionNumber: String,
+        @Header("deviceId") deviceId: String,
+        @Header("Password") password: String,
+    ): JsonObject
+
+    @POST("authService/updateProfile")
+    suspend fun updateProfile(
+        @Header("Name") name: String,
+        @Header("MobileNo") mobileNo: String,
+        @Header("NewMobileNo") reMobileNo: String,
+        @Header("VillageCode") villageCode: String,
+    ): JsonObject
 
     @POST(ApiConstants.kUserLogin)
-    fun getUserLoginPassword(
+    suspend fun getUserLoginOTP(
+        @Header("MobileNo") mobileNo: String,
+        @Header("otp") enteredOTP: String,
+        @Header("fcmToken") fcmToken: String
+    ): JsonObject
+
+    @POST(ApiConstants.kUserLogin)
+    suspend fun getUserLoginPassword(
         @Header("MobileNo") mobileNo: String,
         @Header("Password") password: String,
-        @Body params: RequestBody
-    ): Call<JsonObject>
+        @Header("fcmToken") fcmToken: String
+    ): JsonObject
 
     @POST(ApiConstants.kRefreshTokenLogin)
     fun getRefreshTokenLoginViaOTP(
@@ -214,13 +243,19 @@ interface ApiService {
     ): Call<JsonObject>
 
     @POST(ApiConstants.kWareHouseDetails)
-    suspend fun getWareHouseDetails(@Body params: RequestBody): JsonObject
+    suspend fun getWareHouseDetails(
+        @Header("district-code") districtCode: Int,
+        @Header("lang") language: String
+    ): JsonObject
 
     @POST(ApiConstants.kGetDistrictList)
     suspend fun getDistrictList(@Body params: RequestBody): JsonObject
 
     @POST(ApiConstants.kGetMarketAndMarketName)
-    suspend fun getMarketAndMarketName(@Body params: RequestBody): JsonObject
+    suspend fun getMarketAndMarketName(
+        @Header("district-code") districtCode: Int,
+        @Header("lang") language: String
+    ): JsonObject
 
     @POST(ApiConstants.kGetVillageList)
     suspend fun getVillageList(@Body params: RequestBody): JsonObject
@@ -229,7 +264,10 @@ interface ApiService {
     fun getNewsList(@Body params: RequestBody): Call<JsonObject>
 
     @POST(ApiConstants.kGetmarketsPriceDetails)
-    suspend fun getMarketPriceDetails(@Body params: RequestBody): JsonObject
+    suspend fun getMarketPriceDetails(
+        @Header("lang") lang: String,
+        @Header("apmc-id") mandiId: Int
+    ): JsonObject
 
     @POST(ApiConstants.DELETE_FERTILIZER_FROM_SAVED)
     fun deleteFertilizerFromSavedList(@Body params: RequestBody): Call<JsonObject>
@@ -240,8 +278,11 @@ interface ApiService {
     @POST(ApiConstants.kGetFertilizerSavedFormula)
     fun getFertilizerSavedFormula(@Body params: RequestBody): Call<JsonObject>
 
-    @POST(ApiConstants.kResetPassword)
-    fun getNewPassword(@Body params: RequestBody): Call<JsonObject>
+    @POST("authService/resetPassword")
+    suspend fun getNewPassword(
+        @Header("MobileNo") mobile: String,
+        @Header("Password") password: String
+    ): JsonObject
 
     @POST(ApiConstants.kGetTokenFromWotr)
     fun getTokenFromWotr(
@@ -313,7 +354,7 @@ interface ApiService {
     suspend fun addCropCostTransactions(@Body params: RequestBody): JsonObject
 
     @POST("/costofcultivationServices/delete-farmer-crop")
-    suspend fun deleteCrop(@Body params: RequestBody): JsonObject
+    suspend fun deleteCostCalculatorCrop(@Body params: RequestBody): JsonObject
 
     @POST("/costofcultivationServices/delete-transaction")
     suspend fun deleteCropTransaction(@Body params: RequestBody): JsonObject
@@ -338,28 +379,87 @@ interface ApiService {
 
     @POST("authService/update_farmer_id_send_otp")
     suspend fun sendOtpToFarmerId(
-        @Header("FarmerID") farmerID: String,
-        @Header("userid") userId: Int,
-        @Body params: RequestBody
+        @Header("FarmerID") farmerID: String
     ): JsonObject
 
     @POST("authService/farmer_id_compare_otp")
     suspend fun compareOtpToFarmerId(
         @Header("FarmerID") farmerID: String,
-        @Header("userid") userId: Int,
+        @Header("otp") otp: String
+    ): JsonObject
+
+    @POST("authService/farmerid_reg_compare_otp")
+    suspend fun compareOtpToFarmerIdRegistration(
+        @Header("FarmerID") farmerID: String,
         @Header("otp") otp: String,
-        @Body params: RequestBody
+        @Header("timestamp") timestamp: String,
+        @Header("versionNumber") versionNumber: String,
+        @Header("deviceId") deviceId: String
     ): JsonObject
 
     @POST("authService/update_farmer_id")
     suspend fun updateFarmerDetailsById(
         @Header("FarmerID") farmerID: String,
-        @Header("userid") userId: Int,
         @Header("name") name: String,
         @Header("mobile") mobile: String,
-        @Header("villageCode") villageCode: String,
-        @Body params: RequestBody
+        @Header("villageCode") villageCode: String
     ): JsonObject
 
+    @POST("authService/get_device_id_count")
+    suspend fun getRegisteredDeviceCountByDeviceId(@Header("deviceId") deviceId: String): JsonObject
+
+    @POST("notificationServices/add-subscribed-topic")
+    suspend fun saveSubscribedTopic(@Body params: RequestBody): JsonObject
+
+    @POST("notificationServices/delete-subscribed-topic")
+    suspend fun deleteSubscribedTopic(@Body params: RequestBody): JsonObject
+
+    @GET("otherServices/get_magazine_details")
+    suspend fun getMagazineDetails(): JsonObject
+
+    @GET("otherServices/get_farm_magazine_details")
+    suspend fun getFarmMagazineDetails(): JsonObject
+
+    @GET("otherServices/get_promo_banner")
+    suspend fun getPromoBanner(): JsonObject
+
+    @GET("/get_app_version")
+    suspend fun getAppVersion(): JsonObject
+
+    @POST("/farmDairyService/get-farmer-summary")
+    suspend fun getFarmSummery(): JsonObject
+
+    @POST("/farmDairyService/get-farmer-farm-details")
+    suspend fun getFarmDetails(): JsonObject
+
+    @POST("/authService/getCustomDashboardInfo")
+    suspend fun getCustomizedDashboard(): JsonObject
+
+    //DCS
+    @POST("farmDairyService/save-farmer-crop")
+    suspend fun saveFarmCropForDCS(
+        @Header("crop-id") cropId: String,
+        @Header("sowing-date") sowingDate: String,
+        @Header("farm-id") farmId: String
+    ): JsonObject
+
+    @POST("farmDairyService/get-farmer-crop")
+    suspend fun getFarmCropForDCS(
+        @Header("farm-id") farmId: String
+    ): JsonObject
+
+    @POST("farmDairyService/update-farmer-crop")
+    suspend fun updateFarmCropForDCS(
+        @Header("declaration-id") declaringId: String,
+        @Header("sowing-date") sowingDate: String
+    ): JsonObject
+
+    @POST("farmDairyService/delete-farmer-crop")
+    suspend fun deleteFarmCropForDCS(
+        @Header("declaration-id") declaringId: String
+    ): JsonObject
+
+    @GET("farmDairyService/crop-master")
+    suspend fun fetchCropsForDCS(): JsonObject
 
 }

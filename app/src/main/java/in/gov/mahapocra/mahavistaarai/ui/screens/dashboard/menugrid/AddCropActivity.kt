@@ -15,12 +15,16 @@ import `in`.co.appinventor.services_api.listener.DatePickerRequestListener
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityAddCropBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropCategoriesAdapter
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.NewDashboardMainActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,43 +36,39 @@ import org.json.JSONObject
 import java.util.Calendar
 
 
-class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener, DatePickerRequestListener {
+class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener,
+    DatePickerRequestListener {
 
     private lateinit var binding: ActivityAddCropBinding
     private lateinit var textViewHeaderTitle: TextView
     private lateinit var imageMenuShow: ImageView
     private lateinit var imgBackArrow: ImageView
     private lateinit var receivedJson: JSONObject
-
+    private var activityStarted = false
+    private var farmerId = 0
     private val viewModel: FarmerViewModel by viewModels()
     private var languageToLoad: String = "mr"
     private var cropId: Int = 0
-
     private val uiScope = CoroutineScope(Dispatchers.Main + Job())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // --- Language setup ---
-        languageToLoad = if (AppSettings.getLanguage(this).equals("1", ignoreCase = true)) "en" else "mr"
+        languageToLoad =
+            if (AppSettings.getLanguage(this).equals("1", ignoreCase = true)) "en" else "mr"
         switchLanguage(this, languageToLoad)
 
         binding = ActivityAddCropBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
-
+        farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
         setupToolbar()
         setupRecyclerView()
 
         // --- Load data in background ---
-        uiScope.launch {
-            ProgressHelper.showProgressDialog(this@AddCropActivity)
-            withContext(Dispatchers.IO) {
-                viewModel.getCropCategoriesAndCropDetails(this@AddCropActivity, languageToLoad)
-            }
-        }
-
-        observeCropData()
+        observeResponse()
+        viewModel.getCropCategoriesAndCropDetails(languageToLoad)
     }
 
     // -----------------------------
@@ -87,7 +87,7 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener, D
         }
 
         imageMenuShow.setOnClickListener {
-            startActivity(Intent(this, DashboardScreen::class.java))
+            AppHelper(this).redirectToHome()
         }
     }
 
@@ -102,35 +102,55 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener, D
     // -----------------------------
     // 🌾 Observe Crop Data
     // -----------------------------
-    private fun observeCropData() {
-        viewModel.cropCategoryResponse.observe(this) { response ->
-            ProgressHelper.disableProgressDialog()
-
-            try {
-                val jsonObject = JSONObject(response.toString())
-                val jsonDataArray = jsonObject.getJSONArray("data")
-                val callerActivityString = if (intent.getStringExtra("callerActivity") != null) {
-                    "costCalculator"
-                } else {
-                    "TitleVideosDetailsAdpter"
+    private fun observeResponse() {
+        viewModel.cropCategoryResponse.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
                 }
 
-                if (callerActivityString!=null) {
-                    uiScope.launch(Dispatchers.Default) {
-                        val adapter = CropCategoriesAdapter(
-                            this@AddCropActivity,
-                            jsonDataArray,
-                            callerActivityString,
-                            this@AddCropActivity
-                        )
-                        withContext(Dispatchers.Main) {
-                            binding.mainRecyclerView.adapter = adapter
+                is UiState.Success -> {
+                    ProgressHelper.disableProgressDialog()
+                    val jsonObject = JSONObject(state.data.toString())
+                    val cropCategoryArray = jsonObject.getJSONArray("data")
+                        uiScope.launch(Dispatchers.Default) {
+                            val adapter = CropCategoriesAdapter(
+                                this@AddCropActivity,
+                                cropCategoryArray,
+                                this@AddCropActivity
+                            )
+                            withContext(Dispatchers.Main) {
+                                binding.mainRecyclerView.adapter = adapter
+                            }
                         }
+
+                }
+
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        viewModel.saveFarmerSelectedCrop.observe(this) { state ->
+            when(state){
+                is UiState.Loading->{
+                    ProgressHelper.showProgressDialog(this)
+                }
+                is UiState.Success->{
+                    ProgressHelper.disableProgressDialog()
+                    val dataObject = JSONObject(state.data.toString())
+                    val status = dataObject.optInt("status")
+                    if (status == 200) {
+                        AppHelper(this).redirectToPage(1)
+                        finish()
                     }
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Toast.makeText(this, R.string.error_loading_data, Toast.LENGTH_SHORT).show()
+                is UiState.Error->{
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
@@ -174,22 +194,18 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener, D
         if (i == 1) {
             val sowingDate = "$day-${month + 1}-$year"
             cropId = receivedJson.optInt("id")
+            viewModel.saveFarmerSelectedCrop(farmerId, sowingDate, cropId)
+        }
+    }
 
-            ProgressHelper.showProgressDialog(this)
-            viewModel.saveFarmerSelectedCrop(this, sowingDate, cropId)
-
-            viewModel.saveFarmerSelectedCrop.observe(this) { response ->
-                ProgressHelper.disableProgressDialog()
-                val jsonObject = JSONObject(response.toString())
-                if (jsonObject.optString("status") == "200") {
-                    Toast.makeText(this, R.string.selected_crop_saved, Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, DashboardScreen::class.java).apply {
-                        putExtra("savedCropResponse", "200")
-                    })
-                } else {
-                    Toast.makeText(this, R.string.error_saving_crop, Toast.LENGTH_SHORT).show()
-                }
-            }
+    fun safeStartActivity() {
+        if (!activityStarted) {
+            activityStarted = true
+            Toast.makeText(this, R.string.selected_crop_saved, Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, NewDashboardMainActivity::class.java).apply {
+                putExtra("savedCropResponse", "200")
+                intent.putExtra("selected_tab", 1)
+            })
         }
     }
 
@@ -197,7 +213,8 @@ class AddCropActivity : AppCompatActivity(), OnMultiRecyclerItemClickListener, D
     // 🌍 Locale
     // -----------------------------
     override fun attachBaseContext(newBase: Context) {
-        languageToLoad = if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) "en" else "mr"
+        languageToLoad =
+            if (AppSettings.getLanguage(newBase).equals("1", ignoreCase = true)) "en" else "mr"
         val updatedContext = configureLocale(newBase, languageToLoad)
         super.attachBaseContext(updatedContext)
     }

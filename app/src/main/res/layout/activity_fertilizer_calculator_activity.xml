@@ -231,6 +231,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:checked="false"
+                            android:buttonTint="@color/actionbar_color_figma"
                             android:text="@string/yes"
                             android:textColor="@color/black"
                             android:textStyle="bold" />
@@ -241,6 +242,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:checked="true"
+                            android:buttonTint="@color/actionbar_color_figma"
                             android:text="@string/no"
                             android:textColor="@color/black"
                             android:textStyle="bold" />

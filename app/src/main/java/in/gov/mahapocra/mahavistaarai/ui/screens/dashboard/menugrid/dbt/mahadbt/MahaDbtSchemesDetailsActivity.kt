@@ -20,7 +20,6 @@ import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmer
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONArray
 import org.json.JSONObject
-import kotlin.getValue
 
 class MahaDbtSchemesDetailsActivity : AppCompatActivity() {
 

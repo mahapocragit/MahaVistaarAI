@@ -269,4 +269,15 @@ public class AppSettings {
         prefs = mContext.getSharedPreferences(this.APP_SHARED_PREFERENCE_NAME, 0);
         return prefs.getString(PREF_USER_MOBILE, PREF_USER_MOBILE);
     }
+
+    public void clearAllPreferences(Context context) {
+        isAppSettingInit();
+
+        if (context != null) {
+            prefs = context.getSharedPreferences(this.APP_SHARED_PREFERENCE_NAME, 0);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.clear();
+            editor.apply();
+        }
+    }
 }

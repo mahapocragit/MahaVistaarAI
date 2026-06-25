@@ -12,16 +12,11 @@ import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityPdfViewBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.FertilizerRecommendationAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.SoilTestResultAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.GisViewModel
-import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.SOIL_HEALTH_CARD_POINT
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
-import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
-import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
-import org.json.JSONArray
 import org.json.JSONObject
 
 class DetailedSoilHealthCardActivity : AppCompatActivity() {

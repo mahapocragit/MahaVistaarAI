@@ -41,7 +41,7 @@
     <string name="delete_crop_title">पीक काढून टाका</string>
     <string name="delete_crop_message">तुम्हाला खात्री आहे की, तुम्ही हटवू इच्छिता?</string>
     <string name="delete_crop_yes">हो</string>
-    <string name="delete_crop_no">नाही, धन्यवाद </string>
+    <string name="delete_crop_no">नाही</string>
 
     <string name="agri_forums"> कृषी मंच </string>
     <string name="forums"> माझे अर्ज </string>
@@ -188,7 +188,7 @@
 
     <string name="weatherText">मोबाईल नंबर टाका</string>
     <string name="todays_temp">आजचे हवामान </string>
-    <string name="select_crop">पीक निवडा </string>
+    <string name="select_crop">पीक निवडा</string>
     <string name="select_sowing_date">पेरणीची तारीख निवडा</string>
     <string name="advisory_next_button">पुढे</string>
     <string name="user_feedback_button">कृपया तुमचा अभिप्राय द्या</string>
@@ -308,7 +308,7 @@
 
     <string name="wrong_OTP">तुम्ही चुकीचा OTP टाकला आहे</string>
     <string name="request_for_mobile">मोबाईल नंबरची विनंती करा</string>
-    <string name="weather_title">वातावरण</string>
+    <string name="weather_title">हवामान</string>
     <string name="rain">पर्जन्यमान</string>
     <string name="humidity">आर्द्रता</string>
     <string name="wind">वाऱ्याचा वेग</string>
@@ -418,7 +418,7 @@
     <string name="dshetishala">शेतीशाळा</string>
     <string name="dbt">डीबीटी</string>
     <string name="schedules">वेळापत्रक</string>
-    <string name="shetishala_schedule">डिजिटल शेतीशाळा वेळापत्रक 2025</string>
+    <string name="shetishala_schedule">डिजिटल शेतीशाळा वेळापत्रक</string>
     <string name="crop">पीक</string>
     <string name="time">वेळ</string>
     <string name="zoom_id">झूम लिंक</string>
@@ -438,7 +438,9 @@
     <string name="click_here_to_know_your_farmer_id">तुमचा शेतकरी ओळख क्रमांक जाणून घेण्यासाठी येथे क्लिक करा</string>
     <string name="etl_crossed_click_here_for_advisory">किड आणि रोगांचा इशारा</string>
     <string name="etl_crop_advisory">पिकांच्या कीड व रोगावरील तज्ञांचा सल्ला</string>
-    <string name="click_here_to_view_full_advisory">पूर्ण सल्ला पाहण्यासाठी येथे क्लिक करा.</string>
+    <string name="dashboard_magazine">महापशुधन वार्ता</string>
+    <string name="dashboard_farm_magazine">कृषी मासिक</string>
+    <string name="click_here_to_view_full_advisory">पूर्ण सल्ला पाहा</string>
     <string name="date_etl">दि.: </string>
     <string name="cost_calculator">खर्च गणक</string>
     <string name="no_notification_right_now">सध्या कोणतीही सूचना नाही!!</string>
@@ -516,7 +518,7 @@
     <string name="points">गुण</string>
 
     <string name="agristack_title">शेतकरी आयडी लिंक करा</string>
-    <string name="agristack_request">प्रिय शेतकरी बंधूंनो, महाविस्तार ॲपमध्ये आता तुम्ही तुमचा शेतकरी आयडी लिंक करू शकता! यामुळे तुमची माहिती आपोआप भरली जाईल आणि विविध योजना, मार्गदर्शन व सुविधा अधिक सुलभपणे मिळतील. \n👉 कृपया ‘शेतकरी आयडी लिंक करा’ या पर्यायावर क्लिक करा आणि आवश्यक माहिती भरून प्रक्रिया पूर्ण करा. आपला सहभागच आपल्या प्रगतीचा मार्ग आहे!</string>
+    <string name="agristack_request">प्रिय शेतकरी बंधूंनो, महाविस्तार ॲपमध्ये आता तुम्ही तुमचा शेतकरी आयडी लिंक करू शकता! यामुळे तुमची माहिती आपोआप भरली जाईल आणि विविध योजना, मार्गदर्शन व सुविधा अधिक सुलभपणे मिळतील. \n👉 कृपया शेतकरी आयडी लिंक करण्यासाठी खालील ‘लिंक करा’ या पर्यायावर क्लिक करा आणि आवश्यक माहिती भरून प्रक्रिया पूर्ण करा. आपला सहभागच आपल्या प्रगतीचा मार्ग आहे!</string>
     <string name="btn_cancel">रद्द करा</string>
     <string name="btn_link">लिंक करा</string>
     <string name="overwrite_data">डेटा ओव्हरराईट करायचा का?</string>
@@ -540,4 +542,80 @@
     <string name="kt_report">अहवाल</string>
     <string name="view_kt_details">अहवाल माहिती</string>
     <string name="KrishiTai">कृषिताई</string>
+    <string name="farmer_id_login_text">आपल्या कामासाठी लागणारी माहिती मिळाली नाही. कृपया थोड्या वेळाने पुन्हा प्रयत्न करा.</string>
+    <string name="limit_reached">मर्यादा गाठली आहे</string>
+    <string name="limit_reached_desc">तुम्ही तुमच्या डिव्हाइसवरून आधीच ५ वापरकर्त्यांची नोंदणी केली आहे.</string>
+    <string name="give_feedback">अभिप्राय द्या</string>
+    <string name="your_feedback_on_advisory">सूचनेबाबत आपला अभिप्राय</string>
+    <string name="send_feedback">अभिप्राय पाठवा</string>
+
+    <!--    pest and diseases identification marathi titles-->
+    <string name="curative_measures_text">उपचारात्मक उपाय</string>
+    <string name="analysis_result_text">रोगनिदान</string>
+    <string name="new_scan_text">नवीन तपासणी</string>
+    <string name="analyse_and_submit_text">तपासणीसाठी पाठवा</string>
+    <string name="plant_pest_image_tips_text">पीक किंवा किडीचा फोटो</string>
+    <string name="capture_image_text">फोटो काढा</string>
+    <string name="select_from_gallery_text">गॅलरीमधून फोटो निवडा</string>
+    <string name="enter_feedback">अभिप्राय लिहा</string>
+    <string name="submit_feedback">अभिप्राय नोंदवा</string>
+    <string name="disease_text">कीड/रोग: </string>
+    <string name="pest_identification_text">कीड व रोग ओळख</string>
+    <string name="identity_pest_amp_disease">कीड व रोग ओळखा</string>
+    <string name="take_a_npicture">फोटो\nकाढा</string>
+    <string name="get_the_nresult">निकाल\nपहा</string>
+    <string name="get_ndiagnosis">अपलोड\nकरा</string>
+    <string name="image_upload_pnd_warning">कृपया फक्त JPEG, PNG किंवा JPG फाइल अपलोड करा. फाइलचा आकार जास्तीत जास्त 10 MB असावा.</string>
+    <string name="snackbar_pnd_message">फक्त JPEG, PNG किंवा JPG प्रतिमा (कमाल 10 MB) परवानगी आहेत.</string>
+    <string name="notice_promo">सूचना</string>
+    <string name="message_promo">निवडलेल्या पिकासाठी ही सुविधा उपलब्ध नाही. कृपया दुसरे पीक निवडा आणि पुन्हा प्रयत्न करा.</string>
+    <string name="ok_promo">ठीक आहे</string>
+    <string name="my_dashboard">माझा डॅशबोर्ड</string>
+    <string name="agri_services">कृषी सेवा</string>
+    <string name="smart_farming">स्मार्ट शेती</string>
+    <string name="welcome_back_to_your_dashboard">आपले डॅशबोर्डमध्ये पुन्हा स्वागत आहे</string>
+    <string name="my_farms">माझी शेती</string>
+    <string name="plot_area_mdash">क्षेत्रफळ</string>
+    <string name="total_farms_mdash">शेतजमिनी</string>
+    <string name="total_crops_mdash">एकूण पिके</string>
+    <string name="production_tools">उत्पादन साधने</string>
+    <string name="hectare_mdash">हेक्टर</string>
+    <string name="market_amp_logistics">बाजारपेठ आणि लॉजिस्टिक्स</string>
+    <string name="fertilizer_ncalculator">खत\nकॅल्क्युलेटर</string>
+    <string name="cost_ncalculator">खर्च\nकॅल्क्युलेटर</string>
+    <string name="feed_crops_right">पिकांना योग्य पोषण द्या</string>
+    <string name="predicts_profit">नफा अंदाज</string>
+    <string name="real_time_market_prices">प्रत्यक्ष बाजारभाव</string>
+    <string name="live_rates_from_200_mandis">२००+ मंड्यांमधून थेट दर</string>
+    <string name="warehouse_availability">गोदाम उपलब्धता</string>
+    <string name="find_storage_space_near_you">तुमच्या जवळील साठवण जागा शोधा</string>
+    <string name="chc_center">सीएचसी केंद्र</string>
+    <string name="find_local_trading_hubs">स्थानिक व्यापार केंद्रे शोधा</string>
+    <string name="hello">नमस्कार,</string>
+    <string name="declare_your_crop">पीक जाहीर करा</string>
+    <string name="add_crop_plus">+ पीक जोडा</string>
+    <string name="survey_no">सर्व्हे क्रमांक</string>
+    <string name="farm_lands_crops">शेतजमीन आणि पिके</string>
+    <string name="please_add_the_crops_message">कृपया पुढील प्रक्रियेसाठी सध्याच्या हंगामातील पिकांची नोंद करा.</string>
+    <string name="total_area">एकूण क्षेत्रफळ</string>
+    <string name="area_cultivated">लागवड केलेले क्षेत्रफळ</string>
+    <string name="max_crop_limit_added">आपण आधीच पिकांची कमाल संख्या जोडली आहे.</string>
+    <string name="owner">मालक</string>
+    <string name="view_details">तपशील पहा →</string>
+    <string name="land_owner_name">जमीन मालकाचे नाव</string>
+    <string name="farmid">शेत ओळख क्रमांक</string>
+    <string name="villages">गावे:</string>
+    <string name="smart_solutions_for_modern_farming">आधुनिक शेतीसाठी स्मार्ट उपाय</string>
+    <string name="services_amp_information">सेवा व माहिती</string>
+    <string name="sown_on">पेरणी दिनांक</string>
+    <string name="logout_title">लॉगआउट</string>
+    <string name="logout_desc">आपण लॉगआउट करू इच्छिता?</string>
+    <string name="farm_magazine">कृषी\nमासिक</string>
+    <string name="mahapashudhan_magazine">महापशुधन\nमासिक</string>
+    <string name="give_your_feedback">तुमचा अभिप्राय द्या</string>
+    <string name="tell_us_more_optional">आम्हाला अधिक सांगा (पर्यायी)</string>
+    <string name="write_your_suggestions_here">तुमच्या सूचना येथे लिहा</string>
+    <string name="submit_feedback_not">अभिप्राय सबमिट करा</string>
+    <string name="helpful">उपयुक्त</string>
+    <string name="not_helpful">उपयुक्त नाही</string>
 </resources>

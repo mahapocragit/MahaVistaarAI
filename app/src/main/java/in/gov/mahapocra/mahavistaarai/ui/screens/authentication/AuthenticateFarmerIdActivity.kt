@@ -5,7 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
@@ -22,9 +24,8 @@ import androidx.core.content.ContextCompat
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityAuthenticateFarmerIdBinding
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
-import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LoginViewModel
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.NewDashboardMainActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
@@ -33,11 +34,11 @@ import org.json.JSONObject
 class AuthenticateFarmerIdActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAuthenticateFarmerIdBinding
-    private val loginViewModel: LoginViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
     var languageToLoad = "mr"
     private var farmerId = ""
     private lateinit var dialog: Dialog
-
+    private lateinit var otpFields: List<EditText>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -50,9 +51,46 @@ class AuthenticateFarmerIdActivity : AppCompatActivity() {
         binding = ActivityAuthenticateFarmerIdBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiResponsive(binding.root)
-
         observeResponse()
         setUpListeners()
+    }
+
+    private fun setupOtpInputs(otpFields: List<EditText>) {
+
+        otpFields.forEachIndexed { index, editText ->
+
+            editText.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    if (s?.length == 1 && index < otpFields.size - 1) {
+                        otpFields[index + 1].requestFocus()
+                    }
+                }
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            })
+
+            editText.setOnKeyListener { _, keyCode, event ->
+                if (keyCode == KeyEvent.KEYCODE_DEL &&
+                    event.action == KeyEvent.ACTION_DOWN &&
+                    editText.text.isEmpty() &&
+                    index > 0
+                ) {
+                    otpFields[index - 1].requestFocus()
+                    otpFields[index - 1].setSelection(
+                        otpFields[index - 1].text.length
+                    )
+                }
+                false
+            }
+        }
     }
 
     private fun setUpListeners() {
@@ -62,16 +100,21 @@ class AuthenticateFarmerIdActivity : AppCompatActivity() {
                 binding.farmerIdEditText.error = "Please enter valid Farmer ID"
                 return@setOnClickListener
             }
-            loginViewModel.sendOtpToFarmerId(this, farmerId)
+            authViewModel.sendOtpToFarmerId(this, farmerId)
         }
 
         binding.backPressIcon.setOnClickListener {
-            startActivity(Intent(this, DashboardScreen::class.java))
+            startActivity(Intent(this, NewDashboardMainActivity::class.java))
         }
 
-        OnBackPressedDispatcher().addCallback(object: OnBackPressedCallback(true){
+        OnBackPressedDispatcher().addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(Intent(this@AuthenticateFarmerIdActivity, DashboardScreen::class.java))
+                startActivity(
+                    Intent(
+                        this@AuthenticateFarmerIdActivity,
+                        NewDashboardMainActivity::class.java
+                    )
+                )
             }
         })
     }
@@ -80,7 +123,7 @@ class AuthenticateFarmerIdActivity : AppCompatActivity() {
 
         var userDataJson = JSONObject()
 
-        loginViewModel.sendOtpToFarmerIdResponse.observe(this) { response ->
+        authViewModel.sendOtpToFarmerIdResponse.observe(this) { response ->
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
                 val status = jSONObject.optInt("status")
@@ -95,10 +138,9 @@ class AuthenticateFarmerIdActivity : AppCompatActivity() {
             }
         }
 
-        loginViewModel.compareOtpToFarmerIdResponse.observe(this) { response ->
+        authViewModel.compareOtpToFarmerIdResponse.observe(this) { response ->
             if (response != null) {
                 val jSONObject = JSONObject(response.toString())
-                Log.d(TAG, "observe compareOtpToFarmerIdResponse: $jSONObject")
                 val status = jSONObject.optInt("status")
                 val response = jSONObject.optString("response")
                 if (status == 200) {
@@ -121,6 +163,15 @@ class AuthenticateFarmerIdActivity : AppCompatActivity() {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
         dialog.setContentView(R.layout.dialog_activity_verification)
+        val otpFields = listOf(
+            dialog.findViewById<EditText>(R.id.otp1),
+            dialog.findViewById<EditText>(R.id.otp2),
+            dialog.findViewById<EditText>(R.id.otp3),
+            dialog.findViewById<EditText>(R.id.otp4),
+            dialog.findViewById<EditText>(R.id.otp5),
+            dialog.findViewById<EditText>(R.id.otp6)
+        )
+        setupOtpInputs(otpFields)
         dialog.window!!.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
@@ -128,7 +179,6 @@ class AuthenticateFarmerIdActivity : AppCompatActivity() {
 
         val dialogTitle = dialog.findViewById<TextView>(R.id.dialogTitle)
         dialogTitle.text = resources.getString(R.string.enterOtp)
-        val receiveOTPEditText = dialog.findViewById<EditText>(R.id.OptEditText)
         val submitButton = dialog.findViewById<Button>(R.id.submitButton)
         val resendOTP = dialog.findViewById<Button>(R.id.resendOTP)
         val cancelButton = dialog.findViewById<ImageView>(R.id.imageView_close)
@@ -136,18 +186,19 @@ class AuthenticateFarmerIdActivity : AppCompatActivity() {
         cancelButton.setOnClickListener { dialog.dismiss() }
         submitButton.setOnClickListener {
 
-            val enteredOTP = receiveOTPEditText.text.toString()
-            if (enteredOTP.isEmpty()) {
-                receiveOTPEditText.error = resources.getString(R.string.regist_otp_err)
-                receiveOTPEditText.requestFocus()
+            val enteredOTP = otpFields.joinToString("") { it.text.toString() }
+
+            if (enteredOTP.length < 6) {
+                Toast.makeText(this, "Enter valid OTP", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             } else {
-                loginViewModel.compareOtpToFarmerId(this, farmerId, enteredOTP)
+                authViewModel.compareOtpToFarmerId(this, farmerId, enteredOTP)
             }
         }
 
         resendOTP.setOnClickListener {
             dialog.dismiss()
-            loginViewModel.sendOtpToFarmerId(this, farmerId)
+            authViewModel.sendOtpToFarmerId(this, farmerId)
         }
         dialog.show()
     }

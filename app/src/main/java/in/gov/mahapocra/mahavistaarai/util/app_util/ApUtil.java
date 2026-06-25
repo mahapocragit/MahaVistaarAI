@@ -14,7 +14,7 @@ import java.util.List;
 
 import in.co.appinventor.services_api.listener.AlertListEventListener;
 import in.gov.mahapocra.mahavistaarai.R;
-import in.gov.mahapocra.mahavistaarai.sma.CustomListAdapter;
+import in.gov.mahapocra.mahavistaarai.sma.ui.adapters.CustomListAdapter;
 
 public class ApUtil {
 

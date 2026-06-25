@@ -6,9 +6,14 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="watercolor"></color>
+    <color name="off_white">#80FFFFFF</color>
+    <color name="off_black">#374151</color>
     <color name="white_light">#80FFFEFE</color>
     <color name="dusk_yellow">#ead538</color>
+    <color name="baby_blue">#6495ED</color>
+    <color name="soft_blue">#D5E4F7</color>
+    <color name="light_gray">#E0E0E0</color>
+    <color name="pale_aqua">#E5FBFC</color>
 
     <color name="schedule_com">#42842d</color>
     <color name="schedule_re">#535353</color>
@@ -111,4 +116,12 @@
     <color name="nav_unselected">#B0BEC5</color> <!-- Light gray -->
     <color name="bottom_icon_tint">#64748B</color> <!-- Light gray -->
     <color name="nav_text">#263238</color> <!-- Dark gray for text -->
+
+    <!--    NEW UI-->
+    <color name="gray_dark_colour_text">#4B5563</color>
+    <color name="background_colour_nui">#F8FAFC</color>
+    <color name="positive_feedback_color">#00A651</color>
+    <color name="negative_feedback_color">#D7D7D7</color>
+    <color name="button_feedback_tint">#3A4354</color>
+    <color name="text_colour_adv">#D97706</color>
 </resources>

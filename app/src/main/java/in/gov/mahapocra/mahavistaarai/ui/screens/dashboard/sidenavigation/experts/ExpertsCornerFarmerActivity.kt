@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.gov.mahapocra.mahavistaarai.data.model.Category
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityExpertsCornerFarmerBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.ExpertsCornerFarmerAdapter
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.NewDashboardMainActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.ExpertsViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import org.json.JSONObject
@@ -40,11 +40,16 @@ class ExpertsCornerFarmerActivity : AppCompatActivity() {
 
         binding.toolbar.imgBackArrow.visibility = View.VISIBLE
         binding.toolbar.imgBackArrow.setOnClickListener {
-            startActivity(Intent(this, DashboardScreen::class.java))
+            startActivity(Intent(this, NewDashboardMainActivity::class.java))
         }
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(Intent(this@ExpertsCornerFarmerActivity, DashboardScreen::class.java))
+                startActivity(
+                    Intent(
+                        this@ExpertsCornerFarmerActivity,
+                        NewDashboardMainActivity::class.java
+                    )
+                )
             }
         })
         binding.toolbar.textViewHeaderTitle.text = "Experts Corner"

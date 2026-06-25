@@ -1,7 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.viewmodel
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,40 +15,39 @@ import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
+import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import org.json.JSONArray
 import org.json.JSONObject
-import retrofit2.Retrofit
 import java.io.IOException
 import java.net.SocketException
 import java.net.SocketTimeoutException
 
 class FarmerViewModel : ViewModel() {
 
-    private val _saveFarmerSelectedCrop = MutableLiveData<JsonObject>()
-    val saveFarmerSelectedCrop: LiveData<JsonObject> = _saveFarmerSelectedCrop
 
-    private val _getFarmerSelectedCrop = MutableLiveData<JsonObject>()
-    val getFarmerSelectedCrop: LiveData<JsonObject> = _getFarmerSelectedCrop
+    private val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+    private val apiRequest = retrofit.create(ApiService::class.java)
 
-    private val _deleteFarmerSelectedCrop = MutableLiveData<JsonObject>()
-    val deleteFarmerSelectedCrop: LiveData<JsonObject> = _deleteFarmerSelectedCrop
+    private val _saveFarmerSelectedCrop = MutableLiveData<UiState<JsonObject>>()
+    val saveFarmerSelectedCrop: LiveData<UiState<JsonObject>> = _saveFarmerSelectedCrop
 
-    private val _cropCategoryResponse = MutableLiveData<JsonObject>()
-    val cropCategoryResponse: LiveData<JsonObject> = _cropCategoryResponse
+    private val _getFarmerSelectedCrop = MutableLiveData<UiState<JsonObject>>()
+    val getFarmerSelectedCrop: LiveData<UiState<JsonObject>> = _getFarmerSelectedCrop
+
+    private val _deleteFarmerSelectedCrop = MutableLiveData<UiState<JsonObject>>()
+    val deleteFarmerSelectedCrop: LiveData<UiState<JsonObject>> = _deleteFarmerSelectedCrop
+
+    private val _cropCategoryResponse = MutableLiveData<UiState<JsonObject>>()
+    val cropCategoryResponse: LiveData<UiState<JsonObject>> = _cropCategoryResponse
 
     private val _talukaList = MutableLiveData<JsonObject>()
     val talukaList: LiveData<JsonObject> = _talukaList
 
-    private val _weatherResponse = MutableLiveData<JsonObject>()
-    val weatherResponse: LiveData<JsonObject> = _weatherResponse
-
-    private val _userDetailsResponse = MutableLiveData<JsonObject>()
-    val userDetailsResponse: LiveData<JsonObject> = _userDetailsResponse
+    private val _weatherResponse = MutableLiveData<UiState<JsonObject>>()
+    val weatherResponse: LiveData<UiState<JsonObject>> = _weatherResponse
 
     private val _videosResponse = MutableLiveData<JsonObject>()
     val videosResponse: LiveData<JsonObject> = _videosResponse
@@ -64,23 +62,12 @@ class FarmerViewModel : ViewModel() {
     private val _chcCentersResponse = MutableLiveData<JsonObject>()
     val chcCentersResponse: LiveData<JsonObject> = _chcCentersResponse
 
-    private val _fetchLocationDataFromCoordinates = MutableLiveData<JsonObject>()
-    val fetchLocationDataFromCoordinates: LiveData<JsonObject> = _fetchLocationDataFromCoordinates
-
-    private val _compareOtpResponse = MutableLiveData<JsonObject>()
-    val compareOtpResponse: LiveData<JsonObject> = _compareOtpResponse
-
-    private val _compareOtpResponseReg = MutableLiveData<JsonObject>()
-    val compareOtpResponseReg: LiveData<JsonObject> = _compareOtpResponseReg
-
     private val _shetishalaVideosResponse = MutableLiveData<JsonObject>()
     val shetishalaVideosResponse: LiveData<JsonObject> = _shetishalaVideosResponse
 
-    private val _agristackLoginResponse = MutableLiveData<JsonObject>()
-    val agristackLoginResponse: LiveData<JsonObject> = _agristackLoginResponse
-
-    private val _getCropStagesAndAdvisoryResponse = MutableLiveData<JsonObject>()
-    val getCropStagesAndAdvisoryResponse: LiveData<JsonObject> = _getCropStagesAndAdvisoryResponse
+    private val _getCropStagesAndAdvisoryResponse = MutableLiveData<UiState<JsonObject>>()
+    val getCropStagesAndAdvisoryResponse: LiveData<UiState<JsonObject>> =
+        _getCropStagesAndAdvisoryResponse
 
     private val _getClimateResilientListResponse = MutableLiveData<JsonObject>()
     val getClimateResilientListResponse: LiveData<JsonObject> = _getClimateResilientListResponse
@@ -91,23 +78,28 @@ class FarmerViewModel : ViewModel() {
     private val _getPestDiseaseDetailsResponse = MutableLiveData<JsonObject>()
     val getPestDiseaseDetailsResponse: LiveData<JsonObject> = _getPestDiseaseDetailsResponse
 
-    private val _getCropSapAdvisoryResponse = MutableLiveData<JsonObject>()
-    val getCropSapAdvisoryResponse: LiveData<JsonObject> = _getCropSapAdvisoryResponse
+    private val _getCropSapAdvisoryResponse = MutableLiveData<UiState<JsonObject>>()
+    val getCropSapAdvisoryResponse: LiveData<UiState<JsonObject>> = _getCropSapAdvisoryResponse
 
-    private val _getNotificationResponse = MutableLiveData<JsonObject>()
-    val getNotificationResponse: LiveData<JsonObject> = _getNotificationResponse
+    private val _getNotificationResponse = MutableLiveData<UiState<JsonObject>>()
+    val getNotificationResponse: LiveData<UiState<JsonObject>> = _getNotificationResponse
 
-    private val _getNotificationDetailedResponse = MutableLiveData<JsonObject>()
-    val getNotificationDetailedResponse: LiveData<JsonObject> = _getNotificationDetailedResponse
+    private val _getNotificationDetailedResponse = MutableLiveData<UiState<JsonObject>>()
+    val getNotificationDetailedResponse: LiveData<UiState<JsonObject>> =
+        _getNotificationDetailedResponse
 
     private val _updateNotificationStatusResponse = MutableLiveData<JsonObject>()
     val updateNotificationStatusResponse: LiveData<JsonObject> = _updateNotificationStatusResponse
 
-    private val _updateFCMTokenResponse = MutableLiveData<JsonObject>()
-    val updateFCMTokenResponse: LiveData<JsonObject> = _updateFCMTokenResponse
+    private val _addNotificationFeedbackResponse = MutableLiveData<UiState<JsonObject>>()
+    val addNotificationFeedbackResponse: LiveData<UiState<JsonObject>> =
+        _addNotificationFeedbackResponse
 
-    private val _checkFCMTokenResponse = MutableLiveData<JsonObject>()
-    val checkFCMTokenResponse: LiveData<JsonObject> = _checkFCMTokenResponse
+    private val _updateFCMTokenResponse = MutableLiveData<UiState<JsonObject>>()
+    val updateFCMTokenResponse: LiveData<UiState<JsonObject>> = _updateFCMTokenResponse
+
+    private val _checkFCMTokenResponse = MutableLiveData<UiState<JsonObject>>()
+    val checkFCMTokenResponse: LiveData<UiState<JsonObject>> = _checkFCMTokenResponse
 
     private val _warehouseDetailsResponse = MutableLiveData<JsonObject>()
     val warehouseDetailsResponse: LiveData<JsonObject> = _warehouseDetailsResponse
@@ -115,86 +107,87 @@ class FarmerViewModel : ViewModel() {
     private val _districtIdResponse = MutableLiveData<JsonObject>()
     val districtIdResponse: LiveData<JsonObject> = _districtIdResponse
 
-    private val _consentResponse = MutableLiveData<JsonObject>()
-    val consentResponse: LiveData<JsonObject> = _consentResponse
+    private val _consentResponse = MutableLiveData<UiState<JsonObject>>()
+    val consentResponse: LiveData<UiState<JsonObject>> = _consentResponse
+
+    private val _saveSubscribedTopicResponse = MutableLiveData<UiState<JsonObject>>()
+    val saveSubscribedTopicResponse: LiveData<UiState<JsonObject>> = _saveSubscribedTopicResponse
+
+    private val _deleteSubscribedTopicResponse = MutableLiveData<UiState<JsonObject>>()
+    val deleteSubscribedTopicResponse: LiveData<UiState<JsonObject>> =
+        _deleteSubscribedTopicResponse
+
+    private val _getMagazineDetailsResponse = MutableLiveData<UiState<JsonObject>>()
+    val getMagazineDetailsResponse: LiveData<UiState<JsonObject>> = _getMagazineDetailsResponse
+
+    private val _getPromoBannerResponse = MutableLiveData<UiState<JsonObject>>()
+    val getPromoBannerResponse: LiveData<UiState<JsonObject>> = _getPromoBannerResponse
+
+    private val _getAppVersionResponse = MutableLiveData<UiState<JsonObject>>()
+    val getAppVersionResponse: LiveData<UiState<JsonObject>> = _getAppVersionResponse
+
+    private val _getFarmSummeryResponse = MutableLiveData<UiState<JsonObject>>()
+    val getFarmSummeryResponse: LiveData<UiState<JsonObject>> = _getFarmSummeryResponse
+
+    private val _getFarmDetailsResponse = MutableLiveData<UiState<JsonObject>>()
+    val getFarmDetailsResponse: LiveData<UiState<JsonObject>> = _getFarmDetailsResponse
+
+    private val _saveFarmCropDCSResponse = MutableLiveData<UiState<JsonObject>>()
+    val saveFarmCropDCSResponse: LiveData<UiState<JsonObject>> = _saveFarmCropDCSResponse
+
+    private val _getFarmCropDCSResponse = MutableLiveData<UiState<JsonObject>>()
+    val getFarmCropDCSResponse: LiveData<UiState<JsonObject>> = _getFarmCropDCSResponse
+
+    private val _updateFarmCropDCSResponse = MutableLiveData<UiState<JsonObject>>()
+    val updateFarmCropDCSResponse: LiveData<UiState<JsonObject>> = _updateFarmCropDCSResponse
+
+    private val _deleteFarmCropDCSResponse = MutableLiveData<UiState<JsonObject>>()
+    val deleteFarmCropDCSResponse: LiveData<UiState<JsonObject>> = _deleteFarmCropDCSResponse
+
+    private val _fetchCropsForDCSResponse = MutableLiveData<UiState<JsonObject>>()
+    val fetchCropsForDCSResponse: LiveData<UiState<JsonObject>> = _fetchCropsForDCSResponse
 
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
-
-    fun saveFarmerSelectedCrop(context: Context, sowingDate: String, cropId: Int) {
+    fun saveFarmerSelectedCrop(farmerId: Int, sowingDate: String, cropId: Int) {
         viewModelScope.launch {
-            ProgressHelper.showProgressDialog(context)
+            _saveFarmerSelectedCrop.value = UiState.Loading
             try {
                 val jsonObject = JSONObject().apply {
                     put("api_key", APIKeys.SSO_PROD)
-                    put(
-                        "farmer_id",
-                        AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
-                    )
+                    put("farmer_id", farmerId)
                     put("sowing_date", sowingDate)
                     put("crop_id", cropId)
-                    put(
-                        "is_guest",
-                        if (AppSettings.getInstance()
-                                .getBooleanValue(context, AppConstants.IS_USER_GUEST, false)
-                        ) 1 else 0
-                    )
+                    put("is_guest", 0)
                 }
-
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
-
                 // Retrofit suspend call
                 val response = apiRequest.kSaveFarmerSelectedCrop(requestBody)
-                ProgressHelper.disableProgressDialog()
-                _saveFarmerSelectedCrop.value = response
+                _saveFarmerSelectedCrop.value = UiState.Success(response)
 
             } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
+                _saveFarmerSelectedCrop.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
 
-    fun getFarmerSelectedCrop(context: Context, language: String?) {
+    fun getFarmerSelectedCrop(language: String?) {
         viewModelScope.launch {
-            val farmerId =
-                AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
-            val jsonObject = JSONObject()
+            _getFarmerSelectedCrop.value = UiState.Loading
             try {
-                jsonObject.put("api_key", APIKeys.SSO_PROD)
+                val jsonObject = JSONObject()
                 jsonObject.put("lang", language)
-                jsonObject.put("farmer_id", farmerId)
-
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
-
-                try {
-                    val response = withContext(Dispatchers.IO) {
-                        apiRequest.getFarmersSelectedCrop(requestBody)
-                    }
-                    _getFarmerSelectedCrop.value = response
-                } catch (e: Exception) {
-                    val message = when (e) {
-                        is SocketTimeoutException -> "Request timed out. Please try again."
-                        is SocketException -> "Connection lost. Please check your internet."
-                        is IOException -> "Network error occurred."
-                        else -> e.localizedMessage ?: "Unknown error"
-                    }
-                    _error.value = message
-                    FirebaseCrashlytics.getInstance().recordException(e)
-                }
-
+                val response = apiRequest.getFarmersSelectedCrop(requestBody)
+                _getFarmerSelectedCrop.value = UiState.Success(response)
             } catch (e: Exception) {
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
@@ -202,32 +195,24 @@ class FarmerViewModel : ViewModel() {
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
+                _getFarmerSelectedCrop.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
 
-    fun deleteFarmerSelectedCrop(context: Context, cropId: Int) {
+    fun deleteFarmerSelectedCrop(farmerId: Int, cropId: Int) {
         viewModelScope.launch {
             try {
-                val farmerId =
-                    AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+                _deleteFarmerSelectedCrop.value = UiState.Loading
                 val jsonObject = JSONObject().apply {
                     put("api_key", APIKeys.SSO_PROD)
                     put("crop_id", cropId)
                     put("farmer_id", farmerId)
                 }
-
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
-
                 val response = apiRequest.deleteSelectedCrop(requestBody)
-
-                // You can handle the result however you want, for example:
-                _deleteFarmerSelectedCrop.value =
-                    response // or create a separate LiveData if needed
+                _deleteFarmerSelectedCrop.value = UiState.Success(response)
 
             } catch (e: Exception) {
                 val message = when (e) {
@@ -236,40 +221,35 @@ class FarmerViewModel : ViewModel() {
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
+                _deleteFarmerSelectedCrop.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
 
-    fun getCropCategoriesAndCropDetails(context: Context, languageToLoad: String) {
+    fun getCropCategoriesAndCropDetails(languageToLoad: String) {
         viewModelScope.launch {
-            ProgressHelper.showProgressDialog(context)
+            _cropCategoryResponse.value = UiState.Loading
             try {
                 val jsonObject = JSONObject().apply {
                     put("api_key", APIKeys.SSO_PROD)
                     put("lang", languageToLoad)
                 }
-
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
-
                 // Suspend call
                 val response = apiRequest.getCropCategoryWise(requestBody)
-                ProgressHelper.disableProgressDialog()
                 // Handle the response (success case)
-                _cropCategoryResponse.value = response // ← use appropriate LiveData
+                _cropCategoryResponse.value =
+                    UiState.Success(response) // ← use appropriate LiveData
 
             } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
+                _cropCategoryResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -285,14 +265,9 @@ class FarmerViewModel : ViewModel() {
                     put("lang", languageToLoad)
                     put("district_code", districtID)
                 }
-
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
-
                 // This is the suspend function call
                 val response = apiRequest.getTalukaList(requestBody)
-
                 // Handle success
                 _talukaList.value = response // <- your LiveData for the UI
 
@@ -309,25 +284,20 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun fetchWeatherDetails(context: Context, languageToLoad: String) {
+    fun fetchWeatherDetails(talukaID: Int, languageToLoad: String) {
         viewModelScope.launch {
+            _weatherResponse.value = UiState.Loading
             try {
-                val talukaID =
-                    AppSettings.getInstance().getIntValue(context, AppConstants.uTALUKAID, 0)
                 val jsonObject = JSONObject().apply {
                     put("taluka_code", talukaID)
                     put("lang", languageToLoad)
                 }
-
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
-
                 // Suspend API call
                 val response = apiRequest.getWeatherDetails(requestBody)
 
                 // Post the response to LiveData
-                _weatherResponse.value = response
+                _weatherResponse.value = UiState.Success(response)
 
             } catch (e: Exception) {
                 val message = when (e) {
@@ -336,36 +306,7 @@ class FarmerViewModel : ViewModel() {
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
-                FirebaseCrashlytics.getInstance().recordException(e)
-            }
-        }
-    }
-
-    fun fetchUserInformation(context: Context, farmerRegistrationID: Int) {
-        viewModelScope.launch {
-            try {
-                val jsonObject = JSONObject().apply {
-                    put("SecurityKey", ApiConstants.SSO_KEY)
-                }
-
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
-
-                val response = apiRequest.getGetRegistration(farmerRegistrationID, requestBody)
-
-                // Handle success
-                _userDetailsResponse.value = response
-
-            } catch (e: Exception) {
-                val message = when (e) {
-                    is SocketTimeoutException -> "Request timed out. Please try again."
-                    is SocketException -> "Connection lost. Please check your internet."
-                    is IOException -> "Network error occurred."
-                    else -> e.localizedMessage ?: "Unknown error"
-                }
-                _error.value = message
+                _weatherResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -374,8 +315,6 @@ class FarmerViewModel : ViewModel() {
     fun getVideosForFarmer(context: Context) {
         viewModelScope.launch {
             try {
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getFarmersVideosJson()
                 _videosResponse.value = response
             } catch (e: Exception) {
@@ -395,8 +334,6 @@ class FarmerViewModel : ViewModel() {
         viewModelScope.launch {
             ProgressHelper.showProgressDialog(context)
             try {
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getDigitalShetishalaSchedule()
                 ProgressHelper.disableProgressDialog()
                 _getDigitalShetishalaScheduleResponse.value = response
@@ -423,9 +360,6 @@ class FarmerViewModel : ViewModel() {
                 }
 
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
-
                 val response = apiRequest.getSOPByList(requestBody)
 
                 // Handle success
@@ -447,96 +381,8 @@ class FarmerViewModel : ViewModel() {
     fun fetchDataForCHC(context: Context, latitude: Double, longitude: Double) {
         viewModelScope.launch {
             try {
-                val jsonObject = JSONObject()
-                jsonObject.put("api_key", ApiConstants.SSO_KEY)
-                jsonObject.put("lat", latitude)
-                jsonObject.put("lon", longitude)
-
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
-                val response = apiRequest.getCHCInformation(requestBody)
+                val response = apiRequest.getCHCInformation(latitude.toString(), longitude.toString())
                 _chcCentersResponse.value = response
-            } catch (e: Exception) {
-                val message = when (e) {
-                    is SocketTimeoutException -> "Request timed out. Please try again."
-                    is SocketException -> "Connection lost. Please check your internet."
-                    is IOException -> "Network error occurred."
-                    else -> e.localizedMessage ?: "Unknown error"
-                }
-                _error.value = message
-                FirebaseCrashlytics.getInstance().recordException(e)
-            }
-        }
-    }
-
-    fun fetchLocationDataFromCoordinates(context: Context, latitude: Double, longitude: Double) {
-        viewModelScope.launch {
-            try {
-                val jsonObject = JSONObject()
-                jsonObject.put("lat", latitude)
-                jsonObject.put("lon", longitude)
-
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
-                val response = apiRequest.getCodeFromCoordinates(requestBody)
-                _fetchLocationDataFromCoordinates.value = response
-            } catch (e: Exception) {
-                val message = when (e) {
-                    is SocketTimeoutException -> "Request timed out. Please try again."
-                    is SocketException -> "Connection lost. Please check your internet."
-                    is IOException -> "Network error occurred."
-                    else -> e.localizedMessage ?: "Unknown error"
-                }
-                _error.value = message
-                FirebaseCrashlytics.getInstance().recordException(e)
-            }
-        }
-    }
-
-
-    fun compareOtp(context: Context, timestamp: Long, mobile: String, enteredOTP: String) {
-        viewModelScope.launch {
-            val jsonObject = JSONObject()
-            try {
-                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
-                jsonObject.put("otp", enteredOTP)
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
-                val response =
-                    apiRequest.compareOtp(mobile.trim { it <= ' ' }, timestamp, requestBody)
-                _compareOtpResponse.value = response
-            } catch (e: Exception) {
-                val message = when (e) {
-                    is SocketTimeoutException -> "Request timed out. Please try again."
-                    is SocketException -> "Connection lost. Please check your internet."
-                    is IOException -> "Network error occurred."
-                    else -> e.localizedMessage ?: "Unknown error"
-                }
-                _error.value = message
-                FirebaseCrashlytics.getInstance().recordException(e)
-            }
-        }
-    }
-
-    fun compareOtpReg(context: Context, mobile: String, enteredOTP: String) {
-        viewModelScope.launch {
-            val jsonObject = JSONObject()
-            try {
-                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
-                jsonObject.put("otp", enteredOTP)
-
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
-                val response = apiRequest.compareOtpReg(mobile.trim { it <= ' ' }, requestBody)
-                _compareOtpResponseReg.value = response
             } catch (e: Exception) {
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
@@ -554,8 +400,8 @@ class FarmerViewModel : ViewModel() {
         viewModelScope.launch {
             ProgressHelper.showProgressDialog(context)
             try {
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
+
+
                 val response = apiRequest.getShetishalaVideos()
                 ProgressHelper.disableProgressDialog()
                 _shetishalaVideosResponse.value = response
@@ -573,68 +419,31 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun farmerIdBasedLogin(context: Context, agristackID: String) {
-        viewModelScope.launch {
-            ProgressHelper.showProgressDialog(context)
-            try {
-                val jsonObject = JSONObject().apply {
-                    put("SecurityKey", APIKeys.SSO_PROD)
-                }
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
-
-                val response = apiRequest.farmerLoginBasedOnID(agristackID, requestBody)
-                ProgressHelper.disableProgressDialog()
-                // You can handle the result however you want, for example:
-                _agristackLoginResponse.value = response
-
-            } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
-                val message = when (e) {
-                    is SocketTimeoutException -> "Request timed out. Please try again."
-                    is SocketException -> "Connection lost. Please check your internet."
-                    is IOException -> "Network error occurred."
-                    else -> e.localizedMessage ?: "Unknown error"
-                }
-                _error.value = message
-                FirebaseCrashlytics.getInstance().recordException(e)
-            }
-        }
-    }
-
     fun getCropStagesAndAdvisory(
-        context: Context,
+        farmerId: Int,
         cropId: Int?,
         sowingDate: String,
         language: String
     ) {
-        val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
         viewModelScope.launch {
-            ProgressHelper.showProgressDialog(context)
+            _getCropStagesAndAdvisoryResponse.value = UiState.Loading
             try {
                 val jsonObject = JSONObject()
                 jsonObject.put("crop_id", cropId)
                 jsonObject.put("farmer_id", farmerId)
                 jsonObject.put("sowing_date", sowingDate)
                 jsonObject.put("lang", language)
-                Log.d(TAG, "getCropStagesAndAdvisory jsonObject: $jsonObject")
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getCropStagesAndAdvisory(requestBody)
-                ProgressHelper.disableProgressDialog()
-                _getCropStagesAndAdvisoryResponse.value = response
+                _getCropStagesAndAdvisoryResponse.value = UiState.Success(response)
             } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
+                _getCropStagesAndAdvisoryResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
@@ -648,9 +457,6 @@ class FarmerViewModel : ViewModel() {
                 jsonObject.put("api_key", ApiConstants.SSO_KEY)
                 jsonObject.put("lang", languageToLoad)
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getClimateResilientList(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _getClimateResilientListResponse.value = response
@@ -676,9 +482,6 @@ class FarmerViewModel : ViewModel() {
                 jsonObject.put("crop_id", cropId)
                 jsonObject.put("lang", language)
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getCropStages(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _getCropStagesResponse.value = response
@@ -702,9 +505,6 @@ class FarmerViewModel : ViewModel() {
             try {
                 val jsonObject = JSONObject().apply { put("pdid", pestId) }
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getPestDiseaseDetails(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _getPestDiseaseDetailsResponse.value = response
@@ -722,17 +522,15 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun getCropSapAdvisory(context: Context, villageCode: Int) {
+    fun getCropSapAdvisory(villageCode: Int) {
         viewModelScope.launch {
-            val jsonObject = JSONObject()
             try {
+                _getCropSapAdvisoryResponse.value = UiState.Loading
+                val jsonObject = JSONObject()
                 jsonObject.put("village_code", villageCode.toString())
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getCropSapAdvisory(requestBody)
-                _getCropSapAdvisoryResponse.value = response
+                _getCropSapAdvisoryResponse.value = UiState.Success(response)
             } catch (e: Exception) {
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
@@ -740,77 +538,62 @@ class FarmerViewModel : ViewModel() {
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
+                _getCropSapAdvisoryResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
 
-    fun getNotificationList(context: Context) {
-        ProgressHelper.showProgressDialog(context)
+    fun getNotificationList(farmerId: Int) {
         viewModelScope.launch {
-            val farmerId =
-                AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
             try {
-                val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
+                _getNotificationResponse.value = UiState.Loading
                 val response = apiRequest.getNotificationList(farmerId)
-                ProgressHelper.disableProgressDialog()
-                _getNotificationResponse.value = response
+                _getNotificationResponse.value = UiState.Success(response)
             } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
+                _getNotificationResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
 
-    fun getNotificationDetails(context: Context, notificationID: Long) {
-        ProgressHelper.showProgressDialog(context)
+    fun getNotificationDetails(notificationID: String, notificationType: String?) {
         viewModelScope.launch {
-            val jsonObject = JSONObject().apply {
-                put("notification_id", notificationID)
-            }
-            val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+            _getNotificationDetailedResponse.value = UiState.Loading
             try {
-                val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
-                val response = apiRequest.getNotificationDetails(requestBody)
-                ProgressHelper.disableProgressDialog()
-                _getNotificationDetailedResponse.value = response
+                val response = apiRequest.getNotificationDetails(
+                    notificationType = notificationType.toString(),
+                    notificationId = notificationID
+                )
+                _getNotificationDetailedResponse.value = UiState.Success(response)
             } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
+                _getNotificationDetailedResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
 
-    fun updateNotificationStatus(context: Context, notificationID: Long) {
-        ProgressHelper.showProgressDialog(context)
+    fun updateNotificationStatus(userId: Int, notificationId: String, type: String) {
         viewModelScope.launch {
             val jsonObject = JSONObject().apply {
-                put("notification_id", notificationID)
+                put("notification_id", notificationId)
+                put("type", type)
+                put("user_id", userId)
             }
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             try {
-                val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.updateNotificationStatus(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _updateNotificationStatusResponse.value = response
@@ -836,9 +619,6 @@ class FarmerViewModel : ViewModel() {
             }
             val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
             try {
-                val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.updateNotificationStatusForChatbot(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _updateNotificationStatusResponse.value = response
@@ -856,75 +636,89 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun updateFCMToken(context: Context, fcmToken: String) {
-        ProgressHelper.showProgressDialog(context)
-        val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+    fun addNotificationFeedback(
+        remarks: String,
+        notificationType: String,
+        notificationID: String,
+        feedbackId: String,
+        answerId: String
+    ) {
         viewModelScope.launch {
+            _addNotificationFeedbackResponse.value = UiState.Loading
             try {
-                val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
-                val response = apiRequest.updateFCMToken(farmerId, fcmToken)
-                ProgressHelper.disableProgressDialog()
-                val jsonString = """{"status": 200,"response": "FCM Cleared"}""".trimIndent()
-                val jsonObject: JsonObject = JsonParser.parseString(jsonString).asJsonObject
-                if (fcmToken == "NA") {
-                    _updateFCMTokenResponse.value = jsonObject
-                } else {
-                    _updateFCMTokenResponse.value = response
+                val feedbackArray = JSONArray()
+                val feedbackObject = JSONObject().apply {
+                    put("id", feedbackId)
+                    put("answer", answerId)
                 }
+                feedbackArray.put(feedbackObject)
+                val mainObject = JSONObject().apply {
+                    put("feedback", feedbackArray)
+                }
+                val requestBody = AppUtility.getInstance().getRequestBody(mainObject.toString())
+                val response = apiRequest.addNotificationFeedback(remarks, notificationType, notificationID,requestBody)
+                _addNotificationFeedbackResponse.value = UiState.Success(response)
             } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
+                _addNotificationFeedbackResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
 
-    fun validateFCMToken(context: Context) {
-        ProgressHelper.showProgressDialog(context)
-        val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+    fun updateFCMToken(farmerId: Int, fcmToken: String) = viewModelScope.launch {
+        _updateFCMTokenResponse.value = UiState.Loading
+        try {
+            val response = if (fcmToken == "NA") {
+                JsonParser.parseString(
+                    """{"status":200,"response":"FCM Cleared"}"""
+                ).asJsonObject
+            } else {
+                apiRequest.updateFCMToken(farmerId, fcmToken)
+            }
+            _updateFCMTokenResponse.value = UiState.Success(response)
+        } catch (e: Exception) {
+            _updateFCMTokenResponse.value = UiState.Error(
+                when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+            )
+            FirebaseCrashlytics.getInstance().recordException(e)
+        }
+    }
+
+    fun validateFCMToken(farmerId: Int) {
         viewModelScope.launch {
+            _checkFCMTokenResponse.value = UiState.Loading
             try {
-                val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.checkFcmToken(farmerId)
-                ProgressHelper.disableProgressDialog()
-                _checkFCMTokenResponse.value = response
+                _checkFCMTokenResponse.value = UiState.Success(response)
             } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
+                _checkFCMTokenResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
 
-    fun fetchWarehouseData(context: Context, districtID: Int, languageToLoad: String) {
+    fun fetchWarehouseData(context: Context, districtID: Int, language: String) {
         ProgressHelper.showProgressDialog(context)
         viewModelScope.launch {
             try {
-                val jsonObject = JSONObject()
-                jsonObject.put("api_key", APIKeys.SSO_PROD)
-                jsonObject.put("district_code", districtID)
-                jsonObject.put("lang", languageToLoad)
-
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
-                val response = apiRequest.getWareHouseDetails(requestBody)
+                val response = apiRequest.getWareHouseDetails(districtID, language)
                 ProgressHelper.disableProgressDialog()
                 _warehouseDetailsResponse.value = response
             } catch (e: Exception) {
@@ -948,9 +742,6 @@ class FarmerViewModel : ViewModel() {
                 val jsonObject = JSONObject()
                 jsonObject.put("lang", languageToLoad)
                 val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
-                val retrofit: Retrofit =
-                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val apiRequest = retrofit.create(ApiService::class.java)
                 val response = apiRequest.getDistrictList(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _districtIdResponse.value = response
@@ -968,25 +759,295 @@ class FarmerViewModel : ViewModel() {
         }
     }
 
-    fun updateConsent(context: Context, consentValue: Boolean) {
-        ProgressHelper.showProgressDialog(context)
-        val farmerId = AppSettings.getInstance().getIntValue(context, AppConstants.fREGISTER_ID, 0)
+    fun updateConsent(farmerId: Int, consentValue: Boolean) {
         viewModelScope.launch {
             try {
-                val retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
-                val api = retrofit.create(ApiService::class.java)
-                val response = api.updateConsent(farmerId, consentValue)
-                ProgressHelper.disableProgressDialog()
-                _consentResponse.value = response
+                _consentResponse.value = UiState.Loading
+                val response = apiRequest.updateConsent(farmerId, consentValue)
+                _consentResponse.value = UiState.Success(response)
             } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
+                _consentResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun saveSubscribedTopic(topic: String) {
+        viewModelScope.launch {
+            _saveSubscribedTopicResponse.value = UiState.Loading
+            try {
+                val jsonObject = JSONObject()
+                jsonObject.put("topic", topic)
+                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
+                val response = apiRequest.saveSubscribedTopic(requestBody)
+                _saveSubscribedTopicResponse.value = UiState.Success(response)
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _saveSubscribedTopicResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun deleteSubscribedTopics(topics: List<String>) {
+        viewModelScope.launch {
+            _deleteSubscribedTopicResponse.value = UiState.Loading
+            try {
+                val jsonObject = JSONObject()
+                val jsonArray = JSONArray()
+                topics.forEach { jsonArray.put(it) }
+                jsonObject.put("topic", jsonArray)
+
+                val requestBody =
+                    AppUtility.getInstance().getRequestBody(jsonObject.toString())
+
+                val response = apiRequest.deleteSubscribedTopic(requestBody)
+
+                _deleteSubscribedTopicResponse.value = UiState.Success(response)
+
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+
+                _deleteSubscribedTopicResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getMagazineDetails() {
+        viewModelScope.launch {
+            _getMagazineDetailsResponse.value = UiState.Loading
+            try {
+                val response = apiRequest.getMagazineDetails()
+                _getMagazineDetailsResponse.value = UiState.Success(response)
+
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+
+                _getMagazineDetailsResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getFarmMagazineDetails() {
+        viewModelScope.launch {
+            _getMagazineDetailsResponse.value = UiState.Loading
+            try {
+                val response = apiRequest.getFarmMagazineDetails()
+                _getMagazineDetailsResponse.value = UiState.Success(response)
+
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+
+                _getMagazineDetailsResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getPromoBanner() {
+        viewModelScope.launch {
+            _getPromoBannerResponse.value = UiState.Loading
+            try {
+                val response = apiRequest.getPromoBanner()
+                _getPromoBannerResponse.value = UiState.Success(response)
+
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+
+                _getPromoBannerResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getAppVersion() {
+        viewModelScope.launch {
+            _getAppVersionResponse.value = UiState.Loading
+            try {
+                val response = apiRequest.getAppVersion()
+                _getAppVersionResponse.value = UiState.Success(response)
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+
+                _getAppVersionResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getFarmSummery() {
+        viewModelScope.launch {
+            _getFarmSummeryResponse.value = UiState.Loading
+            try {
+                val response = apiRequest.getFarmSummery()
+                _getFarmSummeryResponse.value = UiState.Success(response)
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _getFarmSummeryResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getFarmDetails() {
+        viewModelScope.launch {
+            _getFarmDetailsResponse.value = UiState.Loading
+            try {
+                val response = apiRequest.getFarmDetails()
+                _getFarmDetailsResponse.value = UiState.Success(response)
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _getFarmDetailsResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun saveFarmCropDCS(cropId: String, sowingDate: String, farmId: String) {
+        viewModelScope.launch {
+            _saveFarmCropDCSResponse.value = UiState.Loading
+            try {
+                val response = apiRequest.saveFarmCropForDCS(
+                    cropId = cropId,
+                    sowingDate = sowingDate,
+                    farmId = farmId
+                )
+                _saveFarmCropDCSResponse.value = UiState.Success(response)
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _saveFarmCropDCSResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun getFarmCropDCS(farmId: String) {
+        viewModelScope.launch {
+            _getFarmCropDCSResponse.value = UiState.Loading
+            try {
+                val response = apiRequest.getFarmCropForDCS(farmId = farmId)
+                _getFarmCropDCSResponse.value = UiState.Success(response)
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _getFarmCropDCSResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun updateFarmCropForDCS(declaringId: String, sowingDate: String) {
+        viewModelScope.launch {
+            _updateFarmCropDCSResponse.value = UiState.Loading
+            try {
+                val response = apiRequest.updateFarmCropForDCS(
+                    declaringId = declaringId,
+                    sowingDate = sowingDate
+                )
+                _updateFarmCropDCSResponse.value = UiState.Success(response)
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _updateFarmCropDCSResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun deleteFarmCropForDCS(declaringId: String) {
+        viewModelScope.launch {
+            _deleteFarmCropDCSResponse.value = UiState.Loading
+            try {
+                val response = apiRequest.deleteFarmCropForDCS(declaringId = declaringId)
+                _deleteFarmCropDCSResponse.value = UiState.Success(response)
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _deleteFarmCropDCSResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun fetchCropsForDCS() {
+        viewModelScope.launch {
+            _fetchCropsForDCSResponse.value = UiState.Loading
+            try {
+                val response = apiRequest.fetchCropsForDCS()
+                _fetchCropsForDCSResponse.value = UiState.Success(response)
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _fetchCropsForDCSResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }

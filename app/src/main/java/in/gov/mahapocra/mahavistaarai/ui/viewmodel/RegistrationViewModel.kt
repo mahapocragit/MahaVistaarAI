@@ -8,10 +8,11 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import `in`.co.appinventor.services_api.app_util.AppUtility
-import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
+import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -26,8 +27,11 @@ class RegistrationViewModel : ViewModel() {
     private val _getOTPRegisterResponse = MutableLiveData<JsonObject>()
     val getOTPRegisterResponse: LiveData<JsonObject> = _getOTPRegisterResponse
 
-    private val _getRegistrationResponse = MutableLiveData<JsonObject>()
-    val getRegistrationResponse: LiveData<JsonObject> = _getRegistrationResponse
+    private val _getRegistrationResponse = MutableLiveData<UiState<JsonObject>>()
+    val getRegistrationResponse: LiveData<UiState<JsonObject>> = _getRegistrationResponse
+
+    private val _getUpdateProfileResponse = MutableLiveData<UiState<JsonObject>>()
+    val getUpdateProfileResponse: LiveData<UiState<JsonObject>> = _getUpdateProfileResponse
 
     private val _getVillageListResponse = MutableLiveData<JsonObject>()
     val getVillageListResponse: LiveData<JsonObject> = _getVillageListResponse
@@ -39,13 +43,11 @@ class RegistrationViewModel : ViewModel() {
         ProgressHelper.showProgressDialog(context)
         viewModelScope.launch {
             try {
-                val jsonObject = JSONObject()
-                jsonObject.put("SecurityKey", ApiConstants.SSO_KEY)
-                val requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString())
                 val retrofit: Retrofit =
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
-                val response: JsonObject = apiRequest.getOTPRegisterRequest(mobile, requestBody)
+                val response: JsonObject =
+                    apiRequest.getOTPRegisterRequest(CryptoHelper.encryptField(mobile).toString())
                 ProgressHelper.disableProgressDialog()
                 _getOTPRegisterResponse.value = response
             } catch (e: Exception) {
@@ -62,37 +64,59 @@ class RegistrationViewModel : ViewModel() {
         }
     }
 
-    fun getRegistrationRequest(
-        context: Context,
-        registerMob: String,
-        updatedMobile: String,
-        data: JSONObject
-    ) {
-        ProgressHelper.showProgressDialog(context)
+    fun getRegistrationRequest(name:String, registerMob: String, updatedMobile: String, villageCode: String, fcmToken:String, versionNumber: String, deviceId: String) {
         viewModelScope.launch {
+            _getRegistrationResponse.value = UiState.Loading
             try {
-                val requestBody = AppUtility.getInstance().getRequestBody(data.toString())
                 val retrofit: Retrofit =
                     RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
                 val apiRequest = retrofit.create(ApiService::class.java)
-                val response: JsonObject = apiRequest.getRegistrationRequest(
-                    registerMob,
-                    updatedMobile,
-                    requestBody
+                val response: JsonObject = apiRequest.registerUser(
+                    CryptoHelper.encryptField(name).toString(),
+                    CryptoHelper.encryptField(registerMob).toString(),
+                    CryptoHelper.encryptField(updatedMobile).toString(),
+                    CryptoHelper.encryptField(villageCode).toString(),
+                    CryptoHelper.encryptField(fcmToken).toString(),
+                    CryptoHelper.encryptField(versionNumber).toString(),
+                    CryptoHelper.encryptField(deviceId).toString(),
+                    ""
                 )
-//                Toast.makeText(context, response.toString(), Toast.LENGTH_LONG).show()
-                ProgressHelper.disableProgressDialog()
-                _getRegistrationResponse.value = response
+                _getRegistrationResponse.value = UiState.Success(response)
             } catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
                     is SocketException -> "Connection lost. Please check your internet."
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-//                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-                _error.value = message
+                _getRegistrationResponse.value = UiState.Error(message)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun updateProfile(name:String, registerMob: String, updatedMobile: String, villageCode: String) {
+        viewModelScope.launch {
+            _getUpdateProfileResponse.value = UiState.Loading
+            try {
+                val retrofit: Retrofit =
+                    RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response: JsonObject = apiRequest.updateProfile(
+                    CryptoHelper.encryptField(name).toString(),
+                    CryptoHelper.encryptField(registerMob).toString(),
+                    CryptoHelper.encryptField(updatedMobile).toString(),
+                    CryptoHelper.encryptField(villageCode).toString()
+                )
+                _getUpdateProfileResponse.value = UiState.Success(response)
+            } catch (e: Exception) {
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _getUpdateProfileResponse.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }

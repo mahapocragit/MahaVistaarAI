@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import `in`.co.appinventor.services_api.listener.OnMultiRecyclerItemClickListener
@@ -32,10 +33,12 @@ class WarehouseAvailabilityAdapter(
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         try {
             viewHolder.onBind(mJSONArray!!.getJSONObject(position), listener)
+            val dataObject = mJSONArray[position] as JSONObject
+            val wareHouseModel = WareHouseModel(dataObject)
+            val phone: String = wareHouseModel.getPhone()
             viewHolder.binding.tvContactNumber.setOnClickListener {
-                val phoneNumber = viewHolder.binding.tvContactNumber.text.toString()
                 val intent = Intent(Intent.ACTION_DIAL).apply {
-                    data = Uri.parse("tel:$phoneNumber")
+                    data = Uri.parse("tel:$phone")
                 }
                 mContext.startActivity(intent)
             }
@@ -55,7 +58,7 @@ class WarehouseAvailabilityAdapter(
             warehouseName = wareHouseModel.getWarehouseName()
             val recordedDate: String = wareHouseModel.getRecordedDate()
             val totalCapacity: String = wareHouseModel.totalCapacity
-            val address: String = wareHouseModel.getAddress()
+            val address: String = wareHouseModel.getAddress().trim()
             val phone: String = wareHouseModel.getPhone()
             val availableCapacity: String = wareHouseModel.getAvailableCapacity()
             val upperString = warehouseName!!.substring(0, 1)
@@ -65,9 +68,14 @@ class WarehouseAvailabilityAdapter(
             binding.wareHouseName.text = upperString
             binding.recordDate.text = recordedDate
             binding.tvAddress.text = address
-            binding.tvContactNumber.text = phone
-            binding.tvTotalCapacity.text = "Total Capacity: $totalCapacity MT"
-            binding.tvTotalAvailableCapacity.text = "Available Capacity: $availableCapacity MT"
+            binding.tvAddress.visibility = if (address.isEmpty()) {
+                View.GONE
+            } else {
+                View.VISIBLE
+            }
+            binding.tvContactNumber.text = "Call $phone"
+            binding.tvTotalCapacity.text = "$totalCapacity MT"
+            binding.tvTotalAvailableCapacity.text = "$availableCapacity MT"
         }
     }
 }

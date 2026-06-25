@@ -29,7 +29,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityChcenterBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CHCenterRecyclerAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.ChatbotActivity
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.DashboardScreen
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.OnDeleteClick
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.CUSTOM_HIRING_CENTRE_POINT
@@ -38,18 +38,20 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.json.JSONArray
 import org.json.JSONObject
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
 
-class CHCenterActivity : AppCompatActivity() {
+class CHCenterActivity : AppCompatActivity(), OnDeleteClick {
 
     private lateinit var binding: ActivityChcenterBinding
     private lateinit var adapter: CHCenterRecyclerAdapter
@@ -60,6 +62,7 @@ class CHCenterActivity : AppCompatActivity() {
     private lateinit var languageToLoad: String
     private var locationLat = 18.914708311426686
     private var locationLong = 72.81793873488796
+    private var dataJsonArray = JSONArray()
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,12 +89,22 @@ class CHCenterActivity : AppCompatActivity() {
         }
         binding.toolbar.textViewHeaderTitle.text = getString(R.string.chc_title)
         binding.toolbar.imgBackArrow.setOnClickListener {
-            startActivity(Intent(this, DashboardScreen::class.java))
+            val screen = intent.getIntExtra("PARSING_SCREEN", 0)
+            if (screen!=0){
+                AppHelper(this@CHCenterActivity).redirectToPage(1)
+            }else{
+                AppHelper(this@CHCenterActivity).redirectToHome()
+            }
         }
 
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(Intent(this@CHCenterActivity, DashboardScreen::class.java))
+                val screen = intent.getIntExtra("PARSING_SCREEN", 0)
+                if (screen!=0){
+                    AppHelper(this@CHCenterActivity).redirectToPage(1)
+                }else{
+                    AppHelper(this@CHCenterActivity).redirectToHome()
+                }
             }
         })
         observeResponse()
@@ -174,8 +187,9 @@ class CHCenterActivity : AppCompatActivity() {
         farmerViewModel.chcCentersResponse.observe(this) {
             if (it != null) {
                 val jSONObject = JSONObject(it.toString())
+                dataJsonArray = jSONObject.optJSONArray("data")
                 jSONObject.optJSONArray("data")?.let { data ->
-                    adapter = CHCenterRecyclerAdapter(data)
+                    adapter = CHCenterRecyclerAdapter(data, this)
                     binding.recyclerView.apply {
                         layoutManager = LinearLayoutManager(this@CHCenterActivity)
                         adapter = this@CHCenterActivity.adapter
@@ -335,5 +349,18 @@ class CHCenterActivity : AppCompatActivity() {
         }
         val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
         super.attachBaseContext(updatedContext)
+    }
+
+    override fun onDeleteClick(cropId: Int, data: JSONObject) {
+        data.optJSONArray("equipment")?.let { equipment ->
+            MarkerBottomSheetFragment.newInstance(
+                data.optString("contact_name"),
+                data.optString("chcname"),
+                "${data.optString("distance")} kms",
+                locationLat,
+                locationLong,
+                equipment
+            ).show(supportFragmentManager, "MarkerBottomSheet")
+        }
     }
 }
