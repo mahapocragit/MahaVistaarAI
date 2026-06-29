@@ -236,17 +236,13 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
         } else {
 
             // NORMAL APP OPEN CASE
-            val savedTab = appPreferenceManager.getInt(
-                AppConstants.REDIRECT_TO_TAB,
-                0
-            )
-
+            val savedTab = appPreferenceManager.getInt(AppConstants.REDIRECT_TO_TAB, 0)
             binding.viewPager.setCurrentItem(savedTab, false)
         }
 
         binding.toolbar.inflateMenu(R.menu.toolbar_menu)
-
         binding.chatbotIcon.setOnClickListener {
+
             Clarity.sendCustomEvent("VISTAAR_AI_BUTTON_CLICKED")
             if (NetworkUtils.isInternetAvailable(this)) {
                 startActivity(Intent(this, ChatbotActivity::class.java))
@@ -366,11 +362,8 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
 
         binding.krishiTaiButton.setOnClickListener {
 
-            val rolesJson = AppSettings.getInstance()
-                .getValue(this, AppConstants.pocraRoles, "[]")
-
+            val rolesJson = AppSettings.getInstance().getValue(this, AppConstants.pocraRoles, "[]")
             val pocraRoles = mutableListOf<PocraRole>()
-
             try {
                 val arr = JSONArray(rolesJson)
                 for (i in 0 until arr.length()) {

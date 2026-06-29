@@ -40,6 +40,7 @@ public class KTDetailsHistory extends AppCompatActivity implements ApiCallbackCo
     private TextView tvCategoryType,tvCategoryName,tvSubcategoryName,tvFarmerGroupName,tvFarmerGroupOtherText,tvCategoryNameOther,tvDate,tvDiscussionName,tvTechnologyType,tvFarmerType,tvDescription,tvRegisterName,tvMobileNumber;
     private ImageView imgPhoto;
     private String username;
+    private int isGuest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,8 @@ public class KTDetailsHistory extends AppCompatActivity implements ApiCallbackCo
         String selectedId = getIntent().getStringExtra("id");
         String selectedCategoryId = getIntent().getStringExtra("category_id");
         String selectedDateKT = getIntent().getStringExtra("selectedDateKT");
+        isGuest = session.getProfileModel().getIs_guest();
+        Log.d("MAYU","isGuest="+isGuest);
         Log.d("MAYU","selectedId=="+selectedId);
         Log.d("MAYU","selectedCategoryId=="+selectedCategoryId);
         fetchKTReportsDetails(selectedId,selectedCategoryId,selectedDateKT);
@@ -85,6 +88,7 @@ public class KTDetailsHistory extends AppCompatActivity implements ApiCallbackCo
 
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("username", username);
+            jsonObject.put("is_guest", isGuest);
 //            jsonObject.put("date", selectedDateKT);
 //            jsonObject.put("username", "KT529762");
             jsonObject.put("date", selectedDateKT);

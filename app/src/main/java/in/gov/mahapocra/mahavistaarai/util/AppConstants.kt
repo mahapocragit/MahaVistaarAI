@@ -9,6 +9,7 @@ object AppConstants {
     const val uName: String = "USER_NAME"
     const val NOTIFICATION_ID = 1001
     const val uRole: String = "USER_ROLE"
+    const val kIsGuest: String = "kIsGuest"
     const val smaUsername: String = "SMA_USERNAME"
     const val pocraRoles: String = "POCRA_ROLES"
     const val userDataSaved: String = "USER_DATA_SAVED"

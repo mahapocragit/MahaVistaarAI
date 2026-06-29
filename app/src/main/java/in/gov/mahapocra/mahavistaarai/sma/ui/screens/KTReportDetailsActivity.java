@@ -51,6 +51,7 @@ public class KTReportDetailsActivity extends AppCompatActivity implements ApiCal
     private RecyclerView rvMeeting;
     private RecyclerView rvVisit;
     private String username;
+    private int isGuest;
     private boolean hoverVisible = true;
     private ArrayList<KTReportDetailsModel> KTReportDetailsList;
     private ArrayList<KTReportDetailsModel> KTReportDetailsList1;
@@ -74,7 +75,8 @@ public class KTReportDetailsActivity extends AppCompatActivity implements ApiCal
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
-
+        isGuest = session.getProfileModel().getIs_guest();
+        Log.d("MAYU","isGuest="+isGuest);
         ImageView downloadIcon = findViewById(R.id.downloadIcon);
         TextView hoverMessage = findViewById(R.id.hoverMessage);
         downloadIcon.setOnClickListener(new View.OnClickListener() {
@@ -213,6 +215,7 @@ private void setMeetingDetails(ArrayList<KTReportDetailsModel> list, RecyclerVie
             Log.d("MAYU","selecteddateKT=="+selectedDateKT);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("username", username);
+            jsonObject.put("is_guest", isGuest);
             jsonObject.put("date", selectedDateKT);
 //            jsonObject.put("username", "KT529762");
 //            jsonObject.put("date", "2025-10-29");

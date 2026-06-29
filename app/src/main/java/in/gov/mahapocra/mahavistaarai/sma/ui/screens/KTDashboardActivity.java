@@ -84,9 +84,6 @@ public class KTDashboardActivity extends AppCompatActivity implements OnMultiRec
         fetchLogin(selectedUsername);
         initComponents();
         setConfiguration();
-//        String username = AppSettings.getInstance().getValue(this, in.gov.mahapocra.mahavistaarai.util.AppConstants.smaUsername, in.gov.mahapocra.mahavistaarai.util.AppConstants.smaUsername);
-
-//        fetchLogin(selectedUsername);
     }
     private void initComponents() {
 
@@ -214,11 +211,8 @@ public class KTDashboardActivity extends AppCompatActivity implements OnMultiRec
                 new AppString(this).getkMSG_WAIT(),
                 true
         );
-
         Retrofit retrofit = api.getRetrofitInstance();
-
         APIRequest apiRequest = retrofit.create(APIRequest.class);
-
         Call<JsonObject> responseCall = apiRequest.oauthLoginRequest(
                 encryptedUsername,                    // HEADER: username
                 APIServices.SSO_KEY,                  // HEADER: secret
@@ -226,7 +220,6 @@ public class KTDashboardActivity extends AppCompatActivity implements OnMultiRec
         );
 
         DebugLog.getInstance().d("REQUEST=" + responseCall.request());
-
         api.postRequest(responseCall, this, 4);
     }
 //    private void fetchLogin(String strRefreshToken)
@@ -259,6 +252,7 @@ public class KTDashboardActivity extends AppCompatActivity implements OnMultiRec
         AppSession session = new AppSession(this);
         appID =  session.getAppId();
         userID = AppSettings.getInstance().getIntValue(this, AppConstants.kUSER_ID, 0);
+
         String appId = String.valueOf(appID);
         String userId = String.valueOf(userID);
 
@@ -416,12 +410,10 @@ public class KTDashboardActivity extends AppCompatActivity implements OnMultiRec
             } else {
                 profileImageView.setImageResource(R.mipmap.ic_profile);
             }
-
-            String name = profileModel.getFirst_name()+" "+profileModel.getMiddle_name()+" "+profileModel.getLast_name() +"-"+AppSettings.getInstance().getValue(this, AppConstants.kDesignation, AppConstants.kDesignation);
-            nameTextView.setText(name);
+                String name = profileModel.getFirst_name() + " " + profileModel.getMiddle_name() + " " + profileModel.getLast_name() + "-" + AppSettings.getInstance().getValue(this, AppConstants.kDesignation, AppConstants.kDesignation);
+                nameTextView.setText(name);
             String strVillName = AppSettings.getInstance().getValue(this, AppConstants.kVillageName, " ");
             int strVillCensus =AppSettings.getInstance().getIntValue(this, AppConstants.kVillageCensus, 0);
-
             designationTextView.setText(strVillName+" ("+strVillCensus+") ");
 
 //            districtTextView.setText(profileModel.getDistrict_name());
@@ -438,7 +430,6 @@ public class KTDashboardActivity extends AppCompatActivity implements OnMultiRec
             e.printStackTrace();
         }
     }
-
     private void requestDataValidation() {
         int userID = AppSettings.getInstance().getIntValue(this, AppConstants.kUSER_ID, 0);
         String id1= String.valueOf(userID);
@@ -582,8 +573,8 @@ public class KTDashboardActivity extends AppCompatActivity implements OnMultiRec
 
                                 // Print in log or show in TextView
                                 Log.d("VillageInfo", "Village: " + villageName + ", Code: " + villageCode);
-                                String name = profileModel.getFirst_name()+" "+profileModel.getMiddle_name()+" "+profileModel.getLast_name() +"-"+AppSettings.getInstance().getValue(this, AppConstants.kDesignation, AppConstants.kDesignation);
-                                nameTextView.setText(name);
+                                    String name = profileModel.getFirst_name() + " " + profileModel.getMiddle_name() + " " + profileModel.getLast_name() + "-" + AppSettings.getInstance().getValue(this, AppConstants.kDesignation, AppConstants.kDesignation);
+                                    nameTextView.setText(name);
                                 designationTextView.setText(villageName+" ("+villageCode+") ");
                                 // Example: display in Toast
 //                            Toast.makeText(this, "Village: " + villageName + "\nCode: " + villageCode, Toast.LENGTH_LONG).show();
@@ -599,6 +590,7 @@ public class KTDashboardActivity extends AppCompatActivity implements OnMultiRec
                         }
                         if (profileModel.getPassword_change_requires() == 1) {
                             AppSettings.getInstance().setIntValue(this, AppConstants.kROLE_ID, profileModel.getRole_id());
+                            AppSettings.getInstance().setIntValue(this, AppConstants.kIS_GUEST, profileModel.getIs_guest());
                             AppSettings.getInstance().setIntValue(this, AppConstants.kUSER_ID, profileModel.getId());
                             AppSettings.getInstance().setValue(this, AppConstants.kUSERNAME, profileModel.getUsername());
                             AppSettings.getInstance().setValue(this, AppConstants.kTOKEN, response.getToken());

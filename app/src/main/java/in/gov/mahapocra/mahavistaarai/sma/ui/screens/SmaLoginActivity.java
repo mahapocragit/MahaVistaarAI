@@ -220,7 +220,6 @@ public class SmaLoginActivity extends AppCompatActivity implements ApiCallbackCo
         finish();
     }
 
-
     private void onButtonAction() {
         requestDataValidation();
     }
@@ -443,6 +442,7 @@ public class SmaLoginActivity extends AppCompatActivity implements ApiCallbackCo
                     }
                     if (profileModel.getPassword_change_requires() == 1) {
                         AppSettings.getInstance().setIntValue(this, AppConstants.kROLE_ID, profileModel.getRole_id());
+                        AppSettings.getInstance().setIntValue(this, AppConstants.kIS_GUEST, profileModel.getIs_guest());
                         AppSettings.getInstance().setIntValue(this, AppConstants.kUSER_ID, profileModel.getId());
                         AppSettings.getInstance().setValue(this, AppConstants.kUSERNAME, profileModel.getUsername());
                         AppSettings.getInstance().setValue(this, AppConstants.kTOKEN, response.getToken());

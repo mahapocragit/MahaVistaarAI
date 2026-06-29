@@ -21,6 +21,8 @@ public interface AppConstants {
     String kIS_LOGGED_IN = "kIS_LOGGED_IN";
     String kUSER_ID = "kUSER_ID";
     String kUSERNAME  = "kUSERNAME";
+    String kKTNAME  = "kKTNAME";
+    String kIS_GUEST = "kIs_guest";
     String kLOGIN_DATA = "kLOGIN_DATA";
     String kTOKEN = "kTOKEN";
     String kFName  = "kFName";
@@ -37,6 +39,7 @@ public interface AppConstants {
 
     String kSEASON_ID = "kSEASON_ID";
     String kROLE_ID = "kROLE_ID";
+
 
     String kNotificationCount = "kNotificationCount";
 

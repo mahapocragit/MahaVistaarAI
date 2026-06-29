@@ -10,6 +10,7 @@ public class ProfileModel {
 
     private int id;
     private String username;
+    private String ktName;
     private String email;
     private String mobile;
     private String first_name;
@@ -50,6 +51,7 @@ public class ProfileModel {
     private int updated_at;
     private int app_id;
     private int role_id;
+    private int is_guest;
     private int password_change_requires;
 
     private JSONObject jsonObject;
@@ -67,6 +69,10 @@ public class ProfileModel {
     public String getUsername() {
          username = AppUtility.getInstance().sanitizeJSONObj(this.jsonObject, "username");
         return username;
+    }
+    public String getKTName() {
+        ktName = AppUtility.getInstance().sanitizeJSONObj(this.jsonObject, "kt_name");
+        return ktName;
     }
 
     public String getEmail() {
@@ -236,7 +242,10 @@ public class ProfileModel {
         role_id = AppUtility.getInstance().sanitizeIntJSONObj(this.jsonObject, "role_id");
         return role_id;
     }
-
+    public int getIs_guest() {
+        is_guest = AppUtility.getInstance().sanitizeIntJSONObj(this.jsonObject, "is_guest");
+        return is_guest;
+    }
 
     public int getPassword_change_requires() {
         password_change_requires = AppUtility.getInstance().sanitizeIntJSONObj(this.jsonObject, "password_change_requires");
