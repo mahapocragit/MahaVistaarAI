@@ -48,8 +48,6 @@ public class KTDetailsHistory extends AppCompatActivity implements ApiCallbackCo
         setContentView(R.layout.activity_ktdetails_history);
         initComponant();
     }
-
-
     private void initComponant()
     {
         session = new AppSession(this);

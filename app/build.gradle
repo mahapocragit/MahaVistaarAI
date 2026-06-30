@@ -7,7 +7,6 @@ plugins {
 }
 
 android {
-
     compileSdk 36
     namespace 'in.gov.mahapocra.mahavistaarai'
 
@@ -17,6 +16,7 @@ android {
 //            storePassword 'NDKSP@2025'
 //            keyPassword 'NDKSP@2025'
 //            keyAlias 'pks_prod_alias'
+
         }
         debug {
             // No signing configuration for debug
