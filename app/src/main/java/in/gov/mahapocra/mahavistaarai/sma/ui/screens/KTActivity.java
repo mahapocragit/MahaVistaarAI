@@ -197,7 +197,6 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
                     })
                     .start();
         };
-
         edtRemark.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}

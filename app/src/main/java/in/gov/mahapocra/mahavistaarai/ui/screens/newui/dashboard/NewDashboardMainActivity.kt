@@ -371,6 +371,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     pocraRoles.add(
                         PocraRole(
                             obj.getInt("role_id"),
+                            obj.getInt("is_guest"),
                             obj.getString("username"),
                             obj.getString("role"),
                             obj.getString("short_name")
@@ -393,9 +394,14 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
             // If only one username → direct login
             if (ktRoles.size == 1) {
                 val userName = ktRoles[0].username
+                val isGuest = ktRoles[0].is_guest
                 AppSettings.getInstance().setValue(this, AppConstants.smaUsername, userName)
+                AppSettings.getInstance().setValue(this, AppConstants.kIsGuest, isGuest.toString())
                 val intent = Intent(this, KTDashboardActivity::class.java)
                 intent.putExtra("selected_username", userName)
+                intent.putExtra("selected_isGuest", isGuest.toString())
+                Log.d("MAYU","ND UNAME"+userName);
+                Log.d("MAYU","ND Guest="+isGuest);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
@@ -763,10 +769,11 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                         for (i in 0 until rolesArray.length()) {
                             val roleObj = rolesArray.optJSONObject(i) ?: continue
                             val roleId = roleObj.optInt("role_id", -1)
+                            val isGuest = roleObj.optInt("is_guest", 0)
                             val username = roleObj.optString("username", "")
                             val role = roleObj.optString("role", "")
                             val shortName = roleObj.optString("short_name", "")
-                            pocraRoles.add(PocraRole(roleId, username, role, shortName))
+                            pocraRoles.add(PocraRole(roleId, isGuest, username, role, shortName))
                             // ✅ CHECK ROLE 45
                             if (roleId == 45) {
                                 hasKrishiTaiRole = true
@@ -1141,6 +1148,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
         for (role in roles) {
             val obj = JSONObject()
             obj.put("role_id", role.role_id)
+            obj.put("is_guest", role.is_guest)
             obj.put("username", role.username)
             obj.put("role", role.role)
             obj.put("short_name", role.short_name)

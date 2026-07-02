@@ -15,8 +15,8 @@
             <option value="$PROJECT_DIR$/app/libs/appinventorapi" />
           </set>
         </option>
-        <option name="resolveExternalAnnotations" value="false" />
       </GradleProjectSettings>
     </option>
+    <option name="offlineMode" value="true" />
   </component>
 </project>
