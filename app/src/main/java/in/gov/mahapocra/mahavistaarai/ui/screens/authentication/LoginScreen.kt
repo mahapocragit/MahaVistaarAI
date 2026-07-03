@@ -441,7 +441,6 @@ class LoginScreen : AppCompatActivity() {
             startActivity(intent)
 
             dialog.dismiss()
-            farmerViewModel.getFarmerSelectedCrop(languageToLoad)
         }
 
         tvMarathi.setOnClickListener {
@@ -453,7 +452,6 @@ class LoginScreen : AppCompatActivity() {
             startActivity(intent)
 
             dialog.dismiss()
-            farmerViewModel.getFarmerSelectedCrop(languageToLoad)
         }
 
         dialog.show()
