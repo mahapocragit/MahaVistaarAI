@@ -619,4 +619,5 @@
     <string name="submit_feedback_not">Submit Feedback</string>
     <string name="helpful">Helpful</string>
     <string name="not_helpful">Not Helpful</string>
+    <string name="folders">folders</string>
 </resources>

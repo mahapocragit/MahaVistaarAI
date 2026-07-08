@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <!-- 🔥 FORCE REMOVE MEDIA PERMISSIONS FROM ALL LIBRARIES -->
     <uses-permission
         android:name="android.permission.READ_MEDIA_IMAGES"
@@ -183,6 +184,11 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="default_channel_id" />
+
+        <activity
+            android:name=".ui.screens.dashboard.video.VideosCategoryActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
