@@ -32,6 +32,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -135,7 +136,7 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ktactivity);
-
+       
         initComponent();
         session = new AppSession(this);
         profileModel = session.getProfileModel();
