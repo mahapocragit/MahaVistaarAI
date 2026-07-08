@@ -311,7 +311,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                     val jsonResponse = JSONObject(state.data.toString())
                     val dataObject = jsonResponse.optJSONObject("data")
                     val customisedDashboardList = dataObject.optJSONArray("cust_dash")
-
+                    Log.d(TAG, "observeResponse: $customisedDashboardList")
                     // ✅ update adapter (no re-setup RecyclerView)
                     myAdapter = MyDashboardAdapter(languageToLoad, customisedDashboardList, this)
                     binding.myDashboardRecyclerView.adapter = myAdapter

@@ -14,10 +14,10 @@ import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import org.json.JSONArray
 import org.json.JSONObject
 
-class VideosCategoryAdapter(
+class VideosSubCategoryAdapter(
     private val categoryArray: JSONArray,
     private val languageToLoad: String
-) : RecyclerView.Adapter<VideosCategoryAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<VideosSubCategoryAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemVideosCategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -25,9 +25,9 @@ class VideosCategoryAdapter(
         fun bind(videoCategory: JSONObject) {
             val context = binding.root.context
             val title = if (languageToLoad == "mr") {
-                videoCategory.optString("name_mr")
+                videoCategory.optString("category_mr")
             } else {
-                videoCategory.optString("name")
+                videoCategory.optString("category")
             }
 
             binding.textView21.text = title
