@@ -417,5 +417,20 @@ object LocalCustom {
         }
     }
 
+    fun getRatingImageResource(rating: String): Int {
+        when (rating) {
+            "Low" -> return R.drawable.ic_soil_health_card_low
+            "Very Low" -> return R.drawable.ic_soil_health_card_low
+            "Deficient" -> return R.drawable.ic_soil_health_card_low
+            "Normal" -> return R.drawable.ic_soil_health_card_mid
+            "Moderately alkaline" -> return R.drawable.ic_soil_health_card_mid
+            "Medium" -> return R.drawable.ic_soil_health_card_mid
+            "Sufficient" -> return R.drawable.ic_soil_health_card_mid
+            "High" -> return R.drawable.ic_soil_health_card_high
+            "Very High" -> return R.drawable.ic_soil_health_card_high
+        }
+        return R.drawable.ic_soil_health_card_high
+    }
+
 
 }

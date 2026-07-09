@@ -20,7 +20,7 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="@dimen/_18sdp"
+            android:layout_width="19dp"
             android:layout_height="@dimen/_18sdp"
             android:src="@drawable/home_ic"
             app:tint="@color/actionbar_color_figma" />
