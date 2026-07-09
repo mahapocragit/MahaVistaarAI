@@ -90,11 +90,10 @@ public class KTReportActivity extends AppCompatActivity implements OnMultiRecycl
     private JSONArray monthJsonArray;
     private String joining_date_app = null;
     AlertDialog.Builder alertDialogBuilder;
-    int currentYear,priviousYear,rollId;
+    int currentYear,priviousYear,rollId,isGuest;
     private String username,ca_UserName;
     private Button btnFeedback;
     private  Dialog feedbackDialog;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +130,8 @@ public class KTReportActivity extends AppCompatActivity implements OnMultiRecycl
         rollId = session.getProfileModel().getRole_id();
         Log.d("MAYU","rollId="+rollId);
 
+        isGuest = session.getProfileModel().getIs_guest();
+        Log.d("MAYU RP","isGuest="+isGuest);
         btnFeedback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -359,6 +360,7 @@ public class KTReportActivity extends AppCompatActivity implements OnMultiRecycl
 
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("username", username);
+            jsonObject.put("is_guest", isGuest);
             Log.d("MAYU","APIParam Uname22="+username);
 
 //            if(rollId == 22)
@@ -408,6 +410,7 @@ public class KTReportActivity extends AppCompatActivity implements OnMultiRecycl
             Log.d("MAYU222","submitKTFeedback==="+strFeedback);
             jsonObject.put("kt_username", username);
             jsonObject.put("kt_feedback", strFeedback);
+            jsonObject.put("is_guest", isGuest);
 
             RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
 
@@ -431,6 +434,7 @@ public class KTReportActivity extends AppCompatActivity implements OnMultiRecycl
             JSONObject jsonObject = new JSONObject();
 
             jsonObject.put("username", username);
+            jsonObject.put("is_guest", isGuest);
             Log.d("MAYU","APIParam Uname22="+username);
 //            if (rollId == 19){
 //                jsonObject.put("ca_username", ca_UserName);

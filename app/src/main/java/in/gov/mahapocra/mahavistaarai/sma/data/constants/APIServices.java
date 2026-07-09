@@ -1,16 +1,6 @@
-/*
- * Copyright (c) 2018. Runtime Solutions Pvt Ltd. All right reserved.
- * Web URL  http://runtime-solutions.com
- * Author Name: Vinod Vishwakarma
- * Linked In: https://www.linkedin.com/in/vvishwakarma
- * Official Email ID : vinod@runtime-solutions.com
- * Email ID: vish.vino@gmail.com
- * Last Modified : 29/12/18 11:26 AM
- */
 
 package in.gov.mahapocra.mahavistaarai.sma.data.constants;
 
-//8470807282
 public interface APIServices {
 
 // *************** For PROD *************
@@ -40,10 +30,8 @@ public interface APIServices {
     String kFirstAttemptPassChange = "authService/first-login-password-change";
     String userdetails = "authService/userdetail";
     String kUpdateProfile = "authService/update-profile";
-
     String kUpdateProfilePic = "authService/update-profile-picture";
     String kFacilitatorList = "userService/facilitators";
-
     String kDistrictMaster = BASE_API + "masterService/districts";
     String kTalukaMasters = BASE_API + "masterService/talukas/";
     String kVillageMasters = BASE_API + "masterService/villages/";

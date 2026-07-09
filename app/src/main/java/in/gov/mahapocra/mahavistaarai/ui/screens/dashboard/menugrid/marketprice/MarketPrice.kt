@@ -98,7 +98,12 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
 
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                AppHelper(this@MarketPrice).redirectToHome()
+                val screen = intent.getIntExtra("PARSING_SCREEN", 0)
+                if (screen!=0){
+                    AppHelper(this@MarketPrice).redirectToPage(1)
+                }else{
+                    AppHelper(this@MarketPrice).redirectToHome()
+                }
             }
         })
         onClick()
@@ -131,7 +136,12 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
     private fun onClick() {
 
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
-            AppHelper(this@MarketPrice).redirectToHome()
+            val screen = intent.getIntExtra("PARSING_SCREEN", 0)
+            if (screen!=0){
+                AppHelper(this@MarketPrice).redirectToPage(1)
+            }else{
+                AppHelper(this@MarketPrice).redirectToHome()
+            }
         }
         binding.textViewDistrict.setOnClickListener {
             showDistrict()

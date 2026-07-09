@@ -32,6 +32,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -118,7 +119,7 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
     private JSONArray subCategoryJSONArray = null;
     private JSONArray farmerGrpListJSONArray = null;
     private String username,observationNote;
-    private int villageCensuscode;
+    private int villageCensuscode,isGuest;
     private int reason_id = 0;
     private String farmer_id = "";
     private int categoryTypeId = 0;
@@ -135,7 +136,7 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ktactivity);
-
+       
         initComponent();
         session = new AppSession(this);
         profileModel = session.getProfileModel();
@@ -145,6 +146,8 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         username = AppSettings.getInstance().getValue(this, AppConstants.kUSERNAME, AppConstants.kUSERNAME);
         villageCensuscode = AppSettings.getInstance().getIntValue(this, AppConstants.kVillageCensus, 0);
+        isGuest = session.getProfileModel().getIs_guest();
+        Log.d("MAYU","isGuest="+isGuest);
         technologyImage.setOnClickListener(view -> {
 
             if (Utility.checkConnection(KTActivity.this)) {
@@ -183,11 +186,8 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
                 linLayoutUnit.setVisibility(View.VISIBLE);
             }
         });
-
         tooltipRemark = findViewById(R.id.tooltipRemark);
-
         Handler handler = new Handler();
-
         Runnable hideTooltipRunnable = () -> {
             tooltipRemark.animate()
                     .alpha(0f)
@@ -198,7 +198,6 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
                     })
                     .start();
         };
-
         edtRemark.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -372,6 +371,7 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
             jsonObject.put("farmer_type", farmerSelectedType);
             jsonObject.put("technology_type", technologySelectedType);
             jsonObject.put("farmer_group_id", farmerGrpTypeId);
+            jsonObject.put("is_guest", isGuest);
 //            jsonObject.put("discussion_id", discussionTopicTypeId);
             jsonObject.put("farmer_group_other_text", strFarmerGroupOther);
             jsonObject.put("category_other_text", strCategoryOther);
@@ -662,6 +662,8 @@ public class KTActivity extends AppCompatActivity implements ApiJSONObjCallback,
 
             Map<String, RequestBody> params = new HashMap<>();
             params.put("username", AppinventorIncAPI.toRequestBody(String.valueOf(username)));
+            params.put("username", AppinventorIncAPI.toRequestBody(String.valueOf(username)));
+            params.put("is_guest", AppinventorIncAPI.toRequestBody(String.valueOf(isGuest)));
             params.put("timestamp", AppinventorIncAPI.toRequestBody(String.valueOf(session.getTimeStamp())));
 
             DebugLog.getInstance().d("params=" + params);

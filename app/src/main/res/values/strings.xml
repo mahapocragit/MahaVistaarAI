@@ -420,7 +420,7 @@
     <string name="dshetishala">Shetishala</string>
     <string name="dbt">DBT</string>
     <string name="schedules">Schedules</string>
-    <string name="shetishala_schedule">Digital Shetishala Timetable 2025</string>
+    <string name="shetishala_schedule">Digital Shetishala Timetable</string>
     <string name="crop">Crop</string>
     <string name="time">Time</string>
     <string name="zoom_id">Zoom Link</string>
@@ -532,7 +532,7 @@
     <string name="login_forgot_password">Forgot password?</string>
     <string name="login_login">Login</string>
     <string name="login_monitoring_KT">कृषिताई विस्तार कार्य</string>
-    <string name="logout_alert_mr">आपण साइन आउट करण्यास निश्चित आहात का?</string>
+    <string name="logout_alert_mr">Are you sure you want to log out?</string>
     <string name="activity">विस्तार कार्य</string>
     <string name="ca_activity_info">Information</string>
     <string name="ca_activity_refresh">Re-Sync master data</string>
@@ -613,4 +613,11 @@
     <string name="logout_desc">Do you want to log out?</string>
     <string name="farm_magazine">Farm\nMagazine</string>
     <string name="mahapashudhan_magazine">Mahapashudhan\nMagazine</string>
+    <string name="give_your_feedback">Give your Feedback</string>
+    <string name="tell_us_more_optional">Tell us more (optional)</string>
+    <string name="write_your_suggestions_here">Write your suggestions here</string>
+    <string name="submit_feedback_not">Submit Feedback</string>
+    <string name="helpful">Helpful</string>
+    <string name="not_helpful">Not Helpful</string>
+    <string name="folders">folders</string>
 </resources>

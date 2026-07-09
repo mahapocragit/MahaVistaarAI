@@ -1,15 +1,11 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard
 
-import android.app.Dialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -121,7 +117,7 @@ class AgriServicesFragment : Fragment(), OnMultiRecyclerItemClickListener {
         binding.marketPriceLayout.shortDescriptionTextView.text =
             getString(R.string.live_rates_from_200_mandis)
         binding.marketPriceLayout.root.setOnClickListener {
-            startActivity(Intent(context, MarketPrice::class.java))
+            startActivity(Intent(context, MarketPrice::class.java).putExtra("PARSING_SCREEN", 1))
         }
 
         binding.warehouseLayout.containerIcon.setImageDrawable(context?.let {
@@ -135,7 +131,7 @@ class AgriServicesFragment : Fragment(), OnMultiRecyclerItemClickListener {
         binding.warehouseLayout.shortDescriptionTextView.text =
             getString(R.string.find_storage_space_near_you)
         binding.warehouseLayout.root.setOnClickListener {
-            startActivity(Intent(context, Warehouse::class.java))
+            startActivity(Intent(context, Warehouse::class.java).putExtra("PARSING_SCREEN", 1))
         }
 
         binding.chcCentreLayout.containerIcon.setImageDrawable(context?.let {
@@ -149,11 +145,11 @@ class AgriServicesFragment : Fragment(), OnMultiRecyclerItemClickListener {
         binding.chcCentreLayout.shortDescriptionTextView.text =
             getString(R.string.find_local_trading_hubs)
         binding.chcCentreLayout.root.setOnClickListener {
-            startActivity(Intent(context, CHCenterActivity::class.java))
+            startActivity(Intent(context, CHCenterActivity::class.java).putExtra("PARSING_SCREEN", 1))
         }
 
         binding.costCalculatorCard.setOnClickListener {
-            startActivity(Intent(context, CostCalculatorDashboardActivity::class.java))
+            startActivity(Intent(context, CostCalculatorDashboardActivity::class.java).putExtra("PARSING_SCREEN", 1))
         }
 
         binding.fertilizerCalculatorCard.setOnClickListener {

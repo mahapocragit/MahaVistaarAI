@@ -62,7 +62,7 @@
                 android:paddingEnd="@dimen/padding20"
                 android:text="@string/farmer_select_district"
                 android:textColor="@color/heading"
-                android:textSize="@dimen/text14"
+                android:textSize="@dimen/_10sdp"
                 android:textStyle="normal" />
 
             <ImageView
@@ -98,7 +98,7 @@
                 android:paddingEnd="@dimen/padding20"
                 android:text="@string/farmer_select_market"
                 android:textColor="@color/heading"
-                android:textSize="@dimen/text14"
+                android:textSize="@dimen/_10sdp"
                 android:textStyle="normal" />
 
             <ImageView
@@ -134,7 +134,7 @@
                 android:inputType="text"
                 android:paddingStart="@dimen/padding20"
                 android:paddingEnd="@dimen/padding20"
-                android:textSize="@dimen/text14" />
+                android:textSize="@dimen/_10sdp" />
 
             <ImageView
                 android:layout_width="@dimen/_20sdp"
@@ -202,7 +202,7 @@
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:gravity="center"
                 android:textColor="@color/font_color_figma"
-                android:textSize="@dimen/text16"
+                android:textSize="@dimen/_10sdp"
                 android:textStyle="bold"
                 android:visibility="invisible" />
 

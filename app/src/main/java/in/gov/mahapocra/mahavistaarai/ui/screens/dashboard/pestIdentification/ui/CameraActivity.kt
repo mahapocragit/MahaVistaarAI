@@ -29,6 +29,7 @@ class CameraActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCameraBinding
     private lateinit var imageCapture: ImageCapture
+    private var cameraProvider: ProcessCameraProvider? = null
     private var tempFile: File? = null
 
     var languageToLoad = "mr"
@@ -88,26 +89,44 @@ class CameraActivity : AppCompatActivity() {
     }
 
     private fun startCamera() {
+
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
         cameraProviderFuture.addListener({
-            val cameraProvider = cameraProviderFuture.get()
 
-            val preview = Preview.Builder().build().apply {
-                setSurfaceProvider(binding.previewView.surfaceProvider)
+            try {
+
+                cameraProvider = cameraProviderFuture.get()
+
+                val preview = Preview.Builder()
+                    .build()
+                    .also {
+                        it.setSurfaceProvider(binding.previewView.surfaceProvider)
+                    }
+
+                imageCapture = ImageCapture.Builder()
+                    .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                    .setTargetRotation(binding.previewView.display.rotation)
+                    .build()
+
+                cameraProvider?.unbindAll()
+
+                cameraProvider?.bindToLifecycle(
+                    this,
+                    CameraSelector.DEFAULT_BACK_CAMERA,
+                    preview,
+                    imageCapture
+                )
+
+            } catch (e: Exception) {
+
+                Toast.makeText(
+                    this,
+                    "Failed to start camera",
+                    Toast.LENGTH_SHORT
+                ).show()
+
             }
-
-            imageCapture = ImageCapture.Builder()
-                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-                .build()
-
-            cameraProvider.unbindAll()
-            cameraProvider.bindToLifecycle(
-                this,
-                CameraSelector.DEFAULT_BACK_CAMERA,
-                preview,
-                imageCapture
-            )
 
         }, ContextCompat.getMainExecutor(this))
     }
@@ -163,7 +182,17 @@ class CameraActivity : AppCompatActivity() {
             "IMG_${System.currentTimeMillis()}.jpg"
         )
 
-        tempFile?.copyTo(finalFile, overwrite = true)
+        try {
+            tempFile?.copyTo(finalFile, overwrite = true)
+        } catch (e: Exception) {
+
+            Toast.makeText(
+                this,
+                "Failed to save image",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
         tempFile?.delete()
 
         val imageUri = finalFile.toUri()
@@ -194,5 +223,17 @@ class CameraActivity : AppCompatActivity() {
         }
         val updatedContext = configureLocale(newBase, languageToLoad) // Example: set to French
         super.attachBaseContext(updatedContext)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        tempFile?.let {
+            if (it.exists()) {
+                it.delete()
+            }
+        }
+
+        cameraProvider?.unbindAll()
     }
 }

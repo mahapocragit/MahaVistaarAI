@@ -3,7 +3,6 @@ package `in`.gov.mahapocra.mahavistaarai.ui.adapters
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,6 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.sidenavigation.costcalculator.OnDeleteClick
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import org.json.JSONArray
 
 class CHCenterRecyclerAdapter(

@@ -7,7 +7,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -38,7 +37,6 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActi
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.NewDashboardMainActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -64,6 +62,8 @@ class DetailedNotificationActivity : AppCompatActivity() {
     private var notificationId = ""
     private var notificationType = ""
     private var questionJsonObject: JSONObject? = null
+    private var navigateToNextScreen: Boolean = false
+    private var redirectionPage: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -167,12 +167,16 @@ class DetailedNotificationActivity : AppCompatActivity() {
 
                 is UiState.Success -> {
                     ProgressHelper.disableProgressDialog()
-                    startActivity(
-                        Intent(
-                            this@DetailedNotificationActivity,
-                            NotificationActivity::class.java
+                    if (navigateToNextScreen){
+                      redirectToScreen(redirectionPage)
+                    }else {
+                        startActivity(
+                            Intent(
+                                this@DetailedNotificationActivity,
+                                NotificationActivity::class.java
+                            )
                         )
-                    )
+                    }
                 }
 
                 is UiState.Error -> {
@@ -361,6 +365,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
     private fun setUpPageContent(jsonObject: JSONObject, notificationId: String) {
         binding.notificationInfoLayout.visibility = View.VISIBLE
         val page = jsonObject.optString("page")
+        redirectionPage = jsonObject.optString("page")
         val type = jsonObject.optString("type")
         var title = jsonObject.optString("title")
         val description = jsonObject.optString("description")
@@ -395,14 +400,17 @@ class DetailedNotificationActivity : AppCompatActivity() {
                 val isAnswered = questionJsonObject?.optBoolean("is_answered", false)
                 if (isAnswered == false) {
                     try {
+                        navigateToNextScreen = true
                         setUpFeedbackDialog(notificationType, notificationId, questionJsonObject!!)
                     } catch (e: Exception) {
                         redirectToScreen(page)
                     }
                 } else {
+                    navigateToNextScreen = false
                     redirectToScreen(page)
                 }
             } else {
+                navigateToNextScreen = false
                 redirectToScreen(page)
             }
         }
@@ -469,6 +477,7 @@ class DetailedNotificationActivity : AppCompatActivity() {
     }
 
     private fun safelyNavigateToPreviousScreen() {
+        navigateToNextScreen = false
         if (questionJsonObject != null) {
             val isAnswered = questionJsonObject?.optBoolean("is_answered", false)
             if (isAnswered == false) {

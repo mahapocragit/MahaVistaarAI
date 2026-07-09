@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.R
+import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLeaderboardBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.adapters.LeaderboardNewAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
@@ -58,13 +60,23 @@ class LeaderboardActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        mahavistaarViewModel.responseUrlForChatBot.observe(this) { response ->
-            if (response != null) {
-                val json = JSONObject(response.toString())
-                val status = json.optString("status")
-                if (status.equals("success", ignoreCase = true)) {
-                    token = json.optString("token").trim()
-                    leaderboardViewModel.getLeaderboardForAll(this, token)
+        mahavistaarViewModel.responseUrlForChatBot.observe(this) { state ->
+            when(state){
+                is UiState.Loading->{
+                    ProgressHelper.showProgressDialog(this)
+                }
+                is UiState.Success->{
+                    ProgressHelper.disableProgressDialog()
+                    val json = JSONObject(state.data.toString())
+                    val status = json.optString("status")
+                    if (status.equals("success", ignoreCase = true)) {
+                        token = json.optString("token").trim()
+                        leaderboardViewModel.getLeaderboardForAll(this, token)
+                    }
+                }
+                is UiState.Error->{
+                    ProgressHelper.disableProgressDialog()
+                    Toast.makeText(this, state.message,Toast.LENGTH_SHORT).show()
                 }
             }
         }

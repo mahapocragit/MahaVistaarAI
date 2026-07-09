@@ -6,9 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/app_bg"
     tools:context=".sma.ui.screens.KTDashboardActivity">
-    <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -141,7 +139,7 @@
                             <TextView
                                 android:id="@+id/nameTextView"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="29dp"
                                 android:layout_marginTop="@dimen/padding10"
                                 android:gravity="center"
                                 android:maxLines="1"

@@ -74,30 +74,22 @@ public class KTDashboardActivity extends AppCompatActivity implements OnMultiRec
     TextView switchtxt;
     int appID,userID,notifiCountValue;
     JSONArray array2 = new JSONArray();
-    String selectedUsername;
+    String selectedUsername,selectedIsGuest;
+    private JSONArray jsonArray;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ktdashboard);
         selectedUsername = getIntent().getStringExtra("selected_username");
+        selectedIsGuest = getIntent().getStringExtra("selected_isGuest");
         Log.d("ROLE_SELECT","Dashboard=="+selectedUsername);
+        Log.d("ROLE_SELECT","Dashboard=="+selectedIsGuest);
+
         fetchLogin(selectedUsername);
         initComponents();
         setConfiguration();
-//        String username = AppSettings.getInstance().getValue(this, in.gov.mahapocra.mahavistaarai.util.AppConstants.smaUsername, in.gov.mahapocra.mahavistaarai.util.AppConstants.smaUsername);
-
-//        fetchLogin(selectedUsername);
     }
     private void initComponents() {
-
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.addDrawerListener(toggle);
-//        toggle.syncState();
         appVersionTextView = findViewById(R.id.appVerTextView);
         profileImageView = findViewById(R.id.profileImageView);
         nameTextView = findViewById(R.id.nameTextView);
@@ -106,7 +98,6 @@ public class KTDashboardActivity extends AppCompatActivity implements OnMultiRec
         mMenuListView = findViewById(R.id.menuListView);
         ivNotificationCount = findViewById(R.id.iv_notification_image);
         tv_notification_count = findViewById(R.id.tv_notification_count);
-
     }
 
     private void setConfiguration() {
@@ -131,10 +122,13 @@ public class KTDashboardActivity extends AppCompatActivity implements OnMultiRec
             appVersionTextView.setText("App Version " + versionName+"S");}
         else{
             {
-                appVersionTextView.setText("App Version " + versionName);}
+                appVersionTextView.setText("App Version " + versionName); }
+            }
+        if(selectedIsGuest.equalsIgnoreCase("1")) {
+            jsonArray = AppHelper.getInstance().getGuestKTDashboardMenu();
+        }else {
+            jsonArray = AppHelper.getInstance().getKTDashboardMenu();
         }
-        JSONArray jsonArray = AppHelper.getInstance().getKTDashboardMenu();
-
         final GridLayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setHasFixedSize(true);
@@ -214,11 +208,8 @@ public class KTDashboardActivity extends AppCompatActivity implements OnMultiRec
                 new AppString(this).getkMSG_WAIT(),
                 true
         );
-
         Retrofit retrofit = api.getRetrofitInstance();
-
         APIRequest apiRequest = retrofit.create(APIRequest.class);
-
         Call<JsonObject> responseCall = apiRequest.oauthLoginRequest(
                 encryptedUsername,                    // HEADER: username
                 APIServices.SSO_KEY,                  // HEADER: secret
@@ -226,39 +217,15 @@ public class KTDashboardActivity extends AppCompatActivity implements OnMultiRec
         );
 
         DebugLog.getInstance().d("REQUEST=" + responseCall.request());
-
         api.postRequest(responseCall, this, 4);
     }
-//    private void fetchLogin(String strRefreshToken)
-//    {
-//
-//        JSONObject jsonObject = new JSONObject();
-//        try {
-//            String username = "KT542806";
-//            String encryptedUsername = EncryptAES.encrypt(username);
-//            jsonObject.put("username", encryptedUsername);
-//            jsonObject.put("secret", APIServices.SSO_KEY);
-//
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        RequestBody requestBody = AppUtility.getInstance().getRequestBody(jsonObject.toString());
-//
-////            RuntimeAPI api = new RuntimeAPI(this, APIServices.BASE_API, "", AppConstants.kMSG_WAIT, true);
-//        AppinventorIncAPI api = new AppinventorIncAPI(this, APIServices.SSO, "", new AppString(this).getkMSG_WAIT(), true);
-//        Retrofit retrofit = api.getRetrofitInstance();
-//        APIRequest apiRequest = retrofit.create(APIRequest.class);
-//        Call<JsonObject> responseCall = apiRequest.oauthLoginRequest(requestBody);
-//        DebugLog.getInstance().d("param=" + responseCall.request().toString());
-//        DebugLog.getInstance().d("param=" + AppUtility.getInstance().bodyToString(responseCall.request()));
-//        api.postRequest(responseCall, this, 1);
-//
-//    }
+
 
     private void getUnreadNotificationCount() {
         AppSession session = new AppSession(this);
         appID =  session.getAppId();
         userID = AppSettings.getInstance().getIntValue(this, AppConstants.kUSER_ID, 0);
+
         String appId = String.valueOf(appID);
         String userId = String.valueOf(userID);
 
@@ -416,12 +383,10 @@ public class KTDashboardActivity extends AppCompatActivity implements OnMultiRec
             } else {
                 profileImageView.setImageResource(R.mipmap.ic_profile);
             }
-
-            String name = profileModel.getFirst_name()+" "+profileModel.getMiddle_name()+" "+profileModel.getLast_name() +"-"+AppSettings.getInstance().getValue(this, AppConstants.kDesignation, AppConstants.kDesignation);
-            nameTextView.setText(name);
+                String name = profileModel.getFirst_name() + " " + profileModel.getMiddle_name() + " " + profileModel.getLast_name() + "- " + AppSettings.getInstance().getValue(this, AppConstants.kDesignation, AppConstants.kDesignation);
+                nameTextView.setText(name);
             String strVillName = AppSettings.getInstance().getValue(this, AppConstants.kVillageName, " ");
             int strVillCensus =AppSettings.getInstance().getIntValue(this, AppConstants.kVillageCensus, 0);
-
             designationTextView.setText(strVillName+" ("+strVillCensus+") ");
 
 //            districtTextView.setText(profileModel.getDistrict_name());
@@ -438,7 +403,6 @@ public class KTDashboardActivity extends AppCompatActivity implements OnMultiRec
             e.printStackTrace();
         }
     }
-
     private void requestDataValidation() {
         int userID = AppSettings.getInstance().getIntValue(this, AppConstants.kUSER_ID, 0);
         String id1= String.valueOf(userID);
@@ -582,8 +546,8 @@ public class KTDashboardActivity extends AppCompatActivity implements OnMultiRec
 
                                 // Print in log or show in TextView
                                 Log.d("VillageInfo", "Village: " + villageName + ", Code: " + villageCode);
-                                String name = profileModel.getFirst_name()+" "+profileModel.getMiddle_name()+" "+profileModel.getLast_name() +"-"+AppSettings.getInstance().getValue(this, AppConstants.kDesignation, AppConstants.kDesignation);
-                                nameTextView.setText(name);
+                                    String name = profileModel.getFirst_name() + " " + profileModel.getMiddle_name() + " " + profileModel.getLast_name() + "- " + AppSettings.getInstance().getValue(this, AppConstants.kDesignation, AppConstants.kDesignation);
+                                    nameTextView.setText(name);
                                 designationTextView.setText(villageName+" ("+villageCode+") ");
                                 // Example: display in Toast
 //                            Toast.makeText(this, "Village: " + villageName + "\nCode: " + villageCode, Toast.LENGTH_LONG).show();
@@ -599,6 +563,7 @@ public class KTDashboardActivity extends AppCompatActivity implements OnMultiRec
                         }
                         if (profileModel.getPassword_change_requires() == 1) {
                             AppSettings.getInstance().setIntValue(this, AppConstants.kROLE_ID, profileModel.getRole_id());
+                            AppSettings.getInstance().setIntValue(this, AppConstants.kIS_GUEST, profileModel.getIs_guest());
                             AppSettings.getInstance().setIntValue(this, AppConstants.kUSER_ID, profileModel.getId());
                             AppSettings.getInstance().setValue(this, AppConstants.kUSERNAME, profileModel.getUsername());
                             AppSettings.getInstance().setValue(this, AppConstants.kTOKEN, response.getToken());

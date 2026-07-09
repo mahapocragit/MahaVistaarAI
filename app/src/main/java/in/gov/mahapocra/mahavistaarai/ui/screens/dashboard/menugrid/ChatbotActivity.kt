@@ -25,6 +25,7 @@ import com.microsoft.clarity.Clarity
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.util.NetworkUtils.isNetworkAvailable
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
+import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityChatbotBinding
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
@@ -37,7 +38,6 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
-import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONObject
 
 class ChatbotActivity : AppCompatActivity() {
@@ -275,40 +275,23 @@ class ChatbotActivity : AppCompatActivity() {
     }
 
     private fun observeResponse() {
+        mahavistaarViewModel.responseUrlForChatBot.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    ProgressHelper.showProgressDialog(this)
+                }
 
-        leaderboardViewModel.responseUpdateUserPoints.observe(this) { response ->
+                is UiState.Success -> {
+                    val response = JSONObject(state.data.toString())
+                    handleChatbotResponse(response)
+                    ProgressHelper.disableProgressDialog()
+                }
 
-            if (response != null) {
-
-                try {
-
-                    val jsonObject = JSONObject(response.toString())
-
-                    val status = jsonObject.optInt("status")
-
-                    if (status == 200) {
-
-                        ScoreBubbleHelper.showScoreBubble(
-                            binding.root,
-                            "+100🔥 Points Added"
-                        )
-                    }
-
-                } catch (e: Exception) {
-                    Log.e(TAG, "Points parse error", e)
+                is UiState.Error -> {
+                    ProgressHelper.disableProgressDialog()
+                    onChatbotError()
                 }
             }
-        }
-
-        mahavistaarViewModel.responseUrlForChatBot.observe(this) { response ->
-            handleChatbotResponse(response)
-        }
-
-        mahavistaarViewModel.error.observe(this) {
-
-            Log.e(TAG, "API Error")
-
-            onChatbotError()
         }
     }
 

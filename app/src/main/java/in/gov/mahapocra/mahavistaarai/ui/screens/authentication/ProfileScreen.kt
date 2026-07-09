@@ -338,68 +338,57 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
     }
 
     private fun setConfiguration() {
-        val farmerRegId = AppPreferenceManager(this).getString(AppConstants.FARMER_REG_ID)
-        if (farmerRegId != "") {
-            binding.submitButton.text = getString(R.string.update_profile_text)
-            fAAPRegistrationID = farmerRegisterID.toString()
-            mobileNumberStatus = true
-            val userName = AppPreferenceManager(this).getString(AppConstants.USER_NAME)
-            val userMobile = AppPreferenceManager(this).getString(AppConstants.USER_MOBILE)
-            registerMob = CryptoHelper.decryptField(userMobile).toString()
-            emailid =
-                AppSettings.getInstance().getValue(this, AppConstants.uEmail, AppConstants.uEmail)
-            districtName =
-                CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.DISTRICT_NAME))
-                    .toString()
-            talukaName =
-                CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.TALUKA_NAME))
-                    .toString()
-            villageName =
-                CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.VILLAGE_NAME))
-                    .toString()
-            districtCode =
-                CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.DISTRICT_CODE))
-                    .toString().toInt()
-            CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.TALUKA_CODE))
-                ?.let {
-                    talukaCode =
-                        it.toInt()
-                }
-            villageCode =
-                CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.VILLAGE_CODE))
-                    ?.toInt()
-                    .toString().toInt()
-            val rawValue =
-                CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.AGRISTACKID))
-                    .toString()
-            agristackId = if (rawValue.isEmpty() || rawValue == "null") "" else rawValue
-            if (agristackId != "") {
-                binding.consentLayout.visibility = View.VISIBLE
-                binding.consentLayout.setOnClickListener {
-                    showDialogForConsent()
-                }
+        binding.submitButton.text = getString(R.string.update_profile_text)
+        fAAPRegistrationID = farmerRegisterID.toString()
+        mobileNumberStatus = true
+        val userName = AppPreferenceManager(this).getString(AppConstants.USER_NAME)
+        val userMobile = AppPreferenceManager(this).getString(AppConstants.USER_MOBILE)
+        registerMob = CryptoHelper.decryptField(userMobile).toString()
+        emailid =
+            AppSettings.getInstance().getValue(this, AppConstants.uEmail, AppConstants.uEmail)
+        districtName =
+            CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.DISTRICT_NAME))
+                .toString()
+        talukaName =
+            CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.TALUKA_NAME))
+                .toString()
+        villageName =
+            CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.VILLAGE_NAME))
+                .toString()
+        districtCode =
+            CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.DISTRICT_CODE))
+                .toString().toInt()
+        CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.TALUKA_CODE))
+            ?.let {
+                talukaCode =
+                    it.toInt()
             }
-            binding.nameEditText.setText(CryptoHelper.decryptField(userName))
-            binding.mobNoEditText.setText(CryptoHelper.decryptField(userMobile))
-            binding.textViewDist.text = districtName
-            binding.textViewTaluka.text = talukaName
-            binding.textViewVillage.text = villageName
+        villageCode =
+            CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.VILLAGE_CODE))
+                ?.toInt()
+                .toString().toInt()
+        val rawValue =
+            CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.AGRISTACKID))
+                .toString()
+        agristackId = if (rawValue.isEmpty() || rawValue == "null") "" else rawValue
+        if (agristackId != "") {
+            binding.consentLayout.visibility = View.VISIBLE
+            binding.consentLayout.setOnClickListener {
+                showDialogForConsent()
+            }
+        }
+        binding.nameEditText.setText(CryptoHelper.decryptField(userName))
+        binding.mobNoEditText.setText(CryptoHelper.decryptField(userMobile))
+        binding.textViewDist.text = districtName
+        binding.textViewTaluka.text = talukaName
+        binding.textViewVillage.text = villageName
 
-            if (agristackId != "") {
-                disableView()
-            } else {
-                enableView()
-            }
+        if (agristackId != "") {
+            disableView()
         } else {
-            binding.textView5.text = getString(R.string.register_text_1)
-            binding.textView6.text = getString(R.string.register_text_2)
+            enableView()
         }
         farmerViewModel.getDistrictData(this, languageToLoad)
-    }
-
-    @JvmName("getMachineId1")
-    fun getMachineId(): String? {
-        return Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
     }
 
     private fun onclick() {

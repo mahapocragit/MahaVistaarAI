@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -32,6 +33,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.view.GravityCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.get
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
@@ -65,11 +67,13 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.notification.NotificationActi
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.ConfirmationDialog
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
+import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SideNavMenuHelper
@@ -115,8 +119,11 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
             languageToLoad = "en"
         }
         switchLanguage(this, languageToLoad)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         binding = ActivityNewDashboardMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiResponsive(binding.mainLayout)
+        uiResponsive(binding.navView, false)
         askForPermissions()
         init()
         FirebaseHelper(this)
@@ -229,17 +236,13 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
         } else {
 
             // NORMAL APP OPEN CASE
-            val savedTab = appPreferenceManager.getInt(
-                AppConstants.REDIRECT_TO_TAB,
-                0
-            )
-
+            val savedTab = appPreferenceManager.getInt(AppConstants.REDIRECT_TO_TAB, 0)
             binding.viewPager.setCurrentItem(savedTab, false)
         }
 
         binding.toolbar.inflateMenu(R.menu.toolbar_menu)
-
         binding.chatbotIcon.setOnClickListener {
+
             Clarity.sendCustomEvent("VISTAAR_AI_BUTTON_CLICKED")
             if (NetworkUtils.isInternetAvailable(this)) {
                 startActivity(Intent(this, ChatbotActivity::class.java))
@@ -359,11 +362,8 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
 
         binding.krishiTaiButton.setOnClickListener {
 
-            val rolesJson = AppSettings.getInstance()
-                .getValue(this, AppConstants.pocraRoles, "[]")
-
+            val rolesJson = AppSettings.getInstance().getValue(this, AppConstants.pocraRoles, "[]")
             val pocraRoles = mutableListOf<PocraRole>()
-
             try {
                 val arr = JSONArray(rolesJson)
                 for (i in 0 until arr.length()) {
@@ -371,6 +371,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     pocraRoles.add(
                         PocraRole(
                             obj.getInt("role_id"),
+                            obj.getInt("is_guest"),
                             obj.getString("username"),
                             obj.getString("role"),
                             obj.getString("short_name")
@@ -393,9 +394,14 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
             // If only one username → direct login
             if (ktRoles.size == 1) {
                 val userName = ktRoles[0].username
+                val isGuest = ktRoles[0].is_guest
                 AppSettings.getInstance().setValue(this, AppConstants.smaUsername, userName)
+                AppSettings.getInstance().setValue(this, AppConstants.kIsGuest, isGuest.toString())
                 val intent = Intent(this, KTDashboardActivity::class.java)
                 intent.putExtra("selected_username", userName)
+                intent.putExtra("selected_isGuest", isGuest.toString())
+                Log.d("MAYU","ND UNAME"+userName);
+                Log.d("MAYU","ND Guest="+isGuest);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
@@ -737,7 +743,6 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     val talukaName = dataObject?.optString("TalukaName")
                     val districtCode = dataObject?.optString("DistrictCode")
                     val districtName = dataObject?.optString("DistrictName")
-                    val farmerRegId = dataObject?.optString("FAAPRegistrationID")
                     val rolesArray = dataObject?.optJSONArray("pocra_roles")
                     val pocraRoles = mutableListOf<PocraRole>()
                     val topicJsonArray = dataObject?.optJSONArray("topics") ?: JSONArray()
@@ -755,8 +760,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     AppPreferenceManager(this).saveString(AppConstants.DISTRICT_NAME, districtName)
                     AppPreferenceManager(this).saveString(AppConstants.AGRISTACKID, agristackId)
                     appPreferenceManager.saveString("FARMER_POPUP_ID", agristackId)
-                    AppPreferenceManager(this).saveString(AppConstants.FARMER_REG_ID, farmerRegId)
-
+                    Log.d(TAG, "observeResponse: ${CryptoHelper.decryptField(agristackId)}")
                     val userRoleId = -1
                     var hasKrishiTaiRole = false   // FLAG
                     if (rolesArray != null && rolesArray.length() > 0) {
@@ -765,10 +769,11 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                         for (i in 0 until rolesArray.length()) {
                             val roleObj = rolesArray.optJSONObject(i) ?: continue
                             val roleId = roleObj.optInt("role_id", -1)
+                            val isGuest = roleObj.optInt("is_guest", 0)
                             val username = roleObj.optString("username", "")
                             val role = roleObj.optString("role", "")
                             val shortName = roleObj.optString("short_name", "")
-                            pocraRoles.add(PocraRole(roleId, username, role, shortName))
+                            pocraRoles.add(PocraRole(roleId, isGuest, username, role, shortName))
                             // ✅ CHECK ROLE 45
                             if (roleId == 45) {
                                 hasKrishiTaiRole = true
@@ -1143,6 +1148,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
         for (role in roles) {
             val obj = JSONObject()
             obj.put("role_id", role.role_id)
+            obj.put("is_guest", role.is_guest)
             obj.put("username", role.username)
             obj.put("role", role.role)
             obj.put("short_name", role.short_name)

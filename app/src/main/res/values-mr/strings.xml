@@ -418,7 +418,7 @@
     <string name="dshetishala">शेतीशाळा</string>
     <string name="dbt">डीबीटी</string>
     <string name="schedules">वेळापत्रक</string>
-    <string name="shetishala_schedule">डिजिटल शेतीशाळा वेळापत्रक 2025</string>
+    <string name="shetishala_schedule">डिजिटल शेतीशाळा वेळापत्रक</string>
     <string name="crop">पीक</string>
     <string name="time">वेळ</string>
     <string name="zoom_id">झूम लिंक</string>
@@ -612,4 +612,11 @@
     <string name="logout_desc">आपण लॉगआउट करू इच्छिता?</string>
     <string name="farm_magazine">कृषी\nमासिक</string>
     <string name="mahapashudhan_magazine">महापशुधन\nमासिक</string>
+    <string name="give_your_feedback">तुमचा अभिप्राय द्या</string>
+    <string name="tell_us_more_optional">आम्हाला अधिक सांगा (पर्यायी)</string>
+    <string name="write_your_suggestions_here">तुमच्या सूचना येथे लिहा</string>
+    <string name="submit_feedback_not">अभिप्राय सबमिट करा</string>
+    <string name="helpful">उपयुक्त</string>
+    <string name="not_helpful">उपयुक्त नाही</string>
+    <string name="folders">फोल्डर्स</string>
 </resources>

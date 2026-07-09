@@ -1,7 +1,5 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.viewmodel
 
-import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,13 +8,11 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import com.microsoft.clarity.Clarity
 import `in`.co.appinventor.services_api.app_util.AppUtility
-import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.RetrofitHelper
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
+import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
-import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.io.IOException
@@ -25,11 +21,8 @@ import java.net.SocketTimeoutException
 
 class MahavistaarViewModel : ViewModel(){
 
-    private val _responseUrlForChatBot = MutableLiveData<JsonObject>()
-    val responseUrlForChatBot: LiveData<JsonObject> = _responseUrlForChatBot
-
-    private val _error = MutableLiveData<String>()
-    val error: LiveData<String> = _error
+    private val _responseUrlForChatBot = MutableLiveData< UiState<JsonObject>>()
+    val responseUrlForChatBot: LiveData<UiState<JsonObject>> = _responseUrlForChatBot
 
     fun requestUrlForChatBot(username: String, mobileNumber: String) {
 
@@ -37,11 +30,11 @@ class MahavistaarViewModel : ViewModel(){
         val mobileNumber = CryptoHelper.decryptField(mobileNumber)
 
         viewModelScope.launch {
+            _responseUrlForChatBot.value = UiState.Loading
             try {
-//                ProgressHelper.showProgressDialog(context)
                 val jsonObject = JSONObject().apply {
-                    put("mobile", username)
-                    put("name", mobileNumber)
+                    put("name", username)
+                    put("mobile", mobileNumber)
                     put("role", "public")
                 }
 
@@ -52,11 +45,9 @@ class MahavistaarViewModel : ViewModel(){
                 // Retrofit suspend call
                 Clarity.sendCustomEvent("JWT_SESSION_START")
                 val response = apiRequest.requestForChatBotURL(requestBody)
-                ProgressHelper.disableProgressDialog()
-                _responseUrlForChatBot.value = response
+                _responseUrlForChatBot.value = UiState.Success(response)
 
             }catch (e: Exception) {
-                ProgressHelper.disableProgressDialog()
                 Clarity.sendCustomEvent("JWT_SESSION_STOPPED")
                 val message = when (e) {
                     is SocketTimeoutException -> "Request timed out. Please try again."
@@ -64,8 +55,7 @@ class MahavistaarViewModel : ViewModel(){
                     is IOException -> "Network error occurred."
                     else -> e.localizedMessage ?: "Unknown error"
                 }
-                _error.value = message
-                Log.d("TAGGGER", "requestUrlForChatBot: $message")
+                _responseUrlForChatBot.value = UiState.Error(message)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }

@@ -10,7 +10,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
@@ -98,7 +97,6 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.splash.SplashScreenActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -557,6 +555,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                     pocraRoles.add(
                         PocraRole(
                             obj.getInt("role_id"),
+                            obj.getInt("is_guest"),
                             obj.getString("username"),
                             obj.getString("role"),
                             obj.getString("short_name")
@@ -1199,10 +1198,11 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
                             for (i in 0 until rolesArray.length()) {
                                 val roleObj = rolesArray.optJSONObject(i) ?: continue
                                 val roleId = roleObj.optInt("role_id", -1)
+                                val isGuest = roleObj.optInt("is_guest", 0)
                                 val username = roleObj.optString("username", "")
                                 val role = roleObj.optString("role", "")
                                 val shortName = roleObj.optString("short_name", "")
-                                pocraRoles.add(PocraRole(roleId, username, role, shortName))
+                                pocraRoles.add(PocraRole(roleId, isGuest, username, role, shortName))
                                 // ✅ CHECK ROLE 45
                                 if (roleId == 45) {
                                     hasKrishiTaiRole = true
@@ -1413,6 +1413,7 @@ class DashboardScreen : AppCompatActivity(), OnItemClickListener, OnMultiRecycle
         for (role in roles) {
             val obj = JSONObject()
             obj.put("role_id", role.role_id)
+            obj.put("is_guest", role.is_guest)
             obj.put("username", role.username)
             obj.put("role", role.role)
             obj.put("short_name", role.short_name)

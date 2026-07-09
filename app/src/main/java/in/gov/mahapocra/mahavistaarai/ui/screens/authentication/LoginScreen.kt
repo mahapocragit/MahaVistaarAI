@@ -3,6 +3,8 @@ package `in`.gov.mahapocra.mahavistaarai.ui.screens.authentication
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.provider.Settings
@@ -24,17 +26,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.firebase.messaging.FirebaseMessaging
-import com.google.gson.JsonObject
-import `in`.co.appinventor.services_api.api.AppInventorApi
 import `in`.co.appinventor.services_api.app_util.AppUtility
-import `in`.co.appinventor.services_api.listener.ApiCallbackCode
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.widget.UIToastMessage
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.data.api.ApiConstants
-import `in`.gov.mahapocra.mahavistaarai.data.api.ApiService
 import `in`.gov.mahapocra.mahavistaarai.data.api.AppConstant
-import `in`.gov.mahapocra.mahavistaarai.data.api.AppEnvironment
 import `in`.gov.mahapocra.mahavistaarai.data.helpers.FirebaseHelper
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.ActivityLoginScreenBinding
@@ -49,13 +45,9 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.OtpRateLimiter.provideValidEncryptedString
 import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager
-import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
-import org.json.JSONException
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Retrofit
 
 
 class LoginScreen : AppCompatActivity() {
@@ -152,7 +144,11 @@ class LoginScreen : AppCompatActivity() {
                 } else {
                     val jsonObject = JSONObject(it.toString())
                     val response = jsonObject.optString("response")
-                    Toast.makeText(this, response, Toast.LENGTH_SHORT).show()
+                    if (response == "Correlation ID not found in response"){
+                        Toast.makeText(this, "Invalid Farmer ID. Please enter the correct Farmer ID.", Toast.LENGTH_LONG).show()
+                    }else {
+                        Toast.makeText(this, response, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
@@ -164,23 +160,17 @@ class LoginScreen : AppCompatActivity() {
                 }
 
                 is UiState.Success -> {
-                    ProgressHelper.disableProgressDialog(this)
+                    ProgressHelper.disableProgressDialog()
                     val jSONObject = JSONObject(state.data.toString())
                     if (jSONObject.optInt("status") == 200) {
                         AppPreferenceManager(this).saveBoolean("show_overlay", true)
 
-                        val message = jSONObject.getString("response")
-                        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                        val message: String? = jSONObject.getString("Message")
+                        val response: String = jSONObject.getString("response")
+                        Toast.makeText(this, message?:response, Toast.LENGTH_LONG).show()
 
                         val accessToken = jSONObject.optString("access_token")
                         val refreshToken = jSONObject.optString("refresh_token")
-
-                        if (loginOption != OTP_VERIFY) {
-                            farmerRegisteredID = jSONObject.getInt("FAAPRegistrationID")
-                        }
-
-                        AppSettings.getInstance()
-                            .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisteredID)
 
                         TokenSessionManager.saveTokens(accessToken, refreshToken)
                         appPreferenceManager.saveBoolean(AppConstant.IS_FIRST_LOGIN, true)
@@ -190,13 +180,14 @@ class LoginScreen : AppCompatActivity() {
                             finish()
                         }
                     } else {
-                        val message: String = jSONObject.getString("Message")
-                        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                        val message: String? = jSONObject.getString("Message")
+                        val response: String = jSONObject.getString("response")
+                        Toast.makeText(this, message?:response, Toast.LENGTH_LONG).show()
                     }
                 }
 
                 is UiState.Error -> {
-                    ProgressHelper.disableProgressDialog(this)
+                    ProgressHelper.disableProgressDialog()
                     Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                 }
             }
@@ -209,39 +200,28 @@ class LoginScreen : AppCompatActivity() {
                 }
 
                 is UiState.Success -> {
-                    ProgressHelper.disableProgressDialog(this)
+                    ProgressHelper.disableProgressDialog()
                     val jSONObject = JSONObject(state.data.toString())
                     if (jSONObject.optInt("status") == 200) {
                         AppPreferenceManager(this).saveBoolean("show_overlay", true)
-
                         val message = jSONObject.getString("response")
                         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-
                         val accessToken = jSONObject.optString("access_token")
                         val refreshToken = jSONObject.optString("refresh_token")
-
-                        if (loginOption != OTP_VERIFY) {
-                            farmerRegisteredID = jSONObject.getInt("FAAPRegistrationID")
-                        }
-
-                        AppSettings.getInstance()
-                            .setIntValue(this, AppConstants.fREGISTER_ID, farmerRegisteredID)
-
                         TokenSessionManager.saveTokens(accessToken, refreshToken)
-
                         appPreferenceManager.saveBoolean(AppConstant.IS_FIRST_LOGIN, true)
                         AppHelper(this@LoginScreen).redirectToHome()
                         if (loginOption != OTP_VERIFY) {
                             finish()
                         }
                     } else {
-                        val message: String = jSONObject.getString("Message")
-                        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                        val response: String = jSONObject.getString("response")
+                        Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                     }
                 }
 
                 is UiState.Error -> {
-                    ProgressHelper.disableProgressDialog(this)
+                    ProgressHelper.disableProgressDialog()
                     Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                 }
             }
@@ -432,20 +412,34 @@ class LoginScreen : AppCompatActivity() {
     }
 
     private fun openChangeLangPopup() {
-        val dialog = Dialog(this@LoginScreen)
+        val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)
         dialog.setContentView(R.layout.popup_language_selector)
 
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
         val tvEnglish = dialog.findViewById<TextView>(R.id.tv_eng)
         val tvMarathi = dialog.findViewById<TextView>(R.id.tv_mar)
+        val ivEnglish = dialog.findViewById<ImageView>(R.id.check_eng)
+        val ivMarathi = dialog.findViewById<ImageView>(R.id.check_mar)
+
+        if (languageToLoad == "en") {
+            ivEnglish.visibility = View.VISIBLE
+            ivMarathi.visibility = View.GONE
+        } else {
+            ivEnglish.visibility = View.GONE
+            ivMarathi.visibility = View.VISIBLE
+        }
 
         tvEnglish.setOnClickListener {
             val languageToLoad = "en"
             configureLocale(baseContext, languageToLoad)
             AppSettings.setLanguage(this@LoginScreen, "1")
+
             finish()
             startActivity(intent)
+
             dialog.dismiss()
         }
 
@@ -453,12 +447,19 @@ class LoginScreen : AppCompatActivity() {
             val languageToLoad = "mr"
             configureLocale(baseContext, languageToLoad)
             AppSettings.setLanguage(this@LoginScreen, "2")
+
             finish()
             startActivity(intent)
+
             dialog.dismiss()
         }
 
         dialog.show()
+
+        dialog.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
     }
 
     private fun authenticationOperations() {

@@ -46,8 +46,8 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.advisory.A
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.dbt.DBTActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.marketprice.MarketPrice
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.newshc.HealthCardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.pest.PestsAndDiseasesStages
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.soilhealthcard.SoilHealthCardActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.sop.SOPActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.pestIdentification.ui.PestIdentificationActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.ShetishalaActivity
@@ -58,7 +58,6 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.FarmDetails
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.adapters.CropSelectionAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
-import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.MahavistaarViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
@@ -227,8 +226,6 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                 showAgristackLinkingDialog()
             }
         }
-
-        setETLAlertDialog()
     }
 
     private fun showAgristackLinkingDialog() {
@@ -250,7 +247,6 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
             appPreferenceManager.saveBoolean("AGRISTACK_LOGIN_DIALOG", true)
             agristackLoginDialog.dismiss()
         }
-
         agristackLoginDialog.show()
     }
 
@@ -314,7 +310,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                     val jsonResponse = JSONObject(state.data.toString())
                     val dataObject = jsonResponse.optJSONObject("data")
                     val customisedDashboardList = dataObject.optJSONArray("cust_dash")
-
+                    Log.d(TAG, "observeResponse: $customisedDashboardList")
                     // ✅ update adapter (no re-setup RecyclerView)
                     myAdapter = MyDashboardAdapter(languageToLoad, customisedDashboardList, this)
                     binding.myDashboardRecyclerView.adapter = myAdapter
@@ -976,7 +972,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
             "weather" -> Intent(requireContext(), WeatherActivity::class.java)
 
             "shc", "soilcard" ->
-                Intent(requireContext(), SoilHealthCardActivity::class.java)
+                Intent(requireContext(), HealthCardActivity::class.java)
 
             "climatetech" ->
                 Intent(requireContext(), ClimateResilientTechnology::class.java)
@@ -1125,6 +1121,10 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         }
     }
 
+    fun toast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
     companion object {
         const val CUSTOMISED_DASHBOARD_REDIRECTION = 1
         const val CROP_SELECTION_DCS = 2
@@ -1132,6 +1132,11 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         const val SAVE_CROP_FOR_DCS = 4
         const val DELETE_CROP_FOR_DCS = 5
         const val UPDATE_CROP_FOR_DCS = 6
+        val cropCatalog = mapOf(
+            "Paddy" to "22c07b1f-c92d-4e56-9c8f-8328e0fdb2ae",
+            "Cotton" to "3b8973e2-5a16-4d51-b94d-b4cb9ef3d4fb",
+        )
+        val farmerCrops = listOf("Paddy", "Cotton")
     }
 
     override fun onResume() {

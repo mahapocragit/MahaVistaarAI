@@ -41,6 +41,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.FERTILIZER_CALCULATOR_POINT
+import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
@@ -113,7 +114,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         observeResponse()
         binding.relativeLayoutTopBar.imageViewHeaderBack.visibility = View.VISIBLE
         binding.relativeLayoutTopBar.imageViewHeaderBack.setOnClickListener {
-            AppHelper(this).redirectToHome()
+            AppHelper(this).redirectToPage(1)
         }
 
         AnimationHelper.shrinkLeftToCenter(binding.bubbleIconImageView)
@@ -157,7 +158,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
                         startActivity(sharing)
                         dialogInterface.dismiss()
                     }.setNegativeButton(R.string.cancel) { _, _ ->
-                        AppHelper(this).redirectToHome()
+                        AppHelper(this).redirectToPage(1)
                     }
                     .create()
 
@@ -320,7 +321,7 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
 
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                AppHelper(this@FertilizerCalculatorActivity).redirectToHome()
+                AppHelper(this@FertilizerCalculatorActivity).redirectToPage(1)
             }
         })
     }
@@ -599,85 +600,68 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         try {
             if (jSONObject != null) {
                 when (code) {
-                    1 -> {
-                        binding.availableOptionTv.visibility = View.INVISIBLE
-                        val simpleFertilizersArray: JSONArray =
-                            jSONObject.getJSONArray("SimpleFertilizers")
-                        val complexFertilizersArray: JSONArray =
-                            jSONObject.getJSONArray("ComplexFertilizers")
+                    1 -> {binding.availableOptionTv.visibility = View.INVISIBLE
 
-                        //Main JSONObject
-                        var mainIndex = 0
-                        var q = 0
-                        var z = 0
+                        val simpleFertilizersArray = jSONObject.getJSONArray("SimpleFertilizers")
+                        val complexFertilizersArray = jSONObject.getJSONArray("ComplexFertilizers")
+
                         val optionFertilizerDataArray = JSONArray()
-                        var optionJsonObject1 = JSONObject()
-                        var optionArray1 = JSONArray()
+
+// Add Simple Fertilizers as first group
+                        if (simpleFertilizersArray.length() > 0) {
+                            optionFertilizerDataArray.put(createOptionGroup(simpleFertilizersArray))
+                        }
+
                         if (complexFertilizersArray.length() > 0) {
+
                             binding.noDataFoundImageView.visibility = View.GONE
                             binding.noDataFoundTextView.visibility = View.GONE
-                            for (j in 0 until complexFertilizersArray.length()) {
-                                // for simple
-                                if (j == 0) {
-                                    val optionJsonObject = JSONObject()
-                                    val optionArray = JSONArray()
-                                    for (k in 0 until simpleFertilizersArray.length()) {
-                                        val fertilizerJsonObject = JSONObject()
-                                        val option: JSONObject =
-                                            simpleFertilizersArray.getJSONObject(k)
-                                        val fertilizer: JSONArray = option.getJSONArray("Option")
-                                        fertilizerJsonObject.put("fertilizer", fertilizer)
-                                        optionArray.put(k, fertilizerJsonObject)
-                                    }
-                                    optionJsonObject.put("Option", optionArray)
-                                    optionFertilizerDataArray.put(mainIndex, optionJsonObject)
-                                    mainIndex++
+
+                            var currentGroup = JSONArray()
+
+                            for (i in 0 until complexFertilizersArray.length()) {
+
+                                val fertilizerOption =
+                                    complexFertilizersArray.getJSONObject(i).getJSONArray("Option")
+
+                                val cropAgeDays =
+                                    fertilizerOption.getJSONObject(0).optString("CropAgeDays")
+
+                                // Start a new group when CropAgeDays = 0
+                                if (cropAgeDays == "0" && currentGroup.length() > 0) {
+                                    optionFertilizerDataArray.put(
+                                        JSONObject().put("Option", currentGroup)
+                                    )
+                                    currentGroup = JSONArray()
                                 }
-                                // for complex
-                                val fertilizerJsonObject1 = JSONObject()
-                                val option: JSONObject = complexFertilizersArray.getJSONObject(j)
-                                val fertilizer: JSONArray = option.getJSONArray("Option")
-                                var cropAgeDays = ""
-                                for (m in 0 until 1) {
-                                    val optionItem: JSONObject = fertilizer.getJSONObject(m)
-                                    cropAgeDays = optionItem.getString("CropAgeDays")
-                                }
-                                if (cropAgeDays == "0" && q > 1) {
-                                    optionJsonObject1.put("Option", optionArray1)
-                                    optionFertilizerDataArray.put(mainIndex, optionJsonObject1)
-                                    optionJsonObject1 = JSONObject()
-                                    optionArray1 = JSONArray()
-                                    z = 0
-                                    mainIndex++
-                                }
-                                fertilizerJsonObject1.put("fertilizer", fertilizer)
-                                optionArray1.put(z, fertilizerJsonObject1)
-                                q++
-                                z++
+
+                                currentGroup.put(
+                                    JSONObject().put("fertilizer", fertilizerOption)
+                                )
                             }
-                            optionJsonObject1.put("Option", optionArray1)
-                            optionFertilizerDataArray.put(mainIndex, optionJsonObject1)
-                        } else {
-                            val optionJsonObject = JSONObject()
-                            val optionArray = JSONArray()
-                            for (k in 0 until simpleFertilizersArray.length()) {
-                                val fertilizerJsonObject = JSONObject()
-                                val option: JSONObject = simpleFertilizersArray.getJSONObject(k)
-                                val fertilizer: JSONArray = option.getJSONArray("Option")
-                                fertilizerJsonObject.put("fertilizer", fertilizer)
-                                optionArray.put(k, fertilizerJsonObject)
+
+                            // Add last group
+                            if (currentGroup.length() > 0) {
+                                optionFertilizerDataArray.put(
+                                    JSONObject().put("Option", currentGroup)
+                                )
                             }
-                            optionJsonObject.put("Option", optionArray)
-                            optionFertilizerDataArray.put(mainIndex, optionJsonObject)
-                            mainIndex++
                         }
 
                         fertilizerOptionValue = optionFertilizerDataArray
-                        DebugLog.getInstance().d("fertilizerCalculatedValue=$fertilizerOptionValue")
+
+                        DebugLog.getInstance()
+                            .d("fertilizerCalculatedValue=$fertilizerOptionValue")
+
                         availableOption = "fertilizerCalculatedValue"
+
                         showCalculatorData()
+
                         if (containsFarmerId(this)) {
-                            leaderboardViewModel.updateUserPoints(this, FERTILIZER_CALCULATOR_POINT)
+                            leaderboardViewModel.updateUserPoints(
+                                this,
+                                FERTILIZER_CALCULATOR_POINT
+                            )
                         }
                     }
 
@@ -735,6 +719,22 @@ class FertilizerCalculatorActivity : AppCompatActivity(), ApiJSONObjCallback,
         } catch (e: JSONException) {
             e.printStackTrace()
         }
+    }
+
+    private fun createOptionGroup(sourceArray: JSONArray): JSONObject {
+        val optionArray = JSONArray()
+
+        for (i in 0 until sourceArray.length()) {
+            val item = sourceArray.getJSONObject(i)
+            optionArray.put(
+                JSONObject().put(
+                    "fertilizer",
+                    item.getJSONArray("Option")
+                )
+            )
+        }
+
+        return JSONObject().put("Option", optionArray)
     }
 
     private fun showCalculatorData() {

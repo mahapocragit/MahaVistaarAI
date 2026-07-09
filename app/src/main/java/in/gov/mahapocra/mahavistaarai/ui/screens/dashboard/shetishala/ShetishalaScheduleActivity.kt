@@ -26,6 +26,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.app_util.RecyclerItemClickListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ScoreBubbleHelper
 import org.json.JSONObject
+import java.time.Year
 
 class ShetishalaScheduleActivity : AppCompatActivity(), RecyclerItemClickListener {
 
@@ -101,7 +102,13 @@ class ShetishalaScheduleActivity : AppCompatActivity(), RecyclerItemClickListene
     }
 
     private fun setUpToolbar() {
-        binding.toolbar.textViewHeaderTitle.text = getString(R.string.shetishala_schedule)
+        val currentYear = Year.now()
+        Log.d(TAG, "setUpToolbar: $currentYear")
+        binding.toolbar.textViewHeaderTitle.text = buildString {
+            append(getString(R.string.shetishala_schedule))
+            append(" ")
+            append(currentYear)
+        }
         binding.toolbar.textViewHeaderTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
         binding.toolbar.imgBackArrow.visibility = View.VISIBLE
         binding.toolbar.imgBackArrow.setOnClickListener {

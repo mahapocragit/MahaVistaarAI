@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -34,7 +33,6 @@ import `in`.gov.mahapocra.mahavistaarai.ui.adapters.CropTransactionAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.CostCalculatorViewModel
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.LeaderboardViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.COST_CALCULATOR_POINT
-import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
@@ -226,6 +224,8 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
         binding.addExpenseButton.setOnClickListener {
             isIncomeSelected = true
             unitMultiplier = 1
+            yieldAmount = 0
+            pricePerUnit = 0
 
             val dialogBinding = DialogAddExpenseLayoutBinding.inflate(layoutInflater)
 
@@ -294,7 +294,7 @@ class CropCostCalculationActivity : AppCompatActivity(), OnDeleteClick {
                     val transactionType = if (isIncomeSelected) "income" else "expense"
 
                     if (transactionType == "income") {
-                        var transactionName =
+                        val transactionName =
                             incomeNameEditText.text.toString().ifEmpty { "Income" }
 
                         if (yieldAmount == 0 || pricePerUnit == 0) {

@@ -1045,7 +1045,39 @@ public class AppHelper {
 
         return jsonArray;
     }
+    public JSONArray getGuestKTDashboardMenu() {
 
+        JSONArray jsonArray = new JSONArray();
+        try {
+
+            JSONObject jsonObject2 = new JSONObject();
+            jsonObject2.put("id", 1);
+//            jsonObject2.put("name", "Activity");
+            jsonObject2.put("name", "विस्तार कार्य");
+            jsonObject2.put("icon", R.drawable.kt_work_icon);
+
+            JSONObject jsonObject3 = new JSONObject();
+            jsonObject3.put("id", 2);
+//            jsonObject3.put("name", "Activity Report");
+            jsonObject3.put("name", "विस्तार कार्य अहवाल");
+            jsonObject3.put("icon", R.drawable.kt_report_icon);
+
+            JSONObject jsonObject4 = new JSONObject();
+            jsonObject4.put("id", 3);
+//            jsonObject4.put("name", "My Profile");
+            jsonObject4.put("name", "प्रोफाइल");
+            jsonObject4.put("icon", "ic_profile");
+
+            jsonArray.put(jsonObject2);
+            jsonArray.put(jsonObject3);
+//            jsonArray.put(jsonObject4);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return jsonArray;
+    }
     public JSONArray getKTDashboardMenu() {
 
         JSONArray jsonArray = new JSONArray();
