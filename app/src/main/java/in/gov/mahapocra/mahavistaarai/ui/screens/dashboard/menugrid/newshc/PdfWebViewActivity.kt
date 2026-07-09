@@ -221,6 +221,7 @@ class PdfWebViewActivity : AppCompatActivity() {
     private fun loadPdf(url: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
+                runOnUiThread { ProgressHelper.showProgressDialog(this@PdfWebViewActivity) }
                 val client = OkHttpClient()
 
                 val request = Request.Builder()
@@ -234,6 +235,7 @@ class PdfWebViewActivity : AppCompatActivity() {
                 val response = client.newCall(request).execute()
 
                 if (response.isSuccessful) {
+                    runOnUiThread { ProgressHelper.disableProgressDialog() }
                     val file = File(cacheDir, "health_card.pdf")
 
                     response.body?.byteStream()?.use { input ->
@@ -250,7 +252,9 @@ class PdfWebViewActivity : AppCompatActivity() {
                             .load()
                     }
                 }
+                runOnUiThread { ProgressHelper.disableProgressDialog() }
             } catch (e: Exception) {
+                runOnUiThread { ProgressHelper.disableProgressDialog() }
                 withContext(Dispatchers.Main) {
                     Toast.makeText(
                         this@PdfWebViewActivity,
