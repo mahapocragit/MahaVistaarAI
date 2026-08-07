@@ -12,6 +12,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.settings.AppSettings
+import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.di.AppContainer
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.TokenSessionManager
@@ -20,9 +21,13 @@ import java.io.File
 
 class MyApplication : Application() {
 
+    lateinit var container: AppContainer
+        private set
+
     override fun onCreate() {
         super.onCreate()
         instance = this
+        container = AppContainer()
         TokenSessionManager.init(this)
         initAppSettings()
         initNetworking()

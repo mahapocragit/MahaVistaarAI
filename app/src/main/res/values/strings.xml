@@ -14,6 +14,7 @@
         <item>Pest Management</item>
         <item>Bandhavan</item>
     </string-array>
+    <string name="mahila_shetkari">Mahila Shetkari</string>
     <string name="weather">  Weather</string>
     <string name="climateTechnology">Climate Resilient Technology</string>
     <string name="dbtschema"> DBT Schemes</string>

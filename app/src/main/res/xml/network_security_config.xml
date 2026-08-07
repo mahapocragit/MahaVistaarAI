@@ -21,6 +21,7 @@
     </domain-config>
 
     <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">uat-mahakrishi.mahaitgov.in</domain>
         <domain includeSubdomains="true">mahanidan.vassarlabs.com</domain>
         <trust-anchors>
             <certificates src="system" />

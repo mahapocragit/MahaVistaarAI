@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import `in`.co.appinventor.services_api.listener.OnRecyclerItemClickListener
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.FragmentSmartFarmingBinding
+import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.MainActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.magazine.DashboardMagazineActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology
@@ -76,7 +77,11 @@ class SmartFarmingFragment : Fragment(), OnRecyclerItemClickListener {
             ),
             SmartFarmingModel(
                 ContextCompat.getDrawable(requireContext(), R.drawable.ic_videos_sf)!!,
-                getString(R.string.videos)
+                getString(R.string.videos),
+            ),
+            SmartFarmingModel(
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_mahila_shetkari)!!,
+                getString(R.string.mahila_shetkari)
             ),
         )
 
@@ -146,6 +151,12 @@ class SmartFarmingFragment : Fragment(), OnRecyclerItemClickListener {
                         intent.putExtra("mName", savedCropName)
                         startActivity(intent)
                     }
+                }
+
+                getString(R.string.mahila_shetkari) -> {
+                    val intent = Intent(requireContext(), MainActivity::class.java)
+                    startActivity(intent)
+
                 }
             }
         }

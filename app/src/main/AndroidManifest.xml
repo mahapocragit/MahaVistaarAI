@@ -39,6 +39,12 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <queries>
+        <intent>
+            <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
+        </intent>
+    </queries>
+
     <application
         android:name=".application.MyApplication"
         android:allowBackup="false"
@@ -64,6 +70,9 @@
         <activity
             android:name=".ui.screens.newui.farmdetails.FarmDetailsActivity"
             android:exported="false" />
+        <activity
+            android:name=".mahilashetkari.MainActivity"
+            android:exported="false"/>
         <activity
             android:name=".ui.screens.dashboard.magazine.MagazineDashboardActivity"
             android:exported="false" />
