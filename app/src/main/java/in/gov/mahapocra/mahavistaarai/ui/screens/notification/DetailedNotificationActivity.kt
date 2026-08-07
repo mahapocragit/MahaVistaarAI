@@ -79,6 +79,19 @@ class DetailedNotificationActivity : AppCompatActivity() {
         uiResponsive(binding.root)
         farmerId = AppSettings.getInstance().getIntValue(this, AppConstants.fREGISTER_ID, 0)
         val notificationObject = intent.getStringExtra("notificationObject")
+
+        binding.webView.settings.apply {
+            javaScriptEnabled = true
+            domStorageEnabled = true
+            loadWithOverviewMode = true
+            useWideViewPort = true
+        }
+
+        binding.webView.isVerticalScrollBarEnabled = true
+        binding.webView.isHorizontalScrollBarEnabled = false
+        binding.webView.overScrollMode = View.OVER_SCROLL_ALWAYS
+
+
         observeResponse()
         if (notificationObject != null) {
             val jsonObject = JSONObject(notificationObject)
@@ -381,6 +394,8 @@ class DetailedNotificationActivity : AppCompatActivity() {
             binding.redirectTextView.visibility = View.GONE
         }
         binding.titleTextView.text = title
+        binding.shortDescriptionTextView.movementMethod =
+            android.text.method.ScrollingMovementMethod()
         binding.shortDescriptionTextView.text = shortDescription
         if (url.isEmpty()) {
             binding.descriptionTextView.text = description

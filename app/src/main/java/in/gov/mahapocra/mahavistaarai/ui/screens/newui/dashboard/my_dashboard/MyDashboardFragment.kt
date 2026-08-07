@@ -119,6 +119,7 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
         observeResponse()
         setUpListeners()
         hitApis()
+        setETLAlertDialog()
         showDialogs()
     }
 

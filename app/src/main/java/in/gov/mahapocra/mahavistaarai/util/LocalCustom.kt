@@ -343,7 +343,6 @@ object LocalCustom {
         ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             val topBar = if (showBarTop) bars.top else 0
-            Log.d(TAG, "uiResponsive: ${bars.top}")
             v.setPadding(
                 bars.left + startPadding,
                 topBar + topPadding,

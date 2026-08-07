@@ -138,7 +138,7 @@
 
     <string name="name">Name</string>
     <string name="register">Register</string>
-    <string name="forgot_password">Forgot Password?</string>
+    <string name="forgot_password">Create/Forgot Password?</string>
     <string name="change_password">Change Password</string>
     <string name="name_error">Please enter your name</string>
     <string name="lgn_register_phone_error">Please enter your registered number</string>

@@ -33,12 +33,12 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/_45sdp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_5sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayoutTopBar">
 
         <LinearLayout
             android:id="@+id/notificationInfoLayout"
@@ -73,7 +73,8 @@
                         android:id="@+id/shortDescriptionTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=""
+                        android:maxHeight="@dimen/_48sdp"
+                        android:scrollbars="vertical"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_11sdp" />
 
@@ -107,7 +108,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_5sdp"
-                android:layout_marginVertical="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_5sdp"
                 android:gravity="end"
                 android:text="redirect"
                 android:textColor="@color/darkblue"

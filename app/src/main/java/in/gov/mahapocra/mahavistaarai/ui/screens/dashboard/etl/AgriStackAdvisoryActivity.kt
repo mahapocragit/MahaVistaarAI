@@ -20,9 +20,11 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.NewDashboardM
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants.TAG
+import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.configureLocale
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.switchLanguage
 import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONObject
 
@@ -67,9 +69,13 @@ class AgriStackAdvisoryActivity : AppCompatActivity() {
         })
 
         observeResponse()
-        val villageCode = AppSettings.getInstance().getIntValue(this, AppConstants.uVILLAGEID, 0)
-        if (villageCode != 0) {
-            farmerViewModel.getCropSapAdvisory(villageCode)
+        val villageCode = AppPreferenceManager(this).getString(AppConstants.VILLAGE_CODE)
+        if (villageCode!="") {
+            farmerViewModel.getCropSapAdvisory(
+                CryptoHelper.decryptField(villageCode).toString().toInt()
+            )
+        }else{
+            Log.d(TAG, "onCreate: $villageCode")
         }
     }
 

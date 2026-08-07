@@ -132,7 +132,7 @@
 
     <string name="name">नाव</string>
     <string name="register">नोंदणी करा</string>
-    <string name="forgot_password">पासवर्ड विसरलात?</string>
+    <string name="forgot_password">पासवर्ड तयार करा / पासवर्ड विसरलात?</string>
     <string name="change_password"> पासवर्ड बदला</string>
     <string name="name_error"> तुमचे नाव लिहा</string>
     <string name="lgn_register_phone_error">  नोंदणीकृत मोबाईल नंबर टाका</string>
