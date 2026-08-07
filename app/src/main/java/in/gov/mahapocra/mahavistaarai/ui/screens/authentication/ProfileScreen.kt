@@ -356,7 +356,7 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
             CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.VILLAGE_NAME))
                 .toString()
         districtCode =
-            CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.DISTRICT_CODE))
+            CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.DISTRICT_CODE)?:"0")
                 .toString().toInt()
         CryptoHelper.decryptField(AppPreferenceManager(this).getString(AppConstants.TALUKA_CODE))
             ?.let {

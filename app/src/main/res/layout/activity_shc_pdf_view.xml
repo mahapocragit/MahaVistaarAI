@@ -17,7 +17,7 @@
         android:visibility="gone"
         android:layout_marginTop="@dimen/_40sdp" />
 
-    <com.github.barteksc.pdfviewer.PDFView
+    <com.alamin5g.pdf.PDFView
         android:id="@+id/pdfView"
         android:layout_marginTop="@dimen/_40sdp"
         android:layout_width="match_parent"

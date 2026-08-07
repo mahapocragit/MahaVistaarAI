@@ -7,9 +7,10 @@ plugins {
 }
 
 android {
-    compileSdk 36
-    namespace 'in.gov.mahapocra.mahavistaarai'
 
+    namespace 'in.gov.mahapocra.mahavistaarai'
+    compileSdk =  36
+    ndkVersion "28.2.13676358"
     signingConfigs {
         release {
 //            storeFile file('C:\Users\Admin\AndroidStudioProjects\Keys\key_store_credentials.jks')
@@ -35,7 +36,7 @@ android {
         applicationId "in.gov.mahapocra.mahavistaarai"
         minSdk = 28
         targetSdkVersion 36
-        versionCode 56
+        versionCode 57
         versionName "2.1.4"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -191,5 +192,5 @@ dependencies {
     //Encrypted Shared Preference
     implementation "androidx.security:security-crypto:1.1.0-alpha06"
 
-    implementation 'com.github.mhiew:android-pdf-viewer:3.2.0-beta.3'
+    implementation 'com.github.alamin5g:Alamin5G-PDF-Viewer:v1.0.17'
 }
