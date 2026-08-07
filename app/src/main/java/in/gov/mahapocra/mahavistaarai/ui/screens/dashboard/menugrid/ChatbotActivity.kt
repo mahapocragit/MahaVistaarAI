@@ -1,26 +1,35 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.net.http.SslError
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.webkit.CookieManager
 import android.webkit.GeolocationPermissions
 import android.webkit.PermissionRequest
 import android.webkit.SslErrorHandler
+import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import com.microsoft.clarity.Clarity
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.co.appinventor.services_api.util.NetworkUtils.isNetworkAvailable
@@ -39,6 +48,11 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom.uiResponsive
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONObject
+import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class ChatbotActivity : AppCompatActivity() {
 
@@ -55,6 +69,12 @@ class ChatbotActivity : AppCompatActivity() {
         private const val TAG = "ChatbotActivity"
         private const val PERMISSION_REQUEST_CODE = 1001
     }
+
+    private var filePathCallback: ValueCallback<Array<Uri>>? = null
+
+    private lateinit var fileChooserLauncher: ActivityResultLauncher<Intent>
+
+    private var cameraImageUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,6 +93,7 @@ class ChatbotActivity : AppCompatActivity() {
         uiResponsive(binding.root)
 
         setupToolbar()
+        registerFileChooser()
         setupWebView()
         observeResponse()
         setUpListeners()
@@ -90,6 +111,63 @@ class ChatbotActivity : AppCompatActivity() {
             farmerViewModel.updateNotificationStatusForChatbot(this, notificationId)
         }
     }
+
+    private fun registerFileChooser() {
+
+        fileChooserLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+
+                val callback = filePathCallback ?: return@registerForActivityResult
+                filePathCallback = null
+
+                val uris = when {
+
+                    result.resultCode != Activity.RESULT_OK -> null
+
+                    result.data?.clipData != null -> {
+
+                        val clipData = result.data!!.clipData!!
+
+                        Array(clipData.itemCount) {
+                            clipData.getItemAt(it).uri
+                        }
+                    }
+
+                    result.data?.data != null -> {
+
+                        arrayOf(result.data!!.data!!)
+                    }
+
+                    cameraImageUri != null -> {
+
+                        arrayOf(cameraImageUri!!)
+                    }
+
+                    else -> null
+                }
+
+                callback.onReceiveValue(uris)
+
+                cameraImageUri = null
+            }
+    }
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+
+        val timeStamp =
+            SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+
+        val storageDir =
+            getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+
+        return File.createTempFile(
+            "IMG_${timeStamp}_",
+            ".jpg",
+            storageDir
+        )
+    }
+
 
     private fun setupToolbar() {
         binding.toolbar.imageViewHeaderBack.visibility = View.VISIBLE
@@ -194,7 +272,7 @@ class ChatbotActivity : AppCompatActivity() {
             webChromeClient = object : WebChromeClient() {
 
                 override fun onPermissionRequest(request: PermissionRequest) {
-
+                    Log.e("WEBVIEW", "PermissionRequest: ${request.resources.joinToString()}")
                     runOnUiThread {
 
                         try {
@@ -203,6 +281,75 @@ class ChatbotActivity : AppCompatActivity() {
                             Log.e(TAG, "Permission request error", e)
                         }
                     }
+                }
+
+                override fun onShowFileChooser(
+                    webView: WebView?,
+                    filePathCallback: ValueCallback<Array<Uri>>?,
+                    fileChooserParams: FileChooserParams?
+                ): Boolean {
+
+                    this@ChatbotActivity.filePathCallback?.onReceiveValue(null)
+                    this@ChatbotActivity.filePathCallback = filePathCallback
+
+                    val imageFile = createImageFile()
+
+                    cameraImageUri = FileProvider.getUriForFile(
+                        this@ChatbotActivity,
+                        "${packageName}.android.fileprovider",
+                        imageFile
+                    )
+
+                    val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
+                        putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri)
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                    }
+
+                    val galleryIntent = Intent(fileChooserParams?.createIntent()).apply {
+                        addCategory(Intent.CATEGORY_OPENABLE)
+                        type = "image/*"
+                        putExtra(Intent.EXTRA_ALLOW_MULTIPLE, fileChooserParams?.mode == FileChooserParams.MODE_OPEN_MULTIPLE)
+                    }
+
+                    if (fileChooserParams?.isCaptureEnabled == true) {
+
+                        if (ContextCompat.checkSelfPermission(
+                                this@ChatbotActivity,
+                                Manifest.permission.CAMERA
+                            ) != PackageManager.PERMISSION_GRANTED
+                        ) {
+
+                            ActivityCompat.requestPermissions(
+                                this@ChatbotActivity,
+                                arrayOf(Manifest.permission.CAMERA),
+                                PERMISSION_REQUEST_CODE
+                            )
+
+                            this@ChatbotActivity.filePathCallback?.onReceiveValue(null)
+                            this@ChatbotActivity.filePathCallback = null
+
+                            return true
+                        }
+
+                        if (cameraIntent.resolveActivity(packageManager) != null) {
+                            fileChooserLauncher.launch(cameraIntent)
+                        } else {
+                            this@ChatbotActivity.filePathCallback?.onReceiveValue(null)
+                            this@ChatbotActivity.filePathCallback = null
+                        }
+
+                    } else {
+
+                        val chooser = Intent(Intent.ACTION_CHOOSER).apply {
+                            putExtra(Intent.EXTRA_INTENT, galleryIntent)
+                            putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(cameraIntent))
+                        }
+
+                        fileChooserLauncher.launch(chooser)
+                    }
+
+                    return true
                 }
 
                 override fun onGeolocationPermissionsShowPrompt(
@@ -350,6 +497,9 @@ class ChatbotActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        filePathCallback = null
+        cameraImageUri = null
+
         binding.webView.apply {
             stopLoading()
             clearHistory()

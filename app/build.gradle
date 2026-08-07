@@ -72,7 +72,7 @@ android {
             versionNameSuffix "-dev"
             applicationIdSuffix ".dev"
             buildConfigField "String", "BASE_URL", "\"https://stage-farmers-app-api.mahapocra.gov.in/\""
-            buildConfigField "String", "PREDICT_URL", "\"https://uat-ndksp-tih.mahapocra.gov.in/\""
+            buildConfigField "String", "PREDICT_URL", "\"https://ndksp-tih.mahapocra.gov.in/\""
         }
         prod {
             dimension "version"
