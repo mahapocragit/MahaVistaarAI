@@ -9,9 +9,9 @@ plugins {
 
 android {
 
-    compileSdk 36
     namespace 'in.gov.mahapocra.mahavistaarai'
-
+    compileSdk =  36
+    ndkVersion "28.2.13676358"
     signingConfigs {
         release {
 //            storeFile file('C:\Users\Admin\AndroidStudioProjects\Keys\key_store_credentials.jks')
@@ -37,7 +37,7 @@ android {
         minSdk = 28
         targetSdkVersion 36
         versionCode 57
-        versionName "2.1.2"
+        versionName "2.1.4"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resourceConfigurations += ['en', 'mr']
@@ -216,4 +216,5 @@ dependencies {
     // DataStore for persisted language choice
     implementation("androidx.datastore:datastore-preferences:1.1.1")
     debugImplementation("androidx.compose.ui:ui-tooling")
+    implementation 'com.github.alamin5g:Alamin5G-PDF-Viewer:v1.0.17'
 }
