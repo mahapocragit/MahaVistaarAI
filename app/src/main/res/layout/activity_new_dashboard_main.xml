@@ -85,7 +85,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:paddingBottom="@dimen/_5sdp"
+                        android:paddingBottom="@dimen/_4sdp"
                         android:text="@string/welcome_back_to_your_dashboard"
                         android:textColor="@color/white"
                         android:textSize="@dimen/_12sdp" />
@@ -96,13 +96,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:visibility="gone"
-                    android:textColor="@color/black"
                     android:backgroundTint="@color/light_green"
-                    app:cornerRadius="@dimen/_16sdp"
-                    android:textSize="@dimen/_10sdp"
+                    android:text="@string/krushi_tai"
                     android:textAllCaps="false"
-                    android:text="Krishi Tai" />
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_8sdp"
+                    android:visibility="gone"
+                    app:cornerRadius="@dimen/_16sdp" />
 
             </LinearLayout>
 
