@@ -54,6 +54,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.Shetisha
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.weather.WeatherActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.NewDashboardMainActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.TempActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.FarmDetailsActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.adapters.CropSelectionAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.AuthViewModel
@@ -224,6 +225,16 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
             if (rawValue != "null" && rawValue != null) {
                 startActivity(Intent(context, FarmDetailsActivity::class.java))
             } else {
+                showAgristackLinkingDialog()
+            }
+        }
+
+        binding.myFarmsButton.setOnClickListener {
+            val agristackIdEncrypt = appPreferenceManager.getString(AppConstants.AGRISTACKID).toString()
+            val agristackId = CryptoHelper.decryptField(agristackIdEncrypt)
+            if (agristackId != "null" && agristackId != null) {
+                startActivity(Intent(requireContext(), TempActivity::class.java))
+            }else{
                 showAgristackLinkingDialog()
             }
         }

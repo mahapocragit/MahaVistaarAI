@@ -10,6 +10,8 @@ import com.androidnetworking.AndroidNetworking
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.mahanidan.vcccore.common.i18n.NativeUiConfig
+import com.mahanidan.vcccore.common.session.AuthRepository
 import `in`.co.appinventor.services_api.debug.DebugLog
 import `in`.co.appinventor.services_api.settings.AppSettings
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.di.AppContainer
@@ -29,6 +31,11 @@ class MyApplication : Application() {
         instance = this
         container = AppContainer()
         TokenSessionManager.init(this)
+        AuthRepository.bindAppContext(this)
+        NativeUiConfig.apply(
+            language = "English",       // "English", "Hindi", or "Marathi"
+            themeColorHex = "#0B6E4F"   // Primary brand color
+        )
         initAppSettings()
         initNetworking()
         initFirebase()

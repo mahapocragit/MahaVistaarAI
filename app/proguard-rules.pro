@@ -108,3 +108,6 @@
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
+
+-keep class io.ktor.client.** { *; }
+-dontwarn io.ktor.client.**

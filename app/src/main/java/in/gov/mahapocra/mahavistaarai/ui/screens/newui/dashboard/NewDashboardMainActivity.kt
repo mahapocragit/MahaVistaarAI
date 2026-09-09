@@ -39,6 +39,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.mahanidan.vcccore.common.session.AuthRepository
 import com.microsoft.clarity.Clarity
 import `in`.co.appinventor.services_api.app_util.AppUtility
 import `in`.co.appinventor.services_api.settings.AppSettings
@@ -130,7 +131,8 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
     }
 
     private fun init() {
-
+        val pin  = "1234"
+        AuthRepository.authenticate("5014313", pin)
         appPreferenceManager = AppPreferenceManager(this)
         val hView = binding.navView.getHeaderView(0)
         navUserName = hView.findViewById(R.id.tv_farmerName)
