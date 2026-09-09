@@ -16,7 +16,11 @@ class FarmObservationFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val uiContext = NativeUiConfig.wrapContext(requireContext())
-        return MyFarmsUi.createView(uiContext)
+        val view = inflater.inflate(
+            R.layout.fragment_farm_observation,
+            container,
+            false
+        )
+        return view
     }
 }
