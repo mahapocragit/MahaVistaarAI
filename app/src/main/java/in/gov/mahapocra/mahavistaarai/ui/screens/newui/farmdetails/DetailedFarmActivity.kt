@@ -80,7 +80,7 @@ class DetailedFarmActivity : AppCompatActivity() {
                 2 -> tab.text = "Advisory"
             }
         }.attach()
-
+        binding.viewPager.isUserInputEnabled = false
         binding.relativeLayoutTopBar.textViewHeaderTitle.text =
             getString(R.string.farm_lands_crops)
         binding.relativeLayoutTopBar.imgBackArrow.visibility = View.VISIBLE

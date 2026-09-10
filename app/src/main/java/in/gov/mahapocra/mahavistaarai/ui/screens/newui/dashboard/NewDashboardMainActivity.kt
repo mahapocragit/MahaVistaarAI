@@ -132,7 +132,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
 
     private fun init() {
         val pin  = "1234"
-        AuthRepository.authenticate("5014313", pin)
+        AuthRepository.authenticate("19504767536", pin)
         appPreferenceManager = AppPreferenceManager(this)
         val hView = binding.navView.getHeaderView(0)
         navUserName = hView.findViewById(R.id.tv_farmerName)
