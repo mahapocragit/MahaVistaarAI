@@ -34,7 +34,7 @@ class MyApplication : Application() {
         AuthRepository.bindAppContext(this)
         NativeUiConfig.apply(
             language = "English",       // "English", "Hindi", or "Marathi"
-            themeColorHex = "#0B6E4F"   // Primary brand color
+            themeColorHex = "#009444"   // Primary brand color
         )
         initAppSettings()
         initNetworking()

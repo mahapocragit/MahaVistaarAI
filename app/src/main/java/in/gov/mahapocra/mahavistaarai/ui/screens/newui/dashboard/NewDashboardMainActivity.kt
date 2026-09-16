@@ -131,8 +131,6 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
     }
 
     private fun init() {
-        val pin  = "1234"
-        AuthRepository.authenticate("19504767536", pin)
         appPreferenceManager = AppPreferenceManager(this)
         val hView = binding.navView.getHeaderView(0)
         navUserName = hView.findViewById(R.id.tv_farmerName)
@@ -143,7 +141,8 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
         } else {
             LocalCustom.createSnackbar(binding.root, "Internet not available!")
         }
-
+        val pin  = "1234"
+        AuthRepository.authenticate(farmerId.toString(), pin)
 
         val drawerLayout = binding.drawerLayout
         val toolbar = binding.toolbar
@@ -402,8 +401,6 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                 val intent = Intent(this, KTDashboardActivity::class.java)
                 intent.putExtra("selected_username", userName)
                 intent.putExtra("selected_isGuest", isGuest.toString())
-                Log.d("MAYU","ND UNAME"+userName);
-                Log.d("MAYU","ND Guest="+isGuest);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }

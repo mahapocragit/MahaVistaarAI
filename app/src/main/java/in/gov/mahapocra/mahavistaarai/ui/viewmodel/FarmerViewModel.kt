@@ -151,6 +151,8 @@ class FarmerViewModel : ViewModel() {
     private val _soilHealthCardDetailsResponse = MutableLiveData<JsonObject>()
     val soilHealthCardDetailsResponse: LiveData<JsonObject> = _soilHealthCardDetailsResponse
 
+    private val _farmerSpecificAdvisoryResponse = MutableLiveData<JsonObject>()
+    val farmerSpecificAdvisoryResponse: LiveData<JsonObject> = _farmerSpecificAdvisoryResponse
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -1070,6 +1072,29 @@ class FarmerViewModel : ViewModel() {
                 val response = apiRequest.fetchSoilHealthCard(requestBody)
                 ProgressHelper.disableProgressDialog()
                 _soilHealthCardDetailsResponse.value = response
+            } catch (e: Exception) {
+                ProgressHelper.disableProgressDialog()
+                val message = when (e) {
+                    is SocketTimeoutException -> "Request timed out. Please try again."
+                    is SocketException -> "Connection lost. Please check your internet."
+                    is IOException -> "Network error occurred."
+                    else -> e.localizedMessage ?: "Unknown error"
+                }
+                _error.value = message
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    fun farmerSpecificAdvisory(context: Context){
+        ProgressHelper.showProgressDialog(context)
+        viewModelScope.launch {
+            try {
+                val retrofit: Retrofit = RetrofitHelper.createRetrofitInstance(AppEnvironment.FARMER.baseUrl)
+                val apiRequest = retrofit.create(ApiService::class.java)
+                val response = apiRequest.farmerSpecificAdvisory("Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjUyLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzg5MDM4NTQ0LCJleHAiOjE3OTAzMzQ1NDR9.ZpoxWfv783c9bn-bx-3OzIgIgpgHoG6xwW6Y4WpWek8")
+                ProgressHelper.disableProgressDialog()
+                _farmerSpecificAdvisoryResponse.value = response
             } catch (e: Exception) {
                 ProgressHelper.disableProgressDialog()
                 val message = when (e) {

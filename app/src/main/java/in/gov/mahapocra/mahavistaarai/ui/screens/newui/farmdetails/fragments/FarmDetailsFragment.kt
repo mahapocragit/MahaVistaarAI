@@ -25,6 +25,7 @@ import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.data.model.UiState
 import `in`.gov.mahapocra.mahavistaarai.databinding.AddCropForDcsDialogBinding
 import `in`.gov.mahapocra.mahavistaarai.databinding.FragmentFarmDetailsBinding
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.dashboard.TempActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.adapters.CropSelectionAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.adapters.FarmDetailsAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.viewmodel.FarmerViewModel
@@ -78,15 +79,17 @@ class FarmDetailsFragment : Fragment(), RecyclerItemClickListener {
 
     private fun init() {
         farmData = arguments?.getString(ARG_FARM_DATA)
-        Log.d(TAG, "init: ${farmData ?: "NULL"}")
+        var surveyNumber = ""
+        var censusCode = 0
         if (farmData != null) {
             val jsonObject = JSONObject(farmData.toString())
             farmId = jsonObject.optString("farm_id")
             val ownerName = jsonObject.optString("owner_name")
-            val surveyNumber = jsonObject.optString("survey_no")
+            surveyNumber = jsonObject.optString("survey_no")
             val villageName = jsonObject.optString("village_name")
             val villageNameMr = jsonObject.optString("village_name_mr")
             val totalArea = jsonObject.optDouble("total_plot_area")
+            censusCode = jsonObject.optInt("census_code")
             binding.nameTextView.text = buildString {
                 append("${getString(R.string.name)}: ")
                 append(" $ownerName")
@@ -114,6 +117,12 @@ class FarmDetailsFragment : Fragment(), RecyclerItemClickListener {
         farmerViewModel.fetchCropsForDCS()
         binding.addCropForFarmLayout.setOnClickListener {
             openDialogForSavingCropForDCS()
+        }
+        binding.btnViewBund.setOnClickListener {
+            startActivity(Intent(requireContext(), TempActivity::class.java).apply {
+                putExtra("survey_number", surveyNumber)
+                putExtra("census_code", censusCode)
+            })
         }
     }
 

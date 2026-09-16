@@ -55,17 +55,33 @@
                             android:textSize="12sp" />
                     </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/tvOwner"
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnViewBund"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:background="@drawable/bg_owner_chip"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="4dp"
-                        android:text="@string/owner"
-                        android:textColor="#2E7D32"
-                        android:textSize="12sp" />
+                        android:backgroundTint="#FAF8F2"
+                        android:elevation="@dimen/_2sdp"
+                        android:gravity="center"
+                        android:letterSpacing="0.01"
+                        android:minHeight="0dp"
+                        android:minWidth="0dp"
+                        android:paddingStart="@dimen/_12sdp"
+                        android:paddingVertical="@dimen/_3sdp"
+                        android:paddingEnd="@dimen/_10sdp"
+                        android:text="View Map"
+                        android:textAllCaps="false"
+                        android:textColor="#2A6848"
+                        android:textSize="@dimen/_10sdp"
+                        app:cornerRadius="@dimen/_50sdp"
+                        app:icon="@drawable/ic_map"
+                        app:iconGravity="textEnd"
+                        app:iconPadding="@dimen/_5sdp"
+                        app:iconSize="@dimen/_18sdp"
+                        app:iconTint="#00884A"
+                        app:strokeColor="#00884A"
+                        app:strokeWidth="@dimen/_1sdp" />
+
                 </RelativeLayout>
 
                 <!-- Info Rows -->

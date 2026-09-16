@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Background color (off-white / cream) -->
+    <solid android:color="#FAF8F2" />
+
+    <!-- Green Border -->
+    <stroke
+        android:width="2dp"
+        android:color="#00884A" />
+
+    <!-- Large radius for full pill/capsule shape -->
+    <corners android:radius="100dp" />
+</shape>

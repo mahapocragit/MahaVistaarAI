@@ -228,16 +228,6 @@ class MyDashboardFragment : Fragment(), RecyclerItemClickListener {
                 showAgristackLinkingDialog()
             }
         }
-
-        binding.myFarmsButton.setOnClickListener {
-            val agristackIdEncrypt = appPreferenceManager.getString(AppConstants.AGRISTACKID).toString()
-            val agristackId = CryptoHelper.decryptField(agristackIdEncrypt)
-            if (agristackId != "null" && agristackId != null) {
-                startActivity(Intent(requireContext(), TempActivity::class.java))
-            }else{
-                showAgristackLinkingDialog()
-            }
-        }
     }
 
     private fun showAgristackLinkingDialog() {

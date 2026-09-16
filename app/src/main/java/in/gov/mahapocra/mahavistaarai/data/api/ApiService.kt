@@ -462,4 +462,7 @@ interface ApiService {
     @GET("farmDairyService/crop-master")
     suspend fun fetchCropsForDCS(): JsonObject
 
+    @POST("farmerService/get-farmes-crop-sepcific-advisories")
+    suspend fun farmerSpecificAdvisory(@Header("Authorization") token: String): JsonObject
+
 }

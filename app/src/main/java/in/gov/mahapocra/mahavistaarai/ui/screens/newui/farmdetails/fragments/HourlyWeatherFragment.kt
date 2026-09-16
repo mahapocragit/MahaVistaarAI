@@ -1,21 +1,17 @@
 package `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mahanidan.vcccore.common.i18n.NativeUiConfig
-import com.mahanidan.vcccore.my_farms.view.MyFarmsUi
 import `in`.gov.mahapocra.mahavistaarai.R
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.adapters.AdvisoryAdapter
-import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.adapters.AdvisoryModel
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.adapters.WeatherFarmAdapter
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.newui.farmdetails.adapters.WeatherFarmModel
 
-class FarmObservationFragment : Fragment() {
+class HourlyWeatherFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var weatherFarmAdapter: WeatherFarmAdapter
@@ -26,7 +22,7 @@ class FarmObservationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(
-            R.layout.fragment_farm_observation,
+            R.layout.fragment_hourly_weather,
             container,
             false
         )
