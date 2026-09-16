@@ -12,6 +12,14 @@ object Validators {
         else -> null
     }
 
+    /** This scheme is for women farmers only, so the gender returned by the Aadhaar
+     *  verify response gates progress past OTP verification in both the normal
+     *  Apply flow and the chatbot flow. */
+    fun isFemale(gender: String): Boolean {
+        val normalized = gender.trim()
+        return normalized.equals("F", ignoreCase = true) || normalized.equals("FEMALE", ignoreCase = true)
+    }
+
     fun otpError(value: String): String? = when {
         value.isBlank() -> "OTP is required."
         !value.all { it.isDigit() } || value.length != 6 -> "Enter the 6-digit OTP."
@@ -35,4 +43,16 @@ object Validators {
 
     fun workTypesError(selected: List<Int>): String? =
         if (selected.isEmpty()) "Please select at least one type of agricultural work." else null
+
+    fun casteCategoryError(selectedId: Int?): String? =
+        if (selectedId == null) "Please select a caste category." else null
+
+    fun familyFarmerIdAnswerError(value: Boolean?): String? =
+        if (value == null) "Please answer this question." else null
+
+    fun familyFarmerIdError(hasFarmerId: Boolean?, value: String): String? = when {
+        hasFarmerId != true -> null
+        !value.all { it.isDigit() } || value.length != 11 -> "Enter a valid 11-digit Farmer ID."
+        else -> null
+    }
 }

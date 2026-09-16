@@ -1,62 +1,50 @@
 package `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.track
 
-import android.content.Intent
-import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.content.FileProvider
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.ApplicationStatusDto
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.repository.MahilaShetkariRepository
-import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.components.*
-import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.AppLanguage
-import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.Strings
-import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.rememberVm
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.components.MsDropdown
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.components.MsPrimaryButton
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.components.MsTextField
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.components.StatusStepper
-import java.io.File
+import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.AppLanguage
+import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.Strings
+import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.rememberVm
 
 @Composable
-fun TrackScreen(repository: MahilaShetkariRepository, lang: AppLanguage) {
+fun TrackScreen(repository: MahilaShetkariRepository, lang: AppLanguage, initialAckNo: String? = null) {
     val viewModel = rememberVm(repository) { TrackViewModel(it) }
     val state by viewModel.uiState.collectAsState()
-    val context = LocalContext.current
     val strings = Strings.track(lang)
 
-    // Once a certificate download lands in state, write it to disk and open
-    // it with the system PDF viewer — then clear it so it only fires once.
-    LaunchedEffect(state.pendingCertificateBytes) {
-        val bytes = state.pendingCertificateBytes ?: return@LaunchedEffect
-        try {
-            val dir = File(context.getExternalFilesDir(null), "certificates").apply { mkdirs() }
-            val ackNo = state.result?.acknowledgmentNo?.replace("/", "-") ?: "certificate"
-            val file = File(dir, "WFC_$ackNo.pdf")
-            file.writeBytes(bytes)
-
-            val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                setDataAndType(uri, "application/pdf")
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-            runCatching { context.startActivity(intent) }
-                .onFailure { Toast.makeText(context, "Certificate saved to ${file.path}", Toast.LENGTH_LONG).show() }
-        } finally {
-            viewModel.clearPendingCertificate()
-        }
+    // Coming from the chatbot with an ack. no. already in hand — fill it in
+    // instead of making the user retype it.
+    LaunchedEffect(initialAckNo) {
+        if (!initialAckNo.isNullOrBlank()) viewModel.prefillAckNo(initialAckNo)
     }
 
     Column(
@@ -81,11 +69,7 @@ fun TrackScreen(repository: MahilaShetkariRepository, lang: AppLanguage) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Column(modifier = Modifier.padding(20.dp)) {
-                ModeSwitch(
-                    state.mode,
-                    strings,
-                    viewModel::setMode
-                )
+                ModeSwitch(state.mode, strings, viewModel::setMode)
                 Spacer(Modifier.height(16.dp))
 
                 if (state.mode == TrackMode.BY_ACK) {
@@ -151,13 +135,7 @@ fun TrackScreen(repository: MahilaShetkariRepository, lang: AppLanguage) {
 
         state.result?.let { result ->
             Spacer(Modifier.height(28.dp))
-            ResultCard(
-                result = result,
-                strings = strings,
-                certificateLoading = state.certificateLoading,
-                certificateError = state.certificateError,
-                onDownloadCertificate = viewModel::downloadCertificate
-            )
+            ResultCard(result = result)
         }
     }
 }
@@ -171,10 +149,8 @@ private fun ModeSwitch(mode: TrackMode, strings: Strings.Track, onModeChange: (T
             .background(MaterialTheme.colorScheme.surfaceVariant)
             .padding(4.dp)
     ) {
-        ModeOption(strings.byAck, mode == TrackMode.BY_ACK, Modifier.weight(1f)) { onModeChange(
-            TrackMode.BY_ACK) }
-        ModeOption(strings.byNameVillage, mode == TrackMode.BY_NAME_VILLAGE, Modifier.weight(1f)) { onModeChange(
-            TrackMode.BY_NAME_VILLAGE) }
+        ModeOption(strings.byAck, mode == TrackMode.BY_ACK, Modifier.weight(1f)) { onModeChange(TrackMode.BY_ACK) }
+        ModeOption(strings.byNameVillage, mode == TrackMode.BY_NAME_VILLAGE, Modifier.weight(1f)) { onModeChange(TrackMode.BY_NAME_VILLAGE) }
     }
 }
 
@@ -182,12 +158,12 @@ private fun ModeSwitch(mode: TrackMode, strings: Strings.Track, onModeChange: (T
 private fun ModeOption(label: String, selected: Boolean, modifier: Modifier, onClick: () -> Unit) {
     Surface(
         modifier = modifier.clip(RoundedCornerShape(6.dp)),
-        color = if (selected) MaterialTheme.colorScheme.surface else Color.Transparent,
+        color = if (selected) MaterialTheme.colorScheme.surface else androidx.compose.ui.graphics.Color.Transparent,
         onClick = onClick
     ) {
         Text(
             label,
-            textAlign = TextAlign.Center,
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
             fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
             style = MaterialTheme.typography.labelLarge,
             modifier = Modifier
@@ -198,14 +174,8 @@ private fun ModeOption(label: String, selected: Boolean, modifier: Modifier, onC
 }
 
 @Composable
-private fun ResultCard(
-    result: ApplicationStatusDto,
-    strings: Strings.Track,
-    certificateLoading: Boolean,
-    certificateError: String?,
-    onDownloadCertificate: () -> Unit
-) {
-    val isRejected = result.status == "rejected"
+private fun ResultCard(result: ApplicationStatusDto) {
+    val isRejected = result.status.contains("reject")
     Card(
         shape = RoundedCornerShape(18.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -217,7 +187,7 @@ private fun ResultCard(
             Text(result.acknowledgmentNo, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Spacer(Modifier.height(20.dp))
 
-            StatusStepper(statusStep = result.statusStep, isRejected = isRejected)
+            StatusStepper(statusStep = result.statusStep, status = result.status)
 
             Spacer(Modifier.height(20.dp))
             InfoRow("Status", result.statusDisplay)
@@ -227,6 +197,10 @@ private fun ResultCard(
             InfoRow("Mobile", result.mobile)
             result.submittedAt?.let { InfoRow("Submitted", it.take(10)) }
             result.reviewedAt?.let { InfoRow("Reviewed", it.take(10)) }
+            result.workTypes?.takeIf { it.isNotEmpty() }
+                ?.let { InfoRow("Work types", it.joinToString(", ") { wt -> wt.name }) }
+            InfoRow("Has land", if (result.hasLand) "Yes" else "No")
+            InfoRow("Certificate", if (result.hasCertificate) "Issued" else "Not issued yet")
 
             if (isRejected && !result.rejectionReason.isNullOrBlank()) {
                 Spacer(Modifier.height(12.dp))
@@ -242,27 +216,6 @@ private fun ResultCard(
                         modifier = Modifier.padding(12.dp)
                     )
                 }
-            }
-
-            if (result.status == "approved" && result.hasCertificate) {
-                Spacer(Modifier.height(20.dp))
-                MsPrimaryButton(
-                    text = strings.downloadCertificate,
-                    loading = certificateLoading,
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = onDownloadCertificate
-                )
-            } else if (result.status == "approved" && !result.hasCertificate) {
-                Spacer(Modifier.height(12.dp))
-                Text(
-                    strings.certificateGenerating,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-            certificateError?.let {
-                Spacer(Modifier.height(8.dp))
-                Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodyMedium)
             }
         }
     }

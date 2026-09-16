@@ -204,11 +204,6 @@
             android:name=".ui.screens.newui.dashboard.TempActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".ui.screens.newui.farmdetails.DetailedAdvisoryActivity"
-            android:exported="false"
-            android:theme="@style/Theme.FarmerApp"
-            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

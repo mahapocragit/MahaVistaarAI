@@ -40,5 +40,13 @@ data class WorkTypeDto(
     val id: Int,
     val name: String,
     @SerializedName("name_mr") val nameMr: String,
-    val description: String? = null
+    val description: String? = null,
+    @SerializedName("image_url") val imageUrl: String? = null
+)
+
+data class CasteCategoryDto(
+    val id: Int,
+    val name: String,
+    @SerializedName("name_mr") val nameMr: String,
+    val code: String? = null
 )

@@ -32,6 +32,12 @@ fun rememberVoiceInputLauncher(languageTag: String? = null, onResult: (String) -
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
             putExtra(RecognizerIntent.EXTRA_LANGUAGE, languageTag ?: Locale.getDefault().toLanguageTag())
+            // Tolerate pauses of up to 3s while speaking (e.g. reading out a long
+            // Aadhaar number digit by digit) before the recognizer treats it as
+            // the end of the utterance. Honored by Google's recognizer; other
+            // recognizer services may ignore these hints.
+            putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 3000L)
+            putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 3000L)
         }
         try {
             launcher.launch(intent)

@@ -75,19 +75,35 @@ class ApplyViewModel(private val repository: MahilaShetkariRepository) : ViewMod
             when (val result = repository.verifyOtp(state.aadhaar, txn, state.otp)) {
                 is ApiResult.Success -> {
                     val data = result.data
+                    if (!Validators.isFemale(data.gender)) {
+                        _uiState.update {
+                            it.copy(
+                                verifyOtpLoading = false,
+                                step = ApplyStep.AADHAAR,
+                                aadhaar = "",
+                                otp = "",
+                                txn = null,
+                                femaleOnlyDialog = true
+                            )
+                        }
+                        return@launch
+                    }
                     _uiState.update {
                         it.copy(
                             verifyOtpLoading = false,
                             step = ApplyStep.DETAILS,
                             applicantName = data.name,
+                            applicantNameMr = data.nameInMarathi,
                             dob = data.dob,
                             age = data.age,
                             gender = data.gender,
-                            permanentAddress = data.address
+                            permanentAddress = data.address,
+                            photoUrl = data.imageUrl
                         )
                     }
                     loadDistricts()
                     loadWorkTypes()
+                    loadCasteCategories()
                 }
                 is ApiResult.Error -> _uiState.update {
                     it.copy(verifyOtpLoading = false, generalError = result.message)
@@ -107,6 +123,15 @@ class ApplyViewModel(private val repository: MahilaShetkariRepository) : ViewMod
     }
 
     fun onCurrentAddressChange(value: String) = _uiState.update { it.copy(currentAddress = value) }
+
+    fun onCurrentAddressSameAsPermanentToggle(checked: Boolean) {
+        _uiState.update {
+            it.copy(
+                currentAddressSameAsPermanent = checked,
+                currentAddress = if (checked) it.permanentAddress else ""
+            )
+        }
+    }
 
     private fun loadDistricts() {
         viewModelScope.launch {
@@ -192,6 +217,43 @@ class ApplyViewModel(private val repository: MahilaShetkariRepository) : ViewMod
         }
     }
 
+    private fun loadCasteCategories() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(casteCategoriesLoading = true) }
+            when (val result = repository.getCasteCategories()) {
+                is ApiResult.Success -> _uiState.update {
+                    it.copy(
+                        casteCategoriesLoading = false,
+                        casteCategories = result.data.map { c -> DropdownOption(c.id, c.name) }
+                    )
+                }
+                is ApiResult.Error -> _uiState.update {
+                    it.copy(casteCategoriesLoading = false, generalError = result.message)
+                }
+            }
+        }
+    }
+
+    fun onCasteCategorySelected(option: DropdownOption) =
+        _uiState.update { it.copy(selectedCasteCategory = option, casteCategoryError = null) }
+
+    fun onFamilyFarmerIdAnswerChange(hasFarmerId: Boolean) {
+        _uiState.update {
+            it.copy(
+                hasFamilyFarmerId = hasFarmerId,
+                familyFarmerIdAnswerError = null,
+                familyFarmerId = if (hasFarmerId) it.familyFarmerId else "",
+                familyFarmerIdError = null
+            )
+        }
+    }
+
+    fun onFamilyFarmerIdChange(value: String) {
+        if (value.length <= 11 && value.all { it.isDigit() }) {
+            _uiState.update { it.copy(familyFarmerId = value, familyFarmerIdError = null) }
+        }
+    }
+
     fun onDeclarationToggle(checked: Boolean) = _uiState.update { it.copy(declarationAccepted = checked, declarationError = null) }
 
     fun submitApplication() {
@@ -200,14 +262,20 @@ class ApplyViewModel(private val repository: MahilaShetkariRepository) : ViewMod
         val nameError = Validators.nameError(state.applicantName)
         val mobileError = Validators.mobileError(state.mobile)
         val workTypesError = Validators.workTypesError(state.selectedWorkTypeIds.toList())
+        val casteCategoryError = Validators.casteCategoryError(state.selectedCasteCategory?.id)
+        val familyFarmerIdAnswerError = Validators.familyFarmerIdAnswerError(state.hasFamilyFarmerId)
+        val familyFarmerIdError = Validators.familyFarmerIdError(state.hasFamilyFarmerId, state.familyFarmerId)
         val declarationError = Validators.declarationError(state.declarationAccepted)
 
-        if (listOf(nameError, mobileError, workTypesError, declarationError).any { it != null }) {
+        if (listOf(nameError, mobileError, workTypesError, casteCategoryError, familyFarmerIdAnswerError, familyFarmerIdError, declarationError).any { it != null }) {
             _uiState.update {
                 it.copy(
                     nameError = nameError,
                     mobileError = mobileError,
                     workTypesError = workTypesError,
+                    casteCategoryError = casteCategoryError,
+                    familyFarmerIdAnswerError = familyFarmerIdAnswerError,
+                    familyFarmerIdError = familyFarmerIdError,
                     declarationError = declarationError
                 )
             }
@@ -216,7 +284,10 @@ class ApplyViewModel(private val repository: MahilaShetkariRepository) : ViewMod
 
         val request = ApplicationRequest(
             applicantName = state.applicantName.trim(),
+            applicantNameMr = state.applicantNameMr,
             aadhaarNo = state.aadhaar,
+            photoUrl = state.photoUrl,
+            casteCategory = state.selectedCasteCategory!!.id,
             gender = state.gender.ifBlank { null },
             mobile = state.mobile,
             permanentAddress = state.permanentAddress.ifBlank { null },
@@ -227,7 +298,8 @@ class ApplyViewModel(private val repository: MahilaShetkariRepository) : ViewMod
             taluka = state.selectedTaluka?.id,
             village = state.selectedVillage?.id,
             workTypes = state.selectedWorkTypeIds.toList(),
-            declaration = state.declarationAccepted
+            declaration = state.declarationAccepted,
+            farmerId = if (state.hasFamilyFarmerId == true) state.familyFarmerId else null
         )
 
         viewModelScope.launch {
@@ -241,7 +313,8 @@ class ApplyViewModel(private val repository: MahilaShetkariRepository) : ViewMod
                     )
                 }
                 is ApiResult.Error -> _uiState.update {
-                    it.copy(submitLoading = false, generalError = result.message)
+                    val fieldMessage = result.fieldErrors?.values?.firstOrNull()?.firstOrNull()
+                    it.copy(submitLoading = false, generalError = fieldMessage ?: result.message)
                 }
             }
         }
@@ -250,4 +323,6 @@ class ApplyViewModel(private val repository: MahilaShetkariRepository) : ViewMod
     fun startOver() {
         _uiState.value = ApplyUiState()
     }
+
+    fun dismissFemaleOnlyDialog() = _uiState.update { it.copy(femaleOnlyDialog = false) }
 }

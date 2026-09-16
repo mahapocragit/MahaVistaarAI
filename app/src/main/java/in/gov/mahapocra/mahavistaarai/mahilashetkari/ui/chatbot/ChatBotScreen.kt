@@ -1,5 +1,8 @@
 package `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.chatbot
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -29,6 +32,9 @@ import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.components.rememberVoi
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.AppLanguage
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.Strings
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.rememberVm
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,7 +42,7 @@ fun ChatBotDialog(
     repository: MahilaShetkariRepository,
     lang: AppLanguage,
     onDismiss: () -> Unit,
-    onNavigate: (String) -> Unit
+    onNavigate: (String, String?) -> Unit
 ) {
     val context = LocalContext.current
     val historyStore = remember { ChatHistoryStore(context) }
@@ -47,10 +53,22 @@ fun ChatBotDialog(
 
     LaunchedEffect(state.requestNavigateRoute) {
         state.requestNavigateRoute?.let { route ->
+            val ackNo = state.requestNavigateAckNo
             viewModel.consumeNavigationRequest()
             onDismiss()
-            onNavigate(route)
+            onNavigate(route, ackNo)
         }
+    }
+
+    if (state.femaleOnlyDialog) {
+        AlertDialog(
+            onDismissRequest = viewModel::dismissFemaleOnlyDialog,
+            title = { Text(strings.femaleOnlyTitle) },
+            text = { Text(strings.femaleOnlyMessage) },
+            confirmButton = {
+                TextButton(onClick = viewModel::dismissFemaleOnlyDialog) { Text(strings.ok) }
+            }
+        )
     }
 
     if (showDeleteConfirm) {
@@ -84,10 +102,10 @@ fun ChatBotDialog(
                             )
                         },
                         actions = {
-                            IconButton(onClick = { showDeleteConfirm = true }) {
+                            IconButton(onClick = { showDeleteConfirm = true }, enabled = !state.busy) {
                                 Icon(Icons.Filled.DeleteSweep, contentDescription = strings.deleteAll)
                             }
-                            IconButton(onClick = onDismiss) {
+                            IconButton(onClick = onDismiss, enabled = !state.busy) {
                                 Icon(Icons.Filled.Close, contentDescription = null)
                             }
                         },
@@ -97,23 +115,28 @@ fun ChatBotDialog(
                     )
                 }
             ) { padding ->
-                Column(modifier = Modifier.fillMaxSize().padding(padding)) {
-                    MessageList(
-                        messages = state.messages,
-                        busy = state.busy,
-                        typingLabel = strings.typing,
-                        modifier = Modifier.weight(1f)
-                    )
-                    if (state.quickReplies.isNotEmpty()) {
-                        QuickReplyRow(replies = state.quickReplies, onSelect = viewModel::onQuickReply)
+                Box(modifier = Modifier.fillMaxSize().padding(padding)) {
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        MessageList(
+                            messages = state.messages,
+                            busy = state.busy,
+                            typingLabel = strings.typing,
+                            modifier = Modifier.weight(1f)
+                        )
+                        if (state.quickReplies.isNotEmpty()) {
+                            QuickReplyRow(replies = state.quickReplies, onSelect = viewModel::onQuickReply)
+                        }
+                        InputBar(
+                            enabled = state.inputEnabled,
+                            keyboardType = state.keyboardType,
+                            hint = strings.inputHint,
+                            languageTag = if (lang == AppLanguage.MR) "mr-IN" else "en-IN",
+                            onSubmit = viewModel::onTextSubmit
+                        )
                     }
-                    InputBar(
-                        enabled = state.inputEnabled,
-                        keyboardType = state.keyboardType,
-                        hint = strings.inputHint,
-                        languageTag = if (lang == AppLanguage.MR) "mr-IN" else "en-IN",
-                        onSubmit = viewModel::onTextSubmit
-                    )
+                    if (state.busy) {
+                        BlockingLoaderOverlay()
+                    }
                 }
             }
         }
@@ -147,11 +170,13 @@ private fun MessageList(
     }
 }
 
+private val messageTimeFormat by lazy { SimpleDateFormat("dd MMM, hh:mm a", Locale.getDefault()) }
+
 @Composable
 private fun ChatBubble(message: ChatMessage) {
-    Row(
+    Column(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = if (message.isUser) Arrangement.End else Arrangement.Start
+        horizontalAlignment = if (message.isUser) Alignment.End else Alignment.Start
     ) {
         Surface(
             shape = RoundedCornerShape(
@@ -160,15 +185,49 @@ private fun ChatBubble(message: ChatMessage) {
                 bottomStart = if (message.isUser) 16.dp else 4.dp,
                 bottomEnd = if (message.isUser) 4.dp else 16.dp
             ),
-            color = if (message.isUser) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
+            color = when {
+                message.isError -> MaterialTheme.colorScheme.errorContainer
+                message.isUser -> MaterialTheme.colorScheme.primary
+                else -> MaterialTheme.colorScheme.surfaceVariant
+            },
             modifier = Modifier.fillMaxWidth(0.82f)
         ) {
             Text(
                 text = message.text,
-                color = if (message.isUser) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+                color = when {
+                    message.isError -> MaterialTheme.colorScheme.onErrorContainer
+                    message.isUser -> MaterialTheme.colorScheme.onPrimary
+                    else -> MaterialTheme.colorScheme.onSurfaceVariant
+                },
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp)
             )
+        }
+        Text(
+            text = messageTimeFormat.format(Date(message.timestamp)),
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+            style = MaterialTheme.typography.labelSmall,
+            modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 2.dp)
+        )
+    }
+}
+
+@Composable
+private fun BlockingLoaderOverlay() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.scrim.copy(alpha = 0.15f))
+            .clickable(indication = null, interactionSource = remember { MutableInteractionSource() }) { },
+        contentAlignment = Alignment.Center
+    ) {
+        Surface(
+            shape = RoundedCornerShape(12.dp),
+            color = MaterialTheme.colorScheme.surface,
+            tonalElevation = 4.dp,
+            shadowElevation = 4.dp
+        ) {
+            CircularProgressIndicator(modifier = Modifier.padding(20.dp))
         }
     }
 }
@@ -206,7 +265,7 @@ private fun QuickReplyRow(replies: List<QuickReply>, onSelect: (QuickReply) -> U
 @Composable
 private fun InputBar(
     enabled: Boolean,
-    keyboardType: KeyboardType,
+    keyboardType: androidx.compose.ui.text.input.KeyboardType,
     hint: String,
     languageTag: String,
     onSubmit: (String) -> Unit

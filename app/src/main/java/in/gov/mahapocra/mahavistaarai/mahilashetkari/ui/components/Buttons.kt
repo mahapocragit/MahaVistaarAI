@@ -60,7 +60,7 @@ fun MsOutlinedButton(
         enabled = enabled,
         modifier = modifier.height(52.dp),
         shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary),
+        border = androidx.compose.foundation.BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary),
         colors = ButtonDefaults.outlinedButtonColors(
             contentColor = MaterialTheme.colorScheme.primary
         )

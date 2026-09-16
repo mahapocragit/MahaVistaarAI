@@ -18,13 +18,38 @@ import androidx.compose.ui.unit.dp
 
 /** status_step from the API is 0/1/2 (Submitted / Under Review / Approved-or-Rejected). */
 @Composable
-fun StatusStepper(statusStep: Int, isRejected: Boolean, modifier: Modifier = Modifier) {
-    val steps = listOf("Submitted", "Under Review", if (isRejected) "Rejected" else "Approved")
+fun StatusStepper(statusStep: Int, status: String, modifier: Modifier = Modifier) {
+    val isPlainRejected = status == "rejected"
+    val isAppealFlow = statusStep > 2 || status.startsWith("appeal")
+    val isAppealRejected = isAppealFlow && status.contains("appeal") && status.contains("reject")
+
+    val steps = if (isAppealFlow) {
+        listOf(
+            "Submitted",
+            "Gram Sabha Conducted",
+            "Rejected",
+            "Appealed – Sent to TAO",
+            if (isAppealRejected) "Appeal Rejected" else "Approved",
+            "Certificate Issued"
+        )
+    } else {
+        listOf("Submitted", "Gram Sabha Conducted", if (isPlainRejected) "Rejected" else "Approved")
+    }
+
+    // Reached-and-red steps: the branch point in the appeal flow is always
+    // red (an appeal only exists because the original decision was a
+    // rejection), and, for the plain flow, the final step when rejected.
+    val redIndices = if (isAppealFlow) {
+        setOfNotNull(2, if (isAppealRejected) 4 else null)
+    } else {
+        setOfNotNull(if (isPlainRejected) steps.lastIndex else null)
+    }
+
     Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
         steps.forEachIndexed { index, label ->
-            val completed = index <= statusStep
+            val completed = index < statusStep.coerceAtMost(steps.size)
             val isLast = index == steps.lastIndex
-            val isFinalRejected = isRejected && index == 2
+            val isRed = completed && index in redIndices
 
             Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
@@ -43,7 +68,7 @@ fun StatusStepper(statusStep: Int, isRejected: Boolean, modifier: Modifier = Mod
                             .clip(CircleShape)
                             .background(
                                 when {
-                                    isFinalRejected -> MaterialTheme.colorScheme.error
+                                    isRed -> MaterialTheme.colorScheme.error
                                     completed -> MaterialTheme.colorScheme.primary
                                     else -> MaterialTheme.colorScheme.outline
                                 }
@@ -52,7 +77,7 @@ fun StatusStepper(statusStep: Int, isRejected: Boolean, modifier: Modifier = Mod
                     ) {
                         if (completed) {
                             Icon(
-                                imageVector = if (isFinalRejected) Icons.Filled.Close else Icons.Filled.Check,
+                                imageVector = if (isRed) Icons.Filled.Close else Icons.Filled.Check,
                                 contentDescription = null,
                                 tint = Color.White,
                                 modifier = Modifier.size(16.dp)
@@ -69,7 +94,7 @@ fun StatusStepper(statusStep: Int, isRejected: Boolean, modifier: Modifier = Mod
                     label,
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = if (completed) FontWeight.Bold else FontWeight.Normal,
-                    textAlign = TextAlign.Center
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
             }
         }

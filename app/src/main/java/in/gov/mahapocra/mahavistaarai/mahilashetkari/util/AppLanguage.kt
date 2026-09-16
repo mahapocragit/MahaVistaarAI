@@ -38,7 +38,7 @@ object Strings {
     else
         Home(
             badge = "महाराष्ट्र महिला शेतकरी सक्षमीकरण अधिनियम, २०२६",
-            heading = "जी स्त्री जमीन कसते, तिला शेतकरी म्हणून ओळख मिळायलाच हवी.",
+            heading = "जी महिला शेतात राबते, तिला शेतकरी म्हणून ओळख मिळायलाच हवी!",
             body = "हा नवीन कायदा शेती किंवा शेतीपूरक कामात गुंतलेल्या प्रत्येक महिलेला — जमीन कोणाच्याही नावावर असो — अधिकृत महिला शेतकरी ओळख आणि प्रमाणपत्र देतो.",
             applyNow = "अर्ज करा",
             checkEligibility = "पात्रता तपासा",
@@ -63,11 +63,18 @@ object Strings {
         val locationTitle: String,
         val workTypeTitle: String,
         val workTypeSubtitle: String,
+        val familyFarmerIdQuestion: String,
+        val yes: String,
+        val no: String,
+        val familyFarmerIdLabel: String,
         val declaration: String,
         val submit: String,
         val successTitle: String,
         val successBody: String,
-        val submitAnother: String
+        val submitAnother: String,
+        val femaleOnlyTitle: String,
+        val femaleOnlyMessage: String,
+        val ok: String
     )
     fun apply(lang: AppLanguage) = if (lang == AppLanguage.EN)
         Apply(
@@ -86,11 +93,18 @@ object Strings {
             locationTitle = "Location",
             workTypeTitle = "Type of agricultural work",
             workTypeSubtitle = "Select all that apply",
+            familyFarmerIdQuestion = "Does any immediate family member have a Farmer ID?",
+            yes = "Yes",
+            no = "No",
+            familyFarmerIdLabel = "Family member's Farmer ID",
             declaration = "I declare that the information provided above is true to the best of my knowledge.",
             submit = "Submit Application",
             successTitle = "Application submitted!",
             successBody = "Save your acknowledgment number to track your application status.",
-            submitAnother = "Submit another application"
+            submitAnother = "Submit another application",
+            femaleOnlyTitle = "Not eligible",
+            femaleOnlyMessage = "This scheme is only for women farmers. The Aadhaar card you entered is not registered as female, so this form cannot be filled with it.",
+            ok = "OK"
         )
     else
         Apply(
@@ -109,11 +123,18 @@ object Strings {
             locationTitle = "स्थान",
             workTypeTitle = "शेतीकामाचा प्रकार",
             workTypeSubtitle = "लागू असलेले सर्व निवडा",
+            familyFarmerIdQuestion = "तुमच्या जवळच्या कुटुंबातील कोणत्याही सदस्याकडे फार्मर आयडी आहे का?",
+            yes = "हो",
+            no = "नाही",
+            familyFarmerIdLabel = "कुटुंब सदस्याचा फार्मर आयडी",
             declaration = "वर दिलेली माहिती माझ्या माहितीनुसार खरी आहे, असे मी जाहीर करते.",
             submit = "अर्ज सादर करा",
             successTitle = "अर्ज सादर झाला!",
             successBody = "तुमच्या अर्जाची स्थिती पाहण्यासाठी पोच क्रमांक जपून ठेवा.",
-            submitAnother = "आणखी एक अर्ज सादर करा"
+            submitAnother = "आणखी एक अर्ज सादर करा",
+            femaleOnlyTitle = "अपात्र",
+            femaleOnlyMessage = "ही योजना केवळ महिला शेतकऱ्यांसाठी आहे. तुम्ही प्रविष्ट केलेले आधार कार्ड महिलेच्या नावे नोंदणीकृत नाही, त्यामुळे या आधार कार्डाने अर्ज भरता येणार नाही.",
+            ok = "ठीक आहे"
         )
 
     data class ChatBot(
@@ -140,6 +161,10 @@ object Strings {
         val selectedSoFar: String,
         val done: String,
         val pickAtLeastOne: String,
+        val askCasteCategory: String,
+        val askFamilyFarmerId: String,
+        val askFamilyFarmerIdValue: String,
+        val invalidFarmerId: String,
         val askDeclaration: String,
         val mustAcceptDeclaration: String,
         val submitSuccess: String,
@@ -158,7 +183,10 @@ object Strings {
         val deleteAllConfirmTitle: String,
         val deleteAllConfirmBody: String,
         val deleteAllConfirm: String,
-        val cancel: String
+        val cancel: String,
+        val femaleOnlyTitle: String,
+        val femaleOnlyMessage: String,
+        val ok: String
     )
     fun chatBot(lang: AppLanguage) = if (lang == AppLanguage.EN)
         ChatBot(
@@ -185,6 +213,10 @@ object Strings {
             selectedSoFar = "Selected so far: %s",
             done = "Done",
             pickAtLeastOne = "Please select at least one type of work first.",
+            askCasteCategory = "Which caste category do you belong to?",
+            askFamilyFarmerId = "Does any immediate family member have a Farmer ID?",
+            askFamilyFarmerIdValue = "Please say or type that Farmer ID (11 digits).",
+            invalidFarmerId = "Please enter a valid 11-digit Farmer ID.",
             askDeclaration = "I declare that the information provided is true to the best of my knowledge. Do you agree?",
             mustAcceptDeclaration = "You need to accept the declaration to submit your application. Do you agree?",
             submitSuccess = "Application submitted! Your acknowledgment number is %s. Save it to track your status.",
@@ -203,7 +235,10 @@ object Strings {
             deleteAllConfirmTitle = "Delete all chat?",
             deleteAllConfirmBody = "This will permanently delete this conversation from your device and start a new one. This can't be undone.",
             deleteAllConfirm = "Delete all",
-            cancel = "Cancel"
+            cancel = "Cancel",
+            femaleOnlyTitle = "Not eligible",
+            femaleOnlyMessage = "This scheme is only for women farmers. The Aadhaar card you entered is not registered as female, so this form cannot be filled with it. Please enter an Aadhaar number registered to a woman.",
+            ok = "OK"
         )
     else
         ChatBot(
@@ -230,6 +265,10 @@ object Strings {
             selectedSoFar = "आतापर्यंत निवडलेले: %s",
             done = "पूर्ण",
             pickAtLeastOne = "कृपया आधी किमान एक कामाचा प्रकार निवडा.",
+            askCasteCategory = "तुम्ही कोणत्या जात प्रवर्गातील आहात?",
+            askFamilyFarmerId = "तुमच्या जवळच्या कुटुंबातील कोणत्याही सदस्याकडे फार्मर आयडी आहे का?",
+            askFamilyFarmerIdValue = "कृपया तो फार्मर आयडी (११ अंकी) सांगा किंवा टाइप करा.",
+            invalidFarmerId = "कृपया वैध ११ अंकी फार्मर आयडी प्रविष्ट करा.",
             askDeclaration = "वर दिलेली माहिती माझ्या माहितीनुसार खरी आहे, असे मी जाहीर करते. तुम्ही सहमत आहात का?",
             mustAcceptDeclaration = "अर्ज सादर करण्यासाठी तुम्हाला घोषणापत्र स्वीकारावे लागेल. तुम्ही सहमत आहात का?",
             submitSuccess = "अर्ज सादर झाला! तुमचा पोच क्रमांक %s आहे. स्थिती तपासण्यासाठी तो जपून ठेवा.",
@@ -248,7 +287,34 @@ object Strings {
             deleteAllConfirmTitle = "सर्व चॅट हटवायचे का?",
             deleteAllConfirmBody = "हे संभाषण तुमच्या डिव्हाइसवरून कायमचे हटवले जाईल आणि नवीन संभाषण सुरू होईल. ही क्रिया पूर्ववत करता येणार नाही.",
             deleteAllConfirm = "सर्व हटवा",
-            cancel = "रद्द करा"
+            cancel = "रद्द करा",
+            femaleOnlyTitle = "अपात्र",
+            femaleOnlyMessage = "ही योजना केवळ महिला शेतकऱ्यांसाठी आहे. तुम्ही प्रविष्ट केलेले आधार कार्ड महिलेच्या नावे नोंदणीकृत नाही, त्यामुळे या आधार कार्डाने अर्ज भरता येणार नाही. कृपया महिलेच्या नावे नोंदणीकृत आधार क्रमांक प्रविष्ट करा.",
+            ok = "ठीक आहे"
+        )
+
+    data class CertificateDialog(
+        val title: String,
+        val subtitle: String,
+        val submit: String,
+        val cancel: String,
+        val ackNoError: String
+    )
+    fun certificateDialog(lang: AppLanguage) = if (lang == AppLanguage.EN)
+        CertificateDialog(
+            title = "Download Certificate",
+            subtitle = "Enter your acknowledgment number to download your certificate.",
+            submit = "Download",
+            cancel = "Cancel",
+            ackNoError = "Enter your acknowledgment number."
+        )
+    else
+        CertificateDialog(
+            title = "प्रमाणपत्र डाउनलोड करा",
+            subtitle = "तुमचे प्रमाणपत्र डाउनलोड करण्यासाठी तुमचा पोच क्रमांक प्रविष्ट करा.",
+            submit = "डाउनलोड करा",
+            cancel = "रद्द करा",
+            ackNoError = "कृपया तुमचा पोच क्रमांक प्रविष्ट करा."
         )
 
     data class Track(
@@ -256,9 +322,7 @@ object Strings {
         val subtitle: String,
         val byAck: String,
         val byNameVillage: String,
-        val checkStatus: String,
-        val downloadCertificate: String,
-        val certificateGenerating: String
+        val checkStatus: String
     )
     fun track(lang: AppLanguage) = if (lang == AppLanguage.EN)
         Track(
@@ -266,9 +330,7 @@ object Strings {
             subtitle = "Check your application status",
             byAck = "By Ack. No.",
             byNameVillage = "By Name & Village",
-            checkStatus = "Check Status",
-            downloadCertificate = "Download Certificate",
-            certificateGenerating = "Approved — certificate is being generated. Please check back shortly."
+            checkStatus = "Check Status"
         )
     else
         Track(
@@ -276,8 +338,6 @@ object Strings {
             subtitle = "तुमच्या अर्जाची स्थिती तपासा",
             byAck = "पोच क्रमांकाने",
             byNameVillage = "नाव आणि गावाने",
-            checkStatus = "स्थिती तपासा",
-            downloadCertificate = "प्रमाणपत्र डाउनलोड करा",
-            certificateGenerating = "मंजूर — प्रमाणपत्र तयार होत आहे. कृपया थोड्या वेळाने पुन्हा तपासा."
+            checkStatus = "स्थिती तपासा"
         )
 }

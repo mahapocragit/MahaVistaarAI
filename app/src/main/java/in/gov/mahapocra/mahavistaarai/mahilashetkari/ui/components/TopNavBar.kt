@@ -74,9 +74,12 @@ private val navItems = listOf(
     NavItem(Screen.Resources.route, Icons.AutoMirrored.Filled.MenuBook) { it.resources },
 )
 
-/** Primary section navigation, shown as a bottom bar per modern Android convention. */
+/** Primary section navigation, shown as a bottom bar per modern Android convention.
+ *  [onNavigate]'s second argument is an optional payload — currently only used to
+ *  hand the Track screen a pre-filled ack. no. (e.g. from the chatbot); plain tab
+ *  taps always pass null. */
 @Composable
-fun MsBottomNavBar(lang: AppLanguage, currentRoute: String, onNavigate: (String) -> Unit) {
+fun MsBottomNavBar(lang: AppLanguage, currentRoute: String, onNavigate: (String, String?) -> Unit) {
     val nav = Strings.nav(lang)
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surface,
@@ -86,7 +89,7 @@ fun MsBottomNavBar(lang: AppLanguage, currentRoute: String, onNavigate: (String)
             val selected = currentRoute == item.route
             NavigationBarItem(
                 selected = selected,
-                onClick = { onNavigate(item.route) },
+                onClick = { onNavigate(item.route, null) },
                 icon = { Icon(item.icon, contentDescription = null) },
                 label = {
                     Text(

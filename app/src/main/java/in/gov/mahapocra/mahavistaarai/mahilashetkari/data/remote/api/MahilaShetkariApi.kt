@@ -1,18 +1,6 @@
 package `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.api
 
-import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.AadhaarVerifyData
-import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.ApiResponseDto
-import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.ApplicationRequest
-import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.ApplicationStatusDto
-import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.DistrictDto
-import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.SendOtpData
-import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.SendOtpRequest
-import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.SubmitData
-import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.TalukaDto
-import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.VerifyOtpRequest
-import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.VillageDto
-import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.WorkTypeDto
-import okhttp3.ResponseBody
+import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.*
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -39,6 +27,9 @@ interface MahilaShetkariApi {
     @GET("mahila-shetkari-service/api/work-types/")
     suspend fun getWorkTypes(): Response<ApiResponseDto<List<WorkTypeDto>>>
 
+    @GET("mahila-shetkari-service/api/caste-categories/")
+    suspend fun getCasteCategories(): Response<ApiResponseDto<List<CasteCategoryDto>>>
+
     @POST("mahila-shetkari-service/api/aadhaar/send-otp/")
     suspend fun sendAadhaarOtp(
         @Body body: SendOtpRequest
@@ -64,9 +55,4 @@ interface MahilaShetkariApi {
         @Query("name") name: String,
         @Query("village") villageId: Int
     ): Response<ApiResponseDto<ApplicationStatusDto>>
-
-    @GET("mahila-shetkari-service/api/applications/{ackNo}/certificate/")
-    suspend fun downloadCertificate(
-        @Path("ackNo") ackNo: String
-    ): Response<ResponseBody>
 }

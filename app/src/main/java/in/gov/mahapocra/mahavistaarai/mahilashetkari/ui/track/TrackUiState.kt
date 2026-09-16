@@ -25,14 +25,5 @@ data class TrackUiState(
 
     val searchLoading: Boolean = false,
     val searchError: String? = null,
-    val result: ApplicationStatusDto? = null,
-
-    val certificateLoading: Boolean = false,
-    val certificateError: String? = null,
-    // Set once a download completes; the screen persists it to disk, opens it,
-    // then calls clearPendingCertificate() to reset this.
-    val pendingCertificateBytes: ByteArray? = null
-) {
-    override fun equals(other: Any?): Boolean = this === other
-    override fun hashCode(): Int = System.identityHashCode(this)
-}
+    val result: ApplicationStatusDto? = null
+)

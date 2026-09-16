@@ -1,12 +1,16 @@
 package `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.repository
 
 import com.google.gson.Gson
+import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.NetworkModule
+import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.api.CertificateApi
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.api.MahilaShetkariApi
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.ApiResult
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.AadhaarVerifyData
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.ApiResponseDto
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.ApplicationRequest
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.ApplicationStatusDto
+import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.CasteCategoryDto
+import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.CertificateByAckRequest
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.DistrictDto
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.ErrorEnvelope
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.SendOtpData
@@ -22,7 +26,10 @@ import okhttp3.ResponseBody
 import retrofit2.Response
 import java.io.IOException
 
-class MahilaShetkariRepository(private val api: MahilaShetkariApi) {
+class MahilaShetkariRepository(
+    private val api: MahilaShetkariApi,
+    private val certificateApi: CertificateApi
+) {
 
     suspend fun getDistricts(divisionId: Int? = null): ApiResult<List<DistrictDto>> =
         safeCall { api.getDistricts(divisionId) }
@@ -35,6 +42,9 @@ class MahilaShetkariRepository(private val api: MahilaShetkariApi) {
 
     suspend fun getWorkTypes(): ApiResult<List<WorkTypeDto>> =
         safeCall { api.getWorkTypes() }
+
+    suspend fun getCasteCategories(): ApiResult<List<CasteCategoryDto>> =
+        safeCall { api.getCasteCategories() }
 
     suspend fun sendOtp(aadhaarNo: String): ApiResult<SendOtpData> =
         safeCall { api.sendAadhaarOtp(SendOtpRequest(aadhaarNo)) }
@@ -51,22 +61,40 @@ class MahilaShetkariRepository(private val api: MahilaShetkariApi) {
     suspend fun getStatusByNameVillage(name: String, villageId: Int): ApiResult<ApplicationStatusDto> =
         safeCall { api.getStatusByNameVillage(name, villageId) }
 
-    /** Certificate download is a raw PDF stream on success, but a JSON error
-     *  envelope (application/json) on failure — see API_README.md section 4.3 —
-     *  so it can't reuse the generic ApiResponseDto<T> path used everywhere else.
-     *  Bytes are read here (still on the IO dispatcher) so callers never need
-     *  to touch the raw ResponseBody / do blocking I/O themselves. */
+    /** Two-step flow per CERTIFICATE_API.md: (1) resolve the ack. no. to a
+     *  download_url via the certificate service's by-ack endpoint — this is
+     *  also where "pending review" / "rejected" errors surface — then
+     *  (2) stream the PDF bytes from that URL. Runs on its own base URL/host
+     *  (NetworkModule.CERTIFICATE_BASE_URL), separate from the main app API,
+     *  and the PDF step returns raw bytes rather than an ApiResponseDto<T>
+     *  envelope, so neither step can reuse safeCall(). Bytes are read here
+     *  (still on the IO dispatcher) so callers never need to touch the raw
+     *  ResponseBody / do blocking I/O themselves. */
     suspend fun downloadCertificate(ackNo: String): ApiResult<ByteArray> = withContext(Dispatchers.IO) {
         try {
-            val response: Response<ResponseBody> = api.downloadCertificate(ackNo)
-            if (response.isSuccessful && response.body() != null) {
-                ApiResult.Success(response.body()!!.bytes())
+            val byAckResponse = certificateApi.getByAck(CertificateByAckRequest(ackNo))
+            val byAckBody = byAckResponse.body()
+            val downloadUrl = if (byAckResponse.isSuccessful && byAckBody?.success == true) {
+                byAckBody.data?.downloadUrl
             } else {
-                val errorText = response.errorBody()?.string()
+                null
+            }
+            if (downloadUrl == null) {
+                val errorText = byAckResponse.errorBody()?.string()
                 val parsed = errorText?.let {
                     runCatching { Gson().fromJson(it, ErrorEnvelope::class.java) }.getOrNull()
                 }
-                ApiResult.Error(parsed?.message ?: "Could not download the certificate.")
+                return@withContext ApiResult.Error(
+                    parsed?.message ?: byAckBody?.message ?: "Could not fetch the certificate."
+                )
+            }
+
+            val fullUrl = NetworkModule.CERTIFICATE_BASE_URL.trimEnd('/') + downloadUrl
+            val pdfResponse = certificateApi.downloadPdf(fullUrl)
+            if (pdfResponse.isSuccessful && pdfResponse.body() != null) {
+                ApiResult.Success(pdfResponse.body()!!.bytes())
+            } else {
+                ApiResult.Error("Could not download the certificate.")
             }
         } catch (e: IOException) {
             ApiResult.Error("Network error. Check your internet connection.")

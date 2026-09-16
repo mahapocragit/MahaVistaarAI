@@ -8,6 +8,6 @@ import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.repository.MahilaShe
  *  later if the project's build gets wired up in Android Studio. */
 class AppContainer {
     val repository: MahilaShetkariRepository by lazy {
-        MahilaShetkariRepository(NetworkModule.mahilaShetkariApi)
+        MahilaShetkariRepository(NetworkModule.mahilaShetkariApi, NetworkModule.certificateApi)
     }
 }

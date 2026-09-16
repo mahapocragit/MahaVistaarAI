@@ -21,6 +21,10 @@ class TrackViewModel(private val repository: MahilaShetkariRepository) : ViewMod
 
     fun setMode(mode: TrackMode) = _uiState.update { it.copy(mode = mode, searchError = null, result = null) }
 
+    /** Pre-fills the ack. no. field, e.g. when arriving here from the chatbot. */
+    fun prefillAckNo(ackNo: String) =
+        _uiState.update { it.copy(mode = TrackMode.BY_ACK, ackNo = ackNo.uppercase(), ackNoError = null) }
+
     fun onAckNoChange(value: String) = _uiState.update { it.copy(ackNo = value.uppercase(), ackNoError = null, searchError = null) }
 
     fun onNameChange(value: String) = _uiState.update { it.copy(name = value, nameError = null, searchError = null) }
@@ -98,21 +102,4 @@ class TrackViewModel(private val repository: MahilaShetkariRepository) : ViewMod
             }
         }
     }
-
-    fun downloadCertificate() {
-        val ackNo = _uiState.value.result?.acknowledgmentNo ?: return
-        viewModelScope.launch {
-            _uiState.update { it.copy(certificateLoading = true, certificateError = null) }
-            when (val result = repository.downloadCertificate(ackNo)) {
-                is ApiResult.Success -> _uiState.update {
-                    it.copy(certificateLoading = false, pendingCertificateBytes = result.data)
-                }
-                is ApiResult.Error -> _uiState.update {
-                    it.copy(certificateLoading = false, certificateError = result.message)
-                }
-            }
-        }
-    }
-
-    fun clearPendingCertificate() = _uiState.update { it.copy(pendingCertificateBytes = null) }
 }

@@ -22,15 +22,19 @@ data class ApplyUiState(
     // Prefilled from Aadhaar verify
     val applicantName: String = "",
     val nameError: String? = null,
+    val applicantNameMr: String = "",
     val dob: String = "",
     val age: Int? = null,
     val gender: String = "",
     val permanentAddress: String = "",
+    // Full base64 data URI from the Aadhaar verify response, sent as-is to the backend
+    val photoUrl: String = "",
 
     // Step 3 — Details
     val mobile: String = "",
     val mobileError: String? = null,
     val currentAddress: String = "",
+    val currentAddressSameAsPermanent: Boolean = false,
 
     val districts: List<DropdownOption> = emptyList(),
     val talukas: List<DropdownOption> = emptyList(),
@@ -45,6 +49,17 @@ data class ApplyUiState(
     val workTypesError: String? = null,
     val workTypesLoading: Boolean = false,
 
+    val casteCategories: List<DropdownOption> = emptyList(),
+    val selectedCasteCategory: DropdownOption? = null,
+    val casteCategoryError: String? = null,
+    val casteCategoriesLoading: Boolean = false,
+
+    // Does any immediate family member have a Farmer ID?
+    val hasFamilyFarmerId: Boolean? = null,
+    val familyFarmerIdAnswerError: String? = null,
+    val familyFarmerId: String = "",
+    val familyFarmerIdError: String? = null,
+
     val declarationAccepted: Boolean = false,
     val declarationError: String? = null,
 
@@ -52,6 +67,9 @@ data class ApplyUiState(
 
     // Shown as a banner on whichever step it happened on
     val generalError: String? = null,
+
+    // Aadhaar verified but not registered as female — this scheme is women-only
+    val femaleOnlyDialog: Boolean = false,
 
     val acknowledgmentNo: String? = null
 )

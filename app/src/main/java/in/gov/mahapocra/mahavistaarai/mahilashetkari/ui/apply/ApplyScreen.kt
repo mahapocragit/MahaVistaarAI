@@ -1,39 +1,63 @@
+@file:OptIn(ExperimentalFoundationApi::class)
 package `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.apply
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import coil.compose.AsyncImage
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.WorkTypeDto
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.repository.MahilaShetkariRepository
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.components.*
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.AppLanguage
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.Strings
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.rememberVm
-import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.components.MsDropdown
-import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.components.MsOutlinedButton
-import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.components.MsPrimaryButton
-import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.components.MsTextField
 
 @Composable
 fun ApplyScreen(repository: MahilaShetkariRepository, lang: AppLanguage) {
     val viewModel = rememberVm(repository) { ApplyViewModel(it) }
     val state by viewModel.uiState.collectAsState()
     val strings = Strings.apply(lang)
+
+    val generalErrorRequester = remember { BringIntoViewRequester() }
+    LaunchedEffect(state.generalError) {
+        if (state.generalError != null) generalErrorRequester.bringIntoView()
+    }
+
+    if (state.femaleOnlyDialog) {
+        AlertDialog(
+            onDismissRequest = viewModel::dismissFemaleOnlyDialog,
+            title = { Text(strings.femaleOnlyTitle) },
+            text = { Text(strings.femaleOnlyMessage) },
+            confirmButton = {
+                TextButton(onClick = viewModel::dismissFemaleOnlyDialog) { Text(strings.ok) }
+            }
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -55,7 +79,9 @@ fun ApplyScreen(repository: MahilaShetkariRepository, lang: AppLanguage) {
             Spacer(Modifier.height(20.dp))
         }
 
-        state.generalError?.let { ErrorBanner(it) }
+        state.generalError?.let {
+            ErrorBanner(it, modifier = Modifier.bringIntoViewRequester(generalErrorRequester))
+        }
 
         Card(
             shape = RoundedCornerShape(18.dp),
@@ -99,11 +125,11 @@ private fun StepProgress(activeIndex: Int) {
 }
 
 @Composable
-private fun ErrorBanner(message: String) {
+private fun ErrorBanner(message: String, modifier: Modifier = Modifier) {
     Surface(
         color = MaterialTheme.colorScheme.errorContainer,
         shape = RoundedCornerShape(8.dp),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(bottom = 16.dp)
     ) {
@@ -177,6 +203,33 @@ private fun OtpStep(state: ApplyUiState, vm: ApplyViewModel, strings: Strings.Ap
 
 @Composable
 private fun DetailsStep(state: ApplyUiState, vm: ApplyViewModel, strings: Strings.Apply) {
+    val nameFieldRequester = remember { BringIntoViewRequester() }
+    val casteCategoryRequester = remember { BringIntoViewRequester() }
+    val mobileFieldRequester = remember { BringIntoViewRequester() }
+    val workTypesRequester = remember { BringIntoViewRequester() }
+    val familyFarmerIdRequester = remember { BringIntoViewRequester() }
+    val declarationRequester = remember { BringIntoViewRequester() }
+
+    LaunchedEffect(
+        state.nameError,
+        state.casteCategoryError,
+        state.mobileError,
+        state.workTypesError,
+        state.familyFarmerIdAnswerError,
+        state.familyFarmerIdError,
+        state.declarationError
+    ) {
+        when {
+            state.nameError != null -> nameFieldRequester.bringIntoView()
+            state.casteCategoryError != null -> casteCategoryRequester.bringIntoView()
+            state.mobileError != null -> mobileFieldRequester.bringIntoView()
+            state.workTypesError != null -> workTypesRequester.bringIntoView()
+            state.familyFarmerIdAnswerError != null -> familyFarmerIdRequester.bringIntoView()
+            state.familyFarmerIdError != null -> familyFarmerIdRequester.bringIntoView()
+            state.declarationError != null -> declarationRequester.bringIntoView()
+        }
+    }
+
     Text(strings.step2Title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
     Spacer(Modifier.height(4.dp))
     Text(
@@ -191,35 +244,35 @@ private fun DetailsStep(state: ApplyUiState, vm: ApplyViewModel, strings: String
         value = state.applicantName,
         onValueChange = vm::onNameChange,
         error = state.nameError,
-        voiceInputEnabled = true
+        voiceInputEnabled = true,
+        modifier = Modifier.bringIntoViewRequester(nameFieldRequester)
     )
     Spacer(Modifier.height(12.dp))
 
     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        MsTextField(
-            label = "Date of birth",
-            value = state.dob,
-            onValueChange = {},
-            enabled = false,
-            modifier = Modifier.weight(1f)
-        )
-        MsTextField(
-            label = "Age",
-            value = state.age?.toString() ?: "",
-            onValueChange = {},
-            enabled = false,
-            modifier = Modifier.weight(1f)
-        )
+        MsTextField(label = "Date of birth", value = state.dob, onValueChange = {}, enabled = false, modifier = Modifier.weight(1f))
+        MsTextField(label = "Age", value = state.age?.toString() ?: "", onValueChange = {}, enabled = false, modifier = Modifier.weight(1f))
     }
     Spacer(Modifier.height(12.dp))
 
-    MsTextField(
-        label = "Permanent address",
-        value = state.permanentAddress,
-        onValueChange = {},
-        enabled = false,
-        singleLine = false
+    MsTextField(label = "Permanent address", value = state.permanentAddress, onValueChange = {}, enabled = false, singleLine = false)
+    Spacer(Modifier.height(12.dp))
+
+    MsDropdown(
+        label = "Caste category",
+        options = state.casteCategories,
+        selected = state.selectedCasteCategory,
+        onSelected = vm::onCasteCategorySelected,
+        enabled = state.casteCategories.isNotEmpty(),
+        modifier = Modifier.bringIntoViewRequester(casteCategoryRequester)
     )
+    state.casteCategoryError?.let {
+        Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelMedium)
+    }
+    if (state.casteCategoriesLoading) {
+        Spacer(Modifier.height(8.dp))
+        LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+    }
     Spacer(Modifier.height(12.dp))
 
     MsTextField(
@@ -229,14 +282,33 @@ private fun DetailsStep(state: ApplyUiState, vm: ApplyViewModel, strings: String
         error = state.mobileError,
         keyboardType = KeyboardType.Phone,
         supportingText = "For SMS updates on your application",
-        voiceInputEnabled = true
+        voiceInputEnabled = true,
+        modifier = Modifier.bringIntoViewRequester(mobileFieldRequester)
     )
+    Spacer(Modifier.height(12.dp))
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .toggleable(
+                value = state.currentAddressSameAsPermanent,
+                onValueChange = vm::onCurrentAddressSameAsPermanentToggle
+            )
+    ) {
+        Checkbox(
+            checked = state.currentAddressSameAsPermanent,
+            onCheckedChange = vm::onCurrentAddressSameAsPermanentToggle
+        )
+        Text("Current address same as permanent address", style = MaterialTheme.typography.bodyMedium)
+    }
     Spacer(Modifier.height(12.dp))
 
     MsTextField(
         label = "Current address (optional)",
         value = state.currentAddress,
         onValueChange = vm::onCurrentAddressChange,
+        enabled = !state.currentAddressSameAsPermanent,
         singleLine = false,
         voiceInputEnabled = true
     )
@@ -284,16 +356,28 @@ private fun DetailsStep(state: ApplyUiState, vm: ApplyViewModel, strings: String
     if (state.workTypesLoading) {
         LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
     } else {
-        state.workTypes.forEach { workType ->
-            val checked = workType.id in state.selectedWorkTypeIds
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .toggleable(value = checked, onValueChange = { vm.toggleWorkType(workType.id) })
-            ) {
-                Checkbox(checked = checked, onCheckedChange = { vm.toggleWorkType(workType.id) })
-                Text(workType.name, style = MaterialTheme.typography.bodyLarge)
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.bringIntoViewRequester(workTypesRequester)
+        ) {
+            state.workTypes.chunked(2).forEach { rowItems ->
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    rowItems.forEach { workType ->
+                        WorkTypeGridItem(
+                            workType = workType,
+                            checked = workType.id in state.selectedWorkTypeIds,
+                            onToggle = { vm.toggleWorkType(workType.id) },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    // Pad the last, partially-filled row so items keep a consistent width.
+                    repeat(2 - rowItems.size) {
+                        Spacer(Modifier.weight(1f))
+                    }
+                }
             }
         }
     }
@@ -302,10 +386,69 @@ private fun DetailsStep(state: ApplyUiState, vm: ApplyViewModel, strings: String
     }
 
     Spacer(Modifier.height(20.dp))
+    Card(
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+        modifier = Modifier
+            .fillMaxWidth()
+            .bringIntoViewRequester(familyFarmerIdRequester)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                strings.familyFarmerIdQuestion + " *",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(Modifier.height(10.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
+                    .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(8.dp))
+            ) {
+                YesNoOption(
+                    label = strings.yes,
+                    selected = state.hasFamilyFarmerId == true,
+                    modifier = Modifier.weight(1f),
+                    onClick = { vm.onFamilyFarmerIdAnswerChange(true) }
+                )
+                Box(
+                    modifier = Modifier
+                        .width(1.dp)
+                        .height(44.dp)
+                        .background(MaterialTheme.colorScheme.outline)
+                )
+                YesNoOption(
+                    label = strings.no,
+                    selected = state.hasFamilyFarmerId == false,
+                    modifier = Modifier.weight(1f),
+                    onClick = { vm.onFamilyFarmerIdAnswerChange(false) }
+                )
+            }
+            state.familyFarmerIdAnswerError?.let {
+                Spacer(Modifier.height(4.dp))
+                Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelMedium)
+            }
+            if (state.hasFamilyFarmerId == true) {
+                Spacer(Modifier.height(12.dp))
+                MsTextField(
+                    label = strings.familyFarmerIdLabel,
+                    value = state.familyFarmerId,
+                    onValueChange = vm::onFamilyFarmerIdChange,
+                    error = state.familyFarmerIdError,
+                    keyboardType = KeyboardType.Number,
+                    supportingText = "11-digit number, numbers only"
+                )
+            }
+        }
+    }
+
+    Spacer(Modifier.height(20.dp))
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
+            .bringIntoViewRequester(declarationRequester)
             .toggleable(value = state.declarationAccepted, onValueChange = vm::onDeclarationToggle)
     ) {
         Checkbox(checked = state.declarationAccepted, onCheckedChange = vm::onDeclarationToggle)
@@ -361,14 +504,98 @@ private fun SuccessStep(state: ApplyUiState, vm: ApplyViewModel, strings: String
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(20.dp),
-                textAlign = TextAlign.Center
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
             )
         }
         Spacer(Modifier.height(24.dp))
-        MsOutlinedButton(
-            text = strings.submitAnother,
-            modifier = Modifier.fillMaxWidth(),
-            onClick = vm::startOver
+        MsOutlinedButton(text = strings.submitAnother, modifier = Modifier.fillMaxWidth(), onClick = vm::startOver)
+    }
+}
+
+@Composable
+private fun YesNoOption(
+    label: String,
+    selected: Boolean,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .height(44.dp)
+            .background(if (selected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface)
+            .clickable(onClick = onClick)
+    ) {
+        Text(
+            label,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+            color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
         )
+    }
+}
+
+@Composable
+private fun WorkTypeGridItem(
+    workType: WorkTypeDto,
+    checked: Boolean,
+    onToggle: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        shape = RoundedCornerShape(12.dp),
+        color = if (checked) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant,
+        border = if (checked) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null,
+        modifier = modifier
+            .toggleable(value = checked, onValueChange = { onToggle() })
+    ) {
+        Box(modifier = Modifier.padding(10.dp)) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .size(84.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(MaterialTheme.colorScheme.surface)
+                ) {
+                    if (workType.imageUrl != null) {
+                        AsyncImage(
+                            model = workType.imageUrl,
+                            contentDescription = workType.nameMr,
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(9.dp)
+                        )
+                    } else {
+                        Icon(
+                            Icons.Filled.CheckCircle,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(36.dp)
+                        )
+                    }
+                }
+                Spacer(Modifier.height(6.dp))
+                Text(
+                    workType.nameMr,
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = if (checked) FontWeight.Bold else FontWeight.Normal,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    maxLines = 2
+                )
+            }
+            if (checked) {
+                Icon(
+                    Icons.Filled.CheckCircle,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .size(18.dp)
+                        .background(MaterialTheme.colorScheme.surface, CircleShape)
+                )
+            }
+        }
     }
 }
