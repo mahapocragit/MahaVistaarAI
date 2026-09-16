@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
+import android.util.Log
 import com.androidnetworking.AndroidNetworking
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
@@ -31,11 +32,15 @@ class MyApplication : Application() {
         instance = this
         container = AppContainer()
         TokenSessionManager.init(this)
-        AuthRepository.bindAppContext(this)
-        NativeUiConfig.apply(
-            language = "English",       // "English", "Hindi", or "Marathi"
-            themeColorHex = "#009444"   // Primary brand color
-        )
+        try {
+            AuthRepository.bindAppContext(this)
+            NativeUiConfig.apply(
+                language = "English",       // "English", "Hindi", or "Marathi"
+                themeColorHex = "#009444"   // Primary brand color
+            )
+        }catch (e:Exception){
+            Log.d("ERROR_TAG", "onCreate: ${e.message}")
+        }
         initAppSettings()
         initNetworking()
         initFirebase()

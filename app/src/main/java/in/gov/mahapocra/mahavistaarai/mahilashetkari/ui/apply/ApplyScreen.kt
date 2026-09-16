@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.size
 import coil.compose.AsyncImage
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
@@ -36,6 +37,10 @@ import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.components.*
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.AppLanguage
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.Strings
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.rememberVm
+import kotlin.ranges.step
+import kotlin.text.chunked
+import kotlin.text.forEach
+import kotlin.toString
 
 @Composable
 fun ApplyScreen(repository: MahilaShetkariRepository, lang: AppLanguage) {
@@ -453,7 +458,15 @@ private fun DetailsStep(state: ApplyUiState, vm: ApplyViewModel, strings: String
     ) {
         Checkbox(checked = state.declarationAccepted, onCheckedChange = vm::onDeclarationToggle)
         Text(
-            strings.declaration,
+            strings.declaration.format(
+                state.applicantName,
+                state.dob,
+                state.selectedVillage?.label.orEmpty(),
+                state.selectedTaluka?.label.orEmpty(),
+                state.selectedDistrict?.label.orEmpty(),
+                state.mobile,
+                state.aadhaar
+            ),
             style = MaterialTheme.typography.bodyMedium
         )
     }
