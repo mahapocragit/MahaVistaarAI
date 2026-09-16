@@ -48,6 +48,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.NetworkUtils
 import `in`.gov.mahapocra.mahavistaarai.util.app_util.SessionManager
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.DialogHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
 import org.json.JSONArray
 import org.json.JSONException
@@ -454,8 +455,7 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
                 )
             }
         } else {
-            AppUtility.getInstance()
-                .showListDialogIndex(
+            DialogHelper.showListDialogIndex(
                     talukaJSONArray,
                     2,
                     getString(R.string.farmer_select_taluka),
@@ -475,8 +475,7 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
                 UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_taluka))
             }
         } else {
-            AppUtility.getInstance()
-                .showListDialogIndex(
+            DialogHelper.showListDialogIndex(
                     villageJSONArray,
                     3,
                     getString(R.string.farmer_select_village),
@@ -492,7 +491,7 @@ class ProfileScreen : AppCompatActivity(), AlertListEventListener {
         if (districtJSONArray == null) {
             farmerViewModel.getDistrictData(this, languageToLoad)
         } else {
-            AppUtility.getInstance().showListDialogIndex(
+            DialogHelper.showListDialogIndex(
                 districtJSONArray,
                 1,
                 getString(R.string.farmer_select_district),

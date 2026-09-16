@@ -33,6 +33,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.LocalCustom
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.DialogHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.FarmerHelper.containsFarmerId
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.ProgressHelper
@@ -379,7 +380,7 @@ class MarketPrice : AppCompatActivity(), AlertListEventListener {
         if (districtJSONArray == null) {
             geoViewModel.getDistrictData(this, languageToLoad)
         } else {
-            AppUtility.getInstance().showListDialogIndex(
+            DialogHelper.showListDialogIndex(
                 districtJSONArray,
                 1,
                 getString(R.string.farmer_select_district),

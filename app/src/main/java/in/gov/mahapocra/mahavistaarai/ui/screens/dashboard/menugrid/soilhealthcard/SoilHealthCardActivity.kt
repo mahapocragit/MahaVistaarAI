@@ -38,6 +38,7 @@ import `in`.gov.mahapocra.mahavistaarai.util.app_util.AppString
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AnimationHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.AppHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.CryptoHelper
+import `in`.gov.mahapocra.mahavistaarai.util.helpers.DialogHelper
 import `in`.gov.mahapocra.mahavistaarai.util.helpers.DraggableTouchListener
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -260,7 +261,7 @@ class SoilHealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEv
         if (districtJSONArray == null) {
             farmerViewModel.getDistrictData(this, languageToLoad)
         } else {
-            AppUtility.getInstance().showListDialogIndex(
+            DialogHelper.showListDialogIndex(
                 districtJSONArray,
                 1,
                 getString(R.string.farmer_select_district),
@@ -283,7 +284,7 @@ class SoilHealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEv
                 )
             }
         } else {
-            AppUtility.getInstance()
+            DialogHelper
                 .showListDialogIndex(
                     talukaJSONArray,
                     2,
@@ -304,7 +305,7 @@ class SoilHealthCardActivity : AppCompatActivity(), ApiCallbackCode, AlertListEv
                 UIToastMessage.show(this, resources.getString(R.string.error_farmer_select_taluka))
             }
         } else {
-            AppUtility.getInstance()
+            DialogHelper
                 .showListDialogIndex(
                     villageJSONArray,
                     3,
