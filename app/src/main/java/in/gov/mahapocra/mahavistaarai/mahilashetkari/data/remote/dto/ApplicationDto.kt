@@ -7,7 +7,7 @@ data class ApplicationRequest(
     @SerializedName("applicant_name_mr") val applicantNameMr: String,
     @SerializedName("aadhaar_no") val aadhaarNo: String,
     @SerializedName("photo_url") val photoUrl: String,
-    @SerializedName("caste_category") val casteCategory: Int,
+    @SerializedName("caste_category") val casteCategory: Int? = null,
     val gender: String? = null,
     val mobile: String,
     @SerializedName("permanent_address") val permanentAddress: String? = null,
@@ -19,7 +19,9 @@ data class ApplicationRequest(
     val village: Int? = null,
     @SerializedName("work_types") val workTypes: List<Int>,
     val declaration: Boolean,
-    @SerializedName("farmer_id") val farmerId: String? = null
+    @SerializedName("family_member_has_farmer_id") val hasFamilyFarmerId: Boolean,
+    @SerializedName("family_member_farmer_id") val farmerId: String? = null,
+    @SerializedName("family_member_farmer_name") val farmerName: String? = null
 )
 
 data class SubmitData(@SerializedName("acknowledgment_no") val acknowledgmentNo: String)

@@ -21,7 +21,6 @@ data class ApplyUiState(
 
     // Prefilled from Aadhaar verify
     val applicantName: String = "",
-    val nameError: String? = null,
     val applicantNameMr: String = "",
     val dob: String = "",
     val age: Int? = null,
@@ -51,7 +50,6 @@ data class ApplyUiState(
 
     val casteCategories: List<DropdownOption> = emptyList(),
     val selectedCasteCategory: DropdownOption? = null,
-    val casteCategoryError: String? = null,
     val casteCategoriesLoading: Boolean = false,
 
     // Does any immediate family member have a Farmer ID?
@@ -59,6 +57,10 @@ data class ApplyUiState(
     val familyFarmerIdAnswerError: String? = null,
     val familyFarmerId: String = "",
     val familyFarmerIdError: String? = null,
+    val familyFarmerIdVerifying: Boolean = false,
+    // Set once /api/farmer/verify/ confirms familyFarmerId; reset whenever familyFarmerId is edited
+    val familyFarmerIdVerified: Boolean = false,
+    val familyFarmerName: String = "",
 
     val declarationAccepted: Boolean = false,
     val declarationError: String? = null,

@@ -40,6 +40,11 @@ interface MahilaShetkariApi {
         @Body body: VerifyOtpRequest
     ): Response<ApiResponseDto<AadhaarVerifyData>>
 
+    @POST("mahila-shetkari-service/api/farmer/verify/")
+    suspend fun verifyFarmerId(
+        @Body body: FarmerVerifyRequest
+    ): Response<ApiResponseDto<FarmerVerifyData>>
+
     @POST("mahila-shetkari-service/api/applications/")
     suspend fun submitApplication(
         @Body body: ApplicationRequest

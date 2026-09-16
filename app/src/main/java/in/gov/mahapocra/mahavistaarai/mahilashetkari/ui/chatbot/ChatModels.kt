@@ -65,6 +65,7 @@ data class ChatSessionState(
     val selectedCasteCategory: DropdownOption? = null,
     val hasFamilyFarmerId: Boolean? = null,
     val familyFarmerId: String = "",
+    val familyFarmerName: String = "",
     val ackNo: String = "",
     val trackName: String = ""
 )

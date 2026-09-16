@@ -114,8 +114,6 @@ class ApplyViewModel(private val repository: MahilaShetkariRepository) : ViewMod
 
     // ---------- Step 3: Details ----------
 
-    fun onNameChange(value: String) = _uiState.update { it.copy(applicantName = value, nameError = null) }
-
     fun onMobileChange(value: String) {
         if (value.length <= 10 && value.all { it.isDigit() }) {
             _uiState.update { it.copy(mobile = value, mobileError = null) }
@@ -235,7 +233,7 @@ class ApplyViewModel(private val repository: MahilaShetkariRepository) : ViewMod
     }
 
     fun onCasteCategorySelected(option: DropdownOption) =
-        _uiState.update { it.copy(selectedCasteCategory = option, casteCategoryError = null) }
+        _uiState.update { it.copy(selectedCasteCategory = option) }
 
     fun onFamilyFarmerIdAnswerChange(hasFarmerId: Boolean) {
         _uiState.update {
@@ -243,14 +241,52 @@ class ApplyViewModel(private val repository: MahilaShetkariRepository) : ViewMod
                 hasFamilyFarmerId = hasFarmerId,
                 familyFarmerIdAnswerError = null,
                 familyFarmerId = if (hasFarmerId) it.familyFarmerId else "",
-                familyFarmerIdError = null
+                familyFarmerIdError = null,
+                familyFarmerIdVerified = if (hasFarmerId) it.familyFarmerIdVerified else false,
+                familyFarmerName = if (hasFarmerId) it.familyFarmerName else ""
             )
         }
     }
 
     fun onFamilyFarmerIdChange(value: String) {
         if (value.length <= 11 && value.all { it.isDigit() }) {
-            _uiState.update { it.copy(familyFarmerId = value, familyFarmerIdError = null) }
+            _uiState.update {
+                it.copy(
+                    familyFarmerId = value,
+                    familyFarmerIdError = null,
+                    // Any edit invalidates the previous verification
+                    familyFarmerIdVerified = false,
+                    familyFarmerName = ""
+                )
+            }
+        }
+    }
+
+    fun verifyFamilyFarmerId() {
+        val farmerId = _uiState.value.familyFarmerId
+        if (farmerId.length != 11 || !farmerId.all { it.isDigit() }) {
+            _uiState.update { it.copy(familyFarmerIdError = "Enter a valid 11-digit Farmer ID.") }
+            return
+        }
+        viewModelScope.launch {
+            _uiState.update { it.copy(familyFarmerIdVerifying = true, familyFarmerIdError = null) }
+            when (val result = repository.verifyFarmerId(farmerId)) {
+                is ApiResult.Success -> _uiState.update {
+                    it.copy(
+                        familyFarmerIdVerifying = false,
+                        familyFarmerIdVerified = true,
+                        familyFarmerName = result.data.farmerName
+                    )
+                }
+                is ApiResult.Error -> _uiState.update {
+                    it.copy(
+                        familyFarmerIdVerifying = false,
+                        familyFarmerIdVerified = false,
+                        familyFarmerName = "",
+                        familyFarmerIdError = result.message
+                    )
+                }
+            }
         }
     }
 
@@ -259,21 +295,17 @@ class ApplyViewModel(private val repository: MahilaShetkariRepository) : ViewMod
     fun submitApplication() {
         val state = _uiState.value
 
-        val nameError = Validators.nameError(state.applicantName)
         val mobileError = Validators.mobileError(state.mobile)
         val workTypesError = Validators.workTypesError(state.selectedWorkTypeIds.toList())
-        val casteCategoryError = Validators.casteCategoryError(state.selectedCasteCategory?.id)
         val familyFarmerIdAnswerError = Validators.familyFarmerIdAnswerError(state.hasFamilyFarmerId)
-        val familyFarmerIdError = Validators.familyFarmerIdError(state.hasFamilyFarmerId, state.familyFarmerId)
+        val familyFarmerIdError = Validators.familyFarmerIdError(state.hasFamilyFarmerId, state.familyFarmerId, state.familyFarmerIdVerified)
         val declarationError = Validators.declarationError(state.declarationAccepted)
 
-        if (listOf(nameError, mobileError, workTypesError, casteCategoryError, familyFarmerIdAnswerError, familyFarmerIdError, declarationError).any { it != null }) {
+        if (listOf(mobileError, workTypesError, familyFarmerIdAnswerError, familyFarmerIdError, declarationError).any { it != null }) {
             _uiState.update {
                 it.copy(
-                    nameError = nameError,
                     mobileError = mobileError,
                     workTypesError = workTypesError,
-                    casteCategoryError = casteCategoryError,
                     familyFarmerIdAnswerError = familyFarmerIdAnswerError,
                     familyFarmerIdError = familyFarmerIdError,
                     declarationError = declarationError
@@ -287,7 +319,7 @@ class ApplyViewModel(private val repository: MahilaShetkariRepository) : ViewMod
             applicantNameMr = state.applicantNameMr,
             aadhaarNo = state.aadhaar,
             photoUrl = state.photoUrl,
-            casteCategory = state.selectedCasteCategory!!.id,
+            casteCategory = state.selectedCasteCategory?.id,
             gender = state.gender.ifBlank { null },
             mobile = state.mobile,
             permanentAddress = state.permanentAddress.ifBlank { null },
@@ -299,7 +331,9 @@ class ApplyViewModel(private val repository: MahilaShetkariRepository) : ViewMod
             village = state.selectedVillage?.id,
             workTypes = state.selectedWorkTypeIds.toList(),
             declaration = state.declarationAccepted,
-            farmerId = if (state.hasFamilyFarmerId == true) state.familyFarmerId else null
+            hasFamilyFarmerId = state.hasFamilyFarmerId!!,
+            farmerId = if (state.hasFamilyFarmerId == true) state.familyFarmerId else null,
+            farmerName = if (state.hasFamilyFarmerId == true) state.familyFarmerName else null
         )
 
         viewModelScope.launch {

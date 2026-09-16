@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.collections.plus
+import kotlin.ranges.step
 import kotlin.text.clear
 
 /**
@@ -77,6 +78,7 @@ class ChatBotViewModel(
     private var selectedCasteCategory: DropdownOption? = null
     private var hasFamilyFarmerId: Boolean? = null
     private var familyFarmerId = ""
+    private var familyFarmerName = ""
 
     // ---- Track flow scratch data ----
     private var ackNo = ""
@@ -162,7 +164,7 @@ class ChatBotViewModel(
             selectedDistrict = selectedDistrict, selectedTaluka = selectedTaluka, selectedVillage = selectedVillage,
             workTypes = workTypes, selectedWorkTypeIds = selectedWorkTypeIds,
             casteCategories = casteCategories, selectedCasteCategory = selectedCasteCategory,
-            hasFamilyFarmerId = hasFamilyFarmerId, familyFarmerId = familyFarmerId,
+            hasFamilyFarmerId = hasFamilyFarmerId, familyFarmerId = familyFarmerId, familyFarmerName = familyFarmerName,
             ackNo = ackNo, trackName = trackName
         )
         viewModelScope.launch { historyStore.saveSession(session) }
@@ -178,7 +180,7 @@ class ChatBotViewModel(
         selectedDistrict = session.selectedDistrict; selectedTaluka = session.selectedTaluka; selectedVillage = session.selectedVillage
         workTypes = session.workTypes; selectedWorkTypeIds = session.selectedWorkTypeIds
         casteCategories = session.casteCategories; selectedCasteCategory = session.selectedCasteCategory
-        hasFamilyFarmerId = session.hasFamilyFarmerId; familyFarmerId = session.familyFarmerId
+        hasFamilyFarmerId = session.hasFamilyFarmerId; familyFarmerId = session.familyFarmerId; familyFarmerName = session.familyFarmerName
         ackNo = session.ackNo; trackName = session.trackName
     }
 
@@ -328,8 +330,13 @@ class ChatBotViewModel(
                 setPrompt(workTypeReplies())
             }
             Step.APPLY_CASTE_CATEGORY -> {
+                if (normalize(value) == "skip") {
+                    selectedCasteCategory = null
+                    askFamilyFarmerId()
+                    return
+                }
                 val option = matchOption(value, casteCategories)
-                if (option == null) { botSay(t.notUnderstoodOption); setPrompt(casteCategories.map { QuickReply(it.label, it.label) }); return }
+                if (option == null) { botSay(t.notUnderstoodOption); setPrompt(casteCategoryReplies()); return }
                 selectedCasteCategory = option
                 askFamilyFarmerId()
             }
@@ -343,6 +350,7 @@ class ChatBotViewModel(
                 isNo(value) -> {
                     hasFamilyFarmerId = false
                     familyFarmerId = ""
+                    familyFarmerName = ""
                     askDeclaration()
                 }
                 else -> { botSay(t.notUnderstood); setPrompt(yesNoReplies()) }
@@ -355,7 +363,7 @@ class ChatBotViewModel(
                     return
                 }
                 familyFarmerId = digits
-                askDeclaration()
+                verifyFamilyFarmerIdForChat()
             }
             Step.APPLY_DECLARATION -> when {
                 isYes(value) -> submitApplicationChat()
@@ -404,6 +412,7 @@ class ChatBotViewModel(
 
     private fun yesNoReplies() = listOf(QuickReply(t.yes, "yes"), QuickReply(t.no, "no"))
     private fun workTypeReplies() = workTypes.map { QuickReply(it.name, it.name) } + QuickReply(t.done, "done")
+    private fun casteCategoryReplies() = casteCategories.map { QuickReply(it.label, it.label) } + QuickReply(t.skip, "skip")
     private fun trackModeReplies() = listOf(QuickReply(t.byAck, "ack"), QuickReply(t.byName, "name"))
 
     // ---------- apply flow ----------
@@ -573,7 +582,7 @@ class ChatBotViewModel(
                     casteCategories = result.data.map { DropdownOption(it.id, it.name) }
                     step = Step.APPLY_CASTE_CATEGORY
                     botSay(t.askCasteCategory)
-                    setPrompt(casteCategories.map { QuickReply(it.label, it.label) })
+                    setPrompt(casteCategoryReplies())
                 }
                 is ApiResult.Error -> {
                     botError(result.message)
@@ -589,6 +598,26 @@ class ChatBotViewModel(
         setPrompt(yesNoReplies())
     }
 
+    private fun verifyFamilyFarmerIdForChat() {
+        viewModelScope.launch {
+            setBusy(true)
+            botSay(t.verifyingFarmerId)
+            when (val result = repository.verifyFarmerId(familyFarmerId)) {
+                is ApiResult.Success -> {
+                    familyFarmerName = result.data.farmerName
+                    botSay(t.farmerIdVerified.format(familyFarmerName))
+                    askDeclaration()
+                }
+                is ApiResult.Error -> {
+                    botError(result.message)
+                    familyFarmerId = ""
+                    step = Step.APPLY_FAMILY_FARMER_ID_VALUE
+                    setPrompt(inputEnabled = true, keyboardType = KeyboardType.Number)
+                }
+            }
+        }
+    }
+
     private fun askDeclaration() {
         step = Step.APPLY_DECLARATION
         botSay(t.askDeclaration)
@@ -596,13 +625,12 @@ class ChatBotViewModel(
     }
 
     private fun submitApplicationChat() {
-        val casteCategoryId = selectedCasteCategory?.id ?: return
         val request = ApplicationRequest(
             applicantName = applicantName.trim(),
             applicantNameMr = applicantNameMr,
             aadhaarNo = aadhaar,
             photoUrl = photoUrl,
-            casteCategory = casteCategoryId,
+            casteCategory = selectedCasteCategory?.id,
             gender = gender.ifBlank { null },
             mobile = mobile,
             permanentAddress = permanentAddress.ifBlank { null },
@@ -614,7 +642,9 @@ class ChatBotViewModel(
             village = selectedVillage?.id,
             workTypes = selectedWorkTypeIds.toList(),
             declaration = true,
-            farmerId = if (hasFamilyFarmerId == true) familyFarmerId else null
+            hasFamilyFarmerId = hasFamilyFarmerId!!,
+            farmerId = if (hasFamilyFarmerId == true) familyFarmerId else null,
+            farmerName = if (hasFamilyFarmerId == true) familyFarmerName else null
         )
         viewModelScope.launch {
             setBusy(true)
@@ -730,7 +760,7 @@ class ChatBotViewModel(
         selectedDistrict = null; selectedTaluka = null; selectedVillage = null
         workTypes = emptyList(); selectedWorkTypeIds = emptySet()
         casteCategories = emptyList(); selectedCasteCategory = null
-        hasFamilyFarmerId = null; familyFarmerId = ""
+        hasFamilyFarmerId = null; familyFarmerId = ""; familyFarmerName = ""
         ackNo = ""; trackName = ""
     }
 
@@ -740,4 +770,3 @@ class ChatBotViewModel(
         askApplyIntent()
     }
 }
-

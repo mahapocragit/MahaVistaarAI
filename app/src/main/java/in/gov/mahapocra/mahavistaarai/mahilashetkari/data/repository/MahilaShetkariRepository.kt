@@ -13,6 +13,8 @@ import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.CasteCate
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.CertificateByAckRequest
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.DistrictDto
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.ErrorEnvelope
+import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.FarmerVerifyData
+import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.FarmerVerifyRequest
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.SendOtpData
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.SendOtpRequest
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.SubmitData
@@ -51,6 +53,9 @@ class MahilaShetkariRepository(
 
     suspend fun verifyOtp(aadhaarNo: String, txn: String, otp: String): ApiResult<AadhaarVerifyData> =
         safeCall { api.verifyAadhaarOtp(VerifyOtpRequest(aadhaarNo, txn, otp)) }
+
+    suspend fun verifyFarmerId(farmerId: String): ApiResult<FarmerVerifyData> =
+        safeCall { api.verifyFarmerId(FarmerVerifyRequest(farmerId)) }
 
     suspend fun submitApplication(request: ApplicationRequest): ApiResult<SubmitData> =
         safeCall { api.submitApplication(request) }

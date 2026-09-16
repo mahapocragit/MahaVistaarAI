@@ -6,9 +6,17 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import coil.compose.AsyncImage
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
@@ -18,7 +26,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material3.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -31,16 +48,16 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.remote.dto.WorkTypeDto
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.repository.MahilaShetkariRepository
-import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.components.*
+import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.components.MsDropdown
+import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.components.MsOutlinedButton
+import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.components.MsPrimaryButton
+import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.components.MsTextField
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.AppLanguage
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.Strings
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.rememberVm
-import kotlin.ranges.step
-import kotlin.text.chunked
-import kotlin.text.forEach
-import kotlin.toString
 
 @Composable
 fun ApplyScreen(repository: MahilaShetkariRepository, lang: AppLanguage) {
@@ -208,16 +225,12 @@ private fun OtpStep(state: ApplyUiState, vm: ApplyViewModel, strings: Strings.Ap
 
 @Composable
 private fun DetailsStep(state: ApplyUiState, vm: ApplyViewModel, strings: Strings.Apply) {
-    val nameFieldRequester = remember { BringIntoViewRequester() }
-    val casteCategoryRequester = remember { BringIntoViewRequester() }
     val mobileFieldRequester = remember { BringIntoViewRequester() }
     val workTypesRequester = remember { BringIntoViewRequester() }
     val familyFarmerIdRequester = remember { BringIntoViewRequester() }
     val declarationRequester = remember { BringIntoViewRequester() }
 
     LaunchedEffect(
-        state.nameError,
-        state.casteCategoryError,
         state.mobileError,
         state.workTypesError,
         state.familyFarmerIdAnswerError,
@@ -225,8 +238,6 @@ private fun DetailsStep(state: ApplyUiState, vm: ApplyViewModel, strings: String
         state.declarationError
     ) {
         when {
-            state.nameError != null -> nameFieldRequester.bringIntoView()
-            state.casteCategoryError != null -> casteCategoryRequester.bringIntoView()
             state.mobileError != null -> mobileFieldRequester.bringIntoView()
             state.workTypesError != null -> workTypesRequester.bringIntoView()
             state.familyFarmerIdAnswerError != null -> familyFarmerIdRequester.bringIntoView()
@@ -247,10 +258,8 @@ private fun DetailsStep(state: ApplyUiState, vm: ApplyViewModel, strings: String
     MsTextField(
         label = "Full name",
         value = state.applicantName,
-        onValueChange = vm::onNameChange,
-        error = state.nameError,
-        voiceInputEnabled = true,
-        modifier = Modifier.bringIntoViewRequester(nameFieldRequester)
+        onValueChange = {},
+        enabled = false
     )
     Spacer(Modifier.height(12.dp))
 
@@ -264,16 +273,12 @@ private fun DetailsStep(state: ApplyUiState, vm: ApplyViewModel, strings: String
     Spacer(Modifier.height(12.dp))
 
     MsDropdown(
-        label = "Caste category",
+        label = "Caste category (optional)",
         options = state.casteCategories,
         selected = state.selectedCasteCategory,
         onSelected = vm::onCasteCategorySelected,
-        enabled = state.casteCategories.isNotEmpty(),
-        modifier = Modifier.bringIntoViewRequester(casteCategoryRequester)
+        enabled = state.casteCategories.isNotEmpty()
     )
-    state.casteCategoryError?.let {
-        Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelMedium)
-    }
     if (state.casteCategoriesLoading) {
         Spacer(Modifier.height(8.dp))
         LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
@@ -441,9 +446,25 @@ private fun DetailsStep(state: ApplyUiState, vm: ApplyViewModel, strings: String
                     value = state.familyFarmerId,
                     onValueChange = vm::onFamilyFarmerIdChange,
                     error = state.familyFarmerIdError,
+                    enabled = !state.familyFarmerIdVerified,
                     keyboardType = KeyboardType.Number,
                     supportingText = "11-digit number, numbers only"
                 )
+                Spacer(Modifier.height(8.dp))
+                if (state.familyFarmerIdVerified) {
+                    Text(
+                        "Verified: ${state.familyFarmerName}",
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                } else {
+                    MsPrimaryButton(
+                        text = "Verify Farmer ID",
+                        enabled = state.familyFarmerId.length == 11,
+                        loading = state.familyFarmerIdVerifying,
+                        onClick = vm::verifyFamilyFarmerId
+                    )
+                }
             }
         }
     }

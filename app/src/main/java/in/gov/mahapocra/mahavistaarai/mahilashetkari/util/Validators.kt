@@ -33,26 +33,19 @@ object Validators {
         else -> null
     }
 
-    fun nameError(value: String): String? = when {
-        value.trim().length < 2 -> "Please enter a valid full name (at least 2 characters)."
-        else -> null
-    }
-
     fun declarationError(accepted: Boolean): String? =
         if (!accepted) "Declaration must be accepted." else null
 
     fun workTypesError(selected: List<Int>): String? =
         if (selected.isEmpty()) "Please select at least one type of agricultural work." else null
 
-    fun casteCategoryError(selectedId: Int?): String? =
-        if (selectedId == null) "Please select a caste category." else null
-
     fun familyFarmerIdAnswerError(value: Boolean?): String? =
         if (value == null) "Please answer this question." else null
 
-    fun familyFarmerIdError(hasFarmerId: Boolean?, value: String): String? = when {
+    fun familyFarmerIdError(hasFarmerId: Boolean?, value: String, verified: Boolean): String? = when {
         hasFarmerId != true -> null
         !value.all { it.isDigit() } || value.length != 11 -> "Enter a valid 11-digit Farmer ID."
+        !verified -> "Please verify the Farmer ID before submitting."
         else -> null
     }
 }
