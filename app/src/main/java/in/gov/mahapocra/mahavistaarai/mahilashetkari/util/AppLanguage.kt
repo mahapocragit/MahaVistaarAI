@@ -123,7 +123,7 @@ object Strings {
             locationTitle = "स्थान",
             workTypeTitle = "शेतीकामाचा प्रकार",
             workTypeSubtitle = "लागू असलेले सर्व निवडा",
-            familyFarmerIdQuestion = "तुमच्या जवळच्या कुटुंबातील कोणत्याही सदस्याकडे फार्मर आयडी आहे का?",
+            familyFarmerIdQuestion = "तुमच्या कुटुंबातील एखाद्या सदस्याकडे शेतकरी आयडी आहे का?",
             yes = "हो",
             no = "नाही",
             familyFarmerIdLabel = "कुटुंब सदस्याचा फार्मर आयडी",
