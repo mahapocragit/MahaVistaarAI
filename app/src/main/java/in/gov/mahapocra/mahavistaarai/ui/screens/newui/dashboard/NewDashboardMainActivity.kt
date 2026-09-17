@@ -141,9 +141,6 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
         } else {
             LocalCustom.createSnackbar(binding.root, "Internet not available!")
         }
-        val pin  = "1234"
-        AuthRepository.authenticate(farmerId.toString(), pin)
-
         val drawerLayout = binding.drawerLayout
         val toolbar = binding.toolbar
 
@@ -759,7 +756,7 @@ class NewDashboardMainActivity : AppCompatActivity(), OnItemClickListener {
                     AppPreferenceManager(this).saveString(AppConstants.DISTRICT_NAME, districtName)
                     AppPreferenceManager(this).saveString(AppConstants.AGRISTACKID, agristackId)
                     appPreferenceManager.saveString("FARMER_POPUP_ID", agristackId)
-                    Log.d(TAG, "observeResponse: ${CryptoHelper.decryptField(agristackId)}")
+                    AuthRepository.authenticate(CryptoHelper.decryptField(agristackId).toString(), "1234")
                     val userRoleId = -1
                     var hasKrishiTaiRole = false   // FLAG
                     if (rolesArray != null && rolesArray.length() > 0) {
