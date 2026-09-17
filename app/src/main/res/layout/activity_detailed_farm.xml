@@ -29,9 +29,9 @@
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:tabTextAppearance="@style/TabTextAppearance"
-            app:tabInlineLabel="true" />
+            android:visibility="visible"
+            app:tabInlineLabel="true"
+            app:tabTextAppearance="@style/TabTextAppearance" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"
