@@ -5,11 +5,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import `in`.co.appinventor.services_api.helper.JsonObject
 import `in`.gov.mahapocra.mahavistaarai.R
+import org.json.JSONArray
+import org.json.JSONObject
 
 class AdvisoryAdapter(
-    private val list: List<AdvisoryModel>,
-    private val onItemClick: (AdvisoryModel) -> Unit
+    private val jsonArray: JSONArray,
+    private val onItemClick: (JSONObject) -> Unit
 ) : RecyclerView.Adapter<AdvisoryAdapter.AdvisoryViewHolder>() {
 
     inner class AdvisoryViewHolder(
@@ -21,11 +24,11 @@ class AdvisoryAdapter(
         private val tvDescription: TextView =
             itemView.findViewById(R.id.descriptionAdvisory)
 
-        fun bind(item: AdvisoryModel) {
+        fun bind(item: JSONObject) {
 
-            tvTitle.text = item.title
-            tvDate.text = item.date
-            tvDescription.text = item.description
+            tvTitle.text = item.optString("title")
+            tvDescription.text = item.optString("body")
+            tvDate.text = item.optString("date")
 
             itemView.setOnClickListener {
                 onItemClick(item)
@@ -48,10 +51,10 @@ class AdvisoryAdapter(
         holder: AdvisoryViewHolder,
         position: Int
     ) {
-        holder.bind(list[position])
+        holder.bind(jsonArray.get(position) as JSONObject)
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return jsonArray.length()
     }
 }

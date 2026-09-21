@@ -28,6 +28,7 @@ class ApplyViewModel(private val repository: MahilaShetkariRepository) : ViewMod
     fun sendOtp() {
         val aadhaar = _uiState.value.aadhaar
         val error = Validators.aadhaarError(aadhaar)
+        print("Aadhaar error: $error")
         if (error != null) {
             _uiState.update { it.copy(aadhaarError = error) }
             return
@@ -36,9 +37,11 @@ class ApplyViewModel(private val repository: MahilaShetkariRepository) : ViewMod
             _uiState.update { it.copy(sendOtpLoading = true, generalError = null) }
             when (val result = repository.sendOtp(aadhaar)) {
                 is ApiResult.Success -> _uiState.update {
+                    print("OTP: ${result.data.txn}")
                     it.copy(sendOtpLoading = false, txn = result.data.txn, step = ApplyStep.OTP)
                 }
                 is ApiResult.Error -> _uiState.update {
+                    print("Error: ${result.message}")
                     it.copy(sendOtpLoading = false, generalError = result.message)
                 }
             }

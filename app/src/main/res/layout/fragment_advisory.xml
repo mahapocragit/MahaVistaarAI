@@ -14,5 +14,14 @@
             android:id="@+id/advisoryRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/noAdvisoryTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="NO DATA FOUND"
+            android:gravity="center"
+            android:visibility="visible"/>
+
     </LinearLayout>
 </FrameLayout>
