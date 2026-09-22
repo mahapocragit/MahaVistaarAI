@@ -18,6 +18,7 @@ data class ApplyUiState(
     val otpError: String? = null,
     val txn: String? = null,
     val verifyOtpLoading: Boolean = false,
+    val resendCooldownSeconds: Int = 0,
 
     // Prefilled from Aadhaar verify
     val applicantName: String = "",

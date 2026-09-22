@@ -58,6 +58,11 @@ import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.components.MsTextField
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.AppLanguage
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.Strings
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.rememberVm
+import kotlin.compareTo
+import kotlin.ranges.step
+import kotlin.text.chunked
+import kotlin.text.forEach
+import kotlin.toString
 
 @Composable
 fun ApplyScreen(repository: MahilaShetkariRepository, lang: AppLanguage) {
@@ -185,7 +190,11 @@ private fun AadhaarStep(state: ApplyUiState, vm: ApplyViewModel, strings: String
     )
     Spacer(Modifier.height(20.dp))
     MsPrimaryButton(
-        text = strings.sendOtp,
+        text = if (!state.sendOtpLoading && state.resendCooldownSeconds > 0)
+            strings.sendOtpIn.format(state.resendCooldownSeconds)
+        else
+            strings.sendOtp,
+        enabled = state.resendCooldownSeconds == 0,
         loading = state.sendOtpLoading,
         modifier = Modifier.fillMaxWidth(),
         onClick = vm::sendOtp
@@ -218,7 +227,14 @@ private fun OtpStep(state: ApplyUiState, vm: ApplyViewModel, strings: Strings.Ap
     )
     Spacer(Modifier.height(12.dp))
     Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-        TextButton(onClick = vm::resendOtp) { Text(strings.resendOtp) }
+        TextButton(onClick = vm::resendOtp, enabled = state.resendCooldownSeconds == 0) {
+            Text(
+                if (state.resendCooldownSeconds > 0)
+                    strings.resendOtpIn.format(state.resendCooldownSeconds)
+                else
+                    strings.resendOtp
+            )
+        }
         TextButton(onClick = vm::changeAadhaarNumber) { Text(strings.changeAadhaar) }
     }
 }

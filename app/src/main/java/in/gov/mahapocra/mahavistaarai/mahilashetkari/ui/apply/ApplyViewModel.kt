@@ -7,6 +7,8 @@ import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.repository.MahilaShe
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.components.DropdownOption
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.ApiResult
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.Validators
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -17,6 +19,9 @@ class ApplyViewModel(private val repository: MahilaShetkariRepository) : ViewMod
     private val _uiState = MutableStateFlow(ApplyUiState())
     val uiState: StateFlow<ApplyUiState> = _uiState
 
+    private var resendCooldownJob: Job? = null
+    private val resendCooldownDurationSeconds = 30
+
     // ---------- Step 1: Aadhaar ----------
 
     fun onAadhaarChange(value: String) {
@@ -26,25 +31,41 @@ class ApplyViewModel(private val repository: MahilaShetkariRepository) : ViewMod
     }
 
     fun sendOtp() {
+        if (_uiState.value.sendOtpLoading || _uiState.value.resendCooldownSeconds > 0) return
         val aadhaar = _uiState.value.aadhaar
         val error = Validators.aadhaarError(aadhaar)
-        print("Aadhaar error: $error")
         if (error != null) {
             _uiState.update { it.copy(aadhaarError = error) }
             return
         }
+        _uiState.update { it.copy(sendOtpLoading = true, generalError = null) }
+        // Freeze the button for the full cooldown starting at the click itself,
+        // not just after the response, so rapid re-taps can't queue up another
+        // request while this one is still in flight.
+        startResendCooldown()
         viewModelScope.launch {
-            _uiState.update { it.copy(sendOtpLoading = true, generalError = null) }
             when (val result = repository.sendOtp(aadhaar)) {
                 is ApiResult.Success -> _uiState.update {
-                    print("OTP: ${result.data.txn}")
                     it.copy(sendOtpLoading = false, txn = result.data.txn, step = ApplyStep.OTP)
                 }
                 is ApiResult.Error -> _uiState.update {
-                    print("Error: ${result.message}")
                     it.copy(sendOtpLoading = false, generalError = result.message)
                 }
             }
+        }
+    }
+
+    /** Disables the Send/Resend OTP button for [resendCooldownDurationSeconds]
+     *  starting the moment Send/Resend is tapped, with a live countdown shown
+     *  on the button. */
+    private fun startResendCooldown() {
+        resendCooldownJob?.cancel()
+        resendCooldownJob = viewModelScope.launch {
+            for (secondsLeft in resendCooldownDurationSeconds downTo 1) {
+                _uiState.update { it.copy(resendCooldownSeconds = secondsLeft) }
+                delay(1_000)
+            }
+            _uiState.update { it.copy(resendCooldownSeconds = 0) }
         }
     }
 
@@ -59,7 +80,10 @@ class ApplyViewModel(private val repository: MahilaShetkariRepository) : ViewMod
     fun resendOtp() = sendOtp()
 
     fun changeAadhaarNumber() {
-        _uiState.update { it.copy(step = ApplyStep.AADHAAR, otp = "", txn = null, generalError = null) }
+        resendCooldownJob?.cancel()
+        _uiState.update {
+            it.copy(step = ApplyStep.AADHAAR, otp = "", txn = null, generalError = null, resendCooldownSeconds = 0)
+        }
     }
 
     fun verifyOtp() {
