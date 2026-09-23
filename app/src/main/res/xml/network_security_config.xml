@@ -38,7 +38,7 @@
         </trust-anchors>
     </domain-config>
 
-    <domain-config cleartextTrafficPermitted="true">
+    <domain-config cleartextTrafficPermitted="false">
         <domain includeSubdomains="true">uat-mahakrishi.mahaitgov.in</domain>
         <domain includeSubdomains="true">40.81.91.247</domain>
     </domain-config>

@@ -1,20 +1,40 @@
 package `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.home
 
-import androidx.compose.foundation.BorderStroke
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.FactCheck
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.DownloadForOffline
 import androidx.compose.material.icons.filled.SmartToy
 import androidx.compose.material.icons.filled.TrackChanges
 import androidx.compose.material.icons.filled.VerifiedUser
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,7 +45,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.data.repository.MahilaShetkariRepository
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.chatbot.ChatBotDialog
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.ui.navigation.Screen
@@ -33,7 +55,11 @@ import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.AppLanguage
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.util.Strings
 
 @Composable
-fun HomeScreen(repository: MahilaShetkariRepository, lang: AppLanguage, onNavigate: (String, String?) -> Unit) {
+fun HomeScreen(
+    repository: MahilaShetkariRepository,
+    lang: AppLanguage,
+    onNavigate: (String, String?) -> Unit
+) {
     val strings = Strings.home(lang)
     val chatStrings = Strings.chatBot(lang)
     var chatOpen by remember { mutableStateOf(false) }
@@ -52,7 +78,10 @@ fun HomeScreen(repository: MahilaShetkariRepository, lang: AppLanguage, onNaviga
                     .fillMaxWidth()
                     .background(
                         Brush.verticalGradient(
-                            listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.tertiary)
+                            listOf(
+                                MaterialTheme.colorScheme.primary,
+                                MaterialTheme.colorScheme.tertiary
+                            )
                         )
                     )
                     .padding(horizontal = 24.dp, vertical = 28.dp)
@@ -145,15 +174,34 @@ fun HomeScreen(repository: MahilaShetkariRepository, lang: AppLanguage, onNaviga
             }
         }
 
-        FloatingActionButton(
-            onClick = { chatOpen = true },
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
+        val context = LocalContext.current
+        Row(
             modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(24.dp)
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp, vertical = 20.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(Icons.Filled.SmartToy, contentDescription = chatStrings.fabDescription)
+            ExtendedFloatingActionButton(
+                onClick = {
+                    val intent = Intent(
+                        Intent.ACTION_DIAL,
+                        Uri.parse("tel:020 25512812")
+                    )
+                    context.startActivity (intent)
+                },
+                icon = { Icon(Icons.Filled.Call, contentDescription = null) },
+                text = { Text("Help Desk") },
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary
+            )
+
+            FloatingActionButton(
+                onClick = { chatOpen = true },
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ) { Icon(Icons.Filled.SmartToy, contentDescription = chatStrings.fabDescription) }
         }
     }
 
@@ -236,7 +284,10 @@ private fun MsOutlinedButtonOnHero(text: String, icon: ImageVector, onClick: () 
     OutlinedButton(
         onClick = onClick,
         shape = RoundedCornerShape(12.dp),
-        border = androidx.compose.foundation.BorderStroke(1.5.dp, MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f)),
+        border = androidx.compose.foundation.BorderStroke(
+            1.5.dp,
+            MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f)
+        ),
         colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.onPrimary),
         modifier = Modifier.height(50.dp)
     ) {

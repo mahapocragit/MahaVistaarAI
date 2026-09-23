@@ -14,7 +14,25 @@
 -keepattributes *Annotation*
 -keepattributes Signature
 -keepattributes Exceptions
+-keepattributes EnclosingMethod,InnerClasses
 
+-keep class com.mahakrushi.mahilashetkari.data.remote.dto.** { *; }
+
+-keepclassmembers,allowobfuscation class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
+
+-keep class com.google.gson.reflect.TypeToken
+-keep class * extends com.google.gson.reflect.TypeToken
+
+-keep interface com.mahakrushi.mahilashetkari.data.remote.api.** { *; }
+-dontwarn javax.annotation.**
+-dontwarn kotlin.Unit
+-keepclassmembernames class kotlinx.** {
+    volatile <fields>;
+}
+-dontwarn kotlinx.coroutines.**
+-dontwarn coil.**
 #############################################
 # GSON (CRITICAL FOR YOUR APP)
 #############################################
