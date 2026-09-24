@@ -47,7 +47,7 @@ object NetworkModule {
     private val certificateRetrofit: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(CERTIFICATE_BASE_URL)
-            .client(okHttpClient)
+            .client(getUnsafeOkHttpClient())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

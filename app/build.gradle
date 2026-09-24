@@ -38,8 +38,8 @@ android {
         applicationId "in.gov.mahapocra.mahavistaarai"
         minSdk = 28
         targetSdkVersion 36
-        versionCode 59
-        versionName "2.1.6"
+        versionCode 60
+        versionName "2.1.7"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resourceConfigurations += ['en', 'mr']

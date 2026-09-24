@@ -204,6 +204,10 @@
             android:name=".ui.screens.newui.dashboard.TempActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.screens.dashboard.MahilaShetkariActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

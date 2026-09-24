@@ -12,6 +12,7 @@ import `in`.co.appinventor.services_api.listener.OnRecyclerItemClickListener
 import `in`.gov.mahapocra.mahavistaarai.R
 import `in`.gov.mahapocra.mahavistaarai.databinding.FragmentSmartFarmingBinding
 import `in`.gov.mahapocra.mahavistaarai.mahilashetkari.MainActivity
+import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.MahilaShetkariActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.magazine.DashboardMagazineActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.AddCropActivity
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.menugrid.climate.ClimateResilientTechnology
@@ -21,6 +22,7 @@ import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.shetishala.Shetisha
 import `in`.gov.mahapocra.mahavistaarai.ui.screens.dashboard.video.VideosActivity
 import `in`.gov.mahapocra.mahavistaarai.util.AppConstants
 import `in`.gov.mahapocra.mahavistaarai.util.AppPreferenceManager
+import kotlin.jvm.java
 
 class SmartFarmingFragment : Fragment(), OnRecyclerItemClickListener {
 
@@ -154,9 +156,8 @@ class SmartFarmingFragment : Fragment(), OnRecyclerItemClickListener {
                 }
 
                 getString(R.string.mahila_shetkari) -> {
-                    val intent = Intent(requireContext(), MainActivity::class.java)
+                    val intent = Intent(requireContext(), MahilaShetkariActivity::class.java)
                     startActivity(intent)
-
                 }
             }
         }
